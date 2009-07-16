@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="actions">
+  <title>Actions</title>
+
+  <para>This chapter gives a brief description to all service actions. You can use these actions in the test case in
+  order to realize more detailed application validation and test scenarios.</para>
+
+  &actions-database;
+  &actions-sleep;
+  
+</chapter>

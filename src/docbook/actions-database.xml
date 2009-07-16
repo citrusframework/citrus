@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-database">
+    <title>Accessing the database</title>
+  
+    <para>In many cases it is necessary to access the database in order to validate the persistent data during a test.
+    It might also be mandatory to prepare the database with some data before a test run. These requirements
+    can be done through the following two service actions that enable you to access the database</para>
+    
+    <section id="actions-database-update">
+      <title>Updating the database</title>
+  
+      <para>This action executes SQL statements that will manipulate the database data.
+      Typically the bean is used to prepare the database at the beginning of a test or to clean up the
+      database. You can execute every SQL statement you can think of like INSERT, UPDATE,
+      DELETE, CREATE TABLE, ALTER TABLE etc.</para>
+      
+      <para>The action executes a given list of SQL statements either specified by inline SQL or stored in an external
+      SQL resource file as shown in the next two examples.</para>
+      
+      <programlisting>
+      &lt;actions&gt;
+          &lt;updateDatabase connect=&quot;mySchemaConnect&quot;&gt;
+              &lt;resource file=&quot;file:tests/unit/resources/script.sql&quot;/&gt;
+          &lt;/updateDatabase&gt;
+      
+          &lt;updateDatabase connect=&quot;otherSchemaConnect&quot;&gt;
+              &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
+              &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
+          &lt;/updateDatabase&gt;
+      &lt;/actions&gt;
+      </programlisting>
+      
+      <para>The first example uses an external SQL resource file. The SQL resource can hold several SQL
+      statements. The file is read and all statements are executed by the framework. You have to pay attention
+      to some rules when dealing with external SQL resources.</para>
+      
+      <itemizedlist mark="opencircle">
+        <listitem>
+            <para>Each statement should begin in a new line</para>
+        </listitem>
+        <listitem>
+            <para>It is not allowed to define statements with word wrapping</para>
+        </listitem>
+        <listitem>
+            <para>Comments begin with two dashes &quot;--&quot;</para>
+        </listitem>
+      </itemizedlist>
+      
+      <para>As already known the external file path can be referenced as file system resource or class path resource,
+      by using the &quot;file:&quot; or &quot;classpath:&quot; prefix.</para>
+      
+      <para>The second example uses inline SQL statements. This enables you to define your SQL directly into the
+      test case. Both examples use the &quot;connect&quot; attribute to define the database connection to be used. This
+      connect is mandatory, because the test case has to know which database should be accessed. The
+      connect attribute references beans that are defined in the central &quot;serviceBeansContext.xml&quot; configuration file.</para>
+    </section>
+    
+    <section id="actions-database-query">
+      <title>Updating the database</title>
+      
+      <para>This action is specially designed to execute SELECT statements to get some
+      data from the database. In the following the results of the SELECT query can be validated with
+      expected values.</para>
+      
+      <para>Validation of database values is done through the &lt;queryDatabase&gt; action:</para>
+      
+      <programlisting>
+       &lt;queryDatabase connect=&quot;databaseQuery&quot;&gt;
+          &lt;statement&gt;select NAME from CUSTOMERS where ID='%customerId'&lt;/statement&gt;
+          &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
+          &lt;statement&gt;select ID from ORDERS where DESC LIKE 'Def%%'&lt;/statement&gt;
+          &lt;statement&gt;select DESCRIPTION from ORDERS where ID='${id}'&lt;/statement&gt;
+          &lt;validate column=&quot;ID&quot; value=&quot;1&quot;/&gt;
+          &lt;validate column=&quot;NAME&quot; value=&quot;Deppisch&quot;/&gt;
+          &lt;validate column=&quot;COUNT(*)&quot; value=&quot;${rowsCount}&quot;/&gt;
+          &lt;validate column=&quot;DESCRIPTION&quot; value=&quot;null&quot;/&gt;
+      &lt;/queryDatabase&gt;
+      </programlisting>
+      
+      <para>The action &lt;queryDatabase&gt; offers a wide range of validating functionality for database result sets. First
+      of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL
+      statements or external file resource pattern.</para>
+      
+      <para>The result sets can be validated by defining &lt;validate&gt; elements. It is possible to do a detailed check on
+      every selected column of the result set. Simply refer to the selected column name in order to validate its
+      value. The usage of test variables is supported as well as database expressions like count(), avg(), min(),
+      max() ...</para>
+      
+      <para>Simply define the &lt;validate&gt; entry with the column name as the &quot;column&quot; attribute and any expected
+      value expression as &quot;value&quot;. The framework then will check the column to fit the expected value.
+      Look at the first SELECT statement and you will see that test variables beginning with the common
+      variables prefix &quot;%&quot; are supported too. The variables prefix &quot;%&quot; might interfere with the SQL wildcard &quot;%&quot;
+      using LIKE statements. Therefore you have to escape this wildcard with a double &quot;%%&quot; as shown in the
+      third statement executed in this example.</para>
+      
+      <para>The usage would be: LIKE 'Def%%'</para>
+      
+      <para>In the validation section variables can be used too. Look at the third validation entry, where the variable
+      &quot;${rowsCount}&quot; is used. The last validation in this example shows, that null values are also supported as
+      expected values.</para>
+      
+      <para>If a single validation happens to fail the whole action will fail with respective validation errors.</para>
+    </section>
+</section>

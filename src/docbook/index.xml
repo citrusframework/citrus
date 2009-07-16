@@ -5,6 +5,10 @@
 <!ENTITY introduction       SYSTEM "introduction.xml">
 <!ENTITY setup              SYSTEM "setup.xml">
 <!ENTITY testcase           SYSTEM "testcase.xml">
+<!ENTITY send_receive       SYSTEM "send_receive.xml">
+<!ENTITY actions            SYSTEM "actions.xml">
+<!ENTITY actions-database         SYSTEM "actions-database.xml">
+<!ENTITY actions-sleep            SYSTEM "actions-sleep.xml">
 ]>
 <book>
     <bookinfo>
@@ -49,5 +53,7 @@
         </partintro>
         &setup;
         &testcase;
+        &send_receive;
+        &actions;
     </part>
 </book>
