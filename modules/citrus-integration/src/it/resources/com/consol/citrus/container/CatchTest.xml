@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="catchTest">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2008-06-16</creationdate>
+            <status>FINAL</status>
+            <lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+            <lastUpdatedOn>2008-06-16T00:00:00</lastUpdatedOn>
+        </meta-info>
+        
+        <description>Catching excpetions</description>
+        
+        <actions>
+            <catch>
+            	<fail message="Fail!"/>
+            </catch>
+            <catch exception="com.consol.citrus.exceptions.TestSuiteException">
+            	<fail message="Fail!"/>
+            </catch>
+        </actions>
+    </testcase>
+</spring:beans>

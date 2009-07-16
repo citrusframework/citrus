@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="httpServerStandaloneTest">
+		<meta-info>
+			<author>Unknown</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Unknown</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			The simple HttpServer implementation is launched and requests are sent to the server destination.
+		</description>
+		
+		<variables>
+			<variable name="id" value="123456789"/>
+		</variables>
+        <actions>
+            <send type="sendHttpRequest">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<testRequestMessage>
+            					<text>Hello HttpServer</text>
+            				</testRequestMessage>
+            			]]>
+            		</data>
+            	</message>
+            	<header>
+          			<element name="id" value="${id}"/>
+          		</header>
+            </send>
+            
+            <sleep time="1"/>
+            
+            <receive type="receiveHttpResponse">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<testResponseMessage>
+			   					<text>Hello TestFramework</text>
+       						</testResponseMessage>
+            			]]>
+            		</data>
+            	</message>
+            	<header>
+           			<element name="HTTPStatusCode" value="200"/>
+           			<element name="HTTPVersion" value="HTTP/1.1"/>
+           			<element name="HTTPReasonPhrase" value="OK"/>
+           		</header>
+            </receive>
+            
+            <send type="sendHttpRequest">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<moreRequestMessage>
+            					<text>Hello HttpServer</text>
+            				</moreRequestMessage>
+            			]]>
+            		</data>
+            	</message>
+            	<header>
+          			<element name="id" value="${id}"/>
+          		</header>
+            </send>
+            
+            <sleep time="1"/>
+            
+            <receive type="receiveHttpResponse">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<testResponseMessage>
+			   					<text>Hello TestFramework</text>
+       						</testResponseMessage>
+            			]]>
+            		</data>            	
+            	</message>
+            	<header>
+           			<element name="HTTPStatusCode" value="200"/>
+           			<element name="HTTPVersion" value="HTTP/1.1"/>
+           			<element name="HTTPReasonPhrase" value="OK"/>
+           		</header>
+            </receive>
+            
+        </actions>
+    </testcase>
+</spring:beans>

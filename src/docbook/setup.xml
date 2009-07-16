@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="setup">
+  <title>Setup</title>
+
+  <para>TODO</para>
+
+  <section id="setup-download">
+    <title>Download</title>
+
+    <para>TODO</para>
+  </section>
+  
+  <section id="setup-installation">
+    <title>Installation</title>
+
+    <para>TODO</para>
+  </section>
+  
+  <section id="setup-configuration">
+    <title>Basic configuration</title>
+
+    <para>TODO</para>
+  </section>
+  
+</chapter>

@@ -1,0 +1,148 @@
+ ------
+ 30 Minutes Quickstart
+ ------
+
+30 Minutes Quickstart
+
+  This quickstart gets this application running in less than 30 minutes,
+  starting with initial source code checkout and ending with a deployed application ready to play with.
+
+* Preconditions
+
+  * a {{{http://www.subversion.org}subversion}} client. This can be
+    either a command line client or some graphical UI. For
+    simplicity, we assume you have the command line client <<<svn>>>
+    installed.
+
+    Note: <<Make sure your client version is at least 1.5>>!
+
+    Note: If you need subversion access permissions, please contact our {{{mailto:admins@consol.de?subject='SVN Access http://svn.consol.de/svn/cm/web/'}admins}}!
+
+    Please make sure to configure your subversion client for automatic properties - here is a {{{https://cmas.blogs.consol.de/2008/09/14/subversion-eol-handling/}howto}}.
+
+  * a working network connection to the internal ConSol network,
+    i.e. you need access to
+    <<<http://build.int.consol.de>>>. <<<http>>> access is sufficient,
+    via proxy or direct. <<<https>>> access via client certificates is
+    <not sufficient>. However, you can work offline as well as soon as
+    you have an initial setup. 
+
+  * Maven installed on your local machine. You can download {{{http://maven.apache.org}maven}} 
+    and put it somewhere on your machine. You should use at least version 2.0.9 please verify this using following command
+
+---
+> mvn -version
+Maven version: 2.0.9
+Java version: 1.5.0_16
+Default locale: en_US, platform encoding: MacRoman
+OS name: "mac os x" version: "10.5.5" arch: "i386" family: "unix"
+---
+
+  * a JDK 1.5 installed. The installation directory is refered in the
+    following as <<<JAVA_HOME>>>. You can verify your installation via your command line with
+  
+---
+> java -version
+java version "1.5.0_13"
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_13-b05-237)
+Java HotSpot(TM) Client VM (build 1.5.0_13-119, mixed mode, sharing)
+---
+
+    Note the correct version (1.5.x)!
+
+  * in case you want to connect to TIBCO EMS or in case you intend to connect with TIBCO Collaborator 
+    you will need a TIBCO Installation on your local machine. For more information about TIBCO@ConSol use the {{{https://wiki.consol.de/wiki/Tibco}TIBCO Wiki pages}}.
+    
+  That's all.
+
+* Initial checkout
+
+  You need to checkout the Citrus sources from the subversion repository
+  <<<svn.consol.de>>>. Using the command line this is done by
+
+---
+svn co http://svn.consol.de/svn/citrus/trunk citrus-trunk
+---
+
+  This will checkout the main trunk of the Citrus repository in the
+  directory <<<citrus-trunk>>>.  (Subversion checkout could also be done via
+  https using a ConSol SSL client certificate). In the following the
+  freshly created directory "citrus-trunk" is referenced to as
+  <<<$PROJECT_HOME>>>. For detailed instructions about subversion, please
+  consult the subversion
+  {{{http://svnbook.red-bean.com/}documentation}}.
+  
+  After the checkout, you have to create a file <<<profiles.xml>>>. A template
+  <<<profiles.xml.template>>> is provided which can be used as a starting
+  point. Copy it over to <<<profiles.xml>>> and replace <<<[[PROJECT_HOME]]>>> within
+  the file with the top level directory <<<$PROJECT_HOME>>>. If you are the happy
+  users of a Unix or OS X system, you can call
+
+---
+  sh setup.sh
+---
+
+  (or './setup.sh' or even '. ./setup.sh') to do this for you. You have to
+  call <<<setup.sh>>> only once for the <<<profiles.xml>>> generation.
+
+  There are more configuration files to be created after checkout. Naming this is the test.properties configuration file located in the 
+  directory src/main/resources
+  
+* Create Citrus artifacts
+
+  Now, when everything has been setup properly, you use the Maven2 CLI
+  command <<<mvn>>> for all the rest. Call
+
+---
+mvn install
+---
+
+  This creates all artefacts, especially the Citrus JAR files. The <<install>> goal will also run all unit and integration tests included.
+
+* Create IDE project files
+
+  You can easily create the project files for your favourite IDE. For
+  IntelliJ IDEA, in <<<$PROJECT_HOME>>> call
+
+---
+mvn idea:idea
+---
+
+   for eclipse, call
+
+---
+mvn eclipse:eclipse
+---
+
+  This is the prefered way for creating IDE project files. It will
+  also install the sources for most libraries and can be called
+  each time when dependencies changes.
+
+  Note: You can also try out m2eclipse - check out the {{{http://www.theserverside.com/tt/articles/article.tss?l=Introductiontom2eclipse}introductory article}}.
+
+* Create project site
+
+  You can create the project generated site with
+
+---
+mvn site -Psite
+---
+
+  The special profile <site> activates the report plugins such as clover.
+
+  Note: Usually you only want to create the top level project documentation, so you could skip
+  the sub modules site generation with
+
+---
+mvn site -Psite -N
+---
+
+  To completely preview the site documentation, you can stage the generated site of all modules with
+
+---
+mvn site -Psite -DstagingDirectory=/tmp/stage
+---
+
+* Fin
+
+  What's next?

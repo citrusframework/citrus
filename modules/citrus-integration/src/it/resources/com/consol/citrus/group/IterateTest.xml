@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="iterateTest">
+		<meta-info>
+			<author>Unknown</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Unknown</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Test of iterating loops
+		</description>
+		<variables>
+			<variable name="max" value="3"/>
+		</variables>
+        <actions>
+        	<iterate condition="i lt= citrus:randomNumber(1)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="i lt 20" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="(i lt 5) or (i = 5)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="(i lt 5) and (i lt 3)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="i = 0" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="${max} gt= i" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+			
+			<iterate condition="i lt= 50" indexName="i" start="0" step="5">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</iterate>
+        </actions>
+    </testcase>
+</spring:beans>

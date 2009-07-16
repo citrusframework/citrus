@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <description>
+        This web application context contains Spring-WS beans. The beans defined in this context are automatically
+        detected by Spring-WS, similar to the way Controllers are picked up in Spring Web MVC.
+    </description>
+    
+    <bean id="echoPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
+            an incoming message. Every message is passed to the default endpoint. Additionally, messages are logged
+            using the logging interceptor.
+        </description>
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.springframework.org/spring-ws/samples/echo}echoRequest">echoEndpoint</prop>
+            </props>
+        </property>
+        <property name="interceptors">
+            <list>
+                <ref local="echoValidatingInterceptor"/>
+                <ref bean="loggingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="echoValidatingInterceptor"
+          class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+        <description>
+            This interceptor validates both incoming and outgoing message contents according to the 'echo.xsd' XML
+            Schema file.
+        </description>
+        <property name="xsdSchema" ref="echoSchema"/>
+        <property name="validateRequest" value="true"/>
+        <property name="validateResponse" value="true"/>
+    </bean>
+
+    <bean id="echoEndpoint" class="com.consol.citrus.ws.echo.EchoEndpoint">
+        <description>
+            This endpoint handles echo requests.
+        </description>
+        <property name="echoService" ref="echoService"/>
+    </bean>
+
+    <bean id="echo" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+        <description>
+            This bean definition represents a WSDL definition that is generated at runtime. It can be retrieved by
+            going to /echo/echo.wsdl (i.e. the bean name corresponds to the filename).
+        </description>
+        <property name="schema" ref="echoSchema"/>
+        <property name="portTypeName" value="Echo"/>
+        <property name="locationUri" value="http://localhost:8078/echo/services"/>
+    </bean>
+
+    <bean id="echoSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <description>
+            This bean definition contains the XSD schema.
+        </description>
+        <property name="xsd" value="classpath:com/consol/citrus/ws/echo/echo.xsd"/>
+    </bean>
+
+    <bean id="echoService" class="com.consol.citrus.ws.echo.EchoServiceImpl">
+        <description>
+            This bean is our "business" service.
+        </description>
+    </bean>
+
+</beans>

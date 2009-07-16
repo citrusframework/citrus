@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<import resource="classpath:service-context.xml"/>
+	<import resource="classpath:jms-service-context.xml"/>
+    
+    <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
+        <description>
+            This interceptor logs the message payload.
+        </description>
+    </bean>
+    
+    <bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <description>
+            Place here further property files for your service implementation.
+        </description>
+        <property name="locations">
+            <list>
+                <value>classpath:ws-stub.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="defaultPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping is the default mapping for all incoming requests. Mapping will be used in case no other endpoint mapping fits
+            the incoming request. Other endpoint mappings can be found in the imported context files, where service implementations are defined.
+            The default mapping has only logging interceptor defined.
+        </description>
+        <property name="defaultEndpoint" ref="defaultWsEndpoint"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="loggingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
+        <property name="mode" value="${server.run.mode}"/>
+        <property name="sendDestination" value="${jms.ws.stub.request.queue}"/>
+        <property name="receiveDestination" value="${jms.ws.stub.response.queue}"/>
+        <property name="jmsTemplate">
+            <bean parent="defaultJmsTemplate"/>
+        </property>
+        <property name="responseMessageResource" value="classpath:helloResponse.xml"/>
+        <property name="responseMessagePayload">
+            <value>
+            <![CDATA[
+                <ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                    <ns0:MessageId>123456789</ns0:MessageId>
+                    <ns0:CorrelationId>CORR123456789</ns0:CorrelationId>
+                    <ns0:User>TIBCO</ns0:User>
+                    <ns0:Text>Hello TestFramework</ns0:Text>
+                </ns0:HelloResponse>
+            ]]>
+            </value>
+        </property>
+        <property name="responseHeaderElements">
+            <map>
+                <entry key="Operation" value="sayHelloResponse"/>
+                <entry key="Request" value="HelloRequest"/>
+                <entry key="SOAPAction" value="http://www.consol.de/sayHello"/>
+            </map>
+        </property>
+    </bean>
+    
+</beans>

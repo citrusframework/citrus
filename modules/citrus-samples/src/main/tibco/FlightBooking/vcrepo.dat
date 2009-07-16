@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository version="2" commitCount="1">
+  <instanceInfo>
+    <instanceInfoProperty name="displayName" value="FlightBooking"/>
+    <instanceInfoProperty name="version" value="5.5.4"/>
+    <instanceInfoProperty name="rootDir" value="."/>
+    <instanceInfoProperty name="instanceType" value="localFile"/>
+    <instanceInfoProperty name="fileType" value="VC"/>
+    <instanceInfoProperty name="creationTime" value="1240468501937"/>
+    <instanceInfoProperty name="encoding" value="ISO8859-1"/>
+  </instanceInfo>
+</repository>

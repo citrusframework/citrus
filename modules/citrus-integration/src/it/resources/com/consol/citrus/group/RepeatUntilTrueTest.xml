@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="repeatUntilTrueTest">
+		<meta-info>
+			<author>Unknown</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Unknown</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Test of repeating loops
+		</description>
+		<variables>
+			<variable name="max" value="3"/>
+		</variables>
+        <actions>
+        	<repeat-until-true condition="i gt citrus:randomNumber(1)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+			
+			<repeat-until-true condition="i gt= 5" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+			
+			<repeat-until-true condition="(i gt 5) or (i = 5)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+			
+			<repeat-until-true condition="(i gt 5) and (i gt 3)" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+			
+			<repeat-until-true condition="i gt 0" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+			
+			<repeat-until-true condition="${max} lt i" indexName="i">
+				<echo>
+					<message>index is: ${i}</message>
+				</echo>
+			</repeat-until-true>
+        </actions>
+    </testcase>
+</spring:beans>

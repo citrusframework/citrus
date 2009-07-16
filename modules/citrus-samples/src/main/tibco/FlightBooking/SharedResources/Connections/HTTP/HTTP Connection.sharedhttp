@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:httpSharedResource xmlns:ns0="www.tibco.com/shared/HTTPConnection">
+    <config>
+        <Host>localhost</Host>
+        <HttpConnectionProperties>
+            <row>
+                <PropertyName>maxPostSize (bytes)</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue>2097152</PropertyDefaultValue>
+            </row>
+            <row>
+                <PropertyName>maxSavePostSize (bytes)</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue>4096</PropertyDefaultValue>
+            </row>
+            <row>
+                <PropertyName>uriEncoding</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue/>
+            </row>
+            <row>
+                <PropertyName>acceptCount</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue/>
+            </row>
+            <row>
+                <PropertyName>compressableMimeType</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue>text/html,text/xml,text/plain</PropertyDefaultValue>
+            </row>
+            <row>
+                <PropertyName>compression</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue>off</PropertyDefaultValue>
+            </row>
+            <row>
+                <PropertyName>connectionTimeOut (ms)</PropertyName>
+                <PropertyValue/>
+                <PropertyDefaultValue>60000</PropertyDefaultValue>
+            </row>
+        </HttpConnectionProperties>
+        <Port>8088</Port>
+    </config>
+</ns0:httpSharedResource>

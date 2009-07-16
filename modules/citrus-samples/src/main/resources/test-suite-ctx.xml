@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+	 
+	<bean name="flightBookingTestSuite" class="com.consol.citrus.TestSuite">
+		<property name="threadCount" value="1"/>
+		<property name="reporter">
+			<list>
+				<bean class="com.consol.citrus.report.SimpleLogReporter"/>
+			</list>
+		</property>
+		<property name="tasksBefore">
+			<list>
+                <bean class="com.consol.citrus.actions.StartupBean">
+                    <property name="server" ref="royalAirlineHttpServer"/>
+                </bean>
+                
+				<ref bean="purgeJmsQueues"/>
+			</list>
+		</property>
+		<property name="tasksBetween">
+			<list>
+				<ref bean="purgeJmsQueues"/>
+			</list>
+		</property>
+		<property name="tasksAfter">
+			<list>
+                <bean class="com.consol.citrus.actions.ShutdownBean">
+                    <property name="server" ref="royalAirlineHttpServer"/>
+                </bean>
+			</list>
+		</property>
+	</bean>
+	
+</beans>

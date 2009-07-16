@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="jmsLoopBackTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-06-16</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-05-16T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+		<description>
+			Send messages to jms destinations that loop back every message. 
+			This can be used to simulate any jms receiver in Sprint.
+		</description>
+		
+		<actions>
+				<action reference="startJmsDummies"/>
+				
+				<send type="sendDummyRequest">
+					<destination>TestSuite.Queue.Dummy.One.In</destination>
+					<message>					
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REQUEST>Request an DummyOne</REQUEST>
+									<RESPONSE>Antwort von DummyOne</RESPONSE>
+									<NUMBER>123456789</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="One"/>
+						<element name="Message" value="Hello DummyOne"/>
+					</header>
+				</send>
+				
+				<receive type="receiveDummyResponse">
+					<destination>TestSuite.Queue.Dummy.One.Out</destination>
+					<message>
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REPLY>Das ist die Antwort von DummyOne</REPLY>
+									<RESPONSE>Antwort von DummyOne</RESPONSE>
+									<NUMBER>123</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="One"/>
+						<element name="Message" value="Hello DummyOne"/>
+					</header>
+				</receive>
+				
+				<send type="sendDummyRequest">
+					<destination>TestSuite.Queue.Dummy.One.In</destination>
+					<message>
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REQUEST>Request an DummyTwo</REQUEST>
+									<RESPONSE>Antwort von DummyTwo</RESPONSE>
+									<NUMBER>456789123</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="Two"/>
+						<element name="Message" value="Hello DummyTwo"/>
+					</header>
+				</send>
+				
+				<receive type="receiveDummyResponse">
+					<destination>TestSuite.Queue.Dummy.One.Out</destination>
+					<message>
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REPLY>Das ist die Antwort von DummyTwo</REPLY>
+									<RESPONSE>Antwort von DummyTwo</RESPONSE>
+									<NUMBER>456</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="Two"/>
+						<element name="Message" value="Hello DummyTwo"/>
+					</header>
+				</receive>
+				
+				<send type="sendDummyRequest">
+					<destination>TestSuite.Queue.Dummy.Three.In</destination>
+					<message>
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REQUEST>Request an DummyThree</REQUEST>
+									<RESPONSE>Antwort von DummyThree</RESPONSE>
+									<NUMBER>123456789</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="Three"/>
+						<element name="Message" value="Hello DummyThree"/>
+					</header>
+				</send>
+				
+				<receive type="receiveDummyResponse">
+					<destination>TestSuite.Queue.Dummy.Three.Out</destination>
+					<message>
+						<data>
+							<![CDATA[
+								<MESSAGE>
+									<REPLY>Das ist die Antwort von DummyThree</REPLY>
+									<RESPONSE>Antwort von DummyThree</RESPONSE>
+									<NUMBER>number=123456789</NUMBER>
+								</MESSAGE>
+							]]>
+						</data>
+					</message>
+					<header>
+						<element name="Operation" value="Three"/>
+						<element name="Message" value="Hello DummyThree"/>
+					</header>
+				</receive>
+				
+				<action reference="stopJmsDummies"/>
+		</actions>
+	</testcase>	
+	
+	<spring:bean id="jmsDummyOne" parent="defaultJmsLoopBackDummy">
+		<spring:property name="receiveDestination" value="TestSuite.Queue.Dummy.One.In"/>
+		<spring:property name="sendDestination" value="TestSuite.Queue.Dummy.One.Out"/>
+		<spring:property name="xmlData">
+			<spring:value>
+				<![CDATA[
+					<MESSAGE>
+						<REPLY>Das ist die Antwort von DummyOne</REPLY>
+						<RESPONSE>_</RESPONSE>
+						<NUMBER>_</NUMBER>
+					</MESSAGE>
+				]]>		
+			</spring:value>
+		</spring:property>
+		<spring:property name="messageSelector" value="Operation = 'One'"/>
+		<spring:property name="getHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="getMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="substring(//MESSAGE/NUMBER, 1, 3)" value="${number}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="//MESSAGE/NUMBER" value="${number}"/>
+			</spring:map>
+		</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="jmsDummyTwo" parent="defaultJmsLoopBackDummy">
+		<spring:property name="receiveDestination" value="TestSuite.Queue.Dummy.One.In"/>
+		<spring:property name="sendDestination" value="TestSuite.Queue.Dummy.One.Out"/>
+		<spring:property name="xmlData">
+			<spring:value>
+				<![CDATA[
+					<MESSAGE>
+						<REPLY>Das ist die Antwort von DummyTwo</REPLY>
+						<RESPONSE>_</RESPONSE>
+						<NUMBER>_</NUMBER>
+					</MESSAGE>
+				]]>		
+			</spring:value>
+		</spring:property>
+		<spring:property name="messageSelector" value="Operation = 'Two'"/>
+		<spring:property name="getHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="getMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="substring(//MESSAGE/NUMBER, 1, 3)" value="${number}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="//MESSAGE/NUMBER" value="${number}"/>
+			</spring:map>
+		</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="jmsDummyThree" parent="defaultJmsLoopBackDummy">
+		<spring:property name="receiveDestination" value="TestSuite.Queue.Dummy.Three.In"/>
+		<spring:property name="sendDestination" value="TestSuite.Queue.Dummy.Three.Out"/>
+		<spring:property name="xmlData">
+			<spring:value>
+				<![CDATA[
+					<MESSAGE>
+						<REPLY>Das ist die Antwort von DummyThree</REPLY>
+						<RESPONSE>_</RESPONSE>
+						<NUMBER>_</NUMBER>
+					</MESSAGE>
+				]]>		
+			</spring:value>
+		</spring:property>
+		<spring:property name="getHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setHeaderValues">
+			<spring:map>
+				<spring:entry key="Operation" value="${operation}"/>
+				<spring:entry key="Message" value="${message}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="getMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="concat('number=',//MESSAGE/NUMBER)" value="${number}"/>
+			</spring:map>
+		</spring:property>
+		<spring:property name="setMessageValues">
+			<spring:map>
+				<spring:entry key="//MESSAGE/RESPONSE" value="${response}"/>
+				<spring:entry key="//MESSAGE/NUMBER" value="${number}"/>
+			</spring:map>
+		</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="sendDummyRequest" class="com.consol.citrus.actions.SendMessageBean">
+		<spring:property name="service">
+			<spring:bean parent="defaultJmsService">
+				<spring:property name="serviceDestination" value="TestSuite.Queue.Dummy.One.In"/>
+			</spring:bean>
+		</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="receiveDummyResponse" class="com.consol.citrus.actions.ReceiveMessageBean">
+		<spring:property name="service">
+			<spring:bean parent="defaultJmsService">
+				<spring:property name="serviceDestination" value="TestSuite.Queue.Dummy.One.Out"/>
+			</spring:bean>
+		</spring:property>		
+	</spring:bean>
+	
+	<spring:bean class="com.consol.citrus.actions.StartupBean" id="startJmsDummies">
+		<spring:property name="serverList">
+			<spring:list>
+				<spring:ref bean="jmsDummyOne"/>
+				<spring:ref bean="jmsDummyTwo"/>
+				<spring:ref bean="jmsDummyThree"/>
+			</spring:list>
+		</spring:property>
+	</spring:bean>
+	
+	<spring:bean class="com.consol.citrus.actions.ShutdownBean" id="stopJmsDummies">
+		<spring:property name="serverList">
+			<spring:list>
+				<spring:ref bean="jmsDummyOne"/>
+				<spring:ref bean="jmsDummyTwo"/>
+				<spring:ref bean="jmsDummyThree"/>
+			</spring:list>
+		</spring:property>
+	</spring:bean>
+</spring:beans>

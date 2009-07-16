@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="newVariableNotationTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Test new variables notation
+		</description>
+		
+        <variables>
+            <variable name="rowsCount" value="0"/>
+            <variable name="customerId" value="1"/>
+            <variable name="time" value="citrus:currentDate()"/>
+            <variable name="myVariable" value="12345"/>
+            <variable name="newValue" value="54321"/>
+        </variables>
+        <actions>
+        	<updateDatabase connect="databaseAccess">
+                <resource file="classpath:com/consol/citrus/actions/script.sql"/>
+            </updateDatabase>
+            <queryDatabase connect="databaseQuery">
+                <statement>select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'</statement>
+                <statement>select COUNT(1) as overall_cnt from ERRORS</statement>
+                <validate column="NAME" value="Christoph"/>
+                <validate column="OVERALL_CNT" value="${rowsCount}"/>
+            </queryDatabase>
+            <updateDatabase connect="databaseAccess">
+                <statement>DELETE FROM CUSTOMERS WHERE CUSTOMER_ID='${customerId}'</statement>
+            </updateDatabase>
+            <echo>
+                <message>CurrentTime is: ${time}</message>
+            </echo>
+            <traceVariables/>
+            <echo>
+                <message>Current variable value: ${myVariable} </message>
+            </echo>
+            <createVariables>
+                <variable name="myVariable" value="${newValue}"/>
+                <variable name="new" value="'this is a test'"/>
+            </createVariables>
+            <echo>
+                <message>Current variable value: ${myVariable} </message>
+            </echo>
+            <echo>
+                <message>New variable 'new' has the value: ${new} </message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>

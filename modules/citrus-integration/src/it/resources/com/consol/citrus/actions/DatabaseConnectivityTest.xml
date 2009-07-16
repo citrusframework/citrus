@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="databaseConnectivityTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			The TestSuite offers several beans for database access. To prepare or clean
+			the database before the test the service bean "databaseAccess" can be used.
+			
+			The bean executes a given list of sql statements either specified by inline
+			sql statements or stored in an external sql file.
+			
+			For SELECT queries the bean "databaseQuery" offers a wide range of validating 
+			functionality for database ResultSets. First some SELECT statements try to get the
+			information from the database. After that the ResultSets can be validated by defining
+			several "validateDBValues". Here it is possible to check the column values of the previous
+			sql statements. The usage of test variables is supported as well as database expressions 
+			like count(), avg(), min(), max() ... 
+			
+			To validate a column that was previously selected from database simply define an entry 
+			in the validateDBValues with the column name as the key and any expression as value. 
+			The bean then will check the column to fit the specified value.
+			
+			Look at the first SELECT statement and you will see, that test variables beginning with 
+			the common variables prefix "${" and suffix "}" are supported too.
+			
+			The last validation in this example shows, that null values are supported too as expected values.
+		</description>
+        <variables>
+            <variable name="rowsCount" value="0"/>
+            <variable name="customerId" value="1"/>
+        </variables>
+        <actions>
+            <updateDatabase connect="databaseAccess">
+                <resource file="classpath:com/consol/citrus/actions/script.sql"/>
+            </updateDatabase>
+            <queryDatabase connect="databaseQuery">
+                <statement>select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'</statement>
+                <statement>select COUNT(1) as overall_cnt from ERRORS</statement>
+                <statement>select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'</statement>
+                <statement>select DESCRIPTION from ORDERS where ORDER_ID = 2</statement>
+                <validate column="ORDER_ID" value="1"/>
+                <validate column="NAME" value="Christoph"/>
+                <validate column="OVERALL_CNT" value="${rowsCount}"/>
+                <validate column="DESCRIPTION" value="NULL"/>
+            </queryDatabase>
+            <queryDatabase connect="databaseQuery">
+            	<statement>select DESCRIPTION as desc from ORDERS where ORDER_ID = 2</statement>
+            	<validate column="DESC" value=""/>
+            </queryDatabase>
+            <updateDatabase connect="databaseAccess">
+                <statement>DELETE FROM CUSTOMERS</statement>
+            </updateDatabase>
+        </actions>
+    </testcase>
+</spring:beans>

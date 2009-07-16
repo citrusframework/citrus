@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="templateTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+        
+		</description>
+		
+		<variables>
+			<variable name="text" value="Hello TestFramework"></variable>
+		</variables>
+		
+        <actions>
+            <call-template name="doCreateVariables"/>
+            
+            <call-template name="doTraceVariables"/>
+            
+            <call-template name="print">
+            	<parameter name="param1" value="Test1"/>
+            	<parameter name="param2" value="${text}"/>
+            </call-template>
+            
+            <traceVariables/>
+        </actions>
+    </testcase>
+
+	<template name="doCreateVariables">
+    	<createVariables>
+    		<variable name="var" value="123456789"/>
+    	</createVariables>
+    	<call-template name="doTraceVariables"/>
+    </template>
+            
+  	<template name="doTraceVariables">
+    	<echo>
+    		<message>Now tracing all available variables for test case:</message>
+    	</echo>
+    	<traceVariables/>
+    </template>
+    
+    <template name="print">
+    	<echo>
+    		<message>${param1}</message>
+    	</echo>
+    	<echo>
+    		<message>${param2}</message>
+    	</echo>
+    </template>    
+</spring:beans>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="parallelTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-06-13</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-06-13T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Test of action sequence in parallel container
+		</description>
+        <actions>
+			<parallel>
+				<sleep  time="1.5"/>
+				<sequential>
+					<sleep time="1.0"/>
+					<echo>
+						<message>1</message>
+					</echo>
+				</sequential>
+				<echo>
+					<message>2</message>
+				</echo>
+				<echo>
+					<message>3</message>
+				</echo>
+				<iterate condition="i lt= 5" indexName="i">
+					<echo>
+						<message>10</message>
+					</echo>
+				</iterate>
+			</parallel>
+        </actions>
+    </testcase>
+</spring:beans>

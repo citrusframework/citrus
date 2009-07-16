@@ -1,0 +1,21 @@
+ ------
+ Citrus Conventions
+ ------
+
+Citrus Conventions
+
+* TestAction development
+
+  <<AbstractTestAction>>
+  The framework offers a AbstractTestAction class which should be used when developing new test actions.
+  The abstract class forces the actions to contribute name and description for the action. 
+
+* Naming conventions
+
+  * <<TODO>> 
+  
+---
+  ToDo.java  // Good
+  TODO.java  // BAD, use camel back writing
+  todo.java  // BAD, as reserved
+---

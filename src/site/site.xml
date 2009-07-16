@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="${project.name}">
+  <version position="left"/>
+  <skin>
+    <groupId>com.consol.cmas.maven</groupId>
+    <artifactId>consol-default-skin</artifactId>
+    <version>1.2</version>
+  </skin>
+  <bannerRight>
+    <href>${site.url}</href>
+    <src>${site.url}/images/logo.png</src>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Blog" href="http://blogs.consol.de/"/>
+      <item name="Wiki" href="https://wiki.consol.de/wiki/Projekte/O2/TestSuite"/>
+      <item name="Subversion" href="http://fisheye.consol.de/browse/O2_TESTSUITE"/>
+      <item name="Build" href="http://build2.int.consol.de/bamboo/browse/CITRUS"/>
+    </links>
+
+    <menu name="Overview">
+      <item name="Welcome" href="${site.url}/index.html"/>
+      <item name="Quickstart" href="${site.url}/quickstart.html"/>
+      <item name="Changes" href="${site.url}/changes-report.html"/>
+    </menu>
+
+    <menu name="Developer Documentation">
+      <item name="Coding Style" href="${site.url}/coding-style.html"/>
+      <item name="Conventions" href="${site.url}/conventions.html"/>
+      <item name="Test coverage" href="${site.url}/clover/index.html"/>
+    </menu>
+    
+    <menu name="Modules">
+      <item name="Introduction" href="${site.url}/modules-introduction.html"/>
+      <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
+      <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
+      <item name="WebService" href="${site.url}/modules/citrus-ws/project-reports.html"/>
+      <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
+      
+      <item name="Packaging">
+        <item name="Assembly" href="${site.url}/modules/citrus-assembly/project-reports.html"/>
+      </item>
+    </menu>
+
+    <!-- Auto generated modules (all, not selection) -->
+    <menu name="${project.name}" ref="reports" inherit="bottom" collapse="true"/>
+  </body>
+</project>

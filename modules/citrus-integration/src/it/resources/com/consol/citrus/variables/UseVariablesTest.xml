@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="useVariablesTest">
+		<meta-info>
+			<author>Chrisotph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			This test shows how to use test variables.
+	
+			First of all two variables are set in the testVariables property. Note that the key defines the name of the variable, 
+			that from now on is valid for the whole test. Feel free to specify any name you can think of. You only have to fit the 
+			Java variable naming conventions (e.g. no whitespaces, no special characters). 
+			
+			Once the request tag and conversation id are defined they will be used when sending the first message. Have a look at
+			the setMessageValues of the first sending bean. Here the variables are referenced by their name and the common 
+			variables prefix "${" and suffix "}". The test suite will here get the variable value and assign it to the respectiv message part.
+			
+			This is the first basic usage of variables in the test writing process. The advantage of this behaviour is obvious. 
+			The conversation id is defined once in the whole test case and can be referenced many times.
+			
+			The second bean in this test receives a message and uses test variables to store some header values. Have a look at
+			the getHeaderValues property. Here header values of the received message are stored in new test variables. The key
+			specifies the header value to be stored. The value simply defines new variables by new names and their prefix "${" and suffix "}".
+			
+			The new defined variables are now valid for the rest of the test workflow. This means, that these variables can be
+			referenced in the already known way using the variables prefix as shown in the last bean in this test.
+			
+			This strategy is very usefull when storing dynamically generated transaction ids into variables and using these dynamic
+			values for later sending beans.
+		</description>
+        <variables>
+            <variable name="requestTag" value="useVariables___0002"/>
+            <variable name="${conversationId}" value="A00002"/>
+            <variable name="${number}" value="123456789"/>
+        </variables>
+        <actions>
+            <send type="sendGetNumberRequest">
+				<message>
+					<data><![CDATA[
+					
+								<RequestMessage>
+									<MessageHeader>
+										<ConversationId>_</ConversationId>
+										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
+										<RequestTag>_</RequestTag>
+										<VersionId>2</VersionId>
+									</MessageHeader>
+									<MessageBody>
+										<Customer>
+											<Id>1</Id>
+										</Customer>
+									</MessageBody>
+								</RequestMessage>						
+								
+							]]></data>
+					<element path="MessageHeader.RequestTag" value="${requestTag}"/>
+					<element path="ConversationId" value="${conversationId}"/>
+				</message>
+				<header>
+					<element name="Operation" value="GetNumber"/>
+					<element name="RequestTag" value="${requestTag}"/>
+				</header>
+			</send>
+			<receive type="receiveGetNumberResponse">
+				<message>
+					<validate path="MessageBody.Number" value="${number}"/>
+				</message>
+				<extract>
+					<header name="Operation" variable="${transId}"/>
+					<header name="RequestTag" variable="${messageId}"/>
+					<message path="VersionId" variable="${versionId}"/>
+				</extract>
+			</receive>
+			<echo>
+				<message>${transId}</message>
+			</echo>
+			<traceVariables>
+				<variable name="${number}"/>
+				<variable name="${requestTag}"/>
+				<variable name="${conversationId}"/>
+                <variable name="${transId}"/>
+                <variable name="${messageId}"/>
+                <variable name="${versionId}"/>
+			</traceVariables>
+        </actions>
+    </testcase>
+</spring:beans>

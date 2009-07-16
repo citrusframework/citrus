@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="validateValuesWithNamespaceTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2009-06-24</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-06-24T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			
+		</description>
+        <variables>
+            <variable name="requestTag" value="validateValues___0002"/>
+            <variable name="conversationId" value="A00002"/>
+        </variables>
+        <actions>
+            <send type="sendGetNumberRequest">
+                <message>
+                    <data><![CDATA[
+							
+								<RequestMessage xmlns="http://testsuite/default">
+									<MessageHeader>
+										<ConversationId>_</ConversationId>
+										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
+										<RequestTag>_</RequestTag>
+										<VersionId>2</VersionId>
+									</MessageHeader>
+									<MessageBody>
+										<Customer>
+											<Id>1</Id>
+										</Customer>
+									</MessageBody>
+								</RequestMessage>						
+							
+						]]></data>
+                    <element path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
+                    <element path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </send>
+            <receive type="receiveGetNumberRequest">
+                <message>
+                    <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
+                    <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </receive>
+            
+            <send type="sendGetNumberRequest">
+                <message>
+                    <data><![CDATA[
+                            
+                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                                    <ns1:MessageHeader>
+                                        <ns1:ConversationId>_</ns1:ConversationId>
+                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                        <ns1:RequestTag>_</ns1:RequestTag>
+                                        <ns1:VersionId>2</ns1:VersionId>
+                                    </ns1:MessageHeader>
+                                    <ns1:MessageBody>
+                                        <ns1:Customer>
+                                            <ns1:Id>1</ns1:Id>
+                                        </ns1:Customer>
+                                    </ns1:MessageBody>
+                                </ns1:RequestMessage>                       
+                            
+                        ]]></data>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </send>
+            <receive type="receiveGetNumberRequest">
+                <message>
+                    <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
+                    <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </receive>
+            
+            <send type="sendGetNumberRequest">
+                <message>
+                    <data><![CDATA[
+                            
+                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                                    <ns1:MessageHeader>
+                                        <ns1:ConversationId>_</ns1:ConversationId>
+                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                        <ns1:RequestTag>_</ns1:RequestTag>
+                                        <ns1:VersionId>2</ns1:VersionId>
+                                    </ns1:MessageHeader>
+                                    <ns1:MessageBody>
+                                        <ns1:Customer>
+                                            <ns1:Id>1</ns1:Id>
+                                        </ns1:Customer>
+                                    </ns1:MessageBody>
+                                </ns1:RequestMessage>                       
+                            
+                        ]]></data>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </send>
+            <receive type="receiveGetNumberRequest">
+                <message>
+                    <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag" value="${requestTag}"/>
+                    <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId" value="${conversationId}"/>
+                    <namespace prefix="ns2" value="http://testsuite/default"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </receive>
+            
+            <send type="sendGetNumberRequest">
+                <message>
+                    <data><![CDATA[
+                            
+                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                                    <ns1:MessageHeader>
+                                        <ns1:ConversationId>_</ns1:ConversationId>
+                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                        <ns1:RequestTag>_</ns1:RequestTag>
+                                        <ns1:VersionId>2</ns1:VersionId>
+                                    </ns1:MessageHeader>
+                                    <ns1:MessageBody>
+                                        <ns1:Customer>
+                                            <ns1:Id>1</ns1:Id>
+                                        </ns1:Customer>
+                                    </ns1:MessageBody>
+                                </ns1:RequestMessage>                       
+                            
+                        ]]></data>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
+                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </send>
+            <receive type="receiveGetNumberRequest">
+                <message>
+                    <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
+                    <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
+                    <namespace prefix="" value="http://testsuite/default"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumberXmlns"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

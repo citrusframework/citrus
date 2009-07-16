@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+	
+    <bean name="activeMQBroker" class="com.consol.citrus.activemq.ActiveMQServer">
+        <property name="host" value="localhost"/>
+        <property name="port" value="61616"/>
+        <property name="persistent" value="false"/>
+    </bean>
+  
+	<bean id="dummyJmsService" class="com.consol.citrus.service.DummyJmsService" abstract="true">
+		<property name="jmsMessage">
+			<value>TestMessage</value>
+		</property>
+	</bean>
+	
+	<bean id="defaultJmsService" class="com.consol.citrus.service.JmsService" abstract="true">
+		<property name="jmsTemplate">
+			<bean parent="defaultJmsTemplate" />
+		</property>
+	</bean>
+	
+	<bean name="defaultJmsTemplate" class="org.springframework.jms.core.JmsTemplate" abstract="true">
+		<property name="connectionFactory" ref="defaultJmsConnectionFactory" />
+        <property name="receiveTimeout" value="${jms.reveiveTimeout}"/>
+    </bean>
+	
+	<bean name="defaultJmsConnectionFactory" class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+	   <property name="targetConnectionFactory"><ref bean="defaultTargetConnectionFactory"/></property>
+	   <property name="username" value="${jms.user}" />
+	   <property name="password" value="${jms.password}"/>
+	</bean>	
+	
+	<bean name="defaultTargetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jms.server.url}" />
+	</bean>
+	
+	<!-- bean name="tibcoQueueConnectionFactory" class="com.tibco.tibjms.TibjmsQueueConnectionFactory">
+		<property name="serverUrl" value="${jms.server.url}" />
+		<property name="userName" value="${jms.user}"/>
+		<property name="userPassword" value="${jms.password}"/>
+	</bean-->
+</beans>
