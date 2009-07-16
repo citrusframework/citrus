@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="testcase">
+  <title>TestCase</title>
+
+  <para>Citrus specifies test cases through simple XML files. The whole test case description will take place in one single
+  XML file. This chapter will introduce the custom XML schema language in order to write Citrus integration test cases.</para>
+
+  <section id="testcase-defining">
+    <title>Defining a test case</title>
+
+    <para>Clearly spoken a test case is nothing but a simple Spring XML configuration file. 
+    So using the Spring XML configuration syntax you are able to write fully compatible test cases for the Citrus framework.</para>
+    
+    <programlisting>
+    &lt;beans
+        xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+        
+        &lt;bean name=&quot;myFirstTest&quot; class=&quot;com.consol.citrus.model.TestCase&quot;&gt;
+            &lt;property name=&quot;actions&quot;&gt;
+                <lineannotation>&lt;!-- actions of this test go here --&gt;</lineannotation>
+            &lt;/property&gt;
+        &lt;/bean&gt;
+    &lt;/beans&gt;
+    </programlisting>
+    
+    <para>Citrus can execute the test case and verify its result, no problem, but in detail this XML 
+    syntax is not the best way to describe a test case in Citrus. Citrus also provides a custom XML schema definition for writing 
+    test cases. Since Spring version 2.0.x custom XML schemas can also build Spring beans to be used in the Spring IoC container.
+    So let us have a look at a simple test case example and you will see the advantages towards the usual Spring XML syntax.</para>
+    
+    <programlisting>
+    &lt;spring:beans
+        xmlns=&quot;http://www.consol.de/testframework&quot;
+        xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.consol.de/testframework
+        http://www.consol.de/testframework/consol_ts.xsd&quot;&gt;
+        
+        &lt;testcase name=&quot;myFirstTest&quot;&gt;
+            &lt;description&gt;
+                First example showing the basic test case definition elements!
+            &lt;/description&gt;
+            &lt;variables&gt;
+                &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework&quot;/&gt;
+            &lt;/variables&gt;
+            &lt;actions&gt;
+                &lt;echo&gt;
+                &lt;message&gt;%test&lt;/message&gt;
+                &lt;/echo&gt;
+            &lt;/actions&gt;
+        &lt;/testcase&gt;
+    &lt;/spring:beans&gt;
+    </programlisting>
+    
+    <para>As already mentioned the test definitions follow the custom XML schema definition, 
+    but behind the scenes the result will be an amount of Spring benas managed by the Spring IoC container. 
+    Therefore the spring:beans root element is always used as a root element.</para>
+    
+    <para>The test case gets a mandatory name that must be unique through all other test cases used by the testsuite instance. 
+    The &lt;testcase&gt; element offers several child elements that define the behaviour of the test. 
+    These basic test elements are described in the following sections.</para>
+    
+    <section id="testcase-description">
+        <title>Description</title>
+        
+        <para>The test case description can give a short purpose and the intended use case scenario that will be tested. 
+        A reading user should get a first impression what the test case is all about. You can use free text in order to describe the test. 
+        But be aware of the XML validation rules of well formed XML (e.g. special character escaping, use of CDATA sections)</para>
+    </section>
+    
+    <section id="testcase-variables">
+        <title>Variables</title>
+        
+        <para>The test variables are valid for the whole test case. You can reference them several times using the common variables expression 
+        "${variable-name}". It is good practice to provide all important entities as test variables. This
+        makes the test easier to meintain and more readable. All essential information is present right at the beginning of the test. 
+        The name of the variable is arbitrary. Feel free to specify any name you can think of.</para>
+         
+        <para>You only have to fit the Java variable naming conventions (e.g. no whitespaces, no special characters). 
+        The value can be any character sequence, but be aware of special XML characters like "&lt;" that need to be escaped ("&amp;lt;") 
+        when used in variable values.</para>
+        
+        <para>The advantage of variable use is obvious. Once declared the variables can be referenced many times in
+        the test. This makes it very easy to vary different test cases by adjusting the variables for different means.</para>
+    </section>
+    
+    <section id="testcase-actions">
+        <title>Actions</title>
+        
+        <para>A test case defines a sequence of actions that will be executed during the test. The
+        actions will be executed sequentially as they are defined in the list of test actions.</para>
+        
+        <para>Test actions are normal XML elements themselves. All of them do specify individual configuration
+        elements that are describing the behaviour of the action. Citrus offers several actions from scratch, 
+        but you are also able to write your own test action ins Java. <xref linkend="actions"/> gives you a brief description of all available 
+        actions that can be part of a test case execution. All actions can be placed in free sequence to each other 
+        so that every test case can declare its special action chain. This enables the tester to test an application 
+        workflow as it is described in the application design documents.</para>
+    </section>
+    
+    <section id="testcase-cleanup">
+        <title>Cleanup</title>
+        
+        <para>The cleanup property also contains a list of actions. These actions will be executed at the very
+        end of the test case even if errors did occur in the test execution before. This is the right place to
+        clean up the database for instance</para>
+    </section>
+  </section>
+  
+  <section id="testcase-metainfo">
+    <title>Description and meta-info</title>
+
+    <para>The user can provide some basic information about the test case. This can be done through the optional
+    meta-info tag at the very beginning of the test case definition:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;metaInfoTest&quot;&gt;
+        &lt;meta-info&gt;
+            &lt;author&gt;Christoph Deppisch&lt;/author&gt;
+            &lt;creationdate&gt;2008-01-11&lt;/creationdate&gt;
+            &lt;status&gt;FINAL&lt;/status&gt;
+            &lt;lastUpdatedBy&gt;Christoph Deppisch&lt;/lastUpdatedBy&gt;
+            &lt;lastUpdatedOn&gt;2008-01-11T10:00:00&lt;/lastUpdatedOn&gt;
+        &lt;/meta-info&gt;
+        &lt;description&gt;
+            ...
+        &lt;/description&gt;
+        &lt;actions&gt;
+            ...
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The status allows following enumeration values: DRAFT, READY_FOR_REVIEW, FINAL.
+    The meta-data information to a test is quite important to give the reader a first information source about
+    the test purpose and scope. It is also possible to generate test documentation out of this meta-data
+    information. The documentation is provided in HTML or Excel format and lists all tests with their metadata
+    information and description.</para>
+    
+    <para>Using the status (DRAFT / FINAL) one can easily set up test plans and review the progress of test
+    coverage through the generated documentation. In the following chapters this document describes the very 
+    important actions send and receive, which enable you to subscribe and publish messages to the different 
+    transport protocols like HTTP, SOAP or JMS.</para>
+  </section>
+  
+</chapter>

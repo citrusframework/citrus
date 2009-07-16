@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>http-stub.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="httpServer" class="com.consol.citrus.http.HttpServer">
+		<property name="port" value="${http.port}"/>
+		<property name="uri" value="${http.urlpath}"/>
+		<property name="sendDestination" value="${jms.queue.http.request.forward}"/>
+		<property name="replyDestination" value="${jms.queue.http.request.ack}"/>
+        <property name="jmsTemplate">
+            <bean class="org.springframework.jms.core.JmsTemplate">
+                <property name="connectionFactory">
+                    <bean class="org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter">
+                       <property name="targetConnectionFactory">
+                          <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                              <property name="brokerURL" value="${jms.server.url}" />
+                          </bean>
+                       </property>
+                       <property name="username" value="${jms.user}" />
+                       <property name="password" value="${jms.password}"/>
+                    </bean>
+                </property>
+                <property name="receiveTimeout" value="2000"/>
+            </bean>
+        </property>
+		<property name="mode" value="${http.server.mode}"/>
+		<property name="messageHandlerDefinition" value="message-handler-context.xml"/>
+		<property name="defaultMessageHandler">
+			<bean class="com.consol.citrus.message.SimpleXMLMessageHandler">
+				<property name="xmlData" value=""/>
+			</bean>	
+		</property>
+        <property name="deamon" value="true"/>
+	</bean>
+	
+</beans>

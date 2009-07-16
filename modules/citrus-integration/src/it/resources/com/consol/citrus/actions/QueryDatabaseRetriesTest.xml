@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="queryDatabaseRetriesTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-08-05</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-06-13T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Test of retry functionality in queryDatabase.
+            queryDatabase is configured so that it retries for 5 seconds with a pause of 1
+            second. The parallel task waits for 3 seconds and updates the database so
+            that the queryDatabase succeeds.
+		</description>
+        <actions>
+			<parallel>
+				<sequential>
+                    <updateDatabase connect="databaseAccess">
+                        <resource file="classpath:com/consol/citrus/actions/script.sql"/>
+                    </updateDatabase>
+        	        <queryDatabase connect="databaseQuery">
+                        <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
+                        <validate column="CUSTOMER_CNT" value="0"/>
+                    </queryDatabase>
+				</sequential>
+				<sequential>
+                    <sleep time="3"/>
+                    <updateDatabase connect="databaseAccess">
+                        <statement>DELETE FROM CUSTOMERS</statement>
+                    </updateDatabase>
+				</sequential>
+            </parallel>
+        </actions>
+    </testcase>
+</spring:beans>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="validateValuesTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			
+		</description>
+        <variables>
+            <variable name="requestTag" value="validateValues___0001"/>
+            <variable name="conversationId" value="A00001"/>
+        </variables>
+        <actions>
+            <send type="sendGetNumberRequest">
+                <message>
+                    <data><![CDATA[
+							
+								<RequestMessage>
+									<MessageHeader>
+										<ConversationId>_</ConversationId>
+										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
+										<RequestTag>_</RequestTag>
+										<VersionId>2</VersionId>
+									</MessageHeader>
+									<MessageBody>
+										<Customer>
+											<Id>1</Id>
+										</Customer>
+									</MessageBody>
+								</RequestMessage>						
+							
+						]]></data>
+                    <element path="MessageHeader.RequestTag" value="${requestTag}"/>
+                    <element path="ConversationId" value="${conversationId}"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumber"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </send>
+            <receive type="receiveGetNumberResponse">
+                <message>
+                    <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
+                    <validate path="ConversationId" value="${conversationId}"/>
+                    <validate path="MessageBody.Number" value="123456789"/>
+                </message>
+                <header>
+                    <element name="Operation" value="GetNumber"/>
+                    <element name="RequestTag" value="${requestTag}"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

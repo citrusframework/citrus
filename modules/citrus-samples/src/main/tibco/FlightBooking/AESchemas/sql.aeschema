@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002" xmlns="http://www.tibco.com/xmlns/aemeta/types/2002" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="BIGINT">
+        <dataTypeName>BIGINT</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="BIT">
+        <dataTypeName>BIT</dataTypeName>
+        <javaClass>java.lang.Boolean</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="DATE">
+        <dataTypeName>DATE</dataTypeName>
+        <javaClass>java.sql.Date</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="DOUBLE PRECISION">
+        <dataTypeName>DOUBLE PRECISION</dataTypeName>
+        <javaClass>java.lang.Double</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="FLOAT">
+        <dataTypeName>FLOAT</dataTypeName>
+        <javaClass>java.lang.Float</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="INTEGER">
+        <dataTypeName>INTEGER</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="LONGVARBINARY">
+        <dataTypeName>LONGVARBINARY</dataTypeName>
+        <javaClass>java.lang.Byte[]</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="LONGVARCHAR">
+        <dataTypeName>LONGVARCHAR</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="REAL">
+        <dataTypeName>REAL</dataTypeName>
+        <javaClass>java.lang.Float</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="SMALLINT">
+        <dataTypeName>SMALLINT</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="TIME">
+        <dataTypeName>TIME</dataTypeName>
+        <javaClass>java.sql.Time</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="TIMESTAMP">
+        <dataTypeName>TIMESTAMP</dataTypeName>
+        <javaClass>java.sql.Timestamp</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="TINYINT">
+        <dataTypeName>TINYINT</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="VARBINARY">
+        <dataTypeName>VARBINARY</dataTypeName>
+        <javaClass>java.lang.Byte[]</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="VARCHAR">
+        <dataTypeName>VARCHAR</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <designer>
+        <lockedProperties/>
+        <fixedChildren/>
+        <resourceDescriptions/>
+    </designer>
+</Repository:repository>

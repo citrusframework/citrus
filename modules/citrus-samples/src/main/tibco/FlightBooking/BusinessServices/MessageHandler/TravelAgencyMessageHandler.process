@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd">
+    <xsd:import namespace="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd" schemaLocation="/SharedResources/SchemaDefinitions/XML/TravelAgency/TravelAgencySchema.xsd"/>
+    <pd:name>BusinessServices/MessageHandler/TravelAgencyMessageHandler.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="Input">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="CorrelationId" type="xsd:string"/>
+                    <xsd:element name="MessageBody" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>161</pd:startX>
+    <pd:startY>170</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>763</pd:endX>
+    <pd:endY>173</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1240484534385</pd:targetNamespace>
+    <pd:activity name="ParseTravelRequest">
+        <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
+        <pd:x>340</pd:x>
+        <pd:y>171</pd:y>
+        <config>
+            <inputStyle>text</inputStyle>
+            <xsdVersion>default</xsdVersion>
+            <validateOutput>true</validateOutput>
+            <term ref="pfx:TravelBookingRequestMessage"/>
+        </config>
+        <pd:inputBindings>
+            <xmlString>
+                <xsl:value-of select="$Start/Input/MessageBody"/>
+            </xmlString>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="BookingDispatcherService">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>547</pd:x>
+        <pd:y>172</pd:y>
+        <config>
+            <processName>/BusinessServices/ProcessServices/FlightBookingService.process</processName>
+        </config>
+        <pd:inputBindings>
+            <Input>
+                <CorrelationId>
+                    <xsl:value-of select="$Start/Input/CorrelationId"/>
+                </CorrelationId>
+                <pfx:Customer>
+                    <xsl:copy-of select="$ParseTravelRequest/pfx:TravelBookingRequestMessage/pfx:customer/ancestor-or-self::*/namespace::node()"/>
+                    <xsl:copy-of select="$ParseTravelRequest/pfx:TravelBookingRequestMessage/pfx:customer/@*"/>
+                    <xsl:copy-of select="$ParseTravelRequest/pfx:TravelBookingRequestMessage/pfx:customer/node()"/>
+                </pfx:Customer>
+                <xsl:for-each select="$ParseTravelRequest/pfx:TravelBookingRequestMessage/pfx:bookings/pfx:booking">
+                    <pfx:BookingEntry>
+                        <pfx:flightId>
+                            <xsl:value-of select="pfx:flightId"/>
+                        </pfx:flightId>
+                        <pfx:airline>
+                            <xsl:value-of select="pfx:airline"/>
+                        </pfx:airline>
+                        <pfx:from>
+                            <xsl:value-of select="pfx:from"/>
+                        </pfx:from>
+                        <pfx:to>
+                            <xsl:value-of select="pfx:to"/>
+                        </pfx:to>
+                        <pfx:date>
+                            <xsl:value-of select="pfx:date"/>
+                        </pfx:date>
+                        <pfx:scheduledDeparture>
+                            <xsl:value-of select="pfx:scheduledDeparture"/>
+                        </pfx:scheduledDeparture>
+                        <pfx:scheduledArrival>
+                            <xsl:value-of select="pfx:scheduledArrival"/>
+                        </pfx:scheduledArrival>
+                    </pfx:BookingEntry>
+                </xsl:for-each>
+            </Input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>ParseTravelRequest</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ParseTravelRequest</pd:from>
+        <pd:to>BookingDispatcherService</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>BookingDispatcherService</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

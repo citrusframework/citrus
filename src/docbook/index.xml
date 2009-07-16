@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding="iso-8859-1" ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "lib/docbook-dtd/docbookx.dtd"
+[
+<!ENTITY preface            SYSTEM "preface.xml">
+<!ENTITY introduction       SYSTEM "introduction.xml">
+<!ENTITY setup              SYSTEM "setup.xml">
+<!ENTITY testcase           SYSTEM "testcase.xml">
+]>
+<book>
+    <bookinfo>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/citrus_logo.png" format="PNG" />
+            </imageobject>
+        </mediaobject>
+        <title>Citrus Framework - Reference Documentation</title>
+        <releaseinfo>3.0</releaseinfo>
+        <authorgroup>
+            <author>
+                <firstname>Christoph</firstname>
+                <surname>Deppisch</surname>
+            </author>
+        </authorgroup>
+        <copyright>
+            <year>2009</year>
+            <holder>ConSol* Software GmbH</holder>
+        </copyright>
+    </bookinfo>
+    <toc/>
+    &preface;
+    &introduction;
+    
+    <part id="citrus-core">
+        <title>Core functionalities</title>
+        <partintro id="citrus-core-intro">
+            <para>
+                This initial part of the reference documentation deals with all core 
+                technologies in Citrus Framework.
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para><xref linkend="setup"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="testcase"/></para>
+                </listitem>
+            </itemizedlist>
+            
+        </partintro>
+        &setup;
+        &testcase;
+    </part>
+</book>

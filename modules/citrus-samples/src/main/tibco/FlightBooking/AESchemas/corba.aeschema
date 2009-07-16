@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002" xmlns="http://www.tibco.com/xmlns/aemeta/types/2002" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="any">
+        <dataTypeName>any</dataTypeName>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="boolean">
+        <dataTypeName>boolean</dataTypeName>
+        <javaClass>java.lang.Boolean</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="char">
+        <dataTypeName>char</dataTypeName>
+        <javaClass>java.lang.Character</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="double">
+        <dataTypeName>double</dataTypeName>
+        <javaClass>java.lang.Double</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="float">
+        <dataTypeName>float</dataTypeName>
+        <javaClass>java.lang.Float</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="long">
+        <dataTypeName>long</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="longlong">
+        <dataTypeName>longlong</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="octet">
+        <dataTypeName>octet</dataTypeName>
+        <javaClass>java.lang.Byte</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="short">
+        <dataTypeName>short</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="string">
+        <dataTypeName>string</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ulong">
+        <dataTypeName>ulong</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ulonglong">
+        <dataTypeName>ulonglong</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ushort">
+        <dataTypeName>ushort</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="wchar">
+        <dataTypeName>wchar</dataTypeName>
+        <javaClass>java.lang.Character</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="wstring">
+        <dataTypeName>wstring</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <designer>
+        <lockedProperties/>
+        <fixedChildren/>
+        <resourceDescriptions/>
+    </designer>
+</Repository:repository>

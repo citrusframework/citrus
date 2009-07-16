@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<description>
+        This web application context contains Spring-WS beans. The beans defined describe the sample HelloService. 
+        You can use this sample as template for your own service implementation. 
+    </description>
+    
+	<bean id="helloServicePayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping uses the qualified name of the payload (body contents) to determine the endpoint for
+            an incoming message. The mapping will handle all requests related to the HelloService sample. 
+            The mapping uses the default web service endpoint and additionally uses a validation interceptor.
+        </description>
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.consol.de/samples/HelloService}HelloRequest">defaultWsEndpoint</prop>
+            </props>
+        </property>
+        <property name="interceptors">
+            <list>
+                <ref local="helloServiceValidatingInterceptor"/>
+                <ref bean="loggingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="helloServiceValidatingInterceptor"
+          class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+        <description>
+            This interceptor validates both incoming and outgoing message contents according to the XML Schema file.
+        </description>
+        <property name="xsdSchema" ref="helloServiceSchema"/>
+        <property name="validateRequest" value="true"/>
+        <property name="validateResponse" value="true"/>
+    </bean>
+    
+	<bean id="helloService" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+		<description>
+            This bean definition represents a WSDL definition that is generated at runtime. It can be retrieved by
+            going to /helloService/helloService.wsdl
+        </description>
+        <property name="schema" ref="helloServiceSchema"/>
+        <property name="portTypeName" value="${hello.porttype.name}"/>
+        <property name="locationUri" value="${hello.location.uri}"/>
+        <property name="targetNamespace" value="${hello.target.namespace}"/>
+    </bean>
+
+    <bean id="helloServiceSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <property name="xsd" value="classpath:${hello.schema.definition}"/>
+    </bean>
+</beans>

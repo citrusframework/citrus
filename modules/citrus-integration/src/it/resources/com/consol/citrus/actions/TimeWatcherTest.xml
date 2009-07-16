@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="timeWatcherTest">
+		<meta-info>
+			<author>Chrisotph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Chrisotph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			It might be helpful to use time measurement during a test workflow. Therefore you can use the
+			TimeWatcherBean. This bean has to be placed anywhere into the test chain. The TimeWatcherBean offers the property
+			"id" to identify the time line. This enables the tester to use more than one time measurements at the same time.
+			If you leave out the id the TimeWatcher offers a default id as you can see here in the first timeWatcher reference.
+			
+			To print out the current elapsed time for a timeWatcher you simply have to place the timeWatcher into the test chain 
+			again, using the respective id.	The elapsed time will be printed to the console.
+		</description>
+        <actions>
+            <traceTime/>
+            <traceTime id="FirstTimeLineID"/>
+            <sleep time="1.0"/>
+            <traceTime id="FirstTimeLineID"/>
+            <sleep time="2.0"/>
+            <traceTime/>
+            <traceTime id="FirstTimeLineID"/>
+        </actions>
+    </testcase>
+</spring:beans>

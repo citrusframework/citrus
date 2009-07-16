@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+	 
+	<bean id="citrusFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary">
+		<property name="name" value="citrusFunctionLibrary"/>
+		<property name="prefix" value="citrus:"/>
+		<property name="members">
+			<map>
+				<entry key="randomNumber">
+					<bean class="com.consol.citrus.functions.core.RandomNumberFunction"/>
+				</entry>
+				<entry key="randomString">
+					<bean class="com.consol.citrus.functions.core.RandomStringFunction"/>
+				</entry>
+				<entry key="concat">
+					<bean class="com.consol.citrus.functions.core.ConcatFunction"/>
+				</entry>
+				<entry key="currentDate">
+					<bean class="com.consol.citrus.functions.core.CurrentDateFunction"/>
+				</entry>
+				<entry key="substring">
+					<bean class="com.consol.citrus.functions.core.SubstringFunction"/>
+				</entry>
+				<entry key="stringLength">
+					<bean class="com.consol.citrus.functions.core.StringLengthFunction"/>
+				</entry>
+				<entry key="translate">
+					<bean class="com.consol.citrus.functions.core.TranslateFunction"/>
+				</entry>
+				<entry key="substringBefore">
+					<bean class="com.consol.citrus.functions.core.SubstringBeforeFunction"/>
+				</entry>
+				<entry key="substringAfter">
+					<bean class="com.consol.citrus.functions.core.SubstringAfterFunction"/>
+				</entry>
+				<entry key="round">
+					<bean class="com.consol.citrus.functions.core.RoundFunction"/>
+				</entry>
+				<entry key="floor">
+					<bean class="com.consol.citrus.functions.core.FloorFunction"/>
+				</entry>
+				<entry key="ceiling">
+					<bean class="com.consol.citrus.functions.core.CeilingFunction"/>
+				</entry>
+				<entry key="upperCase">
+					<bean class="com.consol.citrus.functions.core.UpperCaseFunction"/>
+				</entry>
+				<entry key="lowerCase">
+					<bean class="com.consol.citrus.functions.core.LowerCaseFunction"/>
+				</entry>
+				<entry key="average">
+					<bean class="com.consol.citrus.functions.core.AvgFunction"/>
+				</entry>
+				<entry key="minimum">
+					<bean class="com.consol.citrus.functions.core.MinFunction"/>
+				</entry>
+				<entry key="maximum">
+					<bean class="com.consol.citrus.functions.core.MaxFunction"/>
+				</entry>
+				<entry key="sum">
+					<bean class="com.consol.citrus.functions.core.SumFunction"/>
+				</entry>
+				<entry key="absolute">
+					<bean class="com.consol.citrus.functions.core.AbsoluteFunction"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	 
+</beans>

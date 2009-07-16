@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+  <properties>
+    <title>Welcome to Citrus Framework</title>
+  </properties>
+  <body>
+    <section name="Overview">
+      <p>
+        The "Citrus Test Framework" will give you the opportunity to test your message-based applications in an automated way.
+      </p>
+      
+      <p>  
+        This project aims to
+        <ul>
+          <li>automate the integration testing for EAI/SOA applications</li>
+          <li>easily simulate interface systems supporting a wide range of protocols</li>
+          <li>provide high integration test coverage for EAI/SOA applications</li>
+          <li>perform fully qualified use case tests</li>          
+        </ul> 
+        
+      </p>
+    </section>
+     
+    <section name="Technologies">
+      <p>
+        Citrus uses following technologies
+        <ul> 
+          <li><a href="http://www.springframework.org">Spring 2.5</a> as the glue for everything</li>
+          <li><a href="http://www.slf4j.org/">SLF4J</a> for logging</li>
+          <li><a href="http://maven.apache.org">Maven</a> as build with support for multi module projects</li>
+        </ul> 
+      </p>
+    </section>
+    
+    <section name="Architecture">
+        <p>
+          <img alt="Architecture" src="images/architecture_overview.png" style="width:35%;" align="left"/>
+        </p>
+    </section>
+     
+  </body>
+</document>

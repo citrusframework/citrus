@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>TestFramework</Author>
+  <LastAuthor>TestFramework</LastAuthor>
+  <LastPrinted>2007-12-12T07:48:58Z</LastPrinted>
+  <Created>2007-12-12T07:40:21Z</Created>
+  <LastSaved>2007-12-12T07:49:11Z</LastSaved>
+  <Company>ConSol Software GmbH</Company>
+  <Version>11.6360</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>13170</WindowHeight>
+  <WindowWidth>15180</WindowWidth>
+  <WindowTopX>480</WindowTopX>
+  <WindowTopY>60</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Top"/>
+   <Borders/>
+   <Font/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="m27359236">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font x:Family="Swiss" ss:Size="20" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s30">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s31">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font x:Family="Swiss" ss:Bold="1"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s34">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font x:Family="Swiss" ss:Bold="1"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s35">
+   <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="@page.title@">
+  <Names>
+   <NamedRange ss:Name="_FilterDatabase" ss:RefersTo="='@page.title@'!R2C1:R143C7" ss:Hidden="1"/>
+  </Names>
+  <Table ss:ExpandedColumnCount="7" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="60">
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="25"/>
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="250"/>
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="150"/>
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="75"/>
+   <Column ss:StyleID="s35" ss:AutoFitWidth="1" ss:Width="250"/>
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="650"/>
+   <Row ss:AutoFitHeight="0" ss:Height="51">
+    <Cell ss:MergeAcross="6" ss:StyleID="m27359236">
+    	<Data ss:Type="String">@page.title@</Data>
+    </Cell>
+   </Row>
+   <Row>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">Nr.</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">Name</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">Author</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">Status</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s34">
+    	<Data ss:Type="String">Description</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">Date</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+    <Cell ss:StyleID="s31">
+    	<Data ss:Type="String">File</Data>
+    	<NamedCell ss:Name="_FilterDatabase"/>
+    </Cell>
+   </Row>
+   +++++ BODY +++++
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.4921259845"/>
+    <Footer x:Margin="0.4921259845"/>
+    <PageMargins x:Bottom="0.984251969" x:Left="0.78740157499999996"
+     x:Right="0.78740157499999996" x:Top="0.984251969"/>
+   </PageSetup>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+  <AutoFilter x:Range="R2C1:R143C7"
+   xmlns="urn:schemas-microsoft-com:office:excel">
+  </AutoFilter>
+ </Worksheet>
+</Workbook>

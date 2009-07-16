@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:stream="http://www.springframework.org/schema/integration/stream"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/jms
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd
+			http://www.springframework.org/schema/integration/stream
+			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd">
+    
+    <beans:bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <beans:property name="brokerURL" value="tcp://localhost:61616"/>     
+    </beans:bean>
+
+    <poller id="poller" default="true">
+       <interval-trigger interval="1000"/>
+    </poller>
+    
+    <jms:inbound-channel-adapter id="bookingIn" destination-name="Travel.Agency.Request.Queue" channel="bookingsXML"/>
+    
+    <channel id="bookingsXML"/>
+    <transformer input-channel="bookingsXML" ref="unmarshallingTransformer" output-channel="bookings"/>
+    <beans:bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <beans:constructor-arg>
+            <beans:ref bean="bookingMarshaller"/>
+        </beans:constructor-arg>
+    </beans:bean>    
+    
+    <beans:bean id="bookingMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+        <beans:property name="aliases">
+            <beans:props>
+                <beans:prop key="flight">com.consol.citrus.samples.flightbooking.model.Flight</beans:prop>
+                <beans:prop key="booking">com.consol.citrus.samples.flightbooking.model.Booking</beans:prop>
+                <beans:prop key="customer">com.consol.citrus.samples.flightbooking.model.Customer</beans:prop>
+                <beans:prop key="FlightBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage</beans:prop>
+                <beans:prop key="FlightBookingConfirmationMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage</beans:prop>
+                <beans:prop key="TravelBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingRequestMessage</beans:prop>
+                <beans:prop key="TravelBookingResponseMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage</beans:prop>
+            </beans:props>
+        </beans:property>
+        <beans:property name="useAttributeFor">
+            <beans:map key-type="java.lang.Class">
+                <beans:entry key="com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage" value="xmlns"/>
+                <beans:entry key="com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage" value="xmlns"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+	<channel id="bookings"/>
+	<splitter input-channel="bookings" ref="bookingSplitter" output-channel="flights"/>
+    <beans:bean id="bookingSplitter" class="com.consol.citrus.samples.flightbooking.BookingSplitter"/>
+
+	<channel id="flights"/>
+	<router input-channel="flights" ref="flightRouter"/>
+    <beans:bean id="flightRouter" class="com.consol.citrus.samples.flightbooking.FlightRouter">
+        <beans:property name="channelResolver">
+            <beans:bean class="org.springframework.integration.channel.MapBasedChannelResolver">
+                <beans:property name="channelMap">
+                    <beans:map>
+                        <beans:entry key="RoyalAirline" value-ref="royalAirlineFlights"/>
+                        <beans:entry key="SmartAirline" value-ref="smartAirlineFlights"/>
+                    </beans:map>
+                </beans:property>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+	<channel id="royalAirlineFlights"/>
+    <channel id="royalAirlineFlightsXML">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    <transformer input-channel="royalAirlineFlights" ref="marshallingTransformer" output-channel="royalAirlineFlightsXML"/>
+    <jms:outbound-channel-adapter id="royalAirlineAdapter" channel="royalAirlineFlightsXML" destination-name="Royal.Airline.Request.Queue"/>
+    
+	<channel id="smartAirlineFlights"/>
+    <channel id="smartAirlineFlightsXML">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    <transformer input-channel="smartAirlineFlights" ref="marshallingTransformer" output-channel="smartAirlineFlightsXML"/>
+    
+    <jms:outbound-channel-adapter id="smartAirlineAdapter" channel="smartAirlineFlightsXML" destination-name="Smart.Airline.Request.Queue"/>
+
+    <channel id="confirmedFlightsXML">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    <jms:inbound-channel-adapter id="royalConfirmedFlightsAdapter" destination-name="Royal.Airline.Response.Queue" channel="confirmedFlightsXML"/>
+    
+    <jms:inbound-channel-adapter id="smartConfirmedFlightsAdapter" destination-name="Smart.Airline.Response.Queue" channel="confirmedFlightsXML"/>
+    
+    <channel id="confirmedFlights"/>
+    <transformer input-channel="confirmedFlightsXML" ref="unmarshallingTransformer" output-channel="confirmedFlights"/>
+    
+    <aggregator input-channel="confirmedFlights" 
+            ref="flightAggregator" 
+            method="processFlights" 
+            output-channel="bookingResults"
+            completion-strategy="flightCompletionStrategy"
+            completion-strategy-method="isComplete"
+            correlation-strategy="flightCorrelationStrategy"
+            correlation-strategy-method="getCorrelationKey"
+            timeout="60"
+            send-partial-result-on-timeout="true"/>
+            
+    <beans:bean id="flightAggregator" class="com.consol.citrus.samples.flightbooking.FlightAggregator"/>
+    <beans:bean id="flightCompletionStrategy" class="com.consol.citrus.samples.flightbooking.FlightCompletionStrategy"/>
+    <beans:bean id="flightCorrelationStrategy" class="com.consol.citrus.samples.flightbooking.FlightCorrelationStrategy"/>
+
+    <channel id="bookingResultsXML">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    <transformer input-channel="bookingResults" ref="marshallingTransformer" output-channel="bookingResultsXML"/>
+    <beans:bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <beans:constructor-arg>
+            <beans:ref bean="bookingMarshaller"/>
+        </beans:constructor-arg>
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </beans:constructor-arg>
+    </beans:bean>
+  
+    <jms:outbound-channel-adapter id="bookingOut" channel="bookingResultsXML" destination-name="Travel.Agency.Response.Queue"/>
+    
+    <channel id="errorChannel">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    
+    <beans:bean id="loggingInterceptor" class="com.consol.citrus.samples.flightbooking.util.LoggingInterceptor"/>
+    
+</beans:beans>

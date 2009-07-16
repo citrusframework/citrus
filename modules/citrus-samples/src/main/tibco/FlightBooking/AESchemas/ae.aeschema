@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002" xmlns="http://www.tibco.com/xmlns/aemeta/types/2002" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="any">
+        <dataTypeName>any</dataTypeName>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="assocList">
+        <dataTypeName>assocList</dataTypeName>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="binary">
+        <dataTypeName>binary</dataTypeName>
+        <javaClass>java.lang.Byte[]</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="boolean">
+        <dataTypeName>boolean</dataTypeName>
+        <javaClass>java.lang.Boolean</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="char">
+        <dataTypeName>char</dataTypeName>
+        <javaClass>java.lang.Character</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="date">
+        <dataTypeName>date</dataTypeName>
+        <javaClass>java.util.Date</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="dateTime">
+        <dataTypeName>dateTime</dataTypeName>
+        <javaClass>java.util.Date</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="i1">
+        <dataTypeName>i1</dataTypeName>
+        <javaClass>java.lang.Byte</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="i2">
+        <dataTypeName>i2</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="i4">
+        <dataTypeName>i4</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="i8">
+        <dataTypeName>i8</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="interval">
+        <dataTypeName>interval</dataTypeName>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="r4">
+        <dataTypeName>r4</dataTypeName>
+        <javaClass>java.lang.Float</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="r8">
+        <dataTypeName>r8</dataTypeName>
+        <javaClass>java.lang.Double</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="string">
+        <dataTypeName>string</dataTypeName>
+        <javaClass>java.lang.String</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="time">
+        <dataTypeName>time</dataTypeName>
+        <javaClass>java.util.Date</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ui1">
+        <dataTypeName>ui1</dataTypeName>
+        <javaClass>java.lang.Short</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ui2">
+        <dataTypeName>ui2</dataTypeName>
+        <javaClass>java.lang.Integer</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ui4">
+        <dataTypeName>ui4</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="ui8">
+        <dataTypeName>ui8</dataTypeName>
+        <javaClass>java.lang.Long</javaClass>
+    </scalar>
+    <scalar xmlns:AESchema="http://www.tibco.com/xmlns/aemeta/types/2002" name="void">
+        <dataTypeName>void</dataTypeName>
+    </scalar>
+    <designer>
+        <lockedProperties/>
+        <fixedChildren/>
+        <resourceDescriptions/>
+    </designer>
+</Repository:repository>

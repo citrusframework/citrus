@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="concatFunctionTest">
+		<meta-info>
+			<author>Unknown</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Unknown</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			CONCAT function test
+		</description>
+		<variables>
+			<variable name="date" value="citrus:currentDate('yyyy-MM-dd')"/>
+			<variable name="right" value="Is that right?!"/>
+			<variable name="str1" value="citrus:concat('Hallo', ' Test', ' Framework!')"/>
+			<variable name="str2" value="citrus:concat('Hallo', ' Test', ' Framework!')"/>
+		</variables>
+        <actions>
+        	<createVariables>
+        		<variable name="str3" value="citrus:concat(${str2})"/>
+				<variable name="str4" value="citrus:concat(${date}, ': Hallo', ' Test', ' Framework! ', ${right})"/>
+				<variable name="str5" value="citrus:concat('Hallo ', ${date}, ' Test', ' Framework! ', ${right})"/>
+        	</createVariables>
+        	
+        	<echo><message>citrus:concat('Today is: ', ${date}, ' ', ${right})</message></echo>
+        	<echo><message>citrus:concat(${str2})</message></echo>
+			<echo><message>citrus:concat(${date}, ': Hallo', ' Test', ' Framework! ', ${right})</message></echo>
+			<echo><message>citrus:concat('Hallo ', ${date}, ' Test', ' Framework! ', ${right})</message></echo>
+			<echo><message>citrus:concat('Today is: ', ${date}, ' ', ${right})</message></echo>
+            <traceVariables/>
+        </actions>
+    </testcase>
+</spring:beans>

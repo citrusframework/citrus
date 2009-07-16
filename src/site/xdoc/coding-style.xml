@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<document>
+
+  <properties>
+    <title>Coding Style</title>
+    <author email="roland@consol.de">Roland Huss</author>
+  </properties>
+
+  <body>
+    <section name="Coding Style">
+      <p>
+        <em>Style</em> matters. Not for beauty but for getting a 'home-feeling'
+        and speaking a common language when talking about code. So please read
+        this guide (which was extracted over some years of CM development) carefuly.
+      </p>
+
+      <p>
+        <strong>Please be sure that you follow these guide lines !</strong>. If you
+        don't like a rule, open a discussion. Changes are that it might
+        get changed.
+      </p>
+      <subsection name="Process">
+        <p>
+         Please be fair and verify before you checkin that your code <em>compiles</em> (of course)
+         <strong>and</strong> that all unit test passes. I.e.
+         <listing>
+            mvn clean install
+         </listing>
+         must suceed sucessfully.
+         </p>
+         <p>
+           Another point is to have a regular a look on the <a href="../project-reports.html">daily reports</a>. Try to keep
+           the test coverage (measured by clover) as high as possible. Fix checkstyle errors as soon as
+           possible before they will bite us.
+         </p>
+      </subsection>
+      <subsection name="Naming">
+        <p>
+          (<em>Copied mostly direct from the old
+          <a href="//cmdoc.int.consol.de/gendoc/style_guide.html">style guide</a>. Maybe
+          a bit dated, but still valid)</em>
+        </p>
+        <ol>
+          <li>
+            <p>
+              <em>Think about your names !</em><br/>
+              <strong>Think about your names !!!!</strong>.
+            </p>
+            <p>
+              More than once. This is the one and only really
+              unbreakable rule, where I'm really strict about. You won't
+              believe it, sometimes I thought more than one hour only
+              about a reasonable name for a silly class, and still got
+              it wrong. The base of any collaborative work is a common
+              language. Its not silly and its not easy to find the right
+              names, which has some meaning to everybody, sticks to some
+              common pattern and is <em>consistent</em>. If the meaning
+              could be ambiguous, give some explanation in some short
+              words in the class comment. Also explain, why you name it
+              like you name it. This is the best way to prevent stupid
+              names which will hunt you the next ten years or so. I know
+              it, because I used so much painful names over the time and
+              I know how painful this can be. Again, <strong>Think about
+              your names !</strong>
+            </p>
+
+            <p>
+              Some hints:<br/> Does the name of you new class really
+              reflects the purpose of your class ? If is inherited from
+              some base class, does the name reflect the specialization
+              of class, too ? (like &quot;Apple&quot; -&gt;
+              &quot;Fruit&quot; is good,
+              &quot;RedOrGreenEatableThing&quot; -&gt; &quot;Fruit&quot;
+              is obviously bad).
+            </p>
+          </li>
+          <li>
+            <p>
+              Name your access and setting method according to the Java
+              Bean scheme. I.e use <code>getApple()</code> and
+              <code>setApple(Apple a)</code> <em>not</em>
+              <code>fetchApple()</code> and <code>storeApple(Apple
+              a)</code> if you merely want to set an object's attribute.
+              Name the accessors/setter method after the object it going
+              to get/set if possible, i.e.  <code>getStatus()</code>
+              <em>not</em> <code>getMyStatus()</code>.
+            </p>
+          </li>
+
+          <li>
+            <p>
+              <em>Class</em>, <em>Method</em> and <em>Member
+              variables</em> names are in mixed case. I.e there are
+              never to capital letters adjacent. Remember, even acronyms
+              like 'ID' or 'JTAPI' in class or method names must follow
+              this rule
+            </p>
+            <p>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Bad</th>
+                    <th>Good</th>
+                  </tr>
+                  <tr>
+                    <td>class CMCall</td>
+
+                    <td>class CmCall</td>
+                  </tr>
+                  <tr>
+                    <td>getCallID()<br/>
+                    getCallid()</td>
+                    <td>getCallId()</td>
+                  </tr>
+
+                  <tr>
+                    <td>class JTAPIProvider</td>
+                  <td>class JtapiProvider</td>
+                  </tr>
+                  <tr>
+                    <td>int CustomerID</td>
+                    <td>int customerId</td>
+
+                  </tr>
+                </tbody>
+            </table>
+            </p>
+          </li>
+          <li>
+            <p>
+              <em>Class</em> names always start with an upper case
+            </p>
+          </li>
+          <li>
+            <p>
+              <em>Method</em> and <em>Member variables</em> names are always starting with lower case
+            </p>
+          </li>
+          <li>
+            <p>
+              Argument parameters start with a lowercase <code>p</code> like <code>pName</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              The name of standard implementations of interfaces end with <code>Impl</code> and live
+              in a subpackaged <code>impl</code>. E.g. <code>com.consol.cmas.core.server.CallService</code>
+              and <code>com.consol.cmas.core.server.impl.CallServiceImpl</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Test classes have to end with <code>Test</code> and should
+              live in a subpackage called <code>test</code> (minus
+              <code>impl</code>). E.g. <code>com.consol.cmas.core.server.impl.CallServiceImpl</code>
+              and
+              <code>com.consol.cmas.core.server.test.CallServiceImplTest</code>
+            </p>
+          </li>
+        </ol>
+      </subsection>
+      <subsection name="Formatting">
+        <p>
+          The following rules are the consensus of some discussions
+          during Kickoff. These are verified daily by <a
+          href="http://checkstyle.sourceforge.net/">Checkstyle</a>. So
+          the first and most important rule is to look regularly to
+          our checkstyle reports !!
+        </p>
+        <p>You can configure you IDE to use <a href="https://svn.consol.de/svn/cm/cmas/trunk/extra/cmas_checkstyle.xml">CM/AS checkstyle rules</a>.</p>
+        <ol>
+          <li>
+            <p>
+              <strong>No tabs</strong>. Period. Indentation must be 4 blanks for Java and 2 blanks for XML.
+            </p>
+          </li>
+          <li>
+            <p>
+              Curly braces start <em>on the same line as the statement</em>
+            <pre>         if (foo == 12) {
+             doSomething();
+         }
+         else {
+             doSomethingOther();
+         }
+            </pre>
+            not
+            <pre>         if (foo == 12)
+         {
+             doSomething();
+         }
+         else
+         {
+             doSomethingOther();
+         }
+            </pre>
+            </p>
+          </li>
+          <li>
+            <p>
+            Each block must be surrounded by curly
+            braces if it is only one line. The code is
+            more readable and more error proof, e.g.
+            think about an extra line to the block. Chances
+            a high, that you forget to insert the now
+            necessary braces. <br/>
+            This means that the following code shouldn't
+            be used:
+  <pre>  if ( a &gt; 0 )
+      b = 1;
+      </pre>
+  but use
+  <pre>  if ( a &gt; 0 ) {
+      b = 1;
+   }
+      </pre>
+            </p>
+          </li>
+          <li>
+            <p>
+              Don't use lines larger than 100 characters.
+            </p>
+          </li>
+          <li>
+            Import statements
+            <ul>
+              <li> Qualify for clarity
+                <p>Group by prefix like java.*, javax.* and rest:
+<pre>
+import java.util.Map;
+import java.util.HashMap;
+
+import javax.mail....
+import javax....
+
+import org.apache.commons.logging.Log;
+import ....
+
+import com.consol.cmas.....
+</pre>
+                </p>
+              </li>
+              <li>Keep the order (see before)</li>
+              <li>Use unqualified imports only for mass imports (eg count &gt; 3):
+                <p>import static org.easymock.EasyMock.*</p>
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </subsection>
+    </section>
+
+    <section name="Logging">
+      <ul>
+        <li>We use <a href="http://www.slf4j.org/">SLF4J</a> for logging. For legacy reasons we use the well known <a href="http://jakarta.apache.org/commons/logging/">commons-logging</a> API, which is provided by SLF4J.
+        </li>
+        <li>Declare it to be reusable in sub classes:
+          <pre>
+final protected Log log = LogFactory.getLog(getClass());
+          </pre>
+        </li>
+        <li>Always check the level for debug and trace messages:
+          <pre>
+if(log.isDebugEnalbed()) {
+   log.debug("Foo");
+}
+          </pre>
+        </li>
+        <li>Log exceptions correctly:
+          <pre>
+...
+} catch(Exception ex) {
+   log.error("Foo causes a problem", ex);
+   ...
+}
+          </pre>
+          <p>
+          Never use printStackTrace for Exceptions.
+          Let the logging and the log configuration deal with it by correctly passing the
+          exception as an additional argument.
+          </p><br/>
+        </li>
+        <li>
+          Don't use <em>System.out</em> for production and test code output.
+          Use the logging framework as System.out is synchronized, not flexible configurable
+          and for tests fill up uncontrolled the log files (console output!).
+        </li>
+      </ul>
+    </section>
+
+    <section name="Database conventions">
+      General rule: use a grouping prefix for tables, not 't_'.
+      The default prefix is <em>cmas_</em>.
+      <p>
+      Examples:
+      <ul>
+        <li>CMAS_CALL (the call table, with <em>cmas_</em> prefix)</li>
+        <li>JBPM_ for Workflow tables (fixed by JBPM)</li>
+        <li>JCR_ for Jackrabbit tables</li>
+        <li>...</li>
+      </ul>
+      </p>
+      <p>
+        Note: <b>make sure the table maximum length is below 30 letters (limit for oracle)!</b>
+      </p>
+    </section>
+  </body>
+</document>

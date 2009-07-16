@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="loadPropertiesTest">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2008-05-15</creationdate>
+            <status>FINAL</status>
+            <lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+            <lastUpdatedOn>2008-05-15T00:00:00</lastUpdatedOn>
+        </meta-info>
+        
+        <description>Loading variables from properties file</description>
+        
+        <actions>
+            <load>
+            	<properties file="classpath:com/consol/citrus/actions/load.properties"/>        
+            </load>
+            
+            <traceVariables/>
+        </actions>
+    </testcase>
+</spring:beans>

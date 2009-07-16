@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+	
+	<bean id="defaultJmsLoopBackDummy" class="com.consol.citrus.actions.JmsLoopBackBean" abstract="true">
+		<property name="serverUrl" value="${jms.server.url}"/>
+		<property name="userName" value="${jms.user}"/>
+		<property name="userPassword" value="${jms.password}"/>
+		<property name="timeout" value="5000"/>
+	</bean>
+	
+	<bean id="asyncJmsLoopBackDummy" parent="defaultJmsLoopBackDummy">
+		<property name="receiveDestination" value="${jms.queue.async.in}"/>
+		<property name="sendDestination" value="${jms.queue.async.out}"/>
+		<property name="xmlData">
+			<value>
+				<![CDATA[
+					<ResponseMessage>
+						<MessageHeader>
+							<ConversationId>_</ConversationId>
+							<Timestamp>_</Timestamp>
+							<RequestTag>_</RequestTag>
+							<VersionId>2</VersionId>
+						</MessageHeader>
+						<MessageBody>
+							<Number>123456789</Number>
+						</MessageBody>
+					</ResponseMessage>
+				]]>		
+			</value>
+		</property>
+		<property name="messageSelector" value="Operation = 'GetNumber'"/>
+		<property name="getHeaderValues">
+			<map>
+				<entry key="Operation" value="${operation}"></entry>
+				<entry key="RequestTag" value="${requestTag}"></entry>
+			</map>
+		</property>
+		<property name="getMessageValues">
+			<map>
+				<entry key="//RequestMessage/MessageHeader/RequestTag" value="${requestTag}"></entry>
+				<entry key="//RequestMessage/MessageHeader/Timestamp" value="${timestamp}"></entry>						
+				<entry key="//RequestMessage/MessageHeader/ConversationId" value="${conversationId}"></entry>
+			</map>
+		</property>
+		<property name="setHeaderValues">
+			<map>
+				<entry key="Operation" value="${operation}"></entry>
+				<entry key="RequestTag" value="${requestTag}"></entry>
+			</map>
+		</property>
+		<property name="setMessageValues">
+			<map>
+				<entry key="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"></entry>
+				<entry key="//ResponseMessage/MessageHeader/Timestamp" value="${timestamp}"></entry>						
+				<entry key="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="syncJmsLoopBackDummy" parent="defaultJmsLoopBackDummy">
+		<property name="receiveDestination" value="${jms.queue.sync.in}"/>
+		<property name="xmlData">
+			<value>
+				<![CDATA[
+					<ResponseMessage>
+						<MessageHeader>
+							<ConversationId>_</ConversationId>
+							<Timestamp>_</Timestamp>
+							<RequestTag>_</RequestTag>
+							<VersionId>2</VersionId>
+						</MessageHeader>
+						<MessageBody>
+							<Customer>
+								<Id>1</Id>
+								<Name>Deppisch</Name>
+								<Firstname>Christoph</Firstname>
+							</Customer>
+						</MessageBody>
+					</ResponseMessage>
+				]]>		
+			</value>
+		</property>
+		<property name="messageSelector" value="Operation = 'GetCustomer'"/>
+		<property name="getHeaderValues">
+			<map>
+				<entry key="Operation" value="${operation}"></entry>
+				<entry key="RequestTag" value="${requestTag}"></entry>
+			</map>
+		</property>
+		<property name="getMessageValues">
+			<map>
+				<entry key="MessageHeader.RequestTag" value="${requestTag}"></entry>
+				<entry key="//RequestMessage/MessageHeader/Timestamp" value="${timestamp}"></entry>						
+				<entry key="//RequestMessage/MessageHeader/ConversationId" value="${conversationId}"></entry>
+			</map>
+		</property>
+		<property name="setHeaderValues">
+			<map>
+				<entry key="Operation" value="${operation}"></entry>
+				<entry key="RequestTag" value="${requestTag}"></entry>
+			</map>
+		</property>
+		<property name="setMessageValues">
+			<map>
+				<entry key="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"></entry>
+				<entry key="//ResponseMessage/MessageHeader/Timestamp" value="${timestamp}"></entry>						
+				<entry key="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="startJmsLoopBackDummies" class="com.consol.citrus.actions.StartupBean">
+		<property name="serverList">
+			<list>
+				<ref bean="asyncJmsLoopBackDummy"/>
+				<ref bean="syncJmsLoopBackDummy"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="stopJmsLoopBackDummies" class="com.consol.citrus.actions.ShutdownBean">
+		<property name="serverList">
+			<list>
+				<ref bean="asyncJmsLoopBackDummy"/>
+				<ref bean="syncJmsLoopBackDummy"/>
+			</list>
+		</property>
+	</bean>
+	
+</beans>

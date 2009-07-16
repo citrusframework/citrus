@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="executePLSQLTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-06-30</creationdate>
+			<status>FINAL</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-06-30T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+        <description>
+			Execute PLSQL scripts
+		</description>
+        
+        <actions>
+            <alterDatabase connect="executePLSQL" ignoreErrors="true">
+                <resource file="classpath:com/consol/citrus/actions/plsql.sql"/>
+            </alterDatabase>
+            
+            <alterDatabase connect="executePLSQL" ignoreErrors="true">
+                <script>
+                	<![CDATA[
+                		BEGIN
+							EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is
+							  begin
+							   if v_id  is null then
+							    return 0;
+							    end if;
+							    return v_id;
+							  end;';
+						END;
+						/
+                	]]>
+                </script>
+            </alterDatabase>
+        </actions>
+    </testcase>
+</spring:beans>

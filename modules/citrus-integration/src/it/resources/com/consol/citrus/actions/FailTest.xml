@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="failTest">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2008-05-26</creationdate>
+            <status>FINAL</status>
+            <lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+            <lastUpdatedOn>2008-05-26T00:00:00</lastUpdatedOn>
+        </meta-info>
+        
+        <description>Failing test for purpose. Asserting exception to be thrown</description>
+        
+        <actions>
+        	<assert exception="com.consol.citrus.exceptions.TestSuiteException">
+            	<fail message="Failing test"/>
+            </assert>
+            
+            <assert exception="com.consol.citrus.exceptions.TestSuiteException">
+	            <assert exception="com.consol.citrus.exceptions.TestSuiteException">
+	            	<sleep time="0.5"/>
+	            </assert>
+            </assert>
+        </actions>
+    </testcase>
+</spring:beans>

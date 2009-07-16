@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="webServiceClientTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2008-04-25</creationdate>
+			<status>DRAFT</status>
+			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+		</meta-info>
+		
+		<variables>
+			<variable name="messageId" value="citrus:randomNumber(10)"></variable>
+			<variable name="correlationId" value="WSCTest_1"></variable>
+			<variable name="user" value="TestFramework"></variable>
+		</variables>
+		
+        <actions>
+            <send type="sendWebServiceRequest">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+								<ns0:MessageId>${messageId}</ns0:MessageId>
+								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+								<ns0:User>${user}</ns0:User>
+								<ns0:Text>Hello TIBCO</ns0:Text>
+							</ns0:HelloRequest>
+            			]]>
+            		</data>
+            	</message>
+            </send>
+            
+            <receive type="receiveWebServiceResponse">
+            	<message>
+            		<data>
+            			<![CDATA[
+            				<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+								<ns0:MessageId>_</ns0:MessageId>
+								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+								<ns0:User>TIBCO</ns0:User>
+								<ns0:Text>Hello ${user}</ns0:Text>
+							</ns0:HelloResponse>
+            			]]>
+            		</data>
+            		<ignore path="/ns0:HelloResponse/ns0:MessageId"/>
+            	</message>
+            </receive>
+    	</actions>
+    </testcase>
+</spring:beans>

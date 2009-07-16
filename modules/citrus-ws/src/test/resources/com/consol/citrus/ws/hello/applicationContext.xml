@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="helloServiceClient" class="com.consol.citrus.ws.hello.HelloServiceClient">
+        <property name="url" value="http://localhost:8081/ws-stub/HelloService/services"/>
+        <property name="prefix" value="ns0"/>
+        <property name="targetNamespace" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+        <property name="requestResource" value="classpath:com/consol/citrus/ws/hello/helloRequest.xml"/>
+        <property name="headerElements">
+        	<map>
+        		<entry key="Operation" value="sayHelloRequest"/>
+        		<entry key="Response" value="HelloResponse"/>
+        		<entry key="SOAPAction" value="http://www.consol.de/sayHello"/>
+        	</map>
+        </property>
+    </bean>
+
+</beans>

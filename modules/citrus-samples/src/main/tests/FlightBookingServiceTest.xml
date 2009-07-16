@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+    <testcase name="flightBookingServiceTest">
+    	<meta-info>
+    		<author>Christoph Deppisch</author>
+    		<creationdate>2009-04-15</creationdate>
+    		<status>FINAL</status>
+    		<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
+    		<lastUpdatedOn>2009-04-15T00:00:00</lastUpdatedOn>
+    	</meta-info>
+        <description>
+			Test flight booking service.
+		</description>
+		<variables>
+            <variable name="correlationId" value="Lx1x123456789"/>
+            <variable name="customerId" value="Mx2x987654321"/>
+        </variables>
+        <actions>
+        	<send type="sendTravelAgencyBookingRequest">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TravelBookingRequestMessage xmlns="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <customer>
+                                    <id>${customerId}</id>
+                                    <firstname>John</firstname>
+                                    <lastname>Doe</lastname>
+                                </customer>
+                                <bookings>
+                                    <booking>
+                                        <flightId>SM 1269</flightId>
+                                        <airline>SmartAirline</airline>
+                                        <from>MUC</from>
+                                        <to>FRA</to>
+                                        <date>2009-04-15</date>
+                                        <scheduledDeparture>11:55:00</scheduledDeparture>
+                                        <scheduledArrival>13:00:00</scheduledArrival>
+                                    </booking>
+                                    <booking>
+                                        <flightId>RA 1780</flightId>
+                                        <airline>RoyalAirline</airline>
+                                        <from>FRA</from>
+                                        <to>HAM</to>
+                                        <date>2009-04-15</date>
+                                        <scheduledDeparture>16:00:00</scheduledDeparture>
+                                        <scheduledArrival>17:10:00</scheduledArrival>
+                                    </booking>
+                                </bookings>                                
+                            </TravelBookingRequestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="correlationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive type="receiveSmartAirlineBookingRequest">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <FlightBookingRequestMessage xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <bookingId>???</bookingId>
+                                <customer>
+                                    <id>${customerId}</id>
+                                    <firstname>John</firstname>
+                                    <lastname>Doe</lastname>
+                                </customer>
+                                <flight>
+                                    <flightId>SM 1269</flightId>
+                                    <airline>SmartAirline</airline>
+                                    <from>MUC</from>
+                                    <to>FRA</to>
+                                    <date>2009-04-15</date>
+                                    <scheduledDeparture>11:55:00</scheduledDeparture>
+                                    <scheduledArrival>13:00:00</scheduledArrival>
+                                </flight>
+                            </FlightBookingRequestMessage>
+                        ]]>
+                    </data>
+                    <ignore path="//:FlightBookingRequestMessage/:bookingId"/>
+                </message>
+                <header>
+                    <element name="correlationId" value="${correlationId}"/>
+                </header>
+                <extract>
+                    <message path="//:FlightBookingRequestMessage/:bookingId" variable="${smartAirlineBookingId}"/>
+                </extract>
+            </receive>
+            
+            <send type="sendSmartAirlineBookingResponse">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <FlightBookingConfirmationMessage xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <bookingId>${smartAirlineBookingId}</bookingId>
+                                <success>true</success>
+                                <flight>
+                                    <flightId>SM 1269</flightId>
+                                    <airline>SmartAirline</airline>
+                                    <from>MUC</from>
+                                    <to>FRA</to>
+                                    <date>2009-04-15</date>
+                                    <scheduledDeparture>11:55:00</scheduledDeparture>
+                                    <scheduledArrival>13:00:00</scheduledArrival>
+                                </flight>
+                            </FlightBookingConfirmationMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="correlationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive type="receiveRoyalAirlineBookingRequest">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <FlightBookingRequestMessage xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <bookingId>???</bookingId>
+                                <customer>
+                                    <id>${customerId}</id>
+                                    <firstname>John</firstname>
+                                    <lastname>Doe</lastname>
+                                </customer>
+                                <flight>
+	                                <flightId>RA 1780</flightId>
+	                                <airline>RoyalAirline</airline>
+	                                <from>FRA</from>
+	                                <to>HAM</to>
+	                                <date>2009-04-15</date>
+	                                <scheduledDeparture>16:00:00</scheduledDeparture>
+	                                <scheduledArrival>17:10:00</scheduledArrival>
+                                </flight>
+                            </FlightBookingRequestMessage>
+                        ]]>
+                    </data>
+                    <ignore path="//:FlightBookingRequestMessage/:bookingId"/>
+                </message>
+                <header>
+                    <element name="correlationId" value="${correlationId}"/>
+                </header>
+                <extract>
+                    <message path="//:FlightBookingRequestMessage/:bookingId" variable="${royalAirlineBookingId}"/>
+                </extract>
+            </receive>
+            
+            <send type="sendRoyalAirlineBookingResponse">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <FlightBookingConfirmationMessage xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <bookingId>${royalAirlineBookingId}</bookingId>
+                                <success>true</success>
+                                <flight>
+                                    <flightId>RA 1780</flightId>
+                                    <airline>RoyalAirline</airline>
+                                    <from>FRA</from>
+                                    <to>HAM</to>
+                                    <date>2009-04-15</date>
+                                    <scheduledDeparture>16:00:00</scheduledDeparture>
+                                    <scheduledArrival>17:10:00</scheduledArrival>
+                                </flight>
+                            </FlightBookingConfirmationMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="correlationid" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive type="receiveTravelAgencyBookingResponse">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TravelBookingResponseMessage xmlns="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd">
+                                <correlationId>${correlationId}</correlationId>
+                                <success>true</success>
+                                <bookings>
+                                    <booking>
+                                        <flightId>SM 1269</flightId>
+                                        <airline>SmartAirline</airline>
+                                        <from>MUC</from>
+                                        <to>FRA</to>
+                                        <date>2009-04-15</date>
+                                        <scheduledDeparture>11:55:00</scheduledDeparture>
+                                        <scheduledArrival>13:00:00</scheduledArrival>
+                                    </booking>
+                                    <booking>
+                                        <flightId>RA 1780</flightId>
+                                        <airline>RoyalAirline</airline>
+                                        <from>FRA</from>
+                                        <to>HAM</to>
+                                        <date>2009-04-15</date>
+                                        <scheduledDeparture>16:00:00</scheduledDeparture>
+                                        <scheduledArrival>17:10:00</scheduledArrival>
+                                    </booking>
+                                </bookings>                                
+                            </TravelBookingResponseMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="correlationId" value="${correlationId}"/>
+                </header>
+            </receive>
+            
+            <!-- queryDatabase connect="customerDB">
+                <statement>SELECT COUNT(1) AS BOOKINGCOUNT FROM BOOKINGS WHERE CORRELATIONID = '${correlationId}'</statement>
+                <statement>SELECT CUSTOMERID FROM BOOKINGS WHERE BOOKINGID = '${smartAirlineBookingId}'</statement>
+                <validate column="CUSTOMERID" value="${customerId}"/>
+                <validate column="BOOKINGCOUNT" value="2"/>
+            </queryDatabase-->
+        </actions>
+    </testcase>
+</spring:beans>
