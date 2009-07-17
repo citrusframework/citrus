@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="containers-iterate">
+    <title>Iterate</title>
+
+    <para>The iterate container will execute the embedded actions in loop as long as the defined breaking condition
+    string evaluates to true. The time the condition evaluates to false the iteration will break its processing.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;iterateTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;iterate indexName=&quot;i&quot; condition=&quot;i lt 5&quot;&gt;
+                &lt;echo&gt;
+                    &lt;message&gt;index is: ${i}&lt;/message&gt;
+                &lt;/echo&gt;
+            &lt;/iterate&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The attribute &quot;indexName&quot; automatically defines a new variable that will always hold the actual loop index.
+    This index variable will be available as normal variable inside the iterate container. Therefore it is possible
+    to print out the actual loop index in the echo action as shown in the above example.</para>
+
+    <para>The condition string is mandatory and describes the actual end of the loop. In iterate container the loop
+    will break in case the condition evaluates to false.</para>
+    
+    <para>The condition string can be any Boolean expression using following operators:</para>
+    
+    <itemizedlist mark="opencircle">
+        <listitem>
+            <para>lt -&gt; lower than</para>
+        </listitem>    
+        <listitem>
+            <para>lt= -&gt; lower than equals</para>
+        </listitem>
+        <listitem>
+            <para>gt -&gt; greater than</para>
+        </listitem>
+        <listitem>
+            <para>gt= -&gt; greater than equals</para>
+        </listitem>
+        <listitem>
+            <para>= -&gt; equals</para>
+        </listitem>
+        <listitem>
+            <para>and -&gt; logical combining of two Boolean values</para>
+        </listitem>
+        <listitem>
+            <para>or -&gt; logical combining of two Boolean values</para>
+        </listitem>
+        <listitem>
+            <para>() -&gt; brackets</para>
+        </listitem>
+    </itemizedlist>
+
+    <para>It is very important to notice that the condition will be evaluated before the execution of the embedded
+    actions take place. The loop therefore can be executed 0-n times according to the condition value.</para>
+    
+</section>

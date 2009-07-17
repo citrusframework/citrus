@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="containers-repeat-onerror">
+    <title>Repeat on error until true</title>
+
+    <para>The next looping container will execute a group of actions only if one embedded action fails with error. In
+    case of an error the loop will try again to execute all embedded actions. The on-error execution will take
+    place until one of the following conditions evaluates to true:</para>
+    
+    <para>1. Every embedded action was processes successfully</para>
+    <para>2. The ending condition evaluates to true</para>
+
+    <programlisting>
+    &lt;testcase name=&quot;iterateTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;repeat-onerror-until-true indexName=&quot;i&quot; condition=&quot;i = 5&quot;&gt;
+                &lt;echo&gt;
+                    &lt;message&gt;index is: ${i}&lt;/message&gt;
+                &lt;/echo&gt;
+                &lt;fail/&gt;
+            &lt;/repeat-onerror-until-true&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>In the code example the error loop will continue four times as the &lt;fail&gt; action definitely will always fail.
+    The time the condition &quot;i=5&quot; evaluates to true the loop will break anyway and the whole test case will fail.</para>
+    
+</section>

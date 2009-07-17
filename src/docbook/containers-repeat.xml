@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="containers-repeat">
+    <title>Repeat until true</title>
+
+    <para>Quite similar to the previous described iterate container this repeating container will execute its actions in
+    a loop according to the Boolean condition string. The condition will describe a Boolean expression using
+    the operators as described in the previous chapter.</para>
+
+    <para>The loop will continue until the provided condition evaluates to true. It is very important to notice that the
+    repeat loop will execute the actions before evaluating the condition. This means the actions get executed
+    1-n times.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;iterateTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;repeat-until-true indexName=&quot;i&quot; condition=&quot;(i = 3) or (i = 5)&quot;&gt;
+                &lt;echo&gt;
+                    &lt;message&gt;index is: ${i}&lt;/message&gt;
+                &lt;/echo&gt;
+            &lt;/repeat-until-true&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+</section>

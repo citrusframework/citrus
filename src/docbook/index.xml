@@ -19,6 +19,13 @@
 <!ENTITY actions-input            SYSTEM "actions-input.xml">
 <!ENTITY actions-load             SYSTEM "actions-load.xml">
 <!ENTITY actions-generic-action   SYSTEM "actions-generic-action.xml">
+<!ENTITY templates          SYSTEM "templates.xml">
+<!ENTITY containers         SYSTEM "containers.xml">
+<!ENTITY containers-sequential    SYSTEM "containers-sequential.xml">
+<!ENTITY containers-parallel      SYSTEM "containers-parallel.xml">
+<!ENTITY containers-iterate       SYSTEM "containers-iterate.xml">
+<!ENTITY containers-repeat        SYSTEM "containers-repeat.xml">
+<!ENTITY containers-repeat-onerror SYSTEM "containers-repeat-onerror.xml">
 ]>
 <book>
     <bookinfo>
@@ -65,5 +72,7 @@
         &testcase;
         &send_receive;
         &actions;
+        &templates;
+        &containers;
     </part>
 </book>

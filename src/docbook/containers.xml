@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="container">
+  <title>Containers</title>
+
+  <para>Similar to templates a container element will always hold one or more test actions. In contrast to the
+  template the container will be defined directly in the test case action chain, meaning that the container will
+  not be referenced by more than one test case.</para>
+  
+  <para>Containers will execute the embedded test actions in specific logic. This can be an execution in iteration
+  for instance. Different containers can easily be combined with each other to generate hierarchical
+  structures. This enables the test case to implement complex execution logic. In the following the available
+  containers will be described.</para>
+
+  &containers-sequential;
+  &containers-parallel;
+  &containers-iterate;
+  &containers-repeat;
+  &containers-repeat-onerror;
+  
+</chapter>
