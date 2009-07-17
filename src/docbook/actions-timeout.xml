@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-timeout">
+    <title>Expect timeouts on a destination</title>
+
+    <para>In some cases it might be necessary to expect a timeout when receiving a message from endpoint
+    destinations. For instance the tester intends to ensure that no message is sent to a certain queue at a
+    particular time period. In that case the timeout would not be a test aborting error but the expected
+    behaviour.</para>
+    
+    <para>In order to validate such a timeout situation the action &lt;expectTimout&gt; can be used. The action expects
+    the timeout to happen on a given destination and fails if a message is received instead. The bean usage
+    is very simple as the following example shows:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;receiveJMSimeoutTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;expectTimeout connect=&quot;receiveSystemA&quot; wait=&quot;500&quot;&gt;
+                &lt;destination&gt;${jms.queue.systema.outbound}&lt;/destination&gt;
+            &lt;/expectTimeout&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The action offers two attributes and one child element:</para>
+    
+    <itemizedlist mark="opencircle">
+        <listitem>
+            <para>connect: Definition of a parent service action definition in the &quot;serviceBeansContext.xml&quot;</para>
+        </listitem>
+        <listitem>
+            <para>wait: Time period to listen on the specified JMS destination for a message to come</para>
+        </listitem>
+        <listitem>
+            <para>destination: Declaration of the JMS queue destination to receive from</para>
+        </listitem>
+    </itemizedlist>
+
+    <para>Note: There are two possibilities to define those timeout expecting actions. On the one hand you can use
+    a general timeout bean in the &quot;serviceBeansContext.xml&quot; for all destinations. The destination specific
+    information like the queue name then has to be set in every test case as shown in the example. The
+    advantage of this strategy is to minimize the configuration work in the service beans context, because you
+    have one parent connect bean for many queues.</para>
+    
+    <para>On the other hand you can specify several connect beans in the central &quot;serviceBeansContext.xml&quot; for
+    every destination needed. In this case the timeout action does not have to set the destination and can
+    leave out this information in the test case. The configuration work in the service beans context increases
+    but the tester does not have to worry about queue names and other endpoint configuration. The used
+    strategy depends on the central &quot;serviceBeansContext.xml&quot; configuration file strategy.</para>
+</section>

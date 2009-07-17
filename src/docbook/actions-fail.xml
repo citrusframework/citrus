@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-fail">
+    <title>Failing the test</title>
+
+    <para>The fail action will generate an exception in order to terminate the test case with error. The test case will
+    therefore not be successful in the reporting.</para>
+    
+    <para>The user can specify a custom message that will be used in the exception to describe the error root
+    cause. Following code example will clarify the fail usage:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;failTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;fail message=&quot;Test will fail with custom message&quot;/&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+</section>

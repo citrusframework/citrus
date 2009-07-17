@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-echo">
+    <title>Echo</title>
+
+    <para>Use the &lt;echo&gt; action to print messages to the console/logger. This function can be useful when
+    debugging test runs. The property "message" holds the text to be printed out. Common use will be to print
+    out debug messages and variables as shown in this example:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;echoTest&quot;&gt;
+        &lt;variables&gt;
+            &lt;variable name=&quot;time&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;echo&gt;
+                &lt;message&gt;Hello Test Framework&lt;/message&gt;
+            &lt;/echo&gt;
+            
+            &lt;echo&gt;
+                &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+            &lt;/echo&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+</section>

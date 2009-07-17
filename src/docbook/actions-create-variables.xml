@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-create-variables">
+    <title>Create variables</title>
+
+    <para>As you know test variables are defined at the beginning of the test case. <xref linkend="testcase-variables"/> describes this
+    functionality in detail. Besides that it might be helpful to reset existing variables during the test workflow as
+    well as to define new variables.</para>
+    
+    <para>You can easily use the action &lt;createVariables&gt; in order to declare new variables or overwrite existing
+    variable values.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;settingVariablesTest&quot;&gt;
+        &lt;variables&gt;
+            &lt;variable name=&quot;myVariable&quot; value=&quot;12345&quot;/&gt;
+            &lt;variable name=&quot;newValue&quot; value=&quot;54321&quot;/&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;echo&gt;
+                &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+            &lt;/echo&gt;
+            
+            &lt;createVariables&gt;
+                &lt;variable name=&quot;myVariable&quot; value=&quot;${newValue}&quot;/&gt;
+                &lt;variable name=&quot;new&quot; value=&quot;'this is a test'&quot;/&gt;
+            &lt;/createVariables&gt;
+            
+            &lt;echo&gt;
+                &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+            &lt;/echo&gt;
+        
+            &lt;echo&gt;
+                &lt;message&gt;New variable 'new' has the value: ${new} &lt;/message&gt;
+            &lt;/echo&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The test example shows that existing variables are overwritten while new variables are created by simply
+    declaring a new variable name that was not present before. The new variables are valid for the rest of the
+    test flow and can be referred to as usual.</para>
+    
+</section>

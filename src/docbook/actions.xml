@@ -7,5 +7,15 @@
 
   &actions-database;
   &actions-sleep;
+  &actions-java;
+  &actions-timeout;
+  &actions-echo;
+  &actions-measure-time;
+  &actions-create-variables;
+  &actions-trace;
+  &actions-fail;
+  &actions-input;
+  &actions-load;
+  &actions-generic-action;
   
 </chapter>
