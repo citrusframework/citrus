@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="service-beans">
+    <title>Service beans configuration</title>
+
+    <para>The service beans context contains all available service beans. These include all beans to send and
+    receive messages, beans to access the database, beans to purge JMS queues, beans to delay the test
+    suite, beans to run Java classes.</para>
+    
+    <para>By adding new service beans the test framework functionality can be extended. In the following the basic
+    beans will be described.</para>
+    
+    <section id="service-beans-purge-jms">
+        <title>Purging JMS queues</title>
+        
+        <para>It might be essential to purge some JMS queues before or during the test run.
+        The specific bean offers the property "queueNames" to hold all queues that should be cleaned. The list
+        should contain all JMS queue names to be purged. As you can see in the next example it is possible to
+        reference properties from the local properties file.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;purgeJmsQueues&quot;
+        class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesBean&quot;&gt;
+        &lt;property name=&quot;queueConnectionFactory&quot;&gt;
+            &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;queueNames&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;${jms.queue.sas.dummy.in}&lt;/value&gt;
+                &lt;value&gt;${jms.queue.sas.dummy.out}&lt;/value&gt;
+                &lt;value&gt;${jms.queue.async.res}&lt;/value&gt;
+                &lt;value&gt;${jms.queue.async.req}&lt;/value&gt;
+                &lt;value&gt;${jms.queue.reply}&lt;/value&gt;
+                &lt;value&gt;${jms.queue.async.ntf}&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The bean will purge all queues that are given in the queueNames list. The serviceBeansContext offers a
+        purgeJmsQueuesBean that purges all available queues. When necessary this bean can be adjusted in
+        case queues have to be added or removed from the test framework.</para>
+    </section>
+    
+    <section id="service-beans-dtd-validation">
+        <title>DTD validation</title>
+        
+        <para>The validation of XML DTD might be mandatory when sending and receiving XML messages throughout
+        the test framework. In order to avoid validation errors you have to deposit the respective DTD in your test
+        environment.</para>
+        
+        <para>The directory &quot;xml&quot; is the standard location to place those DTD files. The service bean has to know this
+        path to the specific DTD. In the following example you can see a service bean definition, where the DTD
+        location is set through an entity resolver. All messages that will be sent/received using this service bean
+        are then validated according to the DTD, which is specified in the entity resolver.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;entityResolver&quot;
+        class=&quot;com.consol.citrus.util.EntityResolverImpl&quot;&gt;
+        &lt;property name=&quot;dtdResource&quot; value=&quot;file:${xml.dtd.path}/${xml.dtd}&quot;/&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id=&quot;httpSender&quot;
+        class=&quot;com.consol.citrus.actions.SendMessageBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;entityResolver&quot; ref=&quot;entityResolver&quot; /&gt;
+        &lt;property name=&quot;service&quot; ref=&quot;httpService&quot; /&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id=&quot;httpReceiver&quot;
+        class=&quot;com.consol.consol.actions.ReceiveMessageBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;entityResolver&quot; ref=&quot;entityResolver&quot; /&gt;
+        &lt;property name=&quot;service&quot; ref=&quot;httpService&quot; /&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The entity resolver uses the property “dtdResource” to find the DTD file in the environment. In this
+        example two property definitions are defined to declare the file path. The properties are set in the
+        common test.properties file.</para>
+    </section>
+    
+    <section id="service-beans-xsd-validation">
+        <title>XML schema validation</title>
+        
+        <para>Similar to the previously described DTD validation the test framework may have to handle XML schema
+        validations. Consequential the sending and receiving service beans have to know the respective XML
+        schema (*.xsd) file.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;receiveFLNFacadeOut&quot;
+        class=&quot;de.consol.testsuite.actions.ValidateBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;validateXmlSchemaSource&quot; value=&quot;${xml.schema.path}/${xml.schema}&quot;/&gt;
+        &lt;property name=&quot;service&quot;&gt;
+            &lt;bean parent=&quot;defaultJmsService&quot;&gt;
+                &lt;property name=&quot;serviceDestination&quot; value=&quot;FLNFacadeTestQueue&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The property &lt;validateXmlSchemaSource&gt; is used to specify the path to the respective XML schema
+        definition in your environment. The default directory &lt;xml&gt; is usually the right place to search for those
+        schema definition files.</para>
+        
+        <para>The service beans refer to property definitions that are specified in the test.properties file.</para>
+    </section>
+</chapter>

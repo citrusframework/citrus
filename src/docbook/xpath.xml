@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="xpath">
+    <title>XPath support</title>
+
+    <para>When sending and receiving messages it is common use to overwrite certain XML message parts with
+    test variable values or to ignore certain XML elements in the messages. The test framework implements a
+    very simple dot-notated syntax in order to walk through XML trees. Every element in the XML tree is
+    separated with a simple dot - for example:</para>
+    
+    <para><literal>root.childElement.subElement</literal></para>
+    
+    <para>The expression root.childElement.subElement will search the XML tree for the respective
+    &lt;subElement&gt; tag.</para>
+    
+    <para>A more powerful way to walk XML trees and structures is XPath. This W3C standard stands for advanced
+    XML tree handling using a special syntax as query language. The test framework supports this XPath
+    syntax in the following fields:</para>
+    
+    <itemizedlist mark="opencircle">
+        <listitem>
+            <para>&lt;message&gt;&lt;element path=”[XPath-Expression]”&gt;&lt;/message&gt;</para>
+        </listitem>
+        <listitem>
+            <para>&lt;extract&gt;&lt;message path=”[XPath-Expression]”&gt;&lt;/extract&gt;</para>
+        </listitem>
+        <listitem>
+            <para>&lt;ignore path=”[XPath-Expression]”/&gt;</para>
+        </listitem>
+        <listitem>
+            <para>&lt;validate path=”[XPath-Expression]”/&gt;</para>
+        </listitem>
+    </itemizedlist>
+    
+    <para>You can use the XPath syntax in substitution to the common dot-notated syntax wherever you want.
+    Summing up let us have a look at a simple XPath example:</para>
+  
+    <programlisting>
+    &lt;message&gt;
+        &lt;validate path=&quot;//element/elementA&quot; value=&quot;text&quot;&gt;&lt;/validate&gt;
+        &lt;validate path=&quot;//element/elementA[@attr='A']&quot; value=&quot;text&quot;&gt;&lt;/validate&gt;
+        &lt;validate path =&quot;//element/elementB&quot; value=&quot;%elementValue&quot;&gt;&lt;/validate&gt;
+        &lt;validate path =&quot;//element/elementB/@attribute&quot; value=&quot;%attributeValue&quot;&gt;&lt;/validate&gt;
+        &lt;validate path =&quot;/root/element&quot; value=&quot;namespace&quot;&gt;&lt;/validate&gt;
+        &lt;validate path =&quot;/root/element&quot; value=&quot;namespace&quot;&gt;&lt;/validate&gt;
+        &lt;validate path =&quot;//*[.='search-for']&quot; value=&quot;search-for&quot;&gt;&lt;/validate&gt;
+    &lt;/message&gt;
+    </programlisting>
+    
+</chapter>
