@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="containers-sequential">
+    <title>Sequential</title>
+
+    <para>The sequential container will execute the embedded test actions in strict sequence. Therefore the
+    sequential container will not differ in its functionality from the template definition besides the fact that the
+    sequential container is specified directly in the test case. The real powerful usage of this container will be
+    in combination with other containers.</para>
+    
+    <para>In the following example the described test case will use a sequential container to group a pair of test
+    actions to sequential execution.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;sequentialTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;sequential&gt;
+                &lt;traceTime/&gt;
+                &lt;sleep/&gt;
+                &lt;echo&gt;
+                    &lt;message&gt;Hallo TestFramework&lt;/message&gt;
+                &lt;/echo&gt;
+                &lt;traceTime/&gt;
+            &lt;/sequential&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+</section>

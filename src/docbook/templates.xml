@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="templates">
+    <title>Templates</title>
+
+    <para>Templates will group action sequences to a logical unit in order to describe certain business logic. Once
+    defined and configured the templates several test cases can reference the templates. The maintenance
+    will be much more effective as the templates will be reused over a whole test case set.</para>
+    
+    <para>The template has a unique name. In the test case the template is called by this unique name. We will
+    have a look at a first example:</para>
+  
+    <programlisting>
+    &lt;template name=&quot;doCreateVariables&quot;&gt;
+        &lt;createVariables&gt;
+            &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
+        &lt;/createVariables&gt;
+        
+        &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
+    &lt;/template&gt;
+    
+    &lt;template name=&quot;doTraceVariables&quot;&gt;
+        &lt;echo&gt;
+            &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+        &lt;/echo&gt;
+        
+        &lt;traceVariables/&gt;
+    &lt;/template&gt;
+    </programlisting>
+  
+    <para>The code example above describes two template definitions. Each template has to define a name using
+    the attribute &quot;name&quot;. Templates usually hold a sequence of test actions as seen in the first template which
+    contains the two test actions &lt;echo&gt; and &lt;traceVariables&gt;. Besides that the template is also able to call
+    other templates as shown in the second template example.</para>
+    
+    <para>The &lt;call-template&gt; action can easily be used inside of test cases in order to call templates. The called
+    template not necessarily has to be defined in the same test case XML file. The template can be defined in
+    a context XML file other than the test case itself:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;templateTest&quot;&gt;
+        &lt;variables&gt;
+            &lt;variable name=&quot;myTime&quot; value=&quot;GET_CURRENT_DATE&quot;/&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;call-template name=&quot;doCreateVariables&quot;/&gt;
+            
+            &lt;call-template name=&quot;doTraceVariables&quot;&gt;
+                &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
+            &lt;/call-template&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>Templates usually work with a specific set of variables. Either these variables have to be present in the
+    calling test case or the variables have to explicitly be set as parameters when calling the template. If a
+    variable is missing the template execution will not be able to work correctly.</para>
+    
+    <para>Note that the template &quot;doTraceVariables&quot; uses the variable ${time}. Therefore the test case must declare
+    the variable before calling the template. Otherwise the test execution would fail in unknown variable error.
+    On the other hand you can define parameters when calling the template. The parameters ensure that the
+    template will work with the declared variables. The next example should clarify the usage of template
+    parameters:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;templateTest&quot;&gt;
+        &lt;variables&gt;
+            &lt;variable name=&quot;text&quot; value=&quot;Hello TestFramework&quot;/&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;call-template name=&quot;print&quot;&gt;
+                &lt;parameter name=&quot;param1&quot; value=&quot;Test1&quot;/&gt;
+                &lt;parameter name=&quot;param2&quot; value=&quot;${text}&quot;/&gt;
+            &lt;/call-template&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The parameters <emphasis>param1</emphasis> and <emphasis>param2</emphasis> will be filled with the respective values. The mapping takes place
+    when calling the template. If you leave out the parameter mapping make sure that the variables param1
+    and <emphasis>param2</emphasis> already exist in your test case.</para>
+    
+</chapter>
