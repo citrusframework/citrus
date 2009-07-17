@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-load">
+    <title>Load</title>
+
+    <para>The action will load properties from property files and store their values as test variables. The action will
+    require a file resource either from class path or file system in order to read the property values.</para>
+    
+    <para>We will have a look at the following example to get an idea about this action:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;loadPropertiesTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;load&gt;
+                &lt;properties file=&quot;file:tests/resources/load.properties&quot;/&gt;
+            &lt;/load&gt;
+            
+            &lt;traceVariables/&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>The action will load all available properties in the file load.properties and store them to the test case
+    context as local variables. Existing variables may be overwritten.</para>
+</section>

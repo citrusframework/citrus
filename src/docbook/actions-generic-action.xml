@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-generic-action">
+    <title>Generic action</title>
+
+    <para>The generic &lt;action&gt; element can be placed into the action chain, in order to reference Spring beans in
+    other configuration files. This enables you to add special functionality to your test case that will extend the
+    usual actions that were described in the previous chapters.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;actionReferenceTest&quot;&gt;
+        &lt;actions&gt;
+            &lt;action reference=&quot;cleanUpDatabase&quot;/&gt;
+            &lt;action reference=&quot;mySpecialAction&quot;/&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>Using this action reference you can use your own implementation of the Java interface
+    com.consol.citrus.TestAction. The implementation will then be included into the test action chain as any
+    other standard action.</para>
+    
+    <para>In the example the called referenced beans implementation will clean up the database and execute some
+    custom action implementation.</para>
+</section>

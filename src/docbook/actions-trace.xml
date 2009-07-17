@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-trace">
+    <title>Trace variables</title>
+
+    <para>You already know the &lt;echo&gt; action that will trace messages to the console or logger. The
+    &lt;traceVariables&gt; action is specially designed to trace all currently valid test variables. This function can
+    be used for debug reasons. The usage is quite simple:</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;createVariablesTest&quot;&gt;
+        &lt;variables&gt;
+            &lt;variable name=&quot;myVariable&quot; value=&quot;12345&quot;/&gt;
+            &lt;variable name=&quot;nextVariable&quot; value=&quot;54321&quot;/&gt;
+        &lt;/variables&gt;
+        &lt;actions&gt;
+            &lt;traceVariables&gt;
+                &lt;variable name=&quot;myVariable&quot;/&gt;
+                &lt;variable name=&quot;nextVariable&quot;/&gt;
+            &lt;/traceVariables&gt;
+            
+            &lt;traceVariables/&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>Simply add the &lt;traceVariables&gt; action to your action chain and the current variables will be printed out to
+    the console. You can specify a special set of variables to be printed out by using &lt;variable&gt; child
+    elements. If you leave the set empty the default behaviour will print out all available variables.</para>
+</section>

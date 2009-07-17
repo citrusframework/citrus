@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-measure-time">
+    <title>Time measurement</title>
+
+    <para>Time measurement during a test can be very helpful. You can use the action &lt;traceTime&gt; for this
+    purpose. This action should be placed several times into the action chain. The action offers the attribute
+    &quot;id&quot; to identify a time line. This enables the tester to use more than one time measurements at the same
+    time. If you leave out the id the action offers a default id as you can see here in the first action reference.</para>
+    
+    <programlisting>
+    &lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
+        &lt;actions&gt;
+            &lt;traceTime/&gt;
+            
+            &lt;traceTime id=&quot;time_line_id&quot;/&gt;
+            
+            &lt;sleep time=&quot;3.5&quot;/&gt;
+            
+            &lt;traceTime id=&quot; time_line_id &quot;/&gt;
+            
+            &lt;sleep time=&quot;5.0&quot;/&gt;
+            
+            &lt;traceTime/&gt;
+            
+            &lt;traceTime id=&quot; time_line_id &quot;/&gt;
+        &lt;/actions&gt;
+    &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>To print out the current elapsed time for a time line you simply have to place the &lt;traceTime&gt; action into
+    the action chain again, using the respective id. The elapsed time will be printed out to the console.</para>
+</section>
