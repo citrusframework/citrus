@@ -26,6 +26,16 @@
 <!ENTITY containers-iterate       SYSTEM "containers-iterate.xml">
 <!ENTITY containers-repeat        SYSTEM "containers-repeat.xml">
 <!ENTITY containers-repeat-onerror SYSTEM "containers-repeat-onerror.xml">
+<!ENTITY cleanup            SYSTEM "cleanup.xml">
+<!ENTITY xpath              SYSTEM "xpath.xml">
+<!ENTITY sync-jms           SYSTEM "sync-jms.xml">
+<!ENTITY functions          SYSTEM "functions.xml">
+<!ENTITY testsuite          SYSTEM "testsuite.xml">
+<!ENTITY tibco              SYSTEM "tibco.xml">
+<!ENTITY service-beans      SYSTEM "service-beans.xml">
+<!ENTITY jms-loopbacks      SYSTEM "jms-loopbacks.xml">
+<!ENTITY debug-messages     SYSTEM "debug-messages.xml">
+<!ENTITY reporting          SYSTEM "reporting.xml">
 ]>
 <book>
     <bookinfo>
@@ -65,8 +75,31 @@
                 <listitem>
                     <para><xref linkend="testcase"/></para>
                 </listitem>
+                <listitem>
+                    <para><xref linkend="send_receive"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="actions"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="templates"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="containers"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="cleanup"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="xpath"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="sync-jms"/></para>
+                </listitem>
+                <listitem>
+                    <para><xref linkend="functions"/></para>
+                </listitem>
             </itemizedlist>
-            
         </partintro>
         &setup;
         &testcase;
@@ -74,5 +107,31 @@
         &actions;
         &templates;
         &containers;
+        &cleanup;
+        &xpath;
+        &sync-jms;
+        &functions;
+    </part>
+    
+    <part id="citrus-config">
+        <title>Changing the basic configuration</title>
+        <partintro id="citrus-config-intro">
+            <para>
+                Now it is time for us to have a look at the basic configuration of the citrus framework. The
+                following chapters will introduce the Spring bean configuration to you and will explain 
+                how test suites are setup.
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para><xref linkend="testsuite"/></para>
+                </listitem>
+            </itemizedlist>
+        </partintro>
+        &testsuite;
+        &tibco;
+        &service-beans;
+        &jms-loopbacks;
+        &debug-messages;
+        &reporting;
     </part>
 </book>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="sync-jms">
+    <title>Synchronous JMS communication</title>
+
+    <para>When dealing with synchronous JMS communication the requestor will store a dynamic JMS queue
+    destination into the JMS header in order to receive the synchronous answer on this dynamic destination.
+    The test framework offers special mechanisms to both remember and define dynamic queue destinations.</para>
+
+    <section id="sync-jms-temporary-queues">
+        <title>Reply to temporary queues</title>
+  
+        <para>In this chapter the responding to a dynamic queue destination is explained. It is possible that the test
+        framework has to publish a reply message synchronously on a dynamic queue destination. In fact the test
+        framework has to send the reply to a temporary queue that was generated dynamically by the sender.</para>
+        
+        <para>The temporary queue name is always stored in the JMS message header. The queue name therefore is
+        unknown until the framework receives the synchronous message from the sender.</para>
+        
+        <para>The receiving action has to take care of this “JMSReplyTo” information, once it is defined in the received
+        message. This means that all receiving actions are looking for “JMSReplyTo” queues in the message
+        headers they are receiving. In case such a dynamic queue is defined it will be automatically stored the
+        test constant named ${REPLY_TO_QUEUE}. This is the only way that the test framework can remember
+        these dynamic queue names.</para>
+        
+        <para>The sender action can now easily send its message to the right JMSReplyTo queue destination, using the
+        test constant ${REPLY_TO_QUEUE} as dynamic queue destination name.</para>
+        
+        <para>In detail the property "destination" is set to the constant ${REPLY_TO_QUEUE} which holds the dynamic
+        queue name. This forces the sending bean to publish the message to the dynamic queue right back to the
+        sender that initially created the temporary queue.</para>
+        
+        <para>Note that this strategy is only useful when using synchronous JMS communication, in detail when the
+        framework has to reply to a received message on a temporary queue.</para>
+    </section>
+    
+    <section id="sync-jms-requestor">
+        <title>Awaiting response on temporary queues</title>
+  
+        <para>As we dealt with responding to dynamic queue destinations in the previous chapter we now will have a
+        look at the opposite direction in synchronous JMS communication. In this case the test framework will
+        define a reply-to-queue destination and wait synchronously for the response. The test framework supports
+        this synchronous communication over JMS by specifying the additional "replyToQueue" property in the
+        sending service bean, as shown below.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;sendSynchronousInfo&quot; 
+        class=&quot;de.consol.testsuite.actions.RequestBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;service&quot;&gt;
+            &lt;bean parent=&quot;defaultJmsService&quot;&gt;
+                &lt;property name=&quot;replyToQueue&quot; value=&quot;jms.sendQueue&quot; /&gt;
+                &lt;property name=&quot;serviceDestination&quot; value=&quot;jms.reqQueue&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id=&quot;receiveSynchronousInfo&quot;
+        class=&quot;de.consol.testsuite.actions.ValidateBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;service&quot;&gt;
+            &lt;bean parent=&quot;defaultJmsService&quot;&gt;
+                &lt;property name=&quot;serviceDestination&quot; value=&quot;jms.sendQueue&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>If the property replyToQueue is present, the framework will set the queue name as a header property in
+        the sent JMS message. The receiver of the message will then directly send the answer back on this replyto-
+        queue destination. The respective receiving service bean has to receive the message from this queue,
+        in order to get the response message.</para>
+        
+        <para>This strategy simulates a synchronous JMS communication, because this queue is supposed to be a
+        temporary queue in the first place. In the test framework the queue is not temporary, but the synchronous
+        communication is guaranteed without any deficit.</para>
+        
+        <para>The only thing to be aware of is that the test framework connects to the JMS server with a user that is
+        able to dynamically create JMS queue destinations. Be sure that the user has the rights to do that. Otherwise 
+        the synchronous communication will not work.</para>
+    </section>
+    
+</chapter>

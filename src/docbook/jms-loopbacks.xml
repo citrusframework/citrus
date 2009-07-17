@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="jms-loopbacks">
+    <title>Creating JMS loopback dummies</title>
+
+    <para>The test framework offers the opportunity to work with loop back dummy implementations. Therefore the
+    framework defines JMS loop back dummies in the “loopBackContext.xml” file. These definitions cause the
+    dummy to automatically send the accurate response message to the invoking requestor.</para>
+    
+    <section id="jms-loopbacks-config">
+        <title>Configuration</title>
+        
+        <para>To create new loop back dummies open the file loopbackContext.xml in the config/spring directory. Here
+        you can see several beans defining the loop back dummies.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;jmsSprPreAsyncCreditDebitDummy&quot; parent=&quot;defaultJmsLoopBackDummy&quot;&gt;
+        &lt;property name=&quot;receiveDestination&quot; value=&quot;${jms.queue.async.req}&quot;/&gt;
+        &lt;property name=&quot;sendDestination&quot; value=&quot;${jms.queue.async.res}&quot;/&gt;
+        &lt;property name=&quot;xmlData&quot;&gt;
+            &lt;value&gt;
+                &lt;![CDATA[
+                &lt;creditDebitPrepaidAccountResponseMessage
+                    xmlns=&quot;http://consol.de/prepaid&quot;&gt;
+                    &lt;ServiceResponse&gt;
+                        &lt;ClientID&gt;1&lt;/ClientID&gt;
+                        &lt;ServiceID&gt;_&lt;/ServiceID&gt;
+                        &lt;TrackingID&gt;_&lt;/TrackingID&gt;
+                        &lt;VersionIdentifier&gt;1.0&lt;/VersionIdentifier&gt;
+                        &lt;CallingDate&gt;2001-12-17T09:30:47.0Z&lt;/CallingDate&gt;
+                        &lt;Success&gt;true&lt;/Success&gt;
+                    &lt;/ServiceResponse&gt;
+                    &lt;BusinessData&gt;
+                        &lt;MSISDN&gt;_&lt;/MSISDN&gt;
+                        &lt;SpSubscriptionID&gt;49176123456789&lt;/SpSubscriptionID&gt;
+                        &lt;Account&gt;
+                            &lt;AccBal&gt;_&lt;/AccBal&gt;
+                            &lt;AccBalExp&gt;2009-12-17T09:30:47.0Z&lt;/AccBalExp&gt;
+                            &lt;BonusBal&gt;_&lt;/BonusBal&gt;
+                            &lt;BonusBalExp&gt;2009-12-16T09:30:47.0Z&lt;/BonusBalExp&gt;
+                        &lt;/Account&gt;
+                    &lt;/BusinessData&gt;
+                &lt;/creditDebitPrepaidAccountResponseMessage&gt;
+                ]]&gt;
+            &lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;messageSelector&quot; value=&quot;Operation = 'creditDebitPrepaidAccount'&quot;/&gt;
+        &lt;property name=&quot;getMessageValues&quot;&gt;
+            &lt;map&gt;
+                &lt;entry key=&quot;ServiceID&quot; value=&quot;%serviceId&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;BusinessData.MSISDN&quot; value=&quot;%msisdn&quot;&gt;&lt;/entry&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;getHeaderValues&quot;&gt;
+            &lt;map&gt;
+                &lt;entry key=&quot;Operation&quot; value=&quot;%operation&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;TrackingID&quot; value=&quot;%requestTag&quot;&gt;&lt;/entry&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;setHeaderValues&quot;&gt;
+            &lt;map&gt;
+                &lt;entry key=&quot;ServiceID&quot; value=&quot;%serviceId&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;Operation&quot; value=&quot;%operation&quot; /&gt;
+                &lt;entry key=&quot;ClientID&quot; value=&quot;1&quot; /&gt;
+                &lt;entry key=&quot;VersionIdentifier&quot; value=&quot;1.0&quot; /&gt;
+                &lt;entry key=&quot;TrackingID&quot; value=&quot;%requestTag&quot; /&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;setMessageValues&quot;&gt;
+            &lt;map&gt;
+                &lt;entry key=&quot;//:ServiceID&quot; value=&quot;%serviceId&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;//:TrackingID&quot; value=&quot;%requestTag&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;//:MSISDN&quot; value=&quot;%msisdn&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;//:AccBal&quot; value=&quot;1000&quot;&gt;&lt;/entry&gt;
+                &lt;entry key=&quot;//:BonusBal&quot; value=&quot;200&quot;&gt;&lt;/entry&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The bean definition has following properties to be set:</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para>receiveDestination</para>
+                <para>-&gt; JMS queue to listen on</para>
+            </listitem>
+            <listitem>
+                <para>sendDestination</para>
+                <para>-&gt; JMS queue to send the respective response to</para>
+            </listitem>
+            <listitem>
+                <para>xmlData/xmlResource</para>
+                <para>-&gt; XML response message definition</para>
+            </listitem>
+            <listitem>
+                <para>messageSelector</para>
+                <para>-&gt; selector to receive only JMS messages with appropriate header values available</para>
+            </listitem>
+            <listitem>
+                <para>getMessageValues</para>
+                <para>-&gt; saves values from the received message as variables</para>
+            </listitem>
+            <listitem>
+                <para>setMessageValues</para>
+                <para>-&gt; sets message values in the response message to be sent</para>
+            </listitem>
+            <listitem>
+                <para>getHeadervalues</para>
+                <para>-&gt; saves header values from the received JMS message</para>
+            </listitem>
+            <listitem>
+                <para>setHeaderValues</para>
+                <para>-&gt; sets header values for the response message to be sent</para>
+            </listitem>
+        </itemizedlist>
+        
+        <para>The receiveDestination and sendDestination properties define the destination endpoints to listen on
+        respectively the JMS queue that will be used to send messages. If the received message contains a
+        temporary reply-to-queue, you can leave the sendDestination undefined. The test framework will
+        automatically send the response message to the temporary queue.</para>
+
+        <para>The messageSelector enables the test framework to have more than one dummy listening on a single
+        JMS queue. The dummies listening then will only get those JMS messages that fit the selector pattern.
+        The selector works only on the JMS header values. The pattern to be defined looks like follows:</para>
+        
+        <para><literal>&lt;header-property-name&gt; = '&lt;header-value&gt;'</literal></para>
+        
+        <para>The framework will then only deliver messages to the dummy that fit the given header pattern.
+        All loop back dummies inherit their behaviour from one parent bean that looks like follows:</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;defaultJmsLoopBackDummy&quot;
+        class=&quot;de.consol.testsuite.actions.JmsLoopBackBean&quot; abstract=&quot;true&quot;&gt;
+        &lt;property name=&quot;serverUrl&quot; value=&quot;${jms.server.url}&quot;/&gt;
+        &lt;property name=&quot;userName&quot; value=&quot;${jms.user}&quot;/&gt;
+        &lt;property name=&quot;userPassword&quot; value=&quot;${jms.password}&quot;/&gt;
+        &lt;property name=&quot;timeout&quot; value=&quot;5000&quot;/&gt;
+        &lt;property name=&quot;countInstances&quot; value=&quot;10&quot;/&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The parent bean offers static properties that will not change frequently. These properties are:</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para>serverUrl -&gt; JMS server host</para>
+            </listitem>
+            <listitem>
+                <para>userName -&gt; JMS user</para>
+            </listitem>
+            <listitem>
+                <para>userPassword -&gt; JMS user password</para>
+            </listitem>
+            <listitem>
+                <para>timeout -&gt; time to wait for requests (in ms)</para>
+            </listitem>
+            <listitem>
+                <para>countInstances -&gt; number of instances to invoke</para>
+            </listitem>
+        </itemizedlist>
+
+        <para>The countInstances property can be used to define multiple threading. In this case the test framework is
+        using several loop back dummies listening on one JMS queue in order to improve performance. Simply
+        configure how many dummy instances you want to invoke.</para>
+    </section>
+    
+    <section id="jms-loopbacks-start-stop">
+        <title>Start and stop JMS loopback dummies</title>
+        
+        <para>If you want to start and stop the loop back dummies you have to use wrapper beans that will start/stop
+        one or more dummy implementation.</para>
+        
+        <programlisting>
+    &lt;bean id=&quot;startLoopBackDummies&quot;
+        class=&quot;de.consol.testsuite.actions.StartupBean&quot;&gt;
+        &lt;property name=&quot;serverList&quot;&gt;
+            &lt;list&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntFormatMSISDNDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntUpdateSubIdDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntActivateMSISDNDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsSimMgntDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsInfoDummy&quot;/&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id=&quot;stopLoopBackDummies&quot;
+        class=&quot;de.consol.testsuite.actions.ShutdownBean&quot;&gt;
+        &lt;property name=&quot;serverList&quot;&gt;
+            &lt;list&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntFormatMSISDNDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntUpdateSubIdDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsMsisdnMgntActivateMSISDNDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsSimMgntDummy&quot;/&gt;
+                &lt;ref bean=&quot;jmsInfoDummy&quot;/&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>These start up and shut down beans will start/stop the defined beans. Therefore the bean offers following
+        properties:</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para>serverList -&gt; list of servers that all will be started</para>
+            </listitem>
+            <listitem>
+                <para>server -&gt; on single server instance to start</para>
+            </listitem>
+        </itemizedlist>
+        
+        <para>As you can see the start up and shut down beans work with bean references to the dummies. It is good
+        practice to group the dummies by their functional classification. This enables you to start/stop all dummies
+        belonging to a certain classification. Of course you can put all available dummies to one single start/stop
+        wrapper to start all dummies.</para>
+        
+        <para>The start/stop wrapper beans can be referred to when calling the special loopback.dummies.start ANT
+        target as described in chapter 2.6. The ANT target will ask for a start/stop wrapper bean name to invoke.
+        This enables you to explicitly start/stop loop back dummy implementations.</para>
+    </section>
+</chapter>

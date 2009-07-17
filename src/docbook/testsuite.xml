@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="testsuite">
+    <title>Setting up a testsuite</title>
+
+    <para></para>
+    
+    <section id="testsuite-tasks">
+        <title>Basic testsuite behavior - Tasks before, between, after</title>
+        
+        <para>The test suite context configuration file declares the basic behaviour of the test framework. For instance
+        this can be the behaviour before or after the test run, so called tasksBefore and tasksAfter. The test
+        framework is configured as a Spring bean declaration itself as you can see in the next code example:</para>
+        
+        <programlisting>
+        &lt;bean name=&quot;integrationTests&quot; class=&quot;de.consol.testsuite.TestSuite&quot;&gt;
+            &lt;property name=&quot;tasksBefore&quot;&gt;
+                &lt;list&gt;
+                    &lt;bean class=&quot;de.consol.testsuite.actions.StartPiranhaDummyBean&quot;&gt;
+                        &lt;property name=&quot;piranhaDummyTemplate&quot;
+                            ref=&quot;piranhaDummyTemplate&quot; /&gt;
+                    &lt;/bean&gt;
+                    &lt;ref bean=&quot;purgeJmsQueues&quot; /&gt;
+                    &lt;ref bean=&quot;cleanIcJobs&quot; /&gt;
+                    &lt;ref bean=&quot;cleanDatabase&quot; /&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        
+            &lt;property name=&quot;tasksBetween&quot;&gt;
+                &lt;list&gt;
+                    &lt;ref bean=&quot;purgeJmsQueues&quot; /&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        
+            &lt;property name=&quot;tasksAfter&quot;&gt;
+                &lt;list&gt;
+                    &lt;bean class=&quot;de.consol.testsuite.actions.StopPiranhaDummyBean&quot;&gt;
+                        &lt;property name=&quot;piranhaDummyTemplate&quot;
+                            ref=&quot;piranhaDummyTemplate&quot; /&gt;
+                    &lt;/bean&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        
+            &lt;property name=&quot;includeTests&quot;&gt;
+                &lt;list&gt;
+                    &lt;value&gt;IT_*&lt;/value&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        
+            &lt;property name=&quot;excludeTests&quot;&gt;
+                &lt;list&gt;
+                    &lt;value&gt;IT_ExportMSISDN_Aborted&lt;/value&gt;
+                    &lt;value&gt;IT_MigOpt_Ok_allSystems&lt;/value&gt;
+                &lt;/list&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The test suite bean is of the type de.consol.testsuite.TestSuite and offers the following properties to affect
+        the basic behaviour:</para>
+        
+        <itemizedlist mark="opencircle">
+            <listitem>
+                <para>tasksBefore: List of actions that will be executed before the first test workflow is run</para>
+            </listitem>
+            <listitem>
+                <para>tasksBetween: List of actions that will be executed between every test workflow</para>
+            </listitem>
+            <listitem>
+                <para>tasksAfter: List of actions that will be executed after the last test workflow</para>
+            </listitem>
+            <listitem>
+                <para>excludedTests -&gt; see <xref linkend="testsuite-include-exclude"/></para>
+            </listitem>
+            <listitem>
+                <para>includedTests -&gt; see <xref linkend="testsuite-include-exclude"/></para>
+            </listitem>
+        </itemizedlist>
+        
+        <para>The three task-sections before, in between and after the execution of tests are supposed to be used for
+        initializing and finishing tasks.</para>
+        
+        <para>All these tasks can easily be adjusted by adding or removing beans in the &lt;list&gt; element. As you can see
+        in the example code above, the test suite bean offers two properties to include/exclude test cases from
+        the test run. This configuration will be part of the next chapter.</para>
+    </section>
+    
+    <section id="testsuite-include-exculde">
+        <title>Including and excluding tests</title>
+        
+        <para>While using the test framework you will find out that the duration of tests differ according to the purpose of
+        the test. Especially timeout tests take a long time. In some cases the tester might not want to execute
+        those tests, because it would take too long. Another situation would be that the tester intends to test a
+        certain group of tests explicitly and all other tests should not be executed.</para>
+        
+        <para>In these situations the previously described test suite context is very helpful. In this configuration you can
+        easily declare the tests you want to include/exclude from the next test run.</para>
+        
+        <para>The following example tries to explain this functionality:</para>
+        
+        <programlisting>
+    &lt;bean name=&quot;testSuite&quot; class=&quot;de.consol.testsuite.TestSuite&quot;&gt;
+        &lt;property name=&quot;tasksBefore&quot;&gt;
+            ...
+        &lt;/property&gt;
+        &lt;property name=&quot;tasksBetween&quot;&gt;
+            ...
+        &lt;/property&gt;
+        &lt;property name=&quot;tasksAfter&quot;&gt;
+            ...
+        &lt;/property&gt;
+        &lt;property name=&quot;excludeTests&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;*timeout*&lt;/value&gt;
+                &lt;value&gt;someTestName&lt;/value&gt;
+                &lt;value&gt;startsWith*&lt;/value&gt;
+                &lt;value&gt;*endsWith&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+        
+        &lt;property name=&quot;includeTests&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;*timeout*&lt;/value&gt;
+                &lt;value&gt;someTestName&lt;/value&gt;
+                &lt;value&gt;startsWith*&lt;/value&gt;
+                &lt;value&gt;*endsWith&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+        </programlisting>
+        
+        <para>As you can see the following properties are used to define the tests to be included or excluded:</para>
+
+        <itemizedlist mark="opencircle">
+            <listitem>
+                <para>includeTests:</para>
+                <para>Use this property to define test names that will be explicitly executed during the test run</para>
+            </listitem>
+            <listitem>
+                <para>excludeTests:</para>
+                <para>Use this property to define test names that will be explicitly left out during the test run</para>
+            </listitem>
+        </itemizedlist>
+
+        <para>Both properties support name patterns. This means that you can use the wildcards &quot;*&quot; to define the test
+        names as shown in the example. Be careful to use both including and excluding patterns at the same
+        time, because they might overrule each other.</para>
+    </section>
+    
+    <section id="testsuite-multiple">
+        <title>Multiple testsuites</title>
+        
+        <para>In the chapters before the configuration of the test suite was described through the testSuiteContext. Now
+        it might be useful to configure more than one of these test suite instances, for instance for different types
+        of tests. This could be unit testing and integration testing. Unit testing might have different tasksBefore
+        than integration testing.</para>
+        
+        <para>You can simply define several beans of test suites in the testSuiteContext. There could be one test suite
+        instance for unit testing and one for integration testing, with their individual configuration like separate
+        tasksBefore and different including patterns for tests.</para>
+        
+        <para>In default behaviour the test suite will start all available test suite instances in sequence. If you want to
+        start a certain instance explicitly you have to declare the name of the instance when starting the test
+        framework. The delivered ANT build.xml script offers already separate tasks for starting only unit tests or
+        only integration tests, as described in <xref linkend="setup"/>.</para>
+    </section>
+</chapter>
