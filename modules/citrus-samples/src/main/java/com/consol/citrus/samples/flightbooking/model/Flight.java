@@ -11,16 +11,16 @@ public class Flight {
     String scheduledArrival;
     
     /**
-     * @return the flighId
+     * @return the flightId
      */
     public String getFlightId() {
         return flightId;
     }
     /**
-     * @param flighId the flighId to set
+     * @param flightId the flightId to set
      */
-    public void setFlightId(String flighId) {
-        this.flightId = flighId;
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
     }
     /**
      * @return the airline
