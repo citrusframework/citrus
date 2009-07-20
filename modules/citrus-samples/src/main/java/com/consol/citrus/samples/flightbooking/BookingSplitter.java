@@ -21,16 +21,7 @@ public class BookingSplitter extends AbstractMessageSplitter {
         
         TravelBookingRequestMessage request  = ((TravelBookingRequestMessage)message.getPayload());
         
-        for (Booking booking : request.getBookings()) {
-            Flight flight = new Flight();
-            flight.setAirline(booking.getAirline());
-            flight.setFlightId(booking.getFlightId());
-            flight.setFrom(booking.getFrom());
-            flight.setTo(booking.getTo());
-            flight.setDate(booking.getDate());
-            flight.setScheduledArrival(booking.getScheduledArrival());
-            flight.setScheduledDeparture(booking.getScheduledDeparture());
-            
+        for (Flight flight : request.getFlights()) {
             FlightBookingRequestMessage flightRequest = new FlightBookingRequestMessage();
             flightRequest.setFlight(flight);
             flightRequest.setCorrelationId(request.getCorrelationId());

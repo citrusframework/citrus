@@ -10,10 +10,10 @@
 			<xs:sequence>
 				<xs:element name="correlationId" type="xs:string"/>
 				<xs:element name="customer" type="Customer"/>
-				<xs:element name="bookings">
+				<xs:element name="flights">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="booking" type="Booking" maxOccurs="unbounded"/>
+							<xs:element name="flight" type="Flight" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -27,12 +27,12 @@
 			<xs:element name="lastname" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="Booking">
+	<xs:complexType name="Flight">
 		<xs:sequence>
 			<xs:element name="flightId" type="xs:string"/>
 			<xs:element name="airline" type="xs:string"/>
-			<xs:element name="from" type="xs:string"/>
-			<xs:element name="to" type="xs:string"/>
+			<xs:element name="fromAirport" type="xs:string"/>
+			<xs:element name="toAirport" type="xs:string"/>
 			<xs:element name="date" type="xs:date"/>
 			<xs:element name="scheduledDeparture" type="xs:time"/>
 			<xs:element name="scheduledArrival" type="xs:time"/>
@@ -43,16 +43,14 @@
 			<xs:sequence>
 				<xs:element name="correlationId" type="xs:string"/>
 				<xs:element name="success" type="xs:boolean"/>
-				<xs:element name="bookings">
+				<xs:element name="flights">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="booking" type="Booking" maxOccurs="unbounded"/>
+							<xs:element name="flight" type="Flight" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="BookingEntry" type="Booking"/>
-	<xs:element name="Customer" type="Customer"/>
 </xs:schema>

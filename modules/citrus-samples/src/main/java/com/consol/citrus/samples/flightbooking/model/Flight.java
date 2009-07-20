@@ -4,8 +4,8 @@ package com.consol.citrus.samples.flightbooking.model;
 public class Flight {
     String flightId;
     String airline;
-    String from;
-    String to;
+    String fromAirport;
+    String toAirport;
     String date;
     String scheduledDeparture;
     String scheduledArrival;
@@ -37,26 +37,26 @@ public class Flight {
     /**
      * @return the from
      */
-    public String getFrom() {
-        return from;
+    public String getFromAirport() {
+        return fromAirport;
     }
     /**
      * @param from the from to set
      */
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFromAirport(String from) {
+        this.fromAirport = from;
     }
     /**
      * @return the to
      */
-    public String getTo() {
-        return to;
+    public String getToAirport() {
+        return toAirport;
     }
     /**
      * @param to the to to set
      */
-    public void setTo(String to) {
-        this.to = to;
+    public void setToAirport(String to) {
+        this.toAirport = to;
     }
     /**
      * @return the date

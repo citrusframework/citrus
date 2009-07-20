@@ -35,7 +35,6 @@
         <beans:property name="aliases">
             <beans:props>
                 <beans:prop key="flight">com.consol.citrus.samples.flightbooking.model.Flight</beans:prop>
-                <beans:prop key="booking">com.consol.citrus.samples.flightbooking.model.Booking</beans:prop>
                 <beans:prop key="customer">com.consol.citrus.samples.flightbooking.model.Customer</beans:prop>
                 <beans:prop key="FlightBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage</beans:prop>
                 <beans:prop key="FlightBookingConfirmationMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage</beans:prop>

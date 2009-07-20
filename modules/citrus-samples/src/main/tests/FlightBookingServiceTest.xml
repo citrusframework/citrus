@@ -27,26 +27,26 @@
                                     <firstname>John</firstname>
                                     <lastname>Doe</lastname>
                                 </customer>
-                                <bookings>
-                                    <booking>
+                                <flights>
+                                    <flight>
                                         <flightId>SM 1269</flightId>
                                         <airline>SmartAirline</airline>
-                                        <from>MUC</from>
-                                        <to>FRA</to>
+                                        <fromAirport>MUC</fromAirport>
+                                        <toAirport>FRA</toAirport>
                                         <date>2009-04-15</date>
                                         <scheduledDeparture>11:55:00</scheduledDeparture>
                                         <scheduledArrival>13:00:00</scheduledArrival>
-                                    </booking>
-                                    <booking>
+                                    </flight>
+                                    <flight>
                                         <flightId>RA 1780</flightId>
                                         <airline>RoyalAirline</airline>
-                                        <from>FRA</from>
-                                        <to>HAM</to>
+                                        <fromAirport>FRA</fromAirport>
+                                        <toAirport>HAM</toAirport>
                                         <date>2009-04-15</date>
                                         <scheduledDeparture>16:00:00</scheduledDeparture>
                                         <scheduledArrival>17:10:00</scheduledArrival>
-                                    </booking>
-                                </bookings>                                
+                                    </flight>
+                                </flights>                                
                             </TravelBookingRequestMessage>
                         ]]>
                     </data>
@@ -71,8 +71,8 @@
                                 <flight>
                                     <flightId>SM 1269</flightId>
                                     <airline>SmartAirline</airline>
-                                    <from>MUC</from>
-                                    <to>FRA</to>
+                                    <fromAirport>MUC</fromAirport>
+                                    <toAirport>FRA</toAirport>
                                     <date>2009-04-15</date>
                                     <scheduledDeparture>11:55:00</scheduledDeparture>
                                     <scheduledArrival>13:00:00</scheduledArrival>
@@ -101,8 +101,8 @@
                                 <flight>
                                     <flightId>SM 1269</flightId>
                                     <airline>SmartAirline</airline>
-                                    <from>MUC</from>
-                                    <to>FRA</to>
+                                    <fromAirport>MUC</fromAirport>
+                                    <toAirport>FRA</toAirport>
                                     <date>2009-04-15</date>
                                     <scheduledDeparture>11:55:00</scheduledDeparture>
                                     <scheduledArrival>13:00:00</scheduledArrival>
@@ -131,8 +131,8 @@
                                 <flight>
 	                                <flightId>RA 1780</flightId>
 	                                <airline>RoyalAirline</airline>
-	                                <from>FRA</from>
-	                                <to>HAM</to>
+	                                <fromAirport>FRA</fromAirport>
+	                                <toAirport>HAM</toAirport>
 	                                <date>2009-04-15</date>
 	                                <scheduledDeparture>16:00:00</scheduledDeparture>
 	                                <scheduledArrival>17:10:00</scheduledArrival>
@@ -161,8 +161,8 @@
                                 <flight>
                                     <flightId>RA 1780</flightId>
                                     <airline>RoyalAirline</airline>
-                                    <from>FRA</from>
-                                    <to>HAM</to>
+                                    <fromAirport>FRA</fromAirport>
+                                    <toAirport>HAM</toAirport>
                                     <date>2009-04-15</date>
                                     <scheduledDeparture>16:00:00</scheduledDeparture>
                                     <scheduledArrival>17:10:00</scheduledArrival>
@@ -183,26 +183,26 @@
                             <TravelBookingResponseMessage xmlns="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd">
                                 <correlationId>${correlationId}</correlationId>
                                 <success>true</success>
-                                <bookings>
-                                    <booking>
+                                <flights>
+                                    <flight>
                                         <flightId>SM 1269</flightId>
                                         <airline>SmartAirline</airline>
-                                        <from>MUC</from>
-                                        <to>FRA</to>
+                                        <fromAirport>MUC</fromAirport>
+                                        <toAirport>FRA</toAirport>
                                         <date>2009-04-15</date>
                                         <scheduledDeparture>11:55:00</scheduledDeparture>
                                         <scheduledArrival>13:00:00</scheduledArrival>
-                                    </booking>
-                                    <booking>
+                                    </flight>
+                                    <flight>
                                         <flightId>RA 1780</flightId>
                                         <airline>RoyalAirline</airline>
-                                        <from>FRA</from>
-                                        <to>HAM</to>
+                                        <fromAirport>FRA</fromAirport>
+                                        <toAirport>HAM</toAirport>
                                         <date>2009-04-15</date>
                                         <scheduledDeparture>16:00:00</scheduledDeparture>
                                         <scheduledArrival>17:10:00</scheduledArrival>
-                                    </booking>
-                                </bookings>                                
+                                    </flight>
+                                </flights>                                
                             </TravelBookingResponseMessage>
                         ]]>
                     </data>

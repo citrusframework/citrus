@@ -6,30 +6,19 @@ import java.util.List;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
-import com.consol.citrus.samples.flightbooking.model.Booking;
-import com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage;
-import com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage;
+import com.consol.citrus.samples.flightbooking.model.*;
 
 public class FlightAggregator {
 
     public Message<TravelBookingResponseMessage> processFlights(List<FlightBookingConfirmationMessage> messages) {
         TravelBookingResponseMessage responseMessage = new TravelBookingResponseMessage();
         
-        List<Booking> bookings = new ArrayList<Booking>();
+        List<Flight> flights = new ArrayList<Flight>();
         for (FlightBookingConfirmationMessage confirmationMessage : messages) {
-            Booking booking = new Booking();
-            booking.setAirline(confirmationMessage.getFlight().getAirline());
-            booking.setFlightId(confirmationMessage.getFlight().getFlightId());
-            booking.setFrom(confirmationMessage.getFlight().getFrom());
-            booking.setTo(confirmationMessage.getFlight().getTo());
-            booking.setDate(confirmationMessage.getFlight().getDate());
-            booking.setScheduledArrival(confirmationMessage.getFlight().getScheduledArrival());
-            booking.setScheduledDeparture(confirmationMessage.getFlight().getScheduledDeparture());
-            
-            bookings.add(booking);
+            flights.add(confirmationMessage.getFlight());
         }
         
-        responseMessage.setBookings(bookings);
+        responseMessage.setFlights(flights);
         responseMessage.setCorrelationId(messages.get(0).getCorrelationId());
         responseMessage.setSuccess(true);
         
