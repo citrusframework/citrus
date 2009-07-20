@@ -1,12 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <artifactId>citrus-maven</artifactId>
+    <groupId>com.consol.citrus.mvn</groupId>
+    <version>1.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  
   <groupId>com.consol.citrus.mvn.plugin</groupId>
   <artifactId>citrus-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.0</version>
   <name>citrus-maven-plugin</name>
-  <url>http://maven.apache.org</url>
+  <description>Citrus Maven Plugin</description>
+  
   <build>
     <plugins>
         <plugin>
@@ -33,116 +42,4 @@
     	<version>3.0</version>
     </dependency>
   </dependencies>
-  <profiles>
-
-    <!-- ============================================================================ -->
-    <!-- Repositories which should be active by default -->
-    
-    <profile>
-        <!-- Profile containing all settings specific to consol  -->
-        <id>repository-consol</id>
-        <repositories>
-          <!-- central -->
-          <repository>
-            <id>central</id>
-            <url>http://build.int.consol.de/proximity/repository/release</url>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-          </repository>
-          <repository>
-            <id>codehaus.org</id>
-            <url>http://build.int.consol.de/proximity/repository/release</url>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-          </repository>
-          <!-- apache.snapshots -->
-          <repository>
-            <id>apache.snapshots</id>
-            <url>http://build.int.consol.de/proximity/repository/snapshot</url>
-            <snapshots>
-              <enabled>true</enabled>
-              <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-              <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-          </repository>
-          <!-- snapshots -->
-          <repository>
-            <id>snapshots</id>
-            <url>http://build.int.consol.de/proximity/repository/snapshot</url>
-            <snapshots>
-              <enabled>true</enabled>
-              <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-              <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-          </repository>
-        </repositories>
-  
-        <pluginRepositories>
-          <pluginRepository>
-            <id>central</id>
-            <url>http://build.int.consol.de/proximity/repository/release</url>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-          </pluginRepository>
-          <pluginRepository>
-            <id>codehaus.org</id>
-            <url>http://build.int.consol.de/proximity/repository/release</url>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-          </pluginRepository>
-          <pluginRepository>
-            <id>apache.snapshots</id>
-            <url>http://build.int.consol.de/proximity/repository/snapshot</url>
-            <snapshots>
-              <enabled>true</enabled>
-              <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-              <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-          </pluginRepository>
-          <pluginRepository>
-            <id>snapshots</id>
-            <url>http://build.int.consol.de/proximity/repository/snapshot</url>
-            <snapshots>
-              <enabled>true</enabled>
-              <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-              <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-          </pluginRepository>
-        </pluginRepositories>
-  
-        <activation>
-          <file>
-            <missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing>
-          </file>
-        </activation>
-      </profile>
-    </profiles>  
 </project>
