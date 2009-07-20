@@ -6,7 +6,7 @@ import java.util.List;
 public class TravelBookingResponseMessage {
     String correlationId;
     boolean success;
-    List<Booking> bookings = new ArrayList<Booking>();
+    List<Flight> flights = new ArrayList<Flight>();
     
     String xmlns = "http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd";
     
@@ -35,15 +35,15 @@ public class TravelBookingResponseMessage {
         this.success = success;
     }
     /**
-     * @return the bookings
+     * @return the flights
      */
-    public List<Booking> getBookings() {
-        return bookings;
+    public List<Flight> getFlights() {
+        return flights;
     }
     /**
-     * @param bookings the bookings to set
+     * @param flights the flights to set
      */
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
     }
 }

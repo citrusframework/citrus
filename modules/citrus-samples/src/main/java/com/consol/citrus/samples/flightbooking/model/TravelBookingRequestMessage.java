@@ -6,7 +6,7 @@ import java.util.List;
 public class TravelBookingRequestMessage {
     String correlationId;
     Customer customer;
-    List<Booking> bookings = new ArrayList<Booking>();
+    List<Flight> flights = new ArrayList<Flight>();
     
     /**
      * @return the correlationId
@@ -35,13 +35,13 @@ public class TravelBookingRequestMessage {
     /**
      * @return the bookings
      */
-    public List<Booking> getBookings() {
-        return bookings;
+    public List<Flight> getFlights() {
+        return flights;
     }
     /**
      * @param bookings the bookings to set
      */
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
+    public void setBookings(List<Flight> flights) {
+        this.flights = flights;
     }
 }
