@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.consol.citrus.mvn</groupId>
+  <artifactId>citrus-maven</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0</version>
+  <name>${project.artifactId} (Main)</name>
+  <description>Citrus Maven Parent</description>
+  <url>http://citrus.consol.de</url>
+  <inceptionYear>2008</inceptionYear>
+  
+  <modules>
+    <module>plugins/citrus-maven-plugin</module>
+    <module>skins/citrus-default-skin</module>
+  </modules>
+  
+  <profiles>
+    <profile>
+      <!-- Profile containing all settings if ConSol environment is not available -->
+      <id>repository-home</id>
+      <repositories>
+        <repository>
+          <id>jboss</id>
+          <url>http://repository.jboss.com/maven2</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
+      </repositories>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <!-- Profile containing all settings specific to ConSol  -->
+      <id>repository-consol</id>
+      <repositories>
+        <repository>
+          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
+          <url>${REPO_URL}/repository/maven2/release</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
+        <repository>
+          <id>release</id>
+          <url>${REPO_URL}/repository/maven2/release</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
+        <repository>
+          <id>snapshots</id>
+          <url>${REPO_URL}/repository/maven2/snapshot</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+        </repository>
+      </repositories>
+
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
+          <url>${REPO_URL}/repository/maven2/release</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </pluginRepository>
+        <pluginRepository>
+          <id>release</id>
+          <url>${REPO_URL}/repository/maven2/release</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </pluginRepository>
+        <pluginRepository>
+          <id>snapshots</id>
+          <url>${REPO_URL}/repository/maven2/snapshot</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
+
+      <activation>
+        <file>
+          <missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing>
+        </file>
+      </activation>
+    </profile>
+  </profiles>
+</project>
