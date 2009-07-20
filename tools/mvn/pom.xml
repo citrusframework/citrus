@@ -16,6 +16,32 @@
     <module>skins/citrus-default-skin</module>
   </modules>
   
+  <build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+              <!-- http://maven.apache.org/plugins/maven-idea-plugin/plugin-info.html -->
+              <artifactId>maven-idea-plugin</artifactId>
+              <version>2.2</version>
+              <configuration>
+                <downloadSources>true</downloadSources>
+                <linkModules>true</linkModules>
+                <jdkLevel>1.5</jdkLevel>
+              </configuration>
+            </plugin>
+            <plugin>
+              <!-- http://maven.apache.org/plugins/maven-eclipse-plugin/plugin-info.html -->
+              <artifactId>maven-eclipse-plugin</artifactId>
+              <version>2.5.1</version>
+              <configuration>
+                <downloadSources>true</downloadSources>
+                <downloadJavadoc>true</downloadJavadoc>
+              </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+  </build>
+  
   <profiles>
     <profile>
       <!-- Profile containing all settings if ConSol environment is not available -->
