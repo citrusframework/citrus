@@ -325,7 +325,7 @@
       #end
       
       #if ( $StringUtils.isEmpty( $decoration.bannerRight ) )
-        <a href="${site.url}" id="bannerRight"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
+        <a href="http://www.consol.de" id="bannerRight"><img src="$relativePath/images/logo_consol.png" alt="ConSol Logo" /></a>
       #else
         #banner( $decoration.bannerRight "bannerRight" )
       #end
