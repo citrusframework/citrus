@@ -2,32 +2,57 @@
 <project name="${project.name}">
   <version position="left"/>
   <skin>
-    <groupId>com.consol.cmas.maven</groupId>
-    <artifactId>consol-default-skin</artifactId>
-    <version>1.2</version>
+    <groupId>com.consol.citrus.mvn.skin</groupId>
+    <artifactId>citrus-default-skin</artifactId>
+    <version>1.0</version>
   </skin>
-  <bannerRight>
-    <href>${site.url}</href>
-    <src>${site.url}/images/logo.png</src>
-  </bannerRight>
+  <poweredBy>
+    <logo name="ConSol" href="http://www.consol.de" img="images/logos/powered-by-consol.png"/>
+    <logo name="Maven" href="http://maven.apache.org/"/>
+  </poweredBy>
   <body>
     <links>
       <item name="Blog" href="http://blogs.consol.de/"/>
-      <item name="Wiki" href="https://wiki.consol.de/wiki/Projekte/O2/TestSuite"/>
-      <item name="Subversion" href="http://fisheye.consol.de/browse/O2_TESTSUITE"/>
+      <item name="Wiki" href="https://wiki.consol.de/wiki/Projekte/consol/Citrus"/>
+      <item name="Subversion" href="http://fisheye.consol.de/browse/citrus"/>
       <item name="Build" href="http://build2.int.consol.de/bamboo/browse/CITRUS"/>
     </links>
 
-    <menu name="Overview">
+    <menu name="Citrus">
       <item name="Welcome" href="${site.url}/index.html"/>
-      <item name="Quickstart" href="${site.url}/quickstart.html"/>
+      <item name="Project Information" href="${site.url}/project-info.html"/>
+      <item name="Project Reports" href="${site.url}/project-reports.html"/>
       <item name="Changes" href="${site.url}/changes-report.html"/>
     </menu>
+    
+    <menu name="Getting Started">
+      <item name="Installation" href="${site.url}/installation.html"/>
+      <item name="Quickstart" href="${site.url}/quickstart.html"/>
+      <item name="Download" href="${site.url}/download.html"/>
+      <item name="Tutorials" href="${site.url}/tutorials.html"/>
+      <item name="Examples" href="${site.url}/examples.html"/>
+    </menu>
+    
+    <menu name="Documentation">
+      <item name="Reference" href="${site.url}/reference-documentation.html"/>
+      <item name="Java API" href="${site.url}/api-doc.html"/>
+      <item name="FAQ" href="${site.url}/faq.html"/>
+      <item name="License" href="${site.url}/license.html"/>
+    </menu>
+    
+    <menu name="Community">
+      <item name="News" href="${site.url}/news.html"/>
+      <item name="Mailing List" href="${site.url}/mailing-list.html"/>
+      <item name="Contact" href="${site.url}/contact.html"/>
+      <item name="Reporting bugs" href="${site.url}/reporting-bugs.html"/>
+      <item name="Forum" href="${site.url}/forum.html"/>
+    </menu>
 
-    <menu name="Developer Documentation">
+    <menu name="Development">
+      <item name="Quickstart" href="${site.url}/quickstart.html"/>
       <item name="Coding Style" href="${site.url}/coding-style.html"/>
-      <item name="Conventions" href="${site.url}/conventions.html"/>
-      <item name="Test coverage" href="${site.url}/clover/index.html"/>
+      <item name="Coding Conventions" href="${site.url}/conventions.html"/>
+      <item name="Contributing" href="${site.url}/contributing.html"/>
     </menu>
     
     <menu name="Modules">
@@ -36,13 +61,9 @@
       <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
       <item name="WebService" href="${site.url}/modules/citrus-ws/project-reports.html"/>
       <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
-      
-      <item name="Packaging">
-        <item name="Assembly" href="${site.url}/modules/citrus-assembly/project-reports.html"/>
-      </item>
     </menu>
 
     <!-- Auto generated modules (all, not selection) -->
-    <menu name="${project.name}" ref="reports" inherit="bottom" collapse="true"/>
+    <menu name="${project.name}" ref="reports" inherit="bottom" collapse="false"/>
   </body>
 </project>

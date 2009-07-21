@@ -38,11 +38,30 @@
                 <downloadJavadoc>true</downloadJavadoc>
               </configuration>
             </plugin>
+            <plugin>
+              <artifactId>maven-deploy-plugin</artifactId>
+              <version>2.4</version>
+            </plugin>
         </plugins>
     </pluginManagement>
   </build>
   
   <profiles>
+    <!-- Distribution Management -->
+    <profile>
+      <id>release</id>
+      <distributionManagement>
+        <repository>
+          <id>repository-consol-releases</id>
+          <url>http://build.int.consol.de/nexus/content/repositories/inhouse</url>
+        </repository>
+        <snapshotRepository>
+          <id>repository-consol-snapshots</id>
+          <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  
     <profile>
       <!-- Profile containing all settings if ConSol environment is not available -->
       <id>repository-home</id>
@@ -68,7 +87,7 @@
       <repositories>
         <repository>
           <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>${REPO_URL}/repository/maven2/release</url>
+          <url>http://build.int.consol.de/repository/maven2/release</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -78,7 +97,7 @@
         </repository>
         <repository>
           <id>release</id>
-          <url>${REPO_URL}/repository/maven2/release</url>
+          <url>http://build.int.consol.de/repository/maven2/release</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -88,7 +107,7 @@
         </repository>
         <repository>
           <id>snapshots</id>
-          <url>${REPO_URL}/repository/maven2/snapshot</url>
+          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
           <snapshots>
             <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
@@ -102,7 +121,7 @@
       <pluginRepositories>
         <pluginRepository>
           <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>${REPO_URL}/repository/maven2/release</url>
+          <url>http://build.int.consol.de/repository/maven2/release</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -112,7 +131,7 @@
         </pluginRepository>
         <pluginRepository>
           <id>release</id>
-          <url>${REPO_URL}/repository/maven2/release</url>
+          <url>http://build.int.consol.de/repository/maven2/release</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -122,7 +141,7 @@
         </pluginRepository>
         <pluginRepository>
           <id>snapshots</id>
-          <url>${REPO_URL}/repository/maven2/snapshot</url>
+          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
           <snapshots>
             <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
