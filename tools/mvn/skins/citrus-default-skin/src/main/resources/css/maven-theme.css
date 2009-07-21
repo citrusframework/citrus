@@ -168,11 +168,6 @@ table {
   background: url(../images/banner.jpg);
 }
 
-#bannerLeft img {
-  margin-left: 15px;
-  margin-top: 3px;
-}
-
 #navcolumn ul {
   margin: 5px 0 15px -0em;
 }
