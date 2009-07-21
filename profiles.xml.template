@@ -15,10 +15,6 @@
            by running setup.sh 
            In Windows, you needs a '/' before the Device name (E.g.  /D:/projects/cm-web)-->
       <PROJECT_HOME>[[PROJECT_HOME]]</PROJECT_HOME>
-      
-      <!-- The local repository
-      <REPO_URL>http://build.int.consol.de</REPO_URL>
-       -->
     </properties>
 
     <!--
