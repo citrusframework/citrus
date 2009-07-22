@@ -9,7 +9,7 @@ import com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMe
 
 public class FlightCompletionStrategy {
     
-    Logger log = LoggerFactory.getLogger(FlightCompletionStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(FlightCompletionStrategy.class);
     
     public boolean isComplete(List<FlightBookingConfirmationMessage> messages) {
         log.info("FlightAggregator (" + messages.get(0).getCorrelationId()
