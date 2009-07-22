@@ -319,7 +319,7 @@
   <body class="composite">
     <div id="banner">
       #if ( $StringUtils.isEmpty( $decoration.bannerLeft ) || $StringUtils.isEmpty( $decoration.bannerLeft.src ))
-        <a href="${site.url}" id="bannerLeft"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
+        <a href="http://citrusframework.org" id="bannerLeft"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
       #else
         #banner( $decoration.bannerLeft "bannerLeft" )
       #end
