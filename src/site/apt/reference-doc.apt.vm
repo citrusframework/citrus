@@ -3,14 +3,18 @@
  ------
  
 Reference Documentation
-
+  
+  Citrus offers following documentation material:
+  
+    * {{{installation.html}Installation}}
+    
     * UserGuide/Manual
     
-        * {{{html/index.html}HTML}}
+        * {{{reference/html/index.html}HTML}}
         
-        * {{{html_single/index.html}HTML (single)}}
+        * {{{reference/html_single/index.html}HTML (single)}}
         
-        * {{{pdf/citrus-reference.pdf}PDF}}
+        * {{{reference/pdf/citrus-reference.pdf}PDF}}
         
     * API (Javadoc)
         
@@ -23,4 +27,12 @@ Reference Documentation
         * {{{modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
     
     * {{{tutorials.html}Tutorials}}
+    
+  For Citrus developers following documentation is provided
+    
+    * {{{dev-quickstart.html}Quickstart}}
+    
+    * {{{conventions.html}Coding conventions}}
+    
+    * {{{contributing.html}How to contribute changes}}
     

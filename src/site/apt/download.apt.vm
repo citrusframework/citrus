@@ -1,0 +1,68 @@
+ ------
+ Download
+ ------
+ 
+Download Citrus
+
+  Citrus ${project.version} ist the current stable release.
+
+  <<Latest stable release>>: ${project.version}
+  
+  * citrus-${project.version}-with-dependencies ({{{dist/citrus-${project.version}-with-dependencies.zip}zip}})
+  
+  * citrus-${project.version}-project ({{{dist/citrus-${project.version}-project.zip}zip}}/{{{dist/citrus-${project.version}-project.tar.gz}tar.gz}})
+  
+  * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
+  
+  []
+  
+  The Citrus ${project.version} project requires JDK 5 or newer version to run.
+  
+Logging framework notice
+
+  We use {{{http://www.slf4j.org}SLF4J}} as logging abstraction framework, wich means that you as a user are not forced to use a specific
+  loggin implementation. SLF4J is similar to commons-logging, so you may use whatever logging framework you want to. All zou have to do is 
+  <<add an SLF4J logging implementation to your classpath>>. 
+  
+  In case you are currently using {{{http://logging.apache.org/log4j}log4j}} as logging framework just include slf4j-log4j12.jar 
+  on your classpath and Citrus will use log4j too. If you want to use some other framework than please see the {{{http://www.slf4j.org}SLF4J}} 
+  documentation for help.
+  
+Maven 2
+
+  You can easily use Citrus in a Maven project by defining a dependency. Simply add this dependency to your POM's dependency section (pom.xml).
+  
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-core</artifactId>
+    <version>${project.version}</version>
+  </dependency>
++---
+  
+  In case you need Citrus modules add following dependencies:
+  
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-http</artifactId>
+    <version>${project.version}</version>
+  </dependency>
++---
+  
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-ws</artifactId>
+    <version>${project.version}</version>
+  </dependency>
++---
+  
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-tibco</artifactId>
+    <version>${project.version}</version>
+  </dependency>
++---
+  
