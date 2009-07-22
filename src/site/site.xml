@@ -34,8 +34,7 @@
     </menu>
     
     <menu name="Documentation">
-      <item name="Reference" href="${site.url}/reference-documentation.html"/>
-      <item name="Java API" href="${site.url}/api-doc.html"/>
+      <item name="Reference" href="${site.url}/reference-doc.html"/>
       <item name="FAQ" href="${site.url}/faq.html"/>
       <item name="License" href="${site.url}/license.html"/>
     </menu>
@@ -49,21 +48,16 @@
     </menu>
 
     <menu name="Development">
-      <item name="Quickstart" href="${site.url}/quickstart.html"/>
+      <item name="Quickstart" href="${site.url}/dev-quickstart.html"/>
       <item name="Coding Style" href="${site.url}/coding-style.html"/>
       <item name="Coding Conventions" href="${site.url}/conventions.html"/>
       <item name="Contributing" href="${site.url}/contributing.html"/>
+      <item name="Modules" href="${site.url}/modules-introduction.html">
+        <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
+        <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
+        <item name="WebService" href="${site.url}/modules/citrus-ws/project-reports.html"/>
+        <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
+      </item>
     </menu>
-    
-    <menu name="Modules">
-      <item name="Introduction" href="${site.url}/modules-introduction.html"/>
-      <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
-      <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
-      <item name="WebService" href="${site.url}/modules/citrus-ws/project-reports.html"/>
-      <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
-    </menu>
-
-    <!-- Auto generated modules (all, not selection) -->
-    <menu name="${project.name}" ref="reports" inherit="bottom" collapse="false"/>
   </body>
 </project>
