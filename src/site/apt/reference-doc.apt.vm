@@ -1,0 +1,26 @@
+ ------
+ Citrus Reference Documentation
+ ------
+ 
+Reference Documentation
+
+    * UserGuide/Manual
+    
+        * {{{html/index.html}HTML}}
+        
+        * {{{html_single/index.html}HTML (single)}}
+        
+        * {{{pdf/citrus-reference.pdf}PDF}}
+        
+    * API (Javadoc)
+        
+        * {{{modules/citrus-core/apidocs/index.html}citrus-core}}
+        
+        * {{{modules/citrus-http/apidocs/index.html}citrus-http}}
+        
+        * {{{modules/citrus-ws/apidocs/index.html}citrus-ws}}
+        
+        * {{{modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
+    
+    * {{{tutorials.html}Tutorials}}
+    

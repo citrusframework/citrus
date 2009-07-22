@@ -3,3 +3,77 @@
  ------
 
 Features
+
+    * Control the message flow
+    
+        * Send and receive messages as expected in use cases
+        
+        * Simulate interface partners supporting a wide range of protocols (Http, JMS, SOAP WebServices, TCP/IP, ...)
+        
+        * Simulate downtimes and errors situations
+        
+        * Define sequence of expected messages
+        
+        * Wait for messages to arrive
+        
+        * Trigger messages and validate responses
+        
+        * Easy error simulation - force message timeouts
+        
+        * Save dynamic message content(Reuse dynamic identifiers in order to generate proper response messages)
+        
+        * Test complex workflow scenarios through step by step definition of all operations
+        
+        * Use process logic in tests (loops, delays, retries ...)
+
+    * Message validation
+    
+        * Message header validation
+        
+        * XML message payload validation
+        
+            * XML tree comparison
+            
+            * XPath element validation
+            
+        * XML schema and DTD validation
+
+    * Database access/validation
+    
+        * Validate existence of data
+        
+        * Simulate data
+        
+        * Read and save dynamic content from database
+
+    * Test writing
+    
+        * Human readable tests (XML format)
+        
+        * Simple test creation (cross-editor support, XML schema support)
+        
+        * Test grouping / test templates
+        
+        * Separation of tests and environment configuration (easy environment switching, improved maintenance)
+
+    * Effective testing
+    
+        * Execute single tests, test groups or all tests
+        
+        * IDE support (execute tests as TestNG tests from Eclipse or IntelliJ IDEA)
+        
+        * Integration into build management tools
+        
+        * Reliable failure descriptions
+        
+        * Reports and test result overview
+        
+        * Parallel test execution realistic message load on tested system and faster test runs
+        
+        * Provide test plan and document test coverage
+
+    * Framework extension
+    
+        * Write adapters to support more protocols
+        
+        * Write customized functions
