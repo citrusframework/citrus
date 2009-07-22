@@ -1,0 +1,35 @@
+ ------
+ Contributing
+ ------
+ 
+Contributing
+
+  The Citrus development team will be glad to receive new ideas and improvements from you - any time. 
+  In case you have coded extensions, bug fixes or simply new features for the framework, please send us
+  your code changes to the citrus-dev list (<<dev@citrusframework.org>>).
+  
+  If you have questions regarding development please do not hesitate to send us a mail regarding your problems
+  <<dev@citrusframework.org>>.
+
+New code
+  
+  In case you coded a new feature or a extension we are looking forward to know about it. So send us your changes 
+  as a patch including unit tests (we are very serious about testing, of course) and a description of the feature.  
+  
+Bug fixing
+  
+  Bug fixes are best sent to us as patches along with a bug report, so we can apply the fix to the codebase. 
+  Please tell us the version the patch should be applied against in order to avoid misunderstandings. Patches must be 
+  released under the same license as Citrus to get involved into the codebase.
+  
+Feature requests
+
+  In case you have new ideas and feature requests you do not want to implement yourself, we will be happy to receive your request
+  on the citrus-dev mailing list (<<dev@citrusframework.org>>). Or simply open a feature request through the issue tracker. We will
+  discuss the benefit of the new feature with you and help you to get the best out of Citrus for your needs.
+  
+  
+  
+  
+  
+  
