@@ -12,8 +12,8 @@
 			Test flight booking service.
 		</description>
 		<variables>
-            <variable name="correlationId" value="Lx1x123456789"/>
-            <variable name="customerId" value="Mx2x987654321"/>
+            <variable name="correlationId" value="citrus:concat('Lx1x', 'citrus:randomNumber(10)')"/>
+            <variable name="customerId" value="citrus:concat('Mx1x', citrus:randomNumber(10))"/>
         </variables>
         <actions>
         	<send type="sendTravelAgencyBookingRequest">

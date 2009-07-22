@@ -28,7 +28,7 @@
 
   <!-- Our own classes-->
   <logger name="com.consol">
-    <level value="INFO"/>
+    <level value="DEBUG"/>
   </logger>
 
   <logger name="org.springframework">
