@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<profiles>
-  <profile>
-    <id>environment</id>
-
-    <!--
-    ================================================================
-    Development environment variables
-    ================================================================
-    -->
-
-    <properties>
-      <!-- Will be replaced with current directory when creating profiles.xml
-           by running setup.sh 
-           In Windows, you needs a '/' before the Device name (E.g.  /D:/projects/cm-web)-->
-      <PROJECT_HOME>[[PROJECT_HOME]]</PROJECT_HOME>
-    </properties>
-
-    <!--
-    ============================================================
-    -->
-    <activation>
-      <!-- <activeByDefault> is not enough, since such a profile is switched off
-           as soon as another (like 'mysql') is switched on explicitely -->
-      <file><missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing></file>
-    </activation>
-  </profile>
-  
-</profiles>
+<profilesXml>
+  <profiles xmlns="http://maven.apache.org/PROFILES/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/xsd/profiles-1.0.0.xsd">
+    <profile>
+        <id>environment</id>
+    
+        <!--
+        ================================================================
+        Development environment variables
+        ================================================================
+        -->
+    
+        <properties>
+          <!-- Will be replaced with current directory when creating profiles.xml
+               by running setup.sh 
+               In Windows, you needs a '/' before the Device name (E.g.  /D:/projects/cm-web)-->
+          <PROJECT_HOME>[[PROJECT_HOME]]</PROJECT_HOME>
+        </properties>
+    
+        <!--
+        ============================================================
+        -->
+        <activation>
+          <!-- <activeByDefault> is not enough, since such a profile is switched off
+               as soon as another (like 'mysql') is switched on explicitely -->
+          <file><missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing></file>
+        </activation>
+    </profile>
+  </profiles>
+</profilesXml>
