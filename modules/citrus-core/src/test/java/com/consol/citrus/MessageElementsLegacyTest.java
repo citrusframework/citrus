@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,7 +17,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.ReceiveMessageBean;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -41,15 +42,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElements() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -68,15 +67,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
 //    public void testValidateEmptyMessageElements() {
 //        reset(service);
 //        
-//        XMLMessage message = new XMLMessage();
-//        
-//        message.setMessagePayload("<root>"
+//        Message message = MessageBuilder.withPayload("<root>"
 //                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
 //                            + "<sub-elementA attribute='A'></sub-elementA>"
 //                            + "<sub-elementB attribute='B'></sub-elementB>"
 //                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
 //                        + "</element>" 
-//                        + "</root>");
+//                        + "</root>").build();
 //        
 //        expect(service.receiveMessage()).andReturn(message);
 //        replay(service);
@@ -94,15 +91,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElementAttributes() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -120,15 +115,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElementsWrongExpectedElement() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -146,15 +139,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElementsWrongExpectedValue() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -172,15 +163,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElementAttributesWrongExpectedValue() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -198,15 +187,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -224,15 +211,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElements() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -258,15 +243,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementsUsingEmptyString() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'></sub-elementA>"
                             + "<sub-elementB attribute='B'></sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -292,15 +275,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementsAndValidate() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -332,15 +313,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementAttributes() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -366,15 +345,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementsError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -400,15 +377,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementAttributesError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -434,15 +409,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testSetMessageElementAttributesErrorWrongElement() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -468,15 +441,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testExtractMessageElements() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -507,15 +478,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testExtractMessageAttributes() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -546,15 +515,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testExtractMessageElementsForWrongElement() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -583,15 +550,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     public void testExtractMessageElementsForWrongAtribute() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

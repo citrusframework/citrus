@@ -7,12 +7,12 @@ import java.io.StringWriter;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
 
 public class WebService extends WebServiceGatewaySupport implements Service {
 
@@ -30,7 +30,7 @@ public class WebService extends WebServiceGatewaySupport implements Service {
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);
 
-        StreamSource source = new StreamSource(new StringReader(message.getMessagePayload()));
+        StreamSource source = new StreamSource(new StringReader(message.getPayload().toString()));
         getWebServiceTemplate().sendSourceAndReceiveToResult(source, result);
 
         writer.flush();
@@ -48,10 +48,7 @@ public class WebService extends WebServiceGatewaySupport implements Service {
      * @see com.consol.citrus.service.Service#receiveMessage()
      */
     public Message receiveMessage() throws TestSuiteException {
-        Message message = new XMLMessage();
-
-        message.setMessagePayload(WebService.response);
-        return message;
+        return MessageBuilder.withPayload(WebService.response).build();
     }
 
     /**

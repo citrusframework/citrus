@@ -8,12 +8,13 @@ import java.util.HashMap;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -29,18 +30,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateHeaderValues() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -68,18 +68,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateHeaderValuesComplete() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -109,18 +108,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateHeaderValuesWrongExpectedValue() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -148,18 +146,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateHeaderValuesForWrongElement() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -187,18 +184,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateEmptyHeaderValues() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "");
-        message.addHeaderElement("header-valueB", "");
-        message.addHeaderElement("header-valueC", "");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "")
+                        .setHeader("header-valueB", "")
+                        .setHeader("header-valueC", "")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -228,18 +224,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testValidateHeaderValuesNullComparison() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "");
-        message.addHeaderElement("header-valueB", "");
-        message.addHeaderElement("header-valueC", "");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "")
+                        .setHeader("header-valueB", "")
+                        .setHeader("header-valueC", "")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -269,18 +264,17 @@ public class HeaderValuesTest extends AbstractBaseTest {
     public void testExtractHeaderValues() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

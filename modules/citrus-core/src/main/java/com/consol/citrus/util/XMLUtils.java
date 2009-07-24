@@ -14,7 +14,6 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.xml.LSResolverImpl;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
@@ -321,7 +320,7 @@ public class XMLUtils {
         return namespaces;
     }
     
-    public static Document parseMessagePayload(Message message) {
+    public static Document parseMessagePayload(String messagePayload) {
         try {
             if(registry == null) {
                 registry = DOMImplementationRegistry.newInstance();
@@ -338,7 +337,7 @@ public class XMLUtils {
             parser.getDomConfig().setParameter("element-content-whitespace", false);
             
             LSInput receivedInput = domImpl.createLSInput();
-            receivedInput.setStringData(message.getMessagePayload());
+            receivedInput.setStringData(messagePayload);
             
             return parser.parse(receivedInput);
         } catch (ClassNotFoundException e) {

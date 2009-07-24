@@ -5,10 +5,10 @@ import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
 
 public interface XMLMessageValidator extends MessageValidator {
     public boolean validateXMLSchema(Resource schemaResource, Message receivedMessage) throws TestSuiteException;

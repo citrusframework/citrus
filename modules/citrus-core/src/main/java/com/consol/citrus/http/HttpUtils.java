@@ -1,10 +1,10 @@
 package com.consol.citrus.http;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
-import com.consol.citrus.message.Message;
+import org.springframework.integration.core.Message;
+
+import com.consol.citrus.util.MessageUtils;
 
 public class HttpUtils {
 
@@ -15,38 +15,40 @@ public class HttpUtils {
      */
     public static String generateRequest(Message request) {
         StringBuffer sBuf = new StringBuffer();
-        Map<String, String> requestHeaders = request.getHeader();
 
         // output status line
-        sBuf.append(request.getHeader().get("HTTPMethod"));
-        sBuf.append(" ").append(request.getHeader().get("HTTPUri"));
-        sBuf.append(" ").append(request.getHeader().get("HTTPVersion")).append(HttpConstants.LINE_BREAK);
+        sBuf.append(request.getHeaders().get("HTTPMethod"));
+        sBuf.append(" ").append(request.getHeaders().get("HTTPUri"));
+        sBuf.append(" ").append(request.getHeaders().get("HTTPVersion")).append(HttpConstants.LINE_BREAK);
 
-        if (!requestHeaders.containsKey("host")) {
-            requestHeaders.put("host", request.getHeader().get("HTTPHost") + ":" + request.getHeader().get("HTTPPort"));
+        if (request.getHeaders().containsKey("host") == false) {
+            sBuf.append("host: ").append(
+                    request.getHeaders().get("HTTPHost") + ":"
+                            + request.getHeaders().get("HTTPPort"))
+                    .append(HttpConstants.LINE_BREAK);
         }
 
-        if (!requestHeaders.containsKey("connection")) {
-            requestHeaders.put("connection", "close");
+        if (request.getHeaders().containsKey("connection") == false) {
+            sBuf.append("connection: close").append(HttpConstants.LINE_BREAK);
         }
 
-        if (request.getMessagePayload() != null && request.getMessagePayload().length() > 0 && !requestHeaders.containsKey("content-length")) {
-            requestHeaders.put("content-length", Integer.toString(request.getMessagePayload().length()));
+        if (request.getPayload() != null && request.getPayload().toString().length() > 0 && request.getHeaders().containsKey("content-length") == false) {
+            sBuf.append("content-length: ").append(
+                    Integer.toString(request.getPayload().toString().length()))
+                    .append(HttpConstants.LINE_BREAK);
         }
 
         // output headers
-        Set<Map.Entry<String, String>> entrySet = requestHeaders.entrySet();
-        for (Iterator<Map.Entry<String, String>> iter = entrySet.iterator(); iter.hasNext();) {
-            Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
-            if (entry.getKey().startsWith("HTTP") == false) {
-                sBuf.append(entry.getKey()).append(": ").append(entry.getValue()).append(HttpConstants.LINE_BREAK);
+        for (Entry<String, Object> headerEntry : request.getHeaders().entrySet()) {
+            if (headerEntry.getKey().startsWith("HTTP") == false && MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey()) == false) {
+                sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
             }
         }
 
         // output post data
-        if (request.getMessagePayload() != null && request.getMessagePayload().length() > 0) {
+        if (request.getPayload() != null && request.getPayload().toString().length() > 0) {
             sBuf.append(HttpConstants.LINE_BREAK);
-            sBuf.append(request.getMessagePayload());
+            sBuf.append(request.getPayload());
         }
 
         // signal end
@@ -56,36 +58,38 @@ public class HttpUtils {
     }
 
     public static String generateResponse(Message response) {
-        if (response.getHeader().get("HTTPVersion") == null || response.getHeader().get("HTTPVersion").length() == 0) {
-            response.addHeaderElement("HTTPVersion", HttpConstants.HTTP_VERSION);
+        String httpVersion = HttpConstants.HTTP_VERSION;
+        String httpStatusCode = HttpConstants.HTTP_CODE_200;
+        String httpReasonPhrase = HttpConstants.HTTP_STATUS_OK;
+        
+        if (response.getHeaders().get("HTTPVersion") != null && response.getHeaders().get("HTTPVersion").toString().length() > 0) {
+            httpVersion = response.getHeaders().get("HTTPVersion").toString();
         }
-        if (response.getHeader().get("HTTPStatusCode") == null || response.getHeader().get("HTTPStatusCode").length() == 0) {
-            response.addHeaderElement("HTTPStatusCode", HttpConstants.HTTP_CODE_200);
+        if (response.getHeaders().get("HTTPStatusCode") != null && response.getHeaders().get("HTTPStatusCode").toString().length() > 0) {
+            httpStatusCode = response.getHeaders().get("HTTPStatusCode").toString();
         }
-        if (response.getHeader().get("HTTPReasonPhrase") == null || response.getHeader().get("HTTPReasonPhrase").length() == 0) {
-            response.addHeaderElement("HTTPReasonPhrase", HttpConstants.HTTP_STATUS_OK);
+        if (response.getHeaders().get("HTTPReasonPhrase") != null && response.getHeaders().get("HTTPReasonPhrase").toString().length() > 0) {
+            httpReasonPhrase = response.getHeaders().get("HTTPReasonPhrase").toString();
         }
 
         StringBuffer sBuf = new StringBuffer();
 
         // output status line
-        sBuf.append(response.getHeader().get("HTTPVersion"));
-        sBuf.append(" ").append(response.getHeader().get("HTTPStatusCode"));
-        sBuf.append(" ").append(response.getHeader().get("HTTPReasonPhrase")).append(HttpConstants.LINE_BREAK);
+        sBuf.append(httpVersion);
+        sBuf.append(" ").append(httpStatusCode);
+        sBuf.append(" ").append(httpReasonPhrase).append(HttpConstants.LINE_BREAK);
 
         // output headers
-        if (response.getHeader() != null) {
-            Set entrySet = response.getHeader().entrySet();
-            for (Iterator iter = entrySet.iterator(); iter.hasNext();) {
-                Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
-                if (entry.getKey().startsWith("HTTP") == false) {
-                    sBuf.append(entry.getKey()).append(": ").append(entry.getValue()).append(HttpConstants.LINE_BREAK);
+        if (response.getHeaders() != null) {
+            for (Entry<String, Object> headerEntry : response.getHeaders().entrySet()) {
+                if (headerEntry.getKey().startsWith("HTTP") == false && MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey()) == false) {
+                    sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
                 }
             }
         }
 
         // output content
-        String content = response.getMessagePayload();
+        String content = response.getPayload().toString();
         if (content != null && content.length() > 0) {
             sBuf.append(HttpConstants.LINE_BREAK);
             sBuf.append(content);

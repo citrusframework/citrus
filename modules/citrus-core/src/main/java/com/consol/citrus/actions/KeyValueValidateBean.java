@@ -5,11 +5,11 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -106,12 +106,12 @@ public class KeyValueValidateBean extends AbstractTestAction {
             throw new TestSuiteException("Received message is null!");
 
         if(log.isDebugEnabled()) {
-            log.debug("Received message " + receivedMessage.getMessagePayload());
+            log.debug("Received message " + receivedMessage.getPayload());
         }
         
         log.info("TestData" + textData);
 
-        receivingMap = createHashMap(receivedMessage.getMessagePayload());
+        receivingMap = createHashMap(receivedMessage.getPayload().toString());
         contentMap = createHashMap(textData);
 
         if (!receivingMap.equals(contentMap))

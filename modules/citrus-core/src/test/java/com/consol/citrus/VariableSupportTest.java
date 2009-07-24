@@ -9,12 +9,13 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -40,15 +41,14 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateMessageElementsVariablesSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -68,15 +68,14 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateMessageElementsFunctionSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -97,15 +96,14 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateMessageElementsVariableSupportInExpression() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -124,15 +122,14 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateMessageElementsFunctionSupportInExpression() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -152,18 +149,17 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateHeaderValuesVariablesSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -194,18 +190,17 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testValidateHeaderValuesFunctionSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -234,18 +229,17 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testHeaderNameVariablesSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -276,18 +270,17 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testHeaderNameFunctionSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -314,15 +307,14 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testExtractMessageElementsVariablesSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -356,18 +348,17 @@ public class VariableSupportTest extends AbstractBaseTest {
     public void testExtractHeaderValuesVariablesSupport() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        message.addHeaderElement("header-valueA", "A");
-        message.addHeaderElement("header-valueB", "B");
-        message.addHeaderElement("header-valueC", "C");
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>")
+                        .setHeader("header-valueA", "A")
+                        .setHeader("header-valueB", "B")
+                        .setHeader("header-valueC", "C")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

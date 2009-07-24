@@ -9,11 +9,12 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -39,9 +40,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPath() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -49,7 +48,8 @@ public class XPathTest extends AbstractBaseTest {
                             + "</element>"
                             + "<ns1:ns-element>namespace</ns1:ns-element>"
                             + "<search-element>search-for</search-element>"
-                        + "</ns1:root>");
+                        + "</ns1:root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -71,9 +71,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPathWithDefaultNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://test'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -81,7 +79,8 @@ public class XPathTest extends AbstractBaseTest {
                             + "</element>"
                             + "<ns-element>namespace</ns-element>"
                             + "<search-element>search-for</search-element>"
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -103,9 +102,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPathWithExplicitNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://test' xmlns:ns1='http://testsuite'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -113,7 +110,8 @@ public class XPathTest extends AbstractBaseTest {
                             + "</element>"
                             + "<ns1:ns-element>namespace</ns1:ns-element>"
                             + "<search-element>search-for</search-element>"
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -131,9 +129,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPathWithExplicitNamespaceInElementDefinition() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://test'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -141,7 +137,8 @@ public class XPathTest extends AbstractBaseTest {
                             + "</element>"
                             + "<ns1:ns-element xmlns:ns1='http://testsuite'>namespace</ns1:ns-element>"
                             + "<search-element>search-for</search-element>"
-                        + "</root>");
+                        + "</root>")
+                        .build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

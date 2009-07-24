@@ -4,13 +4,13 @@ import java.text.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.core.Message;
 import org.springframework.jms.core.JmsTemplate;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.JmsTimeoutException;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.service.JmsService;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -84,7 +84,7 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
             Message receivedMessage = service.receiveMessage();
 
             if(log.isDebugEnabled()) {
-                log.debug("Received message: " + receivedMessage.getMessagePayload());
+                log.debug("Received message: " + receivedMessage.getPayload());
             }
             throw new TestSuiteException("JMS timeout validation failed, because test suite received message on destination " +  service.getServiceDestination());
         } catch (JmsTimeoutException e) {

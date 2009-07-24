@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.integration.core.Message;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -17,7 +18,6 @@ import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.VariableNameValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
@@ -138,7 +138,7 @@ public class TestContext {
                 log.debug("Reading element: " + pathExpression);
             }
             
-            Document doc = XMLUtils.parseMessagePayload(message);
+            Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
             
             if (XMLUtils.isXPathExpression(pathExpression)) {
                 String value = XMLUtils.evaluateXPathExpression(doc, pathExpression);
@@ -171,7 +171,9 @@ public class TestContext {
      * @param map
      * @throws VariableNameValueException
      */
-    public void replaceVariablesInMap(final Map map) throws VariableNameValueException, TestSuiteException {
+    public Map replaceVariablesInMap(final Map map) throws VariableNameValueException, TestSuiteException {
+        Map target = new HashMap();
+        
         for (Iterator iterMap = map.entrySet().iterator(); iterMap.hasNext();) {
             Entry entry = (Entry) iterMap.next();
             String key = entry.getKey().toString();
@@ -180,11 +182,15 @@ public class TestContext {
             // If value is a variable
             if (VariableUtils.isVariableName(value)) {
                 // then replace variable name by variable value
-                map.put(key, getVariable(value));
+                target.put(key, getVariable(value));
             } else if(functionRegistry.isFunction(value)) {
-                map.put(key, FunctionUtils.resolveFunction(value, this));
-            } 
+                target.put(key, FunctionUtils.resolveFunction(value, this));
+            } else {
+                target.put(key, value);
+            }
         }
+        
+        return target;
     }
     
     /**
@@ -247,7 +253,13 @@ public class TestContext {
      * @throws VariableNameValueException
      * @throws TestSuiteException
      */
-    public void replaceMessageValues(final Map messageElements, final Message message) throws TestSuiteException {
+    public String replaceMessageValues(final Map messageElements, String messagePayload) throws TestSuiteException {
+        Document doc = XMLUtils.parseMessagePayload(messagePayload);
+
+        if (doc == null) {
+            throw new TestSuiteException("Not able to set message elements, because no XML ressource defined");
+        }
+        
         Iterator it = messageElements.entrySet().iterator();
         while (it.hasNext()) {
             Entry entry = (Entry) it.next();
@@ -264,12 +276,6 @@ public class TestContext {
                 throw new TestSuiteException("Can not set null values in XML document - path expression is " + pathExpression);
             }
             
-            Document doc = XMLUtils.parseMessagePayload(message);
-
-            if (doc == null) {
-                throw new TestSuiteException("Not able to set message elements, because no XML ressource defined");
-            }
-
             Node node;
 
             if (XMLUtils.isXPathExpression(pathExpression)) {
@@ -292,13 +298,12 @@ public class TestContext {
                 node.setNodeValue(valueExpression);
             }
             
-            //write manipulated doc back to message payload
-            message.setMessagePayload(XMLUtils.serialize(doc));
-
             if(log.isDebugEnabled()) {
                 log.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
             }
         }
+        
+        return XMLUtils.serialize(doc);
     }
     
     public void clear() {

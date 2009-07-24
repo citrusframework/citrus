@@ -162,21 +162,21 @@ public class TestContextTest extends AbstractBaseTest {
         testMap.put("plainText", "Hello TestFramework!");
         testMap.put("value", "${test}");
         
-        context.replaceVariablesInMap(testMap);
+        testMap = context.replaceVariablesInMap(testMap);
         
         Assert.assertEquals(testMap.get("value"), "123");
         
         testMap.clear();
         testMap.put("value", "test");
         
-        context.replaceVariablesInMap(testMap);
+        testMap = context.replaceVariablesInMap(testMap);
         
         Assert.assertEquals(testMap.get("value"), "test");
         
         testMap.clear();
         testMap.put("${value}", "test");
         
-        context.replaceVariablesInMap(testMap);
+        testMap = context.replaceVariablesInMap(testMap);
         
         Assert.assertEquals(testMap.get("${value}"), "test");
     }

@@ -9,13 +9,14 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -41,13 +42,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testNamespaces() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -65,13 +64,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDifferentNamespacePrefix() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -89,13 +86,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testAdditionalNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -113,13 +108,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testMissingNamespaceDeclaration() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -137,13 +130,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespaces() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -161,13 +152,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespacesInExpectedMessage() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -185,13 +174,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespacesInSourceMessage() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -209,13 +196,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testMissingNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -233,13 +218,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testWrongNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -257,13 +240,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -286,13 +267,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
-                    + "</ns1:root>");
+                    + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -315,13 +294,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMixedNamespaces() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -345,13 +322,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMultipleNamespaces() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -376,13 +351,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespaceError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -405,13 +378,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
-                    + "</ns1:root>");
+                    + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -434,13 +405,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMixedNamespacesError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -464,13 +433,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMultipleNamespacesError() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -495,13 +462,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectWrongNamespacePrefix() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -526,13 +491,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespaceButNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
-                    + "</ns0:root>");
+                    + "</ns0:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -557,13 +520,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceButDefaultNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -588,13 +549,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectAdditionalNamespace() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -620,13 +579,11 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceButNamespaceMissing() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>");
+                    + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -651,15 +608,13 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testValidateMessageElementsWithAdditionalNamespacePrefix() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root xmlns='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -682,15 +637,13 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testValidateMessageElementsWithDifferentNamespacePrefix() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
                         + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -713,15 +666,13 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testWrongNamespaceContext() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
                         + "</ns1:element>" 
-                        + "</ns1:root>");
+                        + "</ns1:root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

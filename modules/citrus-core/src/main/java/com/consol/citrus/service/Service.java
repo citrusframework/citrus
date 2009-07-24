@@ -1,7 +1,8 @@
 package com.consol.citrus.service;
 
+import org.springframework.integration.core.Message;
+
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
 
 /**
  * Service interface for all services

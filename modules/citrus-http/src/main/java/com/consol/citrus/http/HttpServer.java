@@ -2,9 +2,7 @@ package com.consol.citrus.http;
 
 import java.io.*;
 import java.net.*;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.jms.*;
 
@@ -15,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.w3c.dom.Node;
@@ -23,9 +23,7 @@ import org.xml.sax.SAXException;
 
 import com.consol.citrus.Server;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.util.ShutdownThread;
 import com.consol.citrus.util.XMLUtils;
 
@@ -124,8 +122,9 @@ public class HttpServer implements Server {
 
                 log.info("[HttpServer] parsing request ...");
 
-                final Message request = new XMLMessage();
-
+                final Message request;
+                Map<String, Object> requestHeaders = new HashMap<String, Object>();
+                
                 String readLine = in.readLine();
                 if (readLine == null || readLine.length() == 0) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
@@ -135,19 +134,19 @@ public class HttpServer implements Server {
                 if (!st.hasMoreTokens()) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 } else {
-                    request.addHeaderElement("HTTPMethod", st.nextToken().toUpperCase());
+                    requestHeaders.put("HTTPMethod", st.nextToken().toUpperCase());
                 }
 
                 if (!st.hasMoreTokens()) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 } else {
-                    request.addHeaderElement("HTTPUri", st.nextToken());
+                    requestHeaders.put("HTTPUri", st.nextToken());
                 }
 
                 if (!st.hasMoreTokens()) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 } else {
-                    request.addHeaderElement("HTTPVersion", st.nextToken());
+                    requestHeaders.put("HTTPVersion", st.nextToken());
                 }
 
                 String line = "";
@@ -156,13 +155,13 @@ public class HttpServer implements Server {
                     line = in.readLine();
                     int p = line.indexOf(':');
                     if (p > 0) {
-                        request.addHeaderElement(line.substring(0, p).trim().toLowerCase(),	line.substring(p + 1).trim());
+                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(),	line.substring(p + 1).trim());
                     }
                 } while (line.trim().length() > 0);
 
-                if (request.getHeader().get("HTTPMethod").equals(HttpConstants.HTTP_POST)) {
+                if (requestHeaders.get("HTTPMethod").equals(HttpConstants.HTTP_POST)) {
                     long size = 0x7FFFFFFFFFFFFFFFl;
-                    String contentLength = (String) request.getHeader().get("content-length");
+                    String contentLength = (String) requestHeaders.get("content-length");
                     if (contentLength != null) {
                         try {
                             size = Integer.parseInt(contentLength);
@@ -180,36 +179,39 @@ public class HttpServer implements Server {
                         }
                     }
                     postLine = postLine.trim();
-                    request.setMessagePayload(postLine);
+                    
+                    request = MessageBuilder.withPayload(postLine).copyHeaders(requestHeaders).build();
                 } else {
                     //TODO implement GET method
+                    request = MessageBuilder.withPayload("").copyHeaders(requestHeaders).build();
                 }
 
                 log.info("[HttpServer] received request " + HttpUtils.generateRequest(request));
 
-                if (request.getMessagePayload() != null && request.getMessagePayload().equals("quit")) {
+                if (request.getPayload() != null && request.getPayload().equals("quit")) {
                     log.info("[HttpServer] received shuttdown call");
                     shutdown();
                     return;
                 }
 
-                Message response = new XMLMessage();
+                Message response;
+                Map<String, Object> responseHeaders = new HashMap<String, Object>();
 
                 if (mode == MODE_USE_TESTSUITE) {
                     log.info("[HttpServer] Now sending to jms queue " + sendDestination);
                     if(log.isDebugEnabled()) {
-                        log.debug("[HttpServer] Message is: " + request.getMessagePayload());
+                        log.debug("[HttpServer] Message is: " + request.getPayload());
                     }
 
                     log.info("[HttpServer] forwarding message to test suite");
 
                     jmsTemplate.send(sendDestination, new MessageCreator() {
                         public javax.jms.Message createMessage(Session session) throws JMSException {
-                            TextMessage sendMessage = session.createTextMessage(request.getMessagePayload());
+                            TextMessage sendMessage = session.createTextMessage(request.getPayload().toString());
 
-                            for (Iterator iter = request.getHeader().keySet().iterator(); iter.hasNext();) {
+                            for (Iterator iter = request.getHeaders().keySet().iterator(); iter.hasNext();) {
                                 String key = (String) iter.next();
-                                sendMessage.setStringProperty(key, request.getHeader().get(key));
+                                sendMessage.setStringProperty(key, request.getHeaders().get(key).toString());
                             }
 
                             Destination replyQueue = session.createQueue(replyDestination);
@@ -225,17 +227,21 @@ public class HttpServer implements Server {
 
                     if (replyMessage != null) {
                         log.info("[HttpServer] received message from test suite");
-                        response.setMessagePayload(replyMessage.getText());
-
+                        
                         Enumeration headerProperties = replyMessage.getPropertyNames();
                         while (headerProperties.hasMoreElements()) {
                             String property = (String)headerProperties.nextElement();
                             log.info("[HttpServer] handling header property: " + property);
 
-                            response.getHeader().put(property, replyMessage.getStringProperty(property));
+                            responseHeaders.put(property, replyMessage.getStringProperty(property));
                         }
+                        
+                        response = MessageBuilder.withPayload(replyMessage.getText()).copyHeaders(responseHeaders).build();
                     } else if (defaultMessageHandler != null) {
                         response = defaultMessageHandler.handleMessage(request);
+                    } else {
+                        //TODO verify if this is a problem
+                        response = MessageBuilder.withPayload("").build();
                     }
 
                     String responseStr = HttpUtils.generateResponse(response);
@@ -246,8 +252,8 @@ public class HttpServer implements Server {
                     out.flush();
                 } else if (mode == MODE_STANDALONE) {
                     try {
-                        if (request.getMessagePayload() != null) {
-                            final Reader reader = new StringReader(request.getMessagePayload());
+                        if (request.getPayload() != null) {
+                            final Reader reader = new StringReader(request.getPayload().toString());
                             DOMParser parser = new DOMParser();
                             parser.setFeature("http://xml.org/sax/features/validation", false);
 
@@ -277,10 +283,14 @@ public class HttpServer implements Server {
                                 }
                             } else if (defaultMessageHandler != null) {
                                 response = defaultMessageHandler.handleMessage(request);
+                            } else {
+                                response = MessageBuilder.withPayload("").build();
                             }
                         } else {
                             if (defaultMessageHandler != null) {
                                 response = defaultMessageHandler.handleMessage(request);
+                            } else {
+                                response = MessageBuilder.withPayload("").build();
                             }
                         }
                     } catch (SAXException e) {
@@ -427,15 +437,15 @@ public class HttpServer implements Server {
 
             Socket socket = new Socket(addr, port);
 
-            Message httpRequest = new XMLMessage();
-
-            httpRequest.addHeaderElement("HTTPVersion", HttpConstants.HTTP_VERSION);
-            httpRequest.addHeaderElement("HTTPMethod", HttpConstants.HTTP_POST);
-            httpRequest.addHeaderElement("HTTPUri", host + ":" + port + uri);
-            httpRequest.addHeaderElement("HTTPHost", host);
-            httpRequest.addHeaderElement("HTTPPort", new Integer(port).toString());
-
-            httpRequest.setMessagePayload("quit");
+            Message httpRequest;
+            
+            httpRequest = MessageBuilder.withPayload("quit")
+                            .setHeader("HTTPVersion", HttpConstants.HTTP_VERSION)
+                            .setHeader("HTTPMethod", HttpConstants.HTTP_POST)
+                            .setHeader("HTTPUri", host + ":" + port + uri)
+                            .setHeader("HTTPHost", host)
+                            .setHeader("HTTPPort", new Integer(port).toString())
+                            .build();
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
             writer.write(HttpUtils.generateRequest(httpRequest));
