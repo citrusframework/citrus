@@ -9,14 +9,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
-import com.consol.citrus.util.CopyHelper;
 import com.consol.citrus.variable.VariableUtils;
 
 
@@ -87,7 +86,7 @@ public class SendMessageBean extends AbstractTestAction {
         }
 
         try {
-            Message sendMessage = new XMLMessage();
+            String messagePayload = null;
             
             if (messageResource != null) {
                 BufferedInputStream reader = new BufferedInputStream(messageResource.getInputStream());
@@ -99,22 +98,21 @@ public class SendMessageBean extends AbstractTestAction {
                     contentBuffer.append(new String(contents, 0, bytesRead));
                 }
                 
-                sendMessage.setMessagePayload(contentBuffer.toString());
+                messagePayload = contentBuffer.toString();
             } else if (messageData != null){
-                sendMessage.setMessagePayload(context.replaceDynamicContentInString(messageData));
+                messagePayload = context.replaceDynamicContentInString(messageData);
             } else {
                 throw new TestSuiteException("Could not find message data. Either message-data or message-resource must be specified");
             }
 
             /* explicitly overwrite message elements */
-            context.replaceMessageValues(messageElements, sendMessage);
+            messagePayload = context.replaceMessageValues(messageElements, messagePayload);
 
             /* Set message header */
-            HashMap headerValuesCopy = (HashMap)CopyHelper.deepCopy(headerValues);
-            context.replaceVariablesInMap(headerValuesCopy);
+            Map headerValuesCopy = context.replaceVariablesInMap(headerValues);
 
             /* store header values map to context - service will read the map */
-            sendMessage.setHeader(headerValuesCopy);
+            Message sendMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
 
             /* message is sent */
             service.sendMessage(sendMessage);

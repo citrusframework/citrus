@@ -1,46 +1,56 @@
 package com.consol.citrus.aop;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
-import com.consol.citrus.message.XMLMessage;
 
 public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     @Autowired
     StoreMessageInterceptorAspect storageAspect;
     
+    @Override
+    @BeforeMethod
+    public void setup() {
+        super.setup();
+        
+        if(new FileSystemResource("logs/debug/messages/message" + 1 + ".body").exists()) {
+            new FileSystemResource("logs/debug/messages/message" + 1 + ".body").getFile().delete();
+        }
+        
+        if(new FileSystemResource("logs/debug/messages/message" + 1 + ".header").exists()) {
+            new FileSystemResource("logs/debug/messages/message" + 1 + ".header").getFile().delete();
+        }
+        
+        StoreMessageInterceptorAspect.resetFileCounter();
+    }
+    
     @Test
     public void testStoreMessage() {
-        XMLMessage message = new XMLMessage();
-        
-        message.setHeader(Collections.singletonMap("operation", "greeting"));
-        
-        message.setMessagePayload("<message>"
+        Message message = MessageBuilder.withPayload("<message>"
                                     + "<text>Hello TestFramework</text>"
-                                  + "</message>");
+                                  + "</message>").setHeader("operation", "greeting").build();
         
         storageAspect.doInterceptMessage(message);
         
-        Assert.assertTrue(new FileSystemResource("logs/debug/messages/" + message.toString() + ".body").exists());
-        Assert.assertTrue(new FileSystemResource("logs/debug/messages/" + message.toString() + ".header").exists());
+        Assert.assertTrue(new FileSystemResource("logs/debug/messages/message" + 1 + ".body").exists());
+        Assert.assertTrue(new FileSystemResource("logs/debug/messages/message" + 1 + ".header").exists());
     }
     
     @Test
     public void testStoreMessageWithoutHeader() {
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<message>"
+        Message message = MessageBuilder.withPayload("<message>"
                                     + "<text>Hello TestFramework</text>"
-                                  + "</message>");
+                                  + "</message>").build();
         
         storageAspect.doInterceptMessage(message);
         
-        Assert.assertTrue(new FileSystemResource("logs/debug/messages/" + message.toString() + ".body").exists());
-        Assert.assertTrue(new FileSystemResource("logs/debug/messages/" + message.toString() + ".header").exists());
+        Assert.assertTrue(new FileSystemResource("logs/debug/messages/message" + 1 + ".body").exists());
+        Assert.assertTrue(new FileSystemResource("logs/debug/messages/message" + 1 + ".header").exists());
     }
 }

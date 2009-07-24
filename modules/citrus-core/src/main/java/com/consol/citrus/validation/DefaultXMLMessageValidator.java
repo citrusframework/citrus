@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.core.MessageHeaders;
 import org.springframework.util.Assert;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSException;
@@ -26,7 +28,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -52,8 +53,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         try {
             log.info("Start XML tree validation");
             
-            Document received = XMLUtils.parseMessagePayload(receivedMessage);
-            Document source = XMLUtils.parseMessagePayload(expectedMessage);
+            Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+            Document source = XMLUtils.parseMessagePayload(expectedMessage.getPayload().toString());
             
             XMLUtils.stripWhitespaceNodes(received);
             XMLUtils.stripWhitespaceNodes(source);
@@ -85,7 +86,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.MessageValidator#validateMessageHeader(java.util.Map, java.util.Map)
      */
-    public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, Map<String, String> receivedHeaderValues, TestContext context) throws TestSuiteException {
+    public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) throws TestSuiteException {
         if (expectedHeaderValues == null) return false;
         if (expectedHeaderValues.isEmpty()) return true;
         
@@ -103,7 +104,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             } 
             
             if (receivedHeaderValues.containsKey(headerName)) {
-                actualValue = receivedHeaderValues.get(headerName);
+                actualValue = (String)receivedHeaderValues.get(headerName);
             } else {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
@@ -173,7 +174,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 elementPathExpression = FunctionUtils.resolveFunction(elementPathExpression, context);
             }
             
-            Document received = XMLUtils.parseMessagePayload(receivedMessage);
+            Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
             Node node;
             if (XMLUtils.isXPathExpression(elementPathExpression)) {
@@ -258,7 +259,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             final Validator validator = schema.newValidator();
             
             try {
-                validator.validate(new DOMSource(XMLUtils.parseMessagePayload(receivedMessage)));
+                validator.validate(new DOMSource(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString())));
                 log.info("Schema of received XML validated OK");
             } catch (SAXException e) {
                 log.error("Schema of received XML document not valid in schema: "
@@ -285,7 +286,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
 
         log.info("Start XML namespace validation");
 
-        Document received = XMLUtils.parseMessagePayload(receivedMessage);
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
         
         Map foundNamespaces = XMLUtils.lookupNamespaces(received.getFirstChild());
 

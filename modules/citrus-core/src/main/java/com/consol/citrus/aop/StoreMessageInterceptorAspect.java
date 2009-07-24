@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
 
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
 
 @Aspect
 public class StoreMessageInterceptorAspect {
-
     /**
      * Logger
      */
@@ -26,7 +26,9 @@ public class StoreMessageInterceptorAspect {
     
     private Resource debugDirectory = new FileSystemResource("logs/debug/messages/");
     
-    @Pointcut("execution(com.consol.citrus.message.Message com.consol.citrus.service.Service.receiveMessage())")
+    private static final AtomicInteger count = new AtomicInteger(1);
+    
+    @Pointcut("execution(org.springframework.integration.core.Message com.consol.citrus.service.Service.receiveMessage())")
     public void inReceivingMessage() {}
 
     @AfterReturning(pointcut="com.consol.citrus.aop.StoreMessageInterceptorAspect.inReceivingMessage()",
@@ -46,18 +48,20 @@ public class StoreMessageInterceptorAspect {
                 debugDirectory.getFile().mkdirs();
             }
             
-            Resource file_body = debugDirectory.createRelative(receivedMessage.toString() + ".body");
-            Resource file_header = debugDirectory.createRelative(receivedMessage.toString() + ".header");
+            int counter = StoreMessageInterceptorAspect.count.getAndIncrement();
+            
+            Resource file_body = debugDirectory.createRelative("message" + counter + ".body");
+            Resource file_header = debugDirectory.createRelative("message" + counter + ".header");
             
             //write body message
             output = new BufferedWriter(new FileWriter(file_body.getFile()));
-            output.write(receivedMessage.getMessagePayload());
+            output.write(receivedMessage.getPayload().toString());
             output.flush();
             output.close();
 
             //write header message
             output = new BufferedWriter(new FileWriter(file_header.getFile()));
-            Map header = receivedMessage.getHeader();
+            Map header = receivedMessage.getHeaders();
 
             Iterator it = header.entrySet().iterator();
             while (it.hasNext()) {
@@ -77,5 +81,9 @@ public class StoreMessageInterceptorAspect {
                 }
             }
         }
+    }
+    
+    public static final void resetFileCounter() {
+        count.set(1);
     }
 }

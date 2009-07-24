@@ -1,7 +1,9 @@
 package com.consol.citrus.service;
 
 import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jms.JMSException;
 import javax.jms.Queue;
@@ -10,14 +12,15 @@ import javax.jms.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
 import com.consol.citrus.exceptions.JmsTimeoutException;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
 
 /**
@@ -61,44 +64,48 @@ public class JmsService implements Service, InitializingBean {
 
         if (log.isDebugEnabled()) {
             log.debug("Message to be sent:");
-            log.debug(XMLUtils.prettyPrint(message.getMessagePayload()));
+            log.debug(XMLUtils.prettyPrint(message.getPayload().toString()));
         }
 
         /* use jms template to send message */
         jmsTemplate.send(new MessageCreator() {
             public javax.jms.Message createMessage(Session session) throws JMSException {
-                javax.jms.TextMessage msg = session.createTextMessage(message.getMessagePayload());
+                javax.jms.TextMessage msg = session.createTextMessage(message.getPayload().toString());
+                
                 /* before sending set special header values */
-                Iterator it = message.getHeader().keySet().iterator();
-                while (it.hasNext())
+                for (Entry headerEntry : message.getHeaders().entrySet())
                 {
-                    Object o = it.next();
-                    final String key = (String) o;
-                    final String value = (String) message.getHeader().get(key);
+                    final String key = headerEntry.getKey().toString();
+                    
+                    if(MessageUtils.isSpringIntegrationHeaderEntry(key)) {
+                        continue;
+                    }
+                    
+                    final String value = (String) headerEntry.getValue();
 
                     if (log.isDebugEnabled()) {
                         log.debug("Setting JMS message property: " + key + " to: " + value);
                     }
 
-                    if (o.equals("JMSCorrelationID")) {
+                    if (key.equals("JMSCorrelationID")) {
                         msg.setJMSCorrelationID(value);
-                    } else if (o.equals("JMSDeliveryMode")) {
+                    } else if (key.equals("JMSDeliveryMode")) {
                         msg.setJMSDeliveryMode(Integer.valueOf(value).intValue());
-                    } else if (o.equals("JMSDestination")) {
+                    } else if (key.equals("JMSDestination")) {
                         msg.setJMSDestination(jmsTemplate.getDestinationResolver().resolveDestinationName(session, value, true));
-                    } else if (o.equals("JMSExpiration")) {
+                    } else if (key.equals("JMSExpiration")) {
                         msg.setJMSExpiration(Long.valueOf(value).longValue());
-                    } else if (o.equals("JMSMessageID")) {
+                    } else if (key.equals("JMSMessageID")) {
                         msg.setJMSMessageID(value);
-                    } else if (o.equals("JMSPriority")) {
+                    } else if (key.equals("JMSPriority")) {
                         msg.setJMSPriority(Integer.valueOf(value).intValue());
-                    } else if (o.equals("JMSRedelivered")) {
+                    } else if (key.equals("JMSRedelivered")) {
                         msg.setJMSRedelivered(Boolean.valueOf(value).booleanValue());
-                    } else if (o.equals("JMSReplyTo")) {
+                    } else if (key.equals("JMSReplyTo")) {
                         msg.setJMSReplyTo(jmsTemplate.getDestinationResolver().resolveDestinationName(session, value, true));
-                    } else if (o.equals("JMSTimestamp")) {
+                    } else if (key.equals("JMSTimestamp")) {
                         msg.setJMSTimestamp(Long.valueOf(value).longValue());
-                    } else if (o.equals("JMSType")) {
+                    } else if (key.equals("JMSType")) {
                         msg.setJMSType(value);
                     } else {
                         msg.setStringProperty(key, value);
@@ -135,9 +142,8 @@ public class JmsService implements Service, InitializingBean {
 
             if (jmsMessage == null) throw new JmsTimeoutException("Action timed out while receiving message on " + getServiceDestination());
 
-            Message message = new XMLMessage();
-            message.setMessagePayload(jmsMessage.getText());
-
+            Map<String, Object> messageHeaders = new HashMap<String, Object>();
+            
             /* get header values from message and store them into the context */
             Enumeration headerValues = jmsMessage.getPropertyNames();
             while (headerValues.hasMoreElements())
@@ -145,32 +151,32 @@ public class JmsService implements Service, InitializingBean {
                 String key = (String)headerValues.nextElement();
                 String value = jmsMessage.getStringProperty(key);
 
-                message.getHeader().put(key, value);
+                messageHeaders.put(key, value);
             }
 
-            message.getHeader().put("JMSCorrelationID", jmsMessage.getJMSCorrelationID());
-            message.getHeader().put("JMSDeliveryMode", Integer.valueOf(jmsMessage.getJMSDeliveryMode()).toString());
+            messageHeaders.put("JMSCorrelationID", jmsMessage.getJMSCorrelationID());
+            messageHeaders.put("JMSDeliveryMode", Integer.valueOf(jmsMessage.getJMSDeliveryMode()).toString());
 
             if (jmsMessage.getJMSDestination() != null)
-                message.getHeader().put("JMSDestination", ((Queue)jmsMessage.getJMSDestination()).getQueueName());
+                messageHeaders.put("JMSDestination", ((Queue)jmsMessage.getJMSDestination()).getQueueName());
 
-            message.getHeader().put("JMSExpiration", Long.valueOf(jmsMessage.getJMSExpiration()).toString());
-            message.getHeader().put("JMSMessageID", jmsMessage.getJMSMessageID());
-            message.getHeader().put("JMSPriority", Integer.valueOf(jmsMessage.getJMSPriority()).toString());
-            message.getHeader().put("JMSRedelivered", Boolean.valueOf(jmsMessage.getJMSRedelivered()).toString());
+            messageHeaders.put("JMSExpiration", Long.valueOf(jmsMessage.getJMSExpiration()).toString());
+            messageHeaders.put("JMSMessageID", jmsMessage.getJMSMessageID());
+            messageHeaders.put("JMSPriority", Integer.valueOf(jmsMessage.getJMSPriority()).toString());
+            messageHeaders.put("JMSRedelivered", Boolean.valueOf(jmsMessage.getJMSRedelivered()).toString());
 
             if (jmsMessage.getJMSReplyTo() != null)
-                message.getHeader().put("JMSReplyTo", ((Queue)jmsMessage.getJMSReplyTo()).getQueueName());
+                messageHeaders.put("JMSReplyTo", ((Queue)jmsMessage.getJMSReplyTo()).getQueueName());
 
-            message.getHeader().put("JMSTimestamp", Long.valueOf(jmsMessage.getJMSTimestamp()).toString());
-            message.getHeader().put("JMSType", jmsMessage.getJMSType());
+            messageHeaders.put("JMSTimestamp", Long.valueOf(jmsMessage.getJMSTimestamp()).toString());
+            messageHeaders.put("JMSType", jmsMessage.getJMSType());
 
             if(log.isDebugEnabled()) {
                 log.debug("Message received:");
                 log.debug(XMLUtils.prettyPrint(jmsMessage.getText()));
             }
-
-            return message;
+            
+            return MessageBuilder.withPayload(jmsMessage.getText()).copyHeaders(messageHeaders).build();
         } catch (JmsException e) {
             throw new TestSuiteException(e);
         } catch (JMSException e) {

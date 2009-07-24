@@ -2,6 +2,8 @@ package com.consol.citrus.message;
 
 import java.util.List;
 
+import org.springframework.integration.core.Message;
+
 import com.consol.citrus.exceptions.TestSuiteException;
 
 /**

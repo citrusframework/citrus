@@ -4,18 +4,16 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -34,15 +32,13 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
         
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);
@@ -92,11 +88,9 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
     public void testIgnoreRootElement() {
         reset(service);
         
-        XMLMessage message = new XMLMessage();
-        
-        message.setMessagePayload("<root>"
+        Message message = MessageBuilder.withPayload("<root>"
                         + "<element>Text</element>" 
-                        + "</root>");
+                        + "</root>").build();
         
         expect(service.receiveMessage()).andReturn(message);
         replay(service);

@@ -1,5 +1,7 @@
 package com.consol.citrus.message;
 
+import org.springframework.integration.core.Message;
+
 import com.consol.citrus.exceptions.TestSuiteException;
 
 

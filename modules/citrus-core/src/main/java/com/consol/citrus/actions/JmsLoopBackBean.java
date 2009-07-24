@@ -14,12 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
 
 /**
  * Special loop back bean for jms.
@@ -209,12 +209,11 @@ public class JmsLoopBackBean implements InitializingBean, Server {
 
                     context.createVariablesFromHeaderValues(getHeaderValues, headerValues);
 
-                    Message receivedMessage = new XMLMessage();
-                    receivedMessage.setMessagePayload(message.getText());
+                    Message receivedMessage = MessageBuilder.withPayload(message.getText()).build();
                     context.createVariablesFromMessageValues(getMessageValues, receivedMessage);
 
-                    Message sendMessage = new XMLMessage();
-
+                    String messagePayload = null;
+                    
                     if (xmlResource != null) {
                         BufferedInputStream reader = new BufferedInputStream(xmlResource.getInputStream());
                         StringBuffer contentBuffer = new StringBuffer();
@@ -225,24 +224,25 @@ public class JmsLoopBackBean implements InitializingBean, Server {
                             contentBuffer.append(new String(contents, 0, bytesRead));
                         }
                         
-                        sendMessage.setMessagePayload(contentBuffer.toString());
+                        messagePayload = contentBuffer.toString();
                     } else if (xmlData != null) {
-                        sendMessage.setMessagePayload(context.replaceDynamicContentInString(xmlData));
+                        messagePayload = context.replaceDynamicContentInString(xmlData);
                     } else {
                         throw new NoRessourceException(
                                 "[JMSLoopBack] The <property name=\"xmlRessource\"/> or the <property name=\"xmlData\"/> is missing!"
                                 + "\n\rPlease specify either a xmlRessource or a xmlData property!");
                     }
 
-                    if (sendMessage.getMessagePayload() != null && sendMessage.getMessagePayload().length() > 0) {
-                        context.replaceMessageValues(setMessageValues, sendMessage);
+                    if (messagePayload != null && messagePayload.length() > 0) {
+                        messagePayload = context.replaceMessageValues(setMessageValues, messagePayload);
                     }
+                    
 
-                    TextMessage msg = qsession.createTextMessage(sendMessage.getMessagePayload());
+                    TextMessage msg = qsession.createTextMessage(messagePayload);
 
                     headerValues.clear();
-                    headerValues.putAll(setHeaderValues);
-                    context.replaceVariablesInMap(headerValues);
+                    headerValues = context.replaceVariablesInMap(setHeaderValues);
+                    
                     Iterator iter = headerValues.keySet().iterator();
                     while (iter.hasNext()) {
                         Object o = iter.next();

@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.TestConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoRessourceException;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
 import com.consol.citrus.service.JmsService;
 import com.consol.citrus.service.Service;
 import com.consol.citrus.util.XMLUtils;
@@ -178,23 +178,23 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 throw new TestSuiteException("Received message is null!");
 
             /* Store jms reply to queue name in context */
-            if (receivedMessage.getHeader().containsKey("JMSReplyTo")) {
-                log.info("About to store replyToQueue in global variables: " + receivedMessage.getHeader().get("JMSReplyTo"));
-                context.setVariable(TestConstants.VARIABLE_PREFIX + TestConstants.REPLY_TO_QUEUE + TestConstants.VARIABLE_SUFFIX, receivedMessage.getHeader().get("JMSReplyTo"));
+            if (receivedMessage.getHeaders().containsKey("JMSReplyTo")) {
+                log.info("About to store replyToQueue in global variables: " + receivedMessage.getHeaders().get("JMSReplyTo"));
+                context.setVariable(TestConstants.VARIABLE_PREFIX + TestConstants.REPLY_TO_QUEUE + TestConstants.VARIABLE_SUFFIX, receivedMessage.getHeaders().get("JMSReplyTo").toString());
             }
 
-            context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeader());
+            context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
             /** 2. Validation of the received header values.*/
             if (hasHeaderValues()) {
                 log.info("Now validating message header values");
 
-                if (validator.validateMessageHeader(headerValues, receivedMessage.getHeader(), context) == false) {
+                if (validator.validateMessageHeader(headerValues, receivedMessage.getHeaders(), context) == false) {
                     isSuccess = false;
                 }
             }
 
-            if (receivedMessage.getMessagePayload() == null || receivedMessage.getMessagePayload().length() == 0) {
+            if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
                 if (messageResource == null && (messageData == null || messageData.length() == 0)) {
                     log.info("Received message body is empty as expected - therefore no message validation");
                     return;
@@ -220,7 +220,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 throw new TestSuiteException("XML namespace validation is not valid for validators other than XMLMessageValidator");
             }
 
-            Message expectedMessage = new XMLMessage();
+            String expectedMessagePayload = null;
             
             if (messageResource != null) {
                 BufferedInputStream reader = new BufferedInputStream(messageResource.getInputStream());
@@ -232,19 +232,23 @@ public class ReceiveMessageBean extends AbstractTestAction {
                     contentBuffer.append(new String(contents, 0, bytesRead));
                 }
                 
-                expectedMessage.setMessagePayload(contentBuffer.toString());
+                expectedMessagePayload = contentBuffer.toString();
             } else if (messageData != null){
-                expectedMessage.setMessagePayload(context.replaceDynamicContentInString(messageData));
-            } else if (messageElements.isEmpty()){
+                expectedMessagePayload = context.replaceDynamicContentInString(messageData);
+            } else if (messageElements.isEmpty() == false){
+                expectedMessagePayload = "";
+            } else {
                 throw new NoRessourceException("No validation elements specifyed. You need to declare at least one element to be validated");
             }
 
-            if (expectedMessage.getMessagePayload() != null && expectedMessage.getMessagePayload().length() > 0) {
+            if (expectedMessagePayload != null && expectedMessagePayload.length() > 0) {
                 /** and for each key within setMessageValues the value is set
                  * within the source.
                  */
-                context.replaceMessageValues(messageElements, expectedMessage);
+                expectedMessagePayload = context.replaceMessageValues(messageElements, expectedMessagePayload);
 
+                Message<String> expectedMessage = MessageBuilder.withPayload(expectedMessagePayload).build();
+                
                 /** 4.2. The received message is validated against the source message,
                  * but elements ignoreValues will not be validated.
                  */
@@ -254,7 +258,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
             
             NamespaceContext nsContext = null;
             if(namespaces.isEmpty() == false) {
-                namespaces.putAll(XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage).getFirstChild()));
+                namespaces.putAll(XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString()).getFirstChild()));
                 nsContext = new NamespaceContextImpl(namespaces);
             }
 

@@ -3,17 +3,20 @@ package com.consol.citrus.service;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.http.HttpConstants;
 import com.consol.citrus.http.HttpUtils;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.XMLMessage;
+import com.consol.citrus.util.MessageUtils;
 
 /**
  * Class enables to send or receive messages via http
@@ -55,36 +58,42 @@ public class HttpService implements Service {
 
             if (log.isDebugEnabled()) {
                 log.debug("Message to be sent:");
-                log.debug(message.getMessagePayload());
+                log.debug(message.getPayload().toString());
             }
 
-            Message request = new XMLMessage();
-
-            request.addHeaderElement("HTTPVersion", HttpConstants.HTTP_VERSION);
-            request.addHeaderElement("HTTPMethod", requestMethod);
-            request.addHeaderElement("HTTPUri", urlPath);
-            request.addHeaderElement("HTTPHost", host);
-            request.addHeaderElement("HTTPPort", Integer.valueOf(port).toString());
+            Map<String, Object> requestHeaders = new HashMap<String, Object>();
+            
+            requestHeaders.put("HTTPVersion", HttpConstants.HTTP_VERSION);
+            requestHeaders.put("HTTPMethod", requestMethod);
+            requestHeaders.put("HTTPUri", urlPath);
+            requestHeaders.put("HTTPHost", host);
+            requestHeaders.put("HTTPPort", Integer.valueOf(port).toString());
 
             /* before sending set header values */
-            Iterator it = message.getHeader().keySet().iterator();
-            while (it.hasNext())
-            {
-                Object o = it.next();
-                final String key = (String) o;
-                final String value = (String) message.getHeader().get(key);
+            for (Entry headerEntry : message.getHeaders().entrySet()) {
+                final String key = headerEntry.getKey().toString();
+                
+                if(MessageUtils.isSpringIntegrationHeaderEntry(key)) {
+                    continue;
+                }
+                
+                final String value = (String) headerEntry.getValue();
 
                 if (log.isDebugEnabled()) {
                     log.debug("Setting message property: " + key + " to: " + value);
                 }
 
-                request.getHeader().put(key, value);
+                requestHeaders.put(key, value);
             }
 
+            Message request;
             if (requestMethod.equals(HttpConstants.HTTP_POST)) {
-                request.setMessagePayload(message.getMessagePayload());
+                request = MessageBuilder.withPayload(message.getPayload()).copyHeaders(requestHeaders).build();
             } else if (requestMethod.equals(HttpConstants.HTTP_GET)) {
                 //TODO: implement GET method
+                request = MessageBuilder.withPayload("").build();
+            } else {
+                throw new TestSuiteException("Unsupported request method: " + requestMethod);
             }
 
             InetAddress addr = InetAddress.getByName(host);
@@ -135,7 +144,7 @@ public class HttpService implements Service {
             log.debug(response);
         }
 
-        Message httpResponse = new XMLMessage();
+        Message httpResponse;
         try {
             BufferedReader reader = new BufferedReader(new StringReader(response));
 
@@ -146,23 +155,24 @@ public class HttpService implements Service {
                 throw new RuntimeException("HTTP response header not set properly. Usage: <HTTP VERSION> <STATUS CODE> <STATUS> ");
             }
 
+            Map<String, Object> responseHeaders = new HashMap<String, Object>();
             StringTokenizer st = new StringTokenizer(readLine);
             if (!st.hasMoreTokens()) {
                 throw new RuntimeException("HTTP response header not set properly. Usage: <HTTP VERSION> <STATUS CODE> <STATUS> ");
             } else {
-                httpResponse.addHeaderElement("HTTPVersion", st.nextToken().toUpperCase());
+                responseHeaders.put("HTTPVersion", st.nextToken().toUpperCase());
             }
 
             if (!st.hasMoreTokens()) {
                 throw new RuntimeException("HTTP response header not set properly. Usage: <HTTP VERSION> <STATUS CODE> <STATUS> ");
             } else {
-                httpResponse.addHeaderElement("HTTPStatusCode", st.nextToken());
+                responseHeaders.put("HTTPStatusCode", st.nextToken());
             }
 
             if (!st.hasMoreTokens()) {
                 throw new RuntimeException("HTTP response header not set properly. Usage: <HTTP VERSION> <STATUS CODE> <STATUS> ");
             } else {
-                httpResponse.addHeaderElement("HTTPReasonPhrase", st.nextToken());
+                responseHeaders.put("HTTPReasonPhrase", st.nextToken());
             }
 
             // Read the request headers
@@ -173,21 +183,17 @@ public class HttpService implements Service {
                 if(line != null) {
                     int p = line.indexOf(':');
                     if (p > 0) {
-                        httpResponse.getHeader().put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
+                        responseHeaders.put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
                     }
                 }
             } while (line != null && line.trim().length() > 0);
-
-            httpResponse.getHeader().put("HTTPVersion", httpResponse.getHeader().get("HTTPVersion"));
-            httpResponse.getHeader().put("HTTPStatusCode", httpResponse.getHeader().get("HTTPStatusCode"));
-            httpResponse.getHeader().put("HTTPReasonPhrase", httpResponse.getHeader().get("HTTPReasonPhrase"));
 
             StringBuffer contentBuffer = new StringBuffer();
             while ((line = reader.readLine()) != null) {
                 contentBuffer.append(line).append(HttpConstants.LINE_BREAK);
             }
 
-            httpResponse.setMessagePayload(contentBuffer.toString());
+            httpResponse = MessageBuilder.withPayload(contentBuffer.toString()).copyHeaders(responseHeaders).build();
         } catch (IOException e) {
             throw new TestSuiteException(e);
         }
