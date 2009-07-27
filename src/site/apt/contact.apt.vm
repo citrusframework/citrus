@@ -4,26 +4,29 @@
  
 Contact the Citrus team
 
-  In case you have any questions or requests for help regarding Enterprise 
-  Application Integration testing, please do not hesitate to contact us.
-  
-  We can help to set up a suitable testing environment to test your EAI and SOA 
-  applications in an automated way. Testing is a very important issue that has to
-  be taken seriously.
+  In case you have any questions or requests for help regarding Enterprise Application Integration testing, 
+  please do not hesitate to contact us.We can help to set up a suitable testing environment to test your EAI and SOA 
+  applications in an automated way. Testing is a very important issue that has to be taken seriously.
   
   Feel free to get in contact with us!
   
-  The Citrus team members will listen for your requests on the following mailing-lists 
-  and adress:
+  The Citrus team members will listen on the following mailing-lists
   
-  user@citrusframework.org
-  dev@citrusframework.org
+  * user@citrusframework.org
   
-  ConSol* Consulting & Solutions Software GmbH\
+  * dev@citrusframework.org
+  
+  []
+  
+  \
+  ConSol is the company behind the Citrus Framework
+  
+  <<ConSol* Consulting & Solutions Software GmbH>>\
   Franziskanerstr. 38\
   D-81669 München\
 
   Tel. +49-89-45841-100\
   Fax +49-89-45841-111
 
+  Homepage: {{{http://www.consol.de}http://www.consol.de}}
   E-Mail: info@consol.de
