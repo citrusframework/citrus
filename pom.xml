@@ -10,6 +10,14 @@
   <url>http://citrus.consol.de</url>
   <inceptionYear>2008</inceptionYear>
   
+  <licenses>
+    <license>
+      <name>LGPL Version 3</name>
+      <url>http://www.gnu.org/licenses/lgpl.txt</url>
+      <distribution>manual</distribution>
+    </license>
+  </licenses>
+  
   <ciManagement>
     <system>Bamboo</system>
     <url>http://build2.int.consol.de/bamboo/browse/CITRUS</url>
@@ -60,8 +68,25 @@
   
   <mailingLists>
     <mailingList>
+      <name>Project Announcments</name>
+      <subscribe>announce@citrus.framework.org</subscribe>
+      <unsubscribe>announce@citrus.framework.org</unsubscribe>
+    </mailingList>
+    <mailingList>
       <name>Project Development List</name>
-      <subscribe>citrus-dev-l@consol.de</subscribe>
+      <subscribe>dev@citrusframework.org</subscribe>
+      <unsubscribe>dev@citrusframework.org</unsubscribe>
+      <post>dev@citrusframework.org</post>
+    </mailingList>
+    <mailingList>
+      <name>Project User List</name>
+      <subscribe>user@citrusframework.org</subscribe>
+      <unsubscribe>user@citrusframework.org</unsubscribe>
+      <post>user@citrusframework.org</post>
+    </mailingList>
+    <mailingList>
+      <name>Internal Project Development List</name>
+      <post>citrus-dev-l@consol.de</post>
     </mailingList>
   </mailingLists>
   

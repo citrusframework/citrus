@@ -41,7 +41,7 @@
     
     <menu name="Community">
       <item name="News" href="${site.url}/news.html"/>
-      <item name="Mailing List" href="${site.url}/mailing-list.html"/>
+      <item name="Mailing List" href="${site.url}/mail-lists.html"/>
       <item name="Contact" href="${site.url}/contact.html"/>
       <item name="Reporting bugs" href="${site.url}/reporting-bugs.html"/>
       <item name="Forum" href="${site.url}/forum.html"/>
