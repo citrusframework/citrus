@@ -21,7 +21,7 @@
        <interval-trigger interval="1000"/>
     </poller>
     
-    <jms:inbound-channel-adapter id="bookingIn" destination-name="Travel.Agency.Request.Queue" channel="bookingsXML"/>
+    <jms:message-driven-channel-adapter id="bookingIn" destination-name="Travel.Agency.Request.Queue" channel="bookingsXML"/>
     
     <channel id="bookingsXML"/>
     <transformer input-channel="bookingsXML" ref="unmarshallingTransformer" output-channel="bookings"/>
@@ -93,9 +93,9 @@
             <beans:ref bean="loggingInterceptor"/>
         </interceptors>
     </channel>
-    <jms:inbound-channel-adapter id="royalConfirmedFlightsAdapter" destination-name="Royal.Airline.Response.Queue" channel="confirmedFlightsXML"/>
+    <jms:message-driven-channel-adapter id="royalConfirmedFlightsAdapter" destination-name="Royal.Airline.Response.Queue" channel="confirmedFlightsXML"/>
     
-    <jms:inbound-channel-adapter id="smartConfirmedFlightsAdapter" destination-name="Smart.Airline.Response.Queue" channel="confirmedFlightsXML"/>
+    <jms:message-driven-channel-adapter id="smartConfirmedFlightsAdapter" destination-name="Smart.Airline.Response.Queue" channel="confirmedFlightsXML"/>
     
     <channel id="confirmedFlights"/>
     <transformer input-channel="confirmedFlightsXML" ref="unmarshallingTransformer" output-channel="confirmedFlights"/>
