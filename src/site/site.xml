@@ -44,7 +44,6 @@
       <item name="Mailing List" href="${site.url}/mail-lists.html"/>
       <item name="Contact" href="${site.url}/contact.html"/>
       <item name="Reporting bugs" href="${site.url}/reporting-bugs.html"/>
-      <item name="Forum" href="${site.url}/forum.html"/>
     </menu>
 
     <menu name="Development">
