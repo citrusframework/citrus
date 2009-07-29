@@ -35,18 +35,6 @@ public class SendActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
         }
 
-        Element destinationElement = DomUtils.getChildElementByTagName(element, "destination");
-        if (destinationElement != null) {
-            beanDefinition.addPropertyValue("destination", DomUtils.getTextValue(destinationElement));
-        }
-
-        /* Not allowed, beacause actually not needed in testcase definition
-		Element entityResolverElement = DomUtils.getChildElementByTagName(element, "entityResolver");
-		if (entityResolverElement != null) {
-			beanDefinition.addPropertyReference("entityResolver", entityResolverElement.getAttribute("name"));
-		}
-         */
-
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");

@@ -28,7 +28,7 @@ public class StoreMessageInterceptorAspect {
     
     private static final AtomicInteger count = new AtomicInteger(1);
     
-    @Pointcut("execution(org.springframework.integration.core.Message com.consol.citrus.service.Service.receiveMessage())")
+    @Pointcut("execution(org.springframework.integration.core.Message com.consol.citrus.message.MessageReceiver.receive*(..))")
     public void inReceivingMessage() {}
 
     @AfterReturning(pointcut="com.consol.citrus.aop.StoreMessageInterceptorAspect.inReceivingMessage()",

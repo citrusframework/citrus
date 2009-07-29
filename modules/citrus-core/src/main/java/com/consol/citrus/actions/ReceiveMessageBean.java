@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
 
@@ -14,18 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import com.consol.citrus.TestConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoRessourceException;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.service.JmsService;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.XMLMessageValidator;
-import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
@@ -50,9 +48,6 @@ public class ReceiveMessageBean extends AbstractTestAction {
     /** Map holding message elements that will be ignored in validation */
     private Set ignoreMessageElements = new HashSet();
 
-    /** Service destination to be explicitly set */
-    private String destination;
-
     /** Map for namespace validation */
     private Map expectedNamespaces = new HashMap();
 
@@ -63,7 +58,9 @@ public class ReceiveMessageBean extends AbstractTestAction {
     private String messageSelectorString;
 
     /** The service to be used for receiving the message */
-    private Service service;
+    private MessageReceiver messageReceiver;
+    
+    private long receiveTimeout = 5000L;
 
     /** Message ressource as a file */
     private Resource messageResource;
@@ -102,86 +99,27 @@ public class ReceiveMessageBean extends AbstractTestAction {
     @Override
     public void execute(TestContext context) throws TestSuiteException {
         boolean isSuccess = true;
-
-        if (destination != null) {
-            String newDestination = null;
-
-            if (VariableUtils.isVariableName(destination)) {
-                newDestination = context.getVariable(destination);
-            } else if(context.getFunctionRegistry().isFunction(destination)) {
-                newDestination = FunctionUtils.resolveFunction(destination, context);
-            } else {
-                newDestination = destination;
-            }
-
-            if (newDestination != null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value " + newDestination);
-                }
-                service.changeServiceDestination(newDestination);
-            } else {
-                if(log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value failed. Maybe variable is not set properly: " + destination);
-                }
-            }
-        }
-
+        
+        Message receivedMessage;
+        
         try {
-            if (service instanceof JmsService) {
-                if (messageSelectorString != null && messageSelectorString.length() > 0) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Setting JMS message selector to value " + messageSelectorString);
-                    }
-
-                    ((JmsService)service).setMessageSelector(context.replaceDynamicContentInString(messageSelectorString));
-                }else if (messageSelector != null && messageSelector.size() > 0) {
-                    StringBuffer buf = new StringBuffer();
-
-                    Iterator iter = messageSelector.entrySet().iterator();
-
-                    if (iter.hasNext()) {
-                        Entry entry = (Entry) iter.next();
-                        String key = entry.getKey().toString();
-                        String value = (String)entry.getValue();
-
-                        if (VariableUtils.isVariableName(value)) {
-                            buf.append(key + " = '" + context.getVariable(value) + "'");
-                        } else {
-                            buf.append(key + " = '" + value + "'");
-                        }
-                    }
-
-                    while (iter.hasNext()) {
-                        String key = (String) iter.next();
-                        String value = (String)messageSelector.get(key);
-
-                        if (VariableUtils.isVariableName(value)) {
-                            buf.append(" AND " + key + " = '" + context.getVariable(value) + "' ");
-                        } else {
-                            buf.append(" AND " + key + " = '" + value + "'");
-                        }
-                    }
-
-                    String selectorString = buf.toString();
-                    
-                    if (log.isDebugEnabled()) {
-                        log.debug("Setting JMS message selector to value " + selectorString);
-                    }
-
-                    ((JmsService)service).setMessageSelector(selectorString);
+            if (StringUtils.hasText(messageSelectorString)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Setting JMS message selector to value " + messageSelectorString);
                 }
-            }
 
-            Message receivedMessage = service.receiveMessage();
+                receivedMessage = messageReceiver.receiveSelected(context.replaceDynamicContentInString(messageSelectorString));
+            } else if (CollectionUtils.isEmpty(messageSelector) == false) {
+                receivedMessage = messageReceiver
+                        .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
+                                context.replaceVariablesInMap(messageSelector))
+                                .build());
+            } else {
+                receivedMessage = messageReceiver.receive(receiveTimeout);
+            }
 
             if (receivedMessage == null)
                 throw new TestSuiteException("Received message is null!");
-
-            /* Store jms reply to queue name in context */
-            if (receivedMessage.getHeaders().containsKey("JMSReplyTo")) {
-                log.info("About to store replyToQueue in global variables: " + receivedMessage.getHeaders().get("JMSReplyTo"));
-                context.setVariable(TestConstants.VARIABLE_PREFIX + TestConstants.REPLY_TO_QUEUE + TestConstants.VARIABLE_SUFFIX, receivedMessage.getHeaders().get("JMSReplyTo").toString());
-            }
 
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
@@ -312,25 +250,10 @@ public class ReceiveMessageBean extends AbstractTestAction {
     }
 
     /**
-     * Setter for destination
-     * @param destination
-     */
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    /**
      * @param expectedNamespaces the expectedNamespaces to set
      */
     public void setExpectedNamespaces(Map expectedNamespaces) {
         this.expectedNamespaces = expectedNamespaces;
-    }
-
-    /**
-     * @param service the service to set
-     */
-    public void setService(Service service) {
-        this.service = service;
     }
 
     /**
@@ -439,5 +362,19 @@ public class ReceiveMessageBean extends AbstractTestAction {
      */
     public Map<String, String> getNamespaces() {
         return namespaces;
+    }
+
+    /**
+     * @param messageReceiver the messageReceiver to set
+     */
+    public void setMessageReceiver(MessageReceiver messageReceiver) {
+        this.messageReceiver = messageReceiver;
+    }
+
+    /**
+     * @return the messageReceiver
+     */
+    public MessageReceiver getMessageReceiver() {
+        return messageReceiver;
     }
 }

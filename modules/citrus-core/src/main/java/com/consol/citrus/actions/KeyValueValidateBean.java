@@ -9,9 +9,7 @@ import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.service.Service;
-import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.message.MessageReceiver;
 
 /**
  * This bean recieves a message on the given <tt>service</tt>
@@ -33,25 +31,17 @@ import com.consol.citrus.variable.VariableUtils;
 public class KeyValueValidateBean extends AbstractTestAction {
 
     /**
-     * Destination to set before receiving
-     */
-    private String destination;
-
-    /**
-     * Destination to set before receiving
-     */
-    //    private HashMap ressceived;
-
-    /**
      * The service with which the message is beeing sent or received.
      */
-    protected Service service;
+    protected MessageReceiver messageReceiver;
 
     /**
      * The text ressource as a inline definition within
      * the spring application context (testContext.xml).
      */
     protected String textData;
+    
+    private long receiveTimeout = 5000L;
 
     /**
      * Logger
@@ -71,36 +61,11 @@ public class KeyValueValidateBean extends AbstractTestAction {
         HashMap receivingMap = null;
         HashMap contentMap = null;
 
-        //context.resetHeaderValues();
-
-        if (destination != null) {
-            String newDestination = null;
-
-            if (VariableUtils.isVariableName(destination)) {
-                newDestination = context.getVariable(destination);
-            } else if(context.getFunctionRegistry().isFunction(destination)) {
-                newDestination = FunctionUtils.resolveFunction(destination, context);
-            } else {
-                newDestination = destination;
-            }
-
-            if (newDestination != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value " + newDestination);
-                }
-                service.changeServiceDestination(newDestination);
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value failed. Maybe variable is not set properly: " + destination);
-                }
-            }
-        }
-
         /** 1. The message is received and the header properties for each key
          * within getHeaderValues are read into the
          * corresponding variables.
          */
-        Message receivedMessage = service.receiveMessage();
+        Message receivedMessage = messageReceiver.receive(receiveTimeout);
 
         if (receivedMessage == null)
             throw new TestSuiteException("Received message is null!");
@@ -147,13 +112,6 @@ public class KeyValueValidateBean extends AbstractTestAction {
     }
 
     /**
-     * @param service the service to set
-     */
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    /**
      * @param textData the textData to set
      */
     public void setTextData(String textData) {
@@ -161,16 +119,9 @@ public class KeyValueValidateBean extends AbstractTestAction {
     }
 
     /**
-     * @return the destination
+     * @param messageReceiver the messageReceiver to set
      */
-    public String getDestination() {
-        return destination;
-    }
-
-    /**
-     * @param destination the destination to set
-     */
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setMessageReceiver(MessageReceiver messageReceiver) {
+        this.messageReceiver = messageReceiver;
     }
 }

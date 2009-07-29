@@ -1,8 +1,6 @@
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +14,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
 public class VariableSupportTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
@@ -33,13 +31,13 @@ public class VariableSupportTest extends AbstractBaseTest {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }
     
     @Test
     public void testValidateMessageElementsVariablesSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -50,8 +48,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
         
@@ -66,7 +64,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testValidateMessageElementsFunctionSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -77,8 +75,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
         context.getVariables().put("text", "text");
@@ -94,7 +92,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testValidateMessageElementsVariableSupportInExpression() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -105,8 +103,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("expression", "//root/element/sub-elementA");
         
@@ -120,7 +118,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testValidateMessageElementsFunctionSupportInExpression() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -131,8 +129,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("variable", "B");
         
@@ -147,7 +145,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testValidateHeaderValuesVariablesSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -161,8 +159,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -188,7 +186,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testValidateHeaderValuesFunctionSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -202,8 +200,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -227,7 +225,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testHeaderNameVariablesSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -241,8 +239,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -268,7 +266,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testHeaderNameFunctionSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -282,8 +280,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -305,7 +303,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testExtractMessageElementsVariablesSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -316,8 +314,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
@@ -346,7 +344,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Test
     public void testExtractHeaderValuesVariablesSupport() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -360,8 +358,8 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");

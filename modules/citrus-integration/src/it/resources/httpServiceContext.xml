@@ -9,33 +9,39 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
 	
-	<bean id="httpService" class="com.consol.citrus.service.HttpService">
+	<bean id="defaultHttpMessageSender" class="com.consol.citrus.http.HttpMessageSender">
 		<property name="host" value="${http.host}" />
 		<property name="port" value="${http.port}" />
 		<property name="urlPath" value="${http.urlpath}" />
 		<property name="requestMethod" value="${http.request.method}" />
-	</bean> 
+	</bean>
+  
+    <bean id="defaultHttpReplyMessageHandler" class="com.consol.citrus.http.HttpReplyMessageReceiver"/>
 	
 	<bean id="sendHttpRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service" ref="httpService" />
+		<property name="messageSender">
+            <bean parent="defaultHttpMessageSender">
+                <property name="replyMessageHandler" ref="defaultHttpReplyMessageHandler"/>
+            </bean>
+        </property>
 	</bean> 
 	
 	<bean id="receiveHttpResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service" ref="httpService" />
+		<property name="messageReceiver" ref="defaultHttpReplyMessageHandler"/>
 	</bean>
 	
 	<bean id="receiveHttpRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.http.request.forward}"/>
+		<property name="messageReceiver">
+			<bean parent="defaultJmsMessageReceiver">
+				<property name="destinationName" value="${jms.queue.http.request.forward}"/>
 			</bean>
 		</property>
 	</bean>
 	
 	<bean id="sendHttpResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.http.request.ack}"/>
+		<property name="messageSender">
+			<bean parent="defaultJmsMessageSender">
+				<property name="destinationName" value="${jms.queue.http.request.ack}"/>
 			</bean>
 		</property>
 	</bean>

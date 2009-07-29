@@ -13,10 +13,10 @@
     
 	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"/>
 	
-	<bean id="abstractWebServiceSupport" abstract="true">
-		<constructor-arg ref="messageFactory"/>
-		<property name="defaultUri" value="http://localhost:8078/ws-stub/MessageService/services"/>
-	</bean>
-	
-	<bean id="defaultWebService" parent="abstractWebServiceSupport" class="com.consol.citrus.service.WebService"/>
+	<bean id="defaultWebServiceMessageSender" class="com.consol.citrus.ws.WebServiceMessageSender" abstract="true">
+        <constructor-arg ref="messageFactory"/>
+        <property name="defaultUri" value="http://localhost:8081/ws-stub/MessageService/services"/>
+    </bean>
+    
+    <bean id="defaultWebServiceReplyMessageHandler" class="com.consol.citrus.ws.WebServiceReplyMessageReceiver" abstract="true"/>
 </beans>

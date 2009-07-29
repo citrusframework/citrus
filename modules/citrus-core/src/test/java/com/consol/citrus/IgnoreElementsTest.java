@@ -1,8 +1,6 @@
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
@@ -14,14 +12,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
 public class IgnoreElementsTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
@@ -30,7 +28,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     public void setup() {
         super.setup();
         
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -40,11 +38,11 @@ public class IgnoreElementsTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }
 
@@ -103,7 +101,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     
     @Test
     public void testIgnoreAttributesUsingArrays() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -113,8 +111,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -134,14 +132,14 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     
     @Test
     public void testIgnoreRootElement() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element>Text</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element additonal-attribute='some'>Wrong text</element>" 

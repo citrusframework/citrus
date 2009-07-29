@@ -1,8 +1,6 @@
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,14 +13,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
 public class XPathTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
@@ -32,13 +30,13 @@ public class XPathTest extends AbstractBaseTest {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }
     
     @Test
     public void testUsingXPath() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -51,8 +49,8 @@ public class XPathTest extends AbstractBaseTest {
                         + "</ns1:root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -69,7 +67,7 @@ public class XPathTest extends AbstractBaseTest {
     
     @Test
     public void testUsingXPathWithDefaultNamespace() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -82,8 +80,8 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -100,7 +98,7 @@ public class XPathTest extends AbstractBaseTest {
     
     @Test
     public void testUsingXPathWithExplicitNamespace() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test' xmlns:ns1='http://testsuite'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -113,8 +111,8 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -127,7 +125,7 @@ public class XPathTest extends AbstractBaseTest {
     
     @Test
     public void testUsingXPathWithExplicitNamespaceInElementDefinition() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -140,8 +138,8 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");

@@ -6,17 +6,13 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.service.Service;
-import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.message.MessageSender;
 
 
 /**
@@ -36,22 +32,14 @@ public class SendMessageBean extends AbstractTestAction {
      */
     private Map headerValues = new HashMap();
 
-    /** Send destination for explicit overwrite of service destination */
-    private String destination;
-
     /** The service with which the message is beeing sent or received */
-    private Service service;
+    private MessageSender messageSender;
 
     /** The message ressource as a file resource */
     private Resource messageResource;
 
     /** The message ressource as a inline definition within the spring application context */
     private String messageData;
-
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(SendMessageBean.class);
 
     /**
      * Following actions will be executed:
@@ -64,27 +52,6 @@ public class SendMessageBean extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) throws TestSuiteException {
-        if (destination != null) {
-            String newDestination = null;
-
-            if (VariableUtils.isVariableName(destination)) {
-                newDestination = context.getVariable(destination);
-            } else if(context.getFunctionRegistry().isFunction(destination)) {
-                newDestination = FunctionUtils.resolveFunction(destination, context);
-            } else {
-                newDestination = destination;
-            }
-
-            if (newDestination != null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value " + newDestination);
-                }
-                service.changeServiceDestination(newDestination);
-            } else if(log.isDebugEnabled()) {
-                log.debug("Setting service destination to custom value failed. Maybe variable is not set properly: " + destination);
-            }
-        }
-
         try {
             String messagePayload = null;
             
@@ -115,27 +82,12 @@ public class SendMessageBean extends AbstractTestAction {
             Message sendMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
 
             /* message is sent */
-            service.sendMessage(sendMessage);
+            messageSender.send(sendMessage);
         } catch (IOException e) {
             throw new TestSuiteException(e);
         } catch (ParseException e) {
             throw new TestSuiteException(e);
         }
-    }
-
-    /**
-     * Setter for destination
-     * @param destination
-     */
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    /**
-     * @param service the service to set
-     */
-    public void setService(Service service) {
-        this.service = service;
     }
 
     /**
@@ -195,13 +147,6 @@ public class SendMessageBean extends AbstractTestAction {
     }
 
     /**
-     * @return the destination
-     */
-    public String getDestination() {
-        return destination;
-    }
-
-    /**
      * @return the messageData
      */
     public String getMessageData() {
@@ -214,11 +159,11 @@ public class SendMessageBean extends AbstractTestAction {
     public Resource getMessageResource() {
         return messageResource;
     }
-
+    
     /**
-     * @return the service
+     * @param messageSender the messageSender to set
      */
-    public Service getService() {
-        return service;
+    public void setMessageSender(MessageSender messageSender) {
+        this.messageSender = messageSender;
     }
 }
