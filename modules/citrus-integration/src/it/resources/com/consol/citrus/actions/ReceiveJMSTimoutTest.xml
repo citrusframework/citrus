@@ -29,17 +29,16 @@
 			but the tester does not have to worry about queue names and other properties as shown in the second example. 
 		</description>
 		<actions>
-			<expectTimeout connect="receiveTimeout" wait="500">
-				<destination>TestSuite.Queue.TimeOut</destination>
-			</expectTimeout>
+			<expectTimeout connect="receiveTimeout" wait="500"/>
 			<expectTimeout connect="receiveTimeoutDummy" wait="500"/>
 		</actions>
 	</testcase>
 	
 	<spring:bean abstract="true" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" id="receiveTimeoutDummy">
-		<spring:property name="jmsTemplate">
-			<spring:bean parent="defaultJmsTemplate"/>
+		<spring:property name="messageReceiver">
+			<spring:bean parent="defaultJmsMessageReceiver">
+                <spring:property name="destinationName" value="TestSuite.Queue.TimeOut"/>
+            </spring:bean>
 		</spring:property>
-        <spring:property name="destination" value="TestSuite.Queue.TimeOut"/>
 	</spring:bean>
 </spring:beans>

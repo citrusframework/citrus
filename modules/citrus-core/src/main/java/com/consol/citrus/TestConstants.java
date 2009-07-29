@@ -16,10 +16,6 @@ public class TestConstants {
     public static final int CONST_REPLY_TO_QUEUE = 1;
     public static final int CUSTOM_FUNCTION = 2;
 
-    /** Predefined variable name for a default queue to reply to. */
-    public static final String REPLY_TO_QUEUE = "REPLY_TO_QUEUE";
-    public static final String DEFAULT_QUEUE = "DefaultQUEUE";
-
     /** Default value for success in web services */
     public static final String RETURN_CODE_SUCCESS = "0";
 

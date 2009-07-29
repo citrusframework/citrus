@@ -48,11 +48,6 @@ public class ReceiveActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("messageSelector", messageSelector);
         }
 
-        Element destinationElement = DomUtils.getChildElementByTagName(element, "destination");
-        if (destinationElement != null) {
-            beanDefinition.addPropertyValue("destination", DomUtils.getTextValue(destinationElement));
-        }
-
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");

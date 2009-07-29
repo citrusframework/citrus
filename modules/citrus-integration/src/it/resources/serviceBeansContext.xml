@@ -12,112 +12,129 @@
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
 	
 	<bean id="sendGetNumberRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.async.in}"/>
+		<property name="messageSender">
+			<bean parent="defaultJmsMessageSender">
+				<property name="destinationName" value="${jms.queue.async.in}"/>
 			</bean>
 		</property>
 	</bean>
   
     <bean id="receiveGetNumberRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${jms.queue.async.in}"/>
+        <property name="messageReceiver">
+            <bean parent="defaultJmsMessageReceiver">
+                <property name="destinationName" value="${jms.queue.async.in}"/>
             </bean>
         </property>
     </bean>
 	
 	<bean id="receiveGetNumberResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.async.out}"/>
+		<property name="messageReceiver">
+			<bean parent="defaultJmsMessageReceiver">
+				<property name="destinationName" value="${jms.queue.async.out}"/>
 			</bean>
 		</property>
 	</bean>
 	
 	<bean id="sendGetCustomerRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="replyToQueue" value="${jms.queue.sync.out}"/>
-				<property name="serviceDestination" value="${jms.queue.sync.in}"/>
+		<property name="messageSender">
+			<bean parent="defaultJmsSyncMessageSender">
+				<property name="destinationName" value="${jms.queue.sync.in}"/>
+                <property name="replyMessageHandler">
+                    <ref bean="getCustomerResponseReplyHandler"/>
+                </property>
 			</bean>
 		</property>
 	</bean>
 	
+    <bean id="getCustomerResponseReplyHandler" parent="defaultJmsReplyMessageHandler"/>
 	<bean id="receiveGetCustomerResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.sync.out}"/>
-			</bean>
+		<property name="messageReceiver">
+			<ref bean="getCustomerResponseReplyHandler"/>
 		</property>
 	</bean>
 	
 	<bean id="sendGetOrderRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="replyToQueue" value="${jms.queue.dummy}"/>
-				<property name="serviceDestination" value="${jms.queue.dummy.one.in}"/>
+		<property name="messageSender">
+			<bean parent="defaultJmsSyncMessageSender">
+				<property name="destinationName" value="${jms.queue.dummy.one.in}"/>
+                <property name="replyMessageHandler">
+                    <ref bean="getOrderRequestReplyHandler"/>
+                </property>    
 			</bean>
 		</property>
 	</bean>
-	
+    
+    <bean id="getOrderRequestMessageReceiver" parent="defaultJmsSyncMessageReceiver">
+        <property name="destinationName" value="${jms.queue.dummy.one.in}"/>
+    </bean>  
 	<bean id="receiveGetOrderRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.dummy.one.in}"/>
-			</bean>
+		<property name="messageReceiver">
+			<ref bean="getOrderRequestMessageReceiver"/>
 		</property>
 	</bean>
+  
+    <bean id="sendGetOrderRequestReply" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
+        <property name="messageSender">
+            <bean parent="defaultJmsReplyMessageSender">
+                <property name="replyDestinationHolder" ref="getOrderRequestMessageReceiver"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="getOrderRequestReplyHandler" parent="defaultJmsReplyMessageHandler"/>
+    <bean id="receiveGetOrderRequestReply" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
+        <property name="messageReceiver">
+            <ref bean="getOrderRequestReplyHandler"/>
+        </property>
+    </bean>
 	
 	<bean id="receiveGetOrderRequestFilesystem" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.queue.dummy.one.in}"/>
+		<property name="messageReceiver">
+			<bean parent="defaultJmsMessageReceiver">
+				<property name="destinationName" value="${jms.queue.dummy.one.in}"/>
 			</bean>
 		</property>
 		<property name="debugBasePath" value="/message-debug/"/>
 	</bean>
 	
-	<bean id="sendWebServiceRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<ref bean="defaultWebService"/>
-		</property>
-	</bean>
-	
-	<bean id="receiveWebServiceResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<ref bean="defaultWebService"/>
-		</property>
-	</bean>
-	
-	<bean id="sendWebServiceResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.ws.stub.response}"/>
-			</bean>
-		</property>
-	</bean>
-	
-	<bean id="receiveWebServiceRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="service">
-			<bean parent="defaultJmsService">
-				<property name="serviceDestination" value="${jms.ws.stub.request}"/>
-			</bean>
-		</property>
-	</bean>
-	
-	<bean id="receiveTimeout" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" abstract="true">
-		<property name="jmsTemplate">
-			<bean parent="defaultJmsTemplate"/>
-		</property>
-        <property name="destination" value="${jms.queue.dummy}"/>
-	</bean>
-	
-	<bean id="sendReplyTo" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService"/>
+    <bean id="sendWebServiceRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
+        <property name="messageSender">
+            <bean parent="defaultWebServiceMessageSender">
+                <property name="replyMessageHandler" ref="webServiceReplyHandler"/>
+            </bean>
         </property>
     </bean>
+    
+    <bean id="webServiceReplyHandler" parent="defaultWebServiceReplyMessageHandler"/>
+    <bean id="receiveWebServiceResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
+        <property name="messageReceiver">
+            <ref bean="webServiceReplyHandler"/>
+        </property>
+    </bean>
+    
+    <bean id="sendWebServiceResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
+        <property name="messageSender">
+            <bean parent="defaultJmsMessageSender">
+                <property name="destinationName" value="${jms.ws.stub.response}"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="receiveWebServiceRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
+        <property name="messageReceiver">
+            <bean parent="defaultJmsMessageReceiver">
+                <property name="destinationName" value="${jms.ws.stub.request}"/>
+            </bean>
+        </property>
+    </bean>
+    
+	<bean id="receiveTimeout" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" abstract="true">
+		<property name="messageReceiver">
+			<bean parent="defaultJmsMessageReceiver">
+                <property name="destinationName" value="${jms.queue.dummy}"/>
+            </bean>
+		</property>
+	</bean>
 	
 	<bean id="databaseAccess" class="com.consol.citrus.actions.ExecuteSqlBean" abstract="true">
 		<property name="dbService" ref="dbService"/>
@@ -135,7 +152,7 @@
 
 	<bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesBean">
 		<property name="queueConnectionFactory">
-			<ref bean="defaultJmsConnectionFactory"></ref>
+			<ref bean="connectionFactory"></ref>
 		</property>
 		<property name="queueNames">
 			<list>

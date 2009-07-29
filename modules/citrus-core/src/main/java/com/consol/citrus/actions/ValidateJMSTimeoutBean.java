@@ -1,32 +1,24 @@
 package com.consol.citrus.actions;
 
-import java.text.ParseException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.JmsTimeoutException;
 import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.service.JmsService;
-import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.message.MessageReceiver;
 
 /**
  * Bean to ecpect a JMS timeout on a queue
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
 public class ValidateJMSTimeoutBean extends AbstractTestAction {
-    /** Queue destination */
-    private String destination;
-
     /** Time to wait until timeout */
-    private long timeout = 0;
+    private long timeout = 1000L;
 
-    /** JmsTemplate */
-    private JmsTemplate jmsTemplate;
+    private MessageReceiver messageReceiver;
 
     /**
      * Select messages to receive
@@ -45,61 +37,24 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
     @Override
     public void execute(TestContext context) throws TestSuiteException {
         try {
-            if (timeout != 0) {
-                jmsTemplate.setReceiveTimeout(timeout);
-            }
-
-            JmsService service = new JmsService();
-            service.setJmsTemplate(jmsTemplate);
+            Message receivedMessage;
             
-            /*
-             * if custom destination is present,
-             * set service destination before receiving message
-             */
-            if (destination != null) {
-                String newDestination = null;
+            if (StringUtils.hasText(messageSelector)) {
+                receivedMessage = messageReceiver.receiveSelected(messageSelector, timeout);
+            } else {
+                receivedMessage = messageReceiver.receive(timeout); 
+            }
 
-                if (VariableUtils.isVariableName(destination)) {
-                    newDestination = context.getVariable(destination);
-                } else if(context.getFunctionRegistry().isFunction(destination)) {
-                    newDestination = FunctionUtils.resolveFunction(destination, context);
-                } else {
-                    newDestination = destination;
+            if(receivedMessage != null) {
+                if(log.isDebugEnabled()) {
+                    log.debug("Received message: " + receivedMessage.getPayload());
                 }
-
-                if (newDestination != null) {
-                    if(log.isDebugEnabled()) {
-                        log.debug("Setting service destination to custom value " + newDestination);
-                    }
-                    jmsTemplate.setDefaultDestinationName(newDestination);
-                } else if(log.isDebugEnabled()) {
-                    log.debug("Setting service destination to custom value failed. Maybe variable is not set properly: " + destination);
-                }
+                
+                throw new TestSuiteException("JMS timeout validation failed, because test suite received message on destination");
             }
-
-            if (messageSelector != null && messageSelector.length() > 0) {
-                service.setMessageSelector(context.replaceDynamicContentInString(messageSelector));
-            }
-
-            Message receivedMessage = service.receiveMessage();
-
-            if(log.isDebugEnabled()) {
-                log.debug("Received message: " + receivedMessage.getPayload());
-            }
-            throw new TestSuiteException("JMS timeout validation failed, because test suite received message on destination " +  service.getServiceDestination());
         } catch (JmsTimeoutException e) {
             log.info("Received timeout as expected. JMS timeout validation OK!");
-        } catch (ParseException e) {
-            throw new TestSuiteException(e);
         }
-    }
-
-    /**
-     * Setter for destination
-     * @param destination
-     */
-    public void setDestination(String destination) {
-        this.destination = destination;
     }
 
     /**
@@ -113,11 +68,11 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
     public void setMessageSelector(String messageSelector) {
         this.messageSelector = messageSelector;
     }
-
+    
     /**
-     * @param jmsTemplate the jmsTemplate to set
+     * @param messageReceiver the messageReceiver to set
      */
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
+    public void setMessageReceiver(MessageReceiver messageReceiver) {
+        this.messageReceiver = messageReceiver;
     }
 }

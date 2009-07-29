@@ -1,8 +1,6 @@
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +11,14 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
 public class ValidationTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
@@ -30,13 +28,13 @@ public class ValidationTest extends AbstractBaseTest {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }
     
     @Test
     public void testValidateXMLTree() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -46,8 +44,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -62,7 +60,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test
     public void testValidateXMLTreeDifferentAttributeOrder() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -72,8 +70,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeB='attribute-value' attributeA='attribute-value' >"
@@ -88,7 +86,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeMissingElement() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -98,8 +96,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -113,7 +111,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeAdditionalElement() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -123,8 +121,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -140,7 +138,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeMissingAttribute() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -150,8 +148,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -166,7 +164,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeAdditionalAttribute() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -176,8 +174,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -192,7 +190,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeWrongAttribute() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -202,8 +200,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -218,7 +216,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeWrongElement() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -228,8 +226,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -244,7 +242,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeWrongNodeValue() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -254,8 +252,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -270,7 +268,7 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateXMLTreeWrongAttributeValue() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -280,8 +278,8 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"

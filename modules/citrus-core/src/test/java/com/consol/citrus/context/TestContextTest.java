@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestConstants;
 import com.consol.citrus.actions.SetVariablesBean;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.exceptions.VariableNameValueException;
@@ -76,9 +75,7 @@ public class TestContextTest extends AbstractBaseTest {
     @Test
     public void testGetVariable() {
         context.getVariables().put("test", "123");
-        context.getVariables().put(TestConstants.REPLY_TO_QUEUE, "Test.Queue");
         
-        Assert.assertEquals(context.getVariable(TestConstants.REPLY_TO_QUEUE), "Test.Queue");
         Assert.assertEquals(context.getVariable("${test}"), "123");
         Assert.assertEquals(context.getVariable("test"), "123");
     }
@@ -116,11 +113,6 @@ public class TestContextTest extends AbstractBaseTest {
         
         Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789"), "123 456789");
         Assert.assertEquals(context.replaceDynamicContentInString("123 ${test}789", true), "123 '456'789");
-    }
-    
-    @Test(expectedExceptions = {TestSuiteException.class})
-    public void testFailReplyToQueue() {
-        context.getVariable(TestConstants.REPLY_TO_QUEUE);
     }
     
     @Test

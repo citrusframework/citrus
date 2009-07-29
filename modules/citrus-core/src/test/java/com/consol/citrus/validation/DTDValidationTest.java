@@ -1,8 +1,6 @@
 package com.consol.citrus.validation;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +11,13 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 
 public class DTDValidationTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
@@ -29,13 +27,13 @@ public class DTDValidationTest extends AbstractBaseTest {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }
     
     @Test
     public void testInlineDTD() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
@@ -48,8 +46,8 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
@@ -67,7 +65,7 @@ public class DTDValidationTest extends AbstractBaseTest {
     
     @Test
     public void testExternalDTD() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
@@ -76,8 +74,8 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>").build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"

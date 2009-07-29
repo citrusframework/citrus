@@ -12,7 +12,6 @@ import org.springframework.integration.core.Message;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.consol.citrus.TestConstants;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.VariableNameValueException;
@@ -55,11 +54,6 @@ public class TestContext {
      * @throws TestSuiteException
      */
     public String getVariable(final String variableExpression) throws TestSuiteException {
-        if (VariableUtils.cutOffVariablesPrefix(variableExpression).equals(TestConstants.REPLY_TO_QUEUE) &&
-                variables.containsKey(TestConstants.REPLY_TO_QUEUE) == false) {
-            throw new TestSuiteException("Trying to read constant " + TestConstants.REPLY_TO_QUEUE + ", but constant was not set before");
-        }
-
         String value = null;
 
         if (variables.containsKey(VariableUtils.cutOffVariablesPrefix(variableExpression))) {

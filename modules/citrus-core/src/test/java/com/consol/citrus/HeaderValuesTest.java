@@ -1,8 +1,6 @@
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 
@@ -15,20 +13,20 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.service.Service;
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
 public class HeaderValuesTest extends AbstractBaseTest {
     @Autowired
     XMLMessageValidator validator;
     
-    Service service = EasyMock.createMock(Service.class);
+    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     ReceiveMessageBean receiveMessageBean;
     
     @Test
     public void testValidateHeaderValues() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -42,11 +40,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -66,7 +64,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     @Test
     public void testValidateHeaderValuesComplete() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -80,11 +78,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -106,7 +104,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateHeaderValuesWrongExpectedValue() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -120,11 +118,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -144,7 +142,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateHeaderValuesForWrongElement() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -158,11 +156,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -182,7 +180,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     @Test
     public void testValidateEmptyHeaderValues() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -196,11 +194,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -222,7 +220,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testValidateHeaderValuesNullComparison() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -236,11 +234,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -262,7 +260,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
     @Test
     public void testExtractHeaderValues() {
-        reset(service);
+        reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -276,11 +274,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(service.receiveMessage()).andReturn(message);
-        replay(service);
+        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageBean();
-        receiveMessageBean.setService(service);
+        receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"

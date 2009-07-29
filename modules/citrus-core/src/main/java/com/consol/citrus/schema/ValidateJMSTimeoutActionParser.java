@@ -38,11 +38,6 @@ public class ValidateJMSTimeoutActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("messageSelector", DomUtils.getTextValue(messageSelectorElement));
         }
 
-        Element destinationElement = DomUtils.getChildElementByTagName(element, "destination");
-        if (destinationElement != null) {
-            beanDefinition.addPropertyValue("destination", DomUtils.getTextValue(destinationElement));
-        }
-
         return beanDefinition.getBeanDefinition();
     }
 }
