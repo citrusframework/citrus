@@ -29,10 +29,7 @@ public class ExecuteSqlActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         List statements = new ArrayList();
         List stmtElements = DomUtils.getChildElementsByTagName(element, "statement");

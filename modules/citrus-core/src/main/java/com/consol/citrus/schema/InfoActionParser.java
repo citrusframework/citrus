@@ -18,10 +18,7 @@ public class InfoActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InfoBean.class);
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         List infoValues = new ArrayList();
         List variableElements = DomUtils.getChildElementsByTagName(element, "variable");

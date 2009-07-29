@@ -18,10 +18,7 @@ public class ClassRunnerActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ClassRunnerBean.class);
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         String className = element.getAttribute("class");
         beanDefinition.addPropertyValue("className", className);

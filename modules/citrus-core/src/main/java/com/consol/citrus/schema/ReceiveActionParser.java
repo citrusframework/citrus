@@ -8,6 +8,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -19,7 +20,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
         String parentBeanName = element.getAttribute("type");
         BeanDefinitionBuilder beanDefinition;
 
-        if (parentBeanName != null && parentBeanName.length() > 0) {
+        if (StringUtils.hasText(parentBeanName)) {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
@@ -27,10 +28,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
         if (messageSelectorElement != null) {

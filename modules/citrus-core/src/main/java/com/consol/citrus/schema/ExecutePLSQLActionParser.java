@@ -25,10 +25,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         Element scriptElement = DomUtils.getChildElementByTagName(element, "script");
         if (scriptElement != null) {

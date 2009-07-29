@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.group.Iterate;
@@ -18,13 +18,10 @@ public class IterateParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Iterate.class);
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         String indexName = element.getAttribute("indexName");
-        if (indexName != null && indexName.length() > 0) {
+        if (StringUtils.hasText(indexName)) {
             beanDefinition.addPropertyValue("indexName", indexName);
         }
 
@@ -32,12 +29,12 @@ public class IterateParser implements BeanDefinitionParser {
         beanDefinition.addPropertyValue("condition", condition);
 
         String start = element.getAttribute("start");
-        if (start != null && start.length() > 0) {
+        if (StringUtils.hasText(start)) {
             beanDefinition.addPropertyValue("index", new Integer(start).intValue());
         }
 
         String step = element.getAttribute("step");
-        if (step != null && step.length() > 0) {
+        if (StringUtils.hasText(step)) {
             beanDefinition.addPropertyValue("step", new Integer(step).intValue());
         }
 

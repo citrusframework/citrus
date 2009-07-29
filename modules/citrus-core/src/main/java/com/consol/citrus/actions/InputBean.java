@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
@@ -37,7 +38,7 @@ public class InputBean extends AbstractTestAction {
         }
 
         String display;
-        if (validAnswers != null && validAnswers.length() > 0) {
+        if (StringUtils.hasText(validAnswers)) {
             display = message + " (" + validAnswers + ")";
         } else {
             display = message;

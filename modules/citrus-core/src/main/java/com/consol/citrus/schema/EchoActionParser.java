@@ -14,10 +14,7 @@ public class EchoActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(EchoBean.class);
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {

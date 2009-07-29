@@ -16,6 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
@@ -233,7 +234,7 @@ public class JmsLoopBackBean implements InitializingBean, Server {
                                 + "\n\rPlease specify either a xmlRessource or a xmlData property!");
                     }
 
-                    if (messagePayload != null && messagePayload.length() > 0) {
+                    if (StringUtils.hasText(messagePayload)) {
                         messagePayload = context.replaceMessageValues(setMessageValues, messagePayload);
                     }
                     

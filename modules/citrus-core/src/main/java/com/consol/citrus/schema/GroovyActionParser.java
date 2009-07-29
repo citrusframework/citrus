@@ -6,6 +6,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -16,12 +17,14 @@ public class GroovyActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(GroovyScriptBean.class);
         
+        DescriptionElementParser.doParse(element, beanDefinition);
+        
         if(DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
             beanDefinition.addPropertyValue("script", DomUtils.getTextValue(element));
         }
         
         String filePath = element.getAttribute("resource");
-        if (filePath != null && filePath.length() > 0) {
+        if (StringUtils.hasText(filePath)) {
             if (filePath.startsWith("classpath:")) {
                 beanDefinition.addPropertyValue("fileResource", new ClassPathResource(filePath.substring("classpath:".length())));
             } else if (filePath.startsWith("file:")) {

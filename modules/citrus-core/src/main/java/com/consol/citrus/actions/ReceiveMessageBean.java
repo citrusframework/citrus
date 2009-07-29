@@ -179,7 +179,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 throw new NoRessourceException("No validation elements specifyed. You need to declare at least one element to be validated");
             }
 
-            if (expectedMessagePayload != null && expectedMessagePayload.length() > 0) {
+            if (StringUtils.hasText(expectedMessagePayload)) {
                 /** and for each key within setMessageValues the value is set
                  * within the source.
                  */
