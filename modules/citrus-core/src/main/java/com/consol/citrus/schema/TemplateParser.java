@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.group.Template;
@@ -20,14 +20,11 @@ public class TemplateParser implements BeanDefinitionParser {
 
         beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Template.class);
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         String name = element.getAttribute("name");
 
-        if (name != null && name.length() > 0) {
+        if (StringUtils.hasText(name)) {
             beanDefinition.addPropertyValue("name", name);
         } else {
             beanDefinition.addPropertyValue("name", parserContext.getReaderContext().generateBeanName(beanDefinition.getBeanDefinition()));

@@ -69,10 +69,7 @@ public class TestCaseParser implements BeanDefinitionParser {
             testcase.addPropertyValue("metaInfo", metaInfo);
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            testcase.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, testcase);
 
         Element testVariablesElement = DomUtils.getChildElementByTagName(element, "variables");
 

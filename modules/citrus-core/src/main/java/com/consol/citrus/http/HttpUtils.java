@@ -3,6 +3,7 @@ package com.consol.citrus.http;
 import java.util.Map.Entry;
 
 import org.springframework.integration.core.Message;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.util.MessageUtils;
 
@@ -90,7 +91,7 @@ public class HttpUtils {
 
         // output content
         String content = response.getPayload().toString();
-        if (content != null && content.length() > 0) {
+        if (StringUtils.hasText(content)) {
             sBuf.append(HttpConstants.LINE_BREAK);
             sBuf.append(content);
         }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.container.Catch;
@@ -22,14 +22,11 @@ public class CatchParser implements BeanDefinitionParser {
 
         String exception = element.getAttribute("exception");
 
-        if (exception != null && exception.length() > 0) {
+        if (StringUtils.hasText(exception)) {
             beanDefinition.addPropertyValue("exception", exception);
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();

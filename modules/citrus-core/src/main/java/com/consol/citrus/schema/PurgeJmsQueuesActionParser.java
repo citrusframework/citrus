@@ -27,10 +27,7 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 
-        Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
-        if (descriptionElement != null) {
-            beanDefinition.addPropertyValue("description", DomUtils.getTextValue(descriptionElement).trim());
-        }
+        DescriptionElementParser.doParse(element, beanDefinition);
 
         List queueNames = new ArrayList();
         List queueElements = DomUtils.getChildElementsByTagName(element, "queue");
