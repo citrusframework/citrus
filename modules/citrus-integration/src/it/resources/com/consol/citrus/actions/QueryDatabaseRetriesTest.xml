@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.consol.de/testframework" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+<spring:beans xmlns="http://www.consol.de/citrus/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.consol.de/citrus/schema/testcase http://www.consol.de/citrus/schema/testcase/citrus-testcase-1.0.xsd">
     <testcase name="queryDatabaseRetriesTest">
 		<meta-info>
 			<author>Christoph Deppisch</author>

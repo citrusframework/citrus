@@ -33,13 +33,13 @@
     
     <programlisting>
     &lt;spring:beans
-        xmlns=&quot;http://www.consol.de/testframework&quot;
+        xmlns=&quot;http://www.consol.de/citrus/schema/testcase&quot;
         xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
         xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.consol.de/testframework
-        http://www.consol.de/testframework/consol_ts.xsd&quot;&gt;
+        http://www.consol.de/citrus/schema/testcase
+        http://www.consol.de/citrus/schema/testcase/consol_ts.xsd&quot;&gt;
         
         &lt;testcase name=&quot;myFirstTest&quot;&gt;
             &lt;description&gt;
