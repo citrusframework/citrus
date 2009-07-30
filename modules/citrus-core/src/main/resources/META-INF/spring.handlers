@@ -1,1 +1,1 @@
-http\://www.consol.de/testframework=com.consol.citrus.config.xml.TestSuiteNamespaceHandler
+http\://www.consol.de/citrus/schema/testcase=com.consol.citrus.config.xml.CitrusTestcaseNamespaceHandler

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
-public class TestSuiteNamespaceHandler extends NamespaceHandlerSupport {
+public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     /*
      * (non-Javadoc)

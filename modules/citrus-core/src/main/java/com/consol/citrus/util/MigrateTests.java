@@ -52,7 +52,7 @@ public class MigrateTests {
 
             t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.setOutputProperty(OutputKeys.INDENT, "yes");
-            t.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "{http://www.consol.de/testframework}data");
+            t.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "{http://www.consol.de/citrus/schema/testcase}data");
             t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
             log.info("XSL transformer was created");
