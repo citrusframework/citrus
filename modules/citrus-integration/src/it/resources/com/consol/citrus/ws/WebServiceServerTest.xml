@@ -15,7 +15,7 @@
 		</variables>
 		
         <actions>
-            <receive type="receiveWebServiceRequest">
+            <receive parent="receiveWebServiceRequest">
             	<message>
             		<data>
             			<![CDATA[
@@ -35,7 +35,7 @@
             	</extract>
             </receive>
             
-            <send type="sendWebServiceResponse">
+            <send parent="sendWebServiceResponse">
             	<message>
             		<data>
             			<![CDATA[

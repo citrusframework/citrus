@@ -12,6 +12,7 @@ import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.message.ReplyMessageHandler;
@@ -31,7 +32,7 @@ public class JmsSyncMessageSender implements MessageSender {
     
     private ReplyMessageHandler replyMessageHandler;
     
-    private long receiveTimeout = 5000L;
+    private long replyTimeout = 5000L;
     
     /**
      * Logger
@@ -72,7 +73,7 @@ public class JmsSyncMessageSender implements MessageSender {
                 messageConsumer = session.createConsumer(replyDestination, messageSelector);
             }
             
-            javax.jms.Message jmsReplyMessage = (this.receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
+            javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             if(replyMessageHandler != null) {
                 replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage));
@@ -113,7 +114,7 @@ public class JmsSyncMessageSender implements MessageSender {
             }
         } else if (replyDestination != null) {
             return replyDestination;
-        } else if (replyDestinationName != null) {
+        } else if (StringUtils.hasText(replyDestinationName)) {
             return new DynamicDestinationResolver().resolveDestinationName(session, this.replyDestinationName, false);
         }
         
@@ -235,9 +236,9 @@ public class JmsSyncMessageSender implements MessageSender {
     }
 
     /**
-     * @param receiveTimeout the receiveTimeout to set
+     * @param replyTimeout the replyTimeout to set
      */
-    public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
+    public void setReplyTimeout(long replyTimeout) {
+        this.replyTimeout = replyTimeout;
     }
 }

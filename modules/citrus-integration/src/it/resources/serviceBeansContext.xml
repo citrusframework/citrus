@@ -4,90 +4,38 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:citrus="http://www.consol.de/citrus/schema/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd">
 	
-	<bean id="sendGetNumberRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="messageSender">
-			<bean parent="defaultJmsMessageSender">
-				<property name="destinationName" value="${jms.queue.async.in}"/>
-			</bean>
-		</property>
-	</bean>
+	<citrus:jms-message-sender id="sendGetNumberRequest" destination-name="${jms.queue.async.in}"/>
   
-    <bean id="receiveGetNumberRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver">
-            <bean parent="defaultJmsMessageReceiver">
-                <property name="destinationName" value="${jms.queue.async.in}"/>
-            </bean>
-        </property>
-    </bean>
+    <citrus:jms-message-receiver id="receiveGetNumberRequest" destination-name="${jms.queue.async.in}"/>
 	
-	<bean id="receiveGetNumberResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver">
-			<bean parent="defaultJmsMessageReceiver">
-				<property name="destinationName" value="${jms.queue.async.out}"/>
-			</bean>
-		</property>
-	</bean>
+    <citrus:jms-message-receiver id="receiveGetNumberResponse" destination-name="${jms.queue.async.out}"/>
 	
-	<bean id="sendGetCustomerRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="messageSender">
-			<bean parent="defaultJmsSyncMessageSender">
-				<property name="destinationName" value="${jms.queue.sync.in}"/>
-                <property name="replyMessageHandler">
-                    <ref bean="getCustomerResponseReplyHandler"/>
-                </property>
-			</bean>
-		</property>
-	</bean>
+	<citrus:jms-sync-message-sender id="sendGetCustomerRequest" 
+                                    destination-name="${jms.queue.sync.in}"
+                                    reply-handler="receiveGetCustomerResponse"
+                                    reply-timeout="1000"/>
 	
-    <bean id="getCustomerResponseReplyHandler" parent="defaultJmsReplyMessageHandler"/>
-	<bean id="receiveGetCustomerResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver">
-			<ref bean="getCustomerResponseReplyHandler"/>
-		</property>
-	</bean>
-	
-	<bean id="sendGetOrderRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="messageSender">
-			<bean parent="defaultJmsSyncMessageSender">
-				<property name="destinationName" value="${jms.queue.dummy.one.in}"/>
-                <property name="replyMessageHandler">
-                    <ref bean="getOrderRequestReplyHandler"/>
-                </property>    
-			</bean>
-		</property>
-	</bean>
+    <citrus:jms-reply-message-handler id="receiveGetCustomerResponse"/>
     
-    <bean id="getOrderRequestMessageReceiver" parent="defaultJmsSyncMessageReceiver">
-        <property name="destinationName" value="${jms.queue.dummy.one.in}"/>
-    </bean>  
-	<bean id="receiveGetOrderRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver">
-			<ref bean="getOrderRequestMessageReceiver"/>
-		</property>
-	</bean>
+    <citrus:jms-sync-message-sender id="sendGetOrderRequest" 
+                                    destination-name="${jms.queue.dummy.one.in}"
+                                    reply-handler="receiveGetOrderRequestReply"
+                                    reply-timeout="1000"/>
+    
+    <citrus:jms-reply-message-handler id="receiveGetOrderRequestReply"/>
+    
+    <citrus:jms-sync-message-receiver id="receiveGetOrderRequest" destination-name="${jms.queue.dummy.one.in}"/>
   
-    <bean id="sendGetOrderRequestReply" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender">
-            <bean parent="defaultJmsReplyMessageSender">
-                <property name="replyDestinationHolder" ref="getOrderRequestMessageReceiver"/>
-            </bean>
-        </property>
-    </bean>
+    <citrus:jms-reply-message-sender id="sendGetOrderRequestReply"
+                                     reply-destination-holder="receiveGetOrderRequest"/>
     
-    <bean id="getOrderRequestReplyHandler" parent="defaultJmsReplyMessageHandler"/>
-    <bean id="receiveGetOrderRequestReply" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver">
-            <ref bean="getOrderRequestReplyHandler"/>
-        </property>
-    </bean>
-	
 	<bean id="receiveGetOrderRequestFilesystem" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
 		<property name="messageReceiver">
 			<bean parent="defaultJmsMessageReceiver">

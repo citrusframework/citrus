@@ -45,7 +45,7 @@
         </variables>
         <actions>
             <parallel>
-              <send type="sendGetOrderRequest">
+              <send with="sendGetOrderRequest">
                   <message>
                       <data><![CDATA[
   																								
@@ -73,7 +73,7 @@
                   </header>
               </send>
               <sequential>
-                <receive type="receiveGetOrderRequest">
+                <receive with="receiveGetOrderRequest">
                     <message>
                         <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
                     </message>
@@ -84,7 +84,7 @@
                         <message path="ConversationId" variable="${conversationId}"/>
                     </extract>
                 </receive>
-                <send type="sendGetOrderRequestReply">
+                <send with="sendGetOrderRequestReply">
                     <message>
                         <data><![CDATA[
                                                                                                     
@@ -115,7 +115,7 @@
                 
                 <sleep time="1"/>
                  
-                <receive type="receiveGetOrderRequestReply">
+                <receive with="receiveGetOrderRequestReply">
                     <message>
                         <data><![CDATA[
                                                                                                     
@@ -147,7 +147,7 @@
             </parallel>
             
             <parallel>
-              <send type="sendGetOrderRequest">
+              <send with="sendGetOrderRequest">
                   <message>
                       <data><![CDATA[
   																								
@@ -175,7 +175,7 @@
                   </header>
               </send>
               <sequential>
-                <receive type="receiveGetOrderRequest">
+                <receive with="receiveGetOrderRequest">
                     <message>
                         <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
                     </message>
@@ -186,7 +186,7 @@
                         <message path="ConversationId" variable="${conversationId}"/>
                     </extract>
                 </receive>
-                <send type="sendGetOrderRequestReply">
+                <send with="sendGetOrderRequestReply">
                     <message>
                         <data><![CDATA[
                                                                                                     
@@ -217,7 +217,7 @@
                 
                 <sleep time="1"/>
                 
-                <receive type="receiveGetOrderRequestReply">
+                <receive with="receiveGetOrderRequestReply">
                     <message>
                         <data><![CDATA[
                                                                                                     

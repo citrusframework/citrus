@@ -2,46 +2,38 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:citrus="http://www.consol.de/citrus/schema/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd">
 	
+    <citrus:jms-message-sender id="travelAgencyBookingRequestSender" destination-name="${travel.agency.request.queue}"/>
+    
+    <citrus:jms-message-receiver id="travelAgencyBookingResponseReceiver" 
+                                 destination-name="${travel.agency.response.queue}"/>
+    
+    <citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
+                                 destination-name="${smart.airline.request.queue}"/>
+    
+    <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
+    
     <bean id="sendTravelAgencyBookingRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${travel.agency.request.queue}"/>
-            </bean>
-        </property>
+        <property name="messageSender" ref="travelAgencyBookingRequestSender"/>
     </bean>
     
     <bean id="receiveTravelAgencyBookingResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${travel.agency.response.queue}"/>
-            </bean>
-        </property>
+        <property name="messageReceiver" ref="travelAgencyBookingResponseReceiver"/>
         <property name="validateXmlSchemaSource" value="${xml.schema.travel.booking}"/>
     </bean>
     
     <bean id="receiveSmartAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${smart.airline.request.queue}"/>
-            </bean>
-        </property>
+        <property name="messageReceiver" ref="smartAirlineBookingRequestReceiver"/>
         <property name="validateXmlSchemaSource" value="${xml.schema.flight.booking}"/>
     </bean>
     
     <bean id="sendSmartAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${smart.airline.response.queue}"/>
-            </bean>
-        </property>
+        <property name="messageSender" ref="smartAirlineBookingResponseSender"/>
     </bean>
 </beans>

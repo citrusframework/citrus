@@ -17,7 +17,7 @@
             <variable name="conversationId" value="A00001"/>
         </variables>
         <actions>
-            <send type="sendGetNumberRequest">
+            <send with="sendGetNumberRequest">
                 <message>
                     <data><![CDATA[
 							
@@ -44,7 +44,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetNumberResponse">
+            <receive with="receiveGetNumberResponse">
                 <message>
                     <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
                     <validate path="ConversationId" value="${conversationId}"/>
