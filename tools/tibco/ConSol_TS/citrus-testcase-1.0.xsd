@@ -71,7 +71,8 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="type" type="xs:string" use="required"/>
+			<xs:attribute name="parent" type="xs:string"/>
+            <xs:attribute name="with" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="receive">
@@ -167,7 +168,8 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="type" type="xs:string" use="required"/>
+			<xs:attribute name="parent" type="xs:string"/>
+            <xs:attribute name="with" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="updateDatabase">

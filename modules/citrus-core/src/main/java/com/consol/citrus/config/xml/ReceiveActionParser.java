@@ -2,6 +2,7 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -12,29 +13,33 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ReceiveMessageBean;
-
 public class ReceiveActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("type");
-        BeanDefinitionBuilder beanDefinition;
+        String parent = element.getAttribute("parent");
+        String messageReceiverReference = element.getAttribute("with");
+        
+        BeanDefinitionBuilder builder;
 
-        if (StringUtils.hasText(parentBeanName)) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
+        if (StringUtils.hasText(parent)) {
+            builder = BeanDefinitionBuilder.childBeanDefinition(parent);
+            builder.addPropertyValue("name", element.getLocalName() + ":" + parent);
+        } else if (StringUtils.hasText(messageReceiverReference)) {
+            builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.ReceiveMessageBean");
+            builder.addPropertyValue("name", element.getLocalName());
+            
+            builder.addPropertyReference("messageReceiver", messageReceiverReference);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveMessageBean.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
+            throw new BeanCreationException("Either 'parent' or 'with' attribute has to be set!");
         }
-
-        DescriptionElementParser.doParse(element, beanDefinition);
+        
+        DescriptionElementParser.doParse(element, builder);
 
         Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
         if (messageSelectorElement != null) {
             Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
             if (selectorStringElement != null) {
-                beanDefinition.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
+                builder.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
             }
 
             Map messageSelector = new HashMap();
@@ -43,25 +48,25 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                 Element selectorElement = (Element) iter.next();
                 messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
             }
-            beanDefinition.addPropertyValue("messageSelector", messageSelector);
+            builder.addPropertyValue("messageSelector", messageSelector);
         }
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
-                beanDefinition.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
+                builder.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
             }
 
             Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
             if (xmlResourceElement != null) {
                 String filePath = xmlResourceElement.getAttribute("file");
                 if (filePath.startsWith("classpath:")) {
-                    beanDefinition.addPropertyValue("messageResource", new ClassPathResource(filePath.substring("classpath:".length())));
+                    builder.addPropertyValue("messageResource", new ClassPathResource(filePath.substring("classpath:".length())));
                 } else if (filePath.startsWith("file:")) {
-                    beanDefinition.addPropertyValue("messageResource", new FileSystemResource(filePath.substring("file:".length())));
+                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath.substring("file:".length())));
                 } else {
-                    beanDefinition.addPropertyValue("messageResource", new FileSystemResource(filePath));
+                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath));
                 }
             }
 
@@ -71,7 +76,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                 Element messageValue = (Element) iter.next();
                 setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
             }
-            beanDefinition.addPropertyValue("messageElements", setMessageValues);
+            builder.addPropertyValue("messageElements", setMessageValues);
 
             List ignoreValues = new ArrayList();
             List ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
@@ -79,7 +84,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                 Element ignoreValue = (Element) iter.next();
                 ignoreValues.add(ignoreValue.getAttribute("path"));
             }
-            beanDefinition.addPropertyValue("ignoreMessageElements", ignoreValues);
+            builder.addPropertyValue("ignoreMessageElements", ignoreValues);
 
             Map validateValues = new HashMap();
             List validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
@@ -88,7 +93,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                     Element validateValue = (Element) iter.next();
                     validateValues.put(validateValue.getAttribute("path"), validateValue.getAttribute("value"));
                 }
-                beanDefinition.addPropertyValue("validateMessageElements", validateValues);
+                builder.addPropertyValue("validateMessageElements", validateValues);
             }
             
             Map namespaces = new HashMap();
@@ -98,7 +103,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                     Element namespaceElement = (Element) iter.next();
                     namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                 }
-                beanDefinition.addPropertyValue("namespaces", namespaces);
+                builder.addPropertyValue("namespaces", namespaces);
             }
         }
 
@@ -110,7 +115,7 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                 Element headerValue = (Element) iter.next();
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
-            beanDefinition.addPropertyValue("headerValues", setHeaderValues);
+            builder.addPropertyValue("headerValues", setHeaderValues);
         }
 
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
@@ -122,17 +127,17 @@ public class ReceiveActionParser implements BeanDefinitionParser {
                 Element headerValue = (Element) iter.next();
                 getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
             }
-            beanDefinition.addPropertyValue("extractHeaderValues", getHeaderValues);
+            builder.addPropertyValue("extractHeaderValues", getHeaderValues);
 
             List messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
             for (Iterator iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 getMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("variable"));
             }
-            beanDefinition.addPropertyValue("extractMessageElements", getMessageValues);
+            builder.addPropertyValue("extractMessageElements", getMessageValues);
         }
 
-        return beanDefinition.getBeanDefinition();
+        return builder.getBeanDefinition();
     }
 
 }

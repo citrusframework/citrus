@@ -1,13 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:citrus="http://www.consol.de/citrus/schema/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd">
 	
 	<bean id="royalAirlineHttpServer" class="com.consol.citrus.http.HttpServer">
         <property name="port" value="${http.port}"/>
@@ -16,30 +16,27 @@
         <property name="replyDestination" value="${royal.airline.response.queue}"/>
         <property name="jmsTemplate">
             <bean class="org.springframework.jms.core.JmsTemplate">
-                 <property name="connectionFactory" ref="defaultJmsConnectionFactory" />
+                 <property name="connectionFactory" ref="connectionFactory" />
                  <property name="receiveTimeout" value="2000"/>
             </bean>
         </property>
     </bean> 
-	
+
+    <citrus:jms-message-receiver id="royalAirlineBookingRequestReceiver" 
+                                 destination-name="${royal.airline.request.queue}"/>
+                                   
 	<bean id="receiveRoyalAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${royal.airline.request.queue}"/>
-            </bean>
-        </property>
+        <property name="messageReceiver" ref="royalAirlineBookingRequestReceiver"/>
 		<property name="validator">
 			<bean class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
 		</property>
         <property name="validateXmlSchemaSource" value="${xml.schema.flight.booking}"/>
 	</bean>
 	
+    <citrus:jms-message-sender id="royalAirlineBookingResponseSender" destination-name="${royal.airline.response.queue}"/>
+  
 	<bean id="sendRoyalAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="service">
-            <bean parent="defaultJmsService">
-                <property name="serviceDestination" value="${royal.airline.response.queue}"/>
-            </bean>
-        </property>
+        <property name="messageSender" ref="royalAirlineBookingResponseSender"/>
     </bean>
 	
 </beans>

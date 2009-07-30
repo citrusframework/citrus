@@ -18,7 +18,7 @@
 		</variables>
         <actions>
             <parallel>
-	            <send type="sendHttpRequest">
+	            <send parent="sendHttpRequest">
 	            	<message>
 	            		<data>
 	            			<![CDATA[
@@ -33,7 +33,7 @@
 	          		</header>
 	            </send>
 	            
-	            <send type="sendHttpResponse">
+	            <send parent="sendHttpResponse">
 	            	<message>
 	            		<data>
 	            			<![CDATA[
@@ -52,7 +52,7 @@
 	            </send>
             </parallel>
             
-            <receive type="receiveHttpRequest">
+            <receive parent="receiveHttpRequest">
             	<message>
             		<data>
             			<![CDATA[
@@ -67,7 +67,7 @@
            		</header>
             </receive>
             
-            <receive type="receiveHttpResponse">
+            <receive parent="receiveHttpResponse">
             	<message>
             		<data>
             			<![CDATA[
@@ -85,7 +85,7 @@
            		</header>
             </receive>
             
-            <send type="sendHttpRequest">
+            <send parent="sendHttpRequest">
             	<message>
             		<data>
             			<![CDATA[
@@ -100,7 +100,7 @@
           		</header>
             </send>
             
-            <receive type="receiveHttpResponse">
+            <receive parent="receiveHttpResponse">
             	<message/>
             	<header>
            			<element name="HTTPStatusCode" value="200"/>

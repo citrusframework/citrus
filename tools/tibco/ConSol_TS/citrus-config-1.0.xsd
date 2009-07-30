@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.consol.de/citrus/schema/config"
+	 targetNamespace="http://www.consol.de/citrus/schema/config"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="jms-message-sender">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="destination" type="xs:string"/>
+			<xs:attribute name="destination-name" type="xs:string"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
+			<xs:attribute name="jms-template" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jms-message-receiver">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="destination" type="xs:string"/>
+			<xs:attribute name="destination-name" type="xs:string"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
+			<xs:attribute name="jms-template" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jms-sync-message-sender">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="destination" type="xs:string"/>
+			<xs:attribute name="destination-name" type="xs:string"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
+			<xs:attribute name="jms-template" type="xs:string"/>
+			<xs:attribute name="reply-destination" type="xs:string"/>
+			<xs:attribute name="reply-destination-name" type="xs:string"/>
+			<xs:attribute name="reply-timeout" type="xs:string"/>
+			<xs:attribute name="reply-handler" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jms-sync-message-receiver">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="destination" type="xs:string"/>
+			<xs:attribute name="destination-name" type="xs:string"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
+			<xs:attribute name="jms-template" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jms-reply-message-handler">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jms-reply-message-sender">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="reply-destination-holder" type="xs:string"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
+			<xs:attribute name="jms-template" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

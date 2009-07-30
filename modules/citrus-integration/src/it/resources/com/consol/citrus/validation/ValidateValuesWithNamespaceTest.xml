@@ -17,7 +17,7 @@
             <variable name="conversationId" value="A00002"/>
         </variables>
         <actions>
-            <send type="sendGetNumberRequest">
+            <send with="sendGetNumberRequest">
                 <message>
                     <data><![CDATA[
 							
@@ -44,7 +44,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetNumberRequest">
+            <receive with="receiveGetNumberRequest">
                 <message>
                     <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
                     <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
@@ -55,7 +55,7 @@
                 </header>
             </receive>
             
-            <send type="sendGetNumberRequest">
+            <send with="sendGetNumberRequest">
                 <message>
                     <data><![CDATA[
                             
@@ -82,7 +82,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetNumberRequest">
+            <receive with="receiveGetNumberRequest">
                 <message>
                     <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
                     <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
@@ -93,7 +93,7 @@
                 </header>
             </receive>
             
-            <send type="sendGetNumberRequest">
+            <send with="sendGetNumberRequest">
                 <message>
                     <data><![CDATA[
                             
@@ -120,7 +120,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetNumberRequest">
+            <receive with="receiveGetNumberRequest">
                 <message>
                     <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag" value="${requestTag}"/>
                     <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId" value="${conversationId}"/>
@@ -132,7 +132,7 @@
                 </header>
             </receive>
             
-            <send type="sendGetNumberRequest">
+            <send with="sendGetNumberRequest">
                 <message>
                     <data><![CDATA[
                             
@@ -159,7 +159,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetNumberRequest">
+            <receive with="receiveGetNumberRequest">
                 <message>
                     <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
                     <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>

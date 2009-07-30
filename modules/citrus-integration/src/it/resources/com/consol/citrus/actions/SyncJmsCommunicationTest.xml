@@ -26,7 +26,7 @@
             <variable name="conversationId" value="A00002"/>
         </variables>
         <actions>
-            <send type="sendGetCustomerRequest">
+            <send with="sendGetCustomerRequest">
             	<description>
             		Send GetCustomerRequest to simulated Service: TestFramework -> Simulator
             	</description>
@@ -56,7 +56,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetCustomerResponse">
+            <receive with="receiveGetCustomerResponse">
             	<description>
             		Receive GetCustomerResponse from simulated Service: Simulator -> TestFramework
             	</description>
@@ -89,7 +89,7 @@
                     <header name="RequestTag" variable="${requestTag}"/>
                 </extract>
             </receive>
-            <send type="sendGetCustomerRequest">
+            <send with="sendGetCustomerRequest">
             	<description>
             		Send GetCustomerRequest to simulated Service: TestFramework -> Simulator
             	</description>
@@ -119,7 +119,7 @@
                     <element name="RequestTag" value="${requestTag}"/>
                 </header>
             </send>
-            <receive type="receiveGetCustomerResponse">
+            <receive with="receiveGetCustomerResponse">
             	<description>
             		Receive GetCustomerResponse from simulated Service: Simulator -> TestFramework
             	</description>

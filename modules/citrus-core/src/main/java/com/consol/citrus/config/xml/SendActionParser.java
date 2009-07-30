@@ -1,10 +1,8 @@
 package com.consol.citrus.config.xml;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -15,40 +13,44 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.SendMessageBean;
-
 public class SendActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("type");
-        BeanDefinitionBuilder beanDefinition;
+        String parent = element.getAttribute("parent");
+        String messageSenderReference = element.getAttribute("with");
+        
+        BeanDefinitionBuilder builder;
 
-        if (StringUtils.hasText(parentBeanName)) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
+        if (StringUtils.hasText(parent)) {
+            builder = BeanDefinitionBuilder.childBeanDefinition(parent);
+            builder.addPropertyValue("name", element.getLocalName() + ":" + parent);
+        } else if (StringUtils.hasText(messageSenderReference)) {
+            builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageBean");
+            builder.addPropertyValue("name", element.getLocalName());
+
+            builder.addPropertyReference("messageSender", messageSenderReference);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SendMessageBean.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
+            throw new BeanCreationException("Either 'parent' or 'with' attribute has to be set!");
         }
-
-        DescriptionElementParser.doParse(element, beanDefinition);
+        
+        DescriptionElementParser.doParse(element, builder);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
-                beanDefinition.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
+                builder.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
             }
 
             Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
             if (xmlResourceElement != null) {
                 String filePath = xmlResourceElement.getAttribute("file");
                 if (filePath.startsWith("classpath:")) {
-                    beanDefinition.addPropertyValue("messageResource", new ClassPathResource(filePath.substring("classpath:".length())));
+                    builder.addPropertyValue("messageResource", new ClassPathResource(filePath.substring("classpath:".length())));
                 } else if (filePath.startsWith("file:")) {
-                    beanDefinition.addPropertyValue("messageResource", new FileSystemResource(filePath.substring("file:".length())));
+                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath.substring("file:".length())));
                 } else {
-                    beanDefinition.addPropertyValue("messageResource", new FileSystemResource(filePath));
+                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath));
                 }
             }
 
@@ -58,7 +60,7 @@ public class SendActionParser implements BeanDefinitionParser {
                 Element messageValue = (Element) iter.next();
                 setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
             }
-            beanDefinition.addPropertyValue("messageElements", setMessageValues);
+            builder.addPropertyValue("messageElements", setMessageValues);
         }
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
@@ -69,9 +71,9 @@ public class SendActionParser implements BeanDefinitionParser {
                 Element headerValue = (Element) iter.next();
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
-            beanDefinition.addPropertyValue("headerValues", setHeaderValues);
+            builder.addPropertyValue("headerValues", setHeaderValues);
         }
 
-        return beanDefinition.getBeanDefinition();
+        return builder.getBeanDefinition();
     }
 }

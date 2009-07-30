@@ -17,7 +17,7 @@
 		<actions>
 				<action reference="startJmsDummies"/>
 				
-				<send type="sendDummyRequest">
+				<send parent="sendDummyRequest">
 					<destination>TestSuite.Queue.Dummy.One.In</destination>
 					<message>					
 						<data>
@@ -36,7 +36,7 @@
 					</header>
 				</send>
 				
-				<receive type="receiveDummyResponse">
+				<receive parent="receiveDummyResponse">
 					<destination>TestSuite.Queue.Dummy.One.Out</destination>
 					<message>
 						<data>
@@ -55,7 +55,7 @@
 					</header>
 				</receive>
 				
-				<send type="sendDummyRequest">
+				<send parent="sendDummyRequest">
 					<destination>TestSuite.Queue.Dummy.One.In</destination>
 					<message>
 						<data>
@@ -74,7 +74,7 @@
 					</header>
 				</send>
 				
-				<receive type="receiveDummyResponse">
+				<receive parent="receiveDummyResponse">
 					<destination>TestSuite.Queue.Dummy.One.Out</destination>
 					<message>
 						<data>
@@ -93,7 +93,7 @@
 					</header>
 				</receive>
 				
-				<send type="sendDummyRequest">
+				<send parent="sendDummyRequest">
 					<destination>TestSuite.Queue.Dummy.Three.In</destination>
 					<message>
 						<data>
@@ -112,7 +112,7 @@
 					</header>
 				</send>
 				
-				<receive type="receiveDummyResponse">
+				<receive parent="receiveDummyResponse">
 					<destination>TestSuite.Queue.Dummy.Three.Out</destination>
 					<message>
 						<data>
