@@ -36,15 +36,6 @@
     <citrus:jms-reply-message-sender id="sendGetOrderRequestReply"
                                      reply-destination-holder="receiveGetOrderRequest"/>
     
-	<bean id="receiveGetOrderRequestFilesystem" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver">
-			<bean parent="defaultJmsMessageReceiver">
-				<property name="destinationName" value="${jms.queue.dummy.one.in}"/>
-			</bean>
-		</property>
-		<property name="debugBasePath" value="/message-debug/"/>
-	</bean>
-	
     <bean id="sendWebServiceRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
         <property name="messageSender">
             <bean parent="defaultWebServiceMessageSender">
