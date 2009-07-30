@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:spring="http://www.springframework.org/schema/beans" xmlns="http://www.consol.de/testframework">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:spring="http://www.springframework.org/schema/beans" xmlns="http://www.consol.de/citrus/schema/testcase">
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" cdata-section-elements="data"/>
 	
 	<xsl:template match="spring:beans">
-		<spring:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.consol.de/testframework http://www.consol.de/testframework/consol_ts.xsd">
+		<spring:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.consol.de/citrus/schema/testcase http://www.consol.de/citrus/schema/testcase/consol_ts.xsd">
 				<xsl:apply-templates/>	
 		</spring:beans>
 	</xsl:template>
