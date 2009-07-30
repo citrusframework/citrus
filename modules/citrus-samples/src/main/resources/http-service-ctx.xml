@@ -30,7 +30,6 @@
 		<property name="validator">
 			<bean class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
 		</property>
-        <property name="validateXmlSchemaSource" value="${xml.schema.flight.booking}"/>
 	</bean>
 	
     <citrus:jms-message-sender id="royalAirlineBookingResponseSender" destination-name="${royal.airline.response.queue}"/>

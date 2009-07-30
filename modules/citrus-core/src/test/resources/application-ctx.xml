@@ -20,6 +20,8 @@
 	<bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
     <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
 	 
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
+    
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>

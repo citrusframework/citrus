@@ -23,7 +23,20 @@
 	
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
 	<bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
-	 
+	
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="${xml.schema.travel.booking}"/>
+                </bean>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="${xml.schema.flight.booking}"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+     
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>

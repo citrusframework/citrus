@@ -8,10 +8,6 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +16,23 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageHeaders;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSException;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.xml.XsdSchemaRepository;
 
 /**
  * Historical message validator. Using W3C DOM object validation.
@@ -44,6 +47,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
     
     @Autowired
     private FunctionRegistry functionRegistry;
+    
+    @Autowired
+    private XsdSchemaRepository schemaRepository;
     
     /**
      * (non-Javadoc)
@@ -245,26 +251,33 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateXMLSchema(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
      */
-    public boolean validateXMLSchema(Resource schemaResource, Message receivedMessage) throws TestSuiteException {
-        if (schemaResource == null) {
-            throw new NoRessourceException("No XML schema ressource defined!");
-        }
-
-        log.info("Validating received XML message schema with: " + schemaResource + " ...");
-
+    public boolean validateXMLSchema(Message receivedMessage) throws TestSuiteException {
         try {
-            // create a SchemaFactory capable of understanding WXS schemas
-            final SchemaFactory factory = new org.apache.xerces.jaxp.validation.XMLSchemaFactory();
-            final Schema schema = factory.newSchema(new StreamSource(schemaResource.getInputStream()));
-            final Validator validator = schema.newValidator();
+            Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
-            try {
-                validator.validate(new DOMSource(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString())));
+            if(StringUtils.hasText(doc.getFirstChild().getNamespaceURI()) == false) {
+                return true;
+            }
+             
+            log.info("Starting XML schema validation ...");
+            
+            XsdSchema schema = schemaRepository.getSchemaByNamespace(doc.getFirstChild().getNamespaceURI());
+
+            //TODO think of throwing error here
+//            Assert.notNull(schema, "No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
+            if(schema == null) {
+                log.warn("No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
+                return true;
+            }
+            
+            XmlValidator validator = schema.createValidator();
+            
+            SAXParseException[] results = validator.validate(new DOMSource(doc));
+            
+            if(results.length == 0) {
                 log.info("Schema of received XML validated OK");
-            } catch (SAXException e) {
-                log.error("Schema of received XML document not valid in schema: "
-                        + schemaResource.getFilename());
-                throw new ValidationException(e);
+            } else {
+                throw new ValidationException("Schema validation failed!", results[0]);
             }
         } catch (IOException e) {
             throw new TestSuiteException(e);
@@ -616,5 +629,12 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         }
 
         return false;
+    }
+
+    /**
+     * @param schemaRepository the schemaRepository to set
+     */
+    public void setSchemaRepository(XsdSchemaRepository schemaRepository) {
+        this.schemaRepository = schemaRepository;
     }
 }

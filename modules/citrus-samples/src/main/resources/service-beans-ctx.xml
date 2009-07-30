@@ -25,12 +25,10 @@
     
     <bean id="receiveTravelAgencyBookingResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
         <property name="messageReceiver" ref="travelAgencyBookingResponseReceiver"/>
-        <property name="validateXmlSchemaSource" value="${xml.schema.travel.booking}"/>
     </bean>
     
     <bean id="receiveSmartAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
         <property name="messageReceiver" ref="smartAirlineBookingRequestReceiver"/>
-        <property name="validateXmlSchemaSource" value="${xml.schema.flight.booking}"/>
     </bean>
     
     <bean id="sendSmartAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">

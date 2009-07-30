@@ -32,6 +32,7 @@ public class XPathTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageBean();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
+        receiveMessageBean.setEnableSchemaValidation(false);
     }
     
     @Test
