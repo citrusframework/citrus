@@ -11,7 +11,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
 
 public interface XMLMessageValidator extends MessageValidator {
-    public boolean validateXMLSchema(Resource schemaResource, Message receivedMessage) throws TestSuiteException;
+    public boolean validateXMLSchema(Message receivedMessage) throws TestSuiteException;
 
     public boolean validateDTD(Resource dtdResource, Message receivedMessage) throws TestSuiteException;
 

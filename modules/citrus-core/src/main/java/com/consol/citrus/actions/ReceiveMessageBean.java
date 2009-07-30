@@ -68,12 +68,11 @@ public class ReceiveMessageBean extends AbstractTestAction {
     /** Inline message resource definition as string */
     private String messageData;
 
-    /** XML schema source to validate the messages received */
-    private Resource validateXmlSchemaSource;
-
     /** Validator doing all message validation tasks */
     @Autowired
     private MessageValidator validator;
+    
+    private boolean enableSchemaValidation = true;
     
     /** XML namespace declaration used for xpath expression evaluation*/
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -144,9 +143,9 @@ public class ReceiveMessageBean extends AbstractTestAction {
             /** 3. If a XML validation schema is defined, is received message
              * schema is validated.
              */
-            if (hasValidateXmlSchemaSource()) {
+            if (enableSchemaValidation) {
                 if(validator instanceof XMLMessageValidator) {
-                    ((XMLMessageValidator)validator).validateXMLSchema(validateXmlSchemaSource, receivedMessage);
+                    ((XMLMessageValidator)validator).validateXMLSchema(receivedMessage);
                 } else {
                     throw new TestSuiteException("XML schema validation is not valid for validators other than XMLMessageValidator");
                 }
@@ -299,21 +298,6 @@ public class ReceiveMessageBean extends AbstractTestAction {
     }
 
     /**
-     * @param validateXmlSchemaSource the validateXmlSchemaSource to set
-     */
-    public void setValidateXmlSchemaSource(Resource validateXmlSchemaSource) {
-        this.validateXmlSchemaSource = validateXmlSchemaSource;
-    }
-
-    /**
-     * Check if xml schema should be validated
-     * @return boolean flag to mark existence
-     */
-    public boolean hasValidateXmlSchemaSource() {
-        return (this.validateXmlSchemaSource != null);
-    }
-
-    /**
      * Check if header values for extraction are present
      * @return boolean flag to mark existence
      */
@@ -376,5 +360,12 @@ public class ReceiveMessageBean extends AbstractTestAction {
      */
     public MessageReceiver getMessageReceiver() {
         return messageReceiver;
+    }
+
+    /**
+     * @param enableSchemaValidation the enableSchemaValidation to set
+     */
+    public void setEnableSchemaValidation(boolean enableSchemaValidation) {
+        this.enableSchemaValidation = enableSchemaValidation;
     }
 }

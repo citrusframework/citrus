@@ -1,34 +1,48 @@
 package com.consol.citrus.validation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.xml.XsdSchemaRepository;
 
 public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     @Test
-    public void validateXMLSchema() {
+    public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
         Message message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
                     + "</message>").build();
         
-        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
-        
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-        validator.validateXMLSchema(schemaResource, message);
+        
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
+        SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
+        schema.afterPropertiesSet();
+        
+        schemaRepository.getSchemas().add(schema);
+        
+        validator.setSchemaRepository(schemaRepository);
+        
+        validator.validateXMLSchema(message);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    public void validateXMLSchemaError() {
+    public void validateXMLSchemaError() throws SAXException, IOException, ParserConfigurationException {
         Message message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -36,10 +50,18 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                         + "<wrongElement>totally wrong</wrongElement>"
                     + "</message>").build();
         
-        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
-        
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-        validator.validateXMLSchema(schemaResource, message);
+        
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
+        SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
+        schema.afterPropertiesSet();
+        
+        schemaRepository.getSchemas().add(schema);
+        
+        validator.setSchemaRepository(schemaRepository);
+        
+        validator.validateXMLSchema(message);
     }
     
     @Test

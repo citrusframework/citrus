@@ -34,6 +34,7 @@ public class NamespaceTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageBean();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
+        receiveMessageBean.setEnableSchemaValidation(false);
     }
     
     @Test
