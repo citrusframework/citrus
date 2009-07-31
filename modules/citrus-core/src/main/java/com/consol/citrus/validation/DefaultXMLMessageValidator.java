@@ -263,12 +263,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             
             XsdSchema schema = schemaRepository.getSchemaByNamespace(doc.getFirstChild().getNamespaceURI());
 
-            //TODO think of throwing error here
-//            Assert.notNull(schema, "No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
-            if(schema == null) {
-                log.warn("No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
-                return true;
-            }
+            Assert.notNull(schema, "No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
             
             XmlValidator validator = schema.createValidator();
             
