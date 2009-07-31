@@ -17,7 +17,7 @@
 			<variable name="id" value="123456789"/>
 		</variables>
         <actions>
-            <send parent="sendHttpRequest">
+            <send parent="sendStandaloneHttpRequest">
             	<message>
             		<data>
             			<![CDATA[
@@ -51,7 +51,7 @@
            		</header>
             </receive>
             
-            <send parent="sendHttpRequest">
+            <send parent="sendStandaloneHttpRequest">
             	<message>
             		<data>
             			<![CDATA[

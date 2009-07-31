@@ -16,14 +16,14 @@
 	</target>
 	
     <target name="start.http.stub" depends="init">
-        <java classname="com.consol.citrus.http.HttpServer" fork="true" spawn="true">
+        <java classname="com.consol.citrus.http.HttpServer" fork="true">
             <classpath refid="classpath" />
             <classpath path="src/it/resources" />
         </java>
     </target>
     
     <target name="stop.http.stub" depends="init">
-        <java classname="com.consol.citrus.http.HttpServer" fork="true" spawn="true">
+        <java classname="com.consol.citrus.http.HttpServer" fork="true">
             <arg line="quit" />
             <classpath refid="classpath" />
             <classpath path="src/it/resources" />
