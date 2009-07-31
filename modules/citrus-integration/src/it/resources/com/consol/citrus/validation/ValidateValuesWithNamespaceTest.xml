@@ -19,23 +19,23 @@
         <actions>
             <send with="sendGetNumberRequest">
                 <message>
-                    <data><![CDATA[
-							
-								<RequestMessage xmlns="http://testsuite/default">
-									<MessageHeader>
-										<ConversationId>_</ConversationId>
-										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-										<RequestTag>_</RequestTag>
-										<VersionId>2</VersionId>
-									</MessageHeader>
-									<MessageBody>
-										<Customer>
-											<Id>1</Id>
-										</Customer>
-									</MessageBody>
-								</RequestMessage>						
-							
-						]]></data>
+                    <data>
+                        <![CDATA[
+						<RequestMessage xmlns="http://testsuite/default">
+							<MessageHeader>
+								<ConversationId>_</ConversationId>
+								<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
+								<RequestTag>_</RequestTag>
+								<VersionId>2</VersionId>
+							</MessageHeader>
+							<MessageBody>
+								<Customer>
+									<Id>1</Id>
+								</Customer>
+							</MessageBody>
+						</RequestMessage>						
+						]]>
+                    </data>
                     <element path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
                     <element path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
                 </message>
@@ -45,7 +45,7 @@
                 </header>
             </send>
             <receive with="receiveGetNumberRequest">
-                <message>
+                <message schemaValidation="false">
                     <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
                     <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
                 </message>
@@ -57,23 +57,23 @@
             
             <send with="sendGetNumberRequest">
                 <message>
-                    <data><![CDATA[
-                            
-                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                                    <ns1:MessageHeader>
-                                        <ns1:ConversationId>_</ns1:ConversationId>
-                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                        <ns1:RequestTag>_</ns1:RequestTag>
-                                        <ns1:VersionId>2</ns1:VersionId>
-                                    </ns1:MessageHeader>
-                                    <ns1:MessageBody>
-                                        <ns1:Customer>
-                                            <ns1:Id>1</ns1:Id>
-                                        </ns1:Customer>
-                                    </ns1:MessageBody>
-                                </ns1:RequestMessage>                       
-                            
-                        ]]></data>
+                    <data>
+                        <![CDATA[
+                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                            <ns1:MessageHeader>
+                                <ns1:ConversationId>_</ns1:ConversationId>
+                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                <ns1:RequestTag>_</ns1:RequestTag>
+                                <ns1:VersionId>2</ns1:VersionId>
+                            </ns1:MessageHeader>
+                            <ns1:MessageBody>
+                                <ns1:Customer>
+                                    <ns1:Id>1</ns1:Id>
+                                </ns1:Customer>
+                            </ns1:MessageBody>
+                        </ns1:RequestMessage>                       
+                        ]]>
+                    </data>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
@@ -83,7 +83,7 @@
                 </header>
             </send>
             <receive with="receiveGetNumberRequest">
-                <message>
+                <message schemaValidation="false">
                     <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
                     <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
@@ -95,23 +95,23 @@
             
             <send with="sendGetNumberRequest">
                 <message>
-                    <data><![CDATA[
-                            
-                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                                    <ns1:MessageHeader>
-                                        <ns1:ConversationId>_</ns1:ConversationId>
-                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                        <ns1:RequestTag>_</ns1:RequestTag>
-                                        <ns1:VersionId>2</ns1:VersionId>
-                                    </ns1:MessageHeader>
-                                    <ns1:MessageBody>
-                                        <ns1:Customer>
-                                            <ns1:Id>1</ns1:Id>
-                                        </ns1:Customer>
-                                    </ns1:MessageBody>
-                                </ns1:RequestMessage>                       
-                            
-                        ]]></data>
+                    <data>
+                        <![CDATA[
+                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                            <ns1:MessageHeader>
+                                <ns1:ConversationId>_</ns1:ConversationId>
+                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                <ns1:RequestTag>_</ns1:RequestTag>
+                                <ns1:VersionId>2</ns1:VersionId>
+                            </ns1:MessageHeader>
+                            <ns1:MessageBody>
+                                <ns1:Customer>
+                                    <ns1:Id>1</ns1:Id>
+                                </ns1:Customer>
+                            </ns1:MessageBody>
+                        </ns1:RequestMessage>                       
+                        ]]>
+                    </data>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
@@ -121,7 +121,7 @@
                 </header>
             </send>
             <receive with="receiveGetNumberRequest">
-                <message>
+                <message schemaValidation="false">
                     <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag" value="${requestTag}"/>
                     <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId" value="${conversationId}"/>
                     <namespace prefix="ns2" value="http://testsuite/default"/>
@@ -134,23 +134,23 @@
             
             <send with="sendGetNumberRequest">
                 <message>
-                    <data><![CDATA[
-                            
-                                <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                                    <ns1:MessageHeader>
-                                        <ns1:ConversationId>_</ns1:ConversationId>
-                                        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                        <ns1:RequestTag>_</ns1:RequestTag>
-                                        <ns1:VersionId>2</ns1:VersionId>
-                                    </ns1:MessageHeader>
-                                    <ns1:MessageBody>
-                                        <ns1:Customer>
-                                            <ns1:Id>1</ns1:Id>
-                                        </ns1:Customer>
-                                    </ns1:MessageBody>
-                                </ns1:RequestMessage>                       
-                            
-                        ]]></data>
+                    <data>
+                        <![CDATA[
+                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
+                            <ns1:MessageHeader>
+                                <ns1:ConversationId>_</ns1:ConversationId>
+                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+                                <ns1:RequestTag>_</ns1:RequestTag>
+                                <ns1:VersionId>2</ns1:VersionId>
+                            </ns1:MessageHeader>
+                            <ns1:MessageBody>
+                                <ns1:Customer>
+                                    <ns1:Id>1</ns1:Id>
+                                </ns1:Customer>
+                            </ns1:MessageBody>
+                        </ns1:RequestMessage>                       
+                        ]]>
+                    </data>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
                     <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
@@ -160,7 +160,7 @@
                 </header>
             </send>
             <receive with="receiveGetNumberRequest">
-                <message>
+                <message schemaValidation="false">
                     <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
                     <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
                     <namespace prefix="" value="http://testsuite/default"/>

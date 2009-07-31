@@ -72,7 +72,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
     @Autowired
     private MessageValidator validator;
     
-    private boolean enableSchemaValidation = true;
+    private boolean schemaValidation = true;
     
     /** XML namespace declaration used for xpath expression evaluation*/
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -143,7 +143,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
             /** 3. If a XML validation schema is defined, is received message
              * schema is validated.
              */
-            if (enableSchemaValidation) {
+            if (schemaValidation) {
                 if(validator instanceof XMLMessageValidator) {
                     ((XMLMessageValidator)validator).validateXMLSchema(receivedMessage);
                 } else {
@@ -363,9 +363,9 @@ public class ReceiveMessageBean extends AbstractTestAction {
     }
 
     /**
-     * @param enableSchemaValidation the enableSchemaValidation to set
+     * @param enableSchemaValidation the schemaValidation to set
      */
-    public void setEnableSchemaValidation(boolean enableSchemaValidation) {
-        this.enableSchemaValidation = enableSchemaValidation;
+    public void setSchemaValidation(boolean enableSchemaValidation) {
+        this.schemaValidation = enableSchemaValidation;
     }
 }

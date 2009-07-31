@@ -72,7 +72,7 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="parent" type="xs:string"/>
-            <xs:attribute name="with" type="xs:string"/>
+			<xs:attribute name="with" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="receive">
@@ -131,6 +131,7 @@
 								</xs:element>
 							</xs:sequence>
 						</xs:choice>
+						<xs:attribute name="schemaValidation" type="xs:boolean"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="header" minOccurs="0">
@@ -169,7 +170,7 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="parent" type="xs:string"/>
-            <xs:attribute name="with" type="xs:string"/>
+			<xs:attribute name="with" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="updateDatabase">
