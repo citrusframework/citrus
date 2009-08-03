@@ -39,24 +39,4 @@
         </property>
     </bean>
     
-    <bean id="defaultJmsSyncMessageSender" class="com.consol.citrus.jms.JmsSyncMessageSender" abstract="true">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-    </bean>
-    
-    <bean id="defaultJmsReplyMessageHandler" class="com.consol.citrus.message.ReplyMessageReceiver" abstract="true"/>
-    
-    <bean id="defaultJmsSyncMessageReceiver" class="com.consol.citrus.jms.JmsSyncMessageReceiver" abstract="true">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-    </bean>
-    
-    <bean id="defaultJmsReplyMessageSender" class="com.consol.citrus.jms.JmsReplyMessageSender" abstract="true">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-    </bean>
-	
 </beans>
