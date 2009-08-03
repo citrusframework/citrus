@@ -1,4 +1,4 @@
-package com.consol.citrus.http;
+package com.consol.citrus.http.util;
 
 import java.util.Map.Entry;
 
