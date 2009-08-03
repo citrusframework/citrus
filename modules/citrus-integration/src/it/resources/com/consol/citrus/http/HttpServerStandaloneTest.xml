@@ -17,7 +17,7 @@
 			<variable name="id" value="123456789"/>
 		</variables>
         <actions>
-            <send parent="sendStandaloneHttpRequest">
+            <send with="httpMessageSenderStandalone">
             	<message>
             		<data>
             			<![CDATA[
@@ -34,7 +34,7 @@
             
             <sleep time="1"/>
             
-            <receive parent="receiveHttpResponse">
+            <receive with="httpResponseReceiver">
             	<message>
             		<data>
             			<![CDATA[
@@ -51,7 +51,7 @@
            		</header>
             </receive>
             
-            <send parent="sendStandaloneHttpRequest">
+            <send with="httpMessageSenderStandalone">
             	<message>
             		<data>
             			<![CDATA[
@@ -68,7 +68,7 @@
             
             <sleep time="1"/>
             
-            <receive parent="receiveHttpResponse">
+            <receive with="httpResponseReceiver">
             	<message>
             		<data>
             			<![CDATA[

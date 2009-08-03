@@ -1,13 +1,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:citrus="http://www.consol.de/citrus/schema/config"
+       xmlns:citrus-http="http://www.consol.de/citrus/schema/http/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
+       http://www.consol.de/citrus/schema/http/config http://www.consol.de/citrus/schema/http/config/citrus-http-config-1.0.xsd">
 	
     <bean id="httpServer" class="com.consol.citrus.http.HttpServer">
         <property name="port" value="8090"/>
@@ -38,52 +38,20 @@
         <property name="deamon" value="false"/>
     </bean>
     
-	<bean id="defaultHttpMessageSender" class="com.consol.citrus.http.message.HttpMessageSender">
-		<property name="requestUrl" value="http://localhost:8090/test" />
-		<property name="requestMethod" value="POST" />
-	</bean>
+	<citrus-http:message-sender id="httpMessageSender" 
+                                request-url="http://localhost:8090/test" 
+                                request-method="POST"
+                                reply-handler="httpResponseReceiver"/>
   
-    <bean id="defaultStandaloneHttpMessageSender" class="com.consol.citrus.http.message.HttpMessageSender">
-        <property name="requestUrl" value="http://localhost:8091/test" />
-        <property name="requestMethod" value="POST" />
-    </bean>
+    <citrus-http:message-sender id="httpMessageSenderStandalone" 
+                                request-url="http://localhost:8091/test" 
+                                request-method="POST"
+                                reply-handler="httpResponseReceiver"/>
   
-    <bean id="defaultHttpReplyMessageHandler" class="com.consol.citrus.http.message.HttpReplyMessageReceiver"/>
+    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
 	
-	<bean id="sendHttpRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="messageSender">
-            <bean parent="defaultHttpMessageSender">
-                <property name="replyMessageHandler" ref="defaultHttpReplyMessageHandler"/>
-            </bean>
-        </property>
-	</bean>
-  
-    <bean id="sendStandaloneHttpRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender">
-            <bean parent="defaultStandaloneHttpMessageSender">
-                <property name="replyMessageHandler" ref="defaultHttpReplyMessageHandler"/>
-            </bean>
-        </property>
-    </bean> 
+	<citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
 	
-	<bean id="receiveHttpResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver" ref="defaultHttpReplyMessageHandler"/>
-	</bean>
-	
-	<bean id="receiveHttpRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-		<property name="messageReceiver">
-			<bean parent="defaultJmsMessageReceiver">
-				<property name="destinationName" value="${jms.queue.http.request.forward}"/>
-			</bean>
-		</property>
-	</bean>
-	
-	<bean id="sendHttpResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-		<property name="messageSender">
-			<bean parent="defaultJmsMessageSender">
-				<property name="destinationName" value="${jms.queue.http.request.ack}"/>
-			</bean>
-		</property>
-	</bean>
+	<citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}"/>
 	
 </beans>

@@ -17,13 +17,13 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
         String requestUrl = element.getAttribute(HttpParserConstants.REQUEST_URL_ATTRIBUTE);
         
         if (StringUtils.hasText(requestUrl)) {
-            builder.addPropertyReference(HttpParserConstants.REQUEST_URL_PROPERTY, requestUrl);
+            builder.addPropertyValue(HttpParserConstants.REQUEST_URL_PROPERTY, requestUrl);
         }
     
         String requestMethod = element.getAttribute(HttpParserConstants.REQUEST_METHOD_ATTRIBUTE);
         
         if (StringUtils.hasText(requestMethod)) {
-            builder.addPropertyReference(HttpParserConstants.REQUEST_METHOD_PROPERTY, requestMethod);
+            builder.addPropertyValue(HttpParserConstants.REQUEST_METHOD_PROPERTY, requestMethod);
         }
         
         String replyHandler = element.getAttribute(HttpParserConstants.REPLY_HANDLER_ATTRIBUTE);
