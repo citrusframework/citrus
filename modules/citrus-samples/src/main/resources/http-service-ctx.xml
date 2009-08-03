@@ -12,17 +12,16 @@
 	<bean id="royalAirlineHttpServer" class="com.consol.citrus.http.HttpServer">
         <property name="port" value="${http.port}"/>
         <property name="uri" value="${http.urlpath}"/>
-        <property name="sendDestination" value="${royal.airline.request.queue}"/>
-        <property name="replyDestination" value="${royal.airline.response.queue}"/>
-        <property name="jmsTemplate">
-            <bean class="org.springframework.jms.core.JmsTemplate">
-                 <property name="connectionFactory" ref="connectionFactory" />
-                 <property name="receiveTimeout" value="2000"/>
+        <property name="messageHandler">
+            <bean class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
+                <property name="destinationName" value="${royal.airline.request.queue}"/>
+                <property name="connectionFactory" ref="connectionFactory" />
+                <property name="replyTimeout" value="2000"/>
             </bean>
         </property>
     </bean> 
 
-    <citrus:jms-message-receiver id="royalAirlineBookingRequestReceiver" 
+    <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
                                  destination-name="${royal.airline.request.queue}"/>
                                    
 	<bean id="receiveRoyalAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
@@ -32,7 +31,8 @@
 		</property>
 	</bean>
 	
-    <citrus:jms-message-sender id="royalAirlineBookingResponseSender" destination-name="${royal.airline.response.queue}"/>
+    <citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
+                                reply-destination-holder="royalAirlineBookingRequestReceiver"/>
   
 	<bean id="sendRoyalAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
         <property name="messageSender" ref="royalAirlineBookingResponseSender"/>

@@ -76,7 +76,10 @@
         </interceptors>
     </channel>
     <transformer input-channel="royalAirlineFlights" ref="marshallingTransformer" output-channel="royalAirlineFlightsXML"/>
-    <jms:outbound-channel-adapter id="royalAirlineAdapter" channel="royalAirlineFlightsXML" destination-name="Royal.Airline.Request.Queue"/>
+    <jms:outbound-gateway id="royalAirlineGateway" 
+                          request-channel="royalAirlineFlightsXML" 
+                          request-destination-name="Royal.Airline.Request.Queue"
+                          reply-channel="confirmedFlightsXML"/>
     
 	<channel id="smartAirlineFlights"/>
     <channel id="smartAirlineFlightsXML">
@@ -93,7 +96,6 @@
             <beans:ref bean="loggingInterceptor"/>
         </interceptors>
     </channel>
-    <jms:message-driven-channel-adapter id="royalConfirmedFlightsAdapter" destination-name="Royal.Airline.Response.Queue" channel="confirmedFlightsXML"/>
     
     <jms:message-driven-channel-adapter id="smartConfirmedFlightsAdapter" destination-name="Smart.Airline.Response.Queue" channel="confirmedFlightsXML"/>
     

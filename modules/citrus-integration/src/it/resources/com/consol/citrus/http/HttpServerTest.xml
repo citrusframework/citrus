@@ -32,40 +32,46 @@
 	          			<element name="id" value="${id}"/>
 	          		</header>
 	            </send>
-	            
-	            <send parent="sendHttpResponse">
-	            	<message>
-	            		<data>
-	            			<![CDATA[
-	            				<testResponseMessage>
-	            					<text>Hello Test Framework</text>
-	            				</testResponseMessage>
-	            			]]>
-	            		</data>
-	            	</message>
-	            	<header>
-	           			<element name="id" value="${id}"/>
-	           			<element name="HTTPStatusCode" value="200"/>
-	           			<element name="HTTPVersion" value="HTTP/1.1"/>
-	           			<element name="HTTPReasonPhrase" value="OK"/>
-	           		</header>
-	            </send>
+              
+                <sequential>
+                    <receive parent="receiveHttpRequest">
+                        <message>
+                            <data>
+                                <![CDATA[
+                                    <testRequestMessage>
+                                        <text>Hello HttpServer</text>
+                                    </testRequestMessage>
+                                ]]>
+                            </data>
+                        </message>
+                        <header>
+                            <element name="id" value="${id}"/>
+                        </header>
+                        <extract>
+                            <header name="springintegration_jms_messageId" variable="correlation_id"/>
+                        </extract>
+                    </receive>
+    	            
+    	            <send parent="sendHttpResponse">
+    	            	<message>
+    	            		<data>
+    	            			<![CDATA[
+    	            				<testResponseMessage>
+    	            					<text>Hello Test Framework</text>
+    	            				</testResponseMessage>
+    	            			]]>
+    	            		</data>
+    	            	</message>
+    	            	<header>
+    	           			<element name="id" value="${id}"/>
+    	           			<element name="HTTPStatusCode" value="200"/>
+    	           			<element name="HTTPVersion" value="HTTP/1.1"/>
+    	           			<element name="HTTPReasonPhrase" value="OK"/>
+                            <element name="springintegration_jms_correlationId" value="${correlation_id}"/>
+    	           		</header>
+    	            </send>
+                </sequential>
             </parallel>
-            
-            <receive parent="receiveHttpRequest">
-            	<message>
-            		<data>
-            			<![CDATA[
-            				<testRequestMessage>
-            					<text>Hello HttpServer</text>
-            				</testRequestMessage>
-            			]]>
-            		</data>
-            	</message>
-            	<header>
-           			<element name="id" value="${id}"/>
-           		</header>
-            </receive>
             
             <receive parent="receiveHttpResponse">
             	<message>
@@ -99,6 +105,8 @@
           			<element name="id" value="${id}"/>
           		</header>
             </send>
+            
+            <sleep time="2"/>
             
             <receive parent="receiveHttpResponse">
             	<message/>

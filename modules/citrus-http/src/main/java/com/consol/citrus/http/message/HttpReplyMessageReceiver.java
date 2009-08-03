@@ -1,4 +1,4 @@
-package com.consol.citrus.http;
+package com.consol.citrus.http.message;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.message.ReplyMessageReceiver;
 
 public class HttpReplyMessageReceiver extends ReplyMessageReceiver {

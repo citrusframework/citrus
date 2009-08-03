@@ -1,4 +1,4 @@
-package com.consol.citrus.http;
+package com.consol.citrus.http.message;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -11,21 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.http.util.HttpConstants;
+import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.util.MessageUtils;
 
 public class HttpMessageSender implements MessageSender {
     /** Http url as service detination */
-    private String urlPath;
-
-    /** Http host */
-    private String host;
-
-    /** Port */
-    private int port;
+    private String requestUrl;
 
     /** Request method */
     private String requestMethod = HttpConstants.HTTP_POST;
@@ -45,7 +43,7 @@ public class HttpMessageSender implements MessageSender {
         BufferedReader reader = null;
 
         try {
-            log.info("Sending message to: " + getDestinationUri());
+            log.info("Sending message to: " + getRequestUrl());
 
             if (log.isDebugEnabled()) {
                 log.debug("Message to be sent:");
@@ -56,9 +54,9 @@ public class HttpMessageSender implements MessageSender {
             
             requestHeaders.put("HTTPVersion", HttpConstants.HTTP_VERSION);
             requestHeaders.put("HTTPMethod", requestMethod);
-            requestHeaders.put("HTTPUri", urlPath);
-            requestHeaders.put("HTTPHost", host);
-            requestHeaders.put("HTTPPort", Integer.valueOf(port).toString());
+            requestHeaders.put("HTTPUri", getUri());
+            requestHeaders.put("HTTPHost", getHost());
+            requestHeaders.put("HTTPPort", getPort());
 
             /* before sending set header values */
             for (Entry headerEntry : message.getHeaders().entrySet()) {
@@ -87,8 +85,8 @@ public class HttpMessageSender implements MessageSender {
                 throw new TestSuiteException("Unsupported request method: " + requestMethod);
             }
 
-            InetAddress addr = InetAddress.getByName(host);
-            socket = new Socket(addr, port);
+            InetAddress addr = InetAddress.getByName(getHost());
+            socket = new Socket(addr, Integer.valueOf(getPort()));
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
             writer.write(HttpUtils.generateRequest(request));
@@ -124,22 +122,65 @@ public class HttpMessageSender implements MessageSender {
         }
     }
 
-    private String getDestinationUri() {
-        return "http://" + host + ":" + port + urlPath;
+    private String getPort() {
+        Assert.isTrue(StringUtils.hasText(requestUrl),
+                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+        
+        String port = requestUrl.substring("http://".length());
+        
+        if(port.contains(":")) {
+            port = port.substring(port.indexOf(':')+1);
+            
+            if(port.contains("/")) {
+                port = port.substring(0, port.indexOf('/'));
+            }
+            
+            return port;
+        } else {
+            return "8080";
+        }
+    }
+
+    private String getHost() {
+        Assert.isTrue(StringUtils.hasText(requestUrl),
+                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+        
+        String host = requestUrl.substring("http://".length());
+        if(host.contains(":")) {
+            host = host.substring(0, host.indexOf(":"));
+        } else {
+            host = host.substring(0, host.indexOf('/'));
+        }
+        
+        return host;
+    }
+
+    private String getUri() {
+        Assert.isTrue(StringUtils.hasText(requestUrl),
+                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+        
+        String uri = requestUrl.substring("http://".length());
+        
+        if(uri.contains("/")) {
+            uri = uri.substring(uri.indexOf("/"));
+            return uri;
+        } else {
+            return "";
+        }
     }
 
     /**
      * @return the urlPath
      */
-    public String getUrlPath() {
-        return urlPath;
+    public String getRequestUrl() {
+        return requestUrl;
     }
 
     /**
-     * @param urlPath the urlPath to set
+     * @param url the url to set
      */
-    public void setUrlPath(String urlPath) {
-        this.urlPath = urlPath;
+    public void setRequestUrl(String url) {
+        this.requestUrl = url;
     }
 
     /**
@@ -154,20 +195,6 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setSocket(Socket socket) {
         this.socket = socket;
-    }
-
-    /**
-     * @param host the host to set
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @param port the port to set
-     */
-    public void setPort(int port) {
-        this.port = port;
     }
 
     /**

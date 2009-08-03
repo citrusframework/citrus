@@ -22,7 +22,6 @@
                 <value>${smart.airline.request.queue}</value>
                 <value>${smart.airline.response.queue}</value>
                 <value>${royal.airline.request.queue}</value>
-                <value>${royal.airline.response.queue}</value>
             </list>
         </property>
     </bean>
