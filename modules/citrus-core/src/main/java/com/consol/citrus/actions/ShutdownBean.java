@@ -26,11 +26,11 @@ public class ShutdownBean extends AbstractTestAction {
     public void execute(TestContext context) throws TestSuiteException {
         for (Iterator iter = serverList.iterator(); iter.hasNext();) {
             Server actServer = (Server) iter.next();
-            actServer.shutdown();
+            actServer.stop();
         }
 
         if (server != null) {
-            server.shutdown();
+            server.stop();
         }
     }
 

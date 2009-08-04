@@ -16,13 +16,13 @@ public interface Server extends BeanNameAware, Runnable {
      *
      * @throws TestSuiteException
      */
-    public void startup() throws TestSuiteException;
+    public void start() throws TestSuiteException;
 
     /**
      *
      * @throws TestSuiteException
      */
-    public void shutdown() throws TestSuiteException;
+    public void stop() throws TestSuiteException;
 
     /**
      *

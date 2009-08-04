@@ -8,7 +8,7 @@ public class FlightBookingDemo {
     
     public static void main(String[] args) {
         ActiveMQServer activemqServer = new ActiveMQServer();
-        activemqServer.startup();
+        activemqServer.start();
         
         new ClassPathXmlApplicationContext("flightBooking.xml", FlightBookingDemo.class);
     }

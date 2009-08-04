@@ -24,14 +24,6 @@
                     <property name="server" ref="activeMQBroker"/>
                 </bean>
                 
-                <bean class="com.consol.citrus.actions.StartupBean">
-                    <property name="server" ref="httpServer"/>
-                </bean>
-                
-                <bean class="com.consol.citrus.actions.StartupBean">
-                    <property name="server" ref="httpStandaloneServer"/>
-                </bean>
-                
 				<ref bean="purgeJmsQueues"/>
 				<ref bean="startJmsLoopBackDummies"/>
 				
@@ -55,14 +47,6 @@
 			<list>
 				<ref bean="stopJmsLoopBackDummies"/>
 				
-                <bean class="com.consol.citrus.actions.ShutdownBean">
-                    <property name="server" ref="httpServer"/>
-                </bean>
-                
-                <bean class="com.consol.citrus.actions.ShutdownBean">
-                    <property name="server" ref="httpStandaloneServer"/>
-                </bean>
-                
                 <bean class="com.consol.citrus.actions.ShutdownBean">
                     <property name="server" ref="activeMQBroker"/>
                 </bean>

@@ -31,7 +31,7 @@ public class ActiveMQServer implements Server {
         }
     }
     
-    public void startup() throws TestSuiteException {
+    public void start() throws TestSuiteException {
         broker = new BrokerService();
         broker.setBrokerName(name);
         broker.setUseShutdownHook(true);
@@ -43,7 +43,7 @@ public class ActiveMQServer implements Server {
         run();
     }
     
-    public void shutdown() throws TestSuiteException {
+    public void stop() throws TestSuiteException {
         if(broker != null) {
             try {
                 broker.stop();

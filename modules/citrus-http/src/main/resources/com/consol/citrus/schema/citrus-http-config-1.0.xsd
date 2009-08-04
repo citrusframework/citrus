@@ -5,6 +5,16 @@
 	 targetNamespace="http://www.consol.de/citrus/schema/http/config"
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
+    <xs:element name="server">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="port" type="xs:integer"/>
+            <xs:attribute name="uri" type="xs:string"/>
+            <xs:attribute name="deamon" type="xs:boolean"/>
+            <xs:attribute name="auto-start" type="xs:boolean"/>
+            <xs:attribute name="message-handler" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
 	<xs:element name="message-sender">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
