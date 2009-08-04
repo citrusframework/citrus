@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="container">
+<chapter id="containers">
   <title>Containers</title>
 
   <para>Similar to templates a container element will always hold one or more test actions. In contrast to the

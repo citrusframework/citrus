@@ -2,30 +2,27 @@
 <chapter id="introduction">
   <title>Introduction</title>
 
-  <para>Enterprise Application Integration (EAI) software usually communicate with different 
-  interface partners inside the SOA landscape. Therefore it is essential to test their integration 
-  into the surrounding system. How can somebody test use case scenarios to work with all interfaces? 
-  How can somebody run positive and negative test cases in an automated reproducable way? 
-  The OpenSource test framework Citrus tries to answer these questions by offering fully 
-  automated integration testing of an EAI software.</para>
+  <para>Enterprise Application Integration (EAI) projects usually communicate with different 
+  interface partners using a loosely coupled message-based communication. The success of a use case is defined by 
+  the cooperation of several applications exchanging information with each other. Therefore it is essential to test 
+  this cooperation/communication between the applications in several integration tests.</para>
+  
+  <para>How can somebody test use case scenarios that include several interface partners? 
+  How can somebody run positive and negative integration test cases in an automated reproducable way? 
+  Citrus tries to answer these questions by offering fully automated integration testing.</para>
 
   <section id="introduction-overview">
     <title>Overview</title>
 
-    <para>The Citrus Test Framework gives you the opportunity to test message based applications in an automated way. 
-    The framework helps you to perform integration, unit, component and performance testing
-    throughout SOA system architectures.</para>
+    <para>Citrus aims to strongly support you in simulating your interface partners. You can easily subscribe and publish 
+    to a wide range of protocols like HTTP, JMS, TCP/IP and SOAP in order to test your message based applications. 
+    The framework will send/receive messages to create a communication as it would be in real production environment. 
+    In each step the framework is able to validate message contents to ensure the objective correctness. In addition to that 
+    the framework offers a wide range of functionalities to take control of the process flow during a test (e.g. iterations, 
+    system availability checks, database validation, parallelism).</para>
     
-    
-    <para>You can easily subscribe and publish to a wide range of protocols like HTTP, JMS, TCP/IP and SOAP in
-    order to test your message based applications. The framework will send/receive messages using these
-    transports in order to simulate applications around the tested system. In each step the framework is able
-    to validate the messages to ensure the correct progress. In addition to that the framework offers a wide
-    range of functionalities to take control of the process flow (e.g. Iterations, system availability checks or
-    database validation).</para>
-    
-    <para>The basic goal is to reflect a certain message workflow throughout the application architecture. With easy
-    definition of test cases via XML the framework will simulate the message workflow step by step and
+    <para>The basic goal is to test a whole use case scenario including all interface partners. With easy
+    definition of test cases via XML the framework will simulate the message flow step by step and
     ensure the correct processing.</para>
   </section>
 
@@ -33,8 +30,8 @@
     <title>Usage scenarios</title>
 
     <para>When should someone use the Citrus test framework? If you are in charge of an EAI application and need to test 
-    its integration into the existing software landscape. Or if you need to make an existing EAI application more stable
-    to use case changes. Or if you simply need to increase your test coverage, in order to feel comfortable regarding 
-    the next release of your EAI application.</para>
+    its integration into the existing software landscape. In case you need to increase the stability of an existing EAI 
+    projects against change requests and bugfixes. Or if you simply need to increase your test coverage, in order to feel 
+    comfortable regarding the next release of your EAI application.</para>
   </section>
 </chapter>

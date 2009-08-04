@@ -61,22 +61,35 @@
     &preface;
     &introduction;
     
-    <part id="citrus-core">
-        <title>Core functionalities</title>
-        <partintro id="citrus-core-intro">
+    <part id="citrus-setup">
+        <title>Setting up Citrus</title>
+        <partintro id="citrus-setup-intro">
             <para>
-                This initial part of the reference documentation deals with all core 
-                technologies in Citrus Framework.
+                This initial part of the reference documentation deals with the installation and set up of the framework, 
+                so you are ready to use the framework and start writing test cases after this part.
             </para>
             <itemizedlist>
                 <listitem>
                     <para><xref linkend="setup"/></para>
                 </listitem>
+            </itemizedlist>
+        </partintro>
+        &setup;
+    </part>
+    
+    <part id="citrus-tests">
+        <title>Writing test cases</title>
+        <partintro id="citrus-tests-intro">
+            <para>
+                This part will explain how to write Citrus test cases in XML. The guide will introduce all possible actions inside
+                a test case and explain how to connect to other systems using various transports.
+            </para>
+            <itemizedlist>
                 <listitem>
                     <para><xref linkend="testcase"/></para>
                 </listitem>
                 <listitem>
-                    <para><xref linkend="send_receive"/></para>
+                    <para><xref linkend="send-receive"/></para>
                 </listitem>
                 <listitem>
                     <para><xref linkend="actions"/></para>
@@ -101,7 +114,6 @@
                 </listitem>
             </itemizedlist>
         </partintro>
-        &setup;
         &testcase;
         &send_receive;
         &actions;

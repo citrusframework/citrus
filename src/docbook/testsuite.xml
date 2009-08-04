@@ -84,7 +84,7 @@
         the test run. This configuration will be part of the next chapter.</para>
     </section>
     
-    <section id="testsuite-include-exculde">
+    <section id="testsuite-include-exclude">
         <title>Including and excluding tests</title>
         
         <para>While using the test framework you will find out that the duration of tests differ according to the purpose of
