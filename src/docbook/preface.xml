@@ -2,16 +2,24 @@
 <preface id="preface">
   <title>Preface</title>
 
-  <para>Testing an IT software can be very hard, especially when there are no sufficient tools that support you. 
-  In Enterprise Application Integration (EAI) environments testing is even harder, because the tester may always be forced to simulate
-  external interface applications. The simulation process of interface partners may cause severe problems regarding maintainability
-  and compability. It is not unusual, that a tester has to simulate several applications manually, 
-  which is very time consuming and error prone.</para>
+  <para>Testing a software can be very hard, especially when there are no sufficient tools that support you. Regarding Java 
+  unit testing very good tools and APIs exists (JUnit, TestNG, EasyMock, and many more). The testing tools support you to easily
+  test your Java applications in various ways.
+   
+  When speaking of integration testing in a service-orianted architecture (SOA) things are getting evil. Besides unit testing efforts
+  Enterprise Application Integration (EAI) projects need to be tested regarding their integration into the existing application 
+  environment on the customer side. Without sufficient tool support the integration testing is exhausting or barely possible.</para> 
   
-  <para>The Citrus test framework helps you to perform complex integration testing in a message based EAI environment. 
-  Citrus is designed to completely test whole use case scenarios in an automated way.</para>
+  <para>Testing can then be a hard task, because the tester may be forced to simulate several external interface applications. 
+  The simulation of interface partners cause severe problems regarding maintainability and compability. It is not unusual, 
+  that a tester has to simulate several applications manually during a test, because of lacking tool support. This manual test approach is 
+  very time consuming and error prone.</para>
   
-  <para>This documentation provides a reference guide to all features of Citrus test framework and gives a detailed picture 
-  of how to set up a EAI integration testing environment. Since this document is considered to be under construction, please feel free 
-  to give any comments or requests to our user mailing list or support forums.</para>
+  <para>The Citrus test framework aims to fill in this gap. The tool helps you to perform complex integration testing in a message based 
+  EAI environment. Citrus is designed to completely test whole use case scenarios in an automated way, where interface partners are
+  simulated in thier behaviour and message contents are validated in their semantics.</para>
+  
+  <para>This document provides a reference guide to all features of Citrus test framework and gives a detailed picture 
+  of how to set up an automated integration testing environment. Since this document is considered to be under construction, 
+  please do not hesitate to give any comments or requests to us using our user or support mailing lists.</para>
 </preface>
