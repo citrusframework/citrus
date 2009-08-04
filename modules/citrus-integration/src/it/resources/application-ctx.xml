@@ -9,12 +9,12 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	 
-	<import resource="jmsServiceContext.xml"/>
-	<import resource="serviceBeansContext.xml"/>
-	<import resource="testSuiteContext.xml"/>
-	<import resource="webServiceContext.xml"/>
+	<import resource="jms-service-ctx.xml"/>
+	<import resource="service-beans-ctx.xml"/>
+	<import resource="test-suite-ctx.xml"/>
+	<import resource="web-service-ctx.xml"/>
 	<import resource="jmsLoopBackContext.xml"/>	
-	<import resource="httpServiceContext.xml"/>
+	<import resource="http-service-ctx.xml"/>
 	
 	<aop:aspectj-autoproxy/>
   
