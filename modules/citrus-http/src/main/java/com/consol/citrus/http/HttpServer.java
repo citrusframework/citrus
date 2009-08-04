@@ -2,10 +2,13 @@ package com.consol.citrus.http;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.core.Message;
@@ -26,7 +29,7 @@ import com.consol.citrus.util.ShutdownThread;
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
-public class HttpServer implements Server {
+public class HttpServer implements Server, InitializingBean {
     /**
      * Logger
      */
@@ -50,17 +53,22 @@ public class HttpServer implements Server {
     private ServerSocket serverSocket;
 
     /** Host */
-    private String host;
+    private String host = "localhost";
 
     /** Port to listen on */
-    private int port;
+    private int port = 8080;
 
     /** URI to listen on */
     private String uri;
 
+    /** MessageHandler handling incoming requests and providing proper responses */
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
     
+    /** Should server start in deamon mode */
     private boolean deamon = false;
+    
+    /** Autostart server after properties are set */
+    private boolean autoStart = false;
     
     public void run() {
         log.info("[HttpServer] Listening for client connections on "
@@ -154,7 +162,7 @@ public class HttpServer implements Server {
 
                 if (request.getPayload() != null && request.getPayload().equals("quit")) {
                     log.info("[HttpServer] received shuttdown call");
-                    shutdown();
+                    stop();
                     return;
                 }
 
@@ -197,7 +205,7 @@ public class HttpServer implements Server {
         }
     }
 
-    public void startup() throws TestSuiteException {
+    public void start() throws TestSuiteException {
         log.info("[HttpServer] Starting ...");
         try {
             InetAddress addr = InetAddress.getByName(host);
@@ -221,21 +229,21 @@ public class HttpServer implements Server {
         log.info("[HttpServer] Started sucessfully");
     }
 
-    public void shutdown() throws TestSuiteException {
+    public void stop() throws TestSuiteException {
         //TODO: ensure shutdown
         synchronized (this) {
-            log.info("[HttpServer] Shutting down");
+            log.info("[HttpServer] Stopping Http server '" + getName() + "'");
             try {
                 if (!serverSocket.isClosed()) {
                     serverSocket.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error while closing server socket", e);
             } finally {
                 running = false;
                 thread = null;
             }
-            log.info("[HttpServer] Shutdown sucessfully");
+            log.info("[HttpServer] Http server '" + getName() + "' was stopped sucessfully");
         }
     }
 
@@ -270,13 +278,13 @@ public class HttpServer implements Server {
             try {
                 server.quit();
             } catch (TestSuiteException e) {
-                e.printStackTrace();
+                log.error("Error during shutdown", e);
             }
         } else {
             try {
-                server.startup();
+                server.start();
             } catch (TestSuiteException e) {
-                e.printStackTrace();
+                log.error("Error during startup", e);
             }
             
             if(server.isDeamon() == false) {
@@ -330,6 +338,12 @@ public class HttpServer implements Server {
             }
         }
     }
+    
+    public void afterPropertiesSet() throws Exception {
+        if(autoStart) {
+            start();
+        }
+    }
 
     public String getName() {
         return name;
@@ -371,4 +385,12 @@ public class HttpServer implements Server {
     public void setHost(String host) {
         this.host = host;
     }
+    
+    /**
+     * @param autoStart the autoStart to set
+     */
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
 }

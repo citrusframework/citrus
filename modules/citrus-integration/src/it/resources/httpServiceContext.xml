@@ -9,35 +9,33 @@
        http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
        http://www.consol.de/citrus/schema/http/config http://www.consol.de/citrus/schema/http/config/citrus-http-config-1.0.xsd">
 	
-    <bean id="httpServer" class="com.consol.citrus.http.HttpServer">
-        <property name="port" value="8090"/>
-        <property name="uri" value="/test"/>
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
-                <property name="destinationName" value="${jms.queue.http.request.forward}"/>
-                <property name="replyDestinationName" value="${jms.queue.http.request.ack}"/>
-                <property name="connectionFactory">
-                    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-                        <property name="brokerURL" value="${jms.server.url}" />
-                    </bean>
-                </property>
-                <property name="replyTimeout" value="2000"/>
+    <citrus-http:server id="httpServer" 
+                        port="8090" uri="/test" 
+                        deamon="false" 
+                        message-handler="jmsForwardingMessageHandler"
+                        auto-start="true"/>
+
+    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
+        <property name="destinationName" value="${jms.queue.http.request.forward}"/>
+        <property name="replyDestinationName" value="${jms.queue.http.request.ack}"/>
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="${jms.server.url}" />
             </bean>
         </property>
-        <property name="deamon" value="false"/>
+        <property name="replyTimeout" value="2000"/>
     </bean>
-    
-    <bean id="httpStandaloneServer" class="com.consol.citrus.http.HttpServer">
-        <property name="port" value="8091"/>
-        <property name="uri" value="/test"/>
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.http.handler.XpathDispatchingMessageHandler">
-                <property name="messageHandlerContext" value="message-handler-context.xml"/>
-            </bean>
-        </property>
-        <property name="deamon" value="false"/>
+        
+    <citrus-http:server id="httpStandaloneServer" 
+                        port="8091" uri="/test" 
+                        deamon="false" 
+                        message-handler="xpathDispatchingHandler"
+                        auto-start="true"/>
+                        
+    <bean id="xpathDispatchingHandler" class="com.consol.citrus.http.handler.XpathDispatchingMessageHandler">
+        <property name="messageHandlerContext" value="message-handler-context.xml"/>
     </bean>
-    
+        
 	<citrus-http:message-sender id="httpMessageSender" 
                                 request-url="http://localhost:8090/test" 
                                 request-method="POST"

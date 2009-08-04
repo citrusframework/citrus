@@ -33,7 +33,7 @@ public class ShutdownThread extends Thread
 
         try {
             for (Server server: servers) {
-                server.shutdown();
+                server.stop();
                 
                 try { // avoid JVM crash
                     Thread.sleep(1000L);

@@ -36,12 +36,12 @@ public class StartupBean extends AbstractTestAction {
 
         for (Iterator iter = serverList.iterator(); iter.hasNext();) {
             Server actServer = (Server) iter.next();
-            actServer.startup();
+            actServer.start();
             log.info("Started server: " + actServer.getName());
         }
 
         if (server != null) {
-            server.startup();
+            server.start();
             log.info("Started server: " + server.getName());
         }
     }

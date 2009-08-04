@@ -327,7 +327,7 @@ public class JmsLoopBackBean implements InitializingBean, Server {
      *
      * @see com.consol.citrus.Startable#start()
      */
-    public void startup() {
+    public void start() {
         for (int i = 1; i <= countInstances; i++) {
             Thread thread = new Thread(this);
             thread.start();
@@ -339,7 +339,7 @@ public class JmsLoopBackBean implements InitializingBean, Server {
      *
      * @see com.consol.citrus.Stoppable#stop()
      */
-    public void shutdown() {
+    public void stop() {
         String operationInfo = "";
         if (messageSelector != null) {
             operationInfo = "(operation=" + messageSelector + ")";
