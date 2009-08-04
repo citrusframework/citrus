@@ -4,23 +4,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:citrus="http://www.consol.de/citrus/schema/config"
+       xmlns:citrus-http="http://www.consol.de/citrus/schema/http/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd">
+       http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
+       http://www.consol.de/citrus/schema/http/config http://www.consol.de/citrus/schema/http/config/citrus-http-config-1.0.xsd">
 	
-	<bean id="royalAirlineHttpServer" class="com.consol.citrus.http.HttpServer">
-        <property name="port" value="${http.port}"/>
-        <property name="uri" value="${http.urlpath}"/>
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
-                <property name="destinationName" value="${royal.airline.request.queue}"/>
-                <property name="connectionFactory" ref="connectionFactory" />
-                <property name="replyTimeout" value="2000"/>
-            </bean>
-        </property>
-    </bean> 
-
+    <citrus-http:server id="royalAirlineHttpServer" 
+                        port="${http.port}" uri="${http.urlpath}" 
+                        message-handler="jmsForwardingMessageHandler"/>
+            
+    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
+        <property name="destinationName" value="${royal.airline.request.queue}"/>
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="replyTimeout" value="2000"/>
+    </bean>        
+                        
     <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
                                  destination-name="${royal.airline.request.queue}"/>
                                    
