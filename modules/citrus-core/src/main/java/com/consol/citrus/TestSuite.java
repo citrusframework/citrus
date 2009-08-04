@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 
+import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestSuiteException;
 import com.consol.citrus.report.Reporter;
@@ -48,8 +49,6 @@ public class TestSuite implements BeanNameAware {
     /** List containing test name patterns to include or exclude from test suite run */
     private List includeTests;
     private List excludeTests;
-
-    private boolean statusCheckEnabled = true;
 
     private String testSuiteName = "";
 
@@ -171,8 +170,7 @@ public class TestSuite implements BeanNameAware {
         for(int i=0; i<tests.length;i++)  {
             TestCase testCase = tests[i];
 
-            //TODO: Make "DRAFT" static final constant
-            if (isStatusCheckEnabled() && testCase.getMetaInfo().getStatus().equals("DRAFT")) {
+            if (testCase.getMetaInfo().getStatus().equals(Status.DRAFT) || testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
                 skipTest(testCase);
                 continue;
             }
@@ -434,20 +432,6 @@ public class TestSuite implements BeanNameAware {
      */
     public void setReporter(List reporter) {
         this.reporter = reporter;
-    }
-
-    /**
-     * @param statusCheckEnabled the statusCheckEnabled to set
-     */
-    public void setStatusCheckEnabled(boolean statusCheckEnabled) {
-        this.statusCheckEnabled = statusCheckEnabled;
-    }
-
-    /**
-     * @return the statusCheckEnabled
-     */
-    public boolean isStatusCheckEnabled() {
-        return statusCheckEnabled;
     }
 
     /**

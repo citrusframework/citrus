@@ -7,6 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 
+import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.util.FileUtils;
 
 @ContextConfiguration(locations = {"/application-ctx.xml", "functions/citrus-function-ctx.xml"})
@@ -40,7 +41,8 @@ public abstract class AbstractIntegrationTest extends AbstractTestNGSpringContex
         for (Object testCaseBean : ctx.getBeansOfType(TestCase.class).keySet()) {
             TestCase testCase = (TestCase)ctx.getBean(testCaseBean.toString());
             
-            if(testCase.getMetaInfo().getStatus().equals("DRAFT") == false) {
+            if(testCase.getMetaInfo().getStatus().equals(Status.DRAFT) == false 
+                    && testCase.getMetaInfo().getStatus().equals(Status.DISABLED) == false ) {
                 Assert.assertTrue(testsuite.run(testCase));
             }
         }
