@@ -125,7 +125,7 @@ public class CitrusApplication {
                 TestSuite testSuite = (TestSuite) testContext.getBean(testSuites[i]);
     
                 if (testSuite.beforeSuite()) {
-                    if (tests.length == 1) {
+                    if (tests.length == 1 && cmd.hasOption("test")) {
                         if (!testSuite.run(tests[0]))
                             exitWithError = true;
                     } else {

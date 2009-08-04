@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.TestCaseMetaInfo.Status;
 
 
 public class TestCaseParser implements BeanDefinitionParser {
@@ -52,7 +53,17 @@ public class TestCaseParser implements BeanDefinitionParser {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-            metaInfo.setStatus(DomUtils.getTextValue(statusElement));
+            
+            String status = DomUtils.getTextValue(statusElement);
+            if(status.equals("DRAFT")) {
+                metaInfo.setStatus(Status.DRAFT);
+            } else if(status.equals("READY_FOR_REVIEW")) {
+                metaInfo.setStatus(Status.READY_FOR_REVIEW);
+            } else if(status.equals("FINAL")) {
+                metaInfo.setStatus(Status.FINAL);
+            } else if(status.equals("DISABLED")) {
+                metaInfo.setStatus(Status.DISABLED);
+            }
 
             if (lastUpdatedByElement != null) {
                 metaInfo.setLastUpdatedBy(DomUtils.getTextValue(lastUpdatedByElement));

@@ -10,7 +10,9 @@ public class TestCaseMetaInfo {
     private Date creationDate;
 
     /** Status of testcase */
-    private String status = "";
+    public static enum Status {DRAFT, READY_FOR_REVIEW, FINAL, DISABLED};
+    
+    private Status status = Status.DRAFT;
 
     /** Last updated by */
     private String lastUpdatedBy = "";
@@ -75,18 +77,17 @@ public class TestCaseMetaInfo {
     }
 
     /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
      * @param status the status to set
      */
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+        return status;
+    }
 
 }
