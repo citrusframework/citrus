@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="actions">
-  <title>Actions</title>
+  <title>Test actions</title>
 
-  <para>This chapter gives a brief description to all service actions. You can use these actions in the test case in
-  order to realize more detailed application validation and test scenarios.</para>
+  <para>This chapter gives a brief description to all test actions that a tester can incorporate in to the test case. 
+  Besides sending and receiving messages the tester may access these actions in order to build a more complex test scenario
+  that fits the desired use case.</para>
 
   &actions-database;
   &actions-sleep;

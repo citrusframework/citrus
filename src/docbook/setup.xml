@@ -2,9 +2,11 @@
 <chapter id="setup">
   <title>Setup</title>
 
-  <para>This chapter will tell you how to get started with Citrus. After downloading the latest release there are several 
-  ways to use Citrus in your project. The next sections will describe to you the Citrus project setup possibilities. Choose 
-  on of them and include Citrus into your project.</para>
+  <para>This chapter will tell you how to get started with Citrus. It deals with the installation and set up of the framework, 
+  so you are ready to use the framework and start writing test cases after reading this chapter.</para> 
+  
+  <para>After downloading the latest release there are several ways to use Citrus in your project. The next sections will 
+  describe to you the Citrus project setup possibilities. Choose on of them and include Citrus into your project.</para>
   
   <para>In case you use Maven in your project you may choose the Maven way described in <xref linkend="setup-using-maven"/>. 
   Others may feel right downloading and unzipping the Citrus archive release.</para>
