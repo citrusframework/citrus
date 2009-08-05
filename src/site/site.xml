@@ -20,6 +20,7 @@
 
     <menu name="Citrus">
       <item name="Welcome" href="${site.url}/index.html"/>
+      <item name="Introduction" href="${site.url}/introduction.html"/>
       <item name="Project Information" href="${site.url}/project-info.html"/>
       <item name="Project Reports" href="${site.url}/project-reports.html"/>
       <item name="Changes" href="${site.url}/changes-report.html"/>
