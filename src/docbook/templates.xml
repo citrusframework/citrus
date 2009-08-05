@@ -2,9 +2,9 @@
 <chapter id="templates">
     <title>Templates</title>
 
-    <para>Templates will group action sequences to a logical unit in order to describe certain business logic. Once
-    defined and configured the templates several test cases can reference the templates. The maintenance
-    will be much more effective as the templates will be reused over a whole test case set.</para>
+    <para>Templates will group action sequences to a logical unit. You can think of templates as reusable components
+    that may be used in several tests. Once a template is configured they are referenced inside a test case. The maintenance
+    will be much more effective as the templates will be reused many times.</para>
     
     <para>The template has a unique name. In the test case the template is called by this unique name. We will
     have a look at a first example:</para>
@@ -28,13 +28,15 @@
     </programlisting>
   
     <para>The code example above describes two template definitions. Each template has to define a name using
-    the attribute &quot;name&quot;. Templates usually hold a sequence of test actions as seen in the first template which
-    contains the two test actions &lt;echo&gt; and &lt;traceVariables&gt;. Besides that the template is also able to call
-    other templates as shown in the second template example.</para>
+    the respective attribute &quot;name&quot;. Templates usually hold a sequence of test actions as seen in the first template which
+    contains the two test actions &lt;echo&gt; and &lt;traceVariables&gt;. Besides that you are allowed to create a hierarchy 
+    of templates when a template calls other templates.</para>
     
-    <para>The &lt;call-template&gt; action can easily be used inside of test cases in order to call templates. The called
-    template not necessarily has to be defined in the same test case XML file. The template can be defined in
-    a context XML file other than the test case itself:</para>
+    <note>
+      <para>The &lt;call-template&gt; action calls other templates by their name. The called
+      template not necessarily has to be located in the same test case XML file, but it can be defined in
+      a separate XML file other than the test case itself:</para>
+    </note>
     
     <programlisting>
     &lt;testcase name=&quot;templateTest&quot;&gt;
@@ -51,15 +53,15 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>Templates usually work with a specific set of variables. Either these variables have to be present in the
-    calling test case or the variables have to explicitly be set as parameters when calling the template. If a
-    variable is missing the template execution will not be able to work correctly.</para>
+    <para>Templates usually will also make use of variables. This means that these variables have to be present with 
+    respective values as soon as the template gets called. Otherwise the variables would be unknown to the test case and raise errors.
+    So either the variables are present in the calling test case anyway or the variables are explicitly set as parameters 
+    when calling the template. Again if a variable is unknown the template will fail with errors.</para>
     
-    <para>Note that the template &quot;doTraceVariables&quot; uses the variable ${time}. Therefore the test case must declare
-    the variable before calling the template. Otherwise the test execution would fail in unknown variable error.
-    On the other hand you can define parameters when calling the template. The parameters ensure that the
-    template will work with the declared variables. The next example should clarify the usage of template
-    parameters:</para>
+    <para>The &quot;doTraceVariables&quot; template faces this problem as it uses the variable ${time}. The test case must declare
+    the variable ${time} as a parameter when calling the template. Otherwise the test execution would fail in unknown variable error.
+    The parameters ensure that the template will work with the declared variables. The next example should clarify the usage of template
+    parameters in more detail:</para>
     
     <programlisting>
     &lt;testcase name=&quot;templateTest&quot;&gt;
@@ -75,8 +77,8 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>The parameters <emphasis>param1</emphasis> and <emphasis>param2</emphasis> will be filled with the respective values. The mapping takes place
-    when calling the template. If you leave out the parameter mapping make sure that the variables param1
-    and <emphasis>param2</emphasis> already exist in your test case.</para>
+    <para>The parameters <emphasis>param1</emphasis> and <emphasis>param2</emphasis> are set with the respective values. 
+    If you leave out the parameter mapping make sure that the variables <emphasis>param1</emphasis> and <emphasis>param2</emphasis> 
+    already exist in your test case.</para>
     
 </chapter>

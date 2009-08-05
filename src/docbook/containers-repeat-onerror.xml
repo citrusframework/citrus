@@ -2,11 +2,12 @@
 <section id="containers-repeat-onerror">
     <title>Repeat on error until true</title>
 
-    <para>The next looping container will execute a group of actions only if one embedded action fails with error. In
-    case of an error the loop will try again to execute all embedded actions. The on-error execution will take
-    place until one of the following conditions evaluates to true:</para>
+    <para>The next looping container is called repeat-on-error-until-true. This container simply repeats group of actions 
+    only in case one embedded action has failed with error. In case of such an error inside the container the loop will try 
+    again to execute all embedded actions. The on-error execution will take place until one of the following conditions 
+    evaluates to true:</para>
     
-    <para>1. Every embedded action was processes successfully</para>
+    <para>1. All embedded actions were processed successfully</para>
     <para>2. The ending condition evaluates to true</para>
 
     <programlisting>
