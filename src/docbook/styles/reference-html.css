@@ -138,6 +138,7 @@ table[summary^="Navigation footer"] {
     width: 100%;
 }
 
+table[summary^="Important"],
 table[summary^="Note"],
 table[summary^="Warning"],
 table[summary^="Tip"] {
@@ -263,6 +264,7 @@ td code {
     font-size: 110%;
 }
 
+div.important * td,
 div.note * td,
 div.tip * td,
 div.warning * td,

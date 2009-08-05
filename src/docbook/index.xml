@@ -60,90 +60,32 @@
     <toc/>
     &preface;
     &introduction;
+    &setup;
     
-    <part id="citrus-setup">
-        <title>Setting up Citrus</title>
-        <partintro id="citrus-setup-intro">
-            <para>
-                This initial part of the reference documentation deals with the installation and set up of the framework, 
-                so you are ready to use the framework and start writing test cases after this part.
-            </para>
-            <itemizedlist>
-                <listitem>
-                    <para><xref linkend="setup"/></para>
-                </listitem>
-            </itemizedlist>
-        </partintro>
-        &setup;
-    </part>
+    &testcase;
+    &send_receive;
+    &actions;
+    &templates;
+    &containers;
+    &cleanup;
+    &xpath;
+    &sync-jms;
+    &functions;
     
-    <part id="citrus-tests">
-        <title>Writing test cases</title>
-        <partintro id="citrus-tests-intro">
-            <para>
-                This part will explain how to write Citrus test cases in XML. The guide will introduce all possible actions inside
-                a test case and explain how to connect to other systems using various transports.
-            </para>
-            <itemizedlist>
-                <listitem>
-                    <para><xref linkend="testcase"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="send-receive"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="actions"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="templates"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="containers"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="cleanup"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="xpath"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="sync-jms"/></para>
-                </listitem>
-                <listitem>
-                    <para><xref linkend="functions"/></para>
-                </listitem>
-            </itemizedlist>
-        </partintro>
-        &testcase;
-        &send_receive;
-        &actions;
-        &templates;
-        &containers;
-        &cleanup;
-        &xpath;
-        &sync-jms;
-        &functions;
-    </part>
+    &testsuite;
+    &tibco;
+    &service-beans;
+    &jms-loopbacks;
+    &debug-messages;
+    &reporting;
     
-    <part id="citrus-config">
-        <title>Changing the basic configuration</title>
-        <partintro id="citrus-config-intro">
-            <para>
-                Now it is time for us to have a look at the basic configuration of the citrus framework. The
-                following chapters will introduce the Spring bean configuration to you and will explain 
-                how test suites are setup.
-            </para>
-            <itemizedlist>
-                <listitem>
-                    <para><xref linkend="testsuite"/></para>
-                </listitem>
-            </itemizedlist>
-        </partintro>
-        &testsuite;
-        &tibco;
-        &service-beans;
-        &jms-loopbacks;
-        &debug-messages;
-        &reporting;
-    </part>
+    <appendix id="samples">
+        <title>Citrus Samples</title>
+        
+        <section id="samples-flightbooking">
+            <title>The FlightBooking Sample</title>
+            
+            <para>TODO</para>
+        </section>    
+    </appendix>
 </book>

@@ -2,10 +2,9 @@
 <section id="actions-sleep">
     <title>Sleep</title>
 
-    <para>The next action shows how to make the test framework sleep for a given amount of time. The service
-    action &lt;sleep&gt; offers this functionality. Use the attribute time, to define the amount of time in seconds.
-    As shown in this example decimal values are supported to specify the time to sleep. The action can also
-    be used without defining a custom time delay. In this case the default delay of 5 seconds will be used.</para>
+    <para>This action shows how to make the test framework sleep for a given amount of time. The attribute 'time' defines 
+    the amount of time to wait in seconds. As shown in the next example decimal values are supported too. When no waiting time is
+    specified the default time of 5.0 seconds applies.</para>
     
     <programlisting>
     &lt;testcase name=&quot;sleepTest&quot;&gt;
@@ -17,6 +16,9 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>Once this bean was added to the action chain the framework will be delayed for the given amount of time.
-    This is very useful if you need to wait for the tested application to do some work (e.g. for database entries)</para>
+    <para>When should somebody use this action? To us this action was always very useful in case the test needed to wait until 
+    an application had done some work. For example in some cases the application took some time to write some data into the database.
+    We waited then a small amount of time in order to avoid unnessesary test failures, because the test framework simply validated 
+    the database too early. Or as another example the test may wait a given time until retry mechanisms are triggered in the tested
+    application and then proceed with the test actions.</para>
 </section>

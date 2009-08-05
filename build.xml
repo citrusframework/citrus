@@ -48,6 +48,7 @@
                 <include name="*.svg"/>
                 <include name="*.jpg"/>
                 <include name="*.png"/>
+            	<include name="**/"/>
             </fileset>
         </copy>
         <copy todir="${basedir}/target/doc/html_single/" file="${basedir}/src/docbook/styles/reference-html.css" failonerror="false"/>
@@ -78,6 +79,7 @@
                 <include name="*.svg"/>
                 <include name="*.jpg"/>
                 <include name="*.png"/>
+            	<include name="**/"/>
             </fileset>
         </copy>
 

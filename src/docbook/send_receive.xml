@@ -2,23 +2,30 @@
 <chapter id="send-receive">
   <title>Send and receive messages</title>
 
-  <para>In the previous chapter the test case structure was introduced with its basic properties &lt;variables$gt; and
+  <para>In the previous chapter the basic test case structure was introduced with its &lt;variables$gt; and
   &lt;actions&gt;. The &lt;actions&gt; element contains all actions that will be executed during the test case in
-  sequential order. The framework offers several built-in actions that the user can choose to add to the test case.
-  First of all this guide will deal with the two essential actions for sending and receiving messages, before
-  other functionalities of the test framework will be described later in this document.</para>
+  sequential order. The framework offers several built-in actions that the user can choose from. These actions will take our
+  interest in the next sections.</para>
+  
+  <para>As sending and receiving messages is an essential part in EAI projects we will handle these actions first.</para>
 
   <section id="send-receive-sending">
     <title>Sending messages</title>
 
-    <para>The &lt;send&gt; action is be used to publish messages to a message destination (e.g. HTTP endpoint, JMS
-    queue, WebService endpoint). Usually these messages will be plain XML format, but the framework is not
-    limited to this message representation. Which protocol to be used (JMS, SOAP, HTTP, TCP/IP etc.) is not
-    specified in the test case directly, but in a central configuration file. This means that the test writer does
-    not have to know the exact JMS queue configurations for instance.</para>
+    <para>The &lt;send&gt; action publishes messages to a certain destination. The transport to be used does - for now- not
+    matter to the test case. The test case simply defines the sending action and uses a predefined message sender to actually 
+    publish the defined message. There are several message sender implementations in the framework available representing several
+    message transports like Http, JMS, SOAP and many more. This means that the transport protocol to be used (JMS, SOAP, HTTP, TCP/IP etc.) 
+    is not specified in the test case directly, but in the message sender definitions. We will see later in this document how message 
+    senders for various transports are configured in Citrus.</para>
     
-    <para>Let us have a look at a first example. The test below has two variables defined (requestTag and
-    conversationId). The test chain consists of one sending action in typical use:</para>
+    <para>The advantage of this seperation of configuration is definitely the flexibility of test cases. The test case does not know 
+    anything about JMS ConnectionFactories, queue names or Http URLs. The transport underneath a sending action can change easily 
+    without affecting the test case definition.</para>
+    
+    <para>Usually the message payload will be plain XML format. The framework is not limited to the XML message format, but to be honest 
+    XML is the default message format that is supported out of the box. Let us have a look at a first example how a sending action is 
+    defined in the test.</para>
     
     <programlisting>
     &lt;testcase name=&quot;sendMessageTest&quot;&gt;
@@ -26,11 +33,11 @@
             Send message example!
         &lt;/description&gt;
         &lt;variables&gt;
-            &lt;variable name=&quot;requestTag&quot; value=&quot;validateValues___0001&quot;/&gt;
+            &lt;variable name=&quot;requestTag&quot; value=&quot;requestTag0001&quot;/&gt;
             &lt;variable name=&quot;conversationId&quot; value=&quot;A00001&quot;/&gt;
         &lt;/variables&gt;
         &lt;actions&gt;
-            &lt;send type=&quot;sendGetNumberRequest&quot;&gt;
+            &lt;send with=&quot;getNumberRequestMessageSender&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                         &lt;![CDATA[
@@ -53,93 +60,95 @@
                 &lt;/message&gt;
                 &lt;header&gt;
                     &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
-                    &lt;element name=&quot;RequestTag&quot; value=&quot;%requestTag&quot;/&gt;
+                    &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
                 &lt;/header&gt;
             &lt;/send&gt;
         &lt;/actions&gt;
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>First of all the type of the sending action has to be set correctly. The type of the action refers to a basic
-    configuration instance that was defined in the &quot;serviceBeansContext.xml&quot; file. This basic configuration file
-    holds all types of actions as defined Spring bean instances. The test case will inherit all attributes of the
-    type definition. This means that the basic configuration is done in the serviceBeansContext.xml file,
-    usually located in &quot;config/spring&quot; directory.</para>
+    <para>The test uses two variable definitions (requestTag and conversationId), so first of all let us refresh in mind what 
+    variables do. These variables defined at the very beginning of the test case are valid throughout all actions that take place 
+    in the test. This means that actions can simply reference a variable by the variable expression (e.g. ${conversationId}).</para> 
     
-    <para>In other words the attribute &quot;type&quot; in the &lt;send&gt; element specifies to which destination the message will
-    be sent. Once again all available types are defined in the service BeansContext.xml configuration file.
-    Each type stands for a certain destination endpoint. Information like JMS queue names or connection
-    details are stored in the service bean type. The type is referenced by the &quot;type&quot; attribute in the sending
-    action. This reference is very important. Be sure to always pick the right service bean type in order to
-    publish your message to the right destination endpoint.</para>
+    <tip>
+        <para>Use variables wherever you can! At least the important entities of a test should be defined as variables at the 
+        beginning. The test case reaches better maintainability and flexibility using variables.</para>
+    </tip>
     
-    <para>Besides that the sending action offers several other properties to be set:</para>
+    <para>Now lets have a look at the sending action. The 'with' attribute might catch someones attention at first. So what does the 
+    'with' attribute do? This attribute references a message sender definition by name. As previously mentioned the message sender 
+    definition lies in a seperate configuration file and contains the actual message transport configurations. In this example the 
+    <emphasis>&quot;getNumberRequestMessageSender&quot;</emphasis> is used to send the message over JMS to a destination queue. 
+    The test case is not aware of these details, because it does not have to. The advantage is obvious: Many test cases may use 
+    the same message sender in order to send messages of type 'getNumberRequest'.</para>
+    
+    <para>In other words the attribute &quot;with&quot; in the &lt;send&gt; element specifies which message sender definition 
+    is sending the message. Once again all available message senders are configured in a seperate Spring configuration file. 
+    We will come to this later. Be sure to always pick the right message sender type in order to publish your message to the right 
+    destination endpoint.</para>
+    
+    <para>Now that the actual message sender is clear, the test must specify the message content itself. 
+    This is done with these elements:</para>
         
     <itemizedlist mark="opencircle">
         <listitem>
-            <para>destination: The destination defines the message destination endpoint. This can be a JMS
-            queue or the WebService endpoint. Usually this information is already given in the type of the
-            sender. Therefore this element is optional and may not be likely to be filled within the test.</para>
-        </listitem>
-        <listitem>
-            <para>message: This element defines the message to be sent. There are several child elements available:</para>
+            <para><emphasis>message</emphasis>: This element defines the message to be sent. There are several child elements available:</para>
             <itemizedlist mark="opencircle">
                 <listitem>
-                    <para>data: Inline definition of the XML message to be sent (instead of &lt;resource&gt; element)</para>                
+                    <para><emphasis>data</emphasis>: Inline definition of the XML message (instead of &lt;resource&gt; element)</para>                
                 </listitem>
                 <listitem>
-                    <para>resource: External file holding the XML message to be sent (instead of &lt;data&gt; element)</para>
+                    <para><emphasis>resource</emphasis>: External file holding the XML message to be sent (instead of &lt;data&gt; element)</para>
                     <para>The syntax would be: &lt;resource file="file:xmlData/NumberDeallocationRequest.xml" /&gt;</para>
                     <para>The location of the file can be declared as file system resource (file:) or as class path
-                    resource (classpath:). The file system resource path is relative to the &lt;install&gt; directory.</para>
+                    resource (classpath:).</para>
                 </listitem>
                 <listitem>
-                    <para>element: Explicitly overwrite values in the data/resource XML message. XML elements
+                    <para><emphasis>element</emphasis>: Explicitly overwrite values in the XML message using XPath. XML elements
                     can be replaced explicitly by previously defined test variable values. Each &lt;element&gt;
-                    entry provides a &quot;path&quot; and &quot;value&quot; attribute. The &quot;path&quot; should be a valid XML node or
-                    attribute in the message to be sent. The &quot;value&quot; can be a variable or any other static
-                    value.</para>
+                    entry provides a &quot;path&quot; and &quot;value&quot; attribute. The &quot;path&quot; should be a valid XPath expression evaluating
+                    to a node element or attribute in the message to be sent. The &quot;value&quot; can be a variable or any other 
+                    static value. The framework will replace the value before sending the message.</para>
                 </listitem>
             </itemizedlist>
         </listitem>
         <listitem>
-            <para>header: Defines a header for the message (e.g. JMS header information or SOAP header). This
+            <para><emphasis>header</emphasis>: Defines a header for the message (e.g. JMS header information or SOAP header). This
             &lt;header&gt; element has child elements to define the header values:</para>
             <itemizedlist mark="opencircle">
                 <listitem>
-                    <para>element: Similar to the &lt;element&gt; tag in the message definition. Here the attributes
+                    <para><emphasis>element</emphasis>: Similar to the &lt;element&gt; tag in the message definition. Here the attributes
                     &quot;name&quot; and &quot;value&quot; define the header entry. The &quot;name&quot; will be the name of the header
-                    entry and &quot;value&quot; its respective value. Again the usage of variables is very useful here.</para>
+                    entry and &quot;value&quot; its respective value. Again the usage of variables is very useful here, too.</para>
                 </listitem>
             </itemizedlist>
         </listitem>
     </itemizedlist>
     
     <para>The most important thing when dealing with sending actions is to prepare the XML message to be sent.
-    The message is first of all specified by the &lt;data&gt; or the &lt;resource&gt; property. Normally there are some
-    message values that have to be dynamically set before sending the message. Therefore you can
-    overwrite specific message elements before sending. The example above uses the variable
-    ${conversationId} directly in the XML content of the message. The framework will replace this variable
-    with the respective value before sending the message. You can also see another approach used to
-    overwrite message elements with variable values. The &quot;/MessageHeader/RequestTag&quot; element is
-    overwritten explicitly via XPath expression. The two approaches of setting message elements can be
-    used simultaneously; however the inline XML content replacement is more powerful when considering
-    XML namespaces. After setting of the message elements the &lt;header&gt; property is used to set the values
-    like &quot;Operation&quot; and &quot;RequestTag&quot;. The example shows that the use of variables is supported here using
-    the common variables syntax.</para>
+    The message content itself is specified by the &lt;data&gt; or the &lt;resource&gt; property. These elements hold the message
+    payload as internal CDATA definition or as external file resource. Usually there are some message values that have to be 
+    dynamically set before sending the message (especially when using test variables). 
+    This is why you can overwrite specific message elements. The example above uses the variable ${conversationId} directly in the 
+    XML payload definition. The framework will replace this variable with the respective value before sending the message. There is 
+    also a second approach to overwrite message elements by using XPath. The &quot;/MessageHeader/RequestTag&quot; element is
+    overwritten explicitly via XPath expressions. The two approaches of setting message elements can coexist simultaneously; 
+    however the inline XML content replacement seems less complex than XPath, although XPath may be the right way for powerful 
+    replacements inside the message payload.</para>
+     
+    <para>The &lt;header&gt; property is used to set the values like &quot;Operation&quot; and &quot;RequestTag&quot;. The example 
+    shows that the use of variables is supported here using the common variables syntax.</para>
   </section>
   
   <section id="send-receive-receiving">
     <title>Receiving messages</title>
 
-    <para>After the definition of a sending action was described in the previous chapter, now the receiving of
-    messages will be the task. The example below shows a usual receiving action in the action chain. The
-    time the test framework is listening for a message can be configured. However the validation of the
-    incoming messages is the key issue to ensure the correct functionality of the tested applications. In the
-    following examples the wrapping test case information is left out. You see only the action definition:</para>
+    <para>After we have learned how to send messages in the previous chapter, now we would like to receive a message in the test. 
+    The action is again best described by having a look at a simple example:</para>
     
     <programlisting>
-    &lt;receive type=&quot;receiveGetNumberResponse&quot;&gt;
+    &lt;receive with=&quot;getNumberResponseReceiver&quot;&gt;
         &lt;selector&gt;
             &lt;value&gt;operation = ‘ReceiveMSISDN’&lt;/value&gt;
         &lt;/selector&gt;
@@ -174,56 +183,51 @@
     &lt;/receive&gt;
     </programlisting>
     
-    <para>The action will receive XML messages from the services (JMS, SOAP, HTTP, TCP/IP etc.). The
-    configuration of these services is already done in a central configuration file &quot;serviceBeansContext.xml&quot;
-    analogue to the explanations in the previous chapter. Simply pick the right service bean type in the &quot;type&quot;
-    attribute for your purpose to receive messages from the right service destination.</para>
+    <para>Knowing the send action of the previous chapter we can identify some common mechanisms that are valid for both 
+    sending and receiving actions. This time the test uses a predefined message receiver in order to receive the message 
+    over a certain transport. Again the test is not aware of the transport details (e.g. JMS connection factory, 
+    queue names, etc.), but the message receiver does know these information.</para>
     
-    <para>While the action tries to receive a message the whole test chain execution will be delayed. This is
-    important to ensure the workflow processing.</para>
+    <para>While the action tries to receive a message the whole test execution will be delayed. This is
+    important to ensure the step by step workflow processing. The receiver wont wait forever for the desired message
+    to arrive. A timeout exception will fail the test in case the message does not arrive in time.</para>
     
-    <para>Once the XML message has arrived, the message can be validated in various ways. On the one hand you
+    <para>Once the message has arrived, the content can be validated in various ways. On the one hand you
     can specify a whole XML message template that you expect. In this case the received XML structure will
     be compared to the expected XML message template element by element. On the other hand you can
-    specify some elements to be explicitly validated. The framework will search for the right element in the
-    received XML structure and compare the value with the expected one.</para>
+    specify some elements that are of interest for the test. These elements will then be explicitly validated. 
+    The framework will search for the right element in the received XML structure and compare the value with the expected one.</para>
     
-    <para>Besides this validation of the message content the framework can also validate header values. Simply
-    specify the header name and the expected value. Variable usage is supported as usual. In conclusion the 
-    receiving action has the purpose to receive messages and validate the content. The action offers following 
-    properties to be set:</para>
+    <para>Besides this message payload validation the framework can also validate the header values. Simply
+    specify the header name and the expected value. Variable usage is supported as usual. See below a full reference of the 
+    receive action properties:</para>
     
     <itemizedlist mark="opencircle">
         <listitem>
-            <para>selector: This element defines a JMS messageSelector. The selector will only receive messages
+            <para><emphasis>selector</emphasis>: This element defines a JMS messageSelector. The selector will only receive messages
             with the given JMS header available. Using this mechanism you can explicitly listen for messages
             that belong to your test. This will be helpful to avoid problems with other messages that are sent
             over the transport you will listen on.</para>
         </listitem>
         <listitem>
-            <para>destination: The destination defines the JMS queue or the WebService endpoint to listen on.
-            Usually this information is already given in the type of the receiver. Therefore this element is
-            optional and may not be likely to be filled within the test.</para>
-        </listitem>
-        <listitem>
-            <para>message: Define the expected message template</para>
+            <para><emphasis>message</emphasis>: Define the expected message template</para>
             <itemizedlist>
                 <listitem>
-                    <para>data: As described above to define an inline XML message that is expected</para>
+                    <para><emphasis>data</emphasis>: As described above to define an inline XML message that is expected</para>
                 </listitem>
                 <listitem>
-                    <para>resource: As described above to define an expected XML message via external file resources</para>
+                    <para><emphasis>resource</emphasis>: As described above to define an expected XML message via external file resources</para>
                 </listitem>
                 <listitem>
-                    <para>element: As described above to overwrite some XML node values in the expected
+                    <para><emphasis>element</emphasis>: As described above to overwrite some XML node values in the expected
                     message template before validation</para>
                 </listitem>
                 <listitem>
-                    <para>ignore: These values will be ignored when comparing the expected XML message with
+                    <para><emphasis>ignore</emphasis>: These values will be ignored when comparing the expected XML message with
                     the received message element by element.</para>
                 </listitem>
                 <listitem>
-                    <para>validate: Instead of comparing a whole message template (data/resource) these values
+                    <para><emphasis>validate</emphasis>: Instead of comparing a whole message template (data/resource) these values
                     are validated explicitly by finding them in the received message. These elements are the
                     only values that will be validated. If this type of validation is choosen no other elements in
                     the &lt;message&gt; declaration are allowed to be present. You do not have to specify a
@@ -242,23 +246,23 @@
             </itemizedlist>
         </listitem>
         <listitem>
-            <para>header: Validate the header of the message by defining elements that have to be present in the
+            <para><emphasis>header</emphasis>: Validate the header of the message by defining elements that have to be present in the
             message header of the received message.</para>
             <itemizedlist mark="opencircle">
                 <listitem>
-                    <para>element: Values to be validated in JMS/SOAP header. These values have to be present
+                    <para><emphasis>element</emphasis>: Values to be validated in JMS/SOAP header. These values have to be present
                     in the received message header and their value has to fit the expected value.</para>
                 </listitem>
             </itemizedlist>            
         </listitem>
         <listitem>
-            <para>extract: This element enables you to store information to new test variables. Header elements as
+            <para><emphasis>extract</emphasis>: This element enables you to store information to new test variables. Header elements as
             well as message elements can be transformed into test variables that can be referenced from
             now on. With this functionality it is possible to store automatically generated identifiers that are
             important for further test actions. The actions can then reference the new variable.</para>
             <itemizedlist mark="opencircle">
                 <listitem>
-                    <para>header: Possibility to store JMS/SOAP header values as test variables, that are valid for
+                    <para><emphasis>header</emphasis>: Possibility to store JMS/SOAP header values as test variables, that are valid for
                     the rest of the test.</para>
                     
                     <para>&lt;header name="TransactionId" variable="%transId"&gt;&lt;/header&gt;</para>
@@ -268,7 +272,7 @@
                     variable does not exist it is created dynamically.</para>
                 </listitem>
                 <listitem>
-                    <para>message: Analogue to &lt;header&gt; elements. Used to store values of the received XML
+                    <para><emphasis>message</emphasis>: Analogue to &lt;header&gt; elements. Used to store values of the received XML
                     message body in test variables, in order to use them in further actions.</para>
                     
                     <para>&lt;message path="TransactionId" variable="%transId"&gt;&lt;/message&gt;</para>
@@ -277,10 +281,9 @@
         </listitem>
     </itemizedlist>
     
-    <para>At this point you know the two most important service actions in the test framework. Sending and
-    receiving actions build the main components of the test workflows. By adding sending and receiving
-    actions to the test user can create message flows, that will test the behaviour of applications in SOA
-    architecture systems.</para>
+    <para>At this point you know the two most important test actions in the test framework. Sending and
+    receiving actions will become the main components of your integration tests. In most cases a test will create a message flow, 
+    which means a sequence of sending and receiving messages in order to replicate a use case.</para>
   </section>
   
 </chapter>

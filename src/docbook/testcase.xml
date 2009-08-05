@@ -2,6 +2,9 @@
 <chapter id="testcase">
   <title>Test case</title>
 
+  <para>Now let us start writing test cases! The upcoming guide will introduce all possible actions inside a test case 
+  and explain how to connect to other systems using various transports.</para>
+  
   <para>Citrus specifies test cases through simple XML files. The whole test case description will take place in one single
   XML file. This chapter will introduce the custom XML schema language that defines a test cases.</para>
 
@@ -160,13 +163,18 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>The status allows following enumeration values: DRAFT, READY_FOR_REVIEW, DISABLED, FINAL.
+    <para>The status allows following values: DRAFT, READY_FOR_REVIEW, DISABLED, FINAL.
     The meta-data information to a test is quite important to give the reader a first information about
     the test. It is also possible to generate test documentation using this meta-data information. The built-in Citrus 
     documentation generates HTML or Excel documents that will lists all tests with their metadata information and description.</para>
     
-    <para>Using the status (DRAFT / FINAL) one can easily set up test plans and review the progress of test
-    coverage through the generated documentation.</para>
+    <note>
+        <para>Tests in status DRAFT or DISABLED will not be executed during a testsuite run. So someone can just start adding
+        planned test cases that are not finished yet in status DRAFT without causing any failures during the test run. In addition 
+        someone could disable a test temporarily. Using these different status one can easily set up test plans and review the 
+        progress of test coverage by comparing the amount of test ins tatus DRAFT to those in FINAL state.</para>
+    </note>
+    
   </section>
   
 </chapter>

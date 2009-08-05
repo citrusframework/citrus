@@ -94,38 +94,15 @@
         <para>
           <mediaobject>
             <imageobject role="fo">
-              <imagedata align="left" fileref="images/reporting_results.png" format="PNG" />
+              <imagedata align="center" display="block" fileref="images/reporting.png" format="PNG" />
             </imageobject>
             
             <imageobject role="html">
-              <imagedata align="left" fileref="images/reporting_results.png" format="PNG" />
+              <imagedata align="center" display="block" fileref="images/reporting.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </para>
         
-        <para>
-          <mediaobject>
-            <imageobject role="fo">
-              <imagedata align="left" fileref="images/reporting_regression.png" format="PNG" />
-            </imageobject>
-            
-            <imageobject role="html">
-              <imagedata align="left" fileref="images/reporting_regression.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-        
-        <para>
-          <mediaobject>
-            <imageobject role="fo">
-              <imagedata align="left" fileref="images/reporting_success.png" format="PNG" />
-            </imageobject>
-            
-            <imageobject role="html">
-              <imagedata align="left" fileref="images/reporting_success.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>      
     </section>
     
 </chapter>

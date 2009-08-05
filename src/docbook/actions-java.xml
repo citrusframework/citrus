@@ -2,9 +2,11 @@
 <section id="actions-java">
     <title>Java</title>
 
-    <para>The test framework offers a service action to instantiate any Java class and run any method through Java
-    reflection. Using this you can invoke any Java based mechanism like command CLI’s or other Java
-    applications.</para>
+    <para>The test framework is written in Java and runs inside a Java virtual machine. The functionality of calling other 
+    Java objects and methods in this same Java VM through Java Reflection is self-evident. 
+    With this action you can call any Java API available at runtime through the specified Java classpath.</para>
+    
+    <para>The action syntax looks like follows:</para>
     
     <programlisting>
     &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
@@ -34,19 +36,17 @@
     &lt;/java&gt;
     </programlisting>
     
-    <para>The Java class that will be called is specified by fully qualified class name in the class attribute.
-    Constructor arguments can be added through the &lt;constructor&gt; element. Every &lt;argument&gt; declares a
-    constructor argument. The type of the argument can be defined with the respective attribute &quot;type&quot;. The
-    default type would be String.</para>
+    <para>The Java class is specified by fully qualified class name. Constructor arguments are added using the &lt;constructor&gt; 
+    element with a list of &lt;argument&gt; child elements. The type of the argument is defined within the respective 
+    attribute &quot;type&quot;. By default the type would be String.</para>
     
-    <para>The method is simply specified by its name. Arguments can be added through the element &lt;argument&gt;
-    as shown in the second example.</para>
+    <para>The invoked method on the Java object is simply referenced by its name. Method arguments do not bring anything new 
+    after knowing the constructor argument definition, do they?.</para>
     
-    <para>As you can see several data types are supported. To specify string arrays as arguments, useful when
-    calling main methods, you should take a look at the third example given. Here you can see that colon
-    separated strings are automatically converted to string arrays.</para>
+    <para>Method arguments support data type conversion too, even string arrays (useful when
+    calling main methods). In the third action in the example code you can see that colon separated strings are automatically 
+    converted to string arrays.</para>
     
     <para>Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method
-    and class constructor fit your arguments and vice versa. Otherwise Java will throw errors because the
-    arguments do not fit the Java code.</para>
+    and class constructor fit your arguments and vice versa, otherwise you will cause errors at runtime.</para>
 </section>
