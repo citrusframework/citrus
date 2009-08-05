@@ -2,11 +2,11 @@
 <section id="actions-input">
     <title>Input</title>
 
-    <para>During the test case execution it might be required to read some user input. Therefore the framework
-    offers the input action. The test execution will stop and wait for user keyboard input over the standard
-    input stream. The user has to type the input and end with return key.</para>
+    <para>During the test case execution it is possible to read some user input from the command line. The test execution will 
+    stop and wait for keyboard inputs over the standard input stream. The user has to type the input and end it with the return 
+    key.</para>
     
-    <para>The inputted string will be stored to the respective variable value.</para>
+    <para>The user input is stored to the respective variable value.</para>
     
     <programlisting>
     &lt;testcase name=&quot;inputTest&quot;&gt;
@@ -36,18 +36,29 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>The input action will have following attributes:</para>
+    <para>The input action has following attributes:</para>
     
     <itemizedlist mark="opencircle">
         <listitem>
-            <para>message -&gt; message to display to the user</para>
+            <para><emphasis>message</emphasis> -&gt; message displayed to the user</para>
         </listitem>
         <listitem>
-            <para>validAnswers -&gt; optional slash separated string containing the possible answers</para>
+            <para><emphasis>validAnswers</emphasis> -&gt; optional slash separated string containing the possible answers</para>
         </listitem>
         <listitem>
-            <para>variable -&gt; destination variable to store the user input (default = ${userinput})</para>
+            <para><emphasis>variable</emphasis> -&gt; destination variable to store the user input (default = ${userinput})</para>
         </listitem>        
     </itemizedlist>
     
+    <note>
+        <para>When user input is restrited to a set of valid answers the input validation of course can fail due to mismatch. 
+        In this case the user is again asked to provide the input until a valid answer is given.</para>
+    </note>
+    
+    <note>
+        <para>User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to 
+        type in the correct answer over the keyboard. In this case you can always miss out the whole the user input by specifying
+        a variable that matches the user input variable name in advance. If the user input variable is already present the user 
+        input is missed out and the test proceeds.</para>
+    </note>
 </section>
