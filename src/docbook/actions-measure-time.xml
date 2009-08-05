@@ -2,10 +2,11 @@
 <section id="actions-measure-time">
     <title>Time measurement</title>
 
-    <para>Time measurement during a test can be very helpful. You can use the action &lt;traceTime&gt; for this
-    purpose. This action should be placed several times into the action chain. The action offers the attribute
-    &quot;id&quot; to identify a time line. This enables the tester to use more than one time measurements at the same
-    time. If you leave out the id the action offers a default id as you can see here in the first action reference.</para>
+    <para>Time measurement during a test can be very helpful. The &lt;traceTime&gt; action creates and monitors 
+    one to many timelines. The action offers the attribute &quot;id&quot; to identify a time line. The tester can of course 
+    use more than one time line with different ids at a time.</para> 
+    
+    <para>Read the next example and you will understand the mix of different time lines at a time:</para>
     
     <programlisting>
     &lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
@@ -27,6 +28,18 @@
     &lt;/testcase&gt;
     </programlisting>
     
+    <para>The test output looks like follows:</para>
+    
+    <programlisting>
+        Starting TimeWatcher:
+        Starting TimeWatcher: time_line_id
+        TimeWatcher time_line_id after 3.5 seconds
+        TimeWatcher after 8.5 seconds
+        TimeWatcher time_line_id after 8.5 seconds
+    </programlisting>
+    
+    <note>In case no time line id is specified the frameowrk will measure the time for a default time line.</note>
+    
     <para>To print out the current elapsed time for a time line you simply have to place the &lt;traceTime&gt; action into
-    the action chain again, using the respective id. The elapsed time will be printed out to the console.</para>
+    the action chain again and again, using the respective ids. The elapsed time will be printed out to the console every time.</para>
 </section>

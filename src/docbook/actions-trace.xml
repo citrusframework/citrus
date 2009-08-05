@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="actions-trace">
-    <title>Trace variables</title>
+    <title>Debug existing variables</title>
 
     <para>You already know the &lt;echo&gt; action that will trace messages to the console or logger. The
-    &lt;traceVariables&gt; action is specially designed to trace all currently valid test variables. This function can
-    be used for debug reasons. The usage is quite simple:</para>
+    &lt;traceVariables&gt; action is specially designed to trace all currently valid test variables to the console. 
+    This was mainly used by us for debug reasons. The usage is quite simple:</para>
     
     <programlisting>
     &lt;testcase name=&quot;createVariablesTest&quot;&gt;
@@ -24,6 +24,6 @@
     </programlisting>
     
     <para>Simply add the &lt;traceVariables&gt; action to your action chain and the current variables will be printed out to
-    the console. You can specify a special set of variables to be printed out by using &lt;variable&gt; child
-    elements. If you leave the set empty the default behaviour will print out all available variables.</para>
+    the console. You can specify a special set of variables to be printed out by using the &lt;variable&gt; child
+    elements. Or you simply leave the set empty and print out all available variables.</para>
 </section>

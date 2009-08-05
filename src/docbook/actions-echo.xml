@@ -2,14 +2,14 @@
 <section id="actions-echo">
     <title>Echo</title>
 
-    <para>Use the &lt;echo&gt; action to print messages to the console/logger. This function can be useful when
-    debugging test runs. The property "message" holds the text to be printed out. Common use will be to print
-    out debug messages and variables as shown in this example:</para>
+    <para>The &lt;echo&gt; action will print messages to the console/logger. This functionality is useful when
+    debugging test runs. The property "message" holds the text to be printed out. Tester might use it to print
+    out debug messages and variables as shown the next code example:</para>
     
     <programlisting>
     &lt;testcase name=&quot;echoTest&quot;&gt;
         &lt;variables&gt;
-            &lt;variable name=&quot;time&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+            &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate()&quot;/&gt;
         &lt;/variables&gt;
         &lt;actions&gt;
             &lt;echo&gt;
@@ -17,10 +17,17 @@
             &lt;/echo&gt;
             
             &lt;echo&gt;
-                &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+                &lt;message&gt;Current date is: ${date}&lt;/message&gt;
             &lt;/echo&gt;
         &lt;/actions&gt;
     &lt;/testcase&gt;
+    </programlisting>
+    
+    <para>Result on the console:</para>
+    
+    <programlisting>
+        Hello Test Framework
+        Current time is: 05.08.2008
     </programlisting>
     
 </section>

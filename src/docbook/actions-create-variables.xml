@@ -2,12 +2,10 @@
 <section id="actions-create-variables">
     <title>Create variables</title>
 
-    <para>As you know test variables are defined at the beginning of the test case. <xref linkend="testcase-variables"/> describes this
-    functionality in detail. Besides that it might be helpful to reset existing variables during the test workflow as
-    well as to define new variables.</para>
-    
-    <para>You can easily use the action &lt;createVariables&gt; in order to declare new variables or overwrite existing
-    variable values.</para>
+    <para>As you know test variables are defined at the beginning of the test case. <xref linkend="testcase-variables"/> handles variables 
+    if you do not know yet what they are about. It might also be helpful to reset existing variables during the test as
+    well as to define new variables during the test. This is why the action &lt;createVariables&gt; is able to declare new variables 
+    or overwrite existing ones.</para>
     
     <programlisting>
     &lt;testcase name=&quot;settingVariablesTest&quot;&gt;
@@ -36,8 +34,6 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>The test example shows that existing variables are overwritten while new variables are created by simply
-    declaring a new variable name that was not present before. The new variables are valid for the rest of the
-    test flow and can be referred to as usual.</para>
+    <para>The new variables are valid for the rest of the test. Actions reference them as usual through a variable expression.</para>
     
 </section>
