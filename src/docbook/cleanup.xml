@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="cleanup">
-    <title>Cleanup</title>
+    <title>Test case cleanup</title>
 
-    <para>When dealing with database access as described in the previous chapter, we might run into some
-    problems when the test fails. Imagine that you prepare the database at the beginning of your test and that
-    you clean up the database at the end of the test. If any action between those preparing and cleaning
-    tasks should fail the test aborts its execution. In this case the cleaning task will not be executed.</para>
+    <para>When dealing with database access, we might run into some problems in case the test fails. 
+    Imagine that you have prepared some data inside the database at the beginning of your test and 
+    you want to make sure that the data is cleaned up at the end of the test case. Now we have the problem
+    that in case of an error the whole test case will terminate immediately. Cleanup tasks at the end of the 
+    test may not be executed correctly.</para>
     
-    <para>This can cause problems for the next test cases, because the database may not be in adequate state. To
-    avoid this problem you can define a finally block besides the usual action chain. The actions are used to
-    declare the test actions as usual. Actions that have to be executed implicitly at the end of the test, even if
-    the test fails, should be declared in the &lt;cleanup&gt; section. This cleanup will be executed at the end of the
-    test in any case. Using this strategy the database cleaning task will be executed even in case of error.</para>
+    <para>This dirty state in database might cause problems for upcoming test cases. To avoid this problems 
+    you should use the cleanup block inside the test case. The &lt;cleanup&gt; section contains actions that 
+    are executed even in case the test fails. Using this strategy the database cleaning tasks mentioned before
+    will find execution in every case (success or failure).</para>
     
     <para>The following example shows how to use the cleanup section at the end of a test:</para>
   
@@ -42,10 +42,7 @@
     &lt;/testcase&gt;
     </programlisting>
     
-    <para>In the example the first action creates an order in the database using an INSERT SQL statement. After
-    that some more actions might follow. Here it is a simple echo action that prints out some information. But
-    there can be errors in these actions. To be sure that the option in the database is deleted after the test,
-    the cleanup contains the respective action. This action will be executed even if the actions chain brakes
-    due to errors.</para>
+    <para>In the example the first action creates an order in the database using an INSERT SQL statement. To be sure that the 
+    order in the database is deleted after the test, the cleanup section contains the respective database DELETE action.</para>
     
 </chapter>
