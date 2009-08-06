@@ -29,6 +29,7 @@
 <!ENTITY cleanup            SYSTEM "cleanup.xml">
 <!ENTITY xpath              SYSTEM "xpath.xml">
 <!ENTITY jms                SYSTEM "jms.xml">
+<!ENTITY http               SYSTEM "http.xml">
 <!ENTITY functions          SYSTEM "functions.xml">
 <!ENTITY testsuite          SYSTEM "testsuite.xml">
 <!ENTITY tibco              SYSTEM "tibco.xml">
@@ -70,6 +71,7 @@
     &cleanup;
     &xpath;
     &jms;
+    &http;    
     &functions;
     
     &testsuite;
