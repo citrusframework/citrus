@@ -112,9 +112,9 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 receivedMessage = messageReceiver
                         .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
                                 context.replaceVariablesInMap(messageSelector))
-                                .build());
+                                .build(), receiveTimeout);
             } else {
-                receivedMessage = messageReceiver.receive(receiveTimeout);
+                receivedMessage = messageReceiver.receive(receiveTimeout); //TODO set this timeout from outside
             }
 
             if (receivedMessage == null)

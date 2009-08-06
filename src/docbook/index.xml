@@ -5,7 +5,7 @@
 <!ENTITY introduction       SYSTEM "introduction.xml">
 <!ENTITY setup              SYSTEM "setup.xml">
 <!ENTITY testcase           SYSTEM "testcase.xml">
-<!ENTITY send_receive       SYSTEM "send_receive.xml">
+<!ENTITY messaging          SYSTEM "messaging.xml">
 <!ENTITY actions            SYSTEM "actions.xml">
 <!ENTITY actions-database         SYSTEM "actions-database.xml">
 <!ENTITY actions-sleep            SYSTEM "actions-sleep.xml">
@@ -63,7 +63,7 @@
     &setup;
     
     &testcase;
-    &send_receive;
+    &messaging;
     &actions;
     &templates;
     &containers;
