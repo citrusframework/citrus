@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="tibco">
-    <title>Connecting with TIBCO</title>
+    <title>TIBCO support</title>
     
     <para>The Citrus framework was designed to also connect to several TIBCO software components. The outcome is a group of
-    special test actions that enable the tester to connect to the TIBCO components and execute operations towards the TIBCO
-    system.</para>
+    special test actions that enable the tester to connect to the TIBCO components and execute operations towards TIBCO.</para>
     
     <section id="tibco-hawk">
         <title>Connecting with TIBCO Hawk</title>
     
-        <para>TIBCO uses the enterprise monitor Hawk to manage and supervise all TIBCO applications. The Hawk tool
-        can also be used in the test framework to affect the TIBCO service instances. This might be essential
-        when executing unit and integration tests on the same machine.
-        The test framework is able to dynamically start/stop BusinessWorks process starters or shut down
-        BusinessWorks engines.</para>
+        <para>TIBCO uses the enterprise monitoring tool Hawk to manage and supervise all TIBCO applications. Citrus can access Hawk
+        to affect the TIBCO service instances. You can start or stop BusinessWorks process archives and process starters for instance.</para>
         
-        <para>The actual test framework configuration uses the Hawk tool to prepare the TIBCO environment according
-        to the test that will be executed (unit or integration tests).</para>
+        <tip>
+            <para>Use TIBCO Hawk in order to prepare the TIBCO environment according
+            to the test that will be executed (unit or integration tests).</para>
+        </tip>
         
-        <para>The next example shows how the Hawk agent can be used in the test suite setup. It is as always done by
-        a Spring bean definition.</para>
-        
+        <para>The next example shows how the Hawk agent can be used in the test suite setup.</para>
         
         <programlisting>
         &lt;bean parent=&quot;tibcoHawkAgent&quot;&gt;
@@ -37,9 +33,9 @@
         &lt;/bean&gt;
         </programlisting>
         
-        <para>The example shows a method call to the Hawk agent. The method is declared through the methodName
+        <para>The example shows a method call to a Hawk agent. The method is declared through the methodName
         property. In the above example the Hawk agent will resume a particular process starter. The
-        methodParameters property will define the process starter to be resumed.</para>
+        methodParameters property will cause the process starter to resume.</para>
         
         <para>In general the HawkAgent has the following properties:</para>
         
@@ -63,7 +59,7 @@
         
         <para>The microAgentID consists of the Hawk domain, the service instance and the process archive. With the
         right setting of the domain the service and the daemon you can now use all methods offered by the
-        specific micro agent.</para>
+        specific MicroAgent.</para>
     </section>
     
     <section id="tibco-collaborator">
@@ -73,8 +69,8 @@
         Workflow Server, especially for clean up reasons. Left over workflows from previous test runs will then get
         terminated correctly.</para>
         
-        <para>The test framework offers the service bean cleanIcJobs, in order to clean up all available workflow jobs in
-        the Workflow Server.</para>
+        <para>The test framework offers a special action implementation, in order to clean up all available workflow jobs on
+        the Workflow Collaborator Server.</para>
         
         <para>The bean looks like follows:</para>
         
@@ -92,8 +88,6 @@
     &lt;/bean&gt;
         </programlisting>
         
-        <para>The properties of that bean do all refer to the connection to the IcServer instance. All properties are
-        defined in the test_local.properties file to achieve improved maintenance. So if you have to connect to
-        another IcServer just adjust the properties in the test_local.properties file.</para>
+        <para>The properties of that bean do all refer to the connection credentials of the Workflow InConcert Server instance.</para>
     </section>
 </chapter>
