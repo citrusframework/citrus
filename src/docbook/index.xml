@@ -73,7 +73,6 @@
     &jms;
     &http;    
     &functions;
-    
     &testsuite;
     &tibco;
     &service-beans;
