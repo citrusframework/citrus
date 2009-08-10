@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-purge">
+    <title>Purge JMS destinations</title>
+
+    <para>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending
+    messages to the same destination endpoints. Of course a test case should only receive messages that belong to it. Therefore it is a 
+    good idea to purge the JMS destiantions between the test cases to remove obsolete messages that are stuck in a JMS queue for some 
+    reason.</para>
+    
+    <para>The 'de.consol.testsuite.actions.PurgeJmsQueuesBean' action offers the property "queueNames" to hold all destiantion namse 
+    that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations.</para>
+        
+    <programlisting>
+&lt;bean id=&quot;purgeJmsQueues&quot;
+    class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesBean&quot;&gt;
+    &lt;property name=&quot;queueConnectionFactory&quot;&gt;
+        &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;queueNames&quot;&gt;
+        &lt;list&gt;
+            &lt;value&gt;${jms.queue.sas.dummy.in}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.sas.dummy.out}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.async.res}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.async.req}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.reply}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.async.ntf}&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+    </programlisting>
+    
+    <tip>
+        <para>Usually you do not need to execute the action by yourself in every test case. The test suite definition offers tasks to run 
+        before, between and after the test cases. This is a very simple way to purge the destinations between the tests. See 
+        <xref linkend="testsuite-tasks"/> for more information about this.</para>
+    </tip>
+</section>

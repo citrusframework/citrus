@@ -86,4 +86,11 @@ public class StoreMessageInterceptorAspect {
     public static final void resetFileCounter() {
         count.set(1);
     }
+
+    /**
+     * @param debugDirectory the debugDirectory to set
+     */
+    public void setDebugDirectory(Resource debugDirectory) {
+        this.debugDirectory = debugDirectory;
+    }
 }
