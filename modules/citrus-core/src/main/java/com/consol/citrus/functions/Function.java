@@ -10,5 +10,5 @@ public interface Function {
      * @param parameterList
      * @return
      */
-    public String execute(List parameterList) throws TestSuiteException;
+    public String execute(List<String> parameterList) throws TestSuiteException;
 }

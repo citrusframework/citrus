@@ -8,22 +8,22 @@ import com.consol.citrus.functions.Function;
 
 public class SubstringFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        String resultString = (String)parameterList.get(0);
+        String resultString = parameterList.get(0);
 
         String beginIndex = null;
         String endIndex = null;
 
         if (parameterList.size()>1) {
-            beginIndex = (String)parameterList.get(1);
+            beginIndex = parameterList.get(1);
         }
 
         if (parameterList.size()>2) {
-            endIndex = (String)parameterList.get(2);
+            endIndex = parameterList.get(2);
         }
 
         if (endIndex != null && endIndex.length()>0) {

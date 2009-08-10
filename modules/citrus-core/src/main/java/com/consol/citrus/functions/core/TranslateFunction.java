@@ -8,22 +8,22 @@ import com.consol.citrus.functions.Function;
 
 public class TranslateFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.size() < 3) {
             throw new InvalidFunctionUsageException("Function parameters not set correctly");
         }
 
-        String resultString = (String)parameterList.get(0);
+        String resultString = parameterList.get(0);
 
         String regex = null;
         String replacement = null;
 
         if (parameterList.size()>1) {
-            regex = (String)parameterList.get(1);
+            regex = parameterList.get(1);
         }
 
         if (parameterList.size()>2) {
-            replacement = (String)parameterList.get(2);
+            replacement = parameterList.get(2);
         }
 
         if(regex != null && replacement != null) {

@@ -8,12 +8,12 @@ import com.consol.citrus.functions.Function;
 
 public class FloorFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        return new Double(Math.floor(new Double(((String)parameterList.get(0))))).toString();
+        return new Double(Math.floor(new Double((parameterList.get(0))))).toString();
     }
 
 }

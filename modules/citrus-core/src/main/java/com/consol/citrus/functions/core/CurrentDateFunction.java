@@ -20,19 +20,19 @@ public class CurrentDateFunction implements Function {
      */
     private static final Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         Calendar calendar = Calendar.getInstance();
 
         String result = "";
 
         if (parameterList != null && parameterList.size() > 0) {
-            dateFormat = new SimpleDateFormat((String)parameterList.get(0));
+            dateFormat = new SimpleDateFormat(parameterList.get(0));
         } else {
             dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         }
 
         if (parameterList != null && parameterList.size() > 1) {
-            String offsetString = (String)parameterList.get(1);
+            String offsetString = parameterList.get(1);
             calendar.add(Calendar.YEAR, getDateValueOffset(offsetString, 'y'));
             calendar.add(Calendar.MONTH, getDateValueOffset(offsetString, 'M'));
             calendar.add(Calendar.DAY_OF_YEAR, getDateValueOffset(offsetString, 'd'));

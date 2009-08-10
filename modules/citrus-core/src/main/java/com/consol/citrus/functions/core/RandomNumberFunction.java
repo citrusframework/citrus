@@ -10,7 +10,7 @@ import com.consol.citrus.functions.Function;
 public class RandomNumberFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         int numberLength;
         boolean paddingOn = true;
 
@@ -22,13 +22,13 @@ public class RandomNumberFunction implements Function {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
-        numberLength = new Integer((String)parameterList.get(0)).intValue();
+        numberLength = new Integer(parameterList.get(0)).intValue();
         if (numberLength < 0) {
             throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
         }
 
         if (parameterList.size() > 1) {
-            paddingOn = Boolean.valueOf((String)parameterList.get(1));
+            paddingOn = Boolean.valueOf(parameterList.get(1));
         }
 
         return getRandomNumber(numberLength, paddingOn);

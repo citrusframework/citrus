@@ -30,7 +30,7 @@ public class RandomStringFunction implements Function {
 
     private static final String MIXED = "MIXED";
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         int numberOfLetters;
         String notationMethod;
 
@@ -42,13 +42,13 @@ public class RandomStringFunction implements Function {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
-        numberOfLetters = new Integer((String)parameterList.get(0)).intValue();
+        numberOfLetters = new Integer(parameterList.get(0)).intValue();
         if (numberOfLetters < 0) {
             throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
         }
 
         if (parameterList.size() > 1) {
-            notationMethod = (String)parameterList.get(1);
+            notationMethod = parameterList.get(1);
 
             if (notationMethod.equals(UPPERCASE)) {
                 return getRandomString(numberOfLetters, ALPHABET_UPPER);
