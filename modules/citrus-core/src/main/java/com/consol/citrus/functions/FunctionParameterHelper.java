@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class FunctionParameterHelper {
-    public static List getParameterList(String parameterString) {
+    public static List<String> getParameterList(String parameterString) {
         List parameterList = new ArrayList();
 
         StringTokenizer tok = new StringTokenizer(parameterString, ",");

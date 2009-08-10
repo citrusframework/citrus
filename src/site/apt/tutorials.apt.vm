@@ -3,3 +3,12 @@
  ------
  
 Tutorials
+
+  The tutorials section tries to cover a high amount of topics to get you in touch working with Citrus and extending the framework with 
+  your own functionality. 
+  
+  See the list of available tutorials:
+  
+  * {{{tutorials/write-functions.html} Writing functions}}
+  
+  * {{{tutorials/write-actions.html} Writing actions}}

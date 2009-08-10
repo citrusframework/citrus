@@ -29,6 +29,6 @@ public class SubstringBeforeFunctionTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.emptyList());
+        function.execute(Collections.<String>emptyList());
     }
 }

@@ -8,12 +8,12 @@ import com.consol.citrus.functions.Function;
 
 public class LowerCaseFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        return ((String)parameterList.get(0)).toLowerCase();
+        return (parameterList.get(0)).toLowerCase();
     }
 
 }

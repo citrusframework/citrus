@@ -8,7 +8,7 @@ import com.consol.citrus.functions.Function;
 
 public class MaxFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }

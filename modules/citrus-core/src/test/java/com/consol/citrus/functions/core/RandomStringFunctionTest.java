@@ -53,7 +53,7 @@ public class RandomStringFunctionTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.emptyList());
+        function.execute(Collections.<String>emptyList());
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})

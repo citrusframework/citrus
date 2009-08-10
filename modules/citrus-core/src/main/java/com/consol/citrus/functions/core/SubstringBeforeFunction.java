@@ -8,15 +8,15 @@ import com.consol.citrus.functions.Function;
 
 public class SubstringBeforeFunction implements Function {
 
-    public String execute(List parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws TestSuiteException {
         if (parameterList == null || parameterList.size() < 2) {
             throw new InvalidFunctionUsageException("Function parameters not set correctly");
         }
 
-        String resultString = (String)parameterList.get(0);
+        String resultString = parameterList.get(0);
 
         if (parameterList.size()>1) {
-            String searchString = (String)parameterList.get(1);
+            String searchString = parameterList.get(1);
             resultString = resultString.substring(0, resultString.indexOf(searchString));
         }
 
