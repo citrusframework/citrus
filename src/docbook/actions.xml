@@ -17,6 +17,7 @@
   &actions-fail;
   &actions-input;
   &actions-load;
+  &actions-purge;
   &actions-generic-action;
   
 </chapter>

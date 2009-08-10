@@ -1,56 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="debug-messages">
-    <title>Debugging messages to file system</title>
+    <title>Debugging received messages</title>
 
-    <para>To enable the functionality, you have to do the following steps:</para>
-    <para>1. Add the following two elements to the testcase after the receive element in that order :</para>
-    <para><literal>&lt;debugPathSuffix&gt;yourCustomTestFilePath&lt;/debugPathSuffix&gt;</literal></para>
-    <para><literal>&lt;debugEnabled&gt;true/false&lt;/debugEnabled&gt;</literal></para>
+    <para>Citrus will receive a lot of messages during a test run. The user may want to persist these messages to the 
+    filesystem either for investigations or for further use.</para>
     
-    <para>For example test cases will look like:</para>
-
+    <para>Citrus offers an easy way to debug all received messages to the filesystem. You need to enable a specific aspect in the
+    Citrus Spring configuration.</para>
+    
     <programlisting>
-    &lt;receive type=&quot;receiveMsisdnMgnt&quot;&gt;
-        &lt;debugPathSuffix&gt;test234&lt;/debugPathSuffix&gt;
-        &lt;debugEnabled&gt;true&lt;/debugEnabled&gt;
-        &lt;message&gt;
-            ...
-        &lt;/message&gt;
-    &lt;/receive&gt;
+    &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;/&gt;
     </programlisting>
     
-    <para>Note: If debugEnabled is not set to &quot;true&quot; the messages are not written to filesystem.
-    If debugEnabled is set to &quot;true&quot; and no debugPathSuffix is set, an error will be thrown.
-    You have to do this step for every single test case receiver bean and every test if you want the
-    debug functionality. Files will be created or overwritten if the file exists. So if you want to see all
-    messages from a testrun, every receiver bean needs their own debugPathSuffix.</para>
+    <para>Just add this bean to the Spring configuration and Citrus will debug received messages to the file system by generating files
+    containing the message header and message body content.</para>
     
-    <para>2. Add the following element to the bean definition e.g. in the serviceBeansContext.xml file:</para>
-    <para><literal>&lt;property name="debugBasePath" value="FilePath"/&gt;</literal></para>
+    <para>For example:</para>
+    <para><literal>logs/debug/messages/message1.header</literal></para>
+    <para><literal>logs/debug/messages/message1.body</literal></para>
+    <para><literal>logs/debug/messages/message2.header</literal></para>
+    <para><literal>logs/debug/messages/message2.body</literal></para>
     
-    <para>For example bean definitions will look like:</para>
+    <para>The framework uses a simple counter that is increased whenever a message is written to the file system. Citrus seperates 
+    message header and message body into extra files with respective extension (".header" and ".body"). By default the debug directory is 
+    <literal>logs/debug/messages/</literal> relative to the project root directory. But you can set your own debug directory in the 
+    configuration.</para>
     
     <programlisting>
-    &lt;bean id=&quot;receiveMsisdnMgnt&quot;
-        class=&quot;de.consol.testsuite.actions.ValidateBean&quot; abstract=&quot;true&quot;&gt;
-        &lt;property name=&quot;validator&quot;&gt;
-            &lt;ref bean=&quot;validator&quot; /&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;validateXmlSchemaSource&quot; value=&quot;${xml.schema.path}/${xml.schema}&quot; /&gt;
-        &lt;property name=&quot;service&quot;&gt;
-            &lt;bean parent=&quot;defaultJmsService&quot;&gt;
-                &lt;property name=&quot;serviceDestination&quot; value=&quot;${jms.queue.msisdnMgnt.dummy}&quot; /&gt;
-            &lt;/bean&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;debugBasePath&quot; value=&quot;c:\TestSuiteReceiveMessageTests\&quot;/&gt;
+    &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
+            &lt;property name=&quot;debugDirectory&quot; value=&quot;debugging/messages&quot;/&gt;
     &lt;/bean&gt;
     </programlisting>
     
-    <para>Note: This step has to be done for every bean definition. If debugEnabled is set to &quot;true&quot; and no
-    debugBasePath is set, an error will be thrown. The received messages from the testcase will be written to
-    the following path: &quot;debugBasePath+debugPathSuffix+header/hody&quot;</para>
-    
-    <para>For example:</para>
-    <para><literal>c:\TestSuiteReceiveMessageTests\test234header</literal></para>
-    <para><literal>c:\TestSuiteReceiveMessageTests\test234body</literal></para>
+    <note>
+        <para>As the fiel counter is always reset to 0 after a test run the message files may be overwritten. So you eventually need to 
+        save the generated message debug files before running another group of test cases.</para>
+    </note>
 </chapter>

@@ -18,13 +18,14 @@
 <!ENTITY actions-fail             SYSTEM "actions-fail.xml">
 <!ENTITY actions-input            SYSTEM "actions-input.xml">
 <!ENTITY actions-load             SYSTEM "actions-load.xml">
+<!ENTITY actions-purge            SYSTEM "actions-purge.xml">
 <!ENTITY actions-generic-action   SYSTEM "actions-generic-action.xml">
 <!ENTITY templates          SYSTEM "templates.xml">
 <!ENTITY containers         SYSTEM "containers.xml">
-<!ENTITY containers-sequential    SYSTEM "containers-sequential.xml">
-<!ENTITY containers-parallel      SYSTEM "containers-parallel.xml">
-<!ENTITY containers-iterate       SYSTEM "containers-iterate.xml">
-<!ENTITY containers-repeat        SYSTEM "containers-repeat.xml">
+<!ENTITY containers-sequential     SYSTEM "containers-sequential.xml">
+<!ENTITY containers-parallel       SYSTEM "containers-parallel.xml">
+<!ENTITY containers-iterate        SYSTEM "containers-iterate.xml">
+<!ENTITY containers-repeat         SYSTEM "containers-repeat.xml">
 <!ENTITY containers-repeat-onerror SYSTEM "containers-repeat-onerror.xml">
 <!ENTITY cleanup            SYSTEM "cleanup.xml">
 <!ENTITY xpath              SYSTEM "xpath.xml">
@@ -33,8 +34,7 @@
 <!ENTITY functions          SYSTEM "functions.xml">
 <!ENTITY testsuite          SYSTEM "testsuite.xml">
 <!ENTITY tibco              SYSTEM "tibco.xml">
-<!ENTITY service-beans      SYSTEM "service-beans.xml">
-<!ENTITY jms-loopbacks      SYSTEM "jms-loopbacks.xml">
+<!ENTITY schema-validation  SYSTEM "schema-validation.xml">
 <!ENTITY debug-messages     SYSTEM "debug-messages.xml">
 <!ENTITY reporting          SYSTEM "reporting.xml">
 ]>
@@ -75,8 +75,7 @@
     &functions;
     &testsuite;
     &tibco;
-    &service-beans;
-    &jms-loopbacks;
+    &schema-validation;
     &debug-messages;
     &reporting;
     
