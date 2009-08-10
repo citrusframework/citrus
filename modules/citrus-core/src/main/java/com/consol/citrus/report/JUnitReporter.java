@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -24,7 +25,7 @@ public class JUnitReporter implements Reporter {
 
     private Element testSuiteElement;
 
-    private Resource outputFile;
+    private Resource outputFile = new FileSystemResource("target/test-output/test-results.xml");
 
     /**
      * Logger
@@ -78,6 +79,10 @@ public class JUnitReporter implements Reporter {
                         serializer.getDomConfig().setParameter("format-pretty-print", true);
                     }
 
+                    if(outputFile.exists() == false) {
+                        outputFile.createRelative("");
+                    }
+                    
                     if(log.isDebugEnabled()) {
                         log.debug("Serializing to file " + outputFile.getFile().toURI().toString());
                     }

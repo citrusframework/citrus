@@ -12,6 +12,7 @@
 		<property name="reporter">
 			<list>
 				<bean class="com.consol.citrus.report.SimpleLogReporter"/>
+                <bean class="com.consol.citrus.report.JUnitReporter"/>
 			</list>
 		</property>
 		<property name="tasksBefore">
