@@ -1,6 +1,10 @@
 package com.consol.citrus.exceptions;
 
-public class NoSuchFunctionLibraryException extends TestSuiteException {
+/**
+ * In case no function library exists for a given prefix this exception is thrown.
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ */
+public class NoSuchFunctionLibraryException extends CitrusRuntimeException {
 
     public NoSuchFunctionLibraryException() {
         super();

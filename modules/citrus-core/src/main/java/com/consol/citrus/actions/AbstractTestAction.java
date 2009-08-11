@@ -2,7 +2,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public abstract class AbstractTestAction implements TestAction {
 
@@ -11,7 +11,7 @@ public abstract class AbstractTestAction implements TestAction {
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
 
-    public abstract void execute(TestContext context) throws TestSuiteException;
+    public abstract void execute(TestContext context) throws CitrusRuntimeException;
 
     public String getDescription() {
         return description;

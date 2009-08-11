@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
 public class RepeatUntilTrue extends AbstractTestAction {
@@ -29,13 +29,13 @@ public class RepeatUntilTrue extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(RepeatUntilTrue.class);
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.info("Executing iterate loop - containing " + actions.size() + " actions");
 
         try {
             condition = context.replaceDynamicContentInString(condition);
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         do {
@@ -44,7 +44,7 @@ public class RepeatUntilTrue extends AbstractTestAction {
         } while (!checkCondition());
     }
 
-    private void executeActions(TestContext context) throws TestSuiteException {
+    private void executeActions(TestContext context) throws CitrusRuntimeException {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
         for (int i = 0; i < actions.size(); i++) {
@@ -58,7 +58,7 @@ public class RepeatUntilTrue extends AbstractTestAction {
         }
     }
 
-    private boolean checkCondition() throws TestSuiteException {
+    private boolean checkCondition() throws CitrusRuntimeException {
         String conditionString = condition;
 
         if (conditionString.indexOf(indexName) != -1) {

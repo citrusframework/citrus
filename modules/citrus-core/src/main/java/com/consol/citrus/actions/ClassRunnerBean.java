@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean to enable class invokation through java reflection
@@ -42,7 +42,7 @@ public class ClassRunnerBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
             try {
                 if (className != null) {
                     log.info("Loading class " + className);
@@ -119,25 +119,25 @@ public class ClassRunnerBean extends AbstractTestAction {
                 methodToRun.invoke(instance, methodObjects);
             } catch (SecurityException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (IllegalArgumentException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (ClassNotFoundException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (NoSuchMethodException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (InstantiationException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (IllegalAccessException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             } catch (InvocationTargetException e) {
                 log.error("Invocation failed due to errors", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
     }
 

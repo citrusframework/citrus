@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Message processor having 0-n message handlers that will take care of incoming messages.
@@ -12,7 +12,7 @@ import com.consol.citrus.exceptions.TestSuiteException;
  *
  */
 public interface MessageProcessor {
-    Message processMessage(Message message) throws TestSuiteException;
+    Message processMessage(Message message) throws CitrusRuntimeException;
 
     List getMessageHandler();
 

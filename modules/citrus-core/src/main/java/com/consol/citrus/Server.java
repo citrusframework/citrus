@@ -2,7 +2,7 @@ package com.consol.citrus;
 
 import org.springframework.beans.factory.BeanNameAware;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  *
@@ -14,15 +14,15 @@ public interface Server extends BeanNameAware, Runnable {
 
     /**
      *
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void start() throws TestSuiteException;
+    public void start() throws CitrusRuntimeException;
 
     /**
      *
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void stop() throws TestSuiteException;
+    public void stop() throws CitrusRuntimeException;
 
     /**
      *

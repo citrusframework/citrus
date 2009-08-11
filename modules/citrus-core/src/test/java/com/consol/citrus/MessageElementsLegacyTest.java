@@ -13,7 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
@@ -109,7 +109,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testValidateMessageElementsWrongExpectedElement() {
         reset(messageReceiver);
         
@@ -181,7 +181,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
         reset(messageReceiver);
         
@@ -339,7 +339,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testSetMessageElementsError() {
         reset(messageReceiver);
         
@@ -371,7 +371,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testSetMessageElementAttributesError() {
         reset(messageReceiver);
         
@@ -403,7 +403,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testSetMessageElementAttributesErrorWrongElement() {
         reset(messageReceiver);
         
@@ -509,7 +509,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariables().get("valueB"), "B");
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testExtractMessageElementsForWrongElement() {
         reset(messageReceiver);
         
@@ -544,7 +544,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         Assert.assertFalse(context.getVariables().containsKey("valueB"));
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testExtractMessageElementsForWrongAtribute() {
         reset(messageReceiver);
         

@@ -3,8 +3,9 @@ package com.consol.citrus.functions;
 import java.text.ParseException;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.exceptions.VariableNameValueException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.NoSuchFunctionException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.variable.VariableUtils;
 
 public class FunctionUtils {
@@ -14,7 +15,7 @@ public class FunctionUtils {
      * @param str
      * @return
      */
-    public static String replaceFunctionsInString(String str, TestContext context) throws TestSuiteException {
+    public static String replaceFunctionsInString(String str, TestContext context) throws CitrusRuntimeException {
         return replaceFunctionsInString(str, context, false);
     }
    
@@ -23,7 +24,7 @@ public class FunctionUtils {
      * @param enableQuoting
      * @return
      */
-    public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) throws TestSuiteException {
+    public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) throws CitrusRuntimeException {
         String newString = stringValue;
 
         StringBuffer strBuffer = new StringBuffer();
@@ -64,7 +65,7 @@ public class FunctionUtils {
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
                 if (value == null) {
-                    throw new VariableNameValueException("Function: " + variableNameBuf.toString() + " could not be found");
+                    throw new NoSuchFunctionException("Function: " + variableNameBuf.toString() + " could not be found");
                 }
 
                 strBuffer.append(newString.substring(startIndex, searchIndex));
@@ -95,7 +96,7 @@ public class FunctionUtils {
      * @param functionString
      * @return
      */
-    public static String resolveFunction(String functionString, TestContext context) throws TestSuiteException {
+    public static String resolveFunction(String functionString, TestContext context) throws CitrusRuntimeException {
         functionString = VariableUtils.cutOffVariablesPrefix(functionString);
 
         String functionPrefix = functionString.substring(0, functionString.indexOf(':')+1);
@@ -108,7 +109,7 @@ public class FunctionUtils {
             parameterString = VariableUtils.replaceVariablesInString(parameterString, context);
             parameterString = replaceFunctionsInString(parameterString, context);
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         return library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString));

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.consol.citrus.actions.StartupBean;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.ShutdownThread;
 
 /**
@@ -86,7 +86,7 @@ public class LoopBackRunner {
 
             try {
                 starter.execute(null);
-            } catch (TestSuiteException e) {
+            } catch (CitrusRuntimeException e) {
                 log.error("Failed to start jms loopback", e);
                 exitWithError = true;
             }

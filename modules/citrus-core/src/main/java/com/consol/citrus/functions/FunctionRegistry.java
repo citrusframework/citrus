@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class FunctionRegistry {
     /** list of libraries providing custom functions */
@@ -37,9 +37,9 @@ public class FunctionRegistry {
      * Get library for function prefix.
      * @param functionPrefix to be searched for
      * @return FunctionLibrary instance
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public FunctionLibrary getLibraryForPrefix(String functionPrefix) throws TestSuiteException {
+    public FunctionLibrary getLibraryForPrefix(String functionPrefix) throws CitrusRuntimeException {
         for (int i = 0; i < functionLibraries.size(); i++) {
             if (((FunctionLibrary)functionLibraries.get(i)).getPrefix().equals(functionPrefix)) {
                 return (FunctionLibrary)functionLibraries.get(i);

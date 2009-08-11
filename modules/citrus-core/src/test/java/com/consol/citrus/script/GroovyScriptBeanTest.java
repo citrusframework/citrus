@@ -5,7 +5,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class GroovyScriptBeanTest extends AbstractBaseTest {
     
@@ -23,14 +23,14 @@ public class GroovyScriptBeanTest extends AbstractBaseTest {
         bean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testScriptFailure() {
         GroovyScriptBean bean = new GroovyScriptBean();
         bean.setScript("Some wrong script");
         bean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testFileNotFound() {
         GroovyScriptBean bean = new GroovyScriptBean();
         bean.setFileResource(new FileSystemResource("some/wrong/path/test.groovy"));

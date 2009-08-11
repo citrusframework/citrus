@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.Function;
 
 public class RandomStringFunction implements Function {
@@ -30,7 +30,7 @@ public class RandomStringFunction implements Function {
 
     private static final String MIXED = "MIXED";
 
-    public String execute(List<String> parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws CitrusRuntimeException {
         int numberOfLetters;
         String notationMethod;
 

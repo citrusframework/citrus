@@ -14,7 +14,7 @@ import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.message.MessageSender;
 
@@ -79,7 +79,7 @@ public class JmsSyncMessageSender implements MessageSender {
                 replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage));
             }
         } catch (JMSException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);

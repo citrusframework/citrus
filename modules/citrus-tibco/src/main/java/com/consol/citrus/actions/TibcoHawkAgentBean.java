@@ -9,7 +9,7 @@ import COM.TIBCO.hawk.console.hawkeye.TIBHawkConsole;
 import COM.TIBCO.hawk.talon.*;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class TibcoHawkAgentBean extends AbstractTestAction implements InitializingBean {
     /**
@@ -31,7 +31,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     private DataElement[] methodParameters;
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         if (hawkDomain == null || hawkDomain.trim().length() == 0) {
             log.info("Skip TibcoHawkAgentBean because hawk domain is not set properly");
             return;
@@ -59,7 +59,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
                 printData(maData);
             }
         } catch (Exception e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             log.info("Shutting down tibco agent manager");
             agentManager.shutdown();
@@ -69,9 +69,9 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     /**
      * Printing result data to console
      * @param madata
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    private void printData(Object madata) throws TestSuiteException
+    private void printData(Object madata) throws CitrusRuntimeException
     {
         // it could be CompositeData
         if (madata instanceof CompositeData) {

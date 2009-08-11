@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
 public class StaticResponseProducingMessageHandler implements MessageHandler {
@@ -15,7 +15,7 @@ public class StaticResponseProducingMessageHandler implements MessageHandler {
     
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
     
-    public Message handleMessage(Message message) throws TestSuiteException {
+    public Message handleMessage(Message message) throws CitrusRuntimeException {
         return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();
     }
 

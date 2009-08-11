@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.XMLUtils;
 
@@ -23,7 +23,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
     private String messageHandlerContext;
     
-    public Message handleMessage(Message request) throws TestSuiteException {
+    public Message handleMessage(Message request) throws CitrusRuntimeException {
         Assert.notNull(messageHandlerContext, "MessageHandler application context must not be empty or null");
         
         try {
@@ -41,7 +41,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
             }
 
             if (matchingElement == null) {
-                throw new TestSuiteException("Could not find matching element '" + xpathMappingExpression + "' in message");
+                throw new CitrusRuntimeException("Could not find matching element '" + xpathMappingExpression + "' in message");
             }
 
             //TODO support FileSystemContext
@@ -51,12 +51,12 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
             if (handler != null) {
                 return handler.handleMessage(request);
             } else {
-                throw new TestSuiteException("Could not find message handler with name '" + matchingElement.getNodeName() + "' in '" + messageHandlerContext + "'");
+                throw new CitrusRuntimeException("Could not find message handler with name '" + matchingElement.getNodeName() + "' in '" + messageHandlerContext + "'");
             }
         } catch (SAXException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
     

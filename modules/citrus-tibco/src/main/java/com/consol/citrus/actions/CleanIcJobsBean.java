@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.tibco.workflow.api.WfClient;
 import com.tibco.workflow.api.WfJob;
 import com.tibco.workflow.api.WfSession;
@@ -37,7 +37,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(CleanIcJobsBean.class);
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         int cntJobsDeleted = 0;
 
         if (serverName == null || serverName.trim().length() == 0) {
@@ -91,7 +91,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
                 }
             }
 
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 

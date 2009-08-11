@@ -15,7 +15,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 @Aspect
 public class StoreMessageInterceptorAspect {
@@ -70,7 +70,7 @@ public class StoreMessageInterceptorAspect {
             }
             
         } catch (IOException e) {
-            throw new TestSuiteException("Error while trying to save incoming message to filesystem", e);
+            throw new CitrusRuntimeException("Error while trying to save incoming message to filesystem", e);
         } finally {
             if(output != null) {
                 try {

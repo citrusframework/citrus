@@ -12,9 +12,9 @@ import org.springframework.integration.core.Message;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.VariableNameValueException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -51,9 +51,9 @@ public class TestContext {
      * Expression can be a constant, function or simple variable name.
      * @param variableExpression expression to be parsed
      * @return value of variable as String
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public String getVariable(final String variableExpression) throws TestSuiteException {
+    public String getVariable(final String variableExpression) throws CitrusRuntimeException {
         String value = null;
 
         if (variables.containsKey(VariableUtils.cutOffVariablesPrefix(variableExpression))) {
@@ -61,7 +61,7 @@ public class TestContext {
         }
 
         if (value == null) {
-            throw new TestSuiteException("Unknown variable " + variableExpression);
+            throw new CitrusRuntimeException("Unknown variable " + variableExpression);
         }
 
         return value;
@@ -72,15 +72,15 @@ public class TestContext {
      * @param variableName, name of new variable
      * @param value, value of new variable
      * @return
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void setVariable(final String variableName, String value) throws TestSuiteException {
+    public void setVariable(final String variableName, String value) throws CitrusRuntimeException {
         if (variableName == null || variableName.length() == 0 || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
-            throw new TestSuiteException("No variable name defined");
+            throw new CitrusRuntimeException("No variable name defined");
         }
 
         if (value == null) {
-            throw new VariableNameValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but value is null");
+            throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but value is null");
         }
 
         if(log.isDebugEnabled()) {
@@ -112,10 +112,9 @@ public class TestContext {
      * @param messageElements map holding variable names and xpath expressions.
      * @param doc W3C XML document, holding the variable values.
      * @throws UnknownElementException
-     * @throws VariableNameValueException
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void createVariablesFromMessageValues(final Map messageElements, Message message) throws UnknownElementException, VariableNameValueException, TestSuiteException {
+    public void createVariablesFromMessageValues(final Map messageElements, Message message) throws UnknownElementException, CitrusRuntimeException {
         if (messageElements == null || messageElements.isEmpty()) return;
 
         if(log.isDebugEnabled()) {
@@ -163,9 +162,8 @@ public class TestContext {
      * the values are replaced by the variables current value.
      *
      * @param map
-     * @throws VariableNameValueException
      */
-    public Map replaceVariablesInMap(final Map map) throws VariableNameValueException, TestSuiteException {
+    public Map replaceVariablesInMap(final Map map) throws CitrusRuntimeException {
         Map target = new HashMap();
         
         for (Iterator iterMap = map.entrySet().iterator(); iterMap.hasNext();) {
@@ -190,10 +188,9 @@ public class TestContext {
     /**
      * Replace variables in list with respective values
      * @param list
-     * @throws VariableNameValueException
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public List replaceVariablesInList(List list) throws VariableNameValueException, TestSuiteException {
+    public List replaceVariablesInList(List list) throws CitrusRuntimeException {
         List variableFreeList = new ArrayList();
 
         for (int i = 0; i < list.size(); i++) {
@@ -216,9 +213,8 @@ public class TestContext {
      *
      * @param extractHeaderValues map containing elements to be extracted from message header
      * @param receivedHeaderValues header elements from received message
-     * @throws VariableNameValueException
      */
-    public void createVariablesFromHeaderValues(final Map extractHeaderValues, final Map receivedHeaderValues) throws UnknownElementException, VariableNameValueException, TestSuiteException {
+    public void createVariablesFromHeaderValues(final Map extractHeaderValues, final Map receivedHeaderValues) throws UnknownElementException, CitrusRuntimeException {
         if (extractHeaderValues== null || extractHeaderValues.isEmpty()) return;
 
         for (Iterator iter = extractHeaderValues.entrySet().iterator(); iter.hasNext();) {
@@ -244,14 +240,13 @@ public class TestContext {
      * @param messageElements map holding the elements to be overwritten
      * @param doc XML document
      * @throws UnknownElementException
-     * @throws VariableNameValueException
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public String replaceMessageValues(final Map messageElements, String messagePayload) throws TestSuiteException {
+    public String replaceMessageValues(final Map messageElements, String messagePayload) throws CitrusRuntimeException {
         Document doc = XMLUtils.parseMessagePayload(messagePayload);
 
         if (doc == null) {
-            throw new TestSuiteException("Not able to set message elements, because no XML ressource defined");
+            throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
         }
         
         Iterator it = messageElements.entrySet().iterator();
@@ -267,7 +262,7 @@ public class TestContext {
             } 
 
             if (valueExpression == null) {
-                throw new TestSuiteException("Can not set null values in XML document - path expression is " + pathExpression);
+                throw new CitrusRuntimeException("Can not set null values in XML document - path expression is " + pathExpression);
             }
             
             Node node;
@@ -344,10 +339,10 @@ public class TestContext {
      * Method to combine the replacement of old variable declaration (%) and new one (${...})
      * @param str
      * @return
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str) throws TestSuiteException, ParseException {
+    public String replaceDynamicContentInString(String str) throws CitrusRuntimeException, ParseException {
         str = VariableUtils.replaceVariablesInString(str, this);
         str = FunctionUtils.replaceFunctionsInString(str, this);
         return str;
@@ -358,10 +353,10 @@ public class TestContext {
      * @param str
      * @param enableQuoting
      * @return
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str, boolean enableQuoting) throws TestSuiteException, ParseException {
+    public String replaceDynamicContentInString(String str, boolean enableQuoting) throws CitrusRuntimeException, ParseException {
         str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
         str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
         return str;

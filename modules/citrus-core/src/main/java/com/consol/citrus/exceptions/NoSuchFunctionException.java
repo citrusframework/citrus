@@ -1,6 +1,11 @@
 package com.consol.citrus.exceptions;
 
-public class NoSuchFunctionException extends TestSuiteException {
+/**
+ * Unknown functions cause this exception.
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ *
+ */
+public class NoSuchFunctionException extends CitrusRuntimeException {
 
     public NoSuchFunctionException() {
         super();

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -48,9 +48,9 @@ public class TestCase implements BeanNameAware {
     /**
      * Method executes a test case.
      * @return boolean flag to mark success
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void execute() throws TestSuiteException {
+    public void execute() throws CitrusRuntimeException {
         if (log.isDebugEnabled()) {
             log.debug("Initializing TestCase");
         }
@@ -98,9 +98,9 @@ public class TestCase implements BeanNameAware {
      * Method that will be executed in any case of test case result (success, error)
      * Usually used to clean up the database in any case
      * @return boolean flag to mark success
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void finish() throws TestSuiteException {
+    public void finish() throws CitrusRuntimeException {
         if (!finallyChain.isEmpty()) {
             log.info("Now reaching finally block to finish test case");
         }

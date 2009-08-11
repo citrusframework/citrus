@@ -11,7 +11,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 
 
@@ -48,10 +48,10 @@ public class SendMessageBean extends AbstractTestAction {
      * 3. The message is sent via respective service.
      *
      * @return boolean success flag
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         try {
             String messagePayload = null;
             
@@ -69,7 +69,7 @@ public class SendMessageBean extends AbstractTestAction {
             } else if (messageData != null){
                 messagePayload = context.replaceDynamicContentInString(messageData);
             } else {
-                throw new TestSuiteException("Could not find message data. Either message-data or message-resource must be specified");
+                throw new CitrusRuntimeException("Could not find message data. Either message-data or message-resource must be specified");
             }
 
             /* explicitly overwrite message elements */
@@ -84,9 +84,9 @@ public class SendMessageBean extends AbstractTestAction {
             /* message is sent */
             messageSender.send(sendMessage);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 

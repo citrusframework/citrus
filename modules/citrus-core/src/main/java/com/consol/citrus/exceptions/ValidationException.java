@@ -1,11 +1,9 @@
 package com.consol.citrus.exceptions;
 
 /**
- * Custom exception
+ * If validation fails throw this exception
  */
-public class ValidationException extends TestSuiteException {
-
-    private static final long serialVersionUID = 5568293757540239407L;
+public class ValidationException extends CitrusRuntimeException {
 
     public ValidationException() {
     }

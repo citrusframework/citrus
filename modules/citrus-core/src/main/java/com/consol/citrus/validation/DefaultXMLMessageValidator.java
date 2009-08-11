@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.FunctionRegistry;
@@ -55,7 +55,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.MessageValidator#validateMessage(com.consol.citrus.message.Message, com.consol.citrus.message.Message, java.util.Map)
      */
-    public boolean validateMessage(Message expectedMessage, Message receivedMessage, Set<String> ignoreElements, TestContext context) throws TestSuiteException {
+    public boolean validateMessage(Message expectedMessage, Message receivedMessage, Set<String> ignoreElements, TestContext context) throws CitrusRuntimeException {
         try {
             log.info("Start XML tree validation");
             
@@ -78,11 +78,11 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 
             return true;
         } catch (ClassCastException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (DOMException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (LSException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Validation failed!", e);
         }
@@ -92,7 +92,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.MessageValidator#validateMessageHeader(java.util.Map, java.util.Map)
      */
-    public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) throws TestSuiteException {
+    public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) throws CitrusRuntimeException {
         if (expectedHeaderValues == null) return false;
         if (expectedHeaderValues.isEmpty()) return true;
         
@@ -155,7 +155,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         return true;
     }
     
-    public boolean validateMessageElements(Map<String, String> elements, Message receivedMessage, TestContext context) throws TestSuiteException {
+    public boolean validateMessageElements(Map<String, String> elements, Message receivedMessage, TestContext context) throws CitrusRuntimeException {
         return validateMessageElements(elements, receivedMessage, null, context);
     }
 
@@ -163,7 +163,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateMessageElements(java.util.Map, org.w3c.dom.Document)
      */
-    public boolean validateMessageElements(Map<String, String> validateElements, Message receivedMessage, NamespaceContext nsContext, TestContext context) throws TestSuiteException {
+    public boolean validateMessageElements(Map<String, String> validateElements, Message receivedMessage, NamespaceContext nsContext, TestContext context) throws CitrusRuntimeException {
         if (validateElements == null) return false;
         if (validateElements.isEmpty()) return true;
         
@@ -242,7 +242,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateDTD(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
      */
-    public boolean validateDTD(Resource dtdResource, Message receivedMessage) throws TestSuiteException {
+    public boolean validateDTD(Resource dtdResource, Message receivedMessage) throws CitrusRuntimeException {
         //TODO implement this
         return false;
     }
@@ -251,7 +251,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateXMLSchema(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
      */
-    public boolean validateXMLSchema(Message receivedMessage) throws TestSuiteException {
+    public boolean validateXMLSchema(Message receivedMessage) throws CitrusRuntimeException {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
@@ -275,9 +275,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 throw new ValidationException("Schema validation failed!", results[0]);
             }
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (SAXException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         return true;
@@ -287,7 +287,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateNamespaces(org.w3c.dom.Document, java.util.Map)
      */
-    public boolean validateNamespaces(Map expectedNamespaces, Message receivedMessage) throws TestSuiteException {
+    public boolean validateNamespaces(Map expectedNamespaces, Message receivedMessage) throws CitrusRuntimeException {
         if (expectedNamespaces == null || expectedNamespaces.isEmpty()) {
             return true;
         }
@@ -523,7 +523,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @param node the attribute node.
      * @return boolean flag to mark ignore
      */
-    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set ignoreMessageElements) throws TestSuiteException {
+    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set ignoreMessageElements) throws CitrusRuntimeException {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
             return false;
 
@@ -583,7 +583,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @param node The node the test.
      * @return true if <tt>node</tt> has to be ignored.
      */
-    private boolean isNodeIgnored(final Node node, Set ignoreMessageElements) throws TestSuiteException {
+    private boolean isNodeIgnored(final Node node, Set ignoreMessageElements) throws CitrusRuntimeException {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
             return false;
 

@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * 
@@ -60,16 +60,16 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                 TestCase test = ((TestCaseBuilder)groovyObject).build(applicationContext);
                 return test;
             } else {
-                throw new TestSuiteException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
+                throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
             }
         } catch (InstantiationException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (CompilationFailedException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             try {
                 if(templateReader != null) {
@@ -80,7 +80,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                     bodyReader.close();
                 }
             } catch (IOException e) {
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
         }
     }

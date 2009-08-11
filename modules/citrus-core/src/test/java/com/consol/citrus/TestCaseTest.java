@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoBean;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class TestCaseTest extends AbstractBaseTest {
     
@@ -34,7 +34,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestChainAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) throws TestSuiteException {
+            public void execute(TestContext context) throws CitrusRuntimeException {
                 Assert.assertEquals(context.getVariable("${text}"), message);
             }
         });
@@ -42,7 +42,7 @@ public class TestCaseTest extends AbstractBaseTest {
         testcase.execute();
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testUnknownVariable() {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
@@ -53,7 +53,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestChainAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) throws TestSuiteException {
+            public void execute(TestContext context) throws CitrusRuntimeException {
                 Assert.assertEquals(context.getVariable("${unknown}"), message);
             }
         });

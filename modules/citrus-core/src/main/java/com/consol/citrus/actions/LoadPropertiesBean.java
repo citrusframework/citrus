@@ -13,7 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class LoadPropertiesBean extends AbstractTestAction {
 
@@ -25,7 +25,7 @@ public class LoadPropertiesBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(LoadPropertiesBean.class);
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         Resource resource;
         if (file.startsWith("classpath:")) {
             resource = new ClassPathResource(file.substring("classpath:".length()));
@@ -40,7 +40,7 @@ public class LoadPropertiesBean extends AbstractTestAction {
         try {
             props = PropertiesLoaderUtils.loadProperties(resource);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         for (Iterator iter = props.entrySet().iterator(); iter.hasNext();) {

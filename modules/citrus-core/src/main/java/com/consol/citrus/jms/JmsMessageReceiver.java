@@ -14,7 +14,7 @@ import org.springframework.integration.message.GenericMessage;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 
-import com.consol.citrus.exceptions.JmsTimeoutException;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
 
 public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implements MessageReceiver {
@@ -31,7 +31,7 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
         Object receivedObject = getJmsTemplate().receiveAndConvert();
         
         if(receivedObject == null) {
-            throw new JmsTimeoutException("Action timed out while receiving message on " + getDestinationName());
+            throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
         }
         
         Message receivedMessage;
@@ -55,7 +55,7 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
         Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
         
         if(receivedObject == null) {
-            throw new JmsTimeoutException("Action timed out while receiving message on " + getDestinationName());
+            throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
         }
         
         Message receivedMessage;

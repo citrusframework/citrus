@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean used for time measurement during test workflow
@@ -39,7 +39,7 @@ public class TimeWatcherBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         DecimalFormat decFormat = new DecimalFormat("0.0");
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');
@@ -56,7 +56,7 @@ public class TimeWatcherBean extends AbstractTestAction {
                 timeStamps.put(id, Long.valueOf(System.currentTimeMillis()));
             }
         } catch (Exception e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 

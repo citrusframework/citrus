@@ -13,7 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class GlobalVariablesPropertyLoader implements InitializingBean {
     @Autowired
@@ -59,7 +59,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                 }
             }
         } catch (IOException e) {
-            throw new TestSuiteException("Error while loading property file", e);
+            throw new CitrusRuntimeException("Error while loading property file", e);
         }
     }
     

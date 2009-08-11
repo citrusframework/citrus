@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Assert extends AbstractTestAction {
     /** TestAction to be executed */
     private TestAction action;
 
     /** Aserted exception */
-    private String exception = TestSuiteException.class.getName();
+    private String exception = CitrusRuntimeException.class.getName();
 
     /**
      * Logger
@@ -25,7 +25,7 @@ public class Assert extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute()
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.info("Assert container asserting exceptions of type " + exception);
 
         try {
@@ -42,12 +42,12 @@ public class Assert extends AbstractTestAction {
                     log.info("Exception validation OK");
                     return;
                 } else {
-                    throw new TestSuiteException("Caught exception does not fit expected exception type '" + exception + "' caught: " + e.getClass().getName());
+                    throw new CitrusRuntimeException("Caught exception does not fit expected exception type '" + exception + "' caught: " + e.getClass().getName());
                 }
             }
         }
 
-        throw new TestSuiteException("Asserted exception " + exception + " was not thrown as expected");
+        throw new CitrusRuntimeException("Asserted exception " + exception + " was not thrown as expected");
     }
 
     /**

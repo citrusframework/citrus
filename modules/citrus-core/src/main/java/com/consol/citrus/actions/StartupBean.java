@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean to start any startable test action
@@ -31,7 +31,7 @@ public class StartupBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.info("Starting up servers");
 
         for (Iterator iter = serverList.iterator(); iter.hasNext();) {

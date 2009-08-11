@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Catch extends AbstractTestAction {
     /** List of actions to be executed */
     private List actions = new ArrayList();
 
     /** Exception type to be caught */
-    private String exception = TestSuiteException.class.getName();
+    private String exception = CitrusRuntimeException.class.getName();
 
     /**
      * Logger
@@ -28,7 +28,7 @@ public class Catch extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute()
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.debug("Catch container catching exceptions of type " + exception);
 
         for (int i = 0; i < actions.size(); i++) {
@@ -45,7 +45,7 @@ public class Catch extends AbstractTestAction {
                     log.info("Caught exception " + e.getClass() + ": " + e.getLocalizedMessage());
                     continue;
                 }
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
         }
     }

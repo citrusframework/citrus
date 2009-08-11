@@ -25,7 +25,7 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
 
 public class WebServiceEndpoint implements MessageEndpoint {
@@ -78,7 +78,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                         }
                     } catch (Exception e) {
                         log.error("Error during request processing:", e);
-                        throw new TestSuiteException(e);
+                        throw new CitrusRuntimeException(e);
                     }
 
                     return msg;
@@ -102,7 +102,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 }
             } catch (Exception e) {
                 log.error("Error during response processing:", e);
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
         } else if (mode == MODE_STANDALONE){
             createResponse(msgContext);
@@ -126,7 +126,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             reader = new InputStreamReader(responseMessageResource.getInputStream());
             parser.parse(new InputSource(reader));
         } else {
-            throw new TestSuiteException("Could not create default response message as no default message defined");
+            throw new CitrusRuntimeException("Could not create default response message as no default message defined");
         }
 
         soapResponse.getSaajMessage().getSOAPBody().addDocument(parser.getDocument());

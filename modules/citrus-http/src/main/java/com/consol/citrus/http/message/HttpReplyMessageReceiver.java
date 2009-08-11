@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.message.ReplyMessageReceiver;
 
@@ -81,7 +81,7 @@ public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
 
             httpResponse = MessageBuilder.withPayload(contentBuffer.toString()).copyHeaders(responseHeaders).build();
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         return httpResponse;

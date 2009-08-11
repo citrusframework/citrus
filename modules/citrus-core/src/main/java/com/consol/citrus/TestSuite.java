@@ -10,7 +10,7 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.Reporter;
 
 /**
@@ -79,7 +79,7 @@ public class TestSuite implements BeanNameAware {
      * @param ctx ApplicationContext containing test and service beans
      * @return success flag
      */
-    public boolean beforeSuite() throws TestSuiteException {
+    public boolean beforeSuite() throws CitrusRuntimeException {
         for (int j = 0; j < reporter.size(); j++) {
             ((Reporter)reporter.get(j)).onStart(this);
         }
@@ -151,7 +151,7 @@ public class TestSuite implements BeanNameAware {
             }
         } else {
             for (int j = 0; j < reporter.size(); j++) {
-                ((Reporter)reporter.get(j)).onFinishFailure(this, new TestSuiteException("Error in clean up phase"));
+                ((Reporter)reporter.get(j)).onFinishFailure(this, new CitrusRuntimeException("Error in clean up phase"));
                 ((Reporter)reporter.get(j)).generateReport(this);
             }
         }
@@ -248,7 +248,7 @@ public class TestSuite implements BeanNameAware {
         return success;
     }
 
-    public void beforeTest() throws TestSuiteException {
+    public void beforeTest() throws CitrusRuntimeException {
         if (tasksBetween == null || tasksBetween.isEmpty()) {
             return;
         }

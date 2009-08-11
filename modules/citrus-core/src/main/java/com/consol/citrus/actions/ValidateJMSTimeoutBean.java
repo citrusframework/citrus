@@ -6,8 +6,8 @@ import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.JmsTimeoutException;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 
 /**
@@ -35,7 +35,7 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         try {
             Message receivedMessage;
             
@@ -50,9 +50,9 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
                     log.debug("Received message: " + receivedMessage.getPayload());
                 }
                 
-                throw new TestSuiteException("JMS timeout validation failed, because test suite received message on destination");
+                throw new CitrusRuntimeException("JMS timeout validation failed, because test suite received message on destination");
             }
-        } catch (JmsTimeoutException e) {
+        } catch (ActionTimeoutException e) {
             log.info("Received timeout as expected. JMS timeout validation OK!");
         }
     }

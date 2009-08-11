@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.consol.citrus.exceptions.TestEngineFailedException;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -169,7 +169,7 @@ public class CitrusApplication {
         } catch (IOException e) {
             log.error("Error while accessing test file", e);
             throw new TestEngineFailedException("TestSuite failed with error", e);
-        }  catch (TestSuiteException e) {
+        }  catch (CitrusRuntimeException e) {
             log.error("TestEngine failed with error", e);
             throw new TestEngineFailedException("TestSuite failed with error", e);
         }

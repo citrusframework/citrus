@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean executing groovy scripts either specified inline or from external file resource.
@@ -35,7 +35,7 @@ public class GroovyScriptBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         try {
             ClassLoader parent = getClass().getClassLoader();
             GroovyClassLoader loader = new GroovyClassLoader(parent);
@@ -47,13 +47,13 @@ public class GroovyScriptBean extends AbstractTestAction {
             } else if(fileResource != null) {
                 groovyClass = loader.parseClass(fileResource.getFile());
             } else {
-                throw new TestSuiteException("Neither inline script nor " +
+                throw new CitrusRuntimeException("Neither inline script nor " +
                 		"external file resource is defined for bean. " +
                 		"Can not execute groovy script.");
             }
     
             if(groovyClass == null) {
-                throw new TestSuiteException("Could not load groovy script!");    
+                throw new CitrusRuntimeException("Could not load groovy script!");    
             }
             
             GroovyObject groovyObject;
@@ -66,15 +66,15 @@ public class GroovyScriptBean extends AbstractTestAction {
                 groovyObject.invokeMethod("run", args);
             }
         } catch (InstantiationException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (CompilationFailedException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 
