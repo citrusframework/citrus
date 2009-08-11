@@ -20,7 +20,11 @@ public class CurrentDateFunction implements Function {
      */
     private static final Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
 
-    public String execute(List<String> parameterList) throws CitrusRuntimeException {
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws CitrusRuntimeException
+     */
+    public String execute(List<String> parameterList) {
         Calendar calendar = Calendar.getInstance();
 
         String result = "";

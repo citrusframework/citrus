@@ -30,8 +30,12 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.info("Executing repeat-on-error loop - containing " + actions.size() + " actions");
 
         try {
@@ -56,7 +60,7 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
         } while (!checkCondition());
     }
 
-    private void executeActions(TestContext context) throws CitrusRuntimeException {
+    private void executeActions(TestContext context) {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
         if (autoSleep > 0) {
@@ -82,7 +86,7 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
         }
     }
 
-    private boolean checkCondition() throws CitrusRuntimeException {
+    private boolean checkCondition() {
         String conditionString = condition;
 
         if (conditionString.indexOf(indexName) != -1) {

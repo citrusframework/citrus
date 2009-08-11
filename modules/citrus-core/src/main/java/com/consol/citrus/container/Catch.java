@@ -23,12 +23,12 @@ public class Catch extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Catch.class);
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see com.consol.citrus.TestAction#execute()
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.debug("Catch container catching exceptions of type " + exception);
 
         for (int i = 0; i < actions.size(); i++) {

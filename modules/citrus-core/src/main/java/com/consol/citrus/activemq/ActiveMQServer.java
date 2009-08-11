@@ -18,6 +18,9 @@ public class ActiveMQServer implements Server {
     
     private BrokerService broker;
 
+    /**
+     * @throws CitrusRuntimeException
+     */
     public void run() {
         synchronized (this) {
             running = true;
@@ -31,7 +34,7 @@ public class ActiveMQServer implements Server {
         }
     }
     
-    public void start() throws CitrusRuntimeException {
+    public void start() {
         broker = new BrokerService();
         broker.setBrokerName(name);
         broker.setUseShutdownHook(true);
@@ -43,7 +46,10 @@ public class ActiveMQServer implements Server {
         run();
     }
     
-    public void stop() throws CitrusRuntimeException {
+    /**
+     * @throws CitrusRuntimeException
+     */
+    public void stop() {
         if(broker != null) {
             try {
                 broker.stop();

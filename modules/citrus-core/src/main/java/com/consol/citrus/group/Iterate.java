@@ -30,8 +30,12 @@ public class Iterate extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Iterate.class);
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.info("Executing iterate loop - containing " + actions.size() + " actions");
 
         try {
@@ -47,7 +51,7 @@ public class Iterate extends AbstractTestAction {
         }
     }
 
-    private void executeActions(TestContext context) throws CitrusRuntimeException {
+    private void executeActions(TestContext context) {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
         for (int i = 0; i < actions.size(); i++) {
@@ -61,7 +65,7 @@ public class Iterate extends AbstractTestAction {
         }
     }
 
-    private boolean checkCondition() throws CitrusRuntimeException {
+    private boolean checkCondition() {
         String conditionString = condition;
 
         if (conditionString.indexOf(indexName) != -1) {

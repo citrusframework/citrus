@@ -205,7 +205,11 @@ public class HttpServer implements Server, InitializingBean {
         }
     }
 
-    public void start() throws CitrusRuntimeException {
+    /**
+     * @see com.consol.citrus.Server#start()
+     * @throws CitrusRuntimeException
+     */
+    public void start() {
         log.info("[HttpServer] Starting ...");
         try {
             InetAddress addr = InetAddress.getByName(host);
@@ -229,7 +233,7 @@ public class HttpServer implements Server, InitializingBean {
         log.info("[HttpServer] Started sucessfully");
     }
 
-    public void stop() throws CitrusRuntimeException {
+    public void stop() {
         //TODO: ensure shutdown
         synchronized (this) {
             log.info("[HttpServer] Stopping Http server '" + getName() + "'");
@@ -301,7 +305,10 @@ public class HttpServer implements Server, InitializingBean {
         return deamon;
     }
 
-    public void quit() throws CitrusRuntimeException {
+    /**
+     * @throws CitrusRuntimeException
+     */
+    public void quit() {
         Writer writer = null;
 
         try {

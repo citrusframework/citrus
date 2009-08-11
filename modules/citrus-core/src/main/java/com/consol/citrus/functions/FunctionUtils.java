@@ -5,7 +5,6 @@ import java.text.ParseException;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
-import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.variable.VariableUtils;
 
 public class FunctionUtils {
@@ -15,7 +14,7 @@ public class FunctionUtils {
      * @param str
      * @return
      */
-    public static String replaceFunctionsInString(String str, TestContext context) throws CitrusRuntimeException {
+    public static String replaceFunctionsInString(String str, TestContext context) {
         return replaceFunctionsInString(str, context, false);
     }
    
@@ -24,7 +23,7 @@ public class FunctionUtils {
      * @param enableQuoting
      * @return
      */
-    public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) throws CitrusRuntimeException {
+    public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
         String newString = stringValue;
 
         StringBuffer strBuffer = new StringBuffer();
@@ -94,9 +93,10 @@ public class FunctionUtils {
     /**
      * This method resolves a custom function
      * @param functionString
+     * @throws CitrusRuntimeException
      * @return
      */
-    public static String resolveFunction(String functionString, TestContext context) throws CitrusRuntimeException {
+    public static String resolveFunction(String functionString, TestContext context) {
         functionString = VariableUtils.cutOffVariablesPrefix(functionString);
 
         String functionPrefix = functionString.substring(0, functionString.indexOf(':')+1);

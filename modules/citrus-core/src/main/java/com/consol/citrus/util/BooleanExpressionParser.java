@@ -16,7 +16,12 @@ public class BooleanExpressionParser {
      */
     private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
-    public static boolean evaluate(String expression) throws CitrusRuntimeException {
+    /**
+     * @param expression
+     * @throws CitrusRuntimeException
+     * @return
+     */
+    public static boolean evaluate(String expression) {
         boolean result = true;
 
         char actChar;

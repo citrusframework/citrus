@@ -37,9 +37,8 @@ public class FunctionRegistry {
      * Get library for function prefix.
      * @param functionPrefix to be searched for
      * @return FunctionLibrary instance
-     * @throws CitrusRuntimeException
      */
-    public FunctionLibrary getLibraryForPrefix(String functionPrefix) throws CitrusRuntimeException {
+    public FunctionLibrary getLibraryForPrefix(String functionPrefix) {
         for (int i = 0; i < functionLibraries.size(); i++) {
             if (((FunctionLibrary)functionLibraries.get(i)).getPrefix().equals(functionPrefix)) {
                 return (FunctionLibrary)functionLibraries.get(i);

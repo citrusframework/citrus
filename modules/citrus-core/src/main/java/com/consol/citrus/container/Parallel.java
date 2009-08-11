@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Parallel extends AbstractTestAction {
 
@@ -24,7 +23,7 @@ public class Parallel extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(Parallel.class);
 
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.info("Executing action parallel - containing " + actions.size() + " actions");
 
         for (int i = 0; i < actions.size(); i++) {

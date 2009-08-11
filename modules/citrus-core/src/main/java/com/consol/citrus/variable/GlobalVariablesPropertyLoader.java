@@ -27,6 +27,9 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
      */
     private static final Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
     
+    /**
+     * @throws CitrusRuntimeException
+     */
     public void loadPropertiesAsVariables() {
         try {
             if (propertyFiles != null && propertyFiles.size() >0) {

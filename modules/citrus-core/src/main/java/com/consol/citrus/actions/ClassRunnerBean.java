@@ -38,107 +38,107 @@ public class ClassRunnerBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(ClassRunnerBean.class);
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
-            try {
-                if (className != null) {
-                    log.info("Loading class " + className);
-                    
-                    Class classToRun = Class.forName(className);
-
-                    Class[] constructorTypes = new Class[constructorArgs.size()];
-                    for (int i = 0; i < constructorTypes.length; i++) {
-                        if (constructorArgs.get(i).getClass().equals(Long.class)) {
-                            constructorTypes[i] = long.class;
-                        } else if (constructorArgs.get(i).getClass().equals(Integer.class)) {
-                            constructorTypes[i] = int.class;
-                        } else if (constructorArgs.get(i).getClass().equals(Short.class)) {
-                            constructorTypes[i] = short.class;
-                        } else if (constructorArgs.get(i).getClass().equals(Double.class)) {
-                            constructorTypes[i] = double.class;
-                        } else if (constructorArgs.get(i).getClass().equals(Float.class)) {
-                            constructorTypes[i] = float.class;
-                        } else if (constructorArgs.get(i).getClass().equals(Boolean.class)) {
-                            constructorTypes[i] = boolean.class;
-                        } else {
-                            constructorTypes[i] = constructorArgs.get(i).getClass();
-                        }
-                    }
-
-                    Object[] constructorObjects = new Object[constructorArgs.size()];
-                    for (int i = 0; i < constructorObjects.length; i++) {
-                        constructorObjects[i] = constructorArgs.get(i);
-                    }
-
-                    Constructor constr = classToRun.getConstructor(constructorTypes);
-                    instance = constr.newInstance(constructorObjects);
-                }
-
-                Class[] methodTypes = new Class[methodArgs.size()];
-                for (int i = 0; i < methodTypes.length; i++) {
-                    if (methodArgs.get(i).getClass().equals(Long.class)) {
-                        methodTypes[i] = long.class;
-                    } else if (methodArgs.get(i).getClass().equals(Integer.class)) {
-                        methodTypes[i] = int.class;
-                    } else if (methodArgs.get(i).getClass().equals(Short.class)) {
-                        methodTypes[i] = short.class;
-                    } else if (methodArgs.get(i).getClass().equals(Double.class)) {
-                        methodTypes[i] = double.class;
-                    } else if (methodArgs.get(i).getClass().equals(Float.class)) {
-                        methodTypes[i] = float.class;
-                    } else if (methodArgs.get(i).getClass().equals(Boolean.class)) {
-                        methodTypes[i] = boolean.class;
-                    } else if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
-                        methodTypes[i] = String[].class;
+    public void execute(TestContext context) {
+        try {
+            if (className != null) {
+                log.info("Loading class " + className);
+                
+                Class classToRun = Class.forName(className);
+    
+                Class[] constructorTypes = new Class[constructorArgs.size()];
+                for (int i = 0; i < constructorTypes.length; i++) {
+                    if (constructorArgs.get(i).getClass().equals(Long.class)) {
+                        constructorTypes[i] = long.class;
+                    } else if (constructorArgs.get(i).getClass().equals(Integer.class)) {
+                        constructorTypes[i] = int.class;
+                    } else if (constructorArgs.get(i).getClass().equals(Short.class)) {
+                        constructorTypes[i] = short.class;
+                    } else if (constructorArgs.get(i).getClass().equals(Double.class)) {
+                        constructorTypes[i] = double.class;
+                    } else if (constructorArgs.get(i).getClass().equals(Float.class)) {
+                        constructorTypes[i] = float.class;
+                    } else if (constructorArgs.get(i).getClass().equals(Boolean.class)) {
+                        constructorTypes[i] = boolean.class;
                     } else {
-                        methodTypes[i] = methodArgs.get(i).getClass();
+                        constructorTypes[i] = constructorArgs.get(i).getClass();
                     }
                 }
-
-                Method methodToRun = instance.getClass().getMethod(methodName, methodTypes);
-
-                Object[] methodObjects = new Object[methodArgs.size()];
-                for (int i = 0; i < methodObjects.length; i++) {
-                    if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
-                        ArrayList list = (ArrayList)methodArgs.get(i);
-                        String[] converted = new String[list.size()];
-                        for (int j = 0; j < converted.length; j++) {
-                            converted[j] = (String)list.get(j);
-                        }
-                        methodObjects[i] = converted;
-                    } else {
-                        methodObjects[i] = methodArgs.get(i);
-                    }
+    
+                Object[] constructorObjects = new Object[constructorArgs.size()];
+                for (int i = 0; i < constructorObjects.length; i++) {
+                    constructorObjects[i] = constructorArgs.get(i);
                 }
-
-                log.info("Invoking method " + methodToRun.toString());
-
-                methodToRun.invoke(instance, methodObjects);
-            } catch (SecurityException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (IllegalArgumentException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (NoSuchMethodException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (InstantiationException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (IllegalAccessException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
-            } catch (InvocationTargetException e) {
-                log.error("Invocation failed due to errors", e);
-                throw new CitrusRuntimeException(e);
+    
+                Constructor constr = classToRun.getConstructor(constructorTypes);
+                instance = constr.newInstance(constructorObjects);
             }
+    
+            Class[] methodTypes = new Class[methodArgs.size()];
+            for (int i = 0; i < methodTypes.length; i++) {
+                if (methodArgs.get(i).getClass().equals(Long.class)) {
+                    methodTypes[i] = long.class;
+                } else if (methodArgs.get(i).getClass().equals(Integer.class)) {
+                    methodTypes[i] = int.class;
+                } else if (methodArgs.get(i).getClass().equals(Short.class)) {
+                    methodTypes[i] = short.class;
+                } else if (methodArgs.get(i).getClass().equals(Double.class)) {
+                    methodTypes[i] = double.class;
+                } else if (methodArgs.get(i).getClass().equals(Float.class)) {
+                    methodTypes[i] = float.class;
+                } else if (methodArgs.get(i).getClass().equals(Boolean.class)) {
+                    methodTypes[i] = boolean.class;
+                } else if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
+                    methodTypes[i] = String[].class;
+                } else {
+                    methodTypes[i] = methodArgs.get(i).getClass();
+                }
+            }
+    
+            Method methodToRun = instance.getClass().getMethod(methodName, methodTypes);
+    
+            Object[] methodObjects = new Object[methodArgs.size()];
+            for (int i = 0; i < methodObjects.length; i++) {
+                if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
+                    ArrayList list = (ArrayList)methodArgs.get(i);
+                    String[] converted = new String[list.size()];
+                    for (int j = 0; j < converted.length; j++) {
+                        converted[j] = (String)list.get(j);
+                    }
+                    methodObjects[i] = converted;
+                } else {
+                    methodObjects[i] = methodArgs.get(i);
+                }
+            }
+    
+            log.info("Invoking method " + methodToRun.toString());
+    
+            methodToRun.invoke(instance, methodObjects);
+        } catch (SecurityException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (InstantiationException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (IllegalAccessException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        } catch (InvocationTargetException e) {
+            log.error("Invocation failed due to errors", e);
+            throw new CitrusRuntimeException(e);
+        }
     }
 
     /**

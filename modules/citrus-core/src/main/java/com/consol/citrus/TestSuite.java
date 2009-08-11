@@ -79,7 +79,7 @@ public class TestSuite implements BeanNameAware {
      * @param ctx ApplicationContext containing test and service beans
      * @return success flag
      */
-    public boolean beforeSuite() throws CitrusRuntimeException {
+    public boolean beforeSuite() {
         for (int j = 0; j < reporter.size(); j++) {
             ((Reporter)reporter.get(j)).onStart(this);
         }
@@ -116,6 +116,7 @@ public class TestSuite implements BeanNameAware {
 
     /**
      * Execute tasks after test suite work, e.g. shutdown of db connection
+     * @throws CitrusRuntimeException
      * @return boolean flag marking success
      */
     public boolean afterSuite() {
@@ -248,7 +249,7 @@ public class TestSuite implements BeanNameAware {
         return success;
     }
 
-    public void beforeTest() throws CitrusRuntimeException {
+    public void beforeTest() {
         if (tasksBetween == null || tasksBetween.isEmpty()) {
             return;
         }

@@ -34,7 +34,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestChainAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) throws CitrusRuntimeException {
+            public void execute(TestContext context) {
                 Assert.assertEquals(context.getVariable("${text}"), message);
             }
         });
@@ -53,7 +53,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestChainAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) throws CitrusRuntimeException {
+            public void execute(TestContext context) {
                 Assert.assertEquals(context.getVariable("${unknown}"), message);
             }
         });

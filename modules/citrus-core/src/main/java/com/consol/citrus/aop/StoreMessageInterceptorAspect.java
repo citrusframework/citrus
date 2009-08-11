@@ -40,6 +40,10 @@ public class StoreMessageInterceptorAspect {
         }
     }
     
+    /**
+     * @param receivedMessage
+     * @throws CitrusRuntimeException
+     */
     private void storeMessage(Message receivedMessage) {
         Writer output = null;
         

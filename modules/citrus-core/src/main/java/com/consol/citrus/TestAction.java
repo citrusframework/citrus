@@ -11,9 +11,8 @@ public interface TestAction {
     /**
      * Main execution method doing all work
      * @param context TODO
-     * @throws CitrusRuntimeException
      */
-    public void execute(TestContext context) throws CitrusRuntimeException;
+    public void execute(TestContext context);
 
     /**
      * Name of TestAction injected as Spring bean name

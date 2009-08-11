@@ -51,11 +51,11 @@ public class ExecutePLSQLBean extends AbstractTestAction {
     }
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         BufferedReader reader = null;
         StringBuffer buffer;
         String stmt;

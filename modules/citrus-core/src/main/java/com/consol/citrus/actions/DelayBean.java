@@ -22,11 +22,11 @@ public class DelayBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(DelayBean.class);
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         String value = null;
 
         if (VariableUtils.isVariableName(delay)) {

@@ -38,6 +38,10 @@ public class HttpMessageSender implements MessageSender {
      */
     private static final Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
     
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @throws CitrusRuntimeException
+     */
     public void send(Message<?> message) {
         Writer writer = null;
         BufferedReader reader = null;

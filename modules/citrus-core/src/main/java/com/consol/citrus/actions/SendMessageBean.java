@@ -46,12 +46,12 @@ public class SendMessageBean extends AbstractTestAction {
      * 1. The message resource is parsed and message elements get overwritten
      * 2. The message header properties are set
      * 3. The message is sent via respective service.
-     *
-     * @return boolean success flag
+     * 
      * @throws CitrusRuntimeException
+     * @return boolean success flag
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         try {
             String messagePayload = null;
             

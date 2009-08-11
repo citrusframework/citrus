@@ -2,8 +2,6 @@ package com.consol.citrus;
 
 import org.springframework.beans.factory.BeanNameAware;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 /**
  *
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
@@ -12,27 +10,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public interface Server extends BeanNameAware, Runnable {
 
-    /**
-     *
-     * @throws CitrusRuntimeException
-     */
-    public void start() throws CitrusRuntimeException;
+    public void start();
 
-    /**
-     *
-     * @throws CitrusRuntimeException
-     */
-    public void stop() throws CitrusRuntimeException;
+    public void stop();
 
-    /**
-     *
-     * @return
-     */
     public boolean isRunning();
 
-    /**
-     *
-     * @return
-     */
     public String getName();
 }

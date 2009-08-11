@@ -50,10 +50,10 @@ public class TestContext {
      * Try to get the value for the variable expression.
      * Expression can be a constant, function or simple variable name.
      * @param variableExpression expression to be parsed
-     * @return value of variable as String
      * @throws CitrusRuntimeException
+     * @return value of variable as String
      */
-    public String getVariable(final String variableExpression) throws CitrusRuntimeException {
+    public String getVariable(final String variableExpression) {
         String value = null;
 
         if (variables.containsKey(VariableUtils.cutOffVariablesPrefix(variableExpression))) {
@@ -71,10 +71,10 @@ public class TestContext {
      * Creates a new variable with the respective value
      * @param variableName, name of new variable
      * @param value, value of new variable
-     * @return
      * @throws CitrusRuntimeException
+     * @return
      */
-    public void setVariable(final String variableName, String value) throws CitrusRuntimeException {
+    public void setVariable(final String variableName, String value) {
         if (variableName == null || variableName.length() == 0 || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
             throw new CitrusRuntimeException("No variable name defined");
         }
@@ -112,9 +112,8 @@ public class TestContext {
      * @param messageElements map holding variable names and xpath expressions.
      * @param doc W3C XML document, holding the variable values.
      * @throws UnknownElementException
-     * @throws CitrusRuntimeException
      */
-    public void createVariablesFromMessageValues(final Map messageElements, Message message) throws UnknownElementException, CitrusRuntimeException {
+    public void createVariablesFromMessageValues(final Map messageElements, Message message) throws UnknownElementException {
         if (messageElements == null || messageElements.isEmpty()) return;
 
         if(log.isDebugEnabled()) {
@@ -163,7 +162,7 @@ public class TestContext {
      *
      * @param map
      */
-    public Map replaceVariablesInMap(final Map map) throws CitrusRuntimeException {
+    public Map replaceVariablesInMap(final Map map) {
         Map target = new HashMap();
         
         for (Iterator iterMap = map.entrySet().iterator(); iterMap.hasNext();) {
@@ -188,9 +187,8 @@ public class TestContext {
     /**
      * Replace variables in list with respective values
      * @param list
-     * @throws CitrusRuntimeException
      */
-    public List replaceVariablesInList(List list) throws CitrusRuntimeException {
+    public List replaceVariablesInList(List list) {
         List variableFreeList = new ArrayList();
 
         for (int i = 0; i < list.size(); i++) {
@@ -214,7 +212,7 @@ public class TestContext {
      * @param extractHeaderValues map containing elements to be extracted from message header
      * @param receivedHeaderValues header elements from received message
      */
-    public void createVariablesFromHeaderValues(final Map extractHeaderValues, final Map receivedHeaderValues) throws UnknownElementException, CitrusRuntimeException {
+    public void createVariablesFromHeaderValues(final Map extractHeaderValues, final Map receivedHeaderValues) throws UnknownElementException {
         if (extractHeaderValues== null || extractHeaderValues.isEmpty()) return;
 
         for (Iterator iter = extractHeaderValues.entrySet().iterator(); iter.hasNext();) {
@@ -239,10 +237,10 @@ public class TestContext {
      *
      * @param messageElements map holding the elements to be overwritten
      * @param doc XML document
-     * @throws UnknownElementException
      * @throws CitrusRuntimeException
+     * @throws UnknownElementException
      */
-    public String replaceMessageValues(final Map messageElements, String messagePayload) throws CitrusRuntimeException {
+    public String replaceMessageValues(final Map messageElements, String messagePayload) {
         Document doc = XMLUtils.parseMessagePayload(messagePayload);
 
         if (doc == null) {
@@ -339,10 +337,9 @@ public class TestContext {
      * Method to combine the replacement of old variable declaration (%) and new one (${...})
      * @param str
      * @return
-     * @throws CitrusRuntimeException
      * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str) throws CitrusRuntimeException, ParseException {
+    public String replaceDynamicContentInString(String str) throws ParseException {
         str = VariableUtils.replaceVariablesInString(str, this);
         str = FunctionUtils.replaceFunctionsInString(str, this);
         return str;
@@ -353,10 +350,9 @@ public class TestContext {
      * @param str
      * @param enableQuoting
      * @return
-     * @throws CitrusRuntimeException
      * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str, boolean enableQuoting) throws CitrusRuntimeException, ParseException {
+    public String replaceDynamicContentInString(String str, boolean enableQuoting) throws ParseException {
         str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
         str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
         return str;
