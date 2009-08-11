@@ -1,8 +1,9 @@
 package com.consol.citrus.actions;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class ReceiveJMSTimoutTest extends AbstractIntegrationTest {
     @Test
-    public void receiveJMSTimeoutTest() {
-        executeTest();
+    public void receiveJMSTimeoutTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }

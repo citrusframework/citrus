@@ -1,8 +1,9 @@
 package com.consol.citrus.validation;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class ValidateValuesWithNamespaceTest extends AbstractIntegrationTest {
     @Test
-    public void validateValuesWithNamespaceTest() {
-        executeTest();
+    public void validateValuesWithNamespaceTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }

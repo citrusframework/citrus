@@ -1,8 +1,9 @@
 package com.consol.citrus.script;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class GroovyTest extends AbstractIntegrationTest {
     @Test
-    public void groovyTest() {
-        executeTest();
+    public void groovyTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }
