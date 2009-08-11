@@ -48,9 +48,8 @@ public class TestCase implements BeanNameAware {
     /**
      * Method executes a test case.
      * @return boolean flag to mark success
-     * @throws CitrusRuntimeException
      */
-    public void execute() throws CitrusRuntimeException {
+    public void execute() {
         if (log.isDebugEnabled()) {
             log.debug("Initializing TestCase");
         }
@@ -98,9 +97,8 @@ public class TestCase implements BeanNameAware {
      * Method that will be executed in any case of test case result (success, error)
      * Usually used to clean up the database in any case
      * @return boolean flag to mark success
-     * @throws CitrusRuntimeException
      */
-    public void finish() throws CitrusRuntimeException {
+    public void finish() {
         if (!finallyChain.isEmpty()) {
             log.info("Now reaching finally block to finish test case");
         }

@@ -81,14 +81,12 @@ public class FileUtils {
      *
      * @param startDir directory where to start the search
      * @param testName test name to search for
-     * @parem fileExtension file extension to search for
-     * @return the name of test file
+     * @param fileExtension file extension to search for
      * @throws CitrusRuntimeException
-     * @throws IOException
-     * @throws FileNotFoundException
+     * @return the name of test file
      */
     public static String getTestFileForTest(final String startDir, final String testName, final String fileExtension)
-    throws CitrusRuntimeException, IOException, FileNotFoundException {
+        throws IOException, FileNotFoundException {
         /* Stack to hold potential sub directories */
         final Stack dirs = new Stack();
         /* start directory */

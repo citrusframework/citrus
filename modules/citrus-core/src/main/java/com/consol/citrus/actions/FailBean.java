@@ -9,8 +9,12 @@ public class FailBean extends AbstractTestAction {
 
     private String message = "Generated error to interrupt test execution";
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         try {
             throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));
         } catch (ParseException e) {

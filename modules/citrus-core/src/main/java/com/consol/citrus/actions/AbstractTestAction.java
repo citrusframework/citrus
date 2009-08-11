@@ -11,7 +11,10 @@ public abstract class AbstractTestAction implements TestAction {
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
 
-    public abstract void execute(TestContext context) throws CitrusRuntimeException;
+    /**
+     * @throws CitrusRuntimeException
+     */
+    public abstract void execute(TestContext context);
 
     public String getDescription() {
         return description;

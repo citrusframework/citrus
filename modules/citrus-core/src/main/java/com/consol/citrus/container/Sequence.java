@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Sequence to perform a block of other actions in sequence
@@ -31,7 +30,7 @@ public class Sequence extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute()
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.info("Executing action sequence - containing " + actions.size() + " actions");
 
         for (int i = 0; i < actions.size(); i++) {

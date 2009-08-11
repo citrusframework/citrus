@@ -35,11 +35,11 @@ public class TimeWatcherBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(TimeWatcherBean.class);
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         DecimalFormat decFormat = new DecimalFormat("0.0");
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');

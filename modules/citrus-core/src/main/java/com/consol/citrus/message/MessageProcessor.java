@@ -4,15 +4,13 @@ import java.util.List;
 
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 /**
  * Message processor having 0-n message handlers that will take care of incoming messages.
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  *
  */
 public interface MessageProcessor {
-    Message processMessage(Message message) throws CitrusRuntimeException;
+    Message processMessage(Message message);
 
     List getMessageHandler();
 

@@ -25,11 +25,11 @@ public class InfoBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(InfoBean.class);
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         boolean isSuccess = true;
 
         Iterator it;

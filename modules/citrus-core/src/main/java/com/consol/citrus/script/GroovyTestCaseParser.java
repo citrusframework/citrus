@@ -28,6 +28,11 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
         public TestCase build(ApplicationContext applicationContext);
     }
     
+    /**
+     * @param groovyScript
+     * @throws CitrusRuntimeException
+     * @return
+     */
     public TestCase parse(Resource groovyScript) {
         BufferedReader templateReader = null;
         BufferedReader bodyReader = null;

@@ -20,12 +20,12 @@ public class Assert extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Assert.class);
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see com.consol.citrus.TestAction#execute()
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         log.info("Assert container asserting exceptions of type " + exception);
 
         try {

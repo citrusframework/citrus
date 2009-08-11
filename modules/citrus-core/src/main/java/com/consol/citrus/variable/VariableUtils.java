@@ -4,9 +4,7 @@ import java.text.ParseException;
 
 import com.consol.citrus.TestConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchVariableException;
-import com.consol.citrus.exceptions.VariableNullValueException;
 
 public class VariableUtils {
     /**
@@ -44,9 +42,8 @@ public class VariableUtils {
     * @param str
     * @return
     * @throws ParseException
-    * @throws CitrusRuntimeException
     */
-   public static String replaceVariablesInString(final String str, TestContext context) throws ParseException, CitrusRuntimeException {
+   public static String replaceVariablesInString(final String str, TestContext context) throws ParseException {
        return replaceVariablesInString(str, context, false);
    }
 
@@ -56,9 +53,8 @@ public class VariableUtils {
     * @param enableQuoting
     * @return
     * @throws ParseException
-    * @throws CitrusRuntimeException
     */
-   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) throws ParseException, CitrusRuntimeException {
+   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) throws ParseException {
        StringBuffer newStr = new StringBuffer();
 
        boolean isVarComplete = false;

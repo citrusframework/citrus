@@ -6,8 +6,6 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
 
     private String xmlData;
@@ -19,7 +17,7 @@ public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
 
     private String handlerName;
 
-    public Message handleMessage(Message message) throws CitrusRuntimeException {
+    public Message handleMessage(Message message) {
         log.info("MessageHandler " + handlerName  + " handling message " + message.getPayload());
 
         Message response;

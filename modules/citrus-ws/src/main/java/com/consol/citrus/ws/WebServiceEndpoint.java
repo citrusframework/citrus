@@ -54,8 +54,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
     private static final Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
 
     /**
-     * (non-Javadoc)
      * @see org.springframework.ws.server.endpoint.MessageEndpoint#invoke(org.springframework.ws.context.MessageContext)
+     * @throws CitrusRuntimeException
      */
     public void invoke(final MessageContext msgContext) throws Exception {
         if (mode == MODE_USE_TESTSUITE) {
@@ -109,6 +109,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
     }
 
+    /**
+     * @param msgContext
+     * @return
+     * @throws SAXException
+     * @throws IOException
+     * @throws SOAPException
+     * @throws CitrusRuntimeException
+     */
     private SaajSoapMessage createResponse(final MessageContext msgContext) throws SAXException, IOException, SOAPException {
         SaajSoapMessage soapResponse = (SaajSoapMessage)msgContext.getResponse();
 

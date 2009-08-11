@@ -23,6 +23,10 @@ public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
      */
     private static final Logger log = LoggerFactory.getLogger(HttpReplyMessageReceiver.class);
     
+    /**
+     * @see com.consol.citrus.message.ReplyMessageReceiver#receive()
+     * @throws CitrusRuntimeException
+     */
     @Override
     public Message<?> receive() {
         if (log.isDebugEnabled()) {

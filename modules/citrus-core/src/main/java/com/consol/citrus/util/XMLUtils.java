@@ -99,9 +99,10 @@ public class XMLUtils {
      * Finds a node in the dom tree using XPath
      * @param node the xml node
      * @param xpath the XPath expression
+     * @throws CitrusRuntimeException
      * @return the node searched for
      */
-    public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) throws CitrusRuntimeException {
+    public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) {
         try {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
@@ -144,9 +145,10 @@ public class XMLUtils {
     /**
      * Evaluates the XPath expression to return the respective value
      * @param node
+     * @throws CitrusRuntimeException
      * @return
      */
-    public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext) throws CitrusRuntimeException  {
+    public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext)  {
         try {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
@@ -242,10 +244,10 @@ public class XMLUtils {
     /**
      * Serializes a DOM document
      * @param doc
-     * @return serialized xml string
      * @throws CitrusRuntimeException
+     * @return serialized xml string
      */
-    public static String serialize(Document doc) throws CitrusRuntimeException {
+    public static String serialize(Document doc) {
         LSSerializer serializer = null;
 
         try {
@@ -267,10 +269,10 @@ public class XMLUtils {
     /**
      * Serializes a DOM document
      * @param doc
-     * @return serialized xml string
      * @throws CitrusRuntimeException
+     * @return serialized xml string
      */
-    public static String prettyPrint(String xml) throws CitrusRuntimeException {
+    public static String prettyPrint(String xml) {
         LSParser parser = null;
 
         try {
@@ -320,6 +322,11 @@ public class XMLUtils {
         return namespaces;
     }
     
+    /**
+     * @param messagePayload
+     * @throws CitrusRuntimeException
+     * @return
+     */
     public static Document parseMessagePayload(String messagePayload) {
         try {
             if(registry == null) {

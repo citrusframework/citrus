@@ -35,8 +35,12 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
-    
-    public Message handleMessage(final Message request) throws CitrusRuntimeException {
+
+    /**
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @throws CitrusRuntimeException
+     */
+    public Message handleMessage(final Message request) {
         log.info("[HttpServer] Forwarding request to: " + getDestinationName());
 
         if(log.isDebugEnabled()) {

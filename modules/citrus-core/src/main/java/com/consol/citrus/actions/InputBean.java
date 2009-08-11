@@ -25,8 +25,12 @@ public class InputBean extends AbstractTestAction {
 
     private String validAnswers;
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
 
         String input = null;
 

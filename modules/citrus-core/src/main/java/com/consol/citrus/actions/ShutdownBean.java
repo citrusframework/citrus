@@ -5,9 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.consol.citrus.Server;
-
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean to stop any stoppable test action
@@ -23,7 +21,7 @@ public class ShutdownBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         for (Iterator iter = serverList.iterator(); iter.hasNext();) {
             Server actServer = (Server) iter.next();
             actServer.stop();

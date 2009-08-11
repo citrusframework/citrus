@@ -51,11 +51,11 @@ public class ExecuteSqlBean extends AbstractTestAction {
     private boolean ignoreErrors = false;
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         BufferedReader reader = null;
         String stmt = "";
 

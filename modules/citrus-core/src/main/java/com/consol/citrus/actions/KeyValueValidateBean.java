@@ -52,12 +52,11 @@ public class KeyValueValidateBean extends AbstractTestAction {
      * Following actions will be executed:
      * <p>1. The message is received.
      * <p>2. The received message is validated against the source message
-     * @return boolean <tt>true</tt> if successful
      * @throws CitrusRuntimeException
-     * @see ValidateSqlQueryBean
+     * @return boolean <tt>true</tt> if successful
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         HashMap receivingMap = null;
         HashMap contentMap = null;
 
@@ -80,7 +79,7 @@ public class KeyValueValidateBean extends AbstractTestAction {
         contentMap = createHashMap(textData);
 
         if (!receivingMap.equals(contentMap))
-            throw new CitrusRuntimeException("Validation failed!");
+            throw new CitrusRuntimeException("Key value validation failed!");
     }
 
     private HashMap createHashMap(String msg) {

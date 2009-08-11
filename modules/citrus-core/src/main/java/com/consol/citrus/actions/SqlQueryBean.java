@@ -53,11 +53,11 @@ public class SqlQueryBean extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(SqlQueryBean.class);
 
     /**
-     * (non-Javadoc)
      * @see com.consol.citrus.TestAction#execute(TestContext)
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         BufferedReader reader = null;
         
         try {
@@ -192,9 +192,8 @@ public class SqlQueryBean extends AbstractTestAction {
     /**
      * Does some simple validation on the SQL statement.
      * @param stmt The statement which is to be validated.
-     * @throws CitrusRuntimeException If there was an error during validation (the message contains the reason).
      */
-    private void validateSqlStatement(String stmt) throws CitrusRuntimeException {
+    private void validateSqlStatement(String stmt) {
         if (stmt.toLowerCase().startsWith("select") == false) {
             throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
         }
@@ -213,9 +212,8 @@ public class SqlQueryBean extends AbstractTestAction {
      * @return
      * @throws UnknownElementException
      * @throws ValidationException
-     * @throws CitrusRuntimeException
      */
-    protected boolean validate(final Map expectedValues, final Map resultValues, TestContext context) throws UnknownElementException, ValidationException, CitrusRuntimeException
+    protected boolean validate(final Map expectedValues, final Map resultValues, TestContext context) throws UnknownElementException, ValidationException
     {
         log.info("Start database query validation ...");
 

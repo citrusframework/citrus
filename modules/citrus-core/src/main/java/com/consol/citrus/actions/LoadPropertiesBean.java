@@ -24,8 +24,12 @@ public class LoadPropertiesBean extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(LoadPropertiesBean.class);
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         Resource resource;
         if (file.startsWith("classpath:")) {
             resource = new ClassPathResource(file.substring("classpath:".length()));

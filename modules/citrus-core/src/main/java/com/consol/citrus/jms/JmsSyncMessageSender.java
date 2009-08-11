@@ -39,6 +39,10 @@ public class JmsSyncMessageSender implements MessageSender {
      */
     private static final Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
     
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @throws CitrusRuntimeException
+     */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
         

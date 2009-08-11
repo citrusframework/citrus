@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.Function;
 
 public class RandomNumberFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());
 
-    public String execute(List<String> parameterList) throws CitrusRuntimeException {
+    public String execute(List<String> parameterList) {
         int numberLength;
         boolean paddingOn = true;
 

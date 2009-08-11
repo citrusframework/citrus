@@ -91,12 +91,12 @@ public class ReceiveMessageBean extends AbstractTestAction {
      * 5. The received message is validated against the source message
      * 6. Explicit validation of message values
      * 7. Extract message elements and header values to variables
-     *
-     * @return boolean success flag
+     * 
      * @throws CitrusRuntimeException
+     * @return boolean success flag
      */
     @Override
-    public void execute(TestContext context) throws CitrusRuntimeException {
+    public void execute(TestContext context) {
         boolean isSuccess = true;
         
         Message receivedMessage;
