@@ -1,7 +1,6 @@
 package com.consol.citrus;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Interface for all test action beans
