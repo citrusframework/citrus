@@ -12,12 +12,12 @@
         <description>Failing test for purpose. Asserting exception to be thrown</description>
         
         <actions>
-        	<assert exception="com.consol.citrus.exceptions.TestSuiteException">
+        	<assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
             	<fail message="Failing test"/>
             </assert>
             
-            <assert exception="com.consol.citrus.exceptions.TestSuiteException">
-	            <assert exception="com.consol.citrus.exceptions.TestSuiteException">
+            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+	            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
 	            	<sleep time="0.5"/>
 	            </assert>
             </assert>

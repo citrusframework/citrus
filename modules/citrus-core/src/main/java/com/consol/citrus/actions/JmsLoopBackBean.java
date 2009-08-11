@@ -229,7 +229,7 @@ public class JmsLoopBackBean implements InitializingBean, Server {
                     } else if (xmlData != null) {
                         messagePayload = context.replaceDynamicContentInString(xmlData);
                     } else {
-                        throw new NoRessourceException(
+                        throw new MissingExpectedMessageException(
                                 "[JMSLoopBack] The <property name=\"xmlRessource\"/> or the <property name=\"xmlData\"/> is missing!"
                                 + "\n\rPlease specify either a xmlRessource or a xmlData property!");
                     }
@@ -288,13 +288,7 @@ public class JmsLoopBackBean implements InitializingBean, Server {
                     time = System.currentTimeMillis() - time;
                     updateThroughPut(time);
                 }
-            } catch (UnknownElementException e) {
-                log.error("[JMSLoopBack] Error in JMSLoopBackDummy ", e);
-                continue;
-            } catch (VariableNameValueException e) {
-                log.error("[JMSLoopBack] Error in JMSLoopBackDummy ", e);
-                continue;
-            } catch (TestSuiteException e) {
+            } catch (CitrusRuntimeException e) {
                 log.error("[JMSLoopBack] Error in JMSLoopBackDummy ", e);
                 continue;
             } catch (JMSException e) {

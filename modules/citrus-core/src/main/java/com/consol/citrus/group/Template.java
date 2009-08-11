@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
@@ -42,7 +42,7 @@ public class Template extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute()
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.info("Executing action template '" + name + "' - containing " + actions.size() + " actions");
 
         for (Iterator iterator = parameter.keySet().iterator(); iterator.hasNext();) {

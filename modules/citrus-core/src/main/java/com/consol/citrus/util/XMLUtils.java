@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.LSResolverImpl;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
@@ -101,7 +101,7 @@ public class XMLUtils {
      * @param xpath the XPath expression
      * @return the node searched for
      */
-    public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) throws TestSuiteException {
+    public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) throws CitrusRuntimeException {
         try {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
@@ -116,12 +116,12 @@ public class XMLUtils {
             Node found = (Node)expression.evaluate(node, XPathConstants.NODE);
                 
             if (found == null) {
-                throw new TestSuiteException("Could not find node in XML tree for expression: " + expressionStr);
+                throw new CitrusRuntimeException("Could not find node in XML tree for expression: " + expressionStr);
             }
 
             return found;
         } catch (XPathExpressionException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
     
@@ -146,7 +146,7 @@ public class XMLUtils {
      * @param node
      * @return
      */
-    public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext) throws TestSuiteException  {
+    public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext) throws CitrusRuntimeException  {
         try {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
@@ -168,7 +168,7 @@ public class XMLUtils {
             
             return value;
         } catch (XPathExpressionException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 
@@ -243,9 +243,9 @@ public class XMLUtils {
      * Serializes a DOM document
      * @param doc
      * @return serialized xml string
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public static String serialize(Document doc) throws TestSuiteException {
+    public static String serialize(Document doc) throws CitrusRuntimeException {
         LSSerializer serializer = null;
 
         try {
@@ -254,7 +254,7 @@ public class XMLUtils {
                 domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
             }
         } catch (Exception e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         serializer = domImpl.createLSSerializer();
@@ -268,9 +268,9 @@ public class XMLUtils {
      * Serializes a DOM document
      * @param doc
      * @return serialized xml string
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public static String prettyPrint(String xml) throws TestSuiteException {
+    public static String prettyPrint(String xml) throws CitrusRuntimeException {
         LSParser parser = null;
 
         try {
@@ -279,7 +279,7 @@ public class XMLUtils {
                 domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
             }
         } catch (Exception e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
@@ -341,11 +341,11 @@ public class XMLUtils {
             
             return parser.parse(receivedInput);
         } catch (ClassNotFoundException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (InstantiationException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 }

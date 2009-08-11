@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.service.DbService;
 
 /**
@@ -55,7 +55,7 @@ public class ExecuteSqlBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         BufferedReader reader = null;
         String stmt = "";
 
@@ -107,7 +107,7 @@ public class ExecuteSqlBean extends AbstractTestAction {
                         log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
                         continue;
                     } else {
-                        throw new TestSuiteException(e);
+                        throw new CitrusRuntimeException(e);
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class ExecuteSqlBean extends AbstractTestAction {
             log.error("Sql resource could not be found - filename: "
                     + sqlResource.getFilename() + ". Nested Exception is: ");
             log.error(e.getLocalizedMessage());
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if(reader != null) {
                 try {

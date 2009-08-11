@@ -9,8 +9,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SetVariablesBean;
-import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.exceptions.VariableNameValueException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.variable.GlobalVariables;
 
 public class TestContextTest extends AbstractBaseTest {
@@ -80,7 +80,7 @@ public class TestContextTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("test"), "123");
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testUnknownVariable() {
         context.getVariables().put("test", "123");
         
@@ -124,12 +124,12 @@ public class TestContextTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("test2"), "");
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testFailSetVariableNoName() {
         context.setVariable("", "123");
     }
     
-    @Test(expectedExceptions = {VariableNameValueException.class})
+    @Test(expectedExceptions = {VariableNullValueException.class})
     public void testFailSetVariableNoValue() {
         context.setVariable("${test}", null);
     }

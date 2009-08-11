@@ -4,8 +4,9 @@ import java.text.ParseException;
 
 import com.consol.citrus.TestConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
-import com.consol.citrus.exceptions.VariableNameValueException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.NoSuchVariableException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 
 public class VariableUtils {
     /**
@@ -43,10 +44,9 @@ public class VariableUtils {
     * @param str
     * @return
     * @throws ParseException
-    * @throws VariableNameValueException
-    * @throws TestSuiteException
+    * @throws CitrusRuntimeException
     */
-   public static String replaceVariablesInString(final String str, TestContext context) throws ParseException, VariableNameValueException, TestSuiteException {
+   public static String replaceVariablesInString(final String str, TestContext context) throws ParseException, CitrusRuntimeException {
        return replaceVariablesInString(str, context, false);
    }
 
@@ -56,10 +56,9 @@ public class VariableUtils {
     * @param enableQuoting
     * @return
     * @throws ParseException
-    * @throws VariableNameValueException
-    * @throws TestSuiteException
+    * @throws CitrusRuntimeException
     */
-   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) throws ParseException, VariableNameValueException, TestSuiteException {
+   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) throws ParseException, CitrusRuntimeException {
        StringBuffer newStr = new StringBuffer();
 
        boolean isVarComplete = false;
@@ -97,7 +96,7 @@ public class VariableUtils {
 
            final String value = context.getVariable(variableNameBuf.toString());
            if (value == null) {
-               throw new VariableNameValueException("Variable: " + variableNameBuf.toString() + " could not be found");
+               throw new NoSuchVariableException("Variable: " + variableNameBuf.toString() + " could not be found");
            }
 
            newStr.append(str.substring(startIndex, searchIndex));

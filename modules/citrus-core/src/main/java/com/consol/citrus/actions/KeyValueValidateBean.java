@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 
 /**
@@ -53,11 +53,11 @@ public class KeyValueValidateBean extends AbstractTestAction {
      * <p>1. The message is received.
      * <p>2. The received message is validated against the source message
      * @return boolean <tt>true</tt> if successful
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      * @see ValidateSqlQueryBean
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         HashMap receivingMap = null;
         HashMap contentMap = null;
 
@@ -68,7 +68,7 @@ public class KeyValueValidateBean extends AbstractTestAction {
         Message receivedMessage = messageReceiver.receive(receiveTimeout);
 
         if (receivedMessage == null)
-            throw new TestSuiteException("Received message is null!");
+            throw new CitrusRuntimeException("Received message is null!");
 
         if(log.isDebugEnabled()) {
             log.debug("Received message " + receivedMessage.getPayload());
@@ -80,7 +80,7 @@ public class KeyValueValidateBean extends AbstractTestAction {
         contentMap = createHashMap(textData);
 
         if (!receivingMap.equals(contentMap))
-            throw new TestSuiteException("Validation failed!");
+            throw new CitrusRuntimeException("Validation failed!");
     }
 
     private HashMap createHashMap(String msg) {

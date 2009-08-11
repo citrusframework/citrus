@@ -3,18 +3,18 @@ package com.consol.citrus.actions;
 import java.text.ParseException;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class FailBean extends AbstractTestAction {
 
     private String message = "Generated error to interrupt test execution";
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         try {
-            throw new TestSuiteException(context.replaceDynamicContentInString(message));
+            throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 

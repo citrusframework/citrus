@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -26,7 +26,7 @@ public class DelayBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         String value = null;
 
         if (VariableUtils.isVariableName(delay)) {
@@ -44,7 +44,7 @@ public class DelayBean extends AbstractTestAction {
 
             log.info("Returning after " + value + " seconds");
         } catch (InterruptedException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
 

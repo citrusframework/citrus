@@ -3,7 +3,7 @@ package com.consol.citrus.activemq;
 import org.apache.activemq.broker.BrokerService;
 
 import com.consol.citrus.Server;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class ActiveMQServer implements Server {
 
@@ -27,11 +27,11 @@ public class ActiveMQServer implements Server {
             broker.addConnector("tcp://" + host + ":" + port);
             broker.start();
         } catch (Exception e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
     }
     
-    public void start() throws TestSuiteException {
+    public void start() throws CitrusRuntimeException {
         broker = new BrokerService();
         broker.setBrokerName(name);
         broker.setUseShutdownHook(true);
@@ -43,12 +43,12 @@ public class ActiveMQServer implements Server {
         run();
     }
     
-    public void stop() throws TestSuiteException {
+    public void stop() throws CitrusRuntimeException {
         if(broker != null) {
             try {
                 broker.stop();
             } catch (Exception e) {
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
         }
         

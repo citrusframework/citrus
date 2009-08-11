@@ -17,8 +17,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.NoRessourceException;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.MissingExpectedMessageException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.XMLUtils;
@@ -93,10 +93,10 @@ public class ReceiveMessageBean extends AbstractTestAction {
      * 7. Extract message elements and header values to variables
      *
      * @return boolean success flag
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         boolean isSuccess = true;
         
         Message receivedMessage;
@@ -118,7 +118,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
             }
 
             if (receivedMessage == null)
-                throw new TestSuiteException("Received message is null!");
+                throw new CitrusRuntimeException("Received message is null!");
 
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
@@ -136,7 +136,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
                     log.info("Received message body is empty as expected - therefore no message validation");
                     return;
                 } else {
-                    throw new TestSuiteException("Validation error: Received message body is empty");
+                    throw new CitrusRuntimeException("Validation error: Received message body is empty");
                 }
             }
 
@@ -147,14 +147,14 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 if(validator instanceof XMLMessageValidator) {
                     ((XMLMessageValidator)validator).validateXMLSchema(receivedMessage);
                 } else {
-                    throw new TestSuiteException("XML schema validation is not valid for validators other than XMLMessageValidator");
+                    throw new CitrusRuntimeException("XML schema validation is not valid for validators other than XMLMessageValidator");
                 }
             }
 
             if(validator instanceof XMLMessageValidator) {
                 ((XMLMessageValidator)validator).validateNamespaces(expectedNamespaces, receivedMessage);
             } else {
-                throw new TestSuiteException("XML namespace validation is not valid for validators other than XMLMessageValidator");
+                throw new CitrusRuntimeException("XML namespace validation is not valid for validators other than XMLMessageValidator");
             }
 
             String expectedMessagePayload = null;
@@ -175,7 +175,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
             } else if (messageElements.isEmpty() == false){
                 expectedMessagePayload = "";
             } else {
-                throw new NoRessourceException("No validation elements specifyed. You need to declare at least one element to be validated");
+                throw new MissingExpectedMessageException("No validation elements specifyed. You need to declare at least one element to be validated");
             }
 
             if (StringUtils.hasText(expectedMessagePayload)) {
@@ -214,13 +214,13 @@ public class ReceiveMessageBean extends AbstractTestAction {
                 context.createVariablesFromMessageValues(extractMessageElements, receivedMessage);
             }
         } catch (ParseException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         if (!isSuccess) {
-            throw new TestSuiteException("Validation failed for received message");
+            throw new CitrusRuntimeException("Validation failed for received message");
         }
     }
 

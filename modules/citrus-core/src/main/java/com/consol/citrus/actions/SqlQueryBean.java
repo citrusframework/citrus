@@ -57,7 +57,7 @@ public class SqlQueryBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         BufferedReader reader = null;
         
         try {
@@ -92,7 +92,7 @@ public class SqlQueryBean extends AbstractTestAction {
                             stmt = context.replaceDynamicContentInString(stmt);
                         } catch (ParseException e) {
                             log.error("Error while parsing sql statement: " + stmt);
-                            throw new TestSuiteException(e);
+                            throw new CitrusRuntimeException(e);
                         }
                         List list = dbService.queryForList(stmt);
 
@@ -102,12 +102,12 @@ public class SqlQueryBean extends AbstractTestAction {
                     }
 
                     if (validate(validationElements, resultMap, context) == false) {
-                        throw new TestSuiteException("Database validation failed");
+                        throw new CitrusRuntimeException("Database validation failed");
                     }
 
                     successful = true;
                 }
-                catch (TestSuiteException ex) {
+                catch (CitrusRuntimeException ex) {
                     if (countRetries >= maxRetries) {
                         throw ex;
                     }
@@ -140,10 +140,10 @@ public class SqlQueryBean extends AbstractTestAction {
             context.addVariables(variableMap);
         } catch (IOException e) {
             log.error("File resource could not be found - filename: " + sqlResource.getFilename(), e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (DataAccessException e) {
             log.error("Failed to execute SQL statement", e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if(reader != null) {
                 try {
@@ -158,14 +158,14 @@ public class SqlQueryBean extends AbstractTestAction {
 
     /**
      * Checks on the size of the result list:
-     * if no rows were returned a TestSuiteException is thrown, if more than one row
+     * if no rows were returned a CitrusRuntimeException is thrown, if more than one row
      * is returned some logging entries are made.
      * @param stmt The sql statement (just needed for logging).
      * @param resultList The list which is checked.
      */
     private void checkOnResultSize(String stmt, List resultList) {
         if (resultList.size() == 0) {
-            throw new TestSuiteException("Validation not possible. SQL result set is empty for statement: " + stmt);
+            throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);
         }
 
         if (resultList.size()>1) {
@@ -192,17 +192,17 @@ public class SqlQueryBean extends AbstractTestAction {
     /**
      * Does some simple validation on the SQL statement.
      * @param stmt The statement which is to be validated.
-     * @throws TestSuiteException If there was an error during validation (the message contains the reason).
+     * @throws CitrusRuntimeException If there was an error during validation (the message contains the reason).
      */
-    private void validateSqlStatement(String stmt) throws TestSuiteException {
+    private void validateSqlStatement(String stmt) throws CitrusRuntimeException {
         if (stmt.toLowerCase().startsWith("select") == false) {
-            throw new TestSuiteException("Missing keyword SELECT in statement: " + stmt);
+            throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
         }
 
         int fromIndex = stmt.toLowerCase().indexOf("from");
 
         if (fromIndex <= "select".length()+1) {
-            throw new TestSuiteException("Missing keyword FROM in statement: " + stmt);
+            throw new CitrusRuntimeException("Missing keyword FROM in statement: " + stmt);
         }
     }
 
@@ -212,11 +212,10 @@ public class SqlQueryBean extends AbstractTestAction {
      * @param resultValues
      * @return
      * @throws UnknownElementException
-     * @throws VariableNameValueException
      * @throws ValidationException
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    protected boolean validate(final Map expectedValues, final Map resultValues, TestContext context) throws UnknownElementException, VariableNameValueException, ValidationException, TestSuiteException
+    protected boolean validate(final Map expectedValues, final Map resultValues, TestContext context) throws UnknownElementException, ValidationException, CitrusRuntimeException
     {
         log.info("Start database query validation ...");
 
@@ -227,7 +226,7 @@ public class SqlQueryBean extends AbstractTestAction {
             String expectedValue = (String)entry.getValue();
             
             if (!resultValues.containsKey(columnName)) {
-                throw new TestSuiteException("Could not find column " + columnName + " in SQL result set");
+                throw new CitrusRuntimeException("Could not find column " + columnName + " in SQL result set");
             }
 
             String columnValue = null;

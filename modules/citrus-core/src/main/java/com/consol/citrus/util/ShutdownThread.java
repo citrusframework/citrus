@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.Server;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Class representing shutdown hook thread
@@ -41,7 +41,7 @@ public class ShutdownThread extends Thread
                     log.error("Thread was interrupted", e);
                 }
             }
-        } catch (TestSuiteException e) {
+        } catch (CitrusRuntimeException e) {
             log.error("Error while shutting down server", e);
         }
     }

@@ -2,7 +2,7 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 
 /**
@@ -11,5 +11,5 @@ import com.consol.citrus.exceptions.TestSuiteException;
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
 public interface MessageHandler {
-    Message handleMessage(Message message) throws TestSuiteException;
+    Message handleMessage(Message message) throws CitrusRuntimeException;
 }

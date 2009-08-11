@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class LoadPropertiesAsGlobalVariablesTest extends AbstractBaseTest {
     @Test
@@ -65,7 +65,7 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractBaseTest {
         Assert.assertFalse(globalVariables.getVariables().get("property.load.test").equals("InitialValue"));
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testPropertyFileDoesNotExist() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:file_not_exists.properties"));

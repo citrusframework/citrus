@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean to explicitly purge jms queues.
@@ -39,7 +39,7 @@ public class PurgeJmsQueuesBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         log.info("Purging JMS queues...");
 
         QueueConnection qcon = null;
@@ -71,7 +71,7 @@ public class PurgeJmsQueuesBean extends AbstractTestAction {
             }
         } catch (JMSException e) {
             log.error("Error while establishing jms queue connection", e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if (qreceiver != null) {
                 try {

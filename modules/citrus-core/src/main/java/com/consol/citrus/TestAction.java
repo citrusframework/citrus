@@ -1,7 +1,7 @@
 package com.consol.citrus;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Interface for all test action beans
@@ -11,9 +11,9 @@ public interface TestAction {
     /**
      * Main execution method doing all work
      * @param context TODO
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      */
-    public void execute(TestContext context) throws TestSuiteException;
+    public void execute(TestContext context) throws CitrusRuntimeException;
 
     /**
      * Name of TestAction injected as Spring bean name

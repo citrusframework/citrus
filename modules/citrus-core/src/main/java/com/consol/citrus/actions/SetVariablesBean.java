@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -31,7 +31,7 @@ public class SetVariablesBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         Iterator it = newVariables.keySet().iterator();
         String value;
         while (it.hasNext()) {

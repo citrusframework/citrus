@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * EchoBean enables to print messages to the console/logger
@@ -28,14 +28,14 @@ public class EchoBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         if (message == null) {
             log.info("TestSuite " + new Date(System.currentTimeMillis()));
         } else {
             try {
                 log.info("echo " + context.replaceDynamicContentInString(message));
             } catch (ParseException e) {
-                throw new TestSuiteException(e);
+                throw new CitrusRuntimeException(e);
             }
         }
     }

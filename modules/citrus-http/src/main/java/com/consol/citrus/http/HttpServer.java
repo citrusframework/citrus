@@ -15,7 +15,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.Server;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
@@ -205,7 +205,7 @@ public class HttpServer implements Server, InitializingBean {
         }
     }
 
-    public void start() throws TestSuiteException {
+    public void start() throws CitrusRuntimeException {
         log.info("[HttpServer] Starting ...");
         try {
             InetAddress addr = InetAddress.getByName(host);
@@ -221,15 +221,15 @@ public class HttpServer implements Server, InitializingBean {
         } catch (IOException e) {
             log.error("[HttpServer] failed to listen on port " + port, e);
             log.info("[HttpServer] Startup failed");
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (Exception e) {
             log.info("[HttpServer] Startup failed");
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
         log.info("[HttpServer] Started sucessfully");
     }
 
-    public void stop() throws TestSuiteException {
+    public void stop() throws CitrusRuntimeException {
         //TODO: ensure shutdown
         synchronized (this) {
             log.info("[HttpServer] Stopping Http server '" + getName() + "'");
@@ -277,13 +277,13 @@ public class HttpServer implements Server, InitializingBean {
         if (command.equals(HttpServer.SHUTDOWN_COMMAND)) {
             try {
                 server.quit();
-            } catch (TestSuiteException e) {
+            } catch (CitrusRuntimeException e) {
                 log.error("Error during shutdown", e);
             }
         } else {
             try {
                 server.start();
-            } catch (TestSuiteException e) {
+            } catch (CitrusRuntimeException e) {
                 log.error("Error during startup", e);
             }
             
@@ -301,7 +301,7 @@ public class HttpServer implements Server, InitializingBean {
         return deamon;
     }
 
-    public void quit() throws TestSuiteException {
+    public void quit() throws CitrusRuntimeException {
         Writer writer = null;
 
         try {
@@ -323,11 +323,11 @@ public class HttpServer implements Server, InitializingBean {
             writer.write(HttpUtils.generateRequest(httpRequest));
             writer.flush();
         } catch (UnknownHostException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (ConnectException e) {
             log.warn("Could not connect to HttpStub - maybe server is already stopped");
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if (writer != null) {
                 try {

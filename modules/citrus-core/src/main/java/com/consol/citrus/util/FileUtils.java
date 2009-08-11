@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestFiles;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Cass to provide general file utils, such as listing all xml files in a directory. Or finding certain
@@ -83,12 +83,12 @@ public class FileUtils {
      * @param testName test name to search for
      * @parem fileExtension file extension to search for
      * @return the name of test file
-     * @throws TestSuiteException
+     * @throws CitrusRuntimeException
      * @throws IOException
      * @throws FileNotFoundException
      */
     public static String getTestFileForTest(final String startDir, final String testName, final String fileExtension)
-    throws TestSuiteException, IOException, FileNotFoundException {
+    throws CitrusRuntimeException, IOException, FileNotFoundException {
         /* Stack to hold potential sub directories */
         final Stack dirs = new Stack();
         /* start directory */
@@ -151,7 +151,7 @@ public class FileUtils {
                 }
             }
         }
-        throw new TestSuiteException("Could not find test with name "
+        throw new CitrusRuntimeException("Could not find test with name "
                 + testName + " in test files. Test directory is: " + startDir);
     }
 }

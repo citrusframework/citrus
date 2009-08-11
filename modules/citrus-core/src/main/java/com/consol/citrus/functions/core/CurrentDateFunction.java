@@ -8,7 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.Function;
 
 public class CurrentDateFunction implements Function {
@@ -20,7 +20,7 @@ public class CurrentDateFunction implements Function {
      */
     private static final Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
 
-    public String execute(List<String> parameterList) throws TestSuiteException {
+    public String execute(List<String> parameterList) throws CitrusRuntimeException {
         Calendar calendar = Calendar.getInstance();
 
         String result = "";
@@ -45,7 +45,7 @@ public class CurrentDateFunction implements Function {
             result = dateFormat.format(calendar.getTime());
         } catch (RuntimeException e) {
             log.error("Error while formatting date value ", e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         return result;

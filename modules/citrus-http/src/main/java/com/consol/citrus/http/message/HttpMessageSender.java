@@ -14,7 +14,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.MessageSender;
@@ -82,7 +82,7 @@ public class HttpMessageSender implements MessageSender {
                 //TODO: implement GET method
                 request = MessageBuilder.withPayload("").build();
             } else {
-                throw new TestSuiteException("Unsupported request method: " + requestMethod);
+                throw new CitrusRuntimeException("Unsupported request method: " + requestMethod);
             }
 
             InetAddress addr = InetAddress.getByName(getHost());
@@ -103,7 +103,7 @@ public class HttpMessageSender implements MessageSender {
                 replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(buffer.toString()).build());
             }
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if (writer != null) {
                 try {

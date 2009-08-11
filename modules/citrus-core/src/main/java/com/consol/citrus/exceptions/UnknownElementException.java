@@ -1,14 +1,9 @@
 package com.consol.citrus.exceptions;
 
 /**
- * Custom exception
+ * Thrown in case an element is not found. Usually used in validation procedures.
  */
-public class UnknownElementException extends TestSuiteException {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = -8652778602073652872L;
+public class UnknownElementException extends CitrusRuntimeException {
 
     public UnknownElementException() {
         super();

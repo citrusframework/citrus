@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.service.DbService;
 
 /**
@@ -55,7 +55,7 @@ public class ExecutePLSQLBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         BufferedReader reader = null;
         StringBuffer buffer;
         String stmt;
@@ -112,16 +112,16 @@ public class ExecutePLSQLBean extends AbstractTestAction {
                         log.error("Error while executing SQL statement: " + e.getMessage());
                         continue;
                     } else {
-                        throw new TestSuiteException(e);
+                        throw new CitrusRuntimeException(e);
                     }
                 }
             }
         } catch (IOException e) {
             log.error("Resource could not be found - filename: " + sqlResource.getFilename(), e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } catch (ParseException e) {
             log.error("Error while parsing string", e);
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             if(reader != null) {
                 try {

@@ -15,7 +15,7 @@
             <catch>
             	<fail message="Fail!"/>
             </catch>
-            <catch exception="com.consol.citrus.exceptions.TestSuiteException">
+            <catch exception="com.consol.citrus.exceptions.CitrusRuntimeException">
             	<fail message="Fail!"/>
             </catch>
         </actions>

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Bean to print out variable values. Bean requires a list of variable
@@ -29,7 +29,7 @@ public class InfoBean extends AbstractTestAction {
      * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
         boolean isSuccess = true;
 
         Iterator it;
@@ -57,7 +57,7 @@ public class InfoBean extends AbstractTestAction {
         }
 
         if (!isSuccess) {
-            throw new TestSuiteException("Validation error, because one or more variables are null");
+            throw new CitrusRuntimeException("Validation error, because one or more variables are null");
         }
     }
 

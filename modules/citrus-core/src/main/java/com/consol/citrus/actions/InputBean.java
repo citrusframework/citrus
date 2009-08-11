@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class InputBean extends AbstractTestAction {
 
@@ -26,7 +26,7 @@ public class InputBean extends AbstractTestAction {
     private String validAnswers;
 
     @Override
-    public void execute(TestContext context) throws TestSuiteException {
+    public void execute(TestContext context) throws CitrusRuntimeException {
 
         String input = null;
 
@@ -53,7 +53,7 @@ public class InputBean extends AbstractTestAction {
                 input = stdin.readLine();
             } while (validAnswers != null && !checkAnswer(input));
         } catch (IOException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         }
 
         context.setVariable(variable, input.trim());

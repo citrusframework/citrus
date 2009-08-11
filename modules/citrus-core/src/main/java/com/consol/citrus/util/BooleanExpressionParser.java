@@ -5,7 +5,7 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class BooleanExpressionParser {
     private static Stack operators = new Stack();
@@ -16,7 +16,7 @@ public class BooleanExpressionParser {
      */
     private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
-    public static boolean evaluate(String expression) throws TestSuiteException {
+    public static boolean evaluate(String expression) throws CitrusRuntimeException {
         boolean result = true;
 
         char actChar;
@@ -48,7 +48,7 @@ public class BooleanExpressionParser {
                     else if (operator.equals("or"))
                         value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
                     else {
-                        throw new TestSuiteException("Unknown operator '" + operator + "'");
+                        throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
                     }
 
                     values.push(value);
@@ -99,7 +99,7 @@ public class BooleanExpressionParser {
             else if (operator.equals("or"))
                 value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
             else {
-                throw new TestSuiteException("Unknown operator '" + operator + "'");
+                throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
             }
 
             values.push(value);

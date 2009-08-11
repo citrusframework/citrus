@@ -14,7 +14,7 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
 public class JmsConnectingMessageHandler implements MessageHandler {
@@ -36,7 +36,7 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      */
     private static final Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
     
-    public Message handleMessage(final Message request) throws TestSuiteException {
+    public Message handleMessage(final Message request) throws CitrusRuntimeException {
         log.info("[HttpServer] Forwarding request to: " + getDestinationName());
 
         if(log.isDebugEnabled()) {
@@ -80,7 +80,7 @@ public class JmsConnectingMessageHandler implements MessageHandler {
                 replyMessage = MessageBuilder.withPayload("").build();
             }
         } catch (JMSException e) {
-            throw new TestSuiteException(e);
+            throw new CitrusRuntimeException(e);
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);

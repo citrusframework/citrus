@@ -1,9 +1,9 @@
 package com.consol.citrus.exceptions;
 
 /**
- * Custom exception
+ * Use this exception in case a function is called with invalid parameters.
  */
-public class InvalidFunctionUsageException extends TestSuiteException {
+public class InvalidFunctionUsageException extends CitrusRuntimeException {
 
     public InvalidFunctionUsageException() {
         super();

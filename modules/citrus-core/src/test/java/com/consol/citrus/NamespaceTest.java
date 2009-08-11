@@ -13,7 +13,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageBean;
-import com.consol.citrus.exceptions.TestSuiteException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
@@ -661,7 +661,7 @@ public class NamespaceTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    @Test(expectedExceptions = {TestSuiteException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testWrongNamespaceContext() {
         reset(messageReceiver);
         
