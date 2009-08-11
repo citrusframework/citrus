@@ -3,14 +3,14 @@ package com.consol.citrus.group;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
  * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class RepeatUntilTrueTest extends AbstractIntegrationTest {
+public class RepeatUntilTrueTest extends AbstractTestNGCitrusTest {
     @Test
     public void repeatUntilTrueTest(ITestContext testContext) {
         executeTest(testContext);

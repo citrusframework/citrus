@@ -1,5 +1,7 @@
 package com.consol.citrus.testng;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,16 +14,20 @@ import org.testng.annotations.BeforeClass;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 
 @ContextConfiguration(locations = {"/application-ctx.xml", "/com/consol/citrus/functions/citrus-function-ctx.xml"})
-public abstract class AbstractIntegrationTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     private static boolean afterTests = false;
     private static boolean beforeTests = false;
     
     private static final Object before = new Object();
     private static final Object after = new Object();
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(AbstractTestNGCitrusTest.class);
     
     @BeforeClass
     public void beforeTests(ITestContext testContext) {
@@ -33,7 +39,9 @@ public abstract class AbstractIntegrationTest extends AbstractTestNGSpringContex
                 try {
                     suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
                 } catch (NoSuchBeanDefinitionException e) {
-                    throw new CitrusRuntimeException("Could not find test suite with name '" + suiteName + "'", e);
+                    log.warn("Could not find test suite with name '" + suiteName + "'");
+                    log.warn("Not able to execute tasks before suite '" + suiteName + "'");
+                    return;
                 }
                 
                 suite.beforeSuite();
@@ -60,7 +68,8 @@ public abstract class AbstractIntegrationTest extends AbstractTestNGSpringContex
         try {
             suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
         } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException("Could not find test suite with name '" + suiteName + "'", e);
+            suite = new TestSuite();
+            suite.setBeanName("default-suite");
         }
         
         for (Object testCaseBean : ctx.getBeansOfType(TestCase.class).keySet()) {
@@ -83,7 +92,9 @@ public abstract class AbstractIntegrationTest extends AbstractTestNGSpringContex
                 try {
                     suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
                 } catch (NoSuchBeanDefinitionException e) {
-                    throw new CitrusRuntimeException("Could not find test suite with name '" + suiteName + "'", e);
+                    log.warn("Could not find test suite with name '" + suiteName + "'");
+                    log.warn("Not able to execute tasks after suite '" + suiteName + "'");
+                    return;
                 }
                 
                 suite.afterSuite();
