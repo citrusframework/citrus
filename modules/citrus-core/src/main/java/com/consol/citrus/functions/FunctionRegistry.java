@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class FunctionRegistry {
     /** list of libraries providing custom functions */
