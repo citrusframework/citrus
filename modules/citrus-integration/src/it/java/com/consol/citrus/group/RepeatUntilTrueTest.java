@@ -1,8 +1,9 @@
 package com.consol.citrus.group;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class RepeatUntilTrueTest extends AbstractIntegrationTest {
     @Test
-    public void repeatUntilTrueTest() {
-        executeTest();
+    public void repeatUntilTrueTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }

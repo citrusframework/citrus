@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
 	 
-	<bean name="testSuite" class="com.consol.citrus.TestSuite" abstract="true">
+	<bean name="citrus-integration" class="com.consol.citrus.TestSuite">
 		<property name="threadCount" value="1"/>
 		<property name="reporter">
 			<list>
@@ -69,7 +69,5 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean name="coreTestSuite" parent="testSuite"/>
 	
 </beans>

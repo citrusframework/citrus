@@ -1,8 +1,9 @@
 package com.consol.citrus.functions;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class ConcatFunctionTest extends AbstractIntegrationTest {
     @Test
-    public void concatFunctionTest() {
-        executeTest();
+    public void concatFunctionTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }

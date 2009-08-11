@@ -1,8 +1,9 @@
 package com.consol.citrus.container;
 
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractIntegrationTest;
+import com.consol.citrus.testng.AbstractIntegrationTest;
 
 /**
  * 
@@ -11,7 +12,7 @@ import com.consol.citrus.AbstractIntegrationTest;
  */
 public class SequentialTest extends AbstractIntegrationTest {
     @Test
-    public void sequentialTest() {
-        executeTest();
+    public void sequentialTest(ITestContext testContext) {
+        executeTest(testContext);
     }
 }

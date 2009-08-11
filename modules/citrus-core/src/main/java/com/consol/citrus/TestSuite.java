@@ -55,7 +55,7 @@ public class TestSuite implements BeanNameAware {
     private int threadCount = 1;
 
     private Stack testPool = new Stack();
-    private Stack testRunner = new Stack();;
+    private Stack testRunner = new Stack();
 
     /** Common decimal format for percentage calculation in report **/
     private static DecimalFormat decFormat = new DecimalFormat("0.0");

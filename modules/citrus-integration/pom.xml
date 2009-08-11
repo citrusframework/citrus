@@ -13,78 +13,6 @@
   <build>
     <plugins>
         <plugin>
-            <groupId>org.apache.activemq.tooling</groupId>
-            <artifactId>maven-activemq-plugin</artifactId>
-            <version>5.1.0</version>
-        </plugin>
-        
-        <plugin>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-maven-plugin</artifactId>
-            <version>7.0.0pre3</version>
-            <configuration>
-                <scanIntervalSeconds>10</scanIntervalSeconds>
-                <stopKey>foo</stopKey>
-                <stopPort>8079</stopPort>
-                <connectors>
-                  <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                    <port>8078</port>
-                    <maxIdleTime>60000</maxIdleTime>
-                  </connector>
-                </connectors>
-            </configuration>
-            <!-- executions>
-                <execution>
-                    <id>start-jetty</id>
-                    <phase>pre-integration-test</phase>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                    <configuration>
-                      <scanIntervalSeconds>0</scanIntervalSeconds>
-                      <daemon>true</daemon>
-                    </configuration>
-                </execution>
-            </executions-->
-        </plugin>
-        
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.3</version>
-          <!-- executions>
-            <execution>
-              <id>start-http-server</id>
-              <phase>pre-integration-test</phase>
-              <configuration>
-                <tasks>
-                  <ant antfile="${basedir}/build.xml">
-                    <target name="start.http.stub"/>
-                  </ant>
-                </tasks>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>stop-http-server</id>
-              <phase>post-integration-test</phase>
-              <configuration>
-                <tasks>
-                  <ant antfile="${basedir}/build.xml">
-                    <target name="stop.http.stub"/>
-                  </ant>
-                </tasks>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-          </executions-->
-        </plugin>
-        
-        <plugin>
           <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
           <artifactId>maven-surefire-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
@@ -101,6 +29,12 @@
               </goals>
               <configuration>
                 <skip>false</skip>
+                <properties>
+                    <property>
+                        <name>suitename</name>
+                        <value>citrus-integration</value>
+                    </property>
+                </properties>
               </configuration>
             </execution>
           </executions>
