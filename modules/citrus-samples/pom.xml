@@ -29,7 +29,36 @@
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
         </plugin>
+        <plugin>
+          <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
+          <artifactId>maven-surefire-plugin</artifactId>
+          <!-- Version is required as mvn has currently a problem updating. -->
+          <version>2.4.3</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
     </plugins>
+    <testSourceDirectory>src/citrus/java</testSourceDirectory>
+    <testResources>
+        <testResource>
+            <directory>src/citrus/java</directory>
+            <includes>
+                <include>**</include>
+            </includes>
+            <excludes>
+                <exclude>*.java</exclude>
+            </excludes>
+        </testResource>
+        <testResource>
+            <directory>src/citrus/resources</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+            </excludes>
+        </testResource>
+    </testResources>
   </build>
   <dependencies>
     <dependency>
