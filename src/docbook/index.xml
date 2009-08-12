@@ -37,6 +37,7 @@
 <!ENTITY schema-validation  SYSTEM "schema-validation.xml">
 <!ENTITY debug-messages     SYSTEM "debug-messages.xml">
 <!ENTITY reporting          SYSTEM "reporting.xml">
+<!ENTITY samples-flightbooking     SYSTEM "samples-flightbooking.xml">
 ]>
 <book>
     <bookinfo>
@@ -80,12 +81,17 @@
     &reporting;
     
     <appendix id="samples">
-        <title>Citrus Samples</title>
+        <title>Citrus samples</title>
         
-        <section id="samples-flightbooking">
-            <title>The FlightBooking Sample</title>
+        <para>This part will show you some sample applications that are tested using Citrus integration tests. 
+        See below a list of all samples.</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para><xref linkend="samples-flightbooking"/></para>
+            </listitem>
+        </itemizedlist>
             
-            <para>TODO</para>
-        </section>    
+        &samples-flightbooking;
     </appendix>
 </book>

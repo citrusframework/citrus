@@ -24,18 +24,7 @@
     <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
                                  destination-name="${royal.airline.request.queue}"/>
                                    
-	<bean id="receiveRoyalAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver" ref="royalAirlineBookingRequestReceiver"/>
-		<property name="validator">
-			<bean class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
-		</property>
-	</bean>
-	
     <citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
                                 reply-destination-holder="royalAirlineBookingRequestReceiver"/>
   
-	<bean id="sendRoyalAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender" ref="royalAirlineBookingResponseSender"/>
-    </bean>
-	
 </beans>
