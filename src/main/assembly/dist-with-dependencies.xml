@@ -48,6 +48,7 @@
             <outputDirectory>samples/lib</outputDirectory>
             <excludes>
                 <exclude>com.consol.citrus:citrus-core</exclude>
+                <exclude>com.consol.citrus:citrus-http</exclude>
                 <exclude>org.slf4j:slf4j-api</exclude>
                 <exclude>org.springframework:spring-core</exclude>
                 <exclude>org.springframework:spring-jms</exclude>
@@ -78,10 +79,17 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/src/main/tests</directory>
+      <directory>modules/citrus-samples/src/citrus/resources</directory>
       <outputDirectory>samples/tests</outputDirectory>
       <includes>
           <include>*.xml</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-samples/src/citrus/java</directory>
+      <outputDirectory>samples/tests</outputDirectory>
+      <includes>
+          <include>*.java</include>
       </includes>
     </fileSet>
     <fileSet>

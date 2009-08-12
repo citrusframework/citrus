@@ -19,19 +19,4 @@
     
     <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
     
-    <bean id="sendTravelAgencyBookingRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender" ref="travelAgencyBookingRequestSender"/>
-    </bean>
-    
-    <bean id="receiveTravelAgencyBookingResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver" ref="travelAgencyBookingResponseReceiver"/>
-    </bean>
-    
-    <bean id="receiveSmartAirlineBookingRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver" ref="smartAirlineBookingRequestReceiver"/>
-    </bean>
-    
-    <bean id="sendSmartAirlineBookingResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender" ref="smartAirlineBookingResponseSender"/>
-    </bean>
 </beans>
