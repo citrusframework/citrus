@@ -55,11 +55,11 @@
         </java>
     </target>
 	
-	<target name="create.new.testcase" depends="init" description="Creates a new empty test">
+	<target name="create.test" depends="init" description="Creates a new empty test">
         <input message="Enter test name:" addproperty="test.name"/>
         <input message="Enter test description:" addproperty="test.description"/>
-        <input message="Enter author's name:" addproperty="test.author.local" defaultvalue="${test.author}"/>
-        <input message="Enter package:" addproperty="test.package"/>
+        <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
+        <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
             <classpath refid="classpath"/>
