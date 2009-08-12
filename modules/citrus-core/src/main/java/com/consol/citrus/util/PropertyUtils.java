@@ -5,6 +5,8 @@ import java.util.Properties;
 
 import org.springframework.core.io.Resource;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+
 /**
  * Util class supporting properties replacement in template files. For usage see doc generators and
  * test case creator.
@@ -38,8 +40,16 @@ public class PropertyUtils {
         int curIndex;
         int searchIndex;
         while ((searchIndex = line.indexOf(propertyMarker, startIndex)) != -1) {
+            //first check if property Marker is escaped by '\' character
+            if(searchIndex != 0 && line.charAt((searchIndex-1)) == '\\') {
+                newStr.append(line.substring(startIndex, searchIndex-1));
+                newStr.append(propertyMarker);
+                startIndex = searchIndex + 1;
+                continue;
+            }
+            
             isVarComplete = false;
-
+            
             curIndex = searchIndex + 1;
 
             while (curIndex < line.length() && !isVarComplete) {
@@ -51,6 +61,12 @@ public class PropertyUtils {
                     variableNameBuf.append(line.charAt(curIndex));
                 }
                 ++curIndex;
+            }
+            
+            if(properties.containsKey(variableNameBuf.toString()) == false) {
+                throw new CitrusRuntimeException("No such property '"
+                        + propertyMarker + variableNameBuf.toString()
+                        + propertyMarker + "'");
             }
 
             String value = properties.getProperty(variableNameBuf.toString(), "");

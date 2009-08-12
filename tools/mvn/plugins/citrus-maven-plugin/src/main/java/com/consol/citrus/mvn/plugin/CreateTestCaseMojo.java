@@ -8,7 +8,7 @@ import com.consol.citrus.util.TestCaseCreator;
 /**
  * Goal which creates a new test case using test case creator.
  *
- * @goal create-new-test
+ * @goal create-test
  */
 public class CreateTestCaseMojo extends AbstractMojo
 {
@@ -26,18 +26,17 @@ public class CreateTestCaseMojo extends AbstractMojo
      *          default-value="TODO: Description" */
     private String description;
     
-    /** @parameter default-value="src/main/tests" */
-    private String directory;
+    /** @parameter default-value="" */
+    private String targetPackage;
     
     public void execute() throws MojoExecutionException
     {
         try {    
-            TestCaseCreator creator = new TestCaseCreator();
-            
-            creator.setName(name);
-            creator.setAuthor(author);
-            creator.setDescription(description);
-            creator.setDirectory(directory);
+            TestCaseCreator creator = TestCaseCreator.build()
+                .withName(name)
+                .withAuthor(author)
+                .withDescription(description)
+                .usePackage(targetPackage);
             
             creator.createTestCase();
         } catch (ArrayIndexOutOfBoundsException e) {
