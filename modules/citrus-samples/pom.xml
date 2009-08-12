@@ -18,7 +18,7 @@
             <version>1.0</version>
             <configuration>
                 <author>Christoph Deppisch</author>
-                <directory>src/main/tests</directory>
+                <targetPackage>com.consol.citrus.samples.flightbooking</targetPackage>
             </configuration>
         </plugin-->
         <plugin>

@@ -1,0 +1,19 @@
+package @test.package@;
+
+import org.testng.ITestContext;
+import org.testng.annotations.Test;
+
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+
+/**
+ * @test.description@
+ *
+ * \@author @test.author@
+ * \@since @test.creation.date@
+ */
+public class @test.name@ extends AbstractTestNGCitrusTest {
+    \@Test
+    public void @test.method.name@(ITestContext testContext) {
+        executeTest(testContext);
+    }
+}
