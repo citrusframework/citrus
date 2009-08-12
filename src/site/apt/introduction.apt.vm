@@ -6,34 +6,36 @@ Introduction
 
   Enterprise Application Integration (EAI) software usually take part in 
   various transactions with different interface partners. It is a very important task to test whole use case scenarios
-  in order to ensure the integration into the existing software landscape of a customer.
+  in order to ensure the integration into the customers software landscape.
 
-  How can somebody ensure that applications communicate with each other in the right way? And how can somebody test 
+  How can someone ensure that applications communicate with each other in the right way? And how can somebody test 
   positive and negative use case scenarios in an automated way? Citrus aims to give answeres to these questions!
 
 Why use Citrus?
 
   In normal EAI projects several applications are linked together using different interfaces in order to exchange data. 
-  The communication of these interface partners is a very important test issue. In production the whole EAI system 
+  The communication of these interface partners is a very important test issue. In production the EAI system 
   has to work as expected, especially regarding the communication with different outstanding applications across 
   various transports.
  
-  In order to keep the message flow alive during a use case test, all interface partners are simulated in their behaviour.
-  This is not an easy challenge when dealing with different transport protocols at a time. Different protocols, technologies and
+  In order to keep the message flow alive during a use case test, all participating applications are simulated in their behaviour.
+  This is not an easy challenge when dealing with different transport protocols at the same time. Different protocols, technologies and
   legacy systems are therefore the beginning of many problems during the integration test.
   
   The tester may only use more or less intelligent dummy implementations of the different interface partners. In some cases the tester
   may have to interact manually during the test. An automatic verification of the sent message content and the semantically correctness 
   is not possible. The tester has to validate the success or failure of the test manually, which is very error prone and time consuming.
   
-  These problems arise seemingly unsolvable challenges for the automated integration test of an EAI software. Regarding the 
-  limited project schedule the tester may only be able to test one single use case manually using the available dummies. 
-  In the worst case the major part of the software features is initial tested in production environment in reality.
+  These problems arise as seemingly unsolvable challenges for the automated integration test team. Regarding the 
+  limited project schedule the tester may only be able to test one single use case manually using the available dummy implementations. 
+  In the worst case a major part of the software features is initially tested in production environment with real customers suffering 
+  from every software bug that is still in the application.
   
-  Citrus provides a tool for the testing team, that enables them to define whole use case tests in a single test describing file. 
-  Incoming and outgoing messages are defined in the test specifying a message flow as it is supposed to be during the use case. All
-  surrounding interface partners are simulated regardless their transport protocols (Http, JMS, TCP/IP, SOAP, ...). The tests are executed
-  automatically in a continuous integration environment and give credit to the software quality during development.
+  Citrus is a testing tool, that enables the test team to define whole use case tests in a single test describing file. 
+  Incoming and outgoing messages are defined in the test case which specifys a message flow as it is supposed to be during the use case. 
+  All surrounding interface partners are simulated regardless their transport protocols (Http, JMS, TCP/IP, SOAP, and many more). 
+  The tests are executed automatically in a continuous integration environment and give credit to the software quality during 
+  development at all time.
 
 Project history
   
