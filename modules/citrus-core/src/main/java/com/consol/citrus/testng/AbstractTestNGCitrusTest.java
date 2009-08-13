@@ -16,7 +16,9 @@ import com.consol.citrus.TestSuite;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.util.FileUtils;
 
-@ContextConfiguration(locations = {"/application-ctx.xml", "/com/consol/citrus/functions/citrus-function-ctx.xml"})
+@ContextConfiguration(locations = {"/com/consol/citrus/spring/root-application-ctx.xml", 
+                                   "/application-ctx.xml", 
+                                   "/com/consol/citrus/functions/citrus-function-ctx.xml"})
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     private static boolean afterTests = false;
     private static boolean beforeTests = false;

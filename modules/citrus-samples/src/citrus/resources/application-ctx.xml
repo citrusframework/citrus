@@ -14,16 +14,6 @@
 	<import resource="http-service-ctx.xml"/>
     <import resource="service-beans-ctx.xml"/>
 	
-	<aop:aspectj-autoproxy/>
-  
-    <!-- Used for autowiring -->
-    <context:annotation-config/>
-    
-    <context:load-time-weaver/>
-	
-    <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
-	<bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
-	
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
             <list>
@@ -46,10 +36,6 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
 	</bean>
 	
-	<bean id="messageValidator" class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
-	
-	<bean class="com.consol.citrus.context.TestContext" scope="prototype"/>
-  
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
@@ -57,8 +43,6 @@
             </map>
         </property>
     </bean>
-    
-    <bean class="com.consol.citrus.functions.FunctionRegistry"/>
     
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">

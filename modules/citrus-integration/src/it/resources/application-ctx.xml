@@ -16,16 +16,6 @@
 	<import resource="jmsLoopBackContext.xml"/>	
 	<import resource="http-service-ctx.xml"/>
 	
-	<aop:aspectj-autoproxy/>
-  
-    <!-- Used for autowiring -->
-    <context:annotation-config/>
-    
-    <context:load-time-weaver/>
-	
-    <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
-	<bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
-	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
     
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -37,10 +27,6 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"></property>
 	</bean>
 	
-	<bean id="messageValidator" class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
-	
-    <bean class="com.consol.citrus.context.TestContext" scope="prototype"/>
-  
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
@@ -57,8 +43,6 @@
             </list>
         </property>
     </bean>
-    
-    <bean class="com.consol.citrus.functions.FunctionRegistry"/>
     
 	<bean id="dbService" class="com.consol.citrus.service.DbService">
 		<property name="dataSource" ref="dataSource"/>
