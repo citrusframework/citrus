@@ -40,7 +40,7 @@
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>test.properties</value>
+				<value>citrus.properties</value>
 			</list>
 		</property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -63,8 +63,7 @@
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>test</value>
-				<value>version</value>			
+				<value>citrus</value>
 			</list>
 		</property>
 	</bean>
