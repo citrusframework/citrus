@@ -18,8 +18,6 @@
 	</target>
 	
 	<target name="citrus.run.tests" depends="init">
-		<mkdir dir="target/test-output"/>
-		
 		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
 			<classpath path="src/citrus/resources"/>
@@ -32,8 +30,6 @@
 	</target>
 	
 	<target name="citrus.run.single.test" depends="init">
-    	<mkdir dir="target/test-output"/>
-    	
    	 	<touch file="target/test.history"/>
     	
     	<loadproperties srcfile="target/test.history"/>

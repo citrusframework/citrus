@@ -80,6 +80,7 @@ public class JUnitReporter implements Reporter {
                     }
 
                     if(outputFile.exists() == false) {
+                        outputFile.getFile().getParentFile().mkdirs();
                         outputFile.createRelative("");
                     }
                     
