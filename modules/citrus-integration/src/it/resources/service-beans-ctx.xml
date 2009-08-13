@@ -113,22 +113,4 @@
 		</property>
 	</bean>
 	
-	<bean id="testCase" class="com.consol.citrus.TestCase" abstract="true" />
-	
-	<bean id="timeWatcher" class="com.consol.citrus.actions.TimeWatcherBean">
-	 	<property name="description" value="TimeWatcherBean" />
-	</bean>
-			
-	<bean id="waitDelay" class="com.consol.citrus.actions.DelayBean" abstract="true">
-		<property name="delay" value="5" />
-	</bean>
-	
-	<bean id="runTrigger" class="com.consol.citrus.actions.ClassRunnerBean" abstract="true" />
-	
-	<bean id="echo" class="com.consol.citrus.actions.EchoBean" />
-	
-	<bean id="infoBean" class="com.consol.citrus.actions.InfoBean" />
-	
-	<bean id="settingVariables" class="com.consol.citrus.actions.SetVariablesBean" />
-	
 </beans>

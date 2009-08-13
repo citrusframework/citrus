@@ -9,10 +9,10 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	 
+    <import resource="test-suite-ctx.xml"/>
 	<import resource="jms-service-ctx.xml"/>
-	<import resource="test-suite-ctx.xml"/>
 	<import resource="http-service-ctx.xml"/>
-    <import resource="service-beans-ctx.xml"/>
+    <import resource="db-service-ctx.xml"/>
 	
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
@@ -51,27 +51,4 @@
 			</list>
 		</property>
 	</bean>
-
-    <bean id="customerDBService" class="com.consol.citrus.service.DbService">
-        <property name="dataSource" ref="customerDBDataSource"/>
-    </bean>
-    
-	<bean id="customerDBDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-	    <property name="driverClassName">
-	        <value>${jdbc.driver}</value>
-	    </property>
-	    <property name="url">
-	        <value>${jdbc.url}</value>
-	    </property>
-	    <property name="username">
-	        <value>${db.user}</value>
-	    </property>
-	    <property name="password">
-	        <value>${db.password}</value>
-	    </property>
-	</bean>
-	
-	<bean id="customerDB" class="com.consol.citrus.actions.SqlQueryBean" abstract="true">
-        <property name="dbService" ref="customerDBService"/>
-    </bean>  
 </beans>
