@@ -19,7 +19,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 
 
-public class JUnitReporter implements Reporter {
+public class JUnitReporter implements TestReporter {
 
     private Document doc;
 

@@ -2,15 +2,18 @@ package com.consol.citrus;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.actions.EchoBean;
 import com.consol.citrus.actions.FailBean;
-import com.consol.citrus.report.SimpleLogReporter;
+import com.consol.citrus.report.TestReporters;
 
 public class TestSuiteTest extends AbstractBaseTest {
+    @Autowired
+    TestReporters reporters;
     
     @Test
     public void testRunSingleTest() {
@@ -26,7 +29,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         Assert.assertTrue(testsuite.beforeSuite());
         Assert.assertTrue(testsuite.run(testcase));
@@ -51,7 +54,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setTasksBefore(Collections.singletonList(new EchoBean()));
         
@@ -78,7 +81,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         TestAction failBean = new FailBean();
         testsuite.setTasksBefore(Collections.singletonList(failBean));
@@ -100,7 +103,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setTasksAfter(Collections.singletonList(new EchoBean()));
         
@@ -127,7 +130,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         TestAction failBean = new FailBean();
         testsuite.setTasksAfter(Collections.singletonList(failBean));
@@ -165,7 +168,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setTasksBetween(Collections.singletonList(new EchoBean()));
         
@@ -202,7 +205,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         TestAction failBean = new FailBean();
         testsuite.setTasksBetween(Collections.singletonList(failBean));
@@ -240,7 +243,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         Assert.assertTrue(testsuite.beforeSuite());
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
@@ -275,7 +278,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         testsuite.setIncludeTests(Collections.singletonList("TestCase1"));
         
@@ -322,7 +325,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase3.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         testsuite.setIncludeTests(Collections.singletonList("TestCase*"));
         
@@ -335,7 +338,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
         
         testsuite = new TestSuite();
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setIncludeTests(Collections.singletonList("*TestCase"));
         
@@ -348,7 +351,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
         
         testsuite = new TestSuite();
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setIncludeTests(Collections.singletonList("*TestCase*"));
         
@@ -385,7 +388,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         testsuite.setExcludeTests(Collections.singletonList("TestCase1"));
         
@@ -428,7 +431,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase3.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         testsuite.setExcludeTests(Collections.singletonList("Exclude*"));
         
@@ -441,7 +444,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
         
         testsuite = new TestSuite();
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setExcludeTests(Collections.singletonList("*TestCase"));
         
@@ -454,7 +457,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
         
         testsuite = new TestSuite();
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
         
         testsuite.setExcludeTests(Collections.singletonList("*TestCase*"));
         

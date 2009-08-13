@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.Reporter;
+import com.consol.citrus.report.TestReporters;
 
 /**
  * This class represents a test suite instance.
@@ -63,15 +63,15 @@ public class TestSuite implements BeanNameAware {
     
     @Autowired
     private TestContext context;
+    
+    @Autowired
+    private TestReporters reporters;
 
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');
         decFormat.setDecimalFormatSymbols(symbol);
     }
-
-    /** List of testsuite reporter **/
-    private List reporter = new ArrayList();
 
     /**
      * Logger
@@ -84,9 +84,7 @@ public class TestSuite implements BeanNameAware {
      * @return success flag
      */
     public boolean beforeSuite() {
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onStart(this);
-        }
+        reporters.onStart(this);
 
         log.info("Found " + tasksBefore.size() + " tasks in init phase");
 
@@ -101,9 +99,7 @@ public class TestSuite implements BeanNameAware {
                         + testAction.getClass().getName()
                         + "Nested exception is: ", e);
 
-                for (int j = 0; j < reporter.size(); j++) {
-                    ((Reporter)reporter.get(j)).onStartFailure(this, e);
-                }
+                reporters.onStartFailure(this, e);
 
                 afterSuite();
 
@@ -111,9 +107,7 @@ public class TestSuite implements BeanNameAware {
             }
         }
 
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onStartSuccess(this);
-        }
+        reporters.onStartSuccess(this);
 
         return true;
     }
@@ -126,9 +120,7 @@ public class TestSuite implements BeanNameAware {
     public boolean afterSuite() {
         boolean success = true;
 
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onFinish(this);
-        }
+        reporters.onFinish(this);
 
         if (log.isDebugEnabled()) {
             log.info("Found " + tasksAfter.size() + " tasks after");
@@ -150,15 +142,11 @@ public class TestSuite implements BeanNameAware {
         }
 
         if (success) {
-            for (int j = 0; j < reporter.size(); j++) {
-                ((Reporter)reporter.get(j)).onFinishSuccess(this);
-                ((Reporter)reporter.get(j)).generateReport(this);
-            }
+            reporters.onFinishSuccess(this);
+            reporters.generateReport(this);
         } else {
-            for (int j = 0; j < reporter.size(); j++) {
-                ((Reporter)reporter.get(j)).onFinishFailure(this, new CitrusRuntimeException("Error in clean up phase"));
-                ((Reporter)reporter.get(j)).generateReport(this);
-            }
+            reporters.onFinishFailure(this, new CitrusRuntimeException("Error in clean up phase"));
+            reporters.generateReport(this);
         }
 
         return success;
@@ -220,9 +208,7 @@ public class TestSuite implements BeanNameAware {
     public boolean run(TestCase testCase) {
         boolean success = true;
 
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestStart(testCase);
-        }
+        reporters.onTestStart(testCase);
 
         try {
             /* Execute test case */
@@ -230,22 +216,16 @@ public class TestSuite implements BeanNameAware {
             testCase.finish();
 
             ++cntCasesSuccess;
-            for (int j = 0; j < reporter.size(); j++) {
-                ((Reporter)reporter.get(j)).onTestSuccess(testCase);
-            }
+            reporters.onTestSuccess(testCase);
         } catch (Exception e) {
             success = false;
             ++cntCasesFail;
-            for (int j = 0; j < reporter.size(); j++) {
-                ((Reporter)reporter.get(j)).onTestFailure(testCase, e);
-            }
+            reporters.onTestFailure(testCase, e);
         }
 
         cntActions += testCase.getCountActions();
 
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestFinish(testCase);
-        }
+        reporters.onTestFinish(testCase);
 
         log.info("FINISHED TEST 1/1 (100%)");
         log.info("");
@@ -435,8 +415,8 @@ public class TestSuite implements BeanNameAware {
     /**
      * @param reporter the reporter to set
      */
-    public void setReporter(List reporter) {
-        this.reporter = reporter;
+    public void setReporters(TestReporters reporters) {
+        this.reporters = reporters;
     }
 
     /**
@@ -455,9 +435,7 @@ public class TestSuite implements BeanNameAware {
      */
     public synchronized void succeedTest(TestCase testCase) {
         ++cntCasesSuccess;
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestSuccess(testCase);
-        }
+        reporters.onTestSuccess(testCase);
     }
 
     /**
@@ -467,9 +445,7 @@ public class TestSuite implements BeanNameAware {
      */
     public synchronized void failTest(TestCase testCase, Exception e) {
         ++cntCasesFail;
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestFailure(testCase, e);
-        }
+        reporters.onTestFailure(testCase, e);
     }
 
     /**
@@ -478,9 +454,7 @@ public class TestSuite implements BeanNameAware {
      */
     public synchronized void skipTest(TestCase testCase) {
         cntSkipped++;
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestSkipped(testCase);
-        }
+        reporters.onTestSkipped(testCase);
     }
 
     /**
@@ -490,9 +464,7 @@ public class TestSuite implements BeanNameAware {
     public synchronized void finishTest(TestCase testCase) {
         cntActions += testCase.getCountActions();
 
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestFinish(testCase);
-        }
+        reporters.onTestFinish(testCase);
 
         log.info("FINISHED TEST " + (cntCasesFail+cntCasesSuccess+cntSkipped) + "/" + cntTests + " (" + decFormat.format(((double)(cntCasesFail+cntCasesSuccess+cntSkipped) / cntTests)*100) + "%)");
         log.info("");
@@ -503,9 +475,7 @@ public class TestSuite implements BeanNameAware {
      * @param testCase
      */
     public void startTest(TestCase testCase) {
-        for (int j = 0; j < reporter.size(); j++) {
-            ((Reporter)reporter.get(j)).onTestStart(testCase);
-        }
+        reporters.onTestStart(testCase);
     }
 
     /**

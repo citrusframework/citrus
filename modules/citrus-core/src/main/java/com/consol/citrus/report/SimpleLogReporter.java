@@ -13,7 +13,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 
 
-public class SimpleLogReporter implements Reporter {
+public class SimpleLogReporter implements TestReporter {
 
     /**
      * Logger

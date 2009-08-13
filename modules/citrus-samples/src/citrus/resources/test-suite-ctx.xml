@@ -9,12 +9,6 @@
 	 
 	<bean name="citrus-samples" class="com.consol.citrus.TestSuite">
 		<property name="threadCount" value="1"/>
-		<property name="reporter">
-			<list>
-				<bean class="com.consol.citrus.report.SimpleLogReporter"/>
-                <bean class="com.consol.citrus.report.JUnitReporter"/>
-			</list>
-		</property>
 		<property name="tasksBefore">
 			<list>
                 <bean class="com.consol.citrus.actions.StartupBean">
