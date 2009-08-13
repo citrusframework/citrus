@@ -40,7 +40,8 @@ public class CitrusApplication {
 
         /* Build root application context without any test files */
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                new String[] { TestConstants.DEFAULT_APPLICATIONCONTEXT,
+                new String[] { "com/consol/citrus/spring/root-application-ctx.xml",
+                               TestConstants.DEFAULT_APPLICATIONCONTEXT,
                                "com/consol/citrus/functions/citrus-function-ctx.xml" });
         
         ctx.setAllowBeanDefinitionOverriding(false);

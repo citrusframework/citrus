@@ -6,7 +6,9 @@ import org.testng.annotations.BeforeMethod;
 
 import com.consol.citrus.context.TestContext;
 
-@ContextConfiguration(locations = {"/application-ctx.xml", "functions/citrus-function-ctx.xml"})
+@ContextConfiguration(locations = {"spring/root-application-ctx.xml",
+                                   "/application-ctx.xml", 
+                                   "functions/citrus-function-ctx.xml"})
 public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests {
     protected TestContext context;
     

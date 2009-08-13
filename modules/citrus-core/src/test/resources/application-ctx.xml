@@ -9,15 +9,6 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	 
-	<aop:aspectj-autoproxy/>
-  
-    <!-- Used for autowiring -->
-    <context:annotation-config/>
-    
-    <context:load-time-weaver/>
-	
-    <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
-	<bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
     <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
 	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
@@ -30,12 +21,8 @@
 		</property>
 	</bean>
 	
-	<bean id="messageValidator" class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
-	
 	<bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
 	
-    <bean class="com.consol.citrus.context.TestContext" scope="prototype"/>
-    
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
@@ -51,8 +38,6 @@
             </list>
         </property>
     </bean>
-    
-    <bean class="com.consol.citrus.functions.FunctionRegistry"/>
     
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
