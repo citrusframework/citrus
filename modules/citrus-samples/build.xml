@@ -1,5 +1,5 @@
 <project name="flight-booking" basedir="." default="init" xmlns:artifact="urn:maven-artifact-ant">
-	<property file="src/main/resources/test.properties"/>
+	<property file="src/citrus/resources/citrus.properties"/>
 	
 	<target name="init">
 	    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
@@ -17,21 +17,22 @@
 	    </artifact:dependencies>
 	</target>
 	
-	<target name="run.all.tests" depends="init">
+	<target name="citrus.run.tests" depends="init">
 		<mkdir dir="target/test-output"/>
 		
 		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
 			<classpath path="src/citrus/resources"/>
+			<classpath path="src/citrus/tests"/>
 			<classpath path="src/main/resources"/>
-			<arg line="-testdir src/citrus/resources"/>
+			<arg line="-testdir src/citrus/tests"/>
 			<jvmarg value="-javaagent:spring-agent-2.5.6.jar"/>
         </java>
 		
 		<antcall target="junit.report"/>
 	</target>
 	
-	<target name="run.single.test" depends="init">
+	<target name="citrus.run.single.test" depends="init">
     	<mkdir dir="target/test-output"/>
     	
    	 	<touch file="target/test.history"/>
@@ -49,8 +50,9 @@
         <java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
         	<classpath path="src/citrus/resources"/>
+        	<classpath path="src/citrus/tests"/>
         	<classpath path="src/main/resources"/>
-        	<arg line="-test ${testclass} -testdir src/citrus/resources"/>
+        	<arg line="-test ${testclass} -testdir src/citrus/tests"/>
         	<jvmarg value="-javaagent:spring-agent-2.5.6.jar"/>
         </java>
     </target>
@@ -82,28 +84,8 @@
 		</junitreport>
 	</target>
 	
-    <target name="start.http.stub" depends="init">
-        <java classname="com.consol.citrus.http.HttpServer" fork="true" failonerror="true">
-            <classpath refid="classpath" />
-            <classpath path="src/main/resources" />
-        </java>
-    </target>
-    
-    <target name="stop.http.stub" depends="init">
-        <java classname="com.consol.citrus.http.HttpServer" fork="true" failonerror="true">
-            <arg line="quit" />
-            <classpath refid="classpath" />
-            <classpath path="src/main/resources" />
-        </java>
-    </target>
-    
-    <target name="restart.http.stub" depends="init">
-        <antcall target="stop.http.stub"/>
-        <antcall target="start.http.stub"/>
-    </target>
-	
 	<target name="create.html.doc" depends="init">
-        <property file="src/main/resources/testdoc.properties" />
+        <property file="src/citrus/resources/citrus.doc.properties" />
         
 		<mkdir dir="${xsl.output.dir}"/>
 		
@@ -117,7 +99,7 @@
         </java>
 		
 		<copy todir="${xsl.output.dir}/${img.dir}">
-            <fileset dir="src/main/resources/${img.dir}">
+            <fileset dir="src/citrus/resources/${img.dir}">
                 <include name="*"/>
             </fileset>
         </copy>
@@ -131,7 +113,7 @@
     </target>
     
     <target name="create.xls.doc" depends="init">
-        <property file="src/main/resources/testdoc.properties" />
+        <property file="src/citrus/resources/citrus.doc.properties" />
         
     	<mkdir dir="${xsl.output.dir}"/>
     	
@@ -146,7 +128,7 @@
     </target>
     
     <target name="create.svg.doc" depends="init">
-        <property file="src/main/resources/testdoc.properties" />
+        <property file="src/citrus/resources/citrus.doc.properties" />
         
         <java classname="com.consol.citrus.doc.SvgTestDocGenerator">
         	<classpath refid="classpath" />    

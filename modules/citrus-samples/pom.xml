@@ -55,8 +55,12 @@
             <includes>
                 <include>**/*</include>
             </includes>
-            <excludes>
-            </excludes>
+        </testResource>
+        <testResource>
+            <directory>src/citrus/tests</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
         </testResource>
     </testResources>
   </build>
