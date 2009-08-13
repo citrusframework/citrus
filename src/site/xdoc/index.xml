@@ -6,31 +6,31 @@
   <body>
     <section name="Welcome to Citrus">
       <p>
-        Citrus is an integration testing framework written in Java that tests your Enterprise Application Integration (EAI) software 
-        to fit into your customers software landscape. The tool can easily simulate surrounding systems across various transports 
-        (e.g. Http, JMS, TCP/IP, SOAP, ...) in order to perform automatic end-to-end use case testing.
+        Citrus is an integration testing framework written in Java that tests your software application to fit into your customers 
+        environment. The tool can easily simulate surrounding systems across various transports (e.g. Http, JMS, TCP/IP, SOAP, ...) 
+        in order to perform automatic end-to-end use case testing.
       </p>
       
       <p>  
         Citrus aims to
         <ul>
-          <li>automate the integration testing for EAI applications</li>
-          <li>easily simulate interface systems supporting a wide range of protocols</li>
-          <li>perform fully qualified use case tests</li>
-          <li>provide high integration test coverage for EAI software</li>          
+          <li>automate the integration testing for applications</li>
+          <li>easily simulate interface partners supporting a wide range of protocols</li>
+          <li>perform fully qualified use case end-to-end tests</li>
+          <li>provide high test coverage for your software application</li>          
         </ul>
       </p>
     </section>
     
     <section name="Overview">
-        This website will give you all information about how to use Citrus. Visit the following points to find out wheather Citrus 
+        This website will give you all information about how to use Citrus. Visit the following pages to find out wheather Citrus 
         will help you solve your testing problems.
         
         <ul>
           <li>Find out why testing can be a hard challenge: <a href="introduction.html">Why use Citrus?</a></li>
           <li>Check the complete <a href="features.html">Feature List</a></li>
           <li>Go to the <a href="reference-doc.html">Reference Documentation</a></li>
-          <li>Check out the <a href="examples.html">Examples</a> section</li>
+          <li>Check out the <a href="tutorials.html">Tutorials</a> section</li>
         </ul>
     </section>
      
@@ -39,6 +39,7 @@
         Citrus uses following technologies
         <ul> 
           <li><a href="http://www.springframework.org">Spring 2.5.x</a> as the glue for everything</li>
+          <li><a href="http://testng.org/">TestNG</a> runs Citrus tests</li>
           <li><a href="http://www.slf4j.org/">SLF4J</a> for logging</li>
           <li><a href="http://maven.apache.org">Maven</a> as build tool with support for multi module projects</li>
           <li><a href="http://www.atlassian.com/software/bamboo">Bamboo</a> as build management tool for continuous integration</li>

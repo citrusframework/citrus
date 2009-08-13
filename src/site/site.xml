@@ -31,7 +31,6 @@
       <item name="Quickstart" href="${site.url}/quickstart.html"/>
       <item name="Download" href="${site.url}/download.html"/>
       <item name="Tutorials" href="${site.url}/tutorials.html"/>
-      <item name="Examples" href="${site.url}/examples.html"/>
     </menu>
     
     <menu name="Documentation">
