@@ -1,4 +1,4 @@
-<project name="flight-booking" basedir="." default="run.all.tests" xmlns:artifact="urn:maven-artifact-ant">
+<project name="flight-booking" basedir="." default="citrus.run.tests" xmlns:artifact="urn:maven-artifact-ant">
 		
     <path id="classpath">
         <pathelement path="tests"/>
@@ -13,29 +13,19 @@
         </fileset>
     </path>
     
-    <target name="echo.classpath">	
-		<!-- get the source compile classpath in a printable form -->
-		<pathconvert pathsep="${line.separator}|   |-- "
-		             property="echo.classpath"
-		             refid="classpath">
-		</pathconvert>
-	
-		<echo message="${echo.classpath}"/>
-	</target>
-    
-	<target name="run.all.tests" description="Runs all tests">
+	<target name="citrus.run.tests" description="Runs all Citrus tests">
 		<mkdir dir="test-output"/>
 		
 		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
-			<classpath path="src/main/tests"/>
+			<classpath path="src/citrus/tests"/>
 			<jvmarg value="-javaagent:lib/spring-agent-2.5.6.jar"/>
         </java>
 		
 		<antcall target="junit.report"/>
 	</target>
 	
-	<target name="run.single.test" description="Runs a single test by name">
+	<target name="citrus.run.single.test" description="Runs a single test by name">
     	<mkdir dir="test-output"/>
     	
    	 	<touch file="test.history"/>
@@ -52,24 +42,24 @@
 
         <java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
-        	<classpath path="src/main/tests"/>
+        	<classpath path="src/citrus/tests"/>
         	<arg line="-test ${testclass}"/>
         	<jvmarg value="-javaagent:lib/spring-agent-2.5.6.jar"/>
         </java>
     </target>
 	
-	<target name="create.new.testcase" description="Creates a new empty test case">
-        <input message="Enter test name:" addproperty="test.name"/>
-        <input message="Enter test description:" addproperty="test.description"/>
-        <input message="Enter your name:" addproperty="test.author.local" defaultvalue="${test.author}"/>
-        <input message="Enter subfolder in test directory:" addproperty="test.subfolder"/>
+	<target name="create.test" description="Creates a new empty test case">
+		<input message="Enter test name:" addproperty="test.name"/>
+		        <input message="Enter test description:" addproperty="test.description"/>
+		        <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
+		        <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
             <classpath refid="classpath"/>
             <arg value="${test.name}"/>
 			<arg value="${test.author}"/>
 			<arg value="${test.description}"/>
-			<arg value="tests/${test.subfolder}"/>
+			<arg value="${test.package}"/>
         </java>
     </target>
 	
