@@ -58,5 +58,10 @@
         <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
       </item>
     </menu>
+    
+    <menu name="Commercial services">
+        <item name="Consulting" href="${site.url}/commercial-consulting.html"/>
+        <item name="Development" href="${site.url}/commercial-development.html"/>
+    </menu>
   </body>
 </project>
