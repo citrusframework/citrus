@@ -2,14 +2,18 @@ package com.consol.citrus;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.actions.EchoBean;
-import com.consol.citrus.report.SimpleLogReporter;
+import com.consol.citrus.report.TestReporters;
 
 public class TestMetaInfoTest extends AbstractBaseTest {
+    
+    @Autowired
+    TestReporters reporters;
     
     @Test
     public void testExcludeDraftTests() {
@@ -36,7 +40,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         Assert.assertTrue(testsuite.beforeSuite());
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
@@ -62,7 +66,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         Assert.assertTrue(testsuite.beforeSuite());
         Assert.assertTrue(testsuite.run(testcase1));
@@ -88,7 +92,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
-        testsuite.setReporter(Collections.singletonList(new SimpleLogReporter()));
+        testsuite.setReporters(reporters);
 
         Assert.assertTrue(testsuite.beforeSuite());
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1}));

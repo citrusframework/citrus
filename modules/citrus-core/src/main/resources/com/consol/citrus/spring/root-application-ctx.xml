@@ -14,6 +14,10 @@
     <!-- Used for autowiring -->
     <context:annotation-config/>
     
+    <bean class="com.consol.citrus.report.TestReporters"/>
+    
+    <bean class="com.consol.citrus.report.SimpleLogReporter"/>
+    
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
     <bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>

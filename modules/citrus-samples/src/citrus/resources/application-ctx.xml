@@ -51,4 +51,6 @@
 			</list>
 		</property>
 	</bean>
+  
+    <bean class="com.consol.citrus.report.JUnitReporter"/>
 </beans>
