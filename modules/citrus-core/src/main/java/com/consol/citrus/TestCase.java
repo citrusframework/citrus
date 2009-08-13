@@ -5,6 +5,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
@@ -28,7 +29,8 @@ public class TestCase implements BeanNameAware {
     private Map variableDefinitions = new HashMap();
 
     /** Variables valid for this test **/
-    private TestContext context = new TestContext();
+    @Autowired
+    private TestContext context;
 
     /** Name of testcase */
     private String name = TestCase.class.getSimpleName();

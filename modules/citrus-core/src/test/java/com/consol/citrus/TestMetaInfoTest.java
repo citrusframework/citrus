@@ -16,6 +16,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
@@ -26,6 +27,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.DRAFT);
@@ -50,6 +52,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
@@ -75,6 +78,7 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();

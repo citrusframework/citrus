@@ -14,15 +14,13 @@
     <!-- Used for autowiring -->
     <context:annotation-config/>
     
-    <context:load-time-weaver/>
-    
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
     <bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
     
     <bean id="messageValidator" class="com.consol.citrus.validation.DefaultXMLMessageValidator"/>
     
-    <bean class="com.consol.citrus.context.TestContext" scope="prototype"/>
+    <bean id="testContextFactory" class="com.consol.citrus.context.TestContextFactoryBean"/>
     
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>
 	

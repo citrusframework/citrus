@@ -13,6 +13,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
@@ -21,6 +22,8 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
+import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.variable.GlobalVariables;
 
 /**
  * Special loop back bean for jms.
@@ -125,6 +128,12 @@ public class JmsLoopBackBean implements InitializingBean, Server {
     private int throughput = 0;
     private long throughputTime = 0L;
     
+    @Autowired
+    FunctionRegistry functionRegistry;
+    
+    @Autowired
+    GlobalVariables globalVariables;
+    
     /**
      * Logger
      */
@@ -137,6 +146,9 @@ public class JmsLoopBackBean implements InitializingBean, Server {
      */
     public void run() {
         TestContext context = new TestContext();
+        context.setFunctionRegistry(functionRegistry);
+        context.setGlobalVariables(globalVariables);
+        
         Map headerValues = new HashMap();
         QueueReceiver qreceiver;
         QueueSession qsession;

@@ -7,6 +7,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
@@ -59,6 +60,9 @@ public class TestSuite implements BeanNameAware {
 
     /** Common decimal format for percentage calculation in report **/
     private static DecimalFormat decFormat = new DecimalFormat("0.0");
+    
+    @Autowired
+    private TestContext context;
 
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
@@ -91,7 +95,7 @@ public class TestSuite implements BeanNameAware {
 
             try {
                 /* Executing test action and validate its success */
-                testAction.execute(new TestContext());
+                testAction.execute(context);
             } catch (Exception e) {
                 log.error("Task failed "
                         + testAction.getClass().getName()
@@ -135,7 +139,7 @@ public class TestSuite implements BeanNameAware {
 
             try {
                 /* Executing test action and validate its success */
-                testAction.execute(new TestContext());
+                testAction.execute(context);
             } catch (Exception e) {
                 log.error("Task failed "
                         + testAction.getClass().getName()
@@ -263,7 +267,7 @@ public class TestSuite implements BeanNameAware {
             final TestAction testAction = (TestAction)tasksBetween.get(j);
 
             /* Executing test action */
-            testAction.execute(new TestContext());
+            testAction.execute(context);
         }
     }
 

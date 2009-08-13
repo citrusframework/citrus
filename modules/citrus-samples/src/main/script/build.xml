@@ -19,7 +19,6 @@
 		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
             <classpath refid="classpath"/>
 			<classpath path="src/citrus/tests"/>
-			<jvmarg value="-javaagent:lib/spring-agent-2.5.6.jar"/>
         </java>
 		
 		<antcall target="junit.report"/>
@@ -44,7 +43,6 @@
             <classpath refid="classpath"/>
         	<classpath path="src/citrus/tests"/>
         	<arg line="-test ${testclass}"/>
-        	<jvmarg value="-javaagent:lib/spring-agent-2.5.6.jar"/>
         </java>
     </target>
 	

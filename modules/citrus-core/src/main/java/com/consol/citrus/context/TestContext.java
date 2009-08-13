@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.integration.core.Message;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -21,7 +19,6 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
-@Configurable(preConstruction=true)
 public class TestContext {
     /**
      * Logger
@@ -32,18 +29,15 @@ public class TestContext {
     protected Map<String, String> variables;
     
     /** Global variables */
-    @Autowired
-    private transient GlobalVariables globalVariables;
+    private GlobalVariables globalVariables;
     
-    @Autowired 
-    private transient FunctionRegistry functionRegistry;
+    private FunctionRegistry functionRegistry;
     
     /**
      * Default constructor
      */
     public TestContext() {
         variables = new LinkedHashMap<String, String>();
-        variables.putAll(globalVariables.getVariables());
     }
     
     /**
@@ -324,6 +318,8 @@ public class TestContext {
 
 	public void setGlobalVariables(GlobalVariables globalVariables) {
 		this.globalVariables = globalVariables;
+		
+		variables.putAll(globalVariables.getVariables());
 	}
 
     /**

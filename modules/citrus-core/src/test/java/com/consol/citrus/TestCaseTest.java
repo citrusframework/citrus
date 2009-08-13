@@ -15,6 +15,7 @@ public class TestCaseTest extends AbstractBaseTest {
     @Test
     public void testExecution() {
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
@@ -26,6 +27,7 @@ public class TestCaseTest extends AbstractBaseTest {
     @Test
     public void testExecutionWithVariables() {
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
@@ -45,6 +47,7 @@ public class TestCaseTest extends AbstractBaseTest {
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testUnknownVariable() {
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
@@ -64,6 +67,7 @@ public class TestCaseTest extends AbstractBaseTest {
     @Test
     public void testFinallyChain() {
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
