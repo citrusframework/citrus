@@ -26,7 +26,6 @@
 			<classpath path="src/citrus/tests"/>
 			<classpath path="src/main/resources"/>
 			<arg line="-testdir src/citrus/tests"/>
-			<jvmarg value="-javaagent:spring-agent-2.5.6.jar"/>
         </java>
 		
 		<antcall target="junit.report"/>
@@ -53,7 +52,6 @@
         	<classpath path="src/citrus/tests"/>
         	<classpath path="src/main/resources"/>
         	<arg line="-test ${testclass} -testdir src/citrus/tests"/>
-        	<jvmarg value="-javaagent:spring-agent-2.5.6.jar"/>
         </java>
     </target>
 	

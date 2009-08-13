@@ -17,6 +17,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("testRunSingleTest");
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setStatus(Status.FINAL);
@@ -41,6 +42,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("testBeforeSuite");
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setStatus(Status.FINAL);
@@ -67,6 +69,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("testFailBeforeSuite");
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setStatus(Status.FINAL);
@@ -88,6 +91,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("testBeforeSuite");
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setStatus(Status.FINAL);
@@ -114,6 +118,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("testFailAfterSuite");
         TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
         metaInfo.setStatus(Status.FINAL);
@@ -141,6 +146,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -150,6 +156,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -176,6 +183,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -185,6 +193,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -212,6 +221,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -221,6 +231,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -245,6 +256,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -254,6 +266,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -280,6 +293,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -289,6 +303,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -298,6 +313,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase3 = new TestCase();
+        testcase3.setTestContext(createTestContext());
         testcase3.setName("ExcludeTestCase");
         TestCaseMetaInfo metaInfo3 = new TestCaseMetaInfo();
         metaInfo3.setStatus(Status.FINAL);
@@ -350,6 +366,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -359,6 +376,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -385,6 +403,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         TestSuite testsuite = new TestSuite();
         
         TestCase testcase1 = new TestCase();
+        testcase1.setTestContext(createTestContext());
         testcase1.setName("TestCase1");
         TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
         metaInfo1.setStatus(Status.FINAL);
@@ -394,6 +413,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("TestCase2");
         TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
         metaInfo2.setStatus(Status.FINAL);
@@ -403,6 +423,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase2.setTestChain(Collections.singletonList(new EchoBean()));
         
         TestCase testcase3 = new TestCase();
+        testcase3.setTestContext(createTestContext());
         testcase3.setName("ExcludeTestCase");
         
         testcase3.setTestChain(Collections.singletonList(new EchoBean()));

@@ -23,6 +23,7 @@ public class TestContextTest extends AbstractBaseTest {
         globalVariables.getVariables().put("defaultVar", "123");
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         
         testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
@@ -35,6 +36,7 @@ public class TestContextTest extends AbstractBaseTest {
         Assert.assertEquals(testcase.getTestContext().getVariables().get("test1Var"), "456");
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("MyTestCase2");
         
         testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
@@ -53,6 +55,7 @@ public class TestContextTest extends AbstractBaseTest {
         globalVariables.getVariables().put("defaultVar", "123");
         
         TestCase testcase = new TestCase();
+        testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         
         SetVariablesBean varSetting = new SetVariablesBean();
@@ -64,6 +67,7 @@ public class TestContextTest extends AbstractBaseTest {
         Assert.assertEquals(testcase.getTestContext().getVariables().get("defaultVar"), "ABC");
         
         TestCase testcase2 = new TestCase();
+        testcase2.setTestContext(createTestContext());
         testcase2.setName("MyTestCase2");
         
         testcase2.execute();
