@@ -51,7 +51,7 @@ public class TestSuite implements BeanNameAware {
     private List includeTests;
     private List excludeTests;
 
-    private String testSuiteName = "";
+    private String name = "";
 
     private int threadCount = 1;
 
@@ -266,18 +266,18 @@ public class TestSuite implements BeanNameAware {
         while (it.hasNext()) {
             String namePattern = (String) it.next();
 
-            if (namePattern.startsWith(TestConstants.SEARCH_WILDCARD) && namePattern.endsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(TestConstants.SEARCH_WILDCARD.length(), namePattern.length() - TestConstants.SEARCH_WILDCARD.length());
+            if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD) && namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length(), namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.indexOf(namePattern) != -1) {
                     return true;
                 }
-            } else if (namePattern.startsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(TestConstants.SEARCH_WILDCARD.length());
+            } else if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.endsWith(namePattern)) {
                     return true;
                 }
-            } else if (namePattern.endsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(0, namePattern.length() - TestConstants.SEARCH_WILDCARD.length());
+            } else if (namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(0, namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.startsWith(namePattern)) {
                     return true;
                 }
@@ -305,18 +305,18 @@ public class TestSuite implements BeanNameAware {
         while (it.hasNext()) {
             String namePattern = (String) it.next();
 
-            if (namePattern.startsWith(TestConstants.SEARCH_WILDCARD) && namePattern.endsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(TestConstants.SEARCH_WILDCARD.length(), namePattern.length() - TestConstants.SEARCH_WILDCARD.length());
+            if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD) && namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length(), namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.indexOf(namePattern) != -1) {
                     return true;
                 }
-            } else if (namePattern.startsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(TestConstants.SEARCH_WILDCARD.length());
+            } else if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.endsWith(namePattern)) {
                     return true;
                 }
-            } else if (namePattern.endsWith(TestConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(0, namePattern.length() - TestConstants.SEARCH_WILDCARD.length());
+            } else if (namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
+                namePattern = namePattern.substring(0, namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
                 if (testName.startsWith(namePattern)) {
                     return true;
                 }
@@ -379,11 +379,11 @@ public class TestSuite implements BeanNameAware {
     }
 
     public void setBeanName(String beanName) {
-        this.testSuiteName = beanName;
+        this.name = beanName;
     }
 
     public String getName() {
-        return testSuiteName;
+        return name;
     }
 
     /**

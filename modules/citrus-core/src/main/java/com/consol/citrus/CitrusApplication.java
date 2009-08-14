@@ -41,7 +41,7 @@ public class CitrusApplication {
         /* Build root application context without any test files */
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
                 new String[] { "com/consol/citrus/spring/root-application-ctx.xml",
-                               TestConstants.DEFAULT_APPLICATIONCONTEXT,
+                               CitrusConstants.DEFAULT_APPLICATIONCONTEXT,
                                "com/consol/citrus/functions/citrus-function-ctx.xml" });
         
         ctx.setAllowBeanDefinitionOverriding(false);
@@ -63,7 +63,7 @@ public class CitrusApplication {
             if (cmd.hasOption("testdir")) {
                 testDirectory = cmd.getOptionValue("testdir");
             } else {
-                testDirectory = TestConstants.DEFAULT_TEST_DIRECTORY;
+                testDirectory = CitrusConstants.DEFAULT_TEST_DIRECTORY;
             }
             
             /* check if command line arguments contain test-names to be executed explicitly */
