@@ -1,6 +1,5 @@
 package com.consol.citrus.server;
 
-import org.springframework.beans.factory.BeanNameAware;
 
 /**
  *
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.BeanNameAware;
  * @since 06.03.2007
  *
  */
-public interface Server extends BeanNameAware, Runnable {
+public interface Server extends Runnable {
 
     public void start();
 

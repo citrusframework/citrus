@@ -1,4 +1,4 @@
-package com.consol.citrus.util;
+package com.consol.citrus.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.server.Server;
 
 /**
  * Class representing shutdown hook thread

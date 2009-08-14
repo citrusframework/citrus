@@ -1,33 +1,24 @@
-package com.consol.citrus.activemq;
+package com.consol.citrus.server.activemq;
 
 import org.apache.activemq.broker.BrokerService;
-import org.springframework.beans.factory.InitializingBean;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.server.Server;
+import com.consol.citrus.server.AbstractServer;
 
-public class ActiveMQServer implements Server, InitializingBean {
+public class ActiveMQServer extends AbstractServer {
 
-    private String name = "activeMQBroker";
-
-    private boolean running = false;
-    
     private String brokerURL = "tcp://localhost:61616";
     
     private boolean persistent = false;
     
-    private boolean autoStart = false;
-    
     private BrokerService broker;
+    
+    private String workingDirectory = "target/activemq-data";
 
     /**
      * @throws CitrusRuntimeException
      */
     public void run() {
-        synchronized (this) {
-            running = true;
-        }
-        
         try {
             broker.addConnector(brokerURL);
             broker.start();
@@ -36,22 +27,25 @@ public class ActiveMQServer implements Server, InitializingBean {
         }
     }
     
-    public void start() {
+    /**
+     * @see com.consol.citrus.server.AbstractServer#startup()
+     */
+    @Override
+    protected void startup() {
         broker = new BrokerService();
-        broker.setBrokerName(name);
+        broker.setBrokerName(getName());
         broker.setUseShutdownHook(true);
         broker.setUseJmx(false);
         broker.setPersistent(persistent);
         broker.setDeleteAllMessagesOnStartup(true);
-        broker.setDataDirectory("target/activemq-data");
-        
-        run();
+        broker.setDataDirectory(workingDirectory);
     }
-    
+
     /**
-     * @throws CitrusRuntimeException
+     * @see com.consol.citrus.server.AbstractServer#shutdown()
      */
-    public void stop() {
+    @Override
+    protected void shutdown() {
         if(broker != null) {
             try {
                 broker.stop();
@@ -59,36 +53,8 @@ public class ActiveMQServer implements Server, InitializingBean {
                 throw new CitrusRuntimeException(e);
             }
         }
-        
-        synchronized (this) {
-            running = false;
-        }
     }
     
-    public void afterPropertiesSet() throws Exception {
-        if(autoStart) {
-            start();
-        }
-    }
-
-    public void setBeanName(String name) {
-        if(this.name == null) {
-            this.name = name;
-        }
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * @param persistent the persistent to set
      */
@@ -116,11 +82,12 @@ public class ActiveMQServer implements Server, InitializingBean {
     public void setBrokerURL(String brokerURL) {
         this.brokerURL = brokerURL;
     }
-    
+
     /**
-     * @param autoStart the autoStart to set
+     * @param workingDirectory the workingDirectory to set
      */
-    public void setAutoStart(boolean autoStart) {
-        this.autoStart = autoStart;
+    public void setWorkingDirectory(String workingDirectory) {
+        this.workingDirectory = workingDirectory;
     }
+    
 }

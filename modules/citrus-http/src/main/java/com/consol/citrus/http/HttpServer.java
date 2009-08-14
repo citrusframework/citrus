@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.core.Message;
@@ -19,8 +18,8 @@ import com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.server.Server;
-import com.consol.citrus.util.ServerShutdownThread;
+import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.server.ServerShutdownThread;
 
 /**
  * Simple http server accepting client connections on a server uri and port. The
@@ -29,25 +28,14 @@ import com.consol.citrus.util.ServerShutdownThread;
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
-public class HttpServer implements Server, InitializingBean {
+public class HttpServer extends AbstractServer {
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(HttpServer.class);
 
-    /**
-     * mode to shutdown the server
-     */
+    /** command to shutdown the server */
     private static final String SHUTDOWN_COMMAND = "quit";
-
-    /** Name of this server (will be injected through Spring) */
-    private String name;
-
-    /** Running flag */
-    private boolean running = false;
-
-    /** Thread running the server in non deamon mode */
-    private Thread thread;
 
     /** server socket accepting client conections */
     private ServerSocket serverSocket;
@@ -67,20 +55,13 @@ public class HttpServer implements Server, InitializingBean {
     /** Should server start in deamon mode */
     private boolean deamon = false;
     
-    /** Autostart server after properties are set */
-    private boolean autoStart = false;
-    
     public void run() {
         log.info("[HttpServer] Listening for client connections on "
                 + serverSocket.getInetAddress().getHostName() + ":" + port + uri);
 
         Socket clientSocket = null;
 
-        synchronized (this) {
-            running = true;
-        }
-
-        while (running && !serverSocket.isClosed()) {
+        while (isRunning() && !serverSocket.isClosed()) {
             BufferedReader in = null;
             Writer out = null;
             
@@ -206,18 +187,14 @@ public class HttpServer implements Server, InitializingBean {
     }
 
     /**
-     * @see com.consol.citrus.server.Server#start()
-     * @throws CitrusRuntimeException
+     * @see com.consol.citrus.server.AbstractServer#startup()
      */
-    public void start() {
+    @Override
+    protected void startup() {
         log.info("[HttpServer] Starting ...");
         try {
             InetAddress addr = InetAddress.getByName(host);
             this.serverSocket = new ServerSocket(port, 0, addr);
-
-            thread = new Thread(this);
-            thread.setDaemon(false);
-            thread.start();
 
             if(deamon == false) {
                 new ServerShutdownThread(this);
@@ -233,8 +210,11 @@ public class HttpServer implements Server, InitializingBean {
         log.info("[HttpServer] Started sucessfully");
     }
 
-    public void stop() {
-        //TODO: ensure shutdown
+    /**
+     * @see com.consol.citrus.server.AbstractServer#shutdown()
+     */
+    @Override
+    protected void shutdown() {
         synchronized (this) {
             log.info("[HttpServer] Stopping Http server '" + getName() + "'");
             try {
@@ -243,10 +223,8 @@ public class HttpServer implements Server, InitializingBean {
                 }
             } catch (Exception e) {
                 log.error("Error while closing server socket", e);
-            } finally {
-                running = false;
-                thread = null;
             }
+            
             log.info("[HttpServer] Http server '" + getName() + "' was stopped sucessfully");
         }
     }
@@ -270,6 +248,7 @@ public class HttpServer implements Server, InitializingBean {
             server = (HttpServer)ctx.getBean("httpServer");
         } else {
             server = new HttpServer();
+            server.setBeanName("httpServer");
             server.setHost("localhost");
             server.setPort(8080);
             server.setUri("request");
@@ -346,34 +325,6 @@ public class HttpServer implements Server, InitializingBean {
         }
     }
     
-    public void afterPropertiesSet() throws Exception {
-        if(autoStart) {
-            start();
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isRunning() {
-        synchronized (this) {
-            return running;
-        }
-    }
-    
-    public void join() {
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            log.error("Error occured", e);
-        }
-    }
-    
-    public void setBeanName(String name) {
-        this.name = name;
-    }
-
     public void setPort(int port) {
         this.port = port;
     }
@@ -393,11 +344,4 @@ public class HttpServer implements Server, InitializingBean {
         this.host = host;
     }
     
-    /**
-     * @param autoStart the autoStart to set
-     */
-    public void setAutoStart(boolean autoStart) {
-        this.autoStart = autoStart;
-    }
-
 }
