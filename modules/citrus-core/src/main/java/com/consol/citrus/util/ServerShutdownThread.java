@@ -6,20 +6,20 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.server.Server;
 
 /**
  * Class representing shutdown hook thread
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
  * @since 22.02.2007
  */
-public class ShutdownThread extends Thread
+public class ServerShutdownThread extends Thread
 {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ShutdownThread.class);
+    private static final Logger log = LoggerFactory.getLogger(ServerShutdownThread.class);
 
     /** List of servers to be shut down */
     private List<Server> servers = new ArrayList<Server>();
@@ -60,7 +60,7 @@ public class ShutdownThread extends Thread
      * Default Constructor using fields
      * @param port
      */
-    public ShutdownThread(Server server) {
+    public ServerShutdownThread(Server server) {
         create();
 
         servers.add(server);
@@ -70,7 +70,7 @@ public class ShutdownThread extends Thread
      * Default Constructor using fields
      * @param port
      */
-    public ShutdownThread(List<Server> servers) {
+    public ServerShutdownThread(List<Server> servers) {
         create();
         
         this.servers.addAll(servers);

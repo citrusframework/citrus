@@ -7,8 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.server.Server;
 
 /**
  * Bean to start any startable test action

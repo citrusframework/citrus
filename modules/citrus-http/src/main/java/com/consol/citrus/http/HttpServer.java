@@ -14,13 +14,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.ShutdownThread;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.util.ServerShutdownThread;
 
 /**
  * Simple http server accepting client connections on a server uri and port. The
@@ -206,7 +206,7 @@ public class HttpServer implements Server, InitializingBean {
     }
 
     /**
-     * @see com.consol.citrus.Server#start()
+     * @see com.consol.citrus.server.Server#start()
      * @throws CitrusRuntimeException
      */
     public void start() {
@@ -220,7 +220,7 @@ public class HttpServer implements Server, InitializingBean {
             thread.start();
 
             if(deamon == false) {
-                new ShutdownThread(this);
+                new ServerShutdownThread(this);
             }
         } catch (IOException e) {
             log.error("[HttpServer] failed to listen on port " + port, e);

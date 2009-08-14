@@ -1,4 +1,4 @@
-package com.consol.citrus;
+package com.consol.citrus.server;
 
 import org.springframework.beans.factory.BeanNameAware;
 

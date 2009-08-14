@@ -3,8 +3,8 @@ package com.consol.citrus.activemq;
 import org.apache.activemq.broker.BrokerService;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.server.Server;
 
 public class ActiveMQServer implements Server, InitializingBean {
 

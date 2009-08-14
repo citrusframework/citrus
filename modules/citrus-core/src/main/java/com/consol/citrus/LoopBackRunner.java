@@ -9,7 +9,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.consol.citrus.actions.StartupBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.ShutdownThread;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.util.ServerShutdownThread;
 
 /**
  * Runs the loop back dummies using classpath references to the applicationContext.xml and test.properties. Required files only
@@ -92,12 +93,12 @@ public class LoopBackRunner {
             }
 
             if (starter.getServer() != null) {
-                Runtime.getRuntime().addShutdownHook(new ShutdownThread(starter.getServer()));
+                Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(starter.getServer()));
                 servers.add(starter.getServer());
             }
 
             if (starter.getServerList() != null) {
-                Runtime.getRuntime().addShutdownHook(new ShutdownThread(starter.getServerList()));
+                Runtime.getRuntime().addShutdownHook(new ServerShutdownThread(starter.getServerList()));
                 for (int j = 0; j < starter.getServerList().size(); j++) {
                     servers.add(starter.getServerList().get(j));
                 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.server.Server;
 
 /**
  * Bean to stop any stoppable test action
