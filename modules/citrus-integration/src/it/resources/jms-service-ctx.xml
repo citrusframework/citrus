@@ -5,7 +5,7 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
-    <bean id="activeMQBroker" class="com.consol.citrus.activemq.ActiveMQServer">
+    <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
         <property name="brokerURL" value="tcp://localhost:61616" />
         <property name="persistent" value="false"/>
         <property name="autoStart" value="true"/>

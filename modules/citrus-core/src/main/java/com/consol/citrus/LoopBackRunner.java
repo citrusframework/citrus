@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.consol.citrus.actions.StartupBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.util.ServerShutdownThread;
+import com.consol.citrus.server.ServerShutdownThread;
 
 /**
  * Runs the loop back dummies using classpath references to the applicationContext.xml and test.properties. Required files only
