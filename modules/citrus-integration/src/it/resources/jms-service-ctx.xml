@@ -2,29 +2,23 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
     <bean id="activeMQBroker" class="com.consol.citrus.activemq.ActiveMQServer">
-        <property name="host" value="localhost"/>
-        <property name="port" value="61616"/>
+        <property name="brokerURL" value="tcp://localhost:61616" />
         <property name="persistent" value="false"/>
+        <property name="autoStart" value="true"/>
     </bean>
-  
+    
 	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="${jms.server.url}" />
+		<property name="brokerURL" value="tcp://localhost:61616" />
 	</bean>
   
     <!-- bean id="connectionFactory" class="com.tibco.tibjms.TibjmsQueueConnectionFactory">
-        <property name="serverUrl" value="${jms.server.url}" />
-        <property name="userName" value="${jms.user}"/>
-        <property name="userPassword" value="${jms.password}"/>
+        <property name="serverUrl" value="tcp://localhost:61616" />
+        <property name="userName" value="admin"/>
+        <property name="userPassword" value=""/>
     </bean-->
   
     <bean id="defaultJmsMessageReceiver" class="com.consol.citrus.jms.JmsMessageReceiver" abstract="true">

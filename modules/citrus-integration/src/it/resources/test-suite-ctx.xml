@@ -2,23 +2,12 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	 
 	<bean name="citrus-integration" class="com.consol.citrus.TestSuite">
 		<property name="threadCount" value="1"/>
 		<property name="tasksBefore">
 			<list>
-                <bean class="com.consol.citrus.actions.StartupBean">
-                    <property name="server" ref="activeMQBroker"/>
-                </bean>
-                
 				<ref bean="purgeJmsQueues"/>
 				<ref bean="startJmsLoopBackDummies"/>
 				
@@ -42,10 +31,6 @@
 			<list>
 				<ref bean="stopJmsLoopBackDummies"/>
 				
-                <bean class="com.consol.citrus.actions.ShutdownBean">
-                    <property name="server" ref="activeMQBroker"/>
-                </bean>
-                
 				<bean id="destroyDatabase" parent="databaseAccess">
                     <property name="ignoreErrors" value="true"/>
 					<property name="statements">

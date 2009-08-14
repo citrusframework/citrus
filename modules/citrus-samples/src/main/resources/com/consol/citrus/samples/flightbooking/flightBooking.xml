@@ -13,6 +13,12 @@
 			http://www.springframework.org/schema/integration/stream
 			http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd">
     
+    <beans:bean id="activeMQBroker" class="com.consol.citrus.activemq.ActiveMQServer">
+        <beans:property name="brokerURL" value="tcp://localhost:61616" />
+        <beans:property name="persistent" value="false"/>
+        <beans:property name="autoStart" value="true"/>
+    </beans:bean>
+    
     <beans:bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <beans:property name="brokerURL" value="tcp://localhost:61616"/>     
     </beans:bean>
