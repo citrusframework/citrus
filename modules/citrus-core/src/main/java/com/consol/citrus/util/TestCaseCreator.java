@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
-import com.consol.citrus.TestConstants;
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
@@ -61,7 +61,7 @@ public class TestCaseCreator {
         OutputStream buffered = null;
         
         try {
-            File file = new File("src/citrus/java/" + targetPackage + "/" + name + ".java");
+            File file = new File(CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java");
             if(file.getParentFile().exists() == false) {
                 file.getParentFile().mkdirs();
             }
@@ -106,7 +106,7 @@ public class TestCaseCreator {
         OutputStream buffered = null;
         
         try {
-            File file = new File("src/citrus/resources/" + targetPackage + "/" + name + "." + TestConstants.TESTCASE_FILE_EXTENSION);
+            File file = new File(CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml");
             if(file.getParentFile().exists() == false) {
                 file.getParentFile().mkdirs();
             }

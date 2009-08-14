@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 
-import com.consol.citrus.TestConstants;
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionUtils;
@@ -134,7 +134,7 @@ public class SqlQueryBean extends AbstractTestAction {
             for (Iterator iterator = resultMap.entrySet().iterator(); iterator.hasNext();) {
                 Entry entry = (Entry) iterator.next();
                 String key = entry.getKey().toString();
-                variableMap.put(TestConstants.VARIABLE_PREFIX + key + TestConstants.VARIABLE_SUFFIX, entry.getValue());
+                variableMap.put(CitrusConstants.VARIABLE_PREFIX + key + CitrusConstants.VARIABLE_SUFFIX, entry.getValue());
             }
 
             context.addVariables(variableMap);

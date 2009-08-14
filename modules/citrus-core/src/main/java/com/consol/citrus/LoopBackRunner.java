@@ -45,7 +45,7 @@ public class LoopBackRunner {
         if (args.length != 0) {
             applicationContext = args[0];
         } else {
-            applicationContext = TestConstants.DEFAULT_APPLICATIONCONTEXT;
+            applicationContext = CitrusConstants.DEFAULT_APPLICATIONCONTEXT;
         }
 
         /* Build root application context without any test files */

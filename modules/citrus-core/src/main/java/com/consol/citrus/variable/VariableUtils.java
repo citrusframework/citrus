@@ -2,7 +2,7 @@ package com.consol.citrus.variable;
 
 import java.text.ParseException;
 
-import com.consol.citrus.TestConstants;
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchVariableException;
 
@@ -13,8 +13,8 @@ public class VariableUtils {
      * @return
      */
     public static String cutOffVariablesPrefix(String variable) {
-        if (variable.indexOf(TestConstants.VARIABLE_PREFIX) == 0 && variable.charAt(variable.length()-1) == TestConstants.VARIABLE_SUFFIX) {
-            return variable.substring(TestConstants.VARIABLE_PREFIX.length(), variable.length()-1);
+        if (variable.indexOf(CitrusConstants.VARIABLE_PREFIX) == 0 && variable.charAt(variable.length()-1) == CitrusConstants.VARIABLE_SUFFIX) {
+            return variable.substring(CitrusConstants.VARIABLE_PREFIX.length(), variable.length()-1);
         }
 
         return variable;
@@ -30,7 +30,7 @@ public class VariableUtils {
             return false;
         }
 
-        if (expression.indexOf(TestConstants.VARIABLE_PREFIX) == 0 && expression.lastIndexOf(TestConstants.VARIABLE_SUFFIX) == expression.length()-1) {
+        if (expression.indexOf(CitrusConstants.VARIABLE_PREFIX) == 0 && expression.lastIndexOf(CitrusConstants.VARIABLE_SUFFIX) == expression.length()-1) {
             return true;
         }
 
@@ -65,18 +65,18 @@ public class VariableUtils {
        int curIndex;
        int searchIndex;
 
-       while ((searchIndex = str.indexOf(TestConstants.VARIABLE_PREFIX, startIndex)) != -1) {
+       while ((searchIndex = str.indexOf(CitrusConstants.VARIABLE_PREFIX, startIndex)) != -1) {
            int control = 0;
            isVarComplete = false;
 
-           curIndex = searchIndex + TestConstants.VARIABLE_PREFIX.length();
+           curIndex = searchIndex + CitrusConstants.VARIABLE_PREFIX.length();
 
            while (curIndex < str.length() && !isVarComplete) {
-               if (str.indexOf(TestConstants.VARIABLE_PREFIX, curIndex) == curIndex) {
+               if (str.indexOf(CitrusConstants.VARIABLE_PREFIX, curIndex) == curIndex) {
                    control++;
                }
 
-               if ((!Character.isJavaIdentifierPart(str.charAt(curIndex)) && (str.charAt(curIndex) == TestConstants.VARIABLE_SUFFIX)) || (curIndex+1 == str.length())) {
+               if ((!Character.isJavaIdentifierPart(str.charAt(curIndex)) && (str.charAt(curIndex) == CitrusConstants.VARIABLE_SUFFIX)) || (curIndex+1 == str.length())) {
                    if (control == 0) {
                        isVarComplete = true;
                    } else {
