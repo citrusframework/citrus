@@ -1,20 +1,22 @@
 package com.consol.citrus.activemq;
 
 import org.apache.activemq.broker.BrokerService;
+import org.springframework.beans.factory.InitializingBean;
 
 import com.consol.citrus.Server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class ActiveMQServer implements Server {
+public class ActiveMQServer implements Server, InitializingBean {
 
     private String name = "activeMQBroker";
 
     private boolean running = false;
     
-    private String host = "localhost";
-    private int port = 61616;
+    private String brokerURL = "tcp://localhost:61616";
     
     private boolean persistent = false;
+    
+    private boolean autoStart = false;
     
     private BrokerService broker;
 
@@ -27,7 +29,7 @@ public class ActiveMQServer implements Server {
         }
         
         try {
-            broker.addConnector("tcp://" + host + ":" + port);
+            broker.addConnector(brokerURL);
             broker.start();
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
@@ -62,6 +64,12 @@ public class ActiveMQServer implements Server {
             running = false;
         }
     }
+    
+    public void afterPropertiesSet() throws Exception {
+        if(autoStart) {
+            start();
+        }
+    }
 
     public void setBeanName(String name) {
         if(this.name == null) {
@@ -82,34 +90,6 @@ public class ActiveMQServer implements Server {
     }
 
     /**
-     * @param host the host to set
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return the host
-     */
-    public String getHost() {
-        return host;
-    }
-
-    /**
-     * @param port the port to set
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * @return the port
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
      * @param persistent the persistent to set
      */
     public void setPersistent(boolean persistent) {
@@ -121,5 +101,26 @@ public class ActiveMQServer implements Server {
      */
     public boolean isPersistent() {
         return persistent;
+    }
+
+    /**
+     * @return the brokerURL
+     */
+    public String getBrokerURL() {
+        return brokerURL;
+    }
+
+    /**
+     * @param brokerURL the brokerURL to set
+     */
+    public void setBrokerURL(String brokerURL) {
+        this.brokerURL = brokerURL;
+    }
+    
+    /**
+     * @param autoStart the autoStart to set
+     */
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 }
