@@ -46,7 +46,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     return;
                 }
                 
-                suite.beforeSuite();
+                if(!suite.beforeSuite()) {
+                    Assert.fail("Before suite failed with errors");
+                }
+                
                 beforeTests = true;
             }
         }
@@ -99,7 +102,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     return;
                 }
                 
-                suite.afterSuite();
+                if(!suite.afterSuite()) {
+                    Assert.fail("After suite failed with errors");
+                }
                 afterTests = true;
             }
         }
