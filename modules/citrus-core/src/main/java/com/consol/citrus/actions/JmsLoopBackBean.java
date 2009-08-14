@@ -19,10 +19,10 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.Server;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.server.Server;
 import com.consol.citrus.variable.GlobalVariables;
 
 /**
