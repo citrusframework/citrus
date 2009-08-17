@@ -19,7 +19,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 
 
-public class JUnitReporter implements TestReporter {
+public class JUnitReporter implements TestSuiteListener, TestListener, TestReporter {
 
     private Document doc;
 
@@ -44,7 +44,7 @@ public class JUnitReporter implements TestReporter {
         decFormat.setDecimalFormatSymbols(symbol);
     }
 
-    public void generateReport(TestSuite testsuite) {
+    public void generateTestResults(TestSuite[] suites) {
         try {
             log.info("Generating JUnit results");
 

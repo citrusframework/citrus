@@ -2,26 +2,26 @@ package com.consol.citrus.report;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
+import com.consol.citrus.report.TestResult.RESULT;
 
 
-public class SimpleLogReporter implements TestReporter {
-
+public class SimpleLogReporter implements TestSuiteListener, TestListener, TestReporter {
+    
+    private TestResults testResults = new TestResults();
+    
+    /** Common decimal format for percentage calculation in report **/
+    private static DecimalFormat decFormat = new DecimalFormat("0.0");
+    
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(SimpleLogReporter.class);
-
-    /** Common decimal format for percentage calculation in report **/
-    private static DecimalFormat decFormat = new DecimalFormat("0.0");
 
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
@@ -29,40 +29,36 @@ public class SimpleLogReporter implements TestReporter {
         decFormat.setDecimalFormatSymbols(symbol);
     }
 
-    /** List filled with report messages during the test suite run */
-    private List report = new ArrayList();
-
-    public void generateReport(TestSuite testsuite) {
-        log.info("________________________________________________________________________");
-        log.info("");
-        log.info("TEST RESULTS " + testsuite.getName());
-        log.info("");
-
-        Iterator it = report.iterator();
-        while (it.hasNext()) {
-            String entry = it.next().toString();
-
-            if (entry.indexOf("skipped") == (-1))
-                log.info(entry);
-            else
-                log.debug(entry);
+    public void generateTestResults(TestSuite[] suites) {
+        if (log.isInfoEnabled()) {
+            log.info("________________________________________________________________________");
+            log.info("");
+            log.info("CITRUS TEST RESULTS");
+            log.info("");
         }
-
+        
+        for (TestResult testResult : testResults) {
+            if (testResult.getResult().equals(RESULT.SKIP))
+                log.debug(testResult.toString());
+            else
+                log.info(testResult.toString());
+        }
+        
         log.info("");
-        log.info("Found " + testsuite.getCntTests() + " test cases to execute");
-        log.info("Skipped " + testsuite.getCntSkipped() + " test cases" + " (" + decFormat.format((double)testsuite.getCntSkipped()/(testsuite.getCntTests())*100) + "%)");
-        log.info("Executed " + (testsuite.getCntCasesFail()+testsuite.getCntCasesSuccess()) + " test cases, containing " +  testsuite.getCntActions() + " actions");
-        log.info("Tests failed: \t\t" + testsuite.getCntCasesFail() + " (" + decFormat.format((double)testsuite.getCntCasesFail()/(testsuite.getCntCasesFail()+testsuite.getCntCasesSuccess())*100) + "%)");
-        log.info("Tests successfully: \t" + testsuite.getCntCasesSuccess() + " (" + decFormat.format((double)testsuite.getCntCasesSuccess()/(testsuite.getCntCasesFail()+testsuite.getCntCasesSuccess())*100) + "%)");
+        log.info("Found " + testResults.size() + " test cases to execute");
+        log.info("Skipped " + testResults.getSkipped() + " test cases" + " (" + decFormat.format((double)testResults.getSkipped() / (testResults.size())*100) + "%)");
+        log.info("Executed " + (testResults.getFailed() + testResults.getSuccess()) + " test cases");
+        log.info("Tests failed: \t\t" + testResults.getFailed() + " (" + decFormat.format((double)testResults.getFailed() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
+        log.info("Tests successfully: \t" + testResults.getSuccess() + " (" + decFormat.format((double)testResults.getSuccess() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
 
         log.info("________________________________________________________________________");
     }
 
     public void onTestFailure(TestCase test, Throwable cause) {
         if (cause != null) {
-            buildReportEntry(test.getName(), "failed - Exception is " + cause.getLocalizedMessage());
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
         } else {
-            buildReportEntry(test.getName(), "failed - No exception available");
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE));
         }
 
         log.error("Execution of test: " + test.getName() + " failed! Nested exception is: ", cause);
@@ -76,7 +72,7 @@ public class SimpleLogReporter implements TestReporter {
             log.debug(seperator());
         }
 
-        buildReportEntry(test.getName(), "skipped - because excluded from test suite");
+        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
     }
 
     public void onTestStart(TestCase test) {
@@ -91,7 +87,7 @@ public class SimpleLogReporter implements TestReporter {
     }
 
     public void onTestSuccess(TestCase test) {
-        buildReportEntry(test.getName(), "successful");
+        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
     }
 
     public void onFinish(TestSuite testsuite) {
@@ -141,26 +137,4 @@ public class SimpleLogReporter implements TestReporter {
         return "------------------------------------------------------------------------";
     }
 
-    /**
-     * Method to build a report entry
-     * @param testName name of current test case
-     * @param result message to report test case result
-     */
-    private void buildReportEntry(String testName, String result) {
-        StringBuffer buf = new StringBuffer();
-
-        buf.append("  " + testName);
-
-        int spaces = 50 - testName.length();
-        for (int i = 0; i < spaces; i++) {
-            buf.append(" ");
-        }
-
-        if (result.length() > 100) {
-            buf.append(": " + result.substring(0, 100) + " ...");
-        } else
-            buf.append(": " + result);
-
-        report.add(buf.toString());
-    }
 }

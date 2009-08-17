@@ -14,9 +14,13 @@
     <!-- Used for autowiring -->
     <context:annotation-config/>
     
-    <bean class="com.consol.citrus.report.TestReporters"/>
+    <bean class="com.consol.citrus.report.TestListeners"/>
+    
+    <bean class="com.consol.citrus.report.TestSuiteListeners"/>
     
     <bean class="com.consol.citrus.report.SimpleLogReporter"/>
+    
+    <bean class="com.consol.citrus.report.ReporterInvokingTestSuiteListener"/>
     
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
