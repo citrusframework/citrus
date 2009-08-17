@@ -40,9 +40,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(testcase));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -68,9 +68,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(testcase));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -119,9 +119,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(testcase));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -148,9 +148,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(testcase));
         Assert.assertFalse(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -186,9 +186,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 2);
     }
     
     @Test
@@ -225,9 +225,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertFalse(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 2);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 0);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 2);
+        Assert.assertEquals(testsuite.getSuccess(), 0);
     }
     
     @Test
@@ -261,9 +261,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 2);
     }
     
     @Test
@@ -299,9 +299,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -347,9 +347,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 2);
         
         testsuite = new TestSuite();
         testsuite.setTestSuiteListeners(testSuiteListeners);
@@ -361,9 +361,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 2);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 2);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
         
         testsuite = new TestSuite();
         testsuite.setTestSuiteListeners(testSuiteListeners);
@@ -375,9 +375,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 3);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 3);
     }
     
     @Test
@@ -413,9 +413,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -457,9 +457,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 2);
         
         testsuite = new TestSuite();
         testsuite.setTestSuiteListeners(testSuiteListeners);
@@ -471,9 +471,9 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 2);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 2);
         
         testsuite = new TestSuite();
         testsuite.setTestSuiteListeners(testSuiteListeners);
@@ -485,8 +485,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2, testcase3}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 3);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 0);
+        Assert.assertEquals(testsuite.getSkipped(), 3);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 0);
     }
 }

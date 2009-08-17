@@ -36,11 +36,10 @@ import com.consol.citrus.report.TestSuiteListeners;
  *
  */
 public class TestSuite implements BeanNameAware {
-    /** Counter members for successful and failed operations */
-    private int cntTests = 0;
-    private int cntActions = 0;
-    private int cntCasesSuccess = 0;
-    private int cntCasesFail = 0;
+    /** Counters for successful, failed and skipped tests */
+    private int numberOfTests = 0;
+    private int cntSuccess = 0;
+    private int cntFailed = 0;
     private int cntSkipped = 0;
 
     /** List of tasks before, between and after */
@@ -160,7 +159,7 @@ public class TestSuite implements BeanNameAware {
      * @return boolean flag marking success
      */
     public boolean run(TestCase[] tests) {
-        cntTests = tests.length;
+        numberOfTests = tests.length;
 
         for(int i=0; i<tests.length;i++)  {
             TestCase testCase = tests[i];
@@ -199,7 +198,7 @@ public class TestSuite implements BeanNameAware {
             }
         }
 
-        return (cntCasesFail == 0);
+        return (cntFailed == 0);
     }
 
     /**
@@ -217,15 +216,13 @@ public class TestSuite implements BeanNameAware {
             testCase.execute();
             testCase.finish();
 
-            ++cntCasesSuccess;
+            ++cntSuccess;
             testListener.onTestSuccess(testCase);
         } catch (Exception e) {
             success = false;
-            ++cntCasesFail;
+            ++cntFailed;
             testListener.onTestFailure(testCase, e);
         }
-
-        cntActions += testCase.getCountActions();
 
         testListener.onTestFinish(testCase);
 
@@ -377,7 +374,7 @@ public class TestSuite implements BeanNameAware {
     }
 
     public boolean hasFailedTests() {
-        return cntCasesFail > 0;
+        return cntFailed > 0;
     }
 
     public void setBeanName(String beanName) {
@@ -391,27 +388,23 @@ public class TestSuite implements BeanNameAware {
     /**
      * @return the cntCasesSuccess
      */
-    public int getCntCasesSuccess() {
-        return cntCasesSuccess;
+    public int getSuccess() {
+        return cntSuccess;
     }
 
     /**
      * @return the cntCasesFail
      */
-    public int getCntCasesFail() {
-        return cntCasesFail;
+    public int getFailed() {
+        return cntFailed;
     }
 
-    public int getCntTests() {
-        return cntTests;
+    public int getNumberOfTests() {
+        return numberOfTests;
     }
 
-    public int getCntSkipped() {
+    public int getSkipped() {
         return cntSkipped;
-    }
-
-    public int getCntActions() {
-        return cntActions;
     }
 
     /**
@@ -432,7 +425,7 @@ public class TestSuite implements BeanNameAware {
      * Try to get next test from stack
      * @return
      */
-    public TestCase nextTest() throws EmptyStackException {
+    protected TestCase nextTest() throws EmptyStackException {
         synchronized (testPool) {
             return (TestCase)testPool.pop();
         }
@@ -442,8 +435,8 @@ public class TestSuite implements BeanNameAware {
      * Report test succeess
      * @param testCase
      */
-    public synchronized void succeedTest(TestCase testCase) {
-        ++cntCasesSuccess;
+    protected synchronized void succeedTest(TestCase testCase) {
+        ++cntSuccess;
         testListener.onTestSuccess(testCase);
     }
 
@@ -452,8 +445,8 @@ public class TestSuite implements BeanNameAware {
      * @param testCase
      * @param e
      */
-    public synchronized void failTest(TestCase testCase, Exception e) {
-        ++cntCasesFail;
+    protected synchronized void failTest(TestCase testCase, Exception e) {
+        ++cntFailed;
         testListener.onTestFailure(testCase, e);
     }
 
@@ -461,7 +454,7 @@ public class TestSuite implements BeanNameAware {
      * Report test skip
      * @param testCase
      */
-    public synchronized void skipTest(TestCase testCase) {
+    protected synchronized void skipTest(TestCase testCase) {
         cntSkipped++;
         testListener.onTestSkipped(testCase);
     }
@@ -470,12 +463,10 @@ public class TestSuite implements BeanNameAware {
      * Report test finish
      * @param testCase
      */
-    public synchronized void finishTest(TestCase testCase) {
-        cntActions += testCase.getCountActions();
-
+    protected synchronized void finishTest(TestCase testCase) {
         testListener.onTestFinish(testCase);
 
-        log.info("FINISHED TEST " + (cntCasesFail+cntCasesSuccess+cntSkipped) + "/" + cntTests + " (" + decFormat.format(((double)(cntCasesFail+cntCasesSuccess+cntSkipped) / cntTests)*100) + "%)");
+        log.info("FINISHED TEST " + (cntFailed+cntSuccess+cntSkipped) + "/" + numberOfTests + " (" + decFormat.format(((double)(cntFailed+cntSuccess+cntSkipped) / numberOfTests)*100) + "%)");
         log.info("");
     }
 
@@ -483,7 +474,7 @@ public class TestSuite implements BeanNameAware {
      * Report test start
      * @param testCase
      */
-    public void startTest(TestCase testCase) {
+    protected void startTest(TestCase testCase) {
         testListener.onTestStart(testCase);
     }
 

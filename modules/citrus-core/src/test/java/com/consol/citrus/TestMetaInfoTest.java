@@ -51,9 +51,9 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1, testcase2}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -78,9 +78,9 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(testcase1));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 0);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 1);
+        Assert.assertEquals(testsuite.getSkipped(), 0);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 1);
     }
     
     @Test
@@ -105,8 +105,8 @@ public class TestMetaInfoTest extends AbstractBaseTest {
         Assert.assertTrue(testsuite.run(new TestCase[] {testcase1}));
         Assert.assertTrue(testsuite.afterSuite());
         
-        Assert.assertEquals(testsuite.getCntSkipped(), 1);
-        Assert.assertEquals(testsuite.getCntCasesFail(), 0);
-        Assert.assertEquals(testsuite.getCntCasesSuccess(), 0);
+        Assert.assertEquals(testsuite.getSkipped(), 1);
+        Assert.assertEquals(testsuite.getFailed(), 0);
+        Assert.assertEquals(testsuite.getSuccess(), 0);
     }
 }

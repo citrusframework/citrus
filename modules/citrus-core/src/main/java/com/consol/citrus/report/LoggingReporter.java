@@ -11,7 +11,7 @@ import com.consol.citrus.TestSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
 
-public class SimpleLogReporter implements TestSuiteListener, TestListener, TestReporter {
+public class LoggingReporter implements TestSuiteListener, TestListener, TestReporter {
     
     private TestResults testResults = new TestResults();
     
@@ -21,7 +21,7 @@ public class SimpleLogReporter implements TestSuiteListener, TestListener, TestR
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SimpleLogReporter.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
