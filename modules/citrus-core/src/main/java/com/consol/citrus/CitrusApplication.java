@@ -146,7 +146,7 @@ public class CitrusApplication {
             for (int i = 0; i < testSuites.length; i++) {
                 TestSuite testSuite = (TestSuite) testContext.getBean(testSuites[i]);
     
-                cntFail += testSuite.getCntCasesFail();
+                cntFail += testSuite.getFailed();
             }
             
             if (exitWithError)

@@ -180,9 +180,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     public void onFinish(TestSuite testsuite) {
-        testSuiteElement.setAttribute("errors", "" + testsuite.getCntCasesFail());
+        testSuiteElement.setAttribute("errors", "" + testsuite.getFailed());
         testSuiteElement.setAttribute("failures", "0");
-        testSuiteElement.setAttribute("tests", "" + (testsuite.getCntCasesSuccess() + testsuite.getCntCasesFail()));
+        testSuiteElement.setAttribute("tests", "" + (testsuite.getSuccess() + testsuite.getFailed()));
         testSuiteElement.setAttribute("time", getTestSuiteExecutionTime(testsuite.getName()));
     }
 
