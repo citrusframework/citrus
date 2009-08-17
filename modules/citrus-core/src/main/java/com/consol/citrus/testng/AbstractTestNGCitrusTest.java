@@ -37,6 +37,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             if(beforeTests == false) {
                 String suiteName = testContext.getSuite().getName();
                 
+                if(suiteName.endsWith(" by packages")) {
+                    suiteName = suiteName.substring(0, suiteName.length() - " by packages".length());
+                }
+                    
                 TestSuite suite;
                 try {
                     suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
@@ -69,6 +73,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         
         String suiteName = testContext.getSuite().getName();
         
+        if(suiteName.endsWith(" by packages")) {
+            suiteName = suiteName.substring(0, suiteName.length() - " by packages".length());
+        }
+        
         TestSuite suite;
         try {
             suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
@@ -93,6 +101,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             if(afterTests == false) {
                 String suiteName = testContext.getSuite().getName();
                 
+                if(suiteName.endsWith(" by packages")) {
+                    suiteName = suiteName.substring(0, suiteName.length() - " by packages".length());
+                }
+                
                 TestSuite suite;
                 try {
                     suite = (TestSuite)applicationContext.getBean(suiteName, TestSuite.class);
@@ -105,6 +117,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 if(!suite.afterSuite()) {
                     Assert.fail("After suite failed with errors");
                 }
+                
                 afterTests = true;
             }
         }

@@ -2,7 +2,6 @@ package com.consol.citrus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.consol.citrus.exceptions.TestEngineFailedException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestEngineFailedException;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -26,9 +25,6 @@ public class CitrusApplication {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(CitrusApplication.class);
-
-    /** Common decimal format for percentage calculation in report **/
-    private static DecimalFormat decFormat = new DecimalFormat("0.0");
 
     /**
      * Main method doing all work
@@ -144,21 +140,15 @@ public class CitrusApplication {
                     exitWithError = true;
             }
     
-            int cntSuccess = 0;
             int cntFail = 0;
-    
-            /* now printing result of all test suite instances */
+            
+            /* find out how many test cases have failed */
             for (int i = 0; i < testSuites.length; i++) {
                 TestSuite testSuite = (TestSuite) testContext.getBean(testSuites[i]);
     
-                cntSuccess += testSuite.getCntCasesSuccess();
                 cntFail += testSuite.getCntCasesFail();
             }
-    
-            if (testSuites.length > 1) {
-                printResult(cntSuccess, cntFail);
-            }
-    
+            
             if (exitWithError)
                 throw new TestEngineFailedException("TestSuite failed with error - " + cntFail + " test(s) failed");
         } catch (ParseException e) {
@@ -173,26 +163,6 @@ public class CitrusApplication {
         }  catch (CitrusRuntimeException e) {
             log.error("TestEngine failed with error", e);
             throw new TestEngineFailedException("TestSuite failed with error", e);
-        }
-    }
-
-    /**
-     * Prints the test results to logger.
-     */
-    private static void printResult(int cntCasesSuccess, int cntCasesFail) {
-        if (log.isInfoEnabled()) {
-            log.info("________________________________________________________________________");
-            log.info("");
-            log.info("OVERALL TEST RESULTS");
-            log.info("");
-
-            log.info("");
-            log.info("Found " + (cntCasesSuccess+cntCasesFail) + " test cases to execute");
-            log.info("Executed " + (cntCasesFail+cntCasesSuccess) + " test cases");
-            log.info("Tests failed: \t\t" + cntCasesFail + " (" + decFormat.format((double)cntCasesFail/(cntCasesFail+cntCasesSuccess)*100) + "%)");
-            log.info("Tests successfully: \t" + cntCasesSuccess + " (" + decFormat.format((double)cntCasesSuccess/(cntCasesFail+cntCasesSuccess)*100) + "%)");
-
-            log.info("________________________________________________________________________");
         }
     }
 }
