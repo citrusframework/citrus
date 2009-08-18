@@ -36,8 +36,7 @@ public class SvgTestDocGenerator {
                 testDirectory = args[1];
             }
 
-            List fileNames = FileUtils.getTestFiles(testDirectory, 
-                    FileUtils.XML_FILE_EXTENSION).getFileNames();
+            List<String> fileNames = FileUtils.getTestFiles(testDirectory);
 
             String xslSource;
             if (args.length > 0) {

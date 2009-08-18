@@ -80,8 +80,7 @@ public class HtmlTestDocGenerator {
                 props.load(HtmlTestDocGenerator.class.getResourceAsStream(DEFAULT_PROPERTIES_FILE));
             }
 
-            List fileNames = FileUtils.getTestFiles(testDirectory, 
-                    FileUtils.XML_FILE_EXTENSION).getFileNames();
+            List<String> fileNames = FileUtils.getTestFiles(testDirectory);
 
             Collections.sort(fileNames);
 

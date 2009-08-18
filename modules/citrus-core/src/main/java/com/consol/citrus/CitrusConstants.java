@@ -16,4 +16,7 @@ public class CitrusConstants {
 
     public static final String DEFAULT_JAVA_DIRECTORY = "src/citrus/java/";
     public static final String DEFAULT_TEST_DIRECTORY = "src/citrus/tests/";
+    
+    public static final String DEFAULT_SUITE_NAME = "citrus-default-testsuite";
+    public static final String DEFAULT_TEST_NAME = "citrus-test";
 }

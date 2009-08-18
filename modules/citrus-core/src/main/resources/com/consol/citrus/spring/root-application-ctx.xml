@@ -31,5 +31,7 @@
     <bean id="testContextFactory" class="com.consol.citrus.context.TestContextFactoryBean"/>
     
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>
+    
+    <bean id="citrus-default-testsuite" class="com.consol.citrus.TestSuite"/>
 	
 </beans>

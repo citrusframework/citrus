@@ -1,18 +1,15 @@
 package com.consol.citrus;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListeners;
 
 /**
@@ -36,46 +33,19 @@ import com.consol.citrus.report.TestSuiteListeners;
  *
  */
 public class TestSuite implements BeanNameAware {
-    /** Counters for successful, failed and skipped tests */
-    private int numberOfTests = 0;
-    private int cntSuccess = 0;
-    private int cntFailed = 0;
-    private int cntSkipped = 0;
-
     /** List of tasks before, between and after */
     private List tasksBefore = new ArrayList();
     private List tasksBetween = new ArrayList();
     private List tasksAfter = new ArrayList();
 
-    /** List containing test name patterns to include or exclude from test suite run */
-    private List includeTests;
-    private List excludeTests;
-
     private String name = "";
 
-    private int threadCount = 1;
-
-    private Stack testPool = new Stack();
-    private Stack testRunner = new Stack();
-
-    /** Common decimal format for percentage calculation in report **/
-    private static DecimalFormat decFormat = new DecimalFormat("0.0");
-    
     @Autowired
     private TestContext context = new TestContext();
     
     @Autowired
     private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
     
-    @Autowired
-    private TestListeners testListener = new TestListeners();
-
-    static {
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
-        symbol.setDecimalSeparator('.');
-        decFormat.setDecimalFormatSymbols(symbol);
-    }
-
     /**
      * Logger
      */
@@ -153,85 +123,6 @@ public class TestSuite implements BeanNameAware {
         return success;
     }
 
-    /**
-     * Method running test cases
-     * @param tests tests to be executed, specified by unique name
-     * @return boolean flag marking success
-     */
-    public boolean run(TestCase[] tests) {
-        numberOfTests = tests.length;
-
-        for(int i=0; i<tests.length;i++)  {
-            TestCase testCase = tests[i];
-
-            if (testCase.getMetaInfo().getStatus().equals(Status.DRAFT) || testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
-                skipTest(testCase);
-                continue;
-            }
-
-            /* check if current test is included in test suite run */
-            if (includeTests != null && !isIncluded(testCase)) {
-                skipTest(testCase);
-                continue;
-            }
-
-            /* check if current test is excluded from test suite run */
-            if (excludeTests != null && isExcluded(testCase)) {
-                skipTest(testCase);
-                continue;
-            }
-
-            testPool.push(testCase);
-        }
-
-        for (int j = 1; j <= threadCount; j++) {
-            TestRunner runner = new TestRunner(this);
-            testRunner.push(runner);
-            runner.start();
-        }
-
-        while (!testRunner.isEmpty()) {
-            try {
-                ((TestRunner)testRunner.pop()).getThread().join();
-            } catch (InterruptedException e) {
-                log.warn("Error while joining runner thread", e);
-            }
-        }
-
-        return (cntFailed == 0);
-    }
-
-    /**
-     * Method running test cases
-     * @param tests tests to be executed, specified by unique name
-     * @return boolean flag marking success
-     */
-    public boolean run(TestCase testCase) {
-        boolean success = true;
-
-        testListener.onTestStart(testCase);
-
-        try {
-            /* Execute test case */
-            testCase.execute();
-            testCase.finish();
-
-            ++cntSuccess;
-            testListener.onTestSuccess(testCase);
-        } catch (Exception e) {
-            success = false;
-            ++cntFailed;
-            testListener.onTestFailure(testCase, e);
-        }
-
-        testListener.onTestFinish(testCase);
-
-        log.info("FINISHED TEST 1/1 (100%)");
-        log.info("");
-
-        return success;
-    }
-
     public void beforeTest() {
         if (tasksBetween == null || tasksBetween.isEmpty()) {
             return;
@@ -248,84 +139,6 @@ public class TestSuite implements BeanNameAware {
             /* Executing test action */
             testAction.execute(context);
         }
-    }
-
-    /**
-     * Method to check wheather a test is excluded from test suite run
-     * @param testName name of current test case
-     * @return boolean flag to mark possible exclusion
-     */
-    private boolean isExcluded(TestCase test) {
-        Iterator it;
-        it = excludeTests.iterator();
-
-        String testName = test.getName();
-
-        /* check if current test case name matches an excluding name pattern */
-        while (it.hasNext()) {
-            String namePattern = (String) it.next();
-
-            if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD) && namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length(), namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.indexOf(namePattern) != -1) {
-                    return true;
-                }
-            } else if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.endsWith(namePattern)) {
-                    return true;
-                }
-            } else if (namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(0, namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.startsWith(namePattern)) {
-                    return true;
-                }
-            } else {
-                if (excludeTests.contains(testName))
-                    return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Method to check wheather a test case is explicitly included in test suite run
-     * @param testName test case name
-     * @return boolean flag to mark possible inclusion
-     */
-    private boolean isIncluded(TestCase test) {
-        Iterator it;
-        it = includeTests.iterator();
-
-        String testName = test.getName();
-
-        /* check if current test case name matches an including name pattern */
-        while (it.hasNext()) {
-            String namePattern = (String) it.next();
-
-            if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD) && namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length(), namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.indexOf(namePattern) != -1) {
-                    return true;
-                }
-            } else if (namePattern.startsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.endsWith(namePattern)) {
-                    return true;
-                }
-            } else if (namePattern.endsWith(CitrusConstants.SEARCH_WILDCARD)) {
-                namePattern = namePattern.substring(0, namePattern.length() - CitrusConstants.SEARCH_WILDCARD.length());
-                if (testName.startsWith(namePattern)) {
-                    return true;
-                }
-            } else {
-                if (includeTests.contains(testName))
-                    return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -355,28 +168,6 @@ public class TestSuite implements BeanNameAware {
         this.tasksBetween = tasksBetween;
     }
 
-    /**
-     * Spring property setter.
-     * Injects the excluding name patterns
-     * @param excludeTests
-     */
-    public void setExcludeTests(List excludeTests) {
-        this.excludeTests = excludeTests;
-    }
-
-    /**
-     * Spring property setter.
-     * Injects the including name patterns
-     * @param includeTests
-     */
-    public void setIncludeTests(List includeTests) {
-        this.includeTests = includeTests;
-    }
-
-    public boolean hasFailedTests() {
-        return cntFailed > 0;
-    }
-
     public void setBeanName(String beanName) {
         this.name = beanName;
     }
@@ -386,102 +177,9 @@ public class TestSuite implements BeanNameAware {
     }
 
     /**
-     * @return the cntCasesSuccess
-     */
-    public int getSuccess() {
-        return cntSuccess;
-    }
-
-    /**
-     * @return the cntCasesFail
-     */
-    public int getFailed() {
-        return cntFailed;
-    }
-
-    public int getNumberOfTests() {
-        return numberOfTests;
-    }
-
-    public int getSkipped() {
-        return cntSkipped;
-    }
-
-    /**
      * @param reporter the reporter to set
      */
     public void setTestSuiteListeners(TestSuiteListeners listeners) {
         this.testSuiteListener = listeners;
-    }
-    
-    /**
-     * @param reporter the reporter to set
-     */
-    public void setTestListeners(TestListeners listeners) {
-        this.testListener = listeners;
-    }
-
-    /**
-     * Try to get next test from stack
-     * @return
-     */
-    protected TestCase nextTest() throws EmptyStackException {
-        synchronized (testPool) {
-            return (TestCase)testPool.pop();
-        }
-    }
-
-    /**
-     * Report test succeess
-     * @param testCase
-     */
-    protected synchronized void succeedTest(TestCase testCase) {
-        ++cntSuccess;
-        testListener.onTestSuccess(testCase);
-    }
-
-    /**
-     * Report test failure
-     * @param testCase
-     * @param e
-     */
-    protected synchronized void failTest(TestCase testCase, Exception e) {
-        ++cntFailed;
-        testListener.onTestFailure(testCase, e);
-    }
-
-    /**
-     * Report test skip
-     * @param testCase
-     */
-    protected synchronized void skipTest(TestCase testCase) {
-        cntSkipped++;
-        testListener.onTestSkipped(testCase);
-    }
-
-    /**
-     * Report test finish
-     * @param testCase
-     */
-    protected synchronized void finishTest(TestCase testCase) {
-        testListener.onTestFinish(testCase);
-
-        log.info("FINISHED TEST " + (cntFailed+cntSuccess+cntSkipped) + "/" + numberOfTests + " (" + decFormat.format(((double)(cntFailed+cntSuccess+cntSkipped) / numberOfTests)*100) + "%)");
-        log.info("");
-    }
-
-    /**
-     * Report test start
-     * @param testCase
-     */
-    protected void startTest(TestCase testCase) {
-        testListener.onTestStart(testCase);
-    }
-
-    /**
-     * @param threadCount the threadCount to set
-     */
-    public void setThreadCount(int threadCount) {
-        this.threadCount = threadCount;
     }
 }

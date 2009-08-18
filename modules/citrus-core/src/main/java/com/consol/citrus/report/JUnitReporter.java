@@ -17,10 +17,13 @@ import org.w3c.dom.ls.LSSerializer;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
+import com.consol.citrus.report.TestResult.RESULT;
 
 
 public class JUnitReporter implements TestSuiteListener, TestListener, TestReporter {
-
+    
+    private TestResults testResults = new TestResults();
+    
     private Document doc;
 
     private Element testSuiteElement;
@@ -149,6 +152,12 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testCaseElement.appendChild(errorElement);
 
         testSuiteElement.appendChild(testCaseElement);
+        
+        if (cause != null) {
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
+        } else {
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE));
+        }
     }
 
     public void onTestFinish(TestCase test) {
@@ -163,6 +172,8 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         //		testCaseElement.setAttribute("time", test.getExecutionTime());
         //
         //		testSuiteElement.appendChild(testCaseElement);
+        
+        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
     }
 
     public void onTestStart(TestCase test) {
@@ -177,12 +188,14 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testCaseElement.setAttribute("time", getTestExecutionTime(test.getName()));
 
         testSuiteElement.appendChild(testCaseElement);
+        
+        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
     }
 
     public void onFinish(TestSuite testsuite) {
-        testSuiteElement.setAttribute("errors", "" + testsuite.getFailed());
+        testSuiteElement.setAttribute("errors", "" + testResults.getFailed());
         testSuiteElement.setAttribute("failures", "0");
-        testSuiteElement.setAttribute("tests", "" + (testsuite.getSuccess() + testsuite.getFailed()));
+        testSuiteElement.setAttribute("tests", "" + (testResults.getSuccess() + testResults.getFailed()));
         testSuiteElement.setAttribute("time", getTestSuiteExecutionTime(testsuite.getName()));
     }
 
