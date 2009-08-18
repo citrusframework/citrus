@@ -93,6 +93,7 @@ public class Citrus {
             
             System.exit(testNG.getStatus());
         } catch (ParseException e) {
+            log.error("Failed to parse command line arguments", e);
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("CITRUS TestFramework", options);
         } catch (FileNotFoundException e) {
