@@ -1,4 +1,4 @@
-<project name="citrus-integration" basedir="." default="init" xmlns:artifact="urn:maven-artifact-ant">
+<project name="citrus-http" basedir="." default="init" xmlns:artifact="urn:maven-artifact-ant">
 
 	<target name="init">
 	    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
