@@ -80,16 +80,24 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-samples/src/citrus/resources</directory>
-      <outputDirectory>samples/tests</outputDirectory>
+      <outputDirectory>samples/src/citrus/resources</outputDirectory>
       <includes>
-          <include>*.xml</include>
+          <include>**/*</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/src/citrus/java</directory>
-      <outputDirectory>samples/tests</outputDirectory>
+      <directory>modules/citrus-samples/target/test-classes</directory>
+      <outputDirectory>samples/src/citrus/tests</outputDirectory>
       <includes>
-          <include>*.java</include>
+          <include>**/*.class</include>
+          <include>**/*.java</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-samples/src/citrus/tests</directory>
+      <outputDirectory>samples/src/citrus/tests</outputDirectory>
+      <includes>
+          <include>**/*.xml</include>
       </includes>
     </fileSet>
     <fileSet>

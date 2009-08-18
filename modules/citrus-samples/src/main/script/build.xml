@@ -1,7 +1,7 @@
 <project name="flight-booking" basedir="." default="citrus.run.tests" xmlns:artifact="urn:maven-artifact-ant">
 		
-    <path id="classpath">
-        <pathelement path="tests"/>
+    <path id="citrus-classpath">
+        <pathelement path="src/citrus/java"/>
         <fileset dir="../dist">
             <include name="*.jar"/>
         </fileset>
@@ -13,12 +13,10 @@
         </fileset>
     </path>
     
+	<typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.0.jar"/>
+	
 	<target name="citrus.run.tests" description="Runs all Citrus tests">
-		<java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
-            <classpath refid="classpath"/>
-			<classpath path="src/citrus/tests"/>
-			<arg line="-package com.consol.* -suitename citrus-samples"/>
-        </java>
+		<citrus suitename="citrus-samples" package="com.consol.citrus.*"/>
 	</target>
 	
 	<target name="citrus.run.single.test" description="Runs a single test by name">
@@ -34,11 +32,7 @@
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
 		</propertyfile>
 
-        <java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
-            <classpath refid="classpath"/>
-        	<classpath path="src/citrus/tests"/>
-        	<arg line="-test ${testclass} -suitename citrus-samples"/>
-        </java>
+		<citrus suitename="citrus-samples" test="${testclass}"/>
     </target>
 	
 	<target name="create.test" description="Creates a new empty test case">
@@ -48,7 +42,7 @@
         <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
-            <classpath refid="classpath"/>
+            <classpath refid="citrus-classpath"/>
             <arg value="${test.name}"/>
 			<arg value="${test.author}"/>
 			<arg value="${test.description}"/>
