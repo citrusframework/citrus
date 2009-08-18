@@ -1,8 +1,7 @@
 package com.consol.citrus;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.Stack;
+import java.util.*;
 
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -74,8 +73,22 @@ public class Citrus {
                     test.setXmlPackages(Collections.singletonList(xmlPackage));
                 }
             }
+
+            if(cmd.getArgList().size() > 0) {
+                List<String> testNgXml = new ArrayList<String>(); 
+                for (String testNgXmlFile : cmd.getArgs()) {
+                    if(testNgXmlFile.endsWith(".xml")) {
+                        testNgXml.add(testNgXmlFile);
+                    } else {
+                        log.warn("Unrecognized argument '" + testNgXmlFile + "'");
+                    }
+                }
+                testNG.setTestSuites(testNgXml);
+            }
             
-            testNG.setXmlSuites(Collections.singletonList(suite));
+            List<XmlSuite> suites = new ArrayList<XmlSuite>();
+            suites.add(suite);
+            testNG.setXmlSuites(suites);
             testNG.run();
             
             System.exit(testNG.getStatus());
