@@ -19,11 +19,11 @@ import com.consol.citrus.exceptions.TestEngineFailedException;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 04.11.2008
  */
-public class CitrusApplication {
+public class Citrus {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(CitrusApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(Citrus.class);
 
     public static void main(String[] args) {
         log.info("CITRUS TESTFRAMEWORK ");

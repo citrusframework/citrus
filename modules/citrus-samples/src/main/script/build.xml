@@ -14,19 +14,14 @@
     </path>
     
 	<target name="citrus.run.tests" description="Runs all Citrus tests">
-		<mkdir dir="test-output"/>
-		
-		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
+		<java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
             <classpath refid="classpath"/>
 			<classpath path="src/citrus/tests"/>
+			<arg line="-package com.consol.* -suitename citrus-samples"/>
         </java>
-		
-		<antcall target="junit.report"/>
 	</target>
 	
 	<target name="citrus.run.single.test" description="Runs a single test by name">
-    	<mkdir dir="test-output"/>
-    	
    	 	<touch file="test.history"/>
     	
     	<loadproperties srcfile="test.history"/>
@@ -39,18 +34,18 @@
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
 		</propertyfile>
 
-        <java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
+        <java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
             <classpath refid="classpath"/>
         	<classpath path="src/citrus/tests"/>
-        	<arg line="-test ${testclass}"/>
+        	<arg line="-test ${testclass} -suitename citrus-samples"/>
         </java>
     </target>
 	
 	<target name="create.test" description="Creates a new empty test case">
 		<input message="Enter test name:" addproperty="test.name"/>
-		        <input message="Enter test description:" addproperty="test.description"/>
-		        <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
-		        <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
+        <input message="Enter test description:" addproperty="test.description"/>
+        <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
+        <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
             <classpath refid="classpath"/>
@@ -61,16 +56,4 @@
         </java>
     </target>
 	
-	<target name="junit.report">
-		<mkdir dir="test-report"/>
-		
-		<junitreport todir="test-report">
-			<fileset dir="test-output">
-				<include name="test-results.xml"/>
-			</fileset>
-			
-			<report todir="test-report"/>
-		</junitreport>
-	</target>
-		
 </project>

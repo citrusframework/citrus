@@ -18,7 +18,7 @@
 	</target>
 	
 	<target name="citrus.run.tests" depends="init">
-		<java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
+		<java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
             <classpath refid="classpath"/>
 			<classpath path="src/citrus/resources"/>
 			<classpath path="src/citrus/tests"/>
@@ -26,8 +26,6 @@
 			<classpath path="target/test-classes"/>
 			<arg line="-package com.consol.* -suitename citrus-samples"/>
         </java>
-		
-		<antcall target="junit.report"/>
 	</target>
 	
 	<target name="citrus.run.single.test" depends="init">
@@ -43,7 +41,7 @@
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
 		</propertyfile>
 
-        <java classname="com.consol.citrus.CitrusApplication" fork="true" failonerror="true">
+        <java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
             <classpath refid="classpath"/>
         	<classpath path="src/citrus/resources"/>
         	<classpath path="src/citrus/tests"/>
@@ -68,70 +66,4 @@
         </java>
     </target>
 	
-	<target name="junit.report">
-		<mkdir dir="target/test-report"/>
-		
-		<junitreport todir="target/test-report">
-			<fileset dir="target/test-output">
-				<include name="test-results.xml"/>
-			</fileset>
-			
-			<report todir="target/test-report"/>
-		</junitreport>
-	</target>
-	
-	<target name="create.html.doc" depends="init">
-        <property file="src/citrus/resources/citrus.doc.properties" />
-        
-		<mkdir dir="${xsl.output.dir}"/>
-		
-        <java classname="com.consol.citrus.doc.HtmlTestDocGenerator">
-        	<classpath refid="classpath" />    
-            
-            <arg value="${html.xslt.file}"/>
-            <arg value="${html.output.file}"/>
-            <arg value="${xsl.src.dir}"/>
-            <arg value="${html.template.file}"/>
-        </java>
-		
-		<copy todir="${xsl.output.dir}/${img.dir}">
-            <fileset dir="src/citrus/resources/${img.dir}">
-                <include name="*"/>
-            </fileset>
-        </copy>
-        
-        <zip destfile="${html.output.file}.zip">
-            <fileset dir="${xsl.output.dir}">
-                <include name="*.html"/>
-                <include name="img/*"/>
-            </fileset>
-        </zip>
-    </target>
-    
-    <target name="create.xls.doc" depends="init">
-        <property file="src/citrus/resources/citrus.doc.properties" />
-        
-    	<mkdir dir="${xsl.output.dir}"/>
-    	
-        <java classname="com.consol.citrus.doc.ExcelTestDocGenerator">
-        	<classpath refid="classpath" />
-            
-            <arg value="${xls.xslt.file}"/>
-            <arg value="${xls.output.file}"/>
-            <arg value="${xsl.src.dir}"/>
-            <arg value="${xls.template.file}"/>
-        </java>
-    </target>
-    
-    <target name="create.svg.doc" depends="init">
-        <property file="src/citrus/resources/citrus.doc.properties" />
-        
-        <java classname="com.consol.citrus.doc.SvgTestDocGenerator">
-        	<classpath refid="classpath" />    
-            
-            <arg value="${svg.xslt.file}"/>
-            <arg value="${test.directory}"/>
-        </java>
-    </target>
-		
 </project>
