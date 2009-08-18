@@ -31,7 +31,7 @@ public class TestContext {
     /** Global variables */
     private GlobalVariables globalVariables;
     
-    private FunctionRegistry functionRegistry;
+    private FunctionRegistry functionRegistry = new FunctionRegistry();
     
     /**
      * Default constructor

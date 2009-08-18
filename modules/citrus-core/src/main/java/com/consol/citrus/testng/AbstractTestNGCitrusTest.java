@@ -13,11 +13,11 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.report.TestListeners;
-import com.consol.citrus.util.FileUtils;
 
 @ContextConfiguration(locations = {"/com/consol/citrus/spring/root-application-ctx.xml", 
                                    "/application-ctx.xml", 
@@ -63,8 +63,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                                 .replace('.', '/')
                                 + "/"
                                 + this.getClass().getSimpleName()
-                                + "."
-                                + FileUtils.XML_FILE_EXTENSION,
+                                + ".xml",
                         "com/consol/citrus/spring/internal-helper-ctx.xml" },
                 true, applicationContext);
         
@@ -114,10 +113,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         try {
             suite = (TestSuite)applicationContext.getBean(name, TestSuite.class);
         } catch (NoSuchBeanDefinitionException e) {
-            log.warn("Could not find test suite with name '" + name + "'");
+            log.warn("Could not find test suite with name '" + name + "' using default test suite");
             
-            suite = new TestSuite();
-            suite.setBeanName("default-suite");
+            suite = (TestSuite)applicationContext.getBean(CitrusConstants.DEFAULT_SUITE_NAME, TestSuite.class);
         }
         
         return suite;

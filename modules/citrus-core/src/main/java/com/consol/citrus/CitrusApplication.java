@@ -1,18 +1,17 @@
 package com.consol.citrus;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.Collections;
+import java.util.Stack;
 
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.testng.TestNG;
+import org.testng.xml.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestEngineFailedException;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Runs the test suite using applicationContext.xml and test.properties.
@@ -26,26 +25,9 @@ public class CitrusApplication {
      */
     private static final Logger log = LoggerFactory.getLogger(CitrusApplication.class);
 
-    /**
-     * Main method doing all work
-     * @param args
-     */
     public static void main(String[] args) {
-        /* list to hold all test defining xml files */
-        List<String> testFiles = new ArrayList<String>();
-
-        /* Build root application context without any test files */
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                new String[] { "com/consol/citrus/spring/root-application-ctx.xml",
-                               CitrusConstants.DEFAULT_APPLICATIONCONTEXT,
-                               "com/consol/citrus/functions/citrus-function-ctx.xml" });
-        
-        ctx.setAllowBeanDefinitionOverriding(false);
-        
         log.info("CITRUS TESTFRAMEWORK ");
         log.info("");
-
-        log.info("Loading configuration");
 
         Options options = new CitrusCliOptions();
         CommandLineParser cliParser = new GnuParser();
@@ -55,102 +37,48 @@ public class CitrusApplication {
         try {
             cmd = cliParser.parse(options, args);
             
-            String testDirectory = null;
-            if (cmd.hasOption("testdir")) {
-                testDirectory = cmd.getOptionValue("testdir");
-            } else {
-                testDirectory = CitrusConstants.DEFAULT_TEST_DIRECTORY;
+            if(cmd.hasOption("help")) {
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("CITRUS TestFramework", options);
+                
+                return;
             }
             
-            /* check if command line arguments contain test-names to be executed explicitly */
-            if (cmd.hasOption("test")) {
-                /* search test files in test directory for the specific tests and load add them to context list */
+            String testDirectory = cmd.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
+            
+            if(testDirectory.endsWith("/") == false) {
+                testDirectory = testDirectory + "/";
+            }
+            
+            TestNG testNG = new TestNG(false);
+            
+            XmlSuite suite = new XmlSuite();
+            suite.setName(cmd.getOptionValue("suitename", CitrusConstants.DEFAULT_SUITE_NAME));
+            
+            if(cmd.hasOption("test")) {
                 for (String testName : cmd.getOptionValues("test")) {
-                    testFiles.add(FileUtils.getTestFileForTest(testDirectory + "/", testName.trim(), FileUtils.XML_FILE_EXTENSION));
+                    XmlTest test = new XmlTest(suite);
+                    test.setName(testName);
+                    
+                    test.setXmlClasses(Collections.singletonList(new XmlClass(getClassNameForTest(testDirectory, testName.trim()))));
                 }
-            } else {
-                /* no test-names in arguments - load all test files available */
-                testFiles = FileUtils.getTestFiles(testDirectory + "/", FileUtils.XML_FILE_EXTENSION).getFileNames();
-            }
-
-            testFiles.add("com/consol/citrus/spring/internal-helper-ctx.xml");
-            
-            /* Load testFiles as applicationContext using root applicationContext as parent */
-            ClassPathXmlApplicationContext testContext = new ClassPathXmlApplicationContext(testFiles.toArray(new String[testFiles.size()]), ctx);
-            testContext.setAllowBeanDefinitionOverriding(false);
-    
-            /* Searching for at least one defined TestSuite bean to execute */
-            String[] testSuites = null;
-            if(cmd.hasOption("testsuite")) {
-                testSuites = cmd.getOptionValues("testsuite");
-            } else {
-                testSuites = ctx.getBeanNamesForType(TestSuite.class);
-            }
-    
-            if (testSuites == null || testSuites.length == 0) {
-                log.error("Missing TestSuite configuration in spring context file");
-                throw new TestEngineFailedException("TestSuite failed with error - Missing TestSuite configuration in spring context file");
-            }
-    
-            /*
-             * Either searching for all given tests by type TestCase or load names
-             * of test cases from arguments
-             */
-            final TestCase[] tests;
-            if (cmd.hasOption("test")) {
-                tests = new TestCase[cmd.getOptionValues("test").length];
-                for (int i = 0; i < cmd.getOptionValues("test").length; i++) {
-                    tests[i] = (TestCase)testContext.getBean(cmd.getOptionValues("test")[i].trim(), TestCase.class);
-                }
-                log.info("Found " + tests.length + " tests in arguments");
-            } else {
-                final String[] testNames = testContext.getBeanNamesForType(TestCase.class);
-    
-                tests = new TestCase[testNames.length];
-                for (int i = 0; i < testNames.length; i++) {
-                    tests[i] = (TestCase)testContext.getBean(testNames[i], TestCase.class);
-                }
-    
-                log.info("Found " + tests.length + " tests in testdirectory");
-            }
-    
-            log.info("");
-    
-            boolean exitWithError = false;
-            /* finally executing all found test suite instances */
-            for (int i = 0; i < testSuites.length; i++) {
-                TestSuite testSuite = (TestSuite) testContext.getBean(testSuites[i]);
-    
-                if (testSuite.beforeSuite()) {
-                    if (tests.length == 1 && cmd.hasOption("test")) {
-                        if (!testSuite.run(tests[0]))
-                            exitWithError = true;
-                    } else {
-                        if (!testSuite.run(tests))
-                            exitWithError = true;
-                    }
-    
-                    if (!testSuite.afterSuite())
-                        exitWithError =true;
-                } else {
-                    exitWithError = true;
-                }
-    
-                if (testSuite.hasFailedTests())
-                    exitWithError = true;
-            }
-    
-            int cntFail = 0;
-            
-            /* find out how many test cases have failed */
-            for (int i = 0; i < testSuites.length; i++) {
-                TestSuite testSuite = (TestSuite) testContext.getBean(testSuites[i]);
-    
-                cntFail += testSuite.getFailed();
             }
             
-            if (exitWithError)
-                throw new TestEngineFailedException("TestSuite failed with error - " + cntFail + " test(s) failed");
+            if(cmd.hasOption("package")) {
+                for (String packageName : cmd.getOptionValues("package")) {
+                    XmlTest test = new XmlTest(suite);
+                    test.setName(packageName);
+                    
+                    XmlPackage xmlPackage = new XmlPackage();
+                    xmlPackage.setName(packageName);
+                    test.setXmlPackages(Collections.singletonList(xmlPackage));
+                }
+            }
+            
+            testNG.setXmlSuites(Collections.singletonList(suite));
+            testNG.run();
+            
+            System.exit(testNG.getStatus());
         } catch (ParseException e) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("CITRUS TestFramework", options);
@@ -160,9 +88,64 @@ public class CitrusApplication {
         } catch (IOException e) {
             log.error("Error while accessing test file", e);
             throw new TestEngineFailedException("TestSuite failed with error", e);
-        }  catch (CitrusRuntimeException e) {
-            log.error("TestEngine failed with error", e);
-            throw new TestEngineFailedException("TestSuite failed with error", e);
         }
+    }
+    
+    /**
+     * Method to retrieve the full class name for the test name searched for.
+     * Subfolders are supported.
+     *
+     * @param startDir directory where to start the search
+     * @param testName test name to search for
+     * @throws CitrusRuntimeException
+     * @return the class name of the test
+     */
+    public static String getClassNameForTest(final String startDir, final String testName)
+        throws IOException, FileNotFoundException {
+        /* Stack to hold potential sub directories */
+        final Stack dirs = new Stack();
+        /* start directory */
+        final File startdir = new File(startDir);
+
+        if (startdir.isDirectory())
+            dirs.push(startdir);
+
+        /* walk through the directories */
+        while (dirs.size() > 0) {
+            File file = (File) dirs.pop();
+            File[] found = file.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    File tmp = new File(dir.getPath() + "/" + name);
+
+                    /* Only allowing XML files as spring configuration files */
+                    if ((name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn")) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            for (int i = 0; i < found.length; i++) {
+                /* Subfolder support */
+                if (found[i].isDirectory())
+                    dirs.push(found[i]);
+                else {
+                    if ((testName + ".xml").equalsIgnoreCase(found[i].getName())) {
+                        String fileName = found[i].getPath();
+                        fileName = fileName.substring(0, (fileName.length()-".xml".length()));
+                        fileName = fileName.substring(startDir.length()).replace('\\', '.');
+                        
+                        if (log.isDebugEnabled()) {
+                            log.debug("Found test '" + fileName + "'");
+                        }
+                        
+                        return fileName;
+                    }
+                }
+            }
+        }
+        throw new CitrusRuntimeException("Could not find test with name '"
+                + testName + "'. Test directory is: " + startDir);
     }
 }

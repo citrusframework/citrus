@@ -1,5 +1,6 @@
 package com.consol.citrus.functions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 public class FunctionRegistry {
     /** list of libraries providing custom functions */
     @Autowired
-    private List<FunctionLibrary> functionLibraries;
+    private List<FunctionLibrary> functionLibraries = new ArrayList<FunctionLibrary>();
     
     /**
      * Check if variable expression is a custom function.

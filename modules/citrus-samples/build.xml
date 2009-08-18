@@ -23,7 +23,8 @@
 			<classpath path="src/citrus/resources"/>
 			<classpath path="src/citrus/tests"/>
 			<classpath path="src/main/resources"/>
-			<arg line="-testdir src/citrus/tests"/>
+			<classpath path="target/test-classes"/>
+			<arg line="-package com.consol.* -suitename citrus-samples"/>
         </java>
 		
 		<antcall target="junit.report"/>
@@ -36,7 +37,7 @@
     	
     	<echo message="Last test executed: ${last.test.executed}"/>
 
-    	<input message="Enter test name or leave empty for last test executed:" addproperty="testclass" defaultvalue="${last.test.executed}"/>
+    	<input message="Enter test name:" addproperty="testclass" defaultvalue="${last.test.executed}"/>
     	
     	<propertyfile file="target/test.history">
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
@@ -47,7 +48,8 @@
         	<classpath path="src/citrus/resources"/>
         	<classpath path="src/citrus/tests"/>
         	<classpath path="src/main/resources"/>
-        	<arg line="-test ${testclass} -testdir src/citrus/tests"/>
+        	<classpath path="target/test-classes"/>
+        	<arg line="-test ${testclass} -suitename citrus-samples"/>
         </java>
     </target>
 	
