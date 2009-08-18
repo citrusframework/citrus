@@ -7,8 +7,8 @@
 	            <pathelement location="maven-ant-tasks-2.0.7.jar"/>
 	        </classpath>
 	    </typedef>
-	
-	    <artifact:dependencies pathId="classpath">
+		
+	    <artifact:dependencies pathId="citrus-classpath">
 	        <dependency groupId="com.consol.citrus" artifactId="citrus-core" version="3.0"/>
 	    	<dependency groupId="com.consol.citrus" artifactId="citrus-tibco" version="3.0"/>
 	    	<dependency groupId="com.consol.citrus" artifactId="citrus-http" version="3.0"/>
@@ -17,15 +17,12 @@
 	    </artifact:dependencies>
 	</target>
 	
+	<typedef resource="citrustasks" classpath="citrus-ant-tasks-1.0.jar"/>
+	
 	<target name="citrus.run.tests" depends="init">
-		<java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
-            <classpath refid="classpath"/>
-			<classpath path="src/citrus/resources"/>
-			<classpath path="src/citrus/tests"/>
-			<classpath path="src/main/resources"/>
-			<classpath path="target/test-classes"/>
-			<arg line="-package com.consol.* -suitename citrus-samples"/>
-        </java>
+	    <citrus suitename="citrus-samples" package="com.consol.citrus.*">
+            <classpath path="src/main/resources"/>
+	    </citrus>
 	</target>
 	
 	<target name="citrus.run.single.test" depends="init">
@@ -41,14 +38,9 @@
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
 		</propertyfile>
 
-        <java classname="com.consol.citrus.Citrus" fork="true" failonerror="true">
-            <classpath refid="classpath"/>
-        	<classpath path="src/citrus/resources"/>
-        	<classpath path="src/citrus/tests"/>
-        	<classpath path="src/main/resources"/>
-        	<classpath path="target/test-classes"/>
-        	<arg line="-test ${testclass} -suitename citrus-samples"/>
-        </java>
+		<citrus suitename="citrus-samples" test="${testclass}">
+            <classpath path="src/main/resources"/>
+        </citrus>
     </target>
 	
 	<target name="create.test" depends="init" description="Creates a new empty test">
@@ -58,7 +50,7 @@
         <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
-            <classpath refid="classpath"/>
+            <classpath refid="citrus-classpath"/>
             <arg value="${test.name}"/>
 			<arg value="${test.author}"/>
 			<arg value="${test.description}"/>
