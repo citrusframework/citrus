@@ -1,5 +1,7 @@
-<project name="flight-booking" basedir="." default="citrus.run.tests" xmlns:artifact="urn:maven-artifact-ant">
+<project name="flight-booking" basedir="." default="citrus.run.tests">
 		
+	<property file="src/citrus/resources/citrus.properties"/>
+	
     <path id="citrus-classpath">
         <pathelement path="src/citrus/java"/>
         <fileset dir="../dist">
@@ -26,7 +28,7 @@
     	
     	<echo message="Last test executed: ${last.test.executed}"/>
 
-    	<input message="Enter test name or leave empty for last test executed:" addproperty="testclass" defaultvalue="${last.test.executed}"/>
+    	<input message="Enter test name:" addproperty="testclass" defaultvalue="${last.test.executed}"/>
     	
     	<propertyfile file="test.history">
 			<entry key="last.test.executed" type="string" value="${testclass}"/>

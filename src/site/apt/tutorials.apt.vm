@@ -9,9 +9,13 @@ Tutorials
   
   See the list of available tutorials:
 
-  * {{{tutorials/setup-projects.html} Project setup with Maven}}
+  * {{{tutorials/run-with-maven.html} Project setup using Maven}}
   
     In this small tutorial a sample Citrus project uses Maven to include its integration tests into the Maven build lifecycle.
+    
+  * {{{tutorials/run-with-ant.html} Run Citrus tests using ANT}}
+  
+    You can also run Citrus using ANT. This tutorial will introduce the project setup for ANT.  
        
   * {{{tutorials/write-functions.html} Writing functions}}
   

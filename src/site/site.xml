@@ -28,9 +28,13 @@
     
     <menu name="Getting Started">
       <item name="Installation" href="${site.url}/installation.html"/>
-      <item name="Quickstart" href="${site.url}/quickstart.html"/>
       <item name="Download" href="${site.url}/download.html"/>
-      <item name="Tutorials" href="${site.url}/tutorials.html"/>
+      <item name="Tutorials" href="${site.url}/tutorials.html">
+        <item name="Run with Maven" href="${site.url}/tutorials/run-with-maven.html"/>
+        <item name="Run with ANT" href="${site.url}/tutorials/run-with-ant.html"/>
+        <item name="Writing functions" href="${site.url}/tutorials/write-functions.html"/>
+        <item name="More ..." href="${site.url}/tutorials.html"/>
+      </item>
     </menu>
     
     <menu name="Documentation">
