@@ -1,5 +1,139 @@
  ------
- Run Citrus using Maven
+ Integrate Citrus with Maven
  ------
  
-How to run Citrus using Maven
+Integrate Citrus with Maven
+ 
+  In case you already use Maven build tool in your project it is most suitable for you to include Citrus into your Maven build lifecycle. In this
+  tutorial we will setup a project with Maven and configure the Maven POM to execute all Citrus tests during the integration-test phase.
+  First of all we create a new Java project called "citrus-sample". We use the Maven command line tool in combination with Maven's archetype 
+  plugin. In case you do not have Maven installed yet it is time for you to do so before continuing this tutorial. See the {{{}Maven Homepage}} for
+  detailed installation instructions. as a test-scoped dependency into your Maven project. 
+  
++---
+  mvn archetype:generate
+  
+  [...]
+  
+  Define value for groupId: : com.consol.citrus.samples.maven
+  Define value for artifactId: : citrus-maven-sample
+  Define value for version:  1.0-SNAPSHOT: :
+  Define value for package:  com.consol.citrus.samples.maven: :
+  
+  [...]
++---
+  
+  Maven will ask you to choose an archetype first. We use the quickstart archetype to get a very simple Maven Java project. After defining the 
+  groupId, the artifactId, the package and the project version we have a typical Maven project structure.
+  
++---
+  citrus-maven-sample
+  |   + src
+  |   |   + main
+  |   |    |   + java
+  |   |   + test
+  |   |    |   + java
+  pom.xml
++---
+
+  We have to create some more folders manually for the Citrus sources and we can delete the generated src/main/test folder plus the sample "App.java" 
+  in the src/main/java. So we have following result project structure:
+  
++---
+  citrus-maven-sample
+  |   + src
+  |   |   + main
+  |   |    |   + java
+  |   |   + citrus
+  |   |    |   + java
+  |   |    |   + resources
+  |   |    |   + tests
+  pom.xml
++---
+  
+  Thanks to Maven we can build, package, install, test our new Maven project right now. Or we can create IDE specific project files, for instance
+  for Eclipse using eclipse:eclipse goal. Next thing to do is to add Citrus as test-scoped project 
+  dependency to your projects POM (pom.xml).
+ 
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-core</artifactId>
+    <version>${project.version}</version>
+    <scope>test</scope>
+  </dependency>
++---
+
+  The next step is optional. Citrus also provides a Maven plugin for creating test cases very easily. Of course you can also use other mechanisms 
+  in order to create the Citrus test cases, but no doubt the Maven plugin fits best in our example project. So we add the Citrus Maven plugin to 
+  our project's POM too.
+
++---
+  <plugin>
+    <groupId>com.consol.citrus.mvn.plugin</groupId>
+    <artifactId>citrus-maven-plugin</artifactId>
+    <version>${project.version}</version>
+    <configuration>
+      <author>Mickey Mouse</author>
+      <directory>src/citrus/tests</directory>
+    </configuration>
+  </plugin>
++---
+
+  Let us try to create a new test case now. We execute Maven with the goal "citrus:create-new-test".
+  
++---
+  mvn citrus:create-test -Dname=MyFirstTest -Ddescription="This is my first Citrus test"
+  
++--- 
+ 
+  Tests will be included into your projects integration-test phase using the surefire plugin
+ 
++---
+  <plugin>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.4.3</version>
+    <configuration>
+      <skip>true</skip>
+    </configuration>
+    <executions>
+      <execution>
+        <id>citrus-tests</id>
+        <phase>integration-test</phase>
+        <goals>
+          <goal>test</goal>
+        </goals>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </execution>
+    </executions>
+  </plugin>
++---
+
+  Citrus source directories have to be defined as test sources
+ 
++---
+  <testSourceDirectory>src/citrus/java</testSourceDirectory>
+  <testResources>
+    <testResource>
+      <directory>src/citrus/resources</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <excludes>
+        <exclude>*.java</exclude>
+      </excludes>
+    </testResource>
+    <testResource>
+      <directory>src/citrus/tests</directory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <excludes>
+      </excludes>
+    </testResource>
+  </testResources>
++---
+
+  Run Maven integration-test phase to execute all tests (goal: integration-test)
