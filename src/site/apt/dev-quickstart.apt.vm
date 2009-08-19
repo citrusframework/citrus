@@ -85,7 +85,7 @@ svn co http://svn.consol.de/svn/citrus/trunk citrus-trunk
   (or './setup.sh' or even '. ./setup.sh') to do this for you. You have to
   call <<<setup.sh>>> only once for the <<<profiles.xml>>> generation.
 
-  There are more configuration files to be created after checkout. Naming this is the test.properties configuration file located in the 
+  There are more configuration files to be created after checkout. Naming this is the citrus.properties configuration file located in the 
   directory src/main/resources
   
 * Create Citrus artifacts

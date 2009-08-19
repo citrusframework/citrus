@@ -13,7 +13,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestEngineFailedException;
 
 /**
- * Runs the test suite using applicationContext.xml and test.properties.
+ * Command line application.
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 04.11.2008

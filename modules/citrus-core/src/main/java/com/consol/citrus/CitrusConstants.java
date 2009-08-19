@@ -12,7 +12,7 @@ public class CitrusConstants {
     /** Search wildcard */
     public static final String SEARCH_WILDCARD = "*";
 
-    public static final String DEFAULT_APPLICATIONCONTEXT = "application-ctx.xml";
+    public static final String DEFAULT_APPLICATIONCONTEXT = "citrus-context.xml";
 
     public static final String DEFAULT_JAVA_DIRECTORY = "src/citrus/java/";
     public static final String DEFAULT_TEST_DIRECTORY = "src/citrus/tests/";

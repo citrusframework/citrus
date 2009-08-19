@@ -13,7 +13,7 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.server.ServerShutdownThread;
 
 /**
- * Runs the loop back dummies using classpath references to the applicationContext.xml and test.properties. Required files only
+ * Runs the loop back dummies using classpath references to the applicationContext.xml and citrus.properties. Required files only
  * have to be available in classpath.
  *
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
@@ -32,7 +32,7 @@ public class LoopBackRunner {
      * @param args
      */
     public static void main(String[] args) {
-        /* version of testsuite loaded from test.properties */
+        /* version of testsuite loaded from citrus.properties */
         String version = "";
 
         /* root context file name */
