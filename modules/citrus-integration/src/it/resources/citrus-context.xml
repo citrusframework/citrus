@@ -9,23 +9,28 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	 
-    <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
-	 
+	<import resource="jms-service-ctx.xml"/>
+	<import resource="service-beans-ctx.xml"/>
+	<import resource="test-suite-ctx.xml"/>
+	<import resource="web-service-ctx.xml"/>
+	<import resource="jmsLoopBackContext.xml"/>	
+	<import resource="http-service-ctx.xml"/>
+	
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
     
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>test.properties</value>
+				<value>citrus.properties</value>
 			</list>
 		</property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"></property>
 	</bean>
-	
-	<bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
 	
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
+                <entry key="project.name" value="Integration Testing"/>
                 <entry key="jdbc.url" value="${jdbc.url}"/>
             </map>
         </property>
@@ -34,17 +39,51 @@
     <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
         <property name="propertyFiles">
             <list>
-                <value>classpath:test.properties</value>
+                <value>classpath:citrus.properties</value>
             </list>
         </property>
     </bean>
     
+	<bean id="dbService" class="com.consol.citrus.service.DbService">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>test</value>
+				<value>citrus</value>
 				<value>version</value>			
 			</list>
 		</property>
 	</bean>
+
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName">
+          <value>${jdbc.driver}</value>
+      </property>
+      
+      <property name="url">
+          <value>${jdbc.url}</value>
+      </property>
+      
+      <property name="username">
+          <value>${db.user}</value>
+      </property>
+      
+      <property name="password">
+          <value>${db.password}</value>
+      </property>
+
+      <property name="initialSize">
+          <value>1</value>
+      </property>
+      
+      <property name="maxActive">
+          <value>5</value>
+      </property>
+      
+      <property name="maxIdle">
+          <value>2</value>
+      </property>
+  </bean>  
 </beans>

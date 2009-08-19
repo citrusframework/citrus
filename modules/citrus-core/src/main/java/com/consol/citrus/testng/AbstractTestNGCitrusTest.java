@@ -20,7 +20,7 @@ import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.report.TestListeners;
 
 @ContextConfiguration(locations = {"/com/consol/citrus/spring/root-application-ctx.xml", 
-                                   "/application-ctx.xml", 
+                                   "/citrus-context.xml", 
                                    "/com/consol/citrus/functions/citrus-function-ctx.xml"})
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     /**
