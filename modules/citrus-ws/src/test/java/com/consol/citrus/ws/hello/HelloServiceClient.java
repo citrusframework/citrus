@@ -58,7 +58,7 @@ public class HelloServiceClient {
 
     private String prefix = "ns0";
 
-    private String targetNamespace = "http://www.consol.de/namespace/default/";
+    private String targetNamespace = "http://www.consol.de/citrus";
 
     private Resource requestResource;
 
@@ -126,8 +126,9 @@ public class HelloServiceClient {
 
     public static void main(String[] args) throws IOException {
         ApplicationContext applicationContext =
-            new ClassPathXmlApplicationContext("applicationContext.xml", HelloServiceClient.class);
+            new ClassPathXmlApplicationContext("hello-client-context.xml", HelloServiceClient.class);
         HelloServiceClient client = (HelloServiceClient) applicationContext.getBean("helloServiceClient");
+        
         try {
             client.callWebService();
         } catch (SOAPException e) {

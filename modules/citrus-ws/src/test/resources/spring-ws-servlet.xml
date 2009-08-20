@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+    <import resource="classpath:com/consol/citrus/ws/hello/hello-service-context.xml"/>
+    
+    <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
+        <description>
+            This interceptor logs the message payload.
+        </description>
+    </bean>
+    
+    <bean id="defaultPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <description>
+            This endpoint mapping is the default mapping for all incoming requests. Mapping will be used in case no other endpoint mapping fits
+            the incoming request. Other endpoint mappings can be found in the imported context files, where service implementations are defined.
+            The default mapping has only logging interceptor defined.
+        </description>
+        <property name="defaultEndpoint" ref="defaultWsEndpoint"/>
+        <property name="interceptors">
+            <list>
+                <ref bean="loggingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
+        <property name="messageHandler">
+            <bean class="com.consol.citrus.ws.handler.EmptyResponseProducingMessageHandler"/>
+        </property>
+    </bean>
+    
+</beans>

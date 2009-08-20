@@ -11,7 +11,7 @@
         	<map>
         		<entry key="Operation" value="sayHelloRequest"/>
         		<entry key="Response" value="HelloResponse"/>
-        		<entry key="SOAPAction" value="http://www.consol.de/sayHello"/>
+        		<entry key="SOAPAction" value="sayHello"/>
         	</map>
         </property>
     </bean>
