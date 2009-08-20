@@ -1,53 +1,38 @@
 package com.consol.citrus.ws;
 
-import java.io.*;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 
-import org.apache.xerces.parsers.DOMParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
+import org.springframework.integration.core.Message;
+import org.springframework.integration.message.MessageBuilder;
+import org.springframework.util.Assert;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.springframework.xml.transform.StringSource;
+import org.w3c.dom.Document;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.ws.handler.EmptyResponseProducingMessageHandler;
 
 public class WebServiceEndpoint implements MessageEndpoint {
 
-    private JmsTemplate jmsTemplate;
-
-    private String sendDestination;
-    private String receiveDestination;
-
-    private Resource responseMessageResource;
-    private String responseMessagePayload;
-
-    private String prefix = "ns0";
-    private String targetNamespace = "http://www.consol.de/namespace/default/";
-
-    private Map responseHeaderElements = new HashMap();
-
-    private static final int MODE_USE_TESTSUITE = 0;
-    private static final int MODE_STANDALONE = 1;
-
-    private int mode = MODE_USE_TESTSUITE;
-
+    /** MessageHandler handling incoming requests and providing proper responses */
+    private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
+    
     /**
      * Logger
      */
@@ -57,163 +42,94 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @see org.springframework.ws.server.endpoint.MessageEndpoint#invoke(org.springframework.ws.context.MessageContext)
      * @throws CitrusRuntimeException
      */
-    public void invoke(final MessageContext msgContext) throws Exception {
-        if (mode == MODE_USE_TESTSUITE) {
-            jmsTemplate.send(sendDestination, new MessageCreator() {
-                public javax.jms.Message createMessage(Session session) throws JMSException {
-                    javax.jms.TextMessage msg = null;
-                    try {
-                        SaajSoapMessage soapRequest = (SaajSoapMessage)msgContext.getRequest();
-
-                        msg = session.createTextMessage(XMLUtils.serialize(soapRequest.getSaajMessage().getSOAPBody().getOwnerDocument()));
-
-                        for (Iterator iterator = soapRequest.getSaajMessage().getSOAPHeader().examineAllHeaderElements(); iterator.hasNext();) {
-                            SOAPHeaderElement headerElement = (SOAPHeaderElement) iterator.next();
-                            msg.setStringProperty(headerElement.getLocalName(), headerElement.getTextContent());
-                        }
-
-                        if (soapRequest.getSoapAction() != null) {
-                            log.info("Setting SOAP action: " + soapRequest.getSoapAction());
-                            msg.setStringProperty("SOAPAction", soapRequest.getSoapAction());
-                        }
-                    } catch (Exception e) {
-                        log.error("Error during request processing:", e);
-                        throw new CitrusRuntimeException(e);
-                    }
-
-                    return msg;
-                }
-            });
-
-            try {
-                TextMessage response = (TextMessage)jmsTemplate.receive(receiveDestination);
-
-                if (response != null) {
-                    final Reader reader = new StringReader(response.getText());
-                    final DOMParser parser = new DOMParser();
-                    parser.setFeature("http://xml.org/sax/features/validation", false);
-
-                    parser.parse(new InputSource(reader));
-
-                    SaajSoapMessage soapResponse = (SaajSoapMessage)msgContext.getResponse();
-                    soapResponse.getSaajMessage().getSOAPBody().addDocument(parser.getDocument());
-                } else {
-                    createResponse(msgContext);
-                }
-            } catch (Exception e) {
-                log.error("Error during response processing:", e);
-                throw new CitrusRuntimeException(e);
+    public void invoke(final MessageContext messageContext) throws Exception {
+        
+        WebServiceMessage request = messageContext.getRequest();
+        Assert.notNull(request, "WebService request must not be null.");
+        
+        MessageBuilder<?> requestMessageBuilder = MessageBuilder.withPayload(request.getPayloadSource());
+        
+        String[] propertyNames = messageContext.getPropertyNames();
+        if (propertyNames != null) {
+            for (String propertyName : propertyNames) {
+                requestMessageBuilder.setHeader(propertyName, messageContext.getProperty(propertyName));
             }
-        } else if (mode == MODE_STANDALONE){
-            createResponse(msgContext);
         }
-    }
-
-    /**
-     * @param msgContext
-     * @return
-     * @throws SAXException
-     * @throws IOException
-     * @throws SOAPException
-     * @throws CitrusRuntimeException
-     */
-    private SaajSoapMessage createResponse(final MessageContext msgContext) throws SAXException, IOException, SOAPException {
-        SaajSoapMessage soapResponse = (SaajSoapMessage)msgContext.getResponse();
-
-        log.info("Creating default SOAP response ...");
-
-        final Reader reader;
-        final DOMParser parser = new DOMParser();
-
-        parser.setFeature("http://xml.org/sax/features/validation", false);
-
-        if (responseMessagePayload != null) {
-            reader = new StringReader(responseMessagePayload);
-            parser.parse(new InputSource(reader));
-        } else if (responseMessageResource != null) {
-            reader = new InputStreamReader(responseMessageResource.getInputStream());
-            parser.parse(new InputSource(reader));
-        } else {
-            throw new CitrusRuntimeException("Could not create default response message as no default message defined");
+        
+        if (request instanceof SoapMessage) {
+            SoapMessage soapMessage = (SoapMessage) request;
+            SoapHeader soapHeader = soapMessage.getSoapHeader();
+            
+            if (soapHeader != null) {
+                Iterator<?> iter = soapHeader.getAllAttributes();
+                while (iter.hasNext()) {
+                    QName name = (QName) iter.next();
+                    requestMessageBuilder.setHeader(name.toString(), soapHeader.getAttributeValue(name));
+                }
+            }
         }
-
-        soapResponse.getSaajMessage().getSOAPBody().addDocument(parser.getDocument());
-
-        for (Iterator iterator = responseHeaderElements.keySet().iterator(); iterator.hasNext();) {
-            String headerName = (String) iterator.next();
-            String headerValue = (String)responseHeaderElements.get(headerName);
-
-            if (headerName.equals("SOAPAction")) {
-                soapResponse.setSoapAction(headerValue);
+        
+        Message requestMessage = requestMessageBuilder.build();
+        
+        log.info("Received WebService request " + requestMessage);
+        
+        Message<?> replyMessage = messageHandler.handleMessage(requestMessage);
+        
+        if (replyMessage != null && replyMessage.getPayload() != null) {
+            log.info("Sending WebService response " + replyMessage);
+            
+            Object replyPayload = replyMessage.getPayload();
+            Source responseSource = null;
+            
+            if (replyPayload instanceof Source) {
+                responseSource = (Source) replyPayload;
+            } else if (replyPayload instanceof Document) {
+                responseSource = new DOMSource((Document) replyPayload);
+            } else if (replyPayload instanceof String) {
+                responseSource = new StringSource((String) replyPayload);
             } else {
-                SoapHeaderElement headerElement = soapResponse.getSoapHeader().addHeaderElement(QNameUtils.createQName(targetNamespace, headerName, prefix));
-                headerElement.setText(headerValue);
+                throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
+                		"Supported types are " + 
+                        "'" + Source.class.getName() + "', " +
+                        "'" + Document.class.getName() + "'" + 
+                        ", or 'java.lang.String'");
             }
+            
+            SoapMessage response = (SoapMessage)messageContext.getResponse();
+            
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(responseSource, response.getPayloadResult());
+            
+            for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
+                
+                if(headerEntry.getKey().startsWith("springintegration")) {
+                    continue;
+                }
+                
+                if(headerEntry.getKey().toLowerCase().endsWith("soapaction")) {
+                    response.setSoapAction(headerEntry.getValue().toString());
+                } else {
+                    SoapHeaderElement headerElement;
+                    if(QNameUtils.validateQName(headerEntry.getKey())) {
+                        headerElement = response.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
+                    } else {
+                        headerElement = response.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
+                    }
+                    
+                    headerElement.setText(headerEntry.getValue().toString());
+                }
+                
+            }
+        } else {
+            log.error("Did not receive any reply from message handler '" + messageHandler + "'");
         }
-
-        return soapResponse;
     }
 
     /**
-     * @param jmsTemplate the jmsTemplate to set
+     * @param messageHandler the messageHandler to set
      */
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    /**
-     * @param sendDestination the sendDestination to set
-     */
-    public void setSendDestination(String sendDestination) {
-        this.sendDestination = sendDestination;
-    }
-
-    /**
-     * @param receiveDestination the receiveDestination to set
-     */
-    public void setReceiveDestination(String receiveDestination) {
-        this.receiveDestination = receiveDestination;
-    }
-
-    /**
-     * @param responseMessageResource the responseMessageResource to set
-     */
-    public void setResponseMessageResource(Resource responseMessageResource) {
-        this.responseMessageResource = responseMessageResource;
-    }
-
-    /**
-     * @param responseMessage the responseMessage to set
-     */
-    public void setResponseMessagePayload(String responseMessage) {
-        this.responseMessagePayload = responseMessage;
-    }
-
-    /**
-     * @param mode the mode to set
-     */
-    public void setMode(int mode) {
-        this.mode = mode;
-    }
-
-    /**
-     * @param responseHeaderElements the responseHeaderElements to set
-     */
-    public void setResponseHeaderElements(Map responseHeaderElements) {
-        this.responseHeaderElements = responseHeaderElements;
-    }
-
-    /**
-     * @param prefix the prefix to set
-     */
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    /**
-     * @param targetNamespace the targetNamespace to set
-     */
-    public void setTargetNamespace(String targetNamespace) {
-        this.targetNamespace = targetNamespace;
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 }
