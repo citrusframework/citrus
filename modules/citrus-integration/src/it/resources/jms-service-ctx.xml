@@ -21,16 +21,4 @@
         <property name="userPassword" value=""/>
     </bean-->
   
-    <bean id="defaultJmsMessageReceiver" class="com.consol.citrus.jms.JmsMessageReceiver" abstract="true">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-    </bean>
-    
-    <bean id="defaultJmsMessageSender" class="com.consol.citrus.jms.JmsMessageSender" abstract="true">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-    </bean>
-    
 </beans>

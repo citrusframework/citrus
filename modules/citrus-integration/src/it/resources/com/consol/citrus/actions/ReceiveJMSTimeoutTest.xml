@@ -30,15 +30,7 @@
 		</description>
 		<actions>
 			<expectTimeout connect="receiveTimeout" wait="500"/>
-			<expectTimeout connect="receiveTimeoutDummy" wait="500"/>
 		</actions>
 	</testcase>
 	
-	<spring:bean abstract="true" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" id="receiveTimeoutDummy">
-		<spring:property name="messageReceiver">
-			<spring:bean parent="defaultJmsMessageReceiver">
-                <spring:property name="destinationName" value="TestSuite.Queue.TimeOut"/>
-            </spring:bean>
-		</spring:property>
-	</spring:bean>
 </spring:beans>
