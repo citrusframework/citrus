@@ -13,8 +13,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.MessageHandler;

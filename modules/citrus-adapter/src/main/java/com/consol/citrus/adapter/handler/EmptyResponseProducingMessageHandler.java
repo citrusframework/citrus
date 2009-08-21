@@ -1,4 +1,4 @@
-package com.consol.citrus.ws.handler;
+package com.consol.citrus.adapter.handler;
 
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;

@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.ws.handler.EmptyResponseProducingMessageHandler;
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 
 public class WebServiceEndpoint implements MessageEndpoint {
 

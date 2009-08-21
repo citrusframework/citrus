@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
@@ -7,8 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.consol.citrus</groupId>
-  <artifactId>citrus-http</artifactId>
-  <name>citrus-http</name>
+  <artifactId>citrus-adapter</artifactId>
+  <name>citrus-adapter</name>
   <version>3.0</version>
   <build>
     <plugins>
@@ -18,15 +20,10 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
+    <dependency>
   		<groupId>com.consol.citrus</groupId>
   		<artifactId>citrus-core</artifactId>
   		<version>3.0</version>
   	</dependency>
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-adapter</artifactId>
-        <version>3.0</version>
-    </dependency>
   </dependencies>
 </project>
