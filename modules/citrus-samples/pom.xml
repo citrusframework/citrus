@@ -6,7 +6,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.consol.citrus.samples</groupId>
+  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-samples</artifactId>
   <name>citrus-samples</name>
   <version>1.0</version>
