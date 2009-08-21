@@ -77,5 +77,10 @@
         <artifactId>citrus-http</artifactId>
         <version>3.0</version>
     </dependency>
+    <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ws</artifactId>
+        <version>3.0</version>
+    </dependency>
   </dependencies>
 </project>

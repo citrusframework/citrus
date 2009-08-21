@@ -4,51 +4,87 @@
 		<meta-info>
 			<author>Christoph Deppisch</author>
 			<creationdate>2008-04-25</creationdate>
-			<status>DRAFT</status>
+			<status>FINAL</status>
 			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
 			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
 		</meta-info>
 		
 		<variables>
-			<variable name="messageId" value="citrus:randomNumber(10)"></variable>
-			<variable name="user" value="TIBCO"></variable>
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>		
+        	<variable name="messageId" value="citrus:randomNumber(10)"></variable>
+			<variable name="user" value="Christoph"></variable>
 		</variables>
 		
         <actions>
-            <receive parent="receiveWebServiceRequest">
-            	<message>
-            		<data>
-            			<![CDATA[
-            				<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>_</ns0:MessageId>
-								<ns0:CorrelationId>_</ns0:CorrelationId>
-								<ns0:User>${user}</ns0:User>
-								<ns0:Text>Hello TestFramework</ns0:Text>
-							</ns0:HelloRequest>
-            			]]>
-            		</data>
-            		<ignore path="//ns0:HelloRequest/ns0:MessageId"/>
-            		<ignore path="//ns0:HelloRequest/ns0:CorrelationId"/>
-            	</message>
-            	<extract>
-            		<message path="//ns0:HelloRequest/ns0:CorrelationId" variable="${correlationId}"/>
-            	</extract>
-            </receive>
+            <parallel>
+              <send with="webServiceRequestSender">
+                  <message>
+                      <data>
+                          <![CDATA[
+                              <ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                  <ns0:MessageId>${messageId}</ns0:MessageId>
+                                  <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                  <ns0:User>${user}</ns0:User>
+                                  <ns0:Text>Hello WebServer</ns0:Text>
+                              </ns0:HelloRequest>
+                          ]]>
+                      </data>
+                  </message>
+              </send>
+              
+                  <sequential>
+                      <receive with="webServiceRequestReceiver">
+                      	<message schemaValidation="false">
+                      		<data>
+                      			<![CDATA[
+                      				<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+          								<ns0:MessageId>${messageId}</ns0:MessageId>
+          								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+          								<ns0:User>${user}</ns0:User>
+          								<ns0:Text>Hello WebServer</ns0:Text>
+          							</ns0:HelloRequest>
+                      			]]>
+                      		</data>
+                      	</message>
+                        <extract>
+                            <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                        </extract>
+                      </receive>
+                      
+                      <send with="webServiceResponseSender">
+                      	<message>
+                      		<data>
+                      			<![CDATA[
+          							<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+          								<ns0:MessageId>${messageId}</ns0:MessageId>
+          								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+          								<ns0:User>WebServer</ns0:User>
+          								<ns0:Text>Hello ${user}</ns0:Text>
+          							</ns0:HelloResponse>
+                      			]]>
+                      		</data>
+                      	</message>
+                        <header>
+                            <element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                        </header>
+                      </send>
+                  </sequential>
+            </parallel>
             
-            <send parent="sendWebServiceResponse">
-            	<message>
-            		<data>
-            			<![CDATA[
-							<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>${messageId}</ns0:MessageId>
-								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>TestFramework</ns0:User>
-								<ns0:Text>Hello ${user}</ns0:Text>
-							</ns0:HelloResponse>
-            			]]>
-            		</data>
-            	</message>
-            </send>
+            <receive with="webServiceReplyHandler">
+                <message schemaValidation="false">
+                    <data>
+                        <![CDATA[
+                            <ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                <ns0:MessageId>${messageId}</ns0:MessageId>
+                                <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+                                <ns0:User>WebServer</ns0:User>
+                                <ns0:Text>Hello ${user}</ns0:Text>
+                            </ns0:HelloResponse>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
 	            
     	</actions>
     </testcase>

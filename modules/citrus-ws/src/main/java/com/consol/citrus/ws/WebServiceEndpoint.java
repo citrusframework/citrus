@@ -21,6 +21,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
@@ -43,11 +44,16 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws CitrusRuntimeException
      */
     public void invoke(final MessageContext messageContext) throws Exception {
-        
         WebServiceMessage request = messageContext.getRequest();
         Assert.notNull(request, "WebService request must not be null.");
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
         
-        MessageBuilder<?> requestMessageBuilder = MessageBuilder.withPayload(request.getPayloadSource());
+        StringResult requestPayload = new StringResult();
+        transformer.transform(request.getPayloadSource(), requestPayload);
+        
+        MessageBuilder<?> requestMessageBuilder = MessageBuilder.withPayload(requestPayload.toString());
         
         String[] propertyNames = messageContext.getPropertyNames();
         if (propertyNames != null) {
@@ -97,8 +103,6 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             SoapMessage response = (SoapMessage)messageContext.getResponse();
             
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
             transformer.transform(responseSource, response.getPayloadResult());
             
             for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
