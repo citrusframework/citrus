@@ -9,7 +9,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus.mvn.skin</groupId>
+  <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-default-skin</artifactId>
   <version>1.0</version>
   <name>citrus-default-skin</name>
