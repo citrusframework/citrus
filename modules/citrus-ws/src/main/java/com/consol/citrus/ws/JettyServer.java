@@ -8,11 +8,13 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
 
-public class JettyWebServer extends AbstractServer {
+public class JettyServer extends AbstractServer {
 
     private int port = 8080;
     
     private String resourceBase = "src/main/resources";
+    
+    private String contextConfigLocation = "classpath:citrus-ws-servlet.xml";
     
     private Server jettyServer;
     
@@ -43,7 +45,7 @@ public class JettyWebServer extends AbstractServer {
         
         ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
         servletHolder.setName("spring-ws");
-        servletHolder.setInitParameter("contextConfigLocation", "classpath:spring-ws-servlet.xml");
+        servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
         
         servletHandler.addServlet(servletHolder);
         
@@ -94,4 +96,11 @@ public class JettyWebServer extends AbstractServer {
         this.resourceBase = resourceBase;
     }
 
+    /**
+     * @param contextConfigLocation the contextConfigLocation to set
+     */
+    public void setContextConfigLocation(String contextConfigLocation) {
+        this.contextConfigLocation = contextConfigLocation;
+    }
+    
 }

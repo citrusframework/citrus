@@ -9,7 +9,7 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	 
-    <bean name="jetty" class="com.consol.citrus.ws.JettyWebServer">
+    <bean name="jetty" class="com.consol.citrus.ws.JettyServer">
         <property name="port" value="8081"/>
         <property name="autoStart" value="true"/>
     </bean>
