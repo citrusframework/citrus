@@ -1,4 +1,4 @@
-package com.consol.citrus.http.handler;
+package com.consol.citrus.adapter.handler;
 
 import java.util.HashMap;
 import java.util.Map;

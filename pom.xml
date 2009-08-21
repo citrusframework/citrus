@@ -36,11 +36,12 @@
   
   <modules>
     <module>modules/citrus-core</module>
+    <module>modules/citrus-adapter</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-ws</module>
     <module>modules/citrus-tibco</module>
-    <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
+    <module>modules/citrus-integration</module>
   </modules>
   
   <developers>

@@ -53,7 +53,7 @@
     
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">
-            <bean class="com.consol.citrus.ws.handler.StaticResponseProducingMessageHandler">
+            <bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler">
                 <property name="messagePayload">
                     <value>
                     <![CDATA[

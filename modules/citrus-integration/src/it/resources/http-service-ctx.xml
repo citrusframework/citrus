@@ -13,7 +13,7 @@
                         message-handler="jmsForwardingMessageHandler"
                         auto-start="true"/>
 
-    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
+    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
         <property name="destinationName" value="${jms.queue.http.request.forward}"/>
         <property name="replyDestinationName" value="${jms.queue.http.request.ack}"/>
         <property name="connectionFactory">
@@ -30,7 +30,7 @@
                         message-handler="xpathDispatchingHandler"
                         auto-start="true"/>
                         
-    <bean id="xpathDispatchingHandler" class="com.consol.citrus.http.handler.XpathDispatchingMessageHandler">
+    <bean id="xpathDispatchingHandler" class="com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler">
         <property name="messageHandlerContext" value="message-handler-context.xml"/>
     </bean>
         

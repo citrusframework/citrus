@@ -26,7 +26,7 @@
     
     <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">
-            <bean class="com.consol.citrus.ws.handler.EmptyResponseProducingMessageHandler"/>
+            <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
         </property>
     </bean>
     

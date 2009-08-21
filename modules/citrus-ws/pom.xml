@@ -23,29 +23,14 @@
   		<artifactId>citrus-core</artifactId>
   		<version>3.0</version>
   	</dependency>
-  	<dependency>
-        <groupId>jdom</groupId>
-        <artifactId>jdom</artifactId>
-    </dependency>
     <dependency>
-        <groupId>javax.activation</groupId>
-        <artifactId>activation</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>javax.jms</groupId>
-        <artifactId>jms</artifactId>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-adapter</artifactId>
+        <version>3.0</version>
     </dependency>
     <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>xalan</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>xerces</groupId>
-        <artifactId>xercesImpl</artifactId>
     </dependency>
     <dependency>
         <groupId>org.mortbay.jetty</groupId>
@@ -65,10 +50,6 @@
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jms</artifactId>
     </dependency>
   </dependencies>
 </project>

@@ -13,7 +13,7 @@
                         port="${http.port}" uri="${http.urlpath}" 
                         message-handler="jmsForwardingMessageHandler"/>
             
-    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.http.handler.JmsConnectingMessageHandler">
+    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
         <property name="destinationName" value="${royal.airline.request.queue}"/>
         <property name="connectionFactory" ref="connectionFactory" />
         <property name="replyTimeout" value="2000"/>
