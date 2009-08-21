@@ -1,4 +1,4 @@
-package com.consol.citrus.ws;
+package com.consol.citrus.ws.message;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
-import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import com.consol.citrus.message.MessageSender;
@@ -26,10 +25,6 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
-    
-    public WebServiceMessageSender(WebServiceMessageFactory messageFactory) {
-        super(messageFactory);
-    }
     
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
@@ -64,4 +59,5 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
     }
+
 }

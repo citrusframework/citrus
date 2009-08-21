@@ -32,37 +32,6 @@
     <citrus:jms-reply-message-sender id="sendGetOrderRequestReply"
                                      reply-destination-holder="receiveGetOrderRequest"/>
     
-    <bean id="sendWebServiceRequest" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender">
-            <bean parent="defaultWebServiceMessageSender">
-                <property name="replyMessageHandler" ref="webServiceReplyHandler"/>
-            </bean>
-        </property>
-    </bean>
-    
-    <bean id="webServiceReplyHandler" parent="defaultWebServiceReplyMessageHandler"/>
-    <bean id="receiveWebServiceResponse" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver">
-            <ref bean="webServiceReplyHandler"/>
-        </property>
-    </bean>
-    
-    <bean id="sendWebServiceResponse" class="com.consol.citrus.actions.SendMessageBean" abstract="true">
-        <property name="messageSender">
-            <bean parent="defaultJmsMessageSender">
-                <property name="destinationName" value="${jms.ws.stub.response}"/>
-            </bean>
-        </property>
-    </bean>
-    
-    <bean id="receiveWebServiceRequest" class="com.consol.citrus.actions.ReceiveMessageBean" abstract="true">
-        <property name="messageReceiver">
-            <bean parent="defaultJmsMessageReceiver">
-                <property name="destinationName" value="${jms.ws.stub.request}"/>
-            </bean>
-        </property>
-    </bean>
-    
 	<bean id="receiveTimeout" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" abstract="true">
 		<property name="messageReceiver">
 			<bean parent="defaultJmsMessageReceiver">

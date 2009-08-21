@@ -18,7 +18,7 @@
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="request-url" type="xs:string" use="required"/>
-            <xs:attribute name="request-method" type="xs:string"/>
+            <xs:attribute name="message-factory" type="xs:string"/>
             <xs:attribute name="reply-handler" type="xs:string"/>
         </xs:complexType>
     </xs:element>

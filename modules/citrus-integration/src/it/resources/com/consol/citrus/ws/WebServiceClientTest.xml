@@ -4,46 +4,44 @@
 		<meta-info>
 			<author>Christoph Deppisch</author>
 			<creationdate>2008-04-25</creationdate>
-			<status>DRAFT</status>
+			<status>FINAL</status>
 			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
 			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
 		</meta-info>
 		
 		<variables>
-			<variable name="messageId" value="citrus:randomNumber(10)"></variable>
-			<variable name="correlationId" value="WSCTest_1"></variable>
-			<variable name="user" value="TestFramework"></variable>
+			<variable name="messageId" value="123456789"></variable>
+			<variable name="correlationId" value="CORR123456789"></variable>
 		</variables>
 		
         <actions>
-            <send parent="sendWebServiceRequest">
+            <send with="webServiceHelloRequestSender">
             	<message>
             		<data>
             			<![CDATA[
-            				<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+            				<ns0:HelloStandaloneRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
 								<ns0:MessageId>${messageId}</ns0:MessageId>
 								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>${user}</ns0:User>
-								<ns0:Text>Hello TIBCO</ns0:Text>
-							</ns0:HelloRequest>
+								<ns0:User>User</ns0:User>
+								<ns0:Text>Hello WebServer</ns0:Text>
+							</ns0:HelloStandaloneRequest>
             			]]>
             		</data>
             	</message>
             </send>
             
-            <receive parent="receiveWebServiceResponse">
-            	<message>
+            <receive with="webServiceHelloReplyHandler">
+            	<message schemaValidation="false">
             		<data>
             			<![CDATA[
-            				<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-								<ns0:MessageId>_</ns0:MessageId>
+            				<ns0:HelloStandaloneResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+								<ns0:MessageId>${messageId}</ns0:MessageId>
 								<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
-								<ns0:User>TIBCO</ns0:User>
-								<ns0:Text>Hello ${user}</ns0:Text>
-							</ns0:HelloResponse>
+								<ns0:User>WebServer</ns0:User>
+								<ns0:Text>Hello User</ns0:Text>
+							</ns0:HelloStandaloneResponse>
             			]]>
             		</data>
-            		<ignore path="/ns0:HelloResponse/ns0:MessageId"/>
             	</message>
             </receive>
     	</actions>
