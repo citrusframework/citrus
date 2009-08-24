@@ -2,9 +2,9 @@
 <project name="${project.name}">
   <version position="left"/>
   <skin>
-    <groupId>com.consol.citrus.mvn.skin</groupId>
+    <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-default-skin</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
   </skin>
   <poweredBy>
     <logo name="ConSol" href="http://www.consol.de" img="images/logos/powered-by-consol.png"/>

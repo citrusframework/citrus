@@ -18,11 +18,13 @@
  */
 
 body {
-  background-color: #fff;
+  background: #F0F0F0
+    url(../images/bg_citrus.png)
+    no-repeat left top;
+  background-repeat: no-repeat;
   font-family: Verdana, Helvetica, Arial, sans-serif;
   margin-left: auto;
   margin-right: auto;
-  background-repeat: repeat-y;
   font-size: 13px;
   padding: 0px;
 }
@@ -81,25 +83,36 @@ p {
   font-size: 12px;
   color: #000;
 }
+#container {
+  padding-top: 10px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  text-align: left;
+  width: 978px;
+  height: 100%;
+}
+#header { 
+  background: #F0F0F0 url(../images/header.png) no-repeat scroll 0 0;
+}
 #breadcrumbs {
-  height: 13px;
-  background-image: url(../images/breadcrumbs.jpg);
+  height: 6px;
   padding: 5px 10px 14px 20px;
 }
 * html #breadcrumbs {
   padding-bottom: 8px;
 }
+#main {
+  background: transparent url(../images/bg_main.png) repeat-y scroll 0 0;
+  padding-bottom: 10px;
+}
+#bodyColumn {
+  padding-left:25px;
+  padding-right:25px;
+  height: 100%;
+  margin-left: 184px;
+  margin-right: 0px;
+}
 #leftColumn {
-  margin: 10px 0 10px 0;
-  border-top-color: #ccc;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-right-color: #ccc;
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-bottom-color: #ccc;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
   padding-right: 5px;
   padding-left: 5px;
 }
@@ -164,8 +177,7 @@ table {
   color: #003300;
 }
 #banner {
-  height: 93px;
-  background: url(../images/banner.jpg);
+  height: 106px;
 }
 
 #navcolumn ul {
@@ -191,10 +203,20 @@ table {
   font-size: 12px;
 }
 #footer {
-  padding: 10px;
-  margin: 20px 0px 20px 0px;
-  border-top: solid #ccc 1px; 
+  padding-top: 5px;
+  padding-right: 10px;
   color: #333333;
+  margin-bottom: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  height: 17px;
+  width: 958px;
+  background: transparent url(../images/bg_footer.png) repeat-y scroll 0 0;
+}
+
+#navcolumn img {
+  margin: 0px;
 }
 
 .errormark, .warningmark, .donemark, .infomark {
