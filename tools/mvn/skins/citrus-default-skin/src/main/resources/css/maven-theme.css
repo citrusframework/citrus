@@ -94,6 +94,14 @@ p {
 #header { 
   background: #F0F0F0 url(../images/header.png) no-repeat scroll 0 0;
 }
+#bannerLeft img {
+  margin-left: 12px;
+  margin-top: 10px;
+}
+#bannerRight img {
+  margin-right: 10px;
+  margin-top: 10px;
+}
 #breadcrumbs {
   height: 6px;
   padding: 5px 10px 14px 20px;
