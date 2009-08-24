@@ -70,7 +70,7 @@ Integrate Citrus with Maven
 
 +---
   <plugin>
-    <groupId>com.consol.citrus.mvn.plugin</groupId>
+    <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-maven-plugin</artifactId>
     <version>${project.version}</version>
     <configuration>

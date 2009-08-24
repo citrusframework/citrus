@@ -317,50 +317,56 @@
     #end
   </head>
   <body class="composite">
-    <div id="banner">
-      #if ( $StringUtils.isEmpty( $decoration.bannerLeft ) || $StringUtils.isEmpty( $decoration.bannerLeft.src ))
-        <a href="http://citrusframework.org" id="bannerLeft"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
-      #else
-        #banner( $decoration.bannerLeft "bannerLeft" )
-      #end
-      
-      #if ( $StringUtils.isEmpty( $decoration.bannerRight ) )
-        <a href="http://www.consol.de" id="bannerRight"><img src="$relativePath/images/logo_consol.png" alt="ConSol Logo" /></a>
-      #else
-        #banner( $decoration.bannerRight "bannerRight" )
-      #end
-      <div class="clear">
-        <hr/>
-      </div>
-    </div>
-    <div id="breadcrumbs">
-      #publishDate( "left" $decoration.publishDate $decoration.version )
-      <div class="xright">#links( $decoration.body.links )#publishDate( "right" $decoration.publishDate $decoration.version )</div>
-      <div class="clear">
-        <hr/>
-      </div>
-    </div>
-    <div id="leftColumn">
-      <div id="navcolumn">
-       #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
-       #mainMenu( $decoration.body.menus )
-       #poweredByLogo( $decoration.poweredBy )
-       #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
-      </div>
-    </div>
-    <div id="bodyColumn">
-      <div id="contentBox">
-        $bodyContent
-      </div>
-    </div>
-    <div class="clear">
-      <hr/>
-    </div>
-    <div id="footer">
-      <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) - <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a></div>
-      <div class="clear">
-        <hr/>
-      </div>
-    </div>
+    <div id="container">
+        <div id="header">
+            <div id="banner">
+              #if ( $StringUtils.isEmpty( $decoration.bannerLeft ) || $StringUtils.isEmpty( $decoration.bannerLeft.src ))
+                <a href="http://www.citrusframework.org" id="bannerLeft"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
+              #else
+                #banner( $decoration.bannerLeft "bannerLeft" )
+              #end
+              
+              #if ( $StringUtils.isEmpty( $decoration.bannerRight ) )
+                <a href="http://www.consol.de" id="bannerRight"></a>
+              #else
+                #banner( $decoration.bannerRight "bannerRight" )
+              #end
+              <div class="clear">
+                <hr/>
+              </div>
+            </div>
+            <div id="breadcrumbs">
+              #publishDate( "left" $decoration.publishDate $decoration.version )
+              <div class="xright">#links( $decoration.body.links )#publishDate( "right" $decoration.publishDate $decoration.version )</div>
+              <div class="clear">
+                <hr/>
+              </div>
+            </div>
+        </div>
+        <div id="main">
+            <div id="leftColumn">
+              <div id="navcolumn">
+               #publishDate( "navigation-top" $decoration.publishDate $decoration.version )
+               #mainMenu( $decoration.body.menus )
+               #poweredByLogo( $decoration.poweredBy )
+               #publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
+              </div>
+            </div>
+            <div id="bodyColumn">
+              <div id="contentBox">
+                $bodyContent
+              </div>
+            </div>
+            <div class="clear">
+              <hr/>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="xright">&#169;#copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ) - <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a></div>
+            <div class="clear">
+              <hr/>
+            </div>
+        </div>
+     </div>
   </body>
 </html>

@@ -13,7 +13,7 @@
   <build>
     <plugins>
         <plugin>
-            <groupId>com.consol.citrus.mvn.plugin</groupId>
+            <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
             <version>1.0</version>
             <configuration>

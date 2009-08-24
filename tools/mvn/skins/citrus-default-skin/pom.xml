@@ -11,7 +11,7 @@
 
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-default-skin</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <name>citrus-default-skin</name>
   <description>Citrus Default Skin</description>
 </project>
