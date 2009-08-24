@@ -31,6 +31,7 @@
 <!ENTITY xpath              SYSTEM "xpath.xml">
 <!ENTITY jms                SYSTEM "jms.xml">
 <!ENTITY http               SYSTEM "http.xml">
+<!ENTITY soap-webservices   SYSTEM "soap-webservices.xml">
 <!ENTITY functions          SYSTEM "functions.xml">
 <!ENTITY testsuite          SYSTEM "testsuite.xml">
 <!ENTITY tibco              SYSTEM "tibco.xml">
@@ -72,7 +73,8 @@
     &cleanup;
     &xpath;
     &jms;
-    &http;    
+    &http;
+    &soap-webservices;    
     &functions;
     &testsuite;
     &tibco;
