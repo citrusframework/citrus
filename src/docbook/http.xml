@@ -7,7 +7,7 @@
     responses.</para>
     
     <note>
-        <para>Analogu to the jms specific configuration schema Citrus provides a customized http configuration schema that
+        <para>Similar to the JMS specific configuration schema Citrus provides a customized Http configuration schema that
         is used in Spring configuration files. Simply include the http-config namespace in the confguration XML as follows.</para>
         
         <programlisting>
@@ -49,12 +49,12 @@
         will build a Http request and send it to the Http endpoint. The Http response is then provided to the reply handler.</para>
     </section>
     
-    <section id="http-receiver">
-        <title>Http message receiver</title>
+    <section id="http-server">
+        <title>Http server</title>
         
-        <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is more complicated, but not impossible
-        as you will see. Citrus has to provide a Http server that is listening on a port for client connections. Once a client connection 
-        is accepted the Http server might also provide a proper Http response to the client. Citrus ships with a embedded Http server 
+        <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is more complicated, because Citrus 
+        has to provide a Http server that is listening on a port for client connections. Once a client connection 
+        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server 
         implementation that can easily listens on a port for client connections.</para>
         
         <programlisting>
@@ -82,11 +82,29 @@
             <para>The next more complex message handler will always return a static response message</para>
             
             <programlisting>
-                TODO
+    &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+        &lt;property name=&quot;messagePayload&quot;&gt;
+            &lt;value&gt;
+            &lt;![CDATA[
+                &lt;ns0:Response xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                    &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                    &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                    &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+                &lt;/ns0:Response&gt;
+            ]]&gt;
+            &lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;messageHeader&quot;&gt;
+            &lt;map&gt;
+                &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Operation&quot; value=&quot;sayHelloResponse&quot;/&gt;
+                &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Request&quot; value=&quot;HelloRequest&quot;/&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
             </programlisting>
             
             <para>The handler is configured with a static message payload and static response header values. The response to the client
-            is therefore always the same.</para>
+            is therefore always identical.</para>
         </section>
         
         <section id="http-message-handler-xpath">
