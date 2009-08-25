@@ -3,7 +3,6 @@
   <formats>
     <format>zip</format>
   </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
   <includeSiteDirectory>false</includeSiteDirectory>
   <moduleSets>
     <moduleSet>
@@ -27,6 +26,7 @@
         <include>com.consol.citrus:citrus-ws</include>
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-tibco</include>
+        <include>com.consol.citrus:citrus-adapter</include>
       </includes>
       <binaries>
         <outputDirectory>dist</outputDirectory>
@@ -110,6 +110,13 @@
     </fileSet>
     <fileSet>
         <directory>modules/citrus-core/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-adapter/target</directory>
         <outputDirectory>src</outputDirectory>
         <includes>
             <include>*sources.jar</include>
