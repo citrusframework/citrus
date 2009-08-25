@@ -36,10 +36,10 @@
     </moduleSet>
     <moduleSet>
       <includes>
-        <include>com.consol.citrus.samples:citrus-samples</include>
+        <include>com.consol.citrus:citrus-samples</include>
       </includes>
       <binaries>
-        <outputDirectory>dist</outputDirectory>
+        <outputDirectory>samples/lib</outputDirectory>
         <unpack>false</unpack>
         <dependencySets>
           <dependencySet>
