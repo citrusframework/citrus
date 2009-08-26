@@ -184,12 +184,16 @@ table {
 .xright a:hover {
   color: #003300;
 }
+#breadcrumbs .xright a:link, #breadcrumbs .xright a:visited, #breadcrumbs .xright a:active, #breadcrumbs .xright a:hover {
+  color: #FF9622;
+  font-weight: bold;
+}
 #banner {
-  height: 106px;
+  height: 133px;
 }
 
 #navcolumn ul {
-  margin: 5px 0 15px -0em;
+  margin: 5px 0 10px -0em;
 }
 #navcolumn ul a {
   color: #333333;
@@ -214,15 +218,14 @@ table {
   padding-top: 5px;
   padding-right: 10px;
   color: #333333;
-  margin-bottom: 2em;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
   height: 17px;
   width: 958px;
   background: transparent url(../images/bg_footer.png) repeat-y scroll 0 0;
 }
-
+#theme_footer p {
+  text-align: center;
+  font-size: 0.7em;
+}
 #navcolumn img {
   margin: 0px;
 }

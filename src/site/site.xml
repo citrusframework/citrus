@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="${project.name}">
-  <version position="left"/>
+  <publishDate position="bottom"/>
+  <version position="bottom"/>
   <skin>
     <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-default-skin</artifactId>
