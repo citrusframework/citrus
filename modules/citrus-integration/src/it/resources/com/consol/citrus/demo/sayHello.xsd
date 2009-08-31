@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.consol.de/schemas/samples/sayHello.xsd"
+	 targetNamespace="http://www.consol.de/schemas/samples/sayHello.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="HelloRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="messageId"/>
+				<xs:element ref="correlationId"/>
+				<xs:element ref="user"/>
+				<xs:element ref="text"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="HelloResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="messageId"/>
+				<xs:element ref="correlationId"/>
+				<xs:element ref="user"/>
+				<xs:element ref="text"/>
+				<xs:element ref="exception" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="messageId" type="xs:string"/>
+	<xs:element name="correlationId" type="xs:string"/>
+	<xs:element name="text" type="xs:string"/>
+	<xs:element name="user" type="xs:string"/>
+	<xs:element name="exception">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="code" type="xs:string"/>
+				<xs:element name="message" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

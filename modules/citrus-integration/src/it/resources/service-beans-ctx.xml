@@ -7,30 +7,32 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd">
 	
-	<citrus:jms-message-sender id="sendGetNumberRequest" destination-name="${jms.queue.async.in}"/>
+	<citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
-    <citrus:jms-message-receiver id="receiveGetNumberRequest" destination-name="${jms.queue.async.in}"/>
+    <citrus:jms-message-receiver id="helloResponseReceiver" destination-name="${jms.queue.hello.response}"/>
 	
-    <citrus:jms-message-receiver id="receiveGetNumberResponse" destination-name="${jms.queue.async.out}"/>
-	
-	<citrus:jms-sync-message-sender id="sendGetCustomerRequest" 
-                                    destination-name="${jms.queue.sync.in}"
-                                    reply-handler="receiveGetCustomerResponse"
+	<citrus:jms-sync-message-sender id="syncHelloRequestSender" 
+                                    destination-name="${jms.queue.hello.sync.request}"
+                                    reply-handler="syncHelloResponseHandler"
                                     reply-timeout="1000"/>
 	
-    <citrus:jms-reply-message-handler id="receiveGetCustomerResponse"/>
+    <citrus:jms-reply-message-handler id="syncHelloResponseHandler"/>
     
-    <citrus:jms-sync-message-sender id="sendGetOrderRequest" 
-                                    destination-name="${jms.queue.dummy.one.in}"
-                                    reply-handler="receiveGetOrderRequestReply"
+    <citrus:jms-sync-message-sender id="syncGetDateRequestSender" 
+                                    destination-name="${jms.queue.date.sync.request}"
+                                    reply-handler="syncGetDateResponseHandler"
                                     reply-timeout="1000"/>
     
-    <citrus:jms-reply-message-handler id="receiveGetOrderRequestReply"/>
+    <citrus:jms-reply-message-handler id="syncGetDateResponseHandler"/>
     
-    <citrus:jms-sync-message-receiver id="receiveGetOrderRequest" destination-name="${jms.queue.dummy.one.in}"/>
+    <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver" destination-name="${jms.queue.date.sync.request}"/>
   
-    <citrus:jms-reply-message-sender id="sendGetOrderRequestReply"
-                                     reply-destination-holder="receiveGetOrderRequest"/>
+    <citrus:jms-reply-message-sender id="getDateRequestReplySender"
+                                     reply-destination-holder="syncGetDateRequestReceiver"/>
+    
+    <citrus:jms-message-sender id="testMessageSender" destination-name="${jms.queue.test}"/>
+  
+    <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
     
 	<bean id="receiveTimeout" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" abstract="true">
 		<property name="messageReceiver">
@@ -63,22 +65,18 @@
 		</property>
 		<property name="queueNames">
 			<list>
-				<value>${jms.queue.sync.in}</value>
-				<value>${jms.queue.sync.out}</value>
-				<value>${jms.queue.async.in}</value>
-				<value>${jms.queue.async.out}</value>
-				<value>${jms.queue.dummy}</value>
-				<value>${jms.queue.dummy.one.in}</value>
-				<value>${jms.queue.dummy.one.out}</value>
-				<value>${jms.queue.dummy.two.in}</value>
-				<value>${jms.queue.dummy.two.out}</value>
-				<value>${jms.queue.dummy.three.in}</value>
-				<value>${jms.queue.dummy.three.out}</value>
 				<value>${jms.queue.http.request.forward}</value>
 				<value>${jms.queue.http.request.ack}</value>
 				
 				<value>${jms.ws.stub.request}</value>
 				<value>${jms.ws.stub.response}</value>
+				
+				<value>${jms.queue.test}</value>
+				
+				<value>${jms.queue.hello.request}</value>
+				<value>${jms.queue.hello.response}</value>
+				<value>${jms.queue.hello.sync.request}</value>
+				<value>${jms.queue.date.sync.request}</value>
 			</list>
 		</property>
 	</bean>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:stream="http://www.springframework.org/schema/integration/stream"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/jms
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd
+            http://www.springframework.org/schema/integration/stream
+            http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd">
+
+    <poller id="poller" default="true">
+       <interval-trigger interval="1000"/>
+    </poller>
+    
+    <jms:message-driven-channel-adapter id="helloReqeustIn" destination-name="Demo.Hello.Request.Queue" channel="helloRequestsXML"/>
+    
+    <jms:inbound-gateway id="syncHelloRequestsIn"
+                         request-destination-name="Demo.Sync.Hello.Request.Queue"
+                         request-channel="syncHelloRequestsXML"/>
+                      
+    <channel id="helloRequestsXML"/>
+    <transformer input-channel="helloRequestsXML" ref="unmarshallingTransformer" output-channel="helloRequests"/>
+    <beans:bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <beans:constructor-arg>
+            <beans:ref bean="helloMarshaller"/>
+        </beans:constructor-arg>
+    </beans:bean>
+    
+    <channel id="syncHelloRequestsXML"/>
+    <transformer input-channel="syncHelloRequestsXML" ref="unmarshallingTransformer" output-channel="syncHelloRequests"/>
+    
+    <beans:bean id="helloMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+        <beans:property name="aliases">
+            <beans:props>
+                <beans:prop key="HelloRequest">com.consol.citrus.demo.HelloRequestMessage</beans:prop>
+                <beans:prop key="HelloResponse">com.consol.citrus.demo.HelloResponseMessage</beans:prop>
+            </beans:props>
+        </beans:property>
+        <beans:property name="useAttributeFor">
+            <beans:map key-type="java.lang.Class">
+                <beans:entry key="com.consol.citrus.demo.HelloRequestMessage" value="xmlns"/>
+                <beans:entry key="com.consol.citrus.demo.HelloResponseMessage" value="xmlns"/>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+    <channel id="helloRequests"/>
+    <service-activator input-channel="helloRequests" 
+                       output-channel="helloResponses"
+                       ref="helloService" 
+                       method="sayHello"/>
+                       
+    <channel id="syncHelloRequests"/>
+    <service-activator input-channel="syncHelloRequests" 
+                       ref="syncHelloService" 
+                       method="sayHello"/>                   
+                       
+    <beans:bean id="helloService" class="com.consol.citrus.demo.HelloServiceImpl"/>
+    
+    <beans:bean id="syncHelloService" class="com.consol.citrus.demo.SyncHelloServiceImpl"/>
+     
+    <channel id="helloResponses"/>
+    <channel id="helloResponsesXML">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    
+    <transformer input-channel="helloResponses" ref="marshallingTransformer" output-channel="helloResponsesXML"/>
+    <beans:bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <beans:constructor-arg>
+            <beans:ref bean="helloMarshaller"/>
+        </beans:constructor-arg>
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </beans:constructor-arg>
+    </beans:bean>
+  
+    <jms:outbound-channel-adapter id="helloResponseOut" channel="helloResponsesXML" destination-name="Demo.Hello.Response.Queue"/>
+    
+    <channel id="errorChannel">
+        <interceptors>
+            <beans:ref bean="loggingInterceptor"/>
+        </interceptors>
+    </channel>
+    
+    <beans:bean id="loggingInterceptor" class="com.consol.citrus.demo.util.LoggingInterceptor"/>
+</beans:beans>

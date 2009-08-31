@@ -9,165 +9,113 @@
 			<lastUpdatedOn>2008-06-24T00:00:00</lastUpdatedOn>
 		</meta-info>
 		
-        <description>
-			
-		</description>
         <variables>
-            <variable name="requestTag" value="validateValues___0002"/>
-            <variable name="conversationId" value="A00002"/>
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
+            <variable name="messageId" value="citrus:randomNumber(10)"></variable>
+            <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send with="sendGetNumberRequest">
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
                 <message>
                     <data>
                         <![CDATA[
-						<RequestMessage xmlns="http://testsuite/default">
-							<MessageHeader>
-								<ConversationId>_</ConversationId>
-								<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-								<RequestTag>_</RequestTag>
-								<VersionId>2</VersionId>
-							</MessageHeader>
-							<MessageBody>
-								<Customer>
-									<Id>1</Id>
-								</Customer>
-							</MessageBody>
-						</RequestMessage>						
-						]]>
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <messageId>${messageId}</messageId>
+                               <correlationId>${correlationId}</correlationId>
+                               <user>${user}</user>
+                               <text>Hello TestFramework</text>
+                           </HelloRequest>                              
+                        ]]>
                     </data>
-                    <element path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
-                    <element path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberRequest">
-                <message schemaValidation="false">
-                    <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
-                    <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate path="//:HelloResponse/:messageId" value="${messageId}"/>
+                    <validate path="//:HelloResponse/:correlationId" value="${correlationId}"/>
+                    <validate path="//:HelloResponse/:text" value="citrus:concat('Hello ', ${user})"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
             
-            <send with="sendGetNumberRequest">
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
                 <message>
                     <data>
                         <![CDATA[
-                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                            <ns1:MessageHeader>
-                                <ns1:ConversationId>_</ns1:ConversationId>
-                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                <ns1:RequestTag>_</ns1:RequestTag>
-                                <ns1:VersionId>2</ns1:VersionId>
-                            </ns1:MessageHeader>
-                            <ns1:MessageBody>
-                                <ns1:Customer>
-                                    <ns1:Id>1</ns1:Id>
-                                </ns1:Customer>
-                            </ns1:MessageBody>
-                        </ns1:RequestMessage>                       
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <messageId>${messageId}</messageId>
+                               <correlationId>${correlationId}</correlationId>
+                               <user>${user}</user>
+                               <text>Hello TestFramework</text>
+                           </HelloRequest>                              
                         ]]>
                     </data>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberRequest">
-                <message schemaValidation="false">
-                    <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
-                    <validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate path="//ns1:HelloResponse/ns1:messageId" value="${messageId}"/>
+                    <validate path="//ns1:HelloResponse/ns1:correlationId" value="${correlationId}"/>
+                    <validate path="//ns1:HelloResponse/ns1:text" value="citrus:concat('Hello ', ${user})"/>
+                    <namespace prefix="ns1" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
             
-            <send with="sendGetNumberRequest">
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
                 <message>
                     <data>
                         <![CDATA[
-                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                            <ns1:MessageHeader>
-                                <ns1:ConversationId>_</ns1:ConversationId>
-                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                <ns1:RequestTag>_</ns1:RequestTag>
-                                <ns1:VersionId>2</ns1:VersionId>
-                            </ns1:MessageHeader>
-                            <ns1:MessageBody>
-                                <ns1:Customer>
-                                    <ns1:Id>1</ns1:Id>
-                                </ns1:Customer>
-                            </ns1:MessageBody>
-                        </ns1:RequestMessage>                       
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <messageId>${messageId}</messageId>
+                               <correlationId>${correlationId}</correlationId>
+                               <user>${user}</user>
+                               <text>Hello TestFramework</text>
+                           </HelloRequest>                              
                         ]]>
                     </data>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberRequest">
-                <message schemaValidation="false">
-                    <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag" value="${requestTag}"/>
-                    <validate path="//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId" value="${conversationId}"/>
-                    <namespace prefix="ns2" value="http://testsuite/default"/>
-                </message>
-                <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
-                </header>
-            </receive>
             
-            <send with="sendGetNumberRequest">
+            <receive with="helloResponseReceiver">
                 <message>
-                    <data>
-                        <![CDATA[
-                        <ns1:RequestMessage xmlns:ns1="http://testsuite/default">
-                            <ns1:MessageHeader>
-                                <ns1:ConversationId>_</ns1:ConversationId>
-                                <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
-                                <ns1:RequestTag>_</ns1:RequestTag>
-                                <ns1:VersionId>2</ns1:VersionId>
-                            </ns1:MessageHeader>
-                            <ns1:MessageBody>
-                                <ns1:Customer>
-                                    <ns1:Id>1</ns1:Id>
-                                </ns1:Customer>
-                            </ns1:MessageBody>
-                        </ns1:RequestMessage>                       
-                        ]]>
-                    </data>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" value="${requestTag}"/>
-                    <element path="//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId" value="${conversationId}"/>
+                    <validate path="//:HelloResponse/:messageId" value="${messageId}"/>
+                    <validate path="//:HelloResponse/:correlationId" value="${correlationId}"/>
+                    <validate path="//:HelloResponse/:text" value="citrus:concat('Hello ', ${user})"/>
+                    <namespace prefix="" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
-                </header>
-            </send>
-            <receive with="receiveGetNumberRequest">
-                <message schemaValidation="false">
-                    <validate path="//:RequestMessage/:MessageHeader/:RequestTag" value="${requestTag}"/>
-                    <validate path="//:RequestMessage/:MessageHeader/:ConversationId" value="${conversationId}"/>
-                    <namespace prefix="" value="http://testsuite/default"/>
-                </message>
-                <header>
-                    <element name="Operation" value="GetNumberXmlns"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
         </actions>

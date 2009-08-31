@@ -39,212 +39,103 @@
 			to the temporary queue. The property "destination" is set to the constant ${REPLY_TO_QUEUE} which holds the dynamic queue name.
 		</description>
         <variables>
-            <variable name="operation" value="GetOrder"/>
-            <variable name="requestTag" value="snycJmsComm___0001"/>
-            <variable name="conversationId" value="A00002"/>
+            <variable name="operation" value="GetDate"/>
+            <variable name="conversationId" value="123456789"/>
         </variables>
         <actions>
             <parallel>
-              <send with="sendGetOrderRequest">
+              <send with="syncGetDateRequestSender">
                   <message>
-                      <data><![CDATA[
-  																								
-  								<RequestMessage>
-  									<MessageHeader>
-  										<ConversationId>_</ConversationId>
-  										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-  										<RequestTag>_</RequestTag>
-  										<VersionId>2</VersionId>
-  									</MessageHeader>
-  									<MessageBody>
-  										<Order>
-  											<Id>1</Id>
-  										</Order>
-  									</MessageBody>
-  								</RequestMessage>	
-  							
-  						]]></data>
-                      <element path="MessageHeader.RequestTag" value="${requestTag}"/>
+                      <data>
+                      <![CDATA[
+			        	<GetDateRequestMessage>
+							<MessageHeader>
+								<ConversationId>_</ConversationId>
+								<Timestamp>citrus:currentDate()</Timestamp>
+							</MessageHeader>
+							<MessageBody>
+								<Format>yyyy-mm-dd</Format>
+							</MessageBody>
+						</GetDateRequestMessage>	
+					  ]]>
+					  </data>
                       <element path="ConversationId" value="${conversationId}"/>
                   </message>
                   <header>
                       <element name="Operation" value="${operation}"/>
-                      <element name="RequestTag" value="${requestTag}"/>
+                      <element name="ConversationId" value="${conversationId}"/>
                   </header>
               </send>
+              
               <sequential>
-                <receive with="receiveGetOrderRequest">
+                <receive with="syncGetDateRequestReceiver">
                     <message>
-                        <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
-                    </message>
-                    <extract>
-                        <header name="Operation" variable="${operation}"/>
-                        <header name="RequestTag" variable="${requestTag}"/>
-                        <message path="MessageHeader.RequestTag" variable="${requestTag}"/>
-                        <message path="ConversationId" variable="${conversationId}"/>
-                    </extract>
-                </receive>
-                <send with="sendGetOrderRequestReply">
-                    <message>
-                        <data><![CDATA[
-                                                                                                    
-                                    <ResponseMessage>
-                                        <MessageHeader>
-                                            <ConversationId>_</ConversationId>
-                                            <Timestamp>_</Timestamp>
-                                            <RequestTag>_</RequestTag>
-                                            <VersionId>2</VersionId>
-                                        </MessageHeader>
-                                        <MessageBody>
-                                            <Order>
-                                                <Id>1</Id>
-                                                <Customer>1</Customer>
-                                            </Order>
-                                        </MessageBody>
-                                    </ResponseMessage>  
-                                
-                            ]]></data>
-                        <element path="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"/>
-                        <element path="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+                        <data>
+                        <![CDATA[
+	                        <GetDateRequestMessage>
+	                            <MessageHeader>
+	                                <ConversationId>${conversationId}</ConversationId>
+	                                <Timestamp>citrus:currentDate()</Timestamp>
+	                            </MessageHeader>
+	                            <MessageBody>
+	                                <Format>yyyy-mm-dd</Format>
+	                            </MessageBody>
+	                        </GetDateRequestMessage>    
+                        ]]>
+                        </data>
                     </message>
                     <header>
                         <element name="Operation" value="${operation}"/>
-                        <element name="RequestTag" value="${requestTag}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
+                    </header>
+                </receive>
+                <send with="getDateRequestReplySender">
+                    <message>
+                        <data>
+                        <![CDATA[
+	                        <GetDateResponseMessage>
+	                            <MessageHeader>
+	                                <ConversationId>_</ConversationId>
+	                                <Timestamp>citrus:currentDate()</Timestamp>
+	                            </MessageHeader>
+	                            <MessageBody>
+	                                <Value>citrus:currentDate()</Value>
+	                            </MessageBody>
+	                        </GetDateResponseMessage>  
+                        ]]>
+                        </data>
+                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+                    </message>
+                    <header>
+                        <element name="Operation" value="${operation}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
                     </header>
                 </send>
                 
                 <sleep time="1"/>
                  
-                <receive with="receiveGetOrderRequestReply">
+                <receive with="syncGetDateResponseHandler">
                     <message>
-                        <data><![CDATA[
-                                                                                                    
-                                    <ResponseMessage>
-                                        <MessageHeader>
-                                            <ConversationId>_</ConversationId>
-                                            <Timestamp>_</Timestamp>
-                                            <RequestTag>_</RequestTag>
-                                            <VersionId>2</VersionId>
-                                        </MessageHeader>
-                                        <MessageBody>
-                                            <Order>
-                                                <Id>1</Id>
-                                                <Customer>1</Customer>
-                                            </Order>
-                                        </MessageBody>
-                                    </ResponseMessage>  
-                                
-                            ]]></data>
-                        <element path="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"/>
-                        <element path="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
+                        <data>
+                        <![CDATA[
+                            <GetDateResponseMessage>
+                                <MessageHeader>
+                                    <ConversationId>_</ConversationId>
+                                    <Timestamp>citrus:currentDate()</Timestamp>
+                                </MessageHeader>
+                                <MessageBody>
+                                    <Value>citrus:currentDate()</Value>
+                                </MessageBody>
+                            </GetDateResponseMessage>
+                        ]]>
+                        </data>
+                        <element path="//GetDateResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
                     </message>
                     <header>
                         <element name="Operation" value="${operation}"/>
-                        <element name="RequestTag" value="${requestTag}"/>
+                        <element name="ConversationId" value="${conversationId}"/>
                     </header>
                 </receive> 
-              </sequential>
-            </parallel>
-            
-            <parallel>
-              <send with="sendGetOrderRequest">
-                  <message>
-                      <data><![CDATA[
-  																								
-  								<RequestMessage>
-  									<MessageHeader>
-  										<ConversationId>_</ConversationId>
-  										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-  										<RequestTag>_</RequestTag>
-  										<VersionId>2</VersionId>
-  									</MessageHeader>
-  									<MessageBody>
-  										<Order>
-  											<Id>1</Id>
-  										</Order>
-  									</MessageBody>
-  								</RequestMessage>	
-  							
-  						]]></data>
-                      <element path="MessageHeader.RequestTag" value="${requestTag}"/>
-                      <element path="ConversationId" value="${conversationId}"/>
-                  </message>
-                  <header>
-                      <element name="Operation" value="${operation}"/>
-                      <element name="RequestTag" value="${requestTag}"/>
-                  </header>
-              </send>
-              <sequential>
-                <receive with="receiveGetOrderRequest">
-                    <message>
-                        <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
-                    </message>
-                    <extract>
-                        <header name="Operation" variable="${operation}"/>
-                        <header name="RequestTag" variable="${requestTag}"/>
-                        <message path="MessageHeader.RequestTag" variable="${requestTag}"/>
-                        <message path="ConversationId" variable="${conversationId}"/>
-                    </extract>
-                </receive>
-                <send with="sendGetOrderRequestReply">
-                    <message>
-                        <data><![CDATA[
-                                                                                                    
-                                    <ResponseMessage>
-                                        <MessageHeader>
-                                            <ConversationId>_</ConversationId>
-                                            <Timestamp>_</Timestamp>
-                                            <RequestTag>_</RequestTag>
-                                            <VersionId>2</VersionId>
-                                        </MessageHeader>
-                                        <MessageBody>
-                                            <Order>
-                                                <Id>1</Id>
-                                                <Customer>1</Customer>
-                                            </Order>
-                                        </MessageBody>
-                                    </ResponseMessage>  
-                                
-                            ]]></data>
-                        <element path="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"/>
-                        <element path="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
-                    </message>
-                    <header>
-                        <element name="Operation" value="${operation}"/>
-                        <element name="RequestTag" value="${requestTag}"/>
-                    </header>
-                </send>
-                
-                <sleep time="1"/>
-                
-                <receive with="receiveGetOrderRequestReply">
-                    <message>
-                        <data><![CDATA[
-                                                                                                    
-                                    <ResponseMessage>
-                                        <MessageHeader>
-                                            <ConversationId>_</ConversationId>
-                                            <Timestamp>_</Timestamp>
-                                            <RequestTag>_</RequestTag>
-                                            <VersionId>2</VersionId>
-                                        </MessageHeader>
-                                        <MessageBody>
-                                            <Order>
-                                                <Id>1</Id>
-                                                <Customer>1</Customer>
-                                            </Order>
-                                        </MessageBody>
-                                    </ResponseMessage>  
-                                
-                            ]]></data>
-                        <element path="//ResponseMessage/MessageHeader/RequestTag" value="${requestTag}"/>
-                        <element path="//ResponseMessage/MessageHeader/ConversationId" value="${conversationId}"/>
-                    </message>
-                    <header>
-                        <element name="Operation" value="${operation}"/>
-                        <element name="RequestTag" value="${requestTag}"/>
-                    </header>
-                </receive>
               </sequential>
             </parallel>
         </actions>

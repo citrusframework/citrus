@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class JmsLoopBackTests extends AbstractTestNGCitrusTest {
+public class JmsCommunicationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void jmsLoopBackTest(ITestContext testContext) {
+    public void jmsCommunicationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
