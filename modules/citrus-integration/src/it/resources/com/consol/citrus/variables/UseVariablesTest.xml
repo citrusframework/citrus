@@ -34,58 +34,53 @@
 			values for later sending beans.
 		</description>
         <variables>
-            <variable name="requestTag" value="useVariables___0002"/>
-            <variable name="${conversationId}" value="A00002"/>
-            <variable name="${number}" value="123456789"/>
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
+            <variable name="messageId" value="citrus:randomNumber(10)"></variable>
         </variables>
         <actions>
-            <send with="sendGetNumberRequest">
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <messageId>${messageId}</messageId>
+                               <correlationId>${correlationId}</correlationId>
+                               <user>Christoph</user>
+                               <text>Hello TestFramework</text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+			<receive with="helloResponseReceiver">
 				<message>
-					<data><![CDATA[
-					
-								<RequestMessage>
-									<MessageHeader>
-										<ConversationId>_</ConversationId>
-										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-										<RequestTag>_</RequestTag>
-										<VersionId>2</VersionId>
-									</MessageHeader>
-									<MessageBody>
-										<Customer>
-											<Id>1</Id>
-										</Customer>
-									</MessageBody>
-								</RequestMessage>						
-								
-							]]></data>
-					<element path="MessageHeader.RequestTag" value="${requestTag}"/>
-					<element path="ConversationId" value="${conversationId}"/>
-				</message>
-				<header>
-					<element name="Operation" value="GetNumber"/>
-					<element name="RequestTag" value="${requestTag}"/>
-				</header>
-			</send>
-			<receive with="receiveGetNumberResponse">
-				<message>
-					<validate path="MessageBody.Number" value="${number}"/>
+					<validate path="HelloResponse.correlationId" value="${correlationId}"/>
 				</message>
 				<extract>
-					<header name="Operation" variable="${transId}"/>
-					<header name="RequestTag" variable="${messageId}"/>
-					<message path="VersionId" variable="${versionId}"/>
+					<header name="Operation" variable="${operation}"/>
+					<header name="CorrelationId" variable="${id}"/>
+					<message path="//:HelloResponse/:user" variable="${user}"/>
 				</extract>
 			</receive>
+			
 			<echo>
-				<message>${transId}</message>
+				<message>${operation}</message>
 			</echo>
+			
 			<traceVariables>
-				<variable name="${number}"/>
-				<variable name="${requestTag}"/>
-				<variable name="${conversationId}"/>
-                <variable name="${transId}"/>
+				<variable name="${id}"/>
+				<variable name="${correlationId}"/>
+                <variable name="${operation}"/>
                 <variable name="${messageId}"/>
-                <variable name="${versionId}"/>
+                <variable name="${user}"/>
 			</traceVariables>
         </actions>
     </testcase>

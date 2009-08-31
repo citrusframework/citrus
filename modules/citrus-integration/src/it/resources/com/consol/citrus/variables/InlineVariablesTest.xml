@@ -20,7 +20,7 @@
             <variable name="text2" value="Test Framework"/>
         </variables>
         <actions>
-            <send with="sendGetNumberRequest">
+            <send with="testMessageSender">
                 <message>
                     <data>
                     	<![CDATA[
@@ -39,7 +39,8 @@
                 	<element name="operation" value="Greetings"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberRequest">
+            
+            <receive with="testMessageReceiver">
                 <message>
                     <data>
 						<![CDATA[							
@@ -59,7 +60,7 @@
                 </header>
             </receive>
             
-            <send with="sendGetNumberRequest">
+            <send with="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -78,7 +79,8 @@
                     <element name="operation" value="Greetings"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberRequest">
+            
+            <receive with="testMessageReceiver">
                 <message>
                     <data>
                         <![CDATA[                           

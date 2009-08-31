@@ -8,7 +8,6 @@
 		<property name="tasksBefore">
 			<list>
 				<ref bean="purgeJmsQueues"/>
-				<ref bean="startJmsLoopBackDummies"/>
 				
 				<bean id="initDatabase" parent="databaseAccess">
 					<property name="statements">
@@ -28,8 +27,6 @@
 		</property>
 		<property name="tasksAfter">
 			<list>
-				<ref bean="stopJmsLoopBackDummies"/>
-				
 				<bean id="destroyDatabase" parent="databaseAccess">
                     <property name="ignoreErrors" value="true"/>
 					<property name="statements">

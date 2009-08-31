@@ -13,10 +13,18 @@
 	<import resource="service-beans-ctx.xml"/>
 	<import resource="test-suite-ctx.xml"/>
 	<import resource="web-service-ctx.xml"/>
-	<import resource="jmsLoopBackContext.xml"/>	
 	<import resource="http-service-ctx.xml"/>
+	<import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
 	
-    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
     
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">

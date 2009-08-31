@@ -442,14 +442,14 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             Assert.isTrue(received.getNodeValue().trim().equals(source.getNodeValue().trim()),
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
-                            + received.getNodeValue().trim() + "' but was '"
-                            + source.getNodeValue().trim() + "'");
+                            + source.getNodeValue().trim() + "' but was '"
+                            + received.getNodeValue().trim() + "'");
         } else {
             Assert.isTrue(source.getNodeValue() == null, 
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
-                            + null + "' but was '"
-                            + source.getNodeValue().trim() + "'");
+                            + source.getNodeValue().trim() + "' but was '"
+                            + null + "'");
         }
         
         if(log.isDebugEnabled()) {

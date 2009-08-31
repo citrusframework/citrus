@@ -9,50 +9,43 @@
 			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
 		</meta-info>
 		
-        <description>
-			
-		</description>
         <variables>
-            <variable name="requestTag" value="validateValues___0001"/>
-            <variable name="conversationId" value="A00001"/>
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
+            <variable name="messageId" value="citrus:randomNumber(10)"></variable>
+            <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send with="sendGetNumberRequest">
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
                 <message>
-                    <data><![CDATA[
-							
-								<RequestMessage>
-									<MessageHeader>
-										<ConversationId>_</ConversationId>
-										<Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-										<RequestTag>_</RequestTag>
-										<VersionId>2</VersionId>
-									</MessageHeader>
-									<MessageBody>
-										<Customer>
-											<Id>1</Id>
-										</Customer>
-									</MessageBody>
-								</RequestMessage>						
-							
-						]]></data>
-                    <element path="MessageHeader.RequestTag" value="${requestTag}"/>
-                    <element path="ConversationId" value="${conversationId}"/>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <messageId>${messageId}</messageId>
+                               <correlationId>${correlationId}</correlationId>
+                               <user>${user}</user>
+                               <text>Hello TestFramework</text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumber"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            <receive with="receiveGetNumberResponse">
+            
+            <receive with="helloResponseReceiver">
                 <message>
-                    <validate path="MessageHeader.RequestTag" value="${requestTag}"/>
-                    <validate path="ConversationId" value="${conversationId}"/>
-                    <validate path="MessageBody.Number" value="123456789"/>
+                    <validate path="HelloResponse.messageId" value="${messageId}"/>
+                    <validate path="HelloResponse.correlationId" value="${correlationId}"/>
+                    <validate path="HelloResponse.text" value="citrus:concat('Hello ', ${user})"/>
                 </message>
                 <header>
-                    <element name="Operation" value="GetNumber"/>
-                    <element name="RequestTag" value="${requestTag}"/>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
         </actions>
