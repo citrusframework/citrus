@@ -8,30 +8,30 @@
     or overwrite existing ones.</para>
     
     <programlisting>
-    &lt;testcase name=&quot;settingVariablesTest&quot;&gt;
-        &lt;variables&gt;
-            &lt;variable name=&quot;myVariable&quot; value=&quot;12345&quot;/&gt;
-            &lt;variable name=&quot;newValue&quot; value=&quot;54321&quot;/&gt;
-        &lt;/variables&gt;
-        &lt;actions&gt;
-            &lt;echo&gt;
-                &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
-            &lt;/echo&gt;
-            
-            &lt;createVariables&gt;
-                &lt;variable name=&quot;myVariable&quot; value=&quot;${newValue}&quot;/&gt;
-                &lt;variable name=&quot;new&quot; value=&quot;'this is a test'&quot;/&gt;
-            &lt;/createVariables&gt;
-            
-            &lt;echo&gt;
-                &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
-            &lt;/echo&gt;
-        
-            &lt;echo&gt;
-                &lt;message&gt;New variable 'new' has the value: ${new} &lt;/message&gt;
-            &lt;/echo&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;settingVariablesTest&quot;&gt;
+      &lt;variables&gt;
+          &lt;variable name=&quot;myVariable&quot; value=&quot;12345&quot;/&gt;
+          &lt;variable name=&quot;newValue&quot; value=&quot;54321&quot;/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;echo&gt;
+              &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+          &lt;/echo&gt;
+          
+          &lt;createVariables&gt;
+              &lt;variable name=&quot;myVariable&quot; value=&quot;${newValue}&quot;/&gt;
+              &lt;variable name=&quot;new&quot; value=&quot;'this is a test'&quot;/&gt;
+          &lt;/createVariables&gt;
+          
+          &lt;echo&gt;
+              &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+          &lt;/echo&gt;
+      
+          &lt;echo&gt;
+              &lt;message&gt;New variable 'new' has the value: ${new} &lt;/message&gt;
+          &lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>The new variables are valid for the rest of the test. Actions reference them as usual through a variable expression.</para>

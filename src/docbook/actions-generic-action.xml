@@ -7,12 +7,12 @@
     implementations to a test case. You can implement own actions in Java and include them into a test case.</para>
     
     <programlisting>
-    &lt;testcase name=&quot;actionReferenceTest&quot;&gt;
-        &lt;actions&gt;
-            &lt;action reference=&quot;cleanUpDatabase&quot;/&gt;
-            &lt;action reference=&quot;mySpecialAction&quot;/&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;actionReferenceTest&quot;&gt;
+      &lt;actions&gt;
+          &lt;action reference=&quot;cleanUpDatabase&quot;/&gt;
+          &lt;action reference=&quot;mySpecialAction&quot;/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>In the example the called actions are special database cleanup implementations. The actions are defined as Spring beans 
