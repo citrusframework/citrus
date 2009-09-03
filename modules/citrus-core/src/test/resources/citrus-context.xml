@@ -38,13 +38,4 @@
             </list>
         </property>
     </bean>
-    
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<value>citrus</value>
-				<value>version</value>			
-			</list>
-		</property>
-	</bean>
 </beans>
