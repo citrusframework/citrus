@@ -22,9 +22,6 @@
     <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
   
     <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesBean">
-        <property name="queueConnectionFactory">
-            <ref bean="connectionFactory"></ref>
-        </property>
         <property name="queueNames">
             <list>
                 <value>${travel.agency.request.queue}</value>
