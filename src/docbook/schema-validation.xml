@@ -16,18 +16,21 @@
         which holds all available XML schema files for a project.</para>
         
         <programlisting>
-    &lt;bean id=&quot;schemaRepository&quot; class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-        &lt;property name=&quot;schemas&quot;&gt;
-            &lt;list&gt;
-                &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                    &lt;property name=&quot;xsd&quot; value=&quot;classpath:com/consol/citrus/samples/flightbooking/schema/TravelAgencySchema.xsd&quot;/&gt;
-                &lt;/bean&gt;
-                &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                    &lt;property name=&quot;xsd&quot; value=&quot;classpath:com/consol/citrus/samples/flightbooking/schema/AirlineSchema.xsd&quot;/&gt;
-                &lt;/bean&gt;
-            &lt;/list&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
+  &lt;bean id=&quot;schemaRepository&quot; 
+           class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
+      &lt;property name=&quot;schemas&quot;&gt;
+          &lt;list&gt;
+              &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+                  &lt;property name=&quot;xsd&quot; 
+                               value=&quot;classpath:com/consol/citrus/samples/flightbooking/schema/TravelAgencySchema.xsd&quot;/&gt;
+              &lt;/bean&gt;
+              &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+                  &lt;property name=&quot;xsd&quot; 
+                               value=&quot;classpath:com/consol/citrus/samples/flightbooking/schema/AirlineSchema.xsd&quot;/&gt;
+              &lt;/bean&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
         </programlisting>
         
         <para>By convention the schema respository instance is defined in the Citrus Spring configuration with the id "schemaRepository".
@@ -46,17 +49,19 @@
             explicitly in your test.</para>
             
             <programlisting>
-    &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
-        &lt;message schemaValidation=&quot;false&quot;&gt;
-            &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-            &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
-        &lt;/message&gt;
-        &lt;header&gt;
-            &lt;element name=&quot;Operation&quot; value=&quot;GetNumberXmlns&quot;/&gt;
-            &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-        &lt;/header&gt;
-    &lt;/receive&gt;
+  &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
+      &lt;message schemaValidation=&quot;false&quot;&gt;
+          &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
+                       value=&quot;${requestTag}&quot;/&gt;
+          &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:ConversationId&quot; 
+                       value=&quot;${conversationId}&quot;/&gt;
+          &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
+      &lt;/message&gt;
+      &lt;header&gt;
+          &lt;element name=&quot;Operation&quot; value=&quot;GetNumberXmlns&quot;/&gt;
+          &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+      &lt;/header&gt;
+  &lt;/receive&gt;
             </programlisting>
             
             <para>This way might sound annoying for you but in our opinion it is very important to validate the structure of the received 
@@ -75,24 +80,24 @@
         <para>First thing you can do about DTD validation is to specify a inline DTD in your expected message template.</para>
         
         <programlisting>
-    &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
-        &lt;message schemaValidation=&quot;false&quot;&gt;
-            &lt;data&gt;
-            &lt;![CDATA[
-                &lt;!DOCTYPE root [
-                    &lt;!ELEMENT root (message)&gt;
-                    &lt;!ELEMENT message (text)&gt;
-                    &lt;!ELEMENT text (#PCDATA)&gt;
-                    ]&gt;
-                &lt;root&gt;
-                    &lt;message&gt;
-                        &lt;text&gt;Hello TestFramework!&lt;/text&gt;
-                    &lt;/message&gt;
-                &lt;/root&gt;
-            ]&gt;
-            &lt;data/&gt;
-        &lt;/message&gt;
-    &lt;/receive&gt;
+  &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
+      &lt;message schemaValidation=&quot;false&quot;&gt;
+          &lt;data&gt;
+          &lt;![CDATA[
+              &lt;!DOCTYPE root [
+                  &lt;!ELEMENT root (message)&gt;
+                  &lt;!ELEMENT message (text)&gt;
+                  &lt;!ELEMENT text (#PCDATA)&gt;
+                  ]&gt;
+              &lt;root&gt;
+                  &lt;message&gt;
+                      &lt;text&gt;Hello TestFramework!&lt;/text&gt;
+                  &lt;/message&gt;
+              &lt;/root&gt;
+          ]&gt;
+          &lt;data/&gt;
+      &lt;/message&gt;
+  &lt;/receive&gt;
         </programlisting>
         
         <para>The system under test may also send the message with a inline DTD definition. So validation will succeed.</para>
@@ -101,20 +106,21 @@
         template as well.</para>
         
         <programlisting>
-    &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
-        &lt;message schemaValidation=&quot;false&quot;&gt;
-            &lt;data&gt;
-            &lt;![CDATA[
-                &lt;!DOCTYPE root SYSTEM &quot;com/consol/citrus/validation/example.dtd&quot;&gt;
-                &lt;root&gt;
-                    &lt;message&gt;
-                        &lt;text&gt;Hello TestFramework!&lt;/text&gt;
-                    &lt;/message&gt;
-                &lt;/root&gt;
-            ]&gt;
-            &lt;data/&gt;
-        &lt;/message&gt;
-    &lt;/receive&gt;
+  &lt;receive with=&quot;getNumberRequestReceiver&quot;&gt;
+      &lt;message schemaValidation=&quot;false&quot;&gt;
+          &lt;data&gt;
+          &lt;![CDATA[
+              &lt;!DOCTYPE root SYSTEM 
+                           &quot;com/consol/citrus/validation/example.dtd&quot;&gt;
+              &lt;root&gt;
+                  &lt;message&gt;
+                      &lt;text&gt;Hello TestFramework!&lt;/text&gt;
+                  &lt;/message&gt;
+              &lt;/root&gt;
+          ]&gt;
+          &lt;data/&gt;
+      &lt;/message&gt;
+  &lt;/receive&gt;
         </programlisting>
     </section>
 </chapter>
