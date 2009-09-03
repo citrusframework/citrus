@@ -7,8 +7,6 @@
 	<bean name="citrus-integration" class="com.consol.citrus.TestSuite">
 		<property name="tasksBefore">
 			<list>
-				<ref bean="purgeJmsQueues"/>
-				
 				<bean id="initDatabase" parent="databaseAccess">
 					<property name="statements">
 						<list>
