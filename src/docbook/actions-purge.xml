@@ -11,22 +11,22 @@
     that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations.</para>
         
     <programlisting>
-&lt;bean id=&quot;purgeJmsQueues&quot;
-    class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesBean&quot;&gt;
-    &lt;property name=&quot;queueConnectionFactory&quot;&gt;
-        &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;queueNames&quot;&gt;
-        &lt;list&gt;
-            &lt;value&gt;${jms.queue.sas.dummy.in}&lt;/value&gt;
-            &lt;value&gt;${jms.queue.sas.dummy.out}&lt;/value&gt;
-            &lt;value&gt;${jms.queue.async.res}&lt;/value&gt;
-            &lt;value&gt;${jms.queue.async.req}&lt;/value&gt;
-            &lt;value&gt;${jms.queue.reply}&lt;/value&gt;
-            &lt;value&gt;${jms.queue.async.ntf}&lt;/value&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;
+  &lt;bean id=&quot;purgeJmsQueues&quot;
+      class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesBean&quot;&gt;
+      &lt;property name=&quot;connectionFactory&quot;&gt;
+          &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
+      &lt;/property&gt;
+      &lt;property name=&quot;queueNames&quot;&gt;
+          &lt;list&gt;
+              &lt;value&gt;${jms.queue.sas.dummy.in}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.sas.dummy.out}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.async.res}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.async.req}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.reply}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.async.ntf}&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
     </programlisting>
     
     <tip>

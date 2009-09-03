@@ -9,31 +9,31 @@
     <para>The action syntax looks like follows:</para>
     
     <programlisting>
-    &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
-        &lt;constructor&gt;
-            &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
-        &lt;/constructor&gt;
-        &lt;method name=&quot;invoke&quot;&gt;
-            &lt;argument type=&quot;String[]&quot;&gt;1,2&lt;/argument&gt;
-        &lt;/method&gt;
-    &lt;/java&gt;
-    
-    &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
-        &lt;constructor&gt;
-            &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
-        &lt;/constructor&gt;
-        &lt;method name=&quot;invoke&quot;&gt;
-            &lt;argument type=&quot;int&quot;&gt;4&lt;/argument&gt;
-            &lt;argument type=&quot;String&quot;&gt;Test Invocation&lt;/argument&gt;
-            &lt;argument type=&quot;boolean&quot;&gt;true&lt;/argument&gt;
-        &lt;/method&gt;
-    &lt;/java&gt;
-    
-    &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
-        &lt;method name=&quot;main&quot;&gt;
-            &lt;argument type=&quot;String[]&quot;&gt;4,Test,true &lt;/argument&gt;
-        &lt;/method&gt;
-    &lt;/java&gt;
+  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+      &lt;constructor&gt;
+          &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
+      &lt;/constructor&gt;
+      &lt;method name=&quot;invoke&quot;&gt;
+          &lt;argument type=&quot;String[]&quot;&gt;1,2&lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
+  
+  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+      &lt;constructor&gt;
+          &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
+      &lt;/constructor&gt;
+      &lt;method name=&quot;invoke&quot;&gt;
+          &lt;argument type=&quot;int&quot;&gt;4&lt;/argument&gt;
+          &lt;argument type=&quot;String&quot;&gt;Test Invocation&lt;/argument&gt;
+          &lt;argument type=&quot;boolean&quot;&gt;true&lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
+      
+  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+      &lt;method name=&quot;main&quot;&gt;
+          &lt;argument type=&quot;String[]&quot;&gt;4,Test,true &lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
     </programlisting>
     
     <para>The Java class is specified by fully qualified class name. Constructor arguments are added using the &lt;constructor&gt; 
