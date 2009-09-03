@@ -11,16 +11,18 @@
         The namespace URI and schema location have to be included into the Spring configuration XML file.</para>
         
         <programlisting>
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
-           xsi:schemaLocation=&quot;
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-           http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd&quot;&gt;
-           
-        [...]
-        
-    &lt;/beans&gt;
+  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
+         xsi:schemaLocation=&quot;
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.consol.de/citrus/schema/config 
+         http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd&quot;&gt;
+         
+      [...]
+      
+  &lt;/beans&gt;
         </programlisting>
         
         <para>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</para>
@@ -35,12 +37,14 @@
         configuration in Citrus.</para>
         
         <programlisting>
-    &lt;bean id=&quot;connectionFactory&quot; class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-        &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
-    &lt;/bean&gt;
-    
-    &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                                  destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;/&gt;
+  &lt;bean id=&quot;connectionFactory&quot; 
+           class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+      &lt;property name=&quot;brokerURL&quot; 
+                   value=&quot;tcp://localhost:61616&quot; /&gt;
+  &lt;/bean&gt;
+  
+  &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
+                                destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;/&gt;
         </programlisting>
         
         <para>The JMS connection factory is responsible for connecting to a JMS message broker. In this example we use the Apache ActiveMQ 
@@ -58,17 +62,17 @@
             names.</para>
             
             <programlisting>
-    &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                                  destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
-                                  connection-factory=&quot;myConnectionFacotry&quot;/&gt;
-            </programlisting> 
-            
-            <para>Alternatively you may want to directly specify a Spring jmsTemplate.</para>
-            
-            <programlisting>
-    &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                                  destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
-                                  jms-template=&quot;myJmsTemplate&quot;/&gt;
+  &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
+                                destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
+                                connection-factory=&quot;myConnectionFacotry&quot;/&gt;
+              </programlisting> 
+              
+              <para>Alternatively you may want to directly specify a Spring jmsTemplate.</para>
+              
+              <programlisting>
+  &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
+                                destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
+                                jms-template=&quot;myJmsTemplate&quot;/&gt;
             </programlisting>
         </note>
     </section>
@@ -80,8 +84,8 @@
         configuration files. We assume that a connection factory has been configured as shown in the previous section.</para>
         
         <programlisting>
-    &lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
-                                    destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
+  &lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
+                                  destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
         </programlisting>
         
         <para>The message receiver will connect to the given destination and wait for messages to arrive.</para>
@@ -90,8 +94,8 @@
             <para>Besides the destination-name attribute you can also provide a reference to a Destination implementation.</para>
             
             <programlisting>
-    &lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
-                                    destination=&quot;orderInboundQueue&quot;/&gt;
+  &lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
+                                  destination=&quot;orderInboundQueue&quot;/&gt;
             </programlisting>
             
             <para>This destination reference applies to all JMS aware message sender and receiver implementations.</para>
@@ -105,12 +109,12 @@
         synchronously for the response on this destination.</para>
         
         <programlisting>
-    &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
-                                destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
-                                reply-handler=&quot;getCustomerReplyHandler&quot;
-                                reply-timeout=&quot;1000&quot;/&gt;
-                                
-    &lt;citrus:jms-reply-message-handler id=&quot;getCustomerReplyHandler&quot;/&gt;      
+  &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
+                              destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
+                              reply-handler=&quot;getCustomerReplyHandler&quot;
+                              reply-timeout=&quot;1000&quot;/&gt;
+                              
+  &lt;citrus:jms-reply-message-handler id=&quot;getCustomerReplyHandler&quot;/&gt;      
         </programlisting>
         
         <para>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
@@ -122,11 +126,11 @@
             destination name is stored to the JMS replyTo message header. You can also define a static reply destination like follows.</para>
             
             <programlisting>
-    &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
-                                destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
-                                reply-destination-name=&quot;Citrus.JMS.Customer.Queue.Reply&quot;
-                                reply-handler=&quot;getCustomerReplyHandler&quot;
-                                reply-timeout=&quot;1000&quot;/&gt;
+  &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
+                              destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
+                              reply-destination-name=&quot;Citrus.JMS.Customer.Queue.Reply&quot;
+                              reply-handler=&quot;getCustomerReplyHandler&quot;
+                              reply-timeout=&quot;1000&quot;/&gt;
             </programlisting>
             
             <para>Instead of using the <emphasis>reply-destination-name</emphasis> feel free to use the destination reference
@@ -150,11 +154,11 @@
         with a reply sender.</para>
         
         <programlisting>
-    &lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 
-                                         destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
-                                         
-    &lt;citrus:jms-reply-message-sender id=&quot;getOrderReplySender&quot;
-                                        reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;
+  &lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 
+                                       destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
+                                       
+  &lt;citrus:jms-reply-message-sender id=&quot;getOrderReplySender&quot;
+                                      reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;
         </programlisting>
         
         <para>In first sight the synchronous message receiver has no difference to a normal receiver, but the difference comes in

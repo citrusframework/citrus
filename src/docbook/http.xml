@@ -11,18 +11,21 @@
         is used in Spring configuration files. Simply include the http-config namespace in the confguration XML as follows.</para>
         
         <programlisting>
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
-           xmlns:citrus-http=&quot;http://www.consol.de/citrus/schema/http/config&quot;
-           xsi:schemaLocation=&quot;
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-           http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
-           http://www.consol.de/citrus/schema/http/config http://www.consol.de/citrus/schema/http/config/citrus-http-config-1.0.xsd&quot;&gt;
-           
-        [...]
-        
-    &lt;/beans&gt;
+  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
+         xmlns:citrus-http=&quot;http://www.consol.de/citrus/schema/http/config&quot;
+         xsi:schemaLocation=&quot;
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.consol.de/citrus/schema/config 
+         http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
+         http://www.consol.de/citrus/schema/http/config 
+         http://www.consol.de/citrus/schema/http/config/citrus-http-config-1.0.xsd&quot;&gt;
+         
+      [...]
+      
+  &lt;/beans&gt;
         </programlisting>
         
         <para>Now you are ready to use the customized http configuration elements using the 
@@ -36,12 +39,12 @@
         Let us see how a message sender for Http is configured:</para>
         
         <programlisting>
-    &lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
-                                   request-url=&quot;http://localhost:8090/test&quot; 
-                                   request-method=&quot;POST&quot;
-                                   reply-handler=&quot;httpResponseHandler&quot;/&gt;
-    
-    &lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;/&gt;
+  &lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
+                                 request-url=&quot;http://localhost:8090/test&quot; 
+                                 request-method=&quot;POST&quot;
+                                 reply-handler=&quot;httpResponseHandler&quot;/&gt;
+  
+  &lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;/&gt;
         </programlisting>
         
         <para>As Http communication is always synchronous we need a reply message handler besides the http message-sender. It is not
@@ -58,15 +61,15 @@
         implementation that can easily listens on a port for client connections.</para>
         
         <programlisting>
-    &lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
-                           port=&quot;8090&quot; 
-                           uri=&quot;/test&quot; 
-                           deamon=&quot;false&quot; 
-                           message-handler=&quot;emptyResponseProducingMessageHandler&quot;
-                           auto-start=&quot;true&quot;/&gt;
-                           
-    &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-             class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+  &lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
+                         port=&quot;8090&quot; 
+                         uri=&quot;/test&quot; 
+                         deamon=&quot;false&quot; 
+                         message-handler=&quot;emptyResponseProducingMessageHandler&quot;
+                         auto-start=&quot;true&quot;/&gt;
+                         
+  &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+           class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
         </programlisting>
         
         <para>The Http server implementation in the example will automatically startup on application loading and will listen on
@@ -82,25 +85,27 @@
             <para>The next more complex message handler will always return a static response message</para>
             
             <programlisting>
-    &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
-        &lt;property name=&quot;messagePayload&quot;&gt;
-            &lt;value&gt;
-            &lt;![CDATA[
-                &lt;ns0:Response xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
-                    &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
-                    &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
-                    &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
-                &lt;/ns0:Response&gt;
-            ]]&gt;
-            &lt;/value&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;messageHeader&quot;&gt;
-            &lt;map&gt;
-                &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Operation&quot; value=&quot;sayHelloResponse&quot;/&gt;
-                &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Request&quot; value=&quot;HelloRequest&quot;/&gt;
-            &lt;/map&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
+  &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+      &lt;property name=&quot;messagePayload&quot;&gt;
+          &lt;value&gt;
+          &lt;![CDATA[
+              &lt;ns0:Response xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                  &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                  &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                  &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+              &lt;/ns0:Response&gt;
+          ]]&gt;
+          &lt;/value&gt;
+      &lt;/property&gt;
+      &lt;property name=&quot;messageHeader&quot;&gt;
+          &lt;map&gt;
+              &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Operation&quot; 
+                        value=&quot;sayHelloResponse&quot;/&gt;
+              &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Request&quot; 
+                        value=&quot;HelloRequest&quot;/&gt;
+          &lt;/map&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
             </programlisting>
             
             <para>The handler is configured with a static message payload and static response header values. The response to the client
@@ -116,10 +121,12 @@
             Spring application context that is loaded in advance.</para>
             
             <programlisting>
-    &lt;bean id=&quot;xpathDispatchingHandler&quot; class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
-        &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation&quot;/&gt;
-        &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
-    &lt;/bean&gt;
+  &lt;bean id=&quot;xpathDispatchingHandler&quot; class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
+      &lt;property name=&quot;xpathMappingExpression&quot; 
+                   value=&quot;//MessageBody/Operation&quot;/&gt;
+      &lt;property name=&quot;messageHandlerContext&quot; 
+                   value=&quot;message-handler-context.xml&quot;/&gt;
+  &lt;/bean&gt;
             </programlisting>
             
             <para>The handler receives a XPath mapping expression as well as a Spring ApllicationContext file resource. The message handlers
@@ -137,16 +144,19 @@
             reply destination.</para>
             
             <programlisting>
-    &lt;bean id=&quot;jmsForwardingMessageHandler&quot; class=&quot;com.consol.citrus.http.handler.JmsConnectingMessageHandler&quot;&gt;
-        &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
-        &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Queue.Response.Out&quot;/&gt;
-        &lt;property name=&quot;connectionFactory&quot;&gt;
-            &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-                &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
-            &lt;/bean&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
-    &lt;/bean&gt;
+  &lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
+           class=&quot;com.consol.citrus.http.handler.JmsConnectingMessageHandler&quot;&gt;
+      &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
+      &lt;property name=&quot;replyDestinationName&quot; 
+                   value=&quot;JMS.Queue.Response.Out&quot;/&gt;
+      &lt;property name=&quot;connectionFactory&quot;&gt;
+          &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+              &lt;property name=&quot;brokerURL&quot; 
+                           value=&quot;tcp://localhost:61616&quot; /&gt;
+          &lt;/bean&gt;
+      &lt;/property&gt;
+      &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
+  &lt;/bean&gt;
             </programlisting>
             
             <tip>

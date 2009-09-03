@@ -28,43 +28,44 @@
     defined in the test.</para>
     
     <programlisting>
-    &lt;testcase name=&quot;sendMessageTest&quot;&gt;
-        &lt;description&gt;
-            Send message example!
-        &lt;/description&gt;
-        &lt;variables&gt;
-            &lt;variable name=&quot;requestTag&quot; value=&quot;requestTag0001&quot;/&gt;
-            &lt;variable name=&quot;conversationId&quot; value=&quot;A00001&quot;/&gt;
-        &lt;/variables&gt;
-        &lt;actions&gt;
-            &lt;send with=&quot;getNumberRequestMessageSender&quot;&gt;
-                &lt;message&gt;
-                    &lt;data&gt;
-                        &lt;![CDATA[
-                        &lt;RequestMessage&gt;
-                            &lt;MessageHeader&gt;
-                                &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
-                                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                                &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                                &lt;VersionId&gt;2&lt;/VersionId&gt;
-                            &lt;/MessageHeader&gt;
-                            &lt;MessageBody&gt;
-                                &lt;Customer&gt;
-                                    &lt;Id&gt;1&lt;/Id&gt;
-                                &lt;/Customer&gt;
-                            &lt;/MessageBody&gt;
-                        &lt;/RequestMessage&gt;
-                        ]]&gt;
-                    &lt;/data&gt;
-                    &lt;element path=&quot;/MessageHeader/RequestTag&quot; value=&quot;%requestTag&quot;/&gt;
-                &lt;/message&gt;
-                &lt;header&gt;
-                    &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
-                    &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-                &lt;/header&gt;
-            &lt;/send&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;sendMessageTest&quot;&gt;
+      &lt;description&gt;
+          Send message example!
+      &lt;/description&gt;
+      &lt;variables&gt;
+          &lt;variable name=&quot;requestTag&quot; value=&quot;requestTag0001&quot;/&gt;
+          &lt;variable name=&quot;conversationId&quot; value=&quot;A00001&quot;/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;send with=&quot;getNumberRequestMessageSender&quot;&gt;
+              &lt;message&gt;
+                  &lt;data&gt;
+                      &lt;![CDATA[
+                      &lt;RequestMessage&gt;
+                          &lt;MessageHeader&gt;
+                              &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
+                              &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                              &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                              &lt;VersionId&gt;2&lt;/VersionId&gt;
+                          &lt;/MessageHeader&gt;
+                          &lt;MessageBody&gt;
+                              &lt;Customer&gt;
+                                  &lt;Id&gt;1&lt;/Id&gt;
+                              &lt;/Customer&gt;
+                          &lt;/MessageBody&gt;
+                      &lt;/RequestMessage&gt;
+                      ]]&gt;
+                  &lt;/data&gt;
+                  &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
+                              value=&quot;%requestTag&quot;/&gt;
+              &lt;/message&gt;
+              &lt;header&gt;
+                  &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
+                  &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+              &lt;/header&gt;
+          &lt;/send&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>The test uses two variable definitions (requestTag and conversationId), so first of all let us refresh in mind what 
@@ -148,39 +149,41 @@
     Let us again have a look at some example showing how it works.</para>
     
     <programlisting>
-    &lt;receive with=&quot;getNumberResponseReceiver&quot;&gt;
-        &lt;selector&gt;
-            &lt;value&gt;operation = ‘ReceiveMSISDN’&lt;/value&gt;
-        &lt;/selector&gt;
-        &lt;message&gt;
-            &lt;data&gt;
-                &lt;![CDATA[
-                &lt;RequestMessage&gt;
-                    &lt;MessageHeader&gt;
-                        &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
-                        &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                        &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                        &lt;VersionId&gt;2&lt;/VersionId&gt;
-                    &lt;/MessageHeader&gt;
-                    &lt;MessageBody&gt;
-                        &lt;Customer&gt;
-                            &lt;Id&gt;1&lt;/Id&gt;
-                        &lt;/Customer&gt;
-                    &lt;/MessageBody&gt;
-                &lt;/RequestMessage&gt;
-                ]]&gt;
-            &lt;/data&gt;
-            &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;%requestTag&quot;/&gt;
-        &lt;/message&gt;
-        &lt;header&gt;
-            &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
-            &lt;element name=&quot;RequestTag&quot; value=&quot;%requestTag&quot;/&gt;
-        &lt;/header&gt;
-        &lt;extract&gt;
-            &lt;header name=&quot;Operation&quot; variable=&quot;%operation&quot;/&gt;
-            &lt;message name=&quot;//MessageBody/Customer/Id&quot; variable=&quot;%customerId&quot;/&gt;
-        &lt;/extract&gt;
-    &lt;/receive&gt;
+  &lt;receive with=&quot;getNumberResponseReceiver&quot;&gt;
+      &lt;selector&gt;
+          &lt;value&gt;operation = ‘ReceiveMSISDN’&lt;/value&gt;
+      &lt;/selector&gt;
+      &lt;message&gt;
+          &lt;data&gt;
+              &lt;![CDATA[
+              &lt;RequestMessage&gt;
+                  &lt;MessageHeader&gt;
+                      &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
+                      &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                      &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                      &lt;VersionId&gt;2&lt;/VersionId&gt;
+                  &lt;/MessageHeader&gt;
+                  &lt;MessageBody&gt;
+                      &lt;Customer&gt;
+                          &lt;Id&gt;1&lt;/Id&gt;
+                      &lt;/Customer&gt;
+                  &lt;/MessageBody&gt;
+              &lt;/RequestMessage&gt;
+              ]]&gt;
+          &lt;/data&gt;
+          &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
+                      value=&quot;%requestTag&quot;/&gt;
+      &lt;/message&gt;
+      &lt;header&gt;
+          &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
+          &lt;element name=&quot;RequestTag&quot; value=&quot;%requestTag&quot;/&gt;
+      &lt;/header&gt;
+      &lt;extract&gt;
+          &lt;header name=&quot;Operation&quot; variable=&quot;%operation&quot;/&gt;
+          &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
+                      variable=&quot;%customerId&quot;/&gt;
+      &lt;/extract&gt;
+  &lt;/receive&gt;
     </programlisting>
     
     <para>Knowing the send action of the previous chapter we can identify some common mechanisms that apply for both 
@@ -226,10 +229,10 @@
         <para>Let us have a closer look at a message selector inside a receiving action:</para>
         
         <programlisting>
-    &lt;selector&gt;
-        &lt;element&gt; name="correlationId" value="Lx1x123456789"&lt;/element&gt;
-        &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
-    &lt;/selector&gt;
+  &lt;selector&gt;
+      &lt;element&gt; name="correlationId" value="Lx1x123456789"&lt;/element&gt;
+      &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
+  &lt;/selector&gt;
         </programlisting>
         
         <para>This example shows how selectors work. The selector will only accept messages that meet the correlation id and the operation 
@@ -239,9 +242,11 @@
         <para>You can also define a selector string yourself that gives you more power in constructing the selection logic.</para>
         
         <programlisting>
-    &lt;selector&gt;
-        &lt;value&gt;correlationId = 'Lx1x123456789' OR correlationId = 'Lx1x987654321'&lt;/value&gt;
-    &lt;/selector&gt;
+  &lt;selector&gt;
+      &lt;value&gt;
+          correlationId = 'Lx1x123456789' OR correlationId = 'Lx1x987654321'
+      &lt;/value&gt;
+  &lt;/selector&gt;
         </programlisting>
         
         <important>
@@ -272,26 +277,27 @@
         a tester can ignore some elements in validation.</para>
         
         <programlisting>
-    &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-            &lt;RequestMessage&gt;
-                &lt;MessageHeader&gt;
-                    &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
-                    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                    &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                    &lt;VersionId&gt;2&lt;/VersionId&gt;
-                &lt;/MessageHeader&gt;
-                &lt;MessageBody&gt;
-                    &lt;Customer&gt;
-                        &lt;Id&gt;1&lt;/Id&gt;
-                    &lt;/Customer&gt;
-                &lt;/MessageBody&gt;
-            &lt;/RequestMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
-        &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-    &lt;/message&gt;
+  &lt;message&gt;
+      &lt;data&gt;
+          &lt;![CDATA[
+          &lt;RequestMessage&gt;
+              &lt;MessageHeader&gt;
+                  &lt;ConversationId&gt;${conversationId}&lt;/ConversationId&gt;
+                  &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                  &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                  &lt;VersionId&gt;2&lt;/VersionId&gt;
+              &lt;/MessageHeader&gt;
+              &lt;MessageBody&gt;
+                  &lt;Customer&gt;
+                      &lt;Id&gt;1&lt;/Id&gt;
+                  &lt;/Customer&gt;
+              &lt;/MessageBody&gt;
+          &lt;/RequestMessage&gt;
+          ]]&gt;
+      &lt;/data&gt;
+      &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
+                  value=&quot;${requestTag}&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>
         
         <para>The previous program linsting shows the two ways of setting variable values inside a message template. First of all you can
@@ -307,9 +313,9 @@
         dedicated for validation at all. Communication timestamps inside a message for example as shown here:</para>
         
         <programlisting>
-    [...]
-        &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-    [...]
+  [...]
+      &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+  [...]
         </programlisting>
         
         <para>This timestamp value will dynamically change from test run to test run, so lets ignore it in validation</para>
@@ -330,11 +336,14 @@
         expectations use the element validation.</para>
         
         <programlisting>
-    &lt;message&gt;
-        &lt;validate path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-        &lt;validate path=&quot;//ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-        &lt;validate path=&quot;//MessageBody/Number&quot; value=&quot;123456789&quot;/&gt;
-    &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//MessageHeader/RequestTag&quot; 
+                   value=&quot;${requestTag}&quot;/&gt;
+      &lt;validate path=&quot;//ConversationId&quot; 
+                   value=&quot;${conversationId}&quot;/&gt;
+      &lt;validate path=&quot;//MessageBody/Number&quot; 
+                   value=&quot;123456789&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>  
         
         <para>Instead of comparing a whole message template (data/resource) the given elements are validated explicitly. The framework 
@@ -366,10 +375,10 @@
         too.</para>
         
         <programlisting>
-    &lt;header&gt;
-        &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
-        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-    &lt;/header&gt;    
+  &lt;header&gt;
+      &lt;element name=&quot;Operation&quot; value=&quot;GetNumber&quot;/&gt;
+      &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+  &lt;/header&gt;    
         </programlisting>
         
         <para>These values have to be present in the received message header and their value has to fit the expected value.</para>
@@ -383,10 +392,11 @@
         save this dynamic id into a new test variable.</para>
         
         <programlisting>
-    &lt;extract&gt;
-        &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
-        &lt;message name=&quot;//MessageBody/Customer/Id&quot; variable=&quot;customerId&quot;/&gt;
-    &lt;/extract&gt;
+  &lt;extract&gt;
+      &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
+      &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
+                  variable=&quot;customerId&quot;/&gt;
+  &lt;/extract&gt;
         </programlisting>
         
         <para>As you can see the framework is able to store content into variables. The content may come from message payload 

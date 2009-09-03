@@ -9,7 +9,7 @@
     Citrus Spring configuration.</para>
     
     <programlisting>
-    &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;/&gt;
+  &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;/&gt;
     </programlisting>
     
     <para>Just add this bean to the Spring configuration and Citrus will debug received messages to the file system by generating files
@@ -27,9 +27,10 @@
     configuration.</para>
     
     <programlisting>
-    &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
-            &lt;property name=&quot;debugDirectory&quot; value=&quot;debugging/messages&quot;/&gt;
-    &lt;/bean&gt;
+  &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
+          &lt;property name=&quot;debugDirectory&quot; 
+                       value=&quot;debugging/messages&quot;/&gt;
+  &lt;/bean&gt;
     </programlisting>
     
     <note>
