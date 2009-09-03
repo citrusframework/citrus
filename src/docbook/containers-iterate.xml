@@ -7,15 +7,16 @@
     evaluates to <literal>false</literal> the iteration will discontinue its work.</para>
     
     <programlisting>
-    &lt;testcase name=&quot;iterateTest&quot;&gt;
-        &lt;actions&gt;
-            &lt;iterate indexName=&quot;i&quot; condition=&quot;i lt 5&quot;&gt;
-                &lt;echo&gt;
-                    &lt;message&gt;index is: ${i}&lt;/message&gt;
-                &lt;/echo&gt;
-            &lt;/iterate&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;iterateTest&quot;&gt;
+      &lt;actions&gt;
+          &lt;iterate indexName=&quot;i&quot; 
+                      condition=&quot;i lt 5&quot;&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;index is: ${i}&lt;/message&gt;
+              &lt;/echo&gt;
+          &lt;/iterate&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>The attribute &quot;indexName&quot; automatically defines a new variable that will always hold the actual loop index 
