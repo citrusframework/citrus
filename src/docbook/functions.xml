@@ -15,21 +15,22 @@
     public use.</para>
     
     <programlisting>
-    &lt;bean id=&quot;testFrameworkFunctionLibrary&quot; class=&quot;de.consol.testsuite.functions.FunctionLibrary&quot;&gt;
-        &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
-        &lt;property name=&quot;prefix&quot; value=&quot;tsf:&quot;/&gt;
-        &lt;property name=&quot;members&quot;&gt;
-            &lt;map&gt;
-                &lt;entry key=&quot;randomNumber&quot;&gt;
-                    &lt;bean class=&quot;de.consol.testsuite.functions.RandomNumberFunction&quot;/&gt;
-                &lt;/entry&gt;
-                &lt;entry key=&quot;randomString&quot;&gt;
-                    &lt;bean class=&quot;de.consol.testsuite.functions.RandomStringFunction&quot;/&gt;
-                &lt;/entry&gt;
-                ...
-            &lt;/map&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
+  &lt;bean id=&quot;testFrameworkFunctionLibrary&quot; 
+           class=&quot;de.consol.testsuite.functions.FunctionLibrary&quot;&gt;
+      &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
+      &lt;property name=&quot;prefix&quot; value=&quot;tsf:&quot;/&gt;
+      &lt;property name=&quot;members&quot;&gt;
+          &lt;map&gt;
+            &lt;entry key=&quot;randomNumber&quot;&gt;
+                &lt;bean class=&quot;de.consol.testsuite.functions.RandomNumberFunction&quot;/&gt;
+            &lt;/entry&gt;
+            &lt;entry key=&quot;randomString&quot;&gt;
+                &lt;bean class=&quot;de.consol.testsuite.functions.RandomStringFunction&quot;/&gt;
+            &lt;/entry&gt;
+            ...
+          &lt;/map&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
     </programlisting>
     
     <para>In the next chapters the default functions offered by the framework will be described in detail.</para>
@@ -41,22 +42,26 @@
         a static text value with a variable value for instance. A first example should clarify the usage:</para>
         
         <programlisting>
-    &lt;testcase name=&quot;concatFunctionTest&quot;&gt;
-        &lt;variables&gt;
-            &lt;variable name=&quot;date&quot; value=&quot;tsf:currentDate(yyyy-MM-dd)&quot; /&gt;
-            &lt;variable name=&quot;text&quot; value=&quot;Hallo Test Framework!&quot; /&gt;
-        &lt;/variables&gt;
-        &lt;actions&gt;
-            &lt;echo&gt;
-                &lt;message&gt;
-                    tsf:concat('Today is: ', ${date}, ' right!?')
-                &lt;/message&gt;
-            &lt;/echo&gt;
-            &lt;echo&gt;
-                &lt;message&gt;tsf:concat('Text is: ', ${text})&lt;/message&gt;
-            &lt;/echo&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;concatFunctionTest&quot;&gt;
+      &lt;variables&gt;
+          &lt;variable name=&quot;date&quot; 
+                       value=&quot;tsf:currentDate(yyyy-MM-dd)&quot; /&gt;
+          &lt;variable name=&quot;text&quot; 
+                       value=&quot;Hallo Test Framework!&quot; /&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;echo&gt;
+              &lt;message&gt;
+                  tsf:concat('Today is: ', ${date}, ' right!?')
+              &lt;/message&gt;
+          &lt;/echo&gt;
+          &lt;echo&gt;
+              &lt;message&gt;
+                  tsf:concat('Text is: ', ${text})
+              &lt;/message&gt;
+          &lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
         </programlisting>
         
         <para>Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to
@@ -68,9 +73,10 @@
         the receive action.</para>
         
         <programlisting>
-    &lt;message&gt;
-        &lt;validate path=&quot;//element/element&quot; value=&quot;tsf:concat('RETCS', ${text})&quot;/&gt;
-    &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//element/element&quot; 
+                   value=&quot;tsf:concat('RETCS', ${text})&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>
     </section>
     
@@ -86,12 +92,16 @@
         <para>Let us have a look at a simple example for this function:</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:substring('Hallo Test Framework', 6)&lt;/message&gt;
-    &lt;/echo&gt;
-    &lt;echo&gt;
-        &lt;message&gt;tsf:substring('Hallo Test Framework', 0, 5)&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          tsf:substring('Hallo Test Framework', 6)
+      &lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          tsf:substring('Hallo Test Framework', 0, 5)
+      &lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -105,9 +115,9 @@
         <para>The function will calculate the number of characters in a string representation and return the number.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:stringLength('Hallo Test Framework')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:stringLength('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -121,9 +131,11 @@
         specified replacement string.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:translate('H.llo Test Fr.mework', '\.', 'a')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          tsf:translate('H.llo Test Fr.mework', '\.', 'a')
+      &lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Note that the second parameter will be a regular expression. The third parameter will be a simple
@@ -140,9 +152,11 @@
         that occurrence. Let us have a closer look in a simple example:</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:substringBefore('Test/Framework', '/')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          tsf:substringBefore('Test/Framework', '/')
+      &lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>In the specific example the function will search for the ‘/’ character and return the string before that index.</para>
@@ -158,9 +172,11 @@
         occurrence. Let us clarify this with a simple example:</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:substringAfter('Test/Framework', '/')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          tsf:substringAfter('Test/Framework', '/')
+      &lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Analogue to the substringBefore function the ‘/’ character is found in the string. But now the remaining
@@ -177,9 +193,9 @@
         number.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:round('3.14')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:round('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -192,9 +208,9 @@
         <para>This function will round down decimal number values.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:floor('3.14')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:floor('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -207,9 +223,9 @@
         <para>Similar to floor function, but now the function will round up the decimal number values.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:ceiling('3.14')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:ceiling('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -227,11 +243,14 @@
         <para>Next example will show the function usage:</para>
         
         <programlisting>
-    &lt;variables&gt;
-        &lt;variable name=&quot;rndNumber1&quot; value=&quot;tsf:randomNumber(10)&quot;/&gt;
-        &lt;variable name=&quot;rndNumber2&quot; value=&quot;tsf:randomNumber(10, true)&quot;/&gt;
-        &lt;variable name=&quot;rndNumber3&quot; value=&quot;tsf:randomNumber(10, false)&quot;/&gt;
-    &lt;/variables&gt;
+  &lt;variables&gt;
+      &lt;variable name=&quot;rndNumber1&quot; 
+                   value=&quot;tsf:randomNumber(10)&quot;/&gt;
+      &lt;variable name=&quot;rndNumber2&quot; 
+                   value=&quot;tsf:randomNumber(10, true)&quot;/&gt;
+      &lt;variable name=&quot;rndNumber3&quot; 
+                   value=&quot;tsf:randomNumber(10, false)&quot;/&gt;
+  &lt;/variables&gt;
         </programlisting>
     </section>
 
@@ -242,13 +261,18 @@
         this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED)</para>
         
         <programlisting>
-    &lt;variables&gt;
-        &lt;variable name=&quot;rndString0&quot; value=&quot;${tsf:randomString(10)}&quot;/&gt;
-        &lt;variable name=&quot;rndString1&quot; value=&quot;tsf:randomString(10)&quot;/&gt;
-        &lt;variable name=&quot;rndString2&quot; value=&quot;tsf:randomString(10, UPPERCASE)&quot;/&gt;
-        &lt;variable name=&quot;rndString3&quot; value=&quot;tsf:randomString(10, LOWERCASE)&quot;/&gt;
-        &lt;variable name=&quot;rndString4&quot; value=&quot;tsf:randomString(10, MIXED)&quot;/&gt;
-    &lt;/variables&gt;
+  &lt;variables&gt;
+      &lt;variable name=&quot;rndString0&quot; 
+                   value=&quot;${tsf:randomString(10)}&quot;/&gt;
+      &lt;variable name=&quot;rndString1&quot; 
+                   value=&quot;tsf:randomString(10)&quot;/&gt;
+      &lt;variable name=&quot;rndString2&quot; 
+                   value=&quot;tsf:randomString(10, UPPERCASE)&quot;/&gt;
+      &lt;variable name=&quot;rndString3&quot; 
+                   value=&quot;tsf:randomString(10, LOWERCASE)&quot;/&gt;
+      &lt;variable name=&quot;rndString4&quot; 
+                   value=&quot;tsf:randomString(10, MIXED)&quot;/&gt;
+  &lt;/variables&gt;
         </programlisting>
     </section>
     
@@ -259,17 +283,39 @@
         usage in detail:</para>
         
         <programlisting>
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate()&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;&lt;/echo&gt;
-    &lt;echo&gt;&lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;&lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate()&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Note that the curentDate function provides two parameters. First parameter describes the date format
@@ -283,9 +329,9 @@
         <para>This function converts any string to upper case letters.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:upperCase('Hallo Test Framework')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:upperCase('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -298,9 +344,9 @@
         <para>This function converts any string to lower case letters.</para>
         
         <programlisting>
-    &lt;echo&gt;
-        &lt;message&gt;tsf:lowerCase('Hallo Test Framework')&lt;/message&gt;
-    &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;tsf:lowerCase('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
@@ -313,7 +359,8 @@
         <para>The function will sum up all specified number values and divide the result through the number of values.</para>
         
         <programlisting>
-    &lt;variable name=&quot;avg&quot; value=&quot;tsf:average('3', '4', '5')&quot;/&gt;
+  &lt;variable name=&quot;avg&quot; 
+               value=&quot;tsf:average('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>avg = <emphasis>4.0</emphasis></para>
@@ -325,7 +372,8 @@
         <para>This function returns the minimum value in a set of number values.</para>
         
         <programlisting>
-    &lt;variable name=&quot;min&quot; value=&quot;tsf:minimum('3', '4', '5')&quot;/&gt;
+  &lt;variable name=&quot;min&quot; 
+               value=&quot;tsf:minimum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>min = <emphasis>3.0</emphasis></para>
@@ -337,7 +385,8 @@
         <para>This function returns the maximum value in a set of number values.</para>
         
         <programlisting>
-    &lt;variable name=&quot;max&quot; value=&quot;tsf:maximum('3', '4', '5')&quot;/&gt;
+  &lt;variable name=&quot;max&quot; 
+               value=&quot;tsf:maximum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>max = <emphasis>5.0</emphasis></para>
@@ -349,7 +398,8 @@
         <para>The function will sum up all number values. The number values can also be negative.</para>
         
         <programlisting>
-    &lt;variable name=&quot;sum&quot; value=&quot;tsf:sum('3', '4', '5')&quot;/&gt;
+  &lt;variable name=&quot;sum&quot; 
+               value=&quot;tsf:sum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>sum = <emphasis>12.0</emphasis></para>
@@ -361,7 +411,8 @@
         <para>The function will return the absolute number value.</para>
         
         <programlisting>
-    &lt;variable name=&quot;abs&quot; value=&quot;tsf:absolute('-3')&quot;/&gt;
+  &lt;variable name=&quot;abs&quot; 
+               value=&quot;tsf:absolute('-3')&quot;/&gt;
         </programlisting>
         
         <para>abs = <emphasis>3.0</emphasis></para>
