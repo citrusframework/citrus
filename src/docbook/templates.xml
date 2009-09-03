@@ -10,21 +10,21 @@
     have a look at a first example:</para>
   
     <programlisting>
-    &lt;template name=&quot;doCreateVariables&quot;&gt;
-        &lt;createVariables&gt;
-            &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
-        &lt;/createVariables&gt;
-        
-        &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
-    &lt;/template&gt;
-    
-    &lt;template name=&quot;doTraceVariables&quot;&gt;
-        &lt;echo&gt;
-            &lt;message&gt;Current time is: ${time}&lt;/message&gt;
-        &lt;/echo&gt;
-        
-        &lt;traceVariables/&gt;
-    &lt;/template&gt;
+  &lt;template name=&quot;doCreateVariables&quot;&gt;
+      &lt;createVariables&gt;
+          &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
+      &lt;/createVariables&gt;
+      
+      &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
+  &lt;/template&gt;
+  
+  &lt;template name=&quot;doTraceVariables&quot;&gt;
+      &lt;echo&gt;
+          &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+      &lt;/echo&gt;
+      
+      &lt;traceVariables/&gt;
+  &lt;/template&gt;
     </programlisting>
   
     <para>The code example above describes two template definitions. Each template has to define a name using
@@ -39,18 +39,18 @@
     </note>
     
     <programlisting>
-    &lt;testcase name=&quot;templateTest&quot;&gt;
-        &lt;variables&gt;
-            &lt;variable name=&quot;myTime&quot; value=&quot;GET_CURRENT_DATE&quot;/&gt;
-        &lt;/variables&gt;
-        &lt;actions&gt;
-            &lt;call-template name=&quot;doCreateVariables&quot;/&gt;
-            
-            &lt;call-template name=&quot;doTraceVariables&quot;&gt;
-                &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
-            &lt;/call-template&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;templateTest&quot;&gt;
+      &lt;variables&gt;
+          &lt;variable name=&quot;myTime&quot; value=&quot;GET_CURRENT_DATE&quot;/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;call-template name=&quot;doCreateVariables&quot;/&gt;
+          
+          &lt;call-template name=&quot;doTraceVariables&quot;&gt;
+              &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
+          &lt;/call-template&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>Templates usually will also make use of variables. This means that these variables have to be present with 
@@ -64,17 +64,17 @@
     parameters in more detail:</para>
     
     <programlisting>
-    &lt;testcase name=&quot;templateTest&quot;&gt;
-        &lt;variables&gt;
-            &lt;variable name=&quot;text&quot; value=&quot;Hello TestFramework&quot;/&gt;
-        &lt;/variables&gt;
-        &lt;actions&gt;
-            &lt;call-template name=&quot;print&quot;&gt;
-                &lt;parameter name=&quot;param1&quot; value=&quot;Test1&quot;/&gt;
-                &lt;parameter name=&quot;param2&quot; value=&quot;${text}&quot;/&gt;
-            &lt;/call-template&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;templateTest&quot;&gt;
+      &lt;variables&gt;
+          &lt;variable name=&quot;text&quot; value=&quot;Hello TestFramework&quot;/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;call-template name=&quot;print&quot;&gt;
+              &lt;parameter name=&quot;param1&quot; value=&quot;Test1&quot;/&gt;
+              &lt;parameter name=&quot;param2&quot; value=&quot;${text}&quot;/&gt;
+          &lt;/call-template&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>The parameters <emphasis>param1</emphasis> and <emphasis>param2</emphasis> are set with the respective values. 

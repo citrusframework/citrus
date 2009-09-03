@@ -10,18 +10,18 @@
         See following XML definition to find out how to include the citrus-ws namespace.</para>
         
         <programlisting>
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
-           xmlns:citrus-ws=&quot;http://www.consol.de/citrus/schema/ws/config&quot;
-           xsi:schemaLocation=&quot;
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-           http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
-           http://www.consol.de/citrus/schema/ws/config http://www.consol.de/citrus/schema/ws/config/citrus-ws-config-1.0.xsd&quot;&gt;
-           
-        [...]
-        
-    &lt;/beans&gt;
+  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
+         xmlns:citrus-ws=&quot;http://www.consol.de/citrus/schema/ws/config&quot;
+         xsi:schemaLocation=&quot;
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
+         http://www.consol.de/citrus/schema/ws/config http://www.consol.de/citrus/schema/ws/config/citrus-ws-config-1.0.xsd&quot;&gt;
+         
+      [...]
+      
+  &lt;/beans&gt;
         </programlisting>
         
         <para>Now you are ready to use the customized WebService configuration elements - all using the citrus-ws prefix - 
@@ -35,11 +35,11 @@
         WebServices looks like in the Spring configuration:</para>
         
         <programlisting>
-    &lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
-                                   request-url=&quot;http://localhost:8090/test&quot; 
-                                   reply-handler=&quot;soapResponseHandler&quot;/&gt;
-    
-    &lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;
+  &lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+                                 request-url=&quot;http://localhost:8090/test&quot; 
+                                 reply-handler=&quot;soapResponseHandler&quot;/&gt;
+  
+  &lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;
         </programlisting>
         
         <para>SOAP WebServices always use synchronous communication, so we need a reply message handler. The message sender 
@@ -56,11 +56,11 @@
         Jetty server is configured in the Spring configuration.</para>
         
         <programlisting>
-    &lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
-                           port=&quot;8091&quot; 
-                           auto-start=&quot;true&quot;
-                           context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
-                           resource-base=&quot;src/it/resources&quot;/&gt;
+  &lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
+                         port=&quot;8091&quot; 
+                         auto-start=&quot;true&quot;
+                         context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
+                         resource-base=&quot;src/it/resources&quot;/&gt;
         </programlisting>
         
         <para>The Jetty server in the example can startup automatically on application startup. The Server will listen on
@@ -68,56 +68,66 @@
         application context. In this application context the request mapping is configured. See the example below.</para>
         
         <programlisting>
-    &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; 
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xsi:schemaLocation=&quot;
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&quot;&gt;
-        
-        &lt;bean id=&quot;loggingInterceptor&quot; class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
-            &lt;description&gt;
-                This interceptor logs the message payload.
-            &lt;/description&gt;
-        &lt;/bean&gt;
-        
-        &lt;bean id=&quot;helloServicePayloadMapping&quot; class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
-            &lt;property name=&quot;mappings&quot;&gt;
-                &lt;props&gt;
-                    &lt;prop key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest&quot;&gt;helloServiceEndpoint&lt;/prop&gt;
-                &lt;/props&gt;
-            &lt;/property&gt;
-            &lt;property name=&quot;interceptors&quot;&gt;
-                &lt;list&gt;
-                    &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
-                &lt;/list&gt;
-            &lt;/property&gt;
-        &lt;/bean&gt;
-        
-        &lt;bean id=&quot;helloServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
-            &lt;property name=&quot;messageHandler&quot;&gt;
-                &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
-                    &lt;property name=&quot;messagePayload&quot;&gt;
-                        &lt;value&gt;
-                        &lt;![CDATA[
-                            &lt;ns0:HelloStandaloneResponse xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
-                                &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
-                                &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
-                                &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
-                                &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
-                            &lt;/ns0:HelloStandaloneResponse&gt;
-                        ]]&gt;
-                        &lt;/value&gt;
-                    &lt;/property&gt;
-                    &lt;property name=&quot;messageHeader&quot;&gt;
-                        &lt;map&gt;
-                            &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation&quot; value=&quot;sayHelloResponse&quot;/&gt;
-                            &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request&quot; value=&quot;HelloRequest&quot;/&gt;
-                            &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:SOAPAction&quot; value=&quot;sayHello&quot;/&gt;
-                        &lt;/map&gt;
-                    &lt;/property&gt;
-                &lt;/bean&gt;
-            &lt;/property&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
+  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; 
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&quot;&gt;
+      
+      &lt;bean id=&quot;loggingInterceptor&quot; 
+               class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
+          &lt;description&gt;
+              This interceptor logs the message payload.
+          &lt;/description&gt;
+      &lt;/bean&gt;
+      
+      &lt;bean id=&quot;helloServicePayloadMapping&quot; 
+               class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
+          &lt;property name=&quot;mappings&quot;&gt;
+              &lt;props&gt;
+                  &lt;prop key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest&quot;&gt;
+                      helloServiceEndpoint
+                  &lt;/prop&gt;
+              &lt;/props&gt;
+          &lt;/property&gt;
+          &lt;property name=&quot;interceptors&quot;&gt;
+              &lt;list&gt;
+                  &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
+              &lt;/list&gt;
+          &lt;/property&gt;
+      &lt;/bean&gt;
+      
+      &lt;bean id=&quot;helloServiceEndpoint&quot; 
+               class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+          &lt;property name=&quot;messageHandler&quot;&gt;
+            &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+                &lt;property name=&quot;messagePayload&quot;&gt;
+                    &lt;value&gt;
+                    &lt;![CDATA[
+                        &lt;ns0:HelloStandaloneResponse 
+                            xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+                            &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                            &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                            &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
+                            &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+                        &lt;/ns0:HelloStandaloneResponse&gt;
+                    ]]&gt;
+                    &lt;/value&gt;
+                &lt;/property&gt;
+                &lt;property name=&quot;messageHeader&quot;&gt;
+                    &lt;map&gt;
+                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation&quot; 
+                                  value=&quot;sayHelloResponse&quot;/&gt;
+                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request&quot; 
+                                  value=&quot;HelloRequest&quot;/&gt;
+                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:SOAPAction&quot; 
+                                  value=&quot;sayHello&quot;/&gt;
+                    &lt;/map&gt;
+                &lt;/property&gt;
+            &lt;/bean&gt;
+          &lt;/property&gt;
+      &lt;/bean&gt;
+  &lt;/beans&gt;
         </programlisting>
         
         <para>The programlisting above describes a normal request mapping. The mapping is responsible to forward incoming requests to

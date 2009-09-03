@@ -13,26 +13,27 @@
         out how it works:</para>
         
         <programlisting>
-        &lt;bean name=&quot;integrationTests&quot; class=&quot;com.consol.citrus.TestSuite&quot;&gt;
-            &lt;property name=&quot;tasksBefore&quot;&gt;
-                &lt;list&gt;
-                    <!-- list of actions -->
-                &lt;/list&gt;
-            &lt;/property&gt;
-        
-            &lt;property name=&quot;tasksBetween&quot;&gt;
-                &lt;list&gt;
-                    <!-- list of actions -->
-                &lt;/list&gt;
-            &lt;/property&gt;
-        
-            &lt;property name=&quot;tasksAfter&quot;&gt;
-                &lt;list&gt;
-                    <!-- list of actions -->
-                &lt;/list&gt;
-            &lt;/property&gt;
-        
-        &lt;/bean&gt;
+  &lt;bean name=&quot;integrationTests&quot; 
+           class=&quot;com.consol.citrus.TestSuite&quot;&gt;
+      &lt;property name=&quot;tasksBefore&quot;&gt;
+          &lt;list&gt;
+              <!-- list of actions -->
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+      &lt;property name=&quot;tasksBetween&quot;&gt;
+          &lt;list&gt;
+              <!-- list of actions -->
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+      &lt;property name=&quot;tasksAfter&quot;&gt;
+          &lt;list&gt;
+              <!-- list of actions -->
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+  &lt;/bean&gt;
         </programlisting>
         
         <para>The test suite bean is of the type com.consol.citrus.TestSuite and offers the following properties to affect
@@ -82,25 +83,26 @@
         <para>The following example tries to explain this functionality in detail:</para>
         
         <programlisting>
-    &lt;bean name=&quot;testSuite&quot; class=&quot;com.consol.citrus.TestSuite&quot;&gt;
-        &lt;property name=&quot;excludeTests&quot;&gt;
-            &lt;list&gt;
-                &lt;value&gt;*timeout*&lt;/value&gt;
-                &lt;value&gt;someTestName&lt;/value&gt;
-                &lt;value&gt;startsWith*&lt;/value&gt;
-                &lt;value&gt;*endsWith&lt;/value&gt;
-            &lt;/list&gt;
-        &lt;/property&gt;
-        
-        &lt;property name=&quot;includeTests&quot;&gt;
-            &lt;list&gt;
-                &lt;value&gt;*timeout*&lt;/value&gt;
-                &lt;value&gt;someTestName&lt;/value&gt;
-                &lt;value&gt;startsWith*&lt;/value&gt;
-                &lt;value&gt;*endsWith&lt;/value&gt;
-            &lt;/list&gt;
-        &lt;/property&gt;
-    &lt;/bean&gt;
+  &lt;bean name=&quot;testSuite&quot; 
+           class=&quot;com.consol.citrus.TestSuite&quot;&gt;
+      &lt;property name=&quot;excludeTests&quot;&gt;
+          &lt;list&gt;
+              &lt;value&gt;*timeout*&lt;/value&gt;
+              &lt;value&gt;someTestName&lt;/value&gt;
+              &lt;value&gt;startsWith*&lt;/value&gt;
+              &lt;value&gt;*endsWith&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+      
+      &lt;property name=&quot;includeTests&quot;&gt;
+          &lt;list&gt;
+              &lt;value&gt;*timeout*&lt;/value&gt;
+              &lt;value&gt;someTestName&lt;/value&gt;
+              &lt;value&gt;startsWith*&lt;/value&gt;
+              &lt;value&gt;*endsWith&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
         </programlisting>
         
         <para>Both properties support name patterns. This means that you can use the wildcard &quot;*&quot; to define name

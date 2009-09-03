@@ -25,33 +25,33 @@
         
         <programlisting>
             <literal>
-    TEST RESULTS IntegrationTests
+  TEST RESULTS IntegrationTests
+  
+    [...]
+    BillingAdapter_ACTSUB_Ok : successfull
+    BillingAdapter_ACTSUB_Ok_NoBillingDetails : successfull
+    BillingAdapter_CHGTRF_Ok : successfull
+    BillingAdapter_DEASUB_Ok : successfull
+    BillingAdapter_EXPMSN_Ok : successfull
+    BillingAdapter_EXPMSN_Ok_2 : successfull
+    BillingAdapter_MIGOPT_Ok : successfull
+    BillingAdapter_OK_1 : successfull
+    [...]
     
-      [...]
-      BillingAdapter_ACTSUB_Ok : successfull
-      BillingAdapter_ACTSUB_Ok_NoBillingDetails : successfull
-      BillingAdapter_CHGTRF_Ok : successfull
-      BillingAdapter_DEASUB_Ok : successfull
-      BillingAdapter_EXPMSN_Ok : successfull
-      BillingAdapter_EXPMSN_Ok_2 : successfull
-      BillingAdapter_MIGOPT_Ok : successfull
-      BillingAdapter_OK_1 : successfull
-      [...]
-      
-      Found 175 test cases to execute
-      Skipped 0 test cases (58.9%)
-      Executed 175 test cases, containing 9072 actions
-      Tests failed:         0 (0.0%)
-      Tests successfully: 175 (100.0%)
-      ________________________________________________________________________
-      ________________________________________________________________________
-      
-      OVERALL TEST RESULTS
-      
-      Found 175 test cases to execute
-      Executed 175 test cases
-      Tests failed:         0 (0.0%)
-      Tests successfully: 175 (100.0%)
+    Found 175 test cases to execute
+    Skipped 0 test cases (58.9%)
+    Executed 175 test cases, containing 9072 actions
+    Tests failed:         0 (0.0%)
+    Tests successfully: 175 (100.0%)
+    ________________________________________________________________________
+    ________________________________________________________________________
+    
+    OVERALL TEST RESULTS
+    
+    Found 175 test cases to execute
+    Executed 175 test cases
+    Tests failed:         0 (0.0%)
+    Tests successfully: 175 (100.0%)
             </literal>
         </programlisting>
         
@@ -60,7 +60,7 @@
         that were made during the test run.</para>
         
         <programlisting>
-            <literal>IT_OrdPre_Performance_Ok : failed - Exception is Action timed out</literal>
+  <literal>IT_OrdPre_Performance_Ok : failed - Exception is Action timed out</literal>
         </programlisting>
     </section>
     

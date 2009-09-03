@@ -28,15 +28,22 @@
     <para>The next program listing indicates the power in using XPath with Citrus:</para>
     
     <programlisting>
-    &lt;message&gt;
-        &lt;validate path=&quot;//element/elementA&quot; value=&quot;text&quot;&gt;&lt;/validate&gt;
-        &lt;validate path=&quot;//element/elementA[@attr='A']&quot; value=&quot;text&quot;&gt;&lt;/validate&gt;
-        &lt;validate path =&quot;//element/elementB&quot; value=&quot;%elementValue&quot;&gt;&lt;/validate&gt;
-        &lt;validate path =&quot;//element/elementB/@attribute&quot; value=&quot;%attributeValue&quot;&gt;&lt;/validate&gt;
-        &lt;validate path =&quot;/root/element&quot; value=&quot;namespace&quot;&gt;&lt;/validate&gt;
-        &lt;validate path =&quot;/root/element&quot; value=&quot;namespace&quot;&gt;&lt;/validate&gt;
-        &lt;validate path =&quot;//*[.='search-for']&quot; value=&quot;search-for&quot;&gt;&lt;/validate&gt;
-    &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//element/elementA&quot; 
+                   value=&quot;text&quot;&gt;&lt;/validate&gt;
+      &lt;validate path=&quot;//element/elementA[@attr='A']&quot; 
+                   value=&quot;text&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;//element/elementB&quot; 
+                   value=&quot;%elementValue&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;//element/elementB/@attribute&quot; 
+                   value=&quot;%attributeValue&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;/root/element&quot; 
+                   value=&quot;namespace&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;/root/element&quot; 
+                   value=&quot;namespace&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;//*[.='search-for']&quot; 
+                   value=&quot;search-for&quot;&gt;&lt;/validate&gt;
+  &lt;/message&gt;
     </programlisting>
     
     <section id="xpath-namespace">
@@ -46,28 +53,30 @@
         message that uses XML namespaces:</para>
       
         <programlisting>
-        &lt;ns1:RequestMessage xmlns:ns1=&quot;http://testsuite/default&quot;&gt;
-            &lt;ns1:MessageHeader&gt;
-                &lt;ns1:ConversationId&gt;_&lt;/ns1:ConversationId&gt;
-                &lt;ns1:Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/ns1:Timestamp&gt;
-                &lt;ns1:RequestTag&gt;_&lt;/ns1:RequestTag&gt;
-                &lt;ns1:VersionId&gt;2&lt;/ns1:VersionId&gt;
-            &lt;/ns1:MessageHeader&gt;
-            &lt;ns1:MessageBody&gt;
-                &lt;ns1:Customer&gt;
-                    &lt;ns1:Id&gt;1&lt;/ns1:Id&gt;
-                &lt;/ns1:Customer&gt;
-            &lt;/ns1:MessageBody&gt;
-        &lt;/ns1:RequestMessage&gt;
+  &lt;ns1:RequestMessage xmlns:ns1=&quot;http://testsuite/default&quot;&gt;
+      &lt;ns1:MessageHeader&gt;
+          &lt;ns1:ConversationId&gt;_&lt;/ns1:ConversationId&gt;
+          &lt;ns1:Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/ns1:Timestamp&gt;
+          &lt;ns1:RequestTag&gt;_&lt;/ns1:RequestTag&gt;
+          &lt;ns1:VersionId&gt;2&lt;/ns1:VersionId&gt;
+      &lt;/ns1:MessageHeader&gt;
+      &lt;ns1:MessageBody&gt;
+          &lt;ns1:Customer&gt;
+              &lt;ns1:Id&gt;1&lt;/ns1:Id&gt;
+          &lt;/ns1:Customer&gt;
+      &lt;/ns1:MessageBody&gt;
+  &lt;/ns1:RequestMessage&gt;
         </programlisting>
         
         <para>Now we would like to validate some elements in this message using XPath</para>
         
         <programlisting>
-        &lt;message&gt;
-            &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-        &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; 
+                   value=&quot;${requestTag}&quot;/&gt;
+      &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; 
+                   value=&quot;${conversationId}&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>
         
         <para>The validation will fail although the XPath expression looks correct regarding the XML tree. Because the message 
@@ -76,10 +85,12 @@
         in the message.</para>
         
         <programlisting>
-        &lt;message&gt;
-            &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-        &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag&quot; 
+                   value=&quot;${requestTag}&quot;/&gt;
+      &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId&quot; 
+                   value=&quot;${conversationId}&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>
         
         <para>Now the expression work fine and the validation is successful. But this is quite error prone. Why because the test is depending
@@ -89,11 +100,14 @@
         <para>You can avoid this affect when specifying your own namespace context and your own namespace prefix during validation.</para>
         
         <programlisting>
-        &lt;message&gt;
-            &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-            &lt;namespace prefix=&quot;pfx&quot; value=&quot;http://testsuite/default&quot;/&gt;
-        &lt;/message&gt;
+  &lt;message&gt;
+      &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:RequestTag&quot; 
+                   value=&quot;${requestTag}&quot;/&gt;
+      &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:ConversationId&quot; 
+                   value=&quot;${conversationId}&quot;/&gt;
+      &lt;namespace prefix=&quot;pfx&quot; 
+                    value=&quot;http://testsuite/default&quot;/&gt;
+  &lt;/message&gt;
         </programlisting>
         
         <para>Now the test in independent from any namespace prefix in the received message. The namespace context will resolve the namespaces and
@@ -108,37 +122,41 @@
         even more! So lets look at the example with default namespaces:</para>
         
         <programlisting>
-        &lt;RequestMessage xmlns=&quot;http://testsuite/default&quot;&gt;
-            &lt;MessageHeader&gt;
-                &lt;ConversationId&gt;_&lt;/ConversationId&gt;
-                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                &lt;VersionId&gt;2&lt;/VersionId&gt;
-            &lt;/MessageHeader&gt;
-            &lt;MessageBody&gt;
-                &lt;Customer&gt;
-                    &lt;Id&gt;1&lt;/Id&gt;
-                &lt;/Customer&gt;
-            &lt;/MessageBody&gt;
-        &lt;/RequestMessage&gt;
+&lt;RequestMessage xmlns=&quot;http://testsuite/default&quot;&gt;
+    &lt;MessageHeader&gt;
+        &lt;ConversationId&gt;_&lt;/ConversationId&gt;
+        &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+        &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+        &lt;VersionId&gt;2&lt;/VersionId&gt;
+    &lt;/MessageHeader&gt;
+    &lt;MessageBody&gt;
+        &lt;Customer&gt;
+            &lt;Id&gt;1&lt;/Id&gt;
+        &lt;/Customer&gt;
+    &lt;/MessageBody&gt;
+&lt;/RequestMessage&gt;
         </programlisting>
         
         <para>Again this normal approach in XPath will fail</para>
         
         <programlisting>
-        &lt;message&gt;
-            &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-        &lt;/message&gt;
+&lt;message&gt;
+    &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; 
+                 value=&quot;${requestTag}&quot;/&gt;
+    &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; 
+                 value=&quot;${conversationId}&quot;/&gt;
+&lt;/message&gt;
         </programlisting>
         
         <para>Even default namespaces need to be specified in the XPath expressions.</para>
         
         <programlisting>
-        &lt;message&gt;
-            &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-            &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:ConversationId&quot; value=&quot;${conversationId}&quot;/&gt;
-        &lt;/message&gt;
+&lt;message&gt;
+    &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:RequestTag&quot; 
+                 value=&quot;${requestTag}&quot;/&gt;
+    &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:ConversationId&quot; 
+                 value=&quot;${conversationId}&quot;/&gt;
+&lt;/message&gt;
         </programlisting>
         
         <tip>

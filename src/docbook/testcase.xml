@@ -15,18 +15,19 @@
     So using the Spring XML configuration syntax you are able to write fully compatible test cases for the Citrus framework.</para>
     
     <programlisting>
-    &lt;beans
-        xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-        
-        &lt;bean name=&quot;myFirstTest&quot; class=&quot;com.consol.citrus.model.TestCase&quot;&gt;
-            &lt;property name=&quot;actions&quot;&gt;
-                <lineannotation>&lt;!-- actions of this test go here --&gt;</lineannotation>
-            &lt;/property&gt;
-        &lt;/bean&gt;
-    &lt;/beans&gt;
+  &lt;beans
+      xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+      
+      &lt;bean name=&quot;myFirstTest&quot; 
+               class=&quot;com.consol.citrus.model.TestCase&quot;&gt;
+          &lt;property name=&quot;actions&quot;&gt;
+              <lineannotation>&lt;!-- actions of this test go here --&gt;</lineannotation>
+          &lt;/property&gt;
+      &lt;/bean&gt;
+  &lt;/beans&gt;
     </programlisting>
     
     <para>Citrus can execute these test case definitions and verify their result - no problem, but this XML 
@@ -39,28 +40,31 @@
     at the Citrus test describing DSL by introducing a first very simple test case definition:</para>
     
     <programlisting>
-    &lt;spring:beans
-        xmlns=&quot;http://www.consol.de/citrus/schema/testcase&quot;
-        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-        xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
-        xsi:schemaLocation=&quot;
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.consol.de/citrus/schema/testcase http://www.consol.de/citrus/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
-        
-        &lt;testcase name=&quot;myFirstTest&quot;&gt;
-            &lt;description&gt;
-                First example showing the basic test case definition elements!
-            &lt;/description&gt;
-            &lt;variables&gt;
-                &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework&quot;/&gt;
-            &lt;/variables&gt;
-            &lt;actions&gt;
-                &lt;echo&gt;
-                    &lt;message&gt;%test&lt;/message&gt;
-                &lt;/echo&gt;
-            &lt;/actions&gt;
-        &lt;/testcase&gt;
-    &lt;/spring:beans&gt;
+  &lt;spring:beans
+      xmlns=&quot;http://www.consol.de/citrus/schema/testcase&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+      xsi:schemaLocation=&quot;
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.consol.de/citrus/schema/testcase 
+      http://www.consol.de/citrus/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
+      
+      &lt;testcase name=&quot;myFirstTest&quot;&gt;
+          &lt;description&gt;
+              First example showing the basic test case definition elements!
+          &lt;/description&gt;
+          &lt;variables&gt;
+              &lt;variable name=&quot;text&quot; 
+                           value=&quot;Hello Test Framework&quot;/&gt;
+          &lt;/variables&gt;
+          &lt;actions&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;%test&lt;/message&gt;
+              &lt;/echo&gt;
+          &lt;/actions&gt;
+      &lt;/testcase&gt;
+  &lt;/spring:beans&gt;
     </programlisting>
     
     <para>We do need the <literal>&lt;spring:beans&gt;</literal> root element as the XML file is read by the Spring IoC Container 
@@ -83,10 +87,10 @@
         <title>Variables</title>
         
         <programlisting>
-    &lt;variables&gt;
-        &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework&quot;/&gt;
-        &lt;variable name=&quot;customerId&quot; value=&quot;123456789&quot;/&gt;
-    &lt;/variables&gt;
+  &lt;variables&gt;
+      &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework&quot;/&gt;
+      &lt;variable name=&quot;customerId&quot; value=&quot;123456789&quot;/&gt;
+  &lt;/variables&gt;
         </programlisting>
         
         <para>The test variables are valid for the whole test case. You can reference them several times using a variables expression 
@@ -112,12 +116,12 @@
         actions are executed sequentially as they are defined in the test case definition.</para>
         
         <programlisting>
-    &lt;actions&gt;
-        &lt;action&gt;[...]&lt;/action&gt;
-        &lt;action&gt;[...]&lt;/action&gt;
-        &lt;action&gt;[...]&lt;/action&gt;
-        &lt;action&gt;[...]&lt;/action&gt;
-    &lt;/actions&gt;
+  &lt;actions&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+  &lt;/actions&gt;
         </programlisting>
         
         <para>Test actions are normal XML elements themselves. All actions have individual names and child elements that define 
@@ -146,21 +150,21 @@
     holds information like the author of the test or the creation date. In detail the meta information is specified like this:</para>
     
     <programlisting>
-    &lt;testcase name=&quot;metaInfoTest&quot;&gt;
-        &lt;meta-info&gt;
-            &lt;author&gt;Christoph Deppisch&lt;/author&gt;
-            &lt;creationdate&gt;2008-01-11&lt;/creationdate&gt;
-            &lt;status&gt;FINAL&lt;/status&gt;
-            &lt;lastUpdatedBy&gt;Christoph Deppisch&lt;/lastUpdatedBy&gt;
-            &lt;lastUpdatedOn&gt;2008-01-11T10:00:00&lt;/lastUpdatedOn&gt;
-        &lt;/meta-info&gt;
-        &lt;description&gt;
-            ...
-        &lt;/description&gt;
-        &lt;actions&gt;
-            ...
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;metaInfoTest&quot;&gt;
+      &lt;meta-info&gt;
+          &lt;author&gt;Christoph Deppisch&lt;/author&gt;
+          &lt;creationdate&gt;2008-01-11&lt;/creationdate&gt;
+          &lt;status&gt;FINAL&lt;/status&gt;
+          &lt;lastUpdatedBy&gt;Christoph Deppisch&lt;/lastUpdatedBy&gt;
+          &lt;lastUpdatedOn&gt;2008-01-11T10:00:00&lt;/lastUpdatedOn&gt;
+      &lt;/meta-info&gt;
+      &lt;description&gt;
+          ...
+      &lt;/description&gt;
+      &lt;actions&gt;
+          ...
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <para>The status allows following values: DRAFT, READY_FOR_REVIEW, DISABLED, FINAL.
