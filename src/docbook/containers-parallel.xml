@@ -7,34 +7,35 @@
     clarify the usage:</para>
     
     <programlisting>
-    &lt;testcase name=&quot;parallelTest&quot;&gt;
-        &lt;actions&gt;
-            &lt;parallel&gt;
-                &lt;sleep/&gt;
-                
-                &lt;sequential&gt;
-                    &lt;sleep/&gt;
-                    &lt;echo&gt;
-                        &lt;message&gt;1&lt;/message&gt;
-                    &lt;/echo&gt;
-                &lt;/sequential&gt;
-                
-                &lt;echo&gt;
-                    &lt;message&gt;2&lt;/message&gt;
-                &lt;/echo&gt;
-                
-                &lt;echo&gt;
-                    &lt;message&gt;3&lt;/message&gt;
-                &lt;/echo&gt;
-                
-                &lt;iterate condition=&quot;i lt= 5&quot; indexName=&quot;i&quot;&gt;
-                    &lt;echo&gt;
-                        &lt;message&gt;10&lt;/message&gt;
-                    &lt;/echo&gt;
-                &lt;/iterate&gt;
-            &lt;/parallel&gt;
-        &lt;/actions&gt;
-    &lt;/testcase&gt;
+  &lt;testcase name=&quot;parallelTest&quot;&gt;
+      &lt;actions&gt;
+          &lt;parallel&gt;
+              &lt;sleep/&gt;
+              
+              &lt;sequential&gt;
+                  &lt;sleep/&gt;
+                  &lt;echo&gt;
+                      &lt;message&gt;1&lt;/message&gt;
+                  &lt;/echo&gt;
+              &lt;/sequential&gt;
+              
+              &lt;echo&gt;
+                  &lt;message&gt;2&lt;/message&gt;
+              &lt;/echo&gt;
+              
+              &lt;echo&gt;
+                  &lt;message&gt;3&lt;/message&gt;
+              &lt;/echo&gt;
+              
+              &lt;iterate condition=&quot;i lt= 5&quot; 
+                          indexName=&quot;i&quot;&gt;
+                  &lt;echo&gt;
+                      &lt;message&gt;10&lt;/message&gt;
+                  &lt;/echo&gt;
+              &lt;/iterate&gt;
+          &lt;/parallel&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
     </programlisting>
     
     <note>
