@@ -35,6 +35,13 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         thread = new Thread(this);
         thread.setDaemon(false);
         thread.start();
+        
+        //give server some time to startup
+        try {
+        	Thread.sleep(1000);
+        } catch (InterruptedException e) {
+			log.error("Failed to wait for server to startup", e);
+		}
     }
     
     public void stop() {
