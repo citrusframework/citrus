@@ -26,31 +26,31 @@
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell text-align="center">
-                            <fo:block>
+                            <fo:block  padding-before="25mm">
                                 <fo:external-graphic src="file:images/citrus_logo.png"/>
                             </fo:block>
-                            <fo:block font-family="Helvetica" font-size="22pt" padding-before="10mm">
+                            <fo:block font-family="Helvetica" font-size="28pt" padding-before="30mm">
                                 <xsl:value-of select="bookinfo/subtitle"/> 
                             </fo:block>
-                            <fo:block font-family="Helvetica" font-size="14pt" padding="10mm">
+                            <fo:block font-family="Helvetica" font-size="28pt" padding="10mm">
                                 <xsl:value-of select="bookinfo/title"/>
                             </fo:block>
-                            <fo:block font-family="Helvetica" font-size="12pt" padding="10mm">
+                            <fo:block font-family="Helvetica" font-size="20pt" padding="10mm">
                                 <xsl:text>Version </xsl:text><xsl:value-of select="bookinfo/releaseinfo"/>  
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
                         <fo:table-cell text-align="center">
-                            <fo:block font-family="Helvetica" font-size="14pt" padding="10mm">
+                            <fo:block font-family="Helvetica" font-size="20pt" padding="10mm">
                                 <xsl:value-of select="bookinfo/pubdate"/>
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
                         <fo:table-cell text-align="center">
-                            <fo:block font-family="Helvetica" font-size="12pt" padding="10mm">
-                                <xsl:text>Copyright &copyright; 2004-2008 </xsl:text>
+                            <fo:block font-family="Helvetica" font-size="16pt" padding="10mm">
+                                <xsl:text>Copyright &copyright; 2006-2009 </xsl:text>
                                 <xsl:for-each select="bookinfo/authorgroup/author">
                                     <xsl:if test="position() > 1">
                                         <xsl:text>, </xsl:text>
@@ -60,7 +60,7 @@
                                     <xsl:value-of select="surname"/>
                                 </xsl:for-each>
                             </fo:block>
-                            <fo:block font-family="Helvetica" font-size="10pt" padding="1mm">
+                            <fo:block font-family="Helvetica" font-size="12pt" padding="1mm">
                                 <xsl:value-of select="bookinfo/legalnotice"/>  
                             </fo:block>
                         </fo:table-cell>
@@ -181,7 +181,7 @@
             <fo:inline keep-together.within-line="always">
             <xsl:text> </xsl:text>
             <fo:leader leader-pattern="dots"
-                        leader-pattern-width="3pt"
+                        leader-pattern-width="6pt"
                         leader-alignment="reference-area"
                         keep-with-next.within-line="always"/>
             <xsl:text> </xsl:text>
@@ -255,6 +255,7 @@
     <!-- Default Font size -->
     <xsl:param name="body.font.master">11</xsl:param>
     <xsl:param name="body.font.small">8</xsl:param>
+    <xsl:param name="body.font.family">Helvetica</xsl:param>
 
     <!-- Line height in body text -->
     <xsl:param name="line-height">1.4</xsl:param>
