@@ -7,7 +7,7 @@
     This was mainly used by us for debug reasons. The usage is quite simple:</para>
     
     <programlisting>
-  &lt;testcase name=&quot;createVariablesTest&quot;&gt;
+  &lt;testcase name=&quot;traceVariablesTest&quot;&gt;
       &lt;variables&gt;
           &lt;variable name=&quot;myVariable&quot; value=&quot;12345&quot;/&gt;
           &lt;variable name=&quot;nextVariable&quot; value=&quot;54321&quot;/&gt;

@@ -55,7 +55,7 @@
         <programlisting>
   &lt;ns1:RequestMessage xmlns:ns1=&quot;http://testsuite/default&quot;&gt;
       &lt;ns1:MessageHeader&gt;
-          &lt;ns1:ConversationId&gt;_&lt;/ns1:ConversationId&gt;
+          &lt;ns1:CorrelationId&gt;_&lt;/ns1:CorrelationId&gt;
           &lt;ns1:Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/ns1:Timestamp&gt;
           &lt;ns1:RequestTag&gt;_&lt;/ns1:RequestTag&gt;
           &lt;ns1:VersionId&gt;2&lt;/ns1:VersionId&gt;
@@ -74,8 +74,8 @@
   &lt;message&gt;
       &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; 
                    value=&quot;${requestTag}&quot;/&gt;
-      &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; 
-                   value=&quot;${conversationId}&quot;/&gt;
+      &lt;validate path=&quot;//RequestMessage/MessageHeader/CorrelationId&quot; 
+                   value=&quot;${correlationId}&quot;/&gt;
   &lt;/message&gt;
         </programlisting>
         
@@ -88,8 +88,8 @@
   &lt;message&gt;
       &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag&quot; 
                    value=&quot;${requestTag}&quot;/&gt;
-      &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:ConversationId&quot; 
-                   value=&quot;${conversationId}&quot;/&gt;
+      &lt;validate path=&quot;//ns1:RequestMessage/ns1:MessageHeader/ns1:CorrelationId&quot; 
+                   value=&quot;${correlationId}&quot;/&gt;
   &lt;/message&gt;
         </programlisting>
         
@@ -103,8 +103,8 @@
   &lt;message&gt;
       &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:RequestTag&quot; 
                    value=&quot;${requestTag}&quot;/&gt;
-      &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:ConversationId&quot; 
-                   value=&quot;${conversationId}&quot;/&gt;
+      &lt;validate path=&quot;//pfx:RequestMessage/pfx:MessageHeader/pfx:CorrelationId&quot; 
+                   value=&quot;${correlationId}&quot;/&gt;
       &lt;namespace prefix=&quot;pfx&quot; 
                     value=&quot;http://testsuite/default&quot;/&gt;
   &lt;/message&gt;
@@ -124,7 +124,7 @@
         <programlisting>
 &lt;RequestMessage xmlns=&quot;http://testsuite/default&quot;&gt;
     &lt;MessageHeader&gt;
-        &lt;ConversationId&gt;_&lt;/ConversationId&gt;
+        &lt;CorrelationId&gt;_&lt;/CorrelationId&gt;
         &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
         &lt;RequestTag&gt;_&lt;/RequestTag&gt;
         &lt;VersionId&gt;2&lt;/VersionId&gt;
@@ -143,8 +143,8 @@
 &lt;message&gt;
     &lt;validate path=&quot;//RequestMessage/MessageHeader/RequestTag&quot; 
                  value=&quot;${requestTag}&quot;/&gt;
-    &lt;validate path=&quot;//RequestMessage/MessageHeader/ConversationId&quot; 
-                 value=&quot;${conversationId}&quot;/&gt;
+    &lt;validate path=&quot;//RequestMessage/MessageHeader/CorrelationId&quot; 
+                 value=&quot;${correlationId}&quot;/&gt;
 &lt;/message&gt;
         </programlisting>
         
@@ -154,8 +154,8 @@
 &lt;message&gt;
     &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:RequestTag&quot; 
                  value=&quot;${requestTag}&quot;/&gt;
-    &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:ConversationId&quot; 
-                 value=&quot;${conversationId}&quot;/&gt;
+    &lt;validate path=&quot;//:RequestMessage/:MessageHeader/:CorrelationId&quot; 
+                 value=&quot;${correlationId}&quot;/&gt;
 &lt;/message&gt;
         </programlisting>
         

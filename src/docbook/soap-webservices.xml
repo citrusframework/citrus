@@ -15,9 +15,12 @@
          xmlns:citrus=&quot;http://www.consol.de/citrus/schema/config&quot;
          xmlns:citrus-ws=&quot;http://www.consol.de/citrus/schema/ws/config&quot;
          xsi:schemaLocation=&quot;
-         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-         http://www.consol.de/citrus/schema/config http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
-         http://www.consol.de/citrus/schema/ws/config http://www.consol.de/citrus/schema/ws/config/citrus-ws-config-1.0.xsd&quot;&gt;
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.consol.de/citrus/schema/config 
+         http://www.consol.de/citrus/schema/config/citrus-config-1.0.xsd
+         http://www.consol.de/citrus/schema/ws/config 
+         http://www.consol.de/citrus/schema/ws/config/citrus-ws-config-1.0.xsd&quot;&gt;
          
       [...]
       

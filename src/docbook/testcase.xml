@@ -60,7 +60,7 @@
           &lt;/variables&gt;
           &lt;actions&gt;
               &lt;echo&gt;
-                  &lt;message&gt;%test&lt;/message&gt;
+                  &lt;message&gt;${test}&lt;/message&gt;
               &lt;/echo&gt;
           &lt;/actions&gt;
       &lt;/testcase&gt;

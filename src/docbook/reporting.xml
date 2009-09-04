@@ -25,30 +25,19 @@
         
         <programlisting>
             <literal>
-  TEST RESULTS IntegrationTests
+  TEST RESULTS citrus-default-testsuite
   
     [...]
-    BillingAdapter_ACTSUB_Ok : successfull
-    BillingAdapter_ACTSUB_Ok_NoBillingDetails : successfull
-    BillingAdapter_CHGTRF_Ok : successfull
-    BillingAdapter_DEASUB_Ok : successfull
-    BillingAdapter_EXPMSN_Ok : successfull
-    BillingAdapter_EXPMSN_Ok_2 : successfull
-    BillingAdapter_MIGOPT_Ok : successfull
-    BillingAdapter_OK_1 : successfull
+    HelloService_Ok_1             : successfull
+    HelloService_Ok_2             : successfull
+    EchoService_Ok_1              : successfull
+    EchoService_Ok_2              : successfull
+    EchoService_TempError_1       : successfull
+    EchoService_AutomacticRetry_1 : successfull
     [...]
     
     Found 175 test cases to execute
-    Skipped 0 test cases (58.9%)
-    Executed 175 test cases, containing 9072 actions
-    Tests failed:         0 (0.0%)
-    Tests successfully: 175 (100.0%)
-    ________________________________________________________________________
-    ________________________________________________________________________
-    
-    OVERALL TEST RESULTS
-    
-    Found 175 test cases to execute
+    Skipped 0 test cases (0.0%)
     Executed 175 test cases
     Tests failed:         0 (0.0%)
     Tests successfully: 175 (100.0%)
@@ -60,7 +49,7 @@
         that were made during the test run.</para>
         
         <programlisting>
-  <literal>IT_OrdPre_Performance_Ok : failed - Exception is Action timed out</literal>
+  <literal>HelloService_Ok_3 : failed - Exception is Action timed out</literal>
         </programlisting>
     </section>
     

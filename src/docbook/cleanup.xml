@@ -16,7 +16,7 @@
     <para>The following example shows how to use the cleanup section at the end of a test:</para>
   
     <programlisting>
-  &lt;testcase name=&quot;finallyBlockTest_new&quot;&gt;
+  &lt;testcase name=&quot;cleanupTest&quot;&gt;
       &lt;variables&gt;
           &lt;variable name=&quot;orderId&quot; value=&quot;1&quot;/&gt;
           &lt;variable name=&quot;date&quot; 
