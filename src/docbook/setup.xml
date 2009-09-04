@@ -101,7 +101,7 @@
     &lt;version&gt;3.0&lt;/version&gt;
     &lt;configuration&gt;
       &lt;author&gt;Mickey Mouse&lt;/author&gt;
-      &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+      &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
     &lt;/configuration&gt;
   &lt;/plugin&gt;            
             </programlisting>
