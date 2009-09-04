@@ -100,7 +100,7 @@
     <!-- If you want to override these properties, use your local profiles.xml! -->
     <spring.version>2.5.6</spring.version>
     <spring.ws.version>1.5.6</spring.ws.version>
-    <spring.integration.version>1.0.2.SR1</spring.integration.version>
+    <spring.integration.version>1.0.3.RELEASE</spring.integration.version>
   </properties>
   
   <dependencyManagement>
