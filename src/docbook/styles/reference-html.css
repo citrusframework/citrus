@@ -40,7 +40,7 @@ p, dl, dt, dd, blockquote {
 
 ol, ul, p {
     margin-top: 6px;
-    margin-bottom: 6px;
+    margin-bottom: 15px;
 }
 
 p, blockquote {
@@ -102,7 +102,7 @@ h2.subtitle {
 }
 
 .firstname, .surname {
-    font-size: 12px;
+    font-size: 16px;
     font-family: Verdana, Arial, helvetica, sans-serif;
 }
 
@@ -111,8 +111,8 @@ table {
     border-spacing: 0;
     border: 1px black;
     empty-cells: hide;
-    margin: 10px 0 30px 50px;
-    width: 90%;
+    margin: 10px 0;
+    width: 100%;
 }
 
 div.table {
@@ -159,6 +159,14 @@ div.warning TD {
     text-align: justify;
 }
 
+h1.title { 
+    font-size: 170%; 
+}
+
+.authorgroup h2 { 
+    font-size: 120%; 
+}
+
 h1 { 
     font-size: 150%; 
 }
@@ -193,10 +201,9 @@ tt {
     border: none;
 }
 
-div.navfooter table {
-    border-style: dashed;
-    border-color: gray;
-    border-width: 1px 1px 1px 1px;
+.navheader table {
+	margin-top: 20px;
+	margin-bottom: 5px;
 }
 
 pre {
