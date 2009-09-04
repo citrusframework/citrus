@@ -26,7 +26,7 @@ public class CreateTestCaseMojo extends AbstractMojo
      *          default-value="TODO: Description" */
     private String description;
     
-    /** @parameter default-value="" */
+    /** @parameter default-value="com.consol.citrus" */
     private String targetPackage;
     
     public void execute() throws MojoExecutionException
