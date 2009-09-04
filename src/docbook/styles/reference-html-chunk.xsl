@@ -77,6 +77,12 @@
         table before
         procedure before
     </xsl:param>
+    
+    <xsl:template name="book.titlepage.separator">
+        <hr/>
+        <img src="images/citrus_logo.png" style="width:25%;float:right;"/>
+    </xsl:template>
+    
     <xsl:template match="author" mode="titlepage.mode">
         <xsl:if test="name(preceding-sibling::*[1]) = 'author'">
             <xsl:text>, </xsl:text>
