@@ -75,12 +75,12 @@ Integrate Citrus with Maven
     <version>${project.version}</version>
     <configuration>
       <author>Mickey Mouse</author>
-      <directory>src/citrus/tests</directory>
+      <targetPackage>com.consol.citrus</targetPackage>
     </configuration>
   </plugin>
 +---
 
-  Let us try to create a new test case now. We execute Maven with the goal "citrus:create-new-test".
+  Let us try to create a new test case now. We execute Maven with the goal "citrus:create-test".
   
 +---
   mvn citrus:create-test -Dname=MyFirstTest -Ddescription="This is my first Citrus test"
