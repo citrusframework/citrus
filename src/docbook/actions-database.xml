@@ -19,7 +19,7 @@
       
       <programlisting>
   &lt;actions&gt;
-      &lt;updateDatabase connect=&quot;otherSchemaConnect&quot;&gt;
+      &lt;updateDatabase connect=&quot;someSchemaConnect&quot;&gt;
           &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
           &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
       &lt;/updateDatabase&gt;

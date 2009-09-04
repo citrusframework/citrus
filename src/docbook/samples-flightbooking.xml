@@ -104,12 +104,12 @@
         other properties of course:</para>
         
         <programlisting>
-#JMS queues
-travel.agency.request.queue=Travel.Agency.Request.Queue
-travel.agency.response.queue=Travel.Agency.Response.Queue
-smart.airline.request.queue=Smart.Airline.Request.Queue
-smart.airline.response.queue=Smart.Airline.Response.Queue
-royal.airline.request.queue=Royal.Airline.Request.Queue    
+  #JMS queues
+  travel.agency.request.queue=Travel.Agency.Request.Queue
+  travel.agency.response.queue=Travel.Agency.Response.Queue
+  smart.airline.request.queue=Smart.Airline.Request.Queue
+  smart.airline.response.queue=Smart.Airline.Response.Queue
+  royal.airline.request.queue=Royal.Airline.Request.Queue    
         </programlisting>
         
         <para>What else do we need in out Spring configuration? There are some basic beans that are commonly defined in a Citrus

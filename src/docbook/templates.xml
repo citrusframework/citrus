@@ -41,7 +41,7 @@
     <programlisting>
   &lt;testcase name=&quot;templateTest&quot;&gt;
       &lt;variables&gt;
-          &lt;variable name=&quot;myTime&quot; value=&quot;GET_CURRENT_DATE&quot;/&gt;
+          &lt;variable name=&quot;myTime&quot; value=&quot;citrus:currentDate()&quot;/&gt;
       &lt;/variables&gt;
       &lt;actions&gt;
           &lt;call-template name=&quot;doCreateVariables&quot;/&gt;

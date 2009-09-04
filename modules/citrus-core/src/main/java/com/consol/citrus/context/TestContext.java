@@ -330,7 +330,7 @@ public class TestContext {
     }
     
     /**
-     * Method to combine the replacement of old variable declaration (%) and new one (${...})
+     * Method replacing variable declarations in a String
      * @param str
      * @return
      * @throws ParseException
@@ -342,7 +342,7 @@ public class TestContext {
     }
 
     /**
-     * Method to combine the replacement of old variable declaration (%) and new one (${...})
+     * Method replacing variable declarations and functions in a String
      * @param str
      * @param enableQuoting
      * @return

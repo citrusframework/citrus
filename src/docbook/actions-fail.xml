@@ -26,7 +26,7 @@
   
   TEST RESULTS coreTestSuite
   
-  failTest                                    : failed - Exception is: Test will fail with custom message
+  failTest          : failed - Exception is: Test will fail with custom message
   
   Found 1 test cases to execute
   Skipped 0 test cases (0.0%)

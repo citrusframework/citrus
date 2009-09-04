@@ -18,12 +18,11 @@
       &lt;/property&gt;
       &lt;property name=&quot;queueNames&quot;&gt;
           &lt;list&gt;
-              &lt;value&gt;${jms.queue.sas.dummy.in}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.sas.dummy.out}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.async.res}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.async.req}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.reply}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.async.ntf}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.hello.request.in}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.hello.response.out}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.echo.request}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.echo.response}&lt;/value&gt;
+              &lt;value&gt;JMS.Queue.Dummy&lt;/value&gt;
           &lt;/list&gt;
       &lt;/property&gt;
   &lt;/bean&gt;
