@@ -3,7 +3,7 @@
   <title>Test case</title>
 
   <para>Now let us start writing test cases! The upcoming guide will introduce all possible actions inside a test case 
-  and explain how to connect to other systems using various transports.</para>
+  and explain how to connect to other systems by sending and receiving messages over various transports.</para>
   
   <para>Citrus specifies test cases through simple XML files. The whole test case description will take place in one single
   XML file. This chapter will introduce the custom XML schema language that defines a test cases.</para>
@@ -30,11 +30,10 @@
   &lt;/beans&gt;
     </programlisting>
     
-    <para>Citrus can execute these test case definitions and verify their result - no problem, but this XML 
+    <para>Citrus can execute these test case as normal test cases - no problem, but this XML usual 
     syntax is not the best way to describe a test case in Citrus, especially when test scenarios get more 
-    complex and the test cases grow in size. Therefore Citrus uses a custom XML schema definition for writing 
-    test cases. Since Spring version 2.0.x custom XML schemas can build Spring beans definitions that are 
-    ready for use in the Spring IoC container.</para>
+    complex and the test cases grow in size. Therefore Citrus provides a custom XML schema definition for 
+    writing test cases.</para>
     
     <para>The custom XML schema aims to reach the convenience of Domain specific languages (DSL). Let us have a look 
     at the Citrus test describing DSL by introducing a first very simple test case definition:</para>
@@ -67,19 +66,19 @@
   &lt;/spring:beans&gt;
     </programlisting>
     
-    <para>We do need the <literal>&lt;spring:beans&gt;</literal> root element as the XML file is read by the Spring IoC Container 
-    in order to generate the Spring bean definitions.</para>
+    <para>We do need the <literal>&lt;spring:beans&gt;</literal> root element as the XML file is read by the Spring IoC Container. 
+    Inside this root element the Citrus specific namespace definitions take place. In the following we use the customized XML schema 
+    language in Citrus to describe the test case.</para>
     
-    <para>The test case gets a mandatory name that must be unique throughout all test cases in this project. 
-    The name must not contain any whitespaces but does support special characters like '-', '.', '_'. 
-    
-    Several child elements define the behaviour of the test. These basic test elements are described in the following sections.</para>
+    <para>The test case itself gets a mandatory name that must be unique throughout all test cases in a project. You will receive errors
+    when using duplicate test names. The name must not contain any whitespaces but does support special characters like '-', '.', '_'. 
+    The &lt;testcase&gt; element holds several child elements. These basic test elements are described in the following sections.</para>
     
     <section id="testcase-description">
         <title>Description</title>
         
-        <para>The test case description can give a short purpose and the intended use case scenario that will be tested. 
-        A reading user should get a first impression what the test case is all about. You can use free text in order to describe the test. 
+        <para>The test case description points out the purpose and gives a short introduction to the intended use case scenario that 
+        will be tested. The user should get a first impression what the test case is all about. You can use free text in order to describe the test. 
         But be aware of the XML validation rules of well formed XML (e.g. special character escaping, use of CDATA sections)</para>
     </section>
     
@@ -124,14 +123,14 @@
   &lt;/actions&gt;
         </programlisting>
         
-        <para>Test actions are normal XML elements themselves. All actions have individual names and child elements that define 
+        <para>All actions have individual names and properties that define 
         the action behaviour. Citrus offers a wide range of test actions from scratch, but you are also able to write your own 
         test actions in Java or Groovy and execute them during a test. <xref linkend="actions"/> gives you a brief description of all available 
-        actions that can be part of a test case execution. The actions can be placed in free sequence to each other 
-        so that every test case declares its special action chain.</para>
+        actions that can be part of a test case execution.</para>
         
-        <para>Step by step the test proceeds the action workflow  and the tester is able to rebuild a use case as it is described 
-        in the design documents.</para>
+        <para>The actions are combined in free sequence to each other so that the tester is able to declare a special action chain inside the test.
+        These actions can be sending or receiving messages, delaying the test, validating the database and so on. Step by step the test proceeds 
+        the action chain. Usually the tester tries to fit the designed use case scenario with the action chain.</para>
     </section>
     
     <section id="testcase-cleanup">
@@ -139,7 +138,16 @@
         
         <para>The cleanup element also contains a list of test actions. These actions will be executed at the very
         end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously 
-        created by the test like cleaning up the database for instance.</para>
+        created by the test like cleaning up the database for instance. The cleanup section is described in more detail in <xref linkend="cleanup"/></para>
+  
+        <programlisting>      
+  &lt;cleanup&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+      &lt;action&gt;[...]&lt;/action&gt;
+  &lt;/cleanup&gt;
+        </programlisting>
     </section>
   </section>
   
@@ -170,7 +178,7 @@
     <para>The status allows following values: DRAFT, READY_FOR_REVIEW, DISABLED, FINAL.
     The meta-data information to a test is quite important to give the reader a first information about
     the test. It is also possible to generate test documentation using this meta-data information. The built-in Citrus 
-    documentation generates HTML or Excel documents that will lists all tests with their metadata information and description.</para>
+    documentation generates HTML or Excel documents that list all tests with their metadata information and description.</para>
     
     <note>
         <para>Tests in status DRAFT or DISABLED will not be executed during a testsuite run. So someone can just start adding

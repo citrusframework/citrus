@@ -59,8 +59,8 @@
     
     <note>
         <para>User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to 
-        type in the correct answer over the keyboard. In this case you can always miss out the whole the user input by specifying
-        a variable that matches the user input variable name in advance. If the user input variable is already present the user 
-        input is missed out and the test proceeds.</para>
+        type in the correct answer over the keyboard. In this case you can always skip the user input in advance by specifying
+        a variable that matches the user input variable name. As the user input variable is then already present the user 
+        input is missed out and the test proceeds automatically.</para>
     </note>
 </section>

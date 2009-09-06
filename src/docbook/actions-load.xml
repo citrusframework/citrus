@@ -35,6 +35,6 @@
     as local variables.</para>
     
     <important>
-        <para>Existing variables may be overwritten!</para>
+        <para>Existing variables are overwritten!</para>
     </important>
 </section>
