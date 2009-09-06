@@ -2,7 +2,7 @@
 <chapter id="messaging">
   <title>Send and receive messages</title>
 
-  <para>In the previous chapter the basic test case structure was introduced with its &lt;variables$gt; and
+  <para>In the previous chapter the basic test case structure was introduced with its &lt;variables&gt; and
   &lt;actions&gt;. The &lt;actions&gt; element contains all actions that will be executed during the test case in
   sequential order. The framework offers several built-in actions that the user can choose from. These actions will take our
   interest in the next sections.</para>
@@ -12,10 +12,10 @@
   <section id="message-sending">
     <title>Sending messages</title>
 
-    <para>The &lt;send&gt; action publishes messages to a certain destination. The transport to be used does - for now- not
+    <para>The &lt;send&gt; action publishes messages to a destination. The transport to be used does - for now - not
     matter to the test case. The test case simply defines the sending action and uses a predefined message sender to actually 
-    publish the defined message. There are several message sender implementations in the framework available representing several
-    message transports like Http, JMS, SOAP and many more. This means that the transport protocol to be used (JMS, SOAP, HTTP, TCP/IP etc.) 
+    publish the defined message. There are several message sender implementations in the framework available representing several 
+    ways to publish a message. This means that the transport protocol to be used (JMS, SOAP, HTTP, TCP/IP etc.) 
     is not specified in the test case directly, but in the message sender definitions. We will see later in this document how message 
     senders for various transports are configured in Citrus.</para>
     
@@ -69,7 +69,7 @@
     </programlisting>
     
     <para>The test uses two variable definitions (requestTag and correlationId), so first of all let us refresh in mind what 
-    variables do. These variables defined at the very beginning of the test case are valid throughout all actions that take place 
+    variables do. Variables defined at the very beginning of the test case are valid throughout all actions that take place 
     in the test. This means that actions can simply reference a variable by the variable expression (e.g. ${correlationId}).</para> 
     
     <tip>
@@ -77,7 +77,7 @@
         beginning. The test case reaches better maintainability and flexibility using variables.</para>
     </tip>
     
-    <para>Now lets have a look at the sending action. The 'with' attribute might catch someones attention at first. So what does the 
+    <para>Now lets have a closer look at the sending action. The 'with' attribute might catch someones attention at first. So what does the 
     'with' attribute do? This attribute references a message sender definition by name. As previously mentioned the message sender 
     definition lies in a seperate configuration file and contains the actual message transport configurations. In this example the 
     <emphasis>&quot;getCustomerRequestMessageSender&quot;</emphasis> is used to send the message over JMS to a destination queue. 
@@ -85,9 +85,15 @@
     the same message sender in order to send messages of type 'getCustomerRequest'.</para>
     
     <para>In other words the attribute &quot;with&quot; in the &lt;send&gt; element specifies which message sender definition 
-    is sending the message. Once again all available message senders are configured in a seperate Spring configuration file. 
+    to use for sendinging the message. Once again all available message senders are configured in a seperate Spring configuration file. 
     We will come to this later. Be sure to always pick the right message sender type in order to publish your message to the right 
     destination endpoint.</para>
+    
+    <tip>
+        <para>It is good practice to follow a naming convention when choosing names for message senders and receivers. The intended
+        purpose of the message sender as well as the sending/receiving actor should be clear when choosing the name. For instance messageSender1,
+        messageSender2 will not give any hint to the reader what is actually sent and to which destination.</para>
+    </tip>
     
     <para>Now that the actual message sender is clear, the test must specify the message content itself. 
     This is done with these elements:</para>
@@ -102,7 +108,7 @@
                 <listitem>
                     <para><emphasis>resource</emphasis>: External file holding the XML message to be sent (instead of &lt;data&gt; element)</para>
                     <para>The syntax would be: &lt;resource file="file:xmlData/NumberDeallocationRequest.xml" /&gt;</para>
-                    <para>The location of the file can be declared as file system resource (file:) or as class path
+                    <para>The location of the file can be declared as file system resource (file:) or as classpath
                     resource (classpath:).</para>
                 </listitem>
                 <listitem>
@@ -133,8 +139,8 @@
     dynamically set before sending the message (especially when using test variables). 
     This is why you can overwrite specific message elements. The example above uses the variable ${correlationId} directly in the 
     XML payload definition. The framework will replace this variable with the respective value before sending the message. There is 
-    also a second approach to overwrite message elements by using XPath. The &quot;/MessageHeader/RequestTag&quot; element is
-    overwritten explicitly via XPath expressions. The two approaches of setting message elements can coexist simultaneously; 
+    also a second approach to overwrite message elements using XPath. The &quot;/MessageHeader/RequestTag&quot; XPath expression for instance
+    overwrites the respective request tag value in the message. The two approaches of setting message elements can coexist simultaneously; 
     however the inline XML content replacement seems less complex than XPath, although XPath may be the right way for powerful 
     replacements inside the message payload.</para>
      
@@ -145,8 +151,8 @@
   <section id="message-receiving">
     <title>Receiving messages</title>
 
-    <para>After we have learned how to send messages in the previous chapter, now we would like to receive a message in the test. 
-    Let us again have a look at some example showing how it works.</para>
+    <para>Now after sending a message with Citrus we would like to receive a message inside the test. 
+    Let us again have a look at s simple example showing how it works.</para>
     
     <programlisting>
   &lt;receive with=&quot;getCustomerResponseReceiver&quot;&gt;
@@ -214,17 +220,16 @@
         messages that belong to your test. This is very helpful to avoid receiving messages from other tests that are still available 
         on the message destination.</para>
         
-        <para>Lets say the tested EAI application keeps sending messages that belong to previous test cases. This could happen in retry 
-        situations where the EAI application's error handling automatically tries to solve a communication problem that occured 
+        <para>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry 
+        situations where the application's error handling automatically tries to solve a communication problem that occured 
         during previous test cases. As a result the EAI application keeps sending messages that are not valid any more for the currently 
-        running test case. The test case might fail because the received messages do not apply the currently tested use case. The messages
+        running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
         received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer informations 
         etc.).</para>
         
-        <para>Now we have to find a way to avoid these problems whe a test receives the wrong messages that are not designated for the test
-        at all. The test could filter the messages on a destination to only receive messages that apply for the use case that is being 
-        tested. The Java Messaging System (JMS) came up with a message header selector that will only accept messages that fit the expected 
-        header values.</para>
+        <para>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages 
+        that apply for the use case that is being tested. The Java Messaging System (JMS) came up with a message header selector that will 
+        only accept messages that fit the expected header values.</para>
         
         <para>Let us have a closer look at a message selector inside a receiving action:</para>
         
@@ -250,8 +255,9 @@
         </programlisting>
         
         <important>
-            <para>In case you want to run tests in parallel you will need to specify message selectors, otherwise test will steal messages
-            from each other, because several test cases will receive messages at a time from a destination.</para>
+            <para>In case you want to run tests in parallel you will need to specify message selectors, otherwise the different tests running 
+            at the same time will steal messages from each other. In parallel test execution several test cases will listen for messages at 
+            the same time.</para>
         </important>
     </section>
     
@@ -259,9 +265,9 @@
         <title>Expected message templates</title>
         
         <para>Once a message is received a tester may always want to validate the message content. The tester has a expected message in 
-        mind that should be compared to the actual message that arrived.</para>
+        mind that is compared to the actual message that arrived.</para>
         
-        <para>A tester can sepcify such expected message templates using these elements inside a receiving action:</para>
+        <para>A tester can sepcify expected message templates using the following elements inside a receiving action:</para>
         <itemizedlist mark="opencircle">
             <listitem>
                 <para><emphasis>&lt;data&gt;</emphasis>: Defines an inline XML message template that is expected</para>
@@ -306,8 +312,8 @@
         
         <para><literal>&lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;</literal></para>
         
-        <para>The XPath expression evaluates to the message template searches for the right element and replaces the element value. It works with
-        attributes too.</para>
+        <para>The XPath expression evaluates to the message template, searches for the right element and replaces the element value. Of course 
+        this works with attributes too.</para>
         
         <para>However despite of adding dynamic variable values to the expected message template some elements inside a message will not be
         dedicated for validation at all. Communication timestamps inside a message for example as shown here:</para>
@@ -322,18 +328,17 @@
         
         <para><literal>&lt;ignore path=&quot;//ResponseMessage/MessageHeader/Timestamp&quot;/&gt;</literal></para>
         
-        <para>Once the expected message template is manipulated with dynamic variables values and ignored elements the XML validation can 
-        start. The framework applies a detailed XML tree validation to ensure that the messages (expected and received) match each other.
-        XML attributes, elements, namespaces and the number of child elements are validated. In case one single element is not equal 
-        to the expected one the validation will raise errors and the test will fail.</para>
+        <para>This is how a message template is manipulated before validation. The framework applies a detailed XML tree validation to ensure 
+        that the messages (expected and received) are matching. XML attributes, element names, namespaces as well as the number of child elements 
+        are validated. In case one single element is not equal to the expected one the validation will raise errors and the test will fail.</para>
     </section>
     
     <section id="message-receiving-elements">
         <title>Validating message elements</title>
         
         <para>In the previous chapter we learned how to validate the whole XML tree against a expected message template. In some cases 
-        this approach might be overkill. In case you as a tester is only interested in a particular message element that has to meet your
-        expectations use the element validation.</para>
+        this approach might be overkill. In case you as a tester need to validate only a small subset of message elements you might want
+        to use the element validation.</para>
         
         <programlisting>
   &lt;message&gt;
@@ -346,8 +351,8 @@
   &lt;/message&gt;
         </programlisting>  
         
-        <para>Instead of comparing a whole message template (data/resource) the given elements are validated explicitly. The framework 
-        tries to find the elements in the received message and compares its value to the expected one. Nothing else is validated.</para> 
+        <para>Instead of comparing the whole message only the specified message elements are validated. The framework 
+        tries to find the elements in the received message via XPath and compares its value to the expected one. Nothing else is validated here.</para> 
         
         <note>
             <para>If this type of validation is choosen neither &lt;data&gt; nor &lt;resource&gt; template definitions are allowed.</para>
@@ -360,11 +365,13 @@
             
             <para><literal>message.body.text</literal></para>
             
-            <para>The expression will search the XML tree for the respective &lt;text&gt; element. Attributes are supported too. In case the
-            last element in the dot-notated expression is a XML attribute the framework will automatically find it.</para>
+            <para>The expression will search the XML tree for the respective &lt;message&gt;&lt;body&gt;&lt;text&gt; element. Attributes 
+            are supported too. In case the last element in the dot-notated expression is a XML attribute the framework will automatically 
+            find it.</para>
             
-            <para>Of course this dot-notated syntax is very straight forward and might not be applicable for more complex tree walkings. 
-            XPath is much more powerful - no doubt. However the dot-notated syntax is supported wherever XPath expressions might apply.</para>
+            <para>Of course this dot-notated syntax is very simple and might not be applicable for more complex tree walkings. 
+            XPath is much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
+            So the dot-notation is supported wherever XPath expressions might apply.</para>
         </tip>  
     </section>
     
@@ -381,15 +388,16 @@
   &lt;/header&gt;    
         </programlisting>
         
-        <para>These values have to be present in the received message header and their value has to fit the expected value.</para>
+        <para>The given values have to be present in the received message header and their value has to fit the expected value otherwise
+        the test case will fail.</para>
     </section>
     
     <section id="message-receiving-extract">
         <title>Saving dynamic message content</title>
         
         <para>Imagine you receive a message in your test that contains a generated message id. You have no chance to predict the id
-        because it was generated by some other application. Now you need to return this id in the respective response message. We need to
-        save this dynamic id into a new test variable.</para>
+        because it was generated dynamically. But unfortunately you need to return this id in the respective response message to meet
+        the requirements. We need to save the dynamic value into a new test variable.</para>
         
         <programlisting>
   &lt;extract&gt;

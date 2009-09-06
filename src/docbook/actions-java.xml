@@ -44,7 +44,7 @@
     after knowing the constructor argument definition, do they?.</para>
     
     <para>Method arguments support data type conversion too, even string arrays (useful when
-    calling main methods). In the third action in the example code you can see that colon separated strings are automatically 
+    calling CLIs). In the third action in the example code you can see that colon separated strings are automatically 
     converted to string arrays.</para>
     
     <para>Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method

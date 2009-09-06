@@ -2,10 +2,9 @@
 <section id="actions-create-variables">
     <title>Create variables</title>
 
-    <para>As you know test variables are defined at the beginning of the test case. <xref linkend="testcase-variables"/> handles variables 
-    if you do not know yet what they are about. It might also be helpful to reset existing variables during the test as
-    well as to define new variables during the test. This is why the action &lt;createVariables&gt; is able to declare new variables 
-    or overwrite existing ones.</para>
+    <para>As you know variables usually are defined at the beginning of the test case (<xref linkend="testcase-variables"/>). 
+    It might also be helpful to reset existing variables as well as to define new variables during the test. The 
+    action &lt;createVariables&gt; is able to declare new variables or overwrite existing ones.</para>
     
     <programlisting>
   &lt;testcase name=&quot;createVariablesTest&quot;&gt;

@@ -9,7 +9,7 @@
     <section id="actions-database-update">
       <title>Updating the database</title>
   
-      <para>The &lt;updateDatabase&gt; action simply executes a group of SQL statements that will change data in a database.
+      <para>The &lt;updateDatabase&gt; action simply executes a group of SQL statements in order to change data in a database.
       Typically the action is used to prepare the database at the beginning of a test or to clean up the
       database at the end of a test. You can specify SQL statements like INSERT, UPDATE,
       DELETE, CREATE TABLE, ALTER TABLE and many more.</para>
@@ -31,8 +31,8 @@
       </programlisting>
       
       <para>The first action uses inline SQL statements defined directly inside the test case. The next action uses an external 
-      SQL resource file instead. The file resource can hold several SQL statements seperated by new lines. The file is read 
-      completely and all statements are executed by the framework.</para>
+      SQL resource file instead. The file resource can hold several SQL statements seperated by new lines. All statements inside 
+      the file are executed sequentially by the framework.</para>
       
       <important>
         <para>You have to pay attention to some rules when dealing with external SQL resources.</para>
@@ -54,7 +54,7 @@
         by using the &quot;file:&quot; or &quot;classpath:&quot; prefix.</para>
       </note>
       
-      <para>Both examples use the &quot;connect&quot; attribute to define the database connection to be used. This connection to
+      <para>Both examples use the &quot;connect&quot; attribute. This value defines the database connection (datasource) to be used. The connection to
       a datasource is mandatory, because the test case does not know about user credentials or database names. The 'connect' attribute 
       references predefined datasources that are located in a seperate Spring configuration file.</para>
     </section>
@@ -62,8 +62,8 @@
     <section id="actions-database-query">
       <title>Verifying data from the database</title>
       
-      <para>The &lt;queryDatabase&gt; action is specially designed to execute SQL queries (SELECT * FROM) to get data from a database. The query results 
-      are validated against expected data as shown in the next example.</para>
+      <para>The &lt;queryDatabase&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
+      The query results are validated against expected data as shown in the next example.</para>
       
       <programlisting>
   &lt;queryDatabase connect=&quot;databaseQuery&quot;&gt;
@@ -86,7 +86,7 @@
       <para>The result sets are validated through &lt;validate&gt; elements. It is possible to do a detailed check on
       every selected column of the result set. Simply refer to the selected column name in order to validate its
       value. The usage of test variables is supported as well as database expressions like count(), avg(), min(),
-      max() and so on.</para>
+      max().</para>
       
       <para>You simply define the &lt;validate&gt; entry with the column name as the &quot;column&quot; attribute and any expected
       value expression as expected &quot;value&quot;. The framework then will check the column to fit the expected value and raise 
@@ -100,5 +100,9 @@
       also supported as expected values.</para>
       
       <para>If a single validation happens to fail, the whole action will fail with respective validation errors.</para>
+      
+      <note>
+        <para>When validating database query result sets Citrus can only handle single </para>
+      </note>
     </section>
 </section>

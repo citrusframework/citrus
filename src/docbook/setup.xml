@@ -9,7 +9,7 @@
   describe to you the Citrus project setup possibilities. Choose on of them and include Citrus into your project.</para>
   
   <para>In case you use Maven in your project you may choose the Maven way described in <xref linkend="setup-using-maven"/>. 
-  Others may feel right downloading and unzipping the Citrus archive release.</para>
+  Others may feel right downloading and unzipping the Citrus archive release manually.</para>
 
   <section id="setup-download">
     <title>Download</title>
@@ -21,11 +21,11 @@
     
     <itemizedlist>
         <listitem><para><emphasis>citrus-x.x-with-dependencies</emphasis></para></listitem>
-        <listitem><para><emphasis>citrus-x.x-project</emphasis></para></listitem>
+        <!-- listitem><para><emphasis>citrus-x.x-project</emphasis></para></listitem-->
         <listitem><para><emphasis>citrus-x.x-src</emphasis></para></listitem>
     </itemizedlist>
     
-    <para>Usually one would shoose the with-dependencies archive in order to use Citrus, because this archive includes the Citrus binaries
+    <para>Usually one would choose the with-dependencies archive in order to use Citrus, because this archive includes the Citrus binaries
     plus all needed depedency libraries. In case you want to get in touch with developing Citrus you should go with the project archive.
     This archive will give you the complete Citrus project sources. Using Maven you will easily be able to build Citrus on your own and
     extend Citrus with your own code.</para>
@@ -110,7 +110,7 @@
             <para>Create tests using the citrus-maven-plugin (goal: citrus:create-new-test)</para>
         </listitem>
         <listitem>
-            <para>Tests will be included into your projects iuntegration-test phase using the surefire plugin</para>
+            <para>Tests will be included into your projects integration-test phase using the surefire plugin</para>
             
             <programlisting>
   &lt;plugin&gt;

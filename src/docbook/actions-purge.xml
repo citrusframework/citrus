@@ -4,10 +4,10 @@
 
     <para>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending
     messages to the same destination endpoints. Of course a test case should only receive messages that belong to it. Therefore it is a 
-    good idea to purge the JMS destiantions between the test cases to remove obsolete messages that are stuck in a JMS queue for some 
-    reason.</para>
+    good idea to purge the JMS queue destiantions between the test cases so obsolete messages stuck in a JMS queue for some 
+    reason are removed.</para>
     
-    <para>The 'de.consol.testsuite.actions.PurgeJmsQueuesBean' action offers the property "queueNames" to hold all destiantion namse 
+    <para>The 'com.consol.citrus.actions.PurgeJmsQueuesBean' action offers the property "queueNames" to hold all destiantion namse 
     that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations.</para>
         
     <programlisting>

@@ -2,8 +2,8 @@
 <section id="actions-echo">
     <title>Echo</title>
 
-    <para>The &lt;echo&gt; action will print messages to the console/logger. This functionality is useful when
-    debugging test runs. The property "message" holds the text to be printed out. Tester might use it to print
+    <para>The &lt;echo&gt; action prints messages to the console/logger. This functionality is useful when
+    debugging test runs. The property "message" defines the text that is printed. Tester might use it to print
     out debug messages and variables as shown the next code example:</para>
     
     <programlisting>
