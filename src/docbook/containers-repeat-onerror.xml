@@ -4,7 +4,7 @@
 
     <para>The next looping container is called repeat-on-error-until-true. This container simply repeats group of actions 
     only in case one embedded action has failed with error. In case of such an error inside the container the loop will try 
-    again to execute all embedded actions. The on-error execution will take place until one of the following conditions 
+    again to execute <literal>all</literal> embedded actions. The on-error execution takes place until one of the following conditions 
     evaluates to true:</para>
     
     <para>1. All embedded actions were processed successfully</para>
@@ -24,7 +24,12 @@
   &lt;/testcase&gt;
     </programlisting>
     
-    <para>In the code example the error loop will continue four times as the &lt;fail&gt; action definitely will always fail.
-    The time the condition &quot;i=5&quot; evaluates to true the loop will break anyway and the whole test case will fail.</para>
+    <para>In the code example the error loop continues four times as the &lt;fail&gt; action definitely fails the test.
+    During the fifth iteration The condition &quot;i=5&quot; evaluates to true and the loop breaks its processing.</para>
     
+    <note>
+        <para>The overall success of the test case depends on the error situation inside the repeat-onerror-until-true container. In case 
+        the loop breaks because of failing actions and the loop will discontinue its work the whole test case is failing too. The error loop
+        processing is successful only in case all embedded actions were not raising any errors before in one iteration.</para>
+    </note>
 </section>

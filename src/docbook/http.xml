@@ -3,11 +3,11 @@
     <title>Http Support</title>
 
     <para>Citrus is able to connect with Http services and simulate Http servers. In the next sections you will learn
-    how to invoke services using Http messaging. You will see how to accept client requests and provide proper Http 
+    how to invoke services using Http messaging. And you will see how to accept client requests and provide proper Http 
     responses.</para>
     
     <note>
-        <para>Similar to the JMS specific configuration schema Citrus provides a customized Http configuration schema that
+        <para>Similar to the JMS specific configuration schema, Citrus provides a customized Http configuration schema that
         is used in Spring configuration files. Simply include the http-config namespace in the confguration XML as follows.</para>
         
         <programlisting>
@@ -35,8 +35,8 @@
     <section id="http-sender">
         <title>Http message sender</title>
         
-        <para>Citrus can invoke any Http service and wait for the response. The response can then be validated in high extend.
-        Let us see how a message sender for Http is configured:</para>
+        <para>Citrus can invoke any Http service and wait for the response. After that the response goes 
+        through the validation process as usual. Let us see how a message sender for Http works:</para>
         
         <programlisting>
   &lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
@@ -58,7 +58,7 @@
         <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is more complicated, because Citrus 
         has to provide a Http server that is listening on a port for client connections. Once a client connection 
         is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server 
-        implementation that can easily listens on a port for client connections.</para>
+        implementation that listens on a port for client connections.</para>
         
         <programlisting>
   &lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
@@ -74,10 +74,22 @@
         
         <para>The Http server implementation in the example will automatically startup on application loading and will listen on
         the URL <literal>'http://localhost:8090/test'</literal> for requests. What also is very important is the message handler definition.
-        Once a client request was accepted the message handler is responsible for generating a proper response to the client. Here
-        in this example the simplest possible Http response is sent via the 'com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler'.</para>
+        Once a client request was accepted the message handler is responsible for generating a proper response to the client.</para>
         
-        <para>Citrus provides several other message handlers. Let's have a look at them in the following sections.</para>
+        <para>Citrus provides several message handler implementations. Let's have a look at them in the following sections.</para>
+        
+        <section id="http-message-handler-empty">
+            <title>Empty response producing message handler</title>
+            
+            <para>This is the simplest message handler you can think of. It simply provides an empty success response using the Http
+            reponse code 202. In the introducing example this message handler was used to provide reponse messages to the calling client.
+            The handler does not need any configurations or properties as it simply responds with an empty Http response.</para>
+            
+            <programlisting>
+  &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+           class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+            </programlisting>
+        </section>
         
         <section id="http-message-handler-static">
             <title>Static response producing message handler</title>
@@ -116,9 +128,9 @@
             <title>Xpath dispatching message handler</title>
             
             <para>The idea behind the xpath-dispatching-message-handler is that the incoming requests are dispathed to several
-            message handlers according to an element value inside the message payload. The XPath expression will evaluate the value and
-            according to it call the respective message handler. The group of available message handlers are defined in an extra
-            Spring application context that is loaded in advance.</para>
+            message handlers according to an element value inside the message payload. The XPath expression will evaluate and
+            call the respective message handler. The message handler mapping is done by their names inside a message handler Spring
+            configuration context. The seperate context is loaded in advance.</para>
             
             <programlisting>
   &lt;bean id=&quot;xpathDispatchingHandler&quot; class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
@@ -131,15 +143,15 @@
             
             <para>The handler receives a XPath mapping expression as well as a Spring ApllicationContext file resource. The message handlers
             are mapped to the different values via their names. For instance a incoming request with 
-            <literal>//MessageBody/Operation = "getOrders"</literal> is handled by the message handler named "getOrders". The message handlers
-            can then be any other implementation (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...).</para>
+            <literal>//MessageBody/Operation = "getOrders"</literal> is handled by the message handler named "getOrders". The available message handlers
+            are configured in the message-handler-context (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...).</para>
         </section>
         
         <section id="http-message-handler-jms">
             <title>JMS connecting message handler</title>
             
-            <para>The last but definitely not least message handler is the JMS connecting message handler. Indeed this handler is the most 
-            flexible one. This handler will forward incoming request to a JMS destination and waiting for a proper response on a reply destination. 
+            <para>The most powerful message handler is the JMS connecting message handler. Indeed this handler also provides the most 
+            flexibility. This handler will forward incoming request to a JMS destination and waiting for a proper response on a reply destination. 
             A configured JMS message receiver can read this forwarded request internally over JMS and provide a proper response on the 
             reply destination.</para>
             

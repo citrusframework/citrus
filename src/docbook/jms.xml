@@ -7,8 +7,9 @@
     outbound and inbound communication</para>
     
     <note>
-        <para>Citrus provides a "citrus" configuration namespace and schema definition to include it in your Spring configuration. 
-        The namespace URI and schema location have to be included into the Spring configuration XML file.</para>
+        <para>Citrus provides a "citrus" configuration namespace and schema definition. Include this namespace into your Spring 
+        configuration in order to use the Citrus configuration elements. The namespace URI and schema location are added to the 
+        Spring configuration XML file as follows.</para>
         
         <programlisting>
   &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
@@ -77,6 +78,10 @@
         </note>
     </section>
     
+    <para>The message sender is now ready for usage inside a test. Many sending actions and test cases reference the message sender. The 
+    message sender will simply publish the message to the defined JMS destination. The communication is supposed to be asynchronous, which
+    means that the sender will not wait for a synchronous response. The sender fires and forgets the message immediately.</para>
+    
     <section id="jms-receiver">
         <title>JMS message receiver</title>
         
@@ -88,7 +93,8 @@
                                   destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
         </programlisting>
         
-        <para>The message receiver will connect to the given destination and wait for messages to arrive.</para>
+        <para> The receiver acts as a message driven listener. This means that the message receiver connects to the given destination 
+        and waits for messages to arrive.</para>
         
         <note>
             <para>Besides the destination-name attribute you can also provide a reference to a Destination implementation.</para>
@@ -119,7 +125,7 @@
         
         <para>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
         in the Spring configuration. The sender sends the message and waits for the response synchronously. Once the reply has arrived the 
-        reply handler is invoked with the respective reoly message. The second possibility would be a timeout while receiving the reply.</para>
+        reply handler is invoked with the respective reply message. The second possibility would be a timeout while receiving the reply.</para>
         
         <note>
             <para>The message sender creates a temporary JMS reply destination by default in order to receive the reply. The temporary 
@@ -140,7 +146,7 @@
         <important>
           <para>Be aware of permissions that are mandatory for creating temporary destinations. Citrus tries to create temporary queues
           on the JMS message broker. Following from that the Citrus JMS user has to have the permission to do so. 
-          Be sure that the user has the sufficient rights. Otherwise the synchronous communication will not work.</para>
+          Be sure that the user has the sufficient rights when using temporary reply destinations.</para>
         </important>
     </section>
     

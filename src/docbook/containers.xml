@@ -2,7 +2,7 @@
 <chapter id="containers">
   <title>Containers</title>
 
-  <para>Similar to templates a container element holds one or more test actions. In contrast to the
+  <para>Similar to templates a container element holds one to many test actions. In contrast to the
   template the container appears directly inside the test case action chain, meaning that the container 
   is not referenced by more than one test case.</para>
   
