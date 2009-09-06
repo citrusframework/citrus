@@ -2,16 +2,20 @@
 <chapter id="cleanup">
     <title>Test case cleanup</title>
 
-    <para>When dealing with database access, we might run into some problems in case the test fails. 
-    Imagine that you have prepared some data inside the database at the beginning of your test and 
-    you want to make sure that the data is cleaned up at the end of the test case. Now we have the problem
-    that in case of an error the whole test case will terminate immediately. Cleanup tasks at the end of the 
-    test may not be executed correctly.</para>
+    <para>This section deals with a special section inside the test case that is executed even in case errors
+    did occur during the test. Lets say you have started a Jetty web server instance at the beginning of the 
+    test case and you need to shutdown the server when the test has finished its work. Or as a second example
+    imagine that you have prepared some data inside the database at the beginning of your test and 
+    you want to make sure that the data is cleaned up at the end of the test case.</para>
     
-    <para>This dirty state in database might cause problems for upcoming test cases. To avoid this problems 
-    you should use the cleanup block inside the test case. The &lt;cleanup&gt; section contains actions that 
-    are executed even in case the test fails. Using this strategy the database cleaning tasks mentioned before
-    will find execution in every case (success or failure).</para>
+    <para>In both situations we might run into some problems when the test failed. 
+    We face the problem that the whole test case will terminate immediately in case of errors. Cleanup tasks 
+    at the end of the test action chain may not be executed correctly.</para>
+    
+    <para>Dirty states inside the database or still running server instances then might cause problems for 
+    upcoming test cases. To avoid this problems you should use the cleanup block of the test case. The &lt;cleanup&gt; 
+    section contains actions that are executed even in case the test fails. Using this strategy the database 
+    cleaning tasks mentioned before will find execution in every case (success or failure).</para>
     
     <para>The following example shows how to use the cleanup section at the end of a test:</para>
   
@@ -43,7 +47,8 @@
   &lt;/testcase&gt;
     </programlisting>
     
-    <para>In the example the first action creates an order in the database using an INSERT SQL statement. To be sure that the 
-    order in the database is deleted after the test, the cleanup section contains the respective database DELETE action.</para>
+    <para>In the example the first action creates an entry in the database using an <literal>INSERT</literal> statement. 
+    To be sure that the entry in the database is deleted after the test, the cleanup section contains the respective 
+    <literal>DELETE</literal> statement that is always executed regardless the test case state (successful or failed).</para>
     
 </chapter>

@@ -49,7 +49,7 @@
     <section id="xpath-namespace">
         <title>Handling XML namespaces</title>
         
-        <para>When it comes to XML namespaces you have to be careful with your XPath expressions too. Lets have a look at an example
+        <para>When it comes to XML namespaces you have to be careful with your XPath expressions. Lets have a look at an example
         message that uses XML namespaces:</para>
       
         <programlisting>
@@ -80,7 +80,7 @@
         </programlisting>
         
         <para>The validation will fail although the XPath expression looks correct regarding the XML tree. Because the message 
-        uses a the namespace <literal>xmlns:ns1=&quot;http://testsuite/default&quot;</literal> with its prefix <literal>ns1</literal>
+        uses the namespace <literal>xmlns:ns1=&quot;http://testsuite/default&quot;</literal> with its prefix <literal>ns1</literal>
         our XPath expression is not able to find the elements. The correct XPath expression uses the namespace prefix as defined 
         in the message.</para>
         
@@ -93,11 +93,11 @@
   &lt;/message&gt;
         </programlisting>
         
-        <para>Now the expression work fine and the validation is successful. But this is quite error prone. Why because the test is depending
-        on the namespace prefix that was used by another application. As soon as the message is sent with a different namespace prefix (e.g.
+        <para>Now the expressions work fine and the validation is successful. But this is quite error prone. This is because the test is now 
+        depending on the namespace prefix that is used by some application. As soon as the message is sent with a different namespace prefix (e.g.
         ns2) the validation will fail again.</para>
         
-        <para>You can avoid this affect when specifying your own namespace context and your own namespace prefix during validation.</para>
+        <para>You can avoid this effect when specifying your own namespace context and your own namespace prefix during validation.</para>
         
         <programlisting>
   &lt;message&gt;
@@ -111,7 +111,7 @@
         </programlisting>
         
         <para>Now the test in independent from any namespace prefix in the received message. The namespace context will resolve the namespaces and
-        find the elements although message Xpath expression might use different prefixes. The only thing that matters is that the namespace value 
+        find the elements although the message might use different prefixes. The only thing that matters is that the namespace value 
         (http://testsuite/default) matches.</para>
     </section>
     
@@ -137,7 +137,7 @@
 &lt;/RequestMessage&gt;
         </programlisting>
         
-        <para>Again this normal approach in XPath will fail</para>
+        <para>The message uses default namespaces. The following approach in XPath will fail due to namespace problems.</para>
         
         <programlisting>
 &lt;message&gt;
@@ -148,7 +148,8 @@
 &lt;/message&gt;
         </programlisting>
         
-        <para>Even default namespaces need to be specified in the XPath expressions.</para>
+        <para>Even default namespaces need to be specified in the XPath expressions. Look at the following code listing that
+        works fine with default namespaces:</para>
         
         <programlisting>
 &lt;message&gt;

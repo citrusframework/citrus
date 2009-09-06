@@ -2,12 +2,12 @@
 <chapter id="templates">
     <title>Templates</title>
 
-    <para>Templates will group action sequences to a logical unit. You can think of templates as reusable components
-    that may be used in several tests. Once a template is configured they are referenced inside a test case. The maintenance
-    will be much more effective as the templates will be reused many times.</para>
+    <para>Templates group action sequences to a logical unit. You can think of templates as reusable components
+    that are used in several tests. The maintenance is much more effective because the templates are referenced
+    several times.</para>
     
-    <para>The template has a unique name. In the test case the template is called by this unique name. We will
-    have a look at a first example:</para>
+    <para>The template always has a unique name. Inside a test case we call the template by this unique name. 
+    Have a look at a first example:</para>
   
     <programlisting>
   &lt;template name=&quot;doCreateVariables&quot;&gt;
@@ -27,14 +27,12 @@
   &lt;/template&gt;
     </programlisting>
   
-    <para>The code example above describes two template definitions. Each template has to define a name using
-    the respective attribute &quot;name&quot;. Templates usually hold a sequence of test actions as seen in the first template which
-    contains the two test actions &lt;echo&gt; and &lt;traceVariables&gt;. Besides that you are allowed to create a hierarchy 
-    of templates when a template calls other templates.</para>
+    <para>The code example above describes two template definitions. Templates hold a sequence of test 
+    actions or call other templates themselves as seen in the example above.</para>
     
     <note>
       <para>The &lt;call-template&gt; action calls other templates by their name. The called
-      template not necessarily has to be located in the same test case XML file, but it can be defined in
+      template not necessarily has to be located in the same test case XML file. The template might be defined in
       a separate XML file other than the test case itself:</para>
     </note>
     
@@ -53,32 +51,28 @@
   &lt;/testcase&gt;
     </programlisting>
     
-    <para>Templates usually will also make use of variables. This means that these variables have to be present with 
-    respective values as soon as the template gets called. Otherwise the variables would be unknown to the test case and raise errors.
-    So either the variables are present in the calling test case anyway or the variables are explicitly set as parameters 
-    when calling the template. Again if a variable is unknown the template will fail with errors.</para>
+    <para>There is an open question when dealing with templates that are defined somewhere else outside the test case.
+    How to handle variables? A templates may use different variable names then the test and vice versa. But all
+    variables must be present with respective values as soon as the template gets called. Otherwise the variables 
+    are unknown to the template and the test will raise errors.</para>
     
-    <para>The &quot;doTraceVariables&quot; template faces this problem as it uses the variable ${time}. The test case must declare
-    the variable ${time} as a parameter when calling the template. Otherwise the test execution would fail in unknown variable error.
-    The parameters ensure that the template will work with the declared variables. The next example should clarify the usage of template
-    parameters in more detail:</para>
+    <para>So a first approach would be to harmonize variable usage accross templates and test cases, so that templates
+    and test cases do use the same variable naming. But this approach might lead to high calibration effort. On the 
+    other hand a template can handle parameters to solve this problem. When a template is called the calling actor has
+    to set some parameters. Lets discuss an example for this issue.</para>
+    
+    <para>The &quot;doTraceVariables&quot; template uses the variable ${time}. The test case must therefore have a variable
+    called time too or declare the variable ${time} as a parameter when calling the template:</para>
     
     <programlisting>
-  &lt;testcase name=&quot;templateTest&quot;&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;text&quot; value=&quot;Hello TestFramework&quot;/&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;call-template name=&quot;print&quot;&gt;
-              &lt;parameter name=&quot;param1&quot; value=&quot;Test1&quot;/&gt;
-              &lt;parameter name=&quot;param2&quot; value=&quot;${text}&quot;/&gt;
-          &lt;/call-template&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
+  &lt;call-template name=&quot;doTraceVariables&quot;&gt;
+      &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
+  &lt;/call-template&gt;
     </programlisting>
     
-    <para>The parameters <emphasis>param1</emphasis> and <emphasis>param2</emphasis> are set with the respective values. 
-    If you leave out the parameter mapping make sure that the variables <emphasis>param1</emphasis> and <emphasis>param2</emphasis> 
-    already exist in your test case.</para>
+    <para>The variable <emphasis>myTime</emphasis> is translated - if you would call it like this - into the 
+    desired <emphasis>time</emphasis> parameter. So the template works fine referencing the time variable. This means
+    that you always have to check the used variables inside a template when calling it. There might be a variable that
+    is not declared yet inside your test. So you need to define this value as a parameter.</para>
     
 </chapter>
