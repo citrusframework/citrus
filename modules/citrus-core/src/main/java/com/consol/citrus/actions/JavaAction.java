@@ -16,7 +16,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * Bean to enable class invokation through java reflection
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class ClassRunnerBean extends AbstractTestAction {
+public class JavaAction extends AbstractTestAction {
     /** Instance to be invoked, injected through java reflection */
     private Object instance;
 
@@ -27,29 +27,30 @@ public class ClassRunnerBean extends AbstractTestAction {
     private String methodName;
 
     /** Method args */
-    private List methodArgs = new ArrayList();
+    private List<Object> methodArgs = new ArrayList<Object>();
 
     /** Constructor args */
-    private List constructorArgs = new ArrayList();
+    private List<Object> constructorArgs = new ArrayList<Object>();
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ClassRunnerBean.class);
+    private static final Logger log = LoggerFactory.getLogger(JavaAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)
      * @throws CitrusRuntimeException
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void execute(TestContext context) {
         try {
             if (className != null) {
                 log.info("Loading class " + className);
                 
-                Class classToRun = Class.forName(className);
+                Class<?> classToRun = Class.forName(className);
     
-                Class[] constructorTypes = new Class[constructorArgs.size()];
+                Class<?>[] constructorTypes = new Class<?>[constructorArgs.size()];
                 for (int i = 0; i < constructorTypes.length; i++) {
                     if (constructorArgs.get(i).getClass().equals(Long.class)) {
                         constructorTypes[i] = long.class;
@@ -73,11 +74,11 @@ public class ClassRunnerBean extends AbstractTestAction {
                     constructorObjects[i] = constructorArgs.get(i);
                 }
     
-                Constructor constr = classToRun.getConstructor(constructorTypes);
+                Constructor<?> constr = classToRun.getConstructor(constructorTypes);
                 instance = constr.newInstance(constructorObjects);
             }
     
-            Class[] methodTypes = new Class[methodArgs.size()];
+            Class<?>[] methodTypes = new Class<?>[methodArgs.size()];
             for (int i = 0; i < methodTypes.length; i++) {
                 if (methodArgs.get(i).getClass().equals(Long.class)) {
                     methodTypes[i] = long.class;
@@ -102,8 +103,8 @@ public class ClassRunnerBean extends AbstractTestAction {
     
             Object[] methodObjects = new Object[methodArgs.size()];
             for (int i = 0; i < methodObjects.length; i++) {
-                if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
-                    ArrayList list = (ArrayList)methodArgs.get(i);
+                if (methodArgs.get(i).getClass().equals(List.class)) {
+                    List<String> list = (List<String>)methodArgs.get(i);
                     String[] converted = new String[list.size()];
                     for (int j = 0; j < converted.length; j++) {
                         converted[j] = (String)list.get(j);
@@ -153,7 +154,7 @@ public class ClassRunnerBean extends AbstractTestAction {
      * Setter for constructor args
      * @param constructorArgs
      */
-    public void setConstructorArgs(List constructorArgs) {
+    public void setConstructorArgs(List<Object> constructorArgs) {
         this.constructorArgs = constructorArgs;
     }
 
@@ -161,7 +162,7 @@ public class ClassRunnerBean extends AbstractTestAction {
      * Setter for method args
      * @param methodArgs
      */
-    public void setMethodArgs(List methodArgs) {
+    public void setMethodArgs(List<Object> methodArgs) {
         this.methodArgs = methodArgs;
     }
 

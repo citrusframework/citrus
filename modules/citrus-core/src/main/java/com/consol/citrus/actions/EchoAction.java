@@ -10,10 +10,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * EchoBean enables to print messages to the console/logger
+ * Prints messages to the console/logger
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class EchoBean extends AbstractTestAction {
+public class EchoAction extends AbstractTestAction {
 
     /** Text to be printed */
     private String message;
@@ -21,7 +21,7 @@ public class EchoBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(EchoBean.class);
+    private static final Logger log = LoggerFactory.getLogger(EchoAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)

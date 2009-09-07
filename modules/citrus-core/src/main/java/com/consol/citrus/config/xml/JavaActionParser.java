@@ -11,12 +11,13 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ClassRunnerBean;
+import com.consol.citrus.actions.JavaAction;
 
-public class ClassRunnerActionParser implements BeanDefinitionParser {
+public class JavaActionParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ClassRunnerBean.class);
+	@SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(JavaAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -24,25 +25,25 @@ public class ClassRunnerActionParser implements BeanDefinitionParser {
         beanDefinition.addPropertyValue("className", className);
 
         Element constructorElement = DomUtils.getChildElementByTagName(element, "constructor");
-        List arguments = new ArrayList();
+        List<Object> arguments = new ArrayList<Object>();
         if (constructorElement != null) {
-            List argumentList = DomUtils.getChildElementsByTagName(constructorElement, "argument");
-            for (Iterator iter = argumentList.iterator(); iter.hasNext();) {
-                Element arg = (Element) iter.next();
+            List<Element> argumentList = DomUtils.getChildElementsByTagName(constructorElement, "argument");
+            for (Iterator<Element> iter = argumentList.iterator(); iter.hasNext();) {
+                Element arg = iter.next();
                 arguments.add(resolveArgument(arg.getAttribute("type"), arg.getTextContent()));
             }
             beanDefinition.addPropertyValue("constructorArgs", arguments);
         }
 
         Element methodElement = DomUtils.getChildElementByTagName(element, "method");
-        arguments = new ArrayList();
+        arguments = new ArrayList<Object>();
         if (methodElement != null) {
             String methodName = methodElement.getAttribute("name");
             beanDefinition.addPropertyValue("methodName", methodName);
 
-            List argumentList = DomUtils.getChildElementsByTagName(methodElement, "argument");
-            for (Iterator iter = argumentList.iterator(); iter.hasNext();) {
-                Element arg = (Element) iter.next();
+            List<Element> argumentList = DomUtils.getChildElementsByTagName(methodElement, "argument");
+            for (Iterator<Element> iter = argumentList.iterator(); iter.hasNext();) {
+                Element arg = iter.next();
                 arguments.add(resolveArgument(arg.getAttribute("type"), DomUtils.getTextValue(arg)));
             }
             beanDefinition.addPropertyValue("methodArgs", arguments);

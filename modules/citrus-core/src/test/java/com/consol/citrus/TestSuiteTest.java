@@ -7,7 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.actions.EchoBean;
+import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestListeners;
@@ -32,11 +32,11 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksBefore(Collections.singletonList(new EchoBean()));
+        testsuite.setTasksBefore(Collections.singletonList(new EchoAction()));
         
         Assert.assertTrue(testsuite.beforeSuite());
     }
@@ -53,7 +53,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -75,11 +75,11 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksAfter(Collections.singletonList(new EchoBean()));
+        testsuite.setTasksAfter(Collections.singletonList(new EchoAction()));
         
         Assert.assertTrue(testsuite.afterSuite());
     }
@@ -96,7 +96,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -118,7 +118,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase1.setMetaInfo(metaInfo1);
         
-        testcase1.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase1.setTestChain(Collections.singletonList(new EchoAction()));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -128,11 +128,11 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setMetaInfo(metaInfo2);
         
-        testcase2.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase2.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksBetween(Collections.singletonList(new EchoBean()));
+        testsuite.setTasksBetween(Collections.singletonList(new EchoAction()));
         
         testsuite.beforeTest();
     }
@@ -149,7 +149,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase1.setMetaInfo(metaInfo1);
         
-        testcase1.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase1.setTestChain(Collections.singletonList(new EchoAction()));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -159,7 +159,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setMetaInfo(metaInfo2);
         
-        testcase2.setTestChain(Collections.singletonList(new EchoBean()));
+        testcase2.setTestChain(Collections.singletonList(new EchoAction()));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         

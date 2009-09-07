@@ -10,7 +10,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class DelayTest extends AbstractTestNGCitrusTest {
+public class SleepActionIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
     public void delayTest(ITestContext testContext) {
         executeTest(testContext);
