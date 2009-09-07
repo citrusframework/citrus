@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
-	xmlns:tsf="http://www.consol.de/citrus/schema/testcase"
+	xmlns:tsf="http://www.citrusframework.org/schema/testcase"
 	xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 	xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
 	exclude-result-prefixes="ss tsf spring">

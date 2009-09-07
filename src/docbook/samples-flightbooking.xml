@@ -207,13 +207,13 @@
         
         <programlisting>
   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-  &lt;spring:beans xmlns=&quot;http://www.consol.de/citrus/schema/testcase&quot; 
+  &lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot; 
                    xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot; 
                    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
                    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
                    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
-                   http://www.consol.de/citrus/schema/testcase 
-                   http://www.consol.de/citrus/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
+                   http://www.citrusframework.org/schema/testcase 
+                   http://www.citrusframework.org/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
       &lt;testcase name=&quot;FlightBookingTest&quot;&gt;
           &lt;meta-info&gt;
               &lt;author&gt;Christoph Deppisch&lt;/author&gt;
