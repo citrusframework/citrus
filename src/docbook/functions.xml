@@ -2,16 +2,16 @@
 <chapter id="functions">
     <title>Functions</title>
 
-    <para>The test framework will offer several functions that can be used throughout the test execution. The
-    functions will always return a string value that can easily be used as variable value or directly inside a text
+    <para>The test framework will offer several functions that are useful throughout the test execution. The
+    functions will always return a string value that is ready for use as variable value or directly inside a text
     message.</para>
     
-    <para>A set of functions is usually combined to a function library. This library has offers a prefix that will identify
+    <para>A set of functions is usually combined to a function library. The library has a prefix that will identify
     the functions inside the test case. The default test framework function library uses a default prefix (citrus).
     You can write your own function library using your own prefix in order to extend the test framework
     functionality whenever you want.</para>
     
-    <para>The library is built in the configuration file “functionContext.xml” and contains a set of functions that are of
+    <para>The library is built in the Spring configuration and contains a set of functions that are of
     public use.</para>
     
     <programlisting>
@@ -75,7 +75,7 @@
         <programlisting>
   &lt;message&gt;
       &lt;validate path=&quot;//element/element&quot; 
-                   value=&quot;tsf:concat('RETCS', ${text})&quot;/&gt;
+                   value=&quot;tsf:concat('Cx1x', ${generatedId})&quot;/&gt;
   &lt;/message&gt;
         </programlisting>
     </section>
@@ -252,6 +252,11 @@
                    value=&quot;tsf:randomNumber(10, false)&quot;/&gt;
   &lt;/variables&gt;
         </programlisting>
+        
+        <para>Function output:</para>
+        <para><emphasis>8954638765</emphasis></para>
+        <para><emphasis>0006387650</emphasis></para>
+        <para><emphasis>45638765</emphasis></para>
     </section>
 
     <section id="functions-random-string">
@@ -274,6 +279,13 @@
                    value=&quot;tsf:randomString(10, MIXED)&quot;/&gt;
   &lt;/variables&gt;
         </programlisting>
+        
+        <para>Function output:</para>
+        <para><emphasis>Hr546dfA65</emphasis></para>
+        <para><emphasis>Ag3876det5</emphasis></para>
+        <para><emphasis>4SDF87TR</emphasis></para>
+        <para><emphasis>4tkhi7uz</emphasis></para>
+        <para><emphasis>Vt567JkA32</emphasis></para>
     </section>
     
     <section id="functions-current-date">
@@ -318,9 +330,15 @@
   &lt;/echo&gt;
         </programlisting>
         
-        <para>Note that the curentDate function provides two parameters. First parameter describes the date format
+        <para>Note that the currentDate function provides two parameters. First parameter describes the date format
         string. The second will define a date offset string containing year, month, days, hours, minutes or seconds
         that will be added or subtracted to or from the actual date value.</para>
+        
+        <para>Function output:</para>
+        <para><emphasis>01.09.2009</emphasis></para>
+        <para><emphasis>2009-09-01</emphasis></para>
+        <para><emphasis>2009-09-01 12:00:00</emphasis></para>
+        <para><emphasis>2009-09-01T12:00:00</emphasis></para>
     </section>
     
     <section id="functions-upper-case">

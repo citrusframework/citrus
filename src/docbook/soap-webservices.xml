@@ -3,7 +3,7 @@
     <title>SOAP WebServices</title>
 
     <para>In case you need to connect to a SOAP WebService you can use the built-in WebServices support in Citrus. Similar
-    to the Http support described earlier Citrus is able to send SOAP messages and receive SOAP messages during a test.</para>
+    to the Http support Citrus is able to send and receive SOAP messages during a test.</para>
     
     <note>
         <para>In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus.
@@ -66,8 +66,8 @@
                          resource-base=&quot;src/it/resources&quot;/&gt;
         </programlisting>
         
-        <para>The Jetty server in the example can startup automatically on application startup. The Server will listen on
-        the port <literal>8091</literal> for SOAP requests. The context-config-location attribute defines a further Spring
+        <para>The Jetty server is able to startup automatically during application startup. In the example above the Server is
+        listening on the port <literal>8091</literal> for SOAP requests. The context-config-location attribute defines a further Spring
         application context. In this application context the request mapping is configured. See the example below.</para>
         
         <programlisting>
@@ -143,7 +143,7 @@
         
         <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'StaticResponseProducingMessageHandler'</literal>
         which is always returning a static response message. The endpoint transforms the static response into a 
-        proper SOAP message that is sent back to the calling client as SOAP response. You can add as many request mapping and endpoints
+        proper SOAP message that is sent back to the calling client as SOAP response. You can add as many request mappings and endpoints
         as you want to the server context configuration. So you are able to handle different request types with one single Jetty server
         instance.</para>
         

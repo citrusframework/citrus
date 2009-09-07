@@ -64,8 +64,8 @@
             or clean up the database to avoid errors caused by obsolete data from previous test runs.</para>
             
             <para>Between the tests it also might sound reasonable to purge all JMS queues. In case a test fails the use case processing stops
-            and some messages might be left in someJMS queues. The next test then will be confronted with these invalid messages. Purgin all JMS
-            destinations between the tests is therefore not a bad idea.</para>
+            and some messages might be left in some JMS queues. The next test then will be confronted with these invalid messages. Purging all JMS
+            destinations between the tests is therefore a good idea.</para>
         </tip>
     </section>
     

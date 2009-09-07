@@ -12,11 +12,11 @@
         the console. This includes current test progress, validation results and error information. This
         enables the user to quickly supervise the test run progress. Failures in tests will be printed to the
         console just the time the error occurred. The detailed stack trace information and the detailed
-        error messages are be helpful to get the idea what went wrong.</para>
+        error messages are helpful to get the idea what went wrong.</para>
 
         <para>As the console output might be limited to a defined buffer limit, the user may not be able to
         follow the output to the very beginning of the test run. Therefore the framework additionally
-        prints all information to a log file.</para>
+        prints all information to a log file according to the logging configuration.</para>
     
         <para>The logging mechanism uses the SLF4J logging framework. SLF4J is independent of logging framework implementations on the 
         market. So in case you use Log4J logging framework the specified log file path as well as logging levels can be freely configured 
