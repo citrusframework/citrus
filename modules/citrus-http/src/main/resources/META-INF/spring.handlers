@@ -1,1 +1,1 @@
-http\://www.consol.de/citrus/schema/http/config=com.consol.citrus.http.config.xml.CitrusHttpConfigNamespaceHandler
+http\://www.citrusframework.org/schema/http/config=com.consol.citrus.http.config.xml.CitrusHttpConfigNamespaceHandler

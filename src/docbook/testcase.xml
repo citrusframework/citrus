@@ -40,14 +40,14 @@
     
     <programlisting>
   &lt;spring:beans
-      xmlns=&quot;http://www.consol.de/citrus/schema/testcase&quot;
+      xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
       xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
       xsi:schemaLocation=&quot;
       http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.consol.de/citrus/schema/testcase 
-      http://www.consol.de/citrus/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
+      http://www.citrusframework.org/schema/testcase 
+      http://www.citrusframework.org/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
       
       &lt;testcase name=&quot;myFirstTest&quot;&gt;
           &lt;description&gt;

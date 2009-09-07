@@ -58,7 +58,7 @@ public class HelloServiceClient {
 
     private String prefix = "ns0";
 
-    private String targetNamespace = "http://www.consol.de/citrus";
+    private String targetNamespace = "http://www.citrusframework.org";
 
     private Resource requestResource;
 
