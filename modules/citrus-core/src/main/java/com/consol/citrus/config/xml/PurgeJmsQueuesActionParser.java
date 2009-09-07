@@ -11,7 +11,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.PurgeJmsQueuesBean;
+import com.consol.citrus.actions.PurgeJmsQueuesAction;
 
 public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
@@ -23,7 +23,7 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesBean.class);
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 

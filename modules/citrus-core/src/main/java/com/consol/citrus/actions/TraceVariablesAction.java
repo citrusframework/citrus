@@ -15,14 +15,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * If the value happens to be null the test failes.
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class InfoBean extends AbstractTestAction {
+public class TraceVariablesAction extends AbstractTestAction {
     /** Values to be validated */
-    private List infoValues;
+    private List variableNames;
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(InfoBean.class);
+    private static final Logger log = LoggerFactory.getLogger(TraceVariablesAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)
@@ -33,10 +33,10 @@ public class InfoBean extends AbstractTestAction {
         boolean isSuccess = true;
 
         Iterator it;
-        if (infoValues != null && infoValues.size() > 0) {
+        if (variableNames != null && variableNames.size() > 0) {
             log.info("Validating variables using custom map:");
             
-            it = infoValues.iterator();
+            it = variableNames.iterator();
         } else {
             log.info("Validating all variables in context:");
             
@@ -63,9 +63,9 @@ public class InfoBean extends AbstractTestAction {
 
     /**
      * Setter for info values list
-     * @param infoValues
+     * @param variableNames
      */
-    public void setInfoValues(List infoValues) {
-        this.infoValues = infoValues;
+    public void setVariableNames(List variableNames) {
+        this.variableNames = variableNames;
     }
 }

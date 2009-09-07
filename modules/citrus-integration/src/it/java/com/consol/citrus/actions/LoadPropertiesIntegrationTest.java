@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class LoadPropertiesTest extends AbstractTestNGCitrusTest {
+public class LoadPropertiesIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void loadPropertiesTest(ITestContext testContext) {
+    public void loadPropertiesIntegrationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

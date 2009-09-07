@@ -5,7 +5,7 @@ import java.text.ParseException;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class FailBean extends AbstractTestAction {
+public class FailAction extends AbstractTestAction {
 
     private String message = "Generated error to interrupt test execution";
 

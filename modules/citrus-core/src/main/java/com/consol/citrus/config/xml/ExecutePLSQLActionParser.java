@@ -9,7 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ExecutePLSQLBean;
+import com.consol.citrus.actions.ExecutePLSQLAction;
 
 public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
@@ -21,7 +21,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLBean.class);
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 

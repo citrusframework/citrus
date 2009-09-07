@@ -15,14 +15,14 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class LoadPropertiesBean extends AbstractTestAction {
+public class LoadPropertiesAction extends AbstractTestAction {
 
     String file = null;
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(LoadPropertiesBean.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
 
     /**
      * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)

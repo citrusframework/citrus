@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class PurgeJMSQueuesTest extends AbstractTestNGCitrusTest {
+public class FailActionIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void purgeJMSQueuesTest(ITestContext testContext) {
+    public void failActionIntegrationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

@@ -12,12 +12,12 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class InputBean extends AbstractTestAction {
+public class InputAction extends AbstractTestAction {
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(InputBean.class);
+    private static final Logger log = LoggerFactory.getLogger(InputAction.class);
 
     private String message = "Press return key to continue...";
 
