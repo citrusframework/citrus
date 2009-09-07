@@ -6,12 +6,12 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.DelayBean;
+import com.consol.citrus.actions.SleepAction;
 
-public class DelayActionParser implements BeanDefinitionParser {
+public class SleepActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DelayBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SleepAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

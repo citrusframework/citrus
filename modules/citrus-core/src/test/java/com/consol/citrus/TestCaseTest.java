@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.actions.EchoBean;
+import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -19,7 +19,7 @@ public class TestCaseTest extends AbstractBaseTest {
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
-        testcase.addTestChainAction(new EchoBean());
+        testcase.addTestChainAction(new EchoAction());
         
         testcase.execute();
     }
@@ -71,8 +71,8 @@ public class TestCaseTest extends AbstractBaseTest {
         testcase.setName("MyTestCase");
         testcase.setTestContext(context);
         
-        testcase.addTestChainAction(new EchoBean());
-        testcase.addFinallyChainAction(new EchoBean());
+        testcase.addTestChainAction(new EchoAction());
+        testcase.addFinallyChainAction(new EchoAction());
         
         testcase.execute();
         testcase.finish();

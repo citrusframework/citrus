@@ -9,17 +9,17 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * DelayBean to let the whole test suite sleep for an amount of time
+ * Lets the whole test execution sleep for an amount of time
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class DelayBean extends AbstractTestAction {
+public class SleepAction extends AbstractTestAction {
     /** Amount of time in seconds */
     private String delay;
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(DelayBean.class);
+    private static final Logger log = LoggerFactory.getLogger(SleepAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)

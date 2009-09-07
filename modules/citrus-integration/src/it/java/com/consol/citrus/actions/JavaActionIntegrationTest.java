@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class EchoTest extends AbstractTestNGCitrusTest {
+public class JavaActionIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void echoTest(ITestContext testContext) {
+    public void classInvocationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
