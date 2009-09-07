@@ -13,7 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ExecuteSqlBean;
+import com.consol.citrus.actions.ExecuteSQLAction;
 
 public class ExecuteSqlActionParser implements BeanDefinitionParser {
 
@@ -25,7 +25,7 @@ public class ExecuteSqlActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSqlBean.class);
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 

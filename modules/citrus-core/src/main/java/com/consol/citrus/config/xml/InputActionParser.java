@@ -7,12 +7,12 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.InputBean;
+import com.consol.citrus.actions.InputAction;
 
 public class InputActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InputBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InputAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

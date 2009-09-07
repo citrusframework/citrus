@@ -20,7 +20,7 @@ public class TestActionRegistry {
         registerActionParser("queryDatabase", new SqlQueryActionParser());
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
-        registerActionParser("traceVariables", new InfoActionParser());
+        registerActionParser("traceVariables", new TraceVariablesActionParser());
         registerActionParser("createVariables", new SetVariablesActionParser());
         registerActionParser("traceTime", new TimeWatcherActionParser());
         registerActionParser("echo", new EchoActionParser());
@@ -35,7 +35,7 @@ public class TestActionRegistry {
         registerActionParser("repeat-onerror-until-true", new RepeatOnErrorUntilTrueParser());
         registerActionParser("fail", new FailActionParser());
         registerActionParser("input", new InputActionParser());
-        registerActionParser("load", new LoadActionParser());
+        registerActionParser("load", new LoadPropertiesActionParser());
         registerActionParser("parallel", new ParallelParser());
         registerActionParser("catch", new CatchParser());
         registerActionParser("assert", new AssertParser());

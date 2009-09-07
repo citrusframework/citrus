@@ -27,7 +27,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
  * @since 24.01.2007
  */
-public class PurgeJmsQueuesBean extends AbstractTestAction {
+public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /** List of queues to be purged */
     private List<String> queueNames;
@@ -42,7 +42,7 @@ public class PurgeJmsQueuesBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(PurgeJmsQueuesBean.class);
+    private static final Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)

@@ -7,12 +7,12 @@
     good idea to purge the JMS queue destiantions between the test cases so obsolete messages stuck in a JMS queue for some 
     reason are removed.</para>
     
-    <para>The 'com.consol.citrus.actions.PurgeJmsQueuesBean' action offers the property "queueNames" to hold all destiantion namse 
+    <para>The 'com.consol.citrus.actions.PurgeJmsQueuesAction' action offers the property "queueNames" to hold all destiantion namse 
     that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations.</para>
         
     <programlisting>
   &lt;bean id=&quot;purgeJmsQueues&quot;
-      class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesBean&quot;&gt;
+      class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesAction&quot;&gt;
       &lt;property name=&quot;connectionFactory&quot;&gt;
           &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
       &lt;/property&gt;

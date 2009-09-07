@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.actions.FailBean;
+import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListeners;
@@ -57,7 +57,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        TestAction failBean = new FailBean();
+        TestAction failBean = new FailAction();
         testsuite.setTasksBefore(Collections.singletonList(failBean));
         
         Assert.assertFalse(testsuite.beforeSuite());
@@ -100,7 +100,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        TestAction failBean = new FailBean();
+        TestAction failBean = new FailAction();
         testsuite.setTasksAfter(Collections.singletonList(failBean));
         
         Assert.assertFalse(testsuite.afterSuite());
@@ -163,7 +163,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        TestAction failBean = new FailBean();
+        TestAction failBean = new FailAction();
         testsuite.setTasksBetween(Collections.singletonList(failBean));
 
         testsuite.beforeTest();

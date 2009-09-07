@@ -3,9 +3,10 @@ package com.consol.citrus.actions;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,24 +17,16 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.service.DbService;
 
 /**
- * Executes sql statements given inline or given by a file.
- * <p>Inline:
- * <pre><blockquote>[property name="statements"]
- * [list]
- *  [value]DELETE FROM T_BT_INBOX;[/value]
- *  [value]DELETE FROM T_BT_OUTBOX;
- * [/list]
- *[/property]</blockquote></pre>
- * <p>File definition:
- * <pre><blockquote>[property name="sqlResource" value="file:xmlData/cleanDatabase.sql" /]</blockquote></pre>
- * @author deppisch Christoph Deppisch, js Jan Szczepanski Consol*GmbH 2006
+ * Executes PLSQL statements given inline or given by a file.
+ *
+ * @author deppisch Christoph Deppisch Consol*GmbH 2008
  *
  */
-public class ExecuteSqlBean extends AbstractTestAction {
+public class ExecutePLSQLAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ExecuteSqlBean.class);
+    private static final Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
 
     /** DBService */
     private DbService dbService;
@@ -41,14 +34,21 @@ public class ExecuteSqlBean extends AbstractTestAction {
     /** SQL file resource */
     private Resource sqlResource;
 
-    /** List of sql statements */
-    private List statements = new ArrayList();
-
-    /** Constant representing sql comment */
-    private static final String SQL_COMMENT = "--";
+    /** In line script */
+    private String script = null;
 
     /** boolean flag marking that possible sql errors will be ignored */
     private boolean ignoreErrors = false;
+
+    /** List of sql statements */
+    private List statements = new ArrayList();
+
+    /**
+     * @param statements the statements to set
+     */
+    public void setStatements(List statements) {
+        this.statements = statements;
+    }
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)
@@ -57,54 +57,59 @@ public class ExecuteSqlBean extends AbstractTestAction {
     @Override
     public void execute(TestContext context) {
         BufferedReader reader = null;
-        String stmt = "";
+        StringBuffer buffer;
+        String stmt;
 
         try {
-            if (statements.isEmpty()) {
-                log.info("Executing Sql file: " + sqlResource.getFilename());
-                
+            if (script == null) {
+                log.info("Executing PLSQL file: " + sqlResource.getFilename());
+
                 reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
-                StringBuffer buffer = new StringBuffer();
+                buffer = new StringBuffer();
+
                 String line;
                 while (reader.ready()) {
                     line = reader.readLine();
 
-                    if (line != null && line.trim() != null && line.trim().startsWith(SQL_COMMENT) == false && line.trim().length() > 0) {
-                        if (line.trim().endsWith(";")) {
-                            buffer.append(line);
-                            stmt = buffer.toString();
+                    if(line != null) {
+                        if (line.trim()!= null && line.trim().endsWith("/")) {
+                            buffer.append(line.trim().substring(0, (line.trim().length() -1)));
+    
+                            stmt = context.replaceDynamicContentInString(buffer.toString());
+                            statements.add(stmt);
                             buffer.setLength(0);
                             buffer = new StringBuffer();
-
-                            if(log.isDebugEnabled()) {
-                                log.debug("Found statement: " + stmt);
-                            }
-
-                            statements.add(stmt);
                         } else {
-                            buffer.append(line);
+                            buffer.append(line + "\n");
                         }
                     }
                 }
+            } else {
+                script = context.replaceDynamicContentInString(script);
+                if(log.isDebugEnabled()) {
+                    log.debug("Found inline PLSQL script " + script);
+                }
+
+                StringTokenizer tok = new StringTokenizer(script, "/");
+                while (tok.hasMoreTokens()) {
+                    stmt = tok.nextToken();
+                    statements.add(stmt.trim());
+                }
             }
 
-            Iterator it = statements.iterator();
-            while (it.hasNext())  {
+            for (int i = 0; i < statements.size(); i++) {
                 try {
-                    stmt = it.next().toString();
-                    stmt = stmt.trim();
+                    stmt = statements.get(i).toString();
 
-                    if (stmt.endsWith(";")) {
-                        stmt = stmt.substring(0, stmt.length()-1);
+                    if(log.isDebugEnabled()) {
+                        log.debug("Executing SQL statement: " + stmt);
                     }
-
-                    stmt = context.replaceDynamicContentInString(stmt);
-
-                    log.info("Found Sql statement " + stmt);
+                    
                     dbService.execute(stmt);
+                    log.info("SQL statement execution successful");
                 } catch (Exception e) {
                     if (ignoreErrors) {
-                        log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
+                        log.error("Error while executing SQL statement: " + e.getMessage());
                         continue;
                     } else {
                         throw new CitrusRuntimeException(e);
@@ -112,16 +117,17 @@ public class ExecuteSqlBean extends AbstractTestAction {
                 }
             }
         } catch (IOException e) {
-            log.error("Sql resource could not be found - filename: "
-                    + sqlResource.getFilename() + ". Nested Exception is: ");
-            log.error(e.getLocalizedMessage());
+            log.error("Resource could not be found - filename: " + sqlResource.getFilename(), e);
+            throw new CitrusRuntimeException(e);
+        } catch (ParseException e) {
+            log.error("Error while parsing string", e);
             throw new CitrusRuntimeException(e);
         } finally {
             if(reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Warning: Error while closing reader instance", e);
+                    log.warn("Warning: could not close reader instance", e);
                 }
             }
         }
@@ -131,9 +137,10 @@ public class ExecuteSqlBean extends AbstractTestAction {
      * Spring property setter.
      * @param statements
      */
-    public void setStatements(List statements) {
-        this.statements = statements;
+    public void setScript(String script) {
+        this.script = script;
     }
+
     /**
      * Spring property setter.
      * @param dbService
@@ -141,6 +148,7 @@ public class ExecuteSqlBean extends AbstractTestAction {
     public void setDbService(DbService dbService) {
         this.dbService = dbService;
     }
+
     /**
      * Spring property setter.
      * @param sqlResource

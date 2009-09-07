@@ -11,22 +11,22 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.InfoBean;
+import com.consol.citrus.actions.TraceVariablesAction;
 
-public class InfoActionParser implements BeanDefinitionParser {
+public class TraceVariablesActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InfoBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TraceVariablesAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        List infoValues = new ArrayList();
+        List variableNames = new ArrayList();
         List variableElements = DomUtils.getChildElementsByTagName(element, "variable");
         for (Iterator iter = variableElements.iterator(); iter.hasNext();) {
             Element variable = (Element) iter.next();
-            infoValues.add(variable.getAttribute("name"));
+            variableNames.add(variable.getAttribute("name"));
         }
-        beanDefinition.addPropertyValue("infoValues", infoValues);
+        beanDefinition.addPropertyValue("variableNames", variableNames);
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
 
