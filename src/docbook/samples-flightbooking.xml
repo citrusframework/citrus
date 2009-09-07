@@ -46,7 +46,7 @@
         </para>
         
         <para>The travel agency puts a travel booking request towards the system. The travel booking contains two seperate flights. The
-        flight request are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive
+        flight requests are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive
         answer. The consolidated travel booking response is then sent back to the travel agency.</para>
     </section>
     
@@ -112,8 +112,8 @@
   royal.airline.request.queue=Royal.Airline.Request.Queue    
         </programlisting>
         
-        <para>What else do we need in out Spring configuration? There are some basic beans that are commonly defined in a Citrus
-        application but I do not want to bore you with these details. So if you want to have a look at the "application-ctx.xml" 
+        <para>What else do we need in our Spring configuration? There are some basic beans that are commonly defined in a Citrus
+        application but I do not want to bore you with these details. So if you want to have a look at the "citrus-context.xml" 
         file in the resources folder and see how things are defined there.</para>
         
         <para>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate
@@ -191,9 +191,9 @@
                                       reply-destination-holder=&quot;royalAirlineBookingRequestReceiver&quot;/&gt;
         </programlisting>
         
-        <para>We need to configure a Http server instance with a port to listen on a request URI and a message handler. We define the
+        <para>We need to configure a Http server instance with a port, a request URI and a message handler. We define the
         JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchrpnous JMS
-        message sender and receiver instances. That's it! e are able to receive Http request in order to simulate the RoyalAirline
+        message sender and receiver instances. That's it! We are able to receive Http request in order to simulate the RoyalAirline
         application. What is missing now? The test case definition itself.</para>
     </section>
     
@@ -463,7 +463,7 @@
         message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors.
         In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against
         a defined expected message template. Only in case all content validation steps are successful the test continues with the action
-        chain. And so the test case proceeeds and works through the use case untile every message is sent respectively received and 
+        chain. And so the test case proceeeds and works through the use case until every message is sent respectively received and 
         validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and 
         provides detailed validation possibilities of messages.</para>
     </section>

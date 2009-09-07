@@ -3,7 +3,7 @@
     <title>Debugging received messages</title>
 
     <para>Citrus will receive a lot of messages during a test run. The user may want to persist these messages to the 
-    filesystem either for investigations or for further use.</para>
+    filesystem for further investigations.</para>
     
     <para>Citrus offers an easy way to debug all received messages to the filesystem. You need to enable a specific aspect in the
     Citrus Spring configuration.</para>
@@ -34,7 +34,7 @@
     </programlisting>
     
     <note>
-        <para>As the fiel counter is always reset to 0 after a test run the message files may be overwritten. So you eventually need to 
+        <para>As the file counter is always reset to 0 after a test run the message files may be overwritten. So you eventually need to 
         save the generated message debug files before running another group of test cases.</para>
     </note>
 </chapter>
