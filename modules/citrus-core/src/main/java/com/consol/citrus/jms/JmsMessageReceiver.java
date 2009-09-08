@@ -18,7 +18,9 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
 
 public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implements MessageReceiver {
-
+    
+    private long receiveTimeout = 5000L;
+    
     /**
      * Logger
      */
@@ -96,11 +98,11 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
     }
     
     public Message<?> receive() {
-        return receive(-1);
+        return receive(receiveTimeout);
     }
 
     public Message<?> receiveSelected(String selector) {
-        return receiveSelected(selector, -1);
+        return receiveSelected(selector, receiveTimeout);
     }
 
     @Override
@@ -111,5 +113,12 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
             hmmc.setExtractIntegrationMessagePayload(true);
             jmsTemplate.setMessageConverter(hmmc);
         }
+    }
+
+    /**
+     * @param receiveTimeout the receiveTimeout to set
+     */
+    public void setReceiveTimeout(long receiveTimeout) {
+        this.receiveTimeout = receiveTimeout;
     }
 }

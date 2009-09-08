@@ -9,7 +9,9 @@
 	
 	<citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
-    <citrus:jms-message-receiver id="helloResponseReceiver" destination-name="${jms.queue.hello.response}"/>
+    <citrus:jms-message-receiver id="helloResponseReceiver"
+                                 receive-timeout="5000" 
+                                 destination-name="${jms.queue.hello.response}"/>
 	
 	<citrus:jms-sync-message-sender id="syncHelloRequestSender" 
                                     destination-name="${jms.queue.hello.sync.request}"
@@ -25,7 +27,9 @@
     
     <citrus:jms-reply-message-handler id="syncGetDateResponseHandler"/>
     
-    <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver" destination-name="${jms.queue.date.sync.request}"/>
+    <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver"
+                                      receive-timeout="5000" 
+                                      destination-name="${jms.queue.date.sync.request}"/>
   
     <citrus:jms-reply-message-sender id="getDateRequestReplySender"
                                      reply-destination-holder="syncGetDateRequestReceiver"/>

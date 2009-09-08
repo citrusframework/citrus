@@ -48,7 +48,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
@@ -75,7 +75,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
@@ -103,7 +103,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("expression", "//root/element/sub-elementA");
@@ -129,7 +129,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("variable", "B");
@@ -159,7 +159,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -200,7 +200,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -239,7 +239,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -280,7 +280,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -314,7 +314,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");
@@ -358,7 +358,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");

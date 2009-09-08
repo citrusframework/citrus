@@ -37,7 +37,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive with="helloResponseReceiver" timeout="5000">
             	<description>
             		Receive asynchronous hello response: HelloService -> TestFramework
             	</description>
