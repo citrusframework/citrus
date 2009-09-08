@@ -12,12 +12,12 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.SetVariablesBean;
+import com.consol.citrus.actions.CreateVariablesAction;
 
-public class SetVariablesActionParser implements BeanDefinitionParser {
+public class CreateVariablesActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SetVariablesBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(CreateVariablesAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

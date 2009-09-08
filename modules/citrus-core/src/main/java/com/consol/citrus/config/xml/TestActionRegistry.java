@@ -14,17 +14,17 @@ public class TestActionRegistry {
      * Default constructor.
      */
     static {
-        registerActionParser("send", new SendActionParser());
-        registerActionParser("receive", new ReceiveActionParser());
+        registerActionParser("send", new SendMessageActionParser());
+        registerActionParser("receive", new ReceiveMessageActionParser());
         registerActionParser("updateDatabase", new ExecuteSqlActionParser());
-        registerActionParser("queryDatabase", new SqlQueryActionParser());
+        registerActionParser("queryDatabase", new ExecuteSQLQueryActionParser());
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
         registerActionParser("traceVariables", new TraceVariablesActionParser());
-        registerActionParser("createVariables", new SetVariablesActionParser());
-        registerActionParser("traceTime", new TimeWatcherActionParser());
+        registerActionParser("createVariables", new CreateVariablesActionParser());
+        registerActionParser("traceTime", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());
-        registerActionParser("expectTimeout", new ValidateJMSTimeoutActionParser());
+        registerActionParser("expectTimeout", new ReceiveTimeoutActionParser());
         registerActionParser("purgeJmsQueues", new PurgeJmsQueuesActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());

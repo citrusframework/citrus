@@ -16,9 +16,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.SqlQueryBean;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
 
-public class SqlQueryActionParser implements BeanDefinitionParser {
+public class ExecuteSQLQueryActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String parentBeanName = element.getAttribute("connect");
@@ -28,7 +28,7 @@ public class SqlQueryActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SqlQueryBean.class);
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 

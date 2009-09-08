@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class ReceiveJMSTimeoutTest extends AbstractTestNGCitrusTest {
+public class ReceiveTimeoutIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void receiveJMSTimeoutTest(ITestContext testContext) {
+    public void receiveTimeoutIntegrationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

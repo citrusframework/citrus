@@ -34,7 +34,7 @@
   
     <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
     
-	<bean id="receiveTimeout" class="com.consol.citrus.actions.ValidateJMSTimeoutBean" abstract="true">
+	<bean id="receiveTimeout" class="com.consol.citrus.actions.ReceiveTimeoutAction" abstract="true">
 		<property name="messageReceiver">
 			<bean class="com.consol.citrus.jms.JmsMessageReceiver">
                 <property name="connectionFactory">
@@ -53,7 +53,7 @@
 		<property name="dbService" ref="dbService"/>
 	</bean>
 
-	<bean id="databaseQuery" class="com.consol.citrus.actions.SqlQueryBean" abstract="true">
+	<bean id="databaseQuery" class="com.consol.citrus.actions.ExecuteSQLQueryAction" abstract="true">
 		<property name="dbService" ref="dbService"/>
 		<property name="maxRetries" value="5"/>
 		<property name="retryPauseInMs" value="1000"/>

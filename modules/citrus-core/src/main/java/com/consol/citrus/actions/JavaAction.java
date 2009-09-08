@@ -13,7 +13,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Bean to enable class invokation through java reflection
+ * Action to enable class invokation through java reflection
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
 public class JavaAction extends AbstractTestAction {

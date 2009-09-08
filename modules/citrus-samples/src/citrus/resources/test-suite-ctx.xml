@@ -7,7 +7,7 @@
 	<bean name="citrus-samples" class="com.consol.citrus.TestSuite">
 		<property name="tasksBefore">
 			<list>
-                <bean class="com.consol.citrus.actions.StartupBean">
+                <bean class="com.consol.citrus.actions.StartServerAction">
                     <property name="server" ref="royalAirlineHttpServer"/>
                 </bean>
                 
@@ -21,7 +21,7 @@
 		</property>
 		<property name="tasksAfter">
 			<list>
-                <bean class="com.consol.citrus.actions.ShutdownBean">
+                <bean class="com.consol.citrus.actions.StopServerAction">
                     <property name="server" ref="royalAirlineHttpServer"/>
                 </bean>
 			</list>

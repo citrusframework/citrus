@@ -8,10 +8,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 
 /**
- * Bean to stop any stoppable test action
+ * Action stopping server instances during test
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class ShutdownBean extends AbstractTestAction {
+public class StopServerAction extends AbstractTestAction {
     private List serverList = new ArrayList();
 
     private Server server;

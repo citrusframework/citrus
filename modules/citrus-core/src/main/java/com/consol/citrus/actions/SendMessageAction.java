@@ -20,7 +20,7 @@ import com.consol.citrus.message.MessageSender;
  *
  * @author deppisch Christoph Deppisch Consol*GmbH 2008
  */
-public class SendMessageBean extends AbstractTestAction {
+public class SendMessageAction extends AbstractTestAction {
     /** Map holding elements that will overwrite message body elements before message gets sent.
      * Keys in the map specify the element paths inside the message body. Value set will contain
      * static values or variables

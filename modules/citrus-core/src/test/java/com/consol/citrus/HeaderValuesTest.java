@@ -11,7 +11,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageBean;
+import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
@@ -22,7 +22,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    ReceiveMessageBean receiveMessageBean;
+    ReceiveMessageAction receiveMessageBean;
     
     @Test
     public void testValidateHeaderValues() {
@@ -43,7 +43,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -81,7 +81,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -121,7 +121,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -159,7 +159,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -197,7 +197,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -237,7 +237,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
@@ -277,7 +277,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"

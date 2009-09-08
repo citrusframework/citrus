@@ -11,7 +11,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageBean;
+import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
 
@@ -21,7 +21,7 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    ReceiveMessageBean receiveMessageBean;
+    ReceiveMessageAction receiveMessageBean;
     
     @Override
     @BeforeMethod
@@ -41,7 +41,7 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive(anyLong())).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }

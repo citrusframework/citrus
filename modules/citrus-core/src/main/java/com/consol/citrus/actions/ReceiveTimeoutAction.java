@@ -11,10 +11,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 
 /**
- * Bean to ecpect a JMS timeout on a queue
+ * Action expecting a timeout on a message destination
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class ValidateJMSTimeoutBean extends AbstractTestAction {
+public class ReceiveTimeoutAction extends AbstractTestAction {
     /** Time to wait until timeout */
     private long timeout = 1000L;
 
@@ -28,7 +29,7 @@ public class ValidateJMSTimeoutBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ValidateJMSTimeoutBean.class);
+    private static final Logger log = LoggerFactory.getLogger(ReceiveTimeoutAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)

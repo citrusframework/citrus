@@ -12,10 +12,11 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * Bean to set variables during test workflow.
+ * Action creating variables during test workflow.
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class SetVariablesBean extends AbstractTestAction {
+public class CreateVariablesAction extends AbstractTestAction {
 
     /** Variables to set */
     private Map newVariables = new LinkedHashMap();
@@ -23,7 +24,7 @@ public class SetVariablesBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SetVariablesBean.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
 
     /**
      * (non-Javadoc)

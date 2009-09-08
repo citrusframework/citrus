@@ -10,9 +10,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class TimeWatcherTest extends AbstractTestNGCitrusTest {
+public class StopTimeIntegrationTest extends AbstractTestNGCitrusTest {
     @Test
-    public void timeWatcherTest(ITestContext testContext) {
+    public void stopTimeIntegrationTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

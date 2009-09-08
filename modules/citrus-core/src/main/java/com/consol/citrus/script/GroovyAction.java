@@ -14,10 +14,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Bean executing groovy scripts either specified inline or from external file resource.
+ * Action executing groovy scripts either specified inline or from external file resource.
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class GroovyScriptBean extends AbstractTestAction {
+public class GroovyAction extends AbstractTestAction {
 
     /** Inline groovy script */
     private String script;

@@ -10,9 +10,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Bean to print out variable values. Bean requires a list of variable
- * names that will bew printed to the console with its according value.
- * If the value happens to be null the test failes.
+ * Action that prints out variable values. Action requires a list of variable
+ * names that are printed to the console with its according value.
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
 public class TraceVariablesAction extends AbstractTestAction {

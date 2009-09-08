@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.SetVariablesBean;
+import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.variable.GlobalVariables;
@@ -58,7 +58,7 @@ public class TestContextTest extends AbstractBaseTest {
         testcase.setTestContext(createTestContext());
         testcase.setName("MyTestCase");
         
-        SetVariablesBean varSetting = new SetVariablesBean();
+        CreateVariablesAction varSetting = new CreateVariablesAction();
         varSetting.setVariables(Collections.singletonMap("defaultVar", "ABC"));
         testcase.addTestChainAction(varSetting);
         testcase.execute();

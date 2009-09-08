@@ -10,12 +10,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.script.GroovyScriptBean;
+import com.consol.citrus.script.GroovyAction;
 
 public class GroovyActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(GroovyScriptBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(GroovyAction.class);
         
         DescriptionElementParser.doParse(element, beanDefinition);
         

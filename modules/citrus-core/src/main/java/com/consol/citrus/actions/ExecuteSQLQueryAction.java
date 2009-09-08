@@ -28,7 +28,7 @@ import com.consol.citrus.variable.VariableUtils;
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2008
  */
-public class SqlQueryBean extends AbstractTestAction {
+public class ExecuteSQLQueryAction extends AbstractTestAction {
     /** Map holding all expected values to be validated */
     protected Map validationElements = new HashMap();
 
@@ -50,7 +50,7 @@ public class SqlQueryBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SqlQueryBean.class);
+    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)
