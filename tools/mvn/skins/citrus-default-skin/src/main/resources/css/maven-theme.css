@@ -222,10 +222,6 @@ table {
   width: 958px;
   background: transparent url(../images/bg_footer.png) repeat-y scroll 0 0;
 }
-#theme_footer p {
-  text-align: center;
-  font-size: 0.7em;
-}
 #navcolumn img {
   margin: 0px;
 }
