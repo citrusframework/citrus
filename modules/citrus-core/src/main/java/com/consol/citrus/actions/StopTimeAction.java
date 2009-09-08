@@ -12,10 +12,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Bean used for time measurement during test workflow
+ * Action used for time measurement during test workflow
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class TimeWatcherBean extends AbstractTestAction {
+public class StopTimeAction extends AbstractTestAction {
 
     /** Static member to hold all time stamps */
     private static Map timeStamps = new HashMap();
@@ -32,7 +33,7 @@ public class TimeWatcherBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TimeWatcherBean.class);
+    private static final Logger log = LoggerFactory.getLogger(StopTimeAction.class);
 
     /**
      * @see com.consol.citrus.TestAction#execute(TestContext)

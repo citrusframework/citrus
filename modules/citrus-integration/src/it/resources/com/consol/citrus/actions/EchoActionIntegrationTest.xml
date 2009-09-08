@@ -10,12 +10,12 @@
 		</meta-info>
 		
         <description>
-			The example explaines how to use the EchoBean to print messages to the console/logger. 
-			This function can be usefull when debugging test workflows.
+			The example describes how to use the EchoAction to print messages to the console/logger. 
+			This function can be useful when debugging test cases.
 			
 			The parent service bean is called "echo" and provides a property called "message" to declare the message to be printed.
-			The EchoBean also provides a default message that will contain the actual data and time. More common use will be to print out 
-			variables and their content, as shown in the last EchoBean in this example.
+			The EchoAction also provides a default message that will contain the actual data and time. More common use will be to print out 
+			variables and their content, as shown in the last EchoAction in this example.
 		</description>
         <variables>
             <variable name="time" value="citrus:currentDate()"/>

@@ -45,8 +45,8 @@ public class TestCaseBuilderImpl implements TestCaseBuilder {
         def last_update_on = { datetime -> testMetaInfo.lastUpdatedOn = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(datetime) }
         def description = { description -> testCase.description = description.trim() }
 
-        def echo = { message -> testCase.testChain.add(new EchoBean(message: message)) }
-        def sleep = { delay -> testCase.testChain.add(new DelayBean(delay: delay)) }
+        def echo = { message -> testCase.testChain.add(new EchoAction(message: message)) }
+        def sleep = { delay -> testCase.testChain.add(new SleepAction(delay: delay)) }
         
         GroovyTestActionBuilder.metaClass.methodMissing = { String methodName, args ->
             LinkedHashMap properties = [:]

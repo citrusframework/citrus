@@ -32,7 +32,7 @@ import com.consol.citrus.xml.NamespaceContextImpl;
  *
  * @author deppisch Christoph Deppisch Consol*GmbH 2008
  */
-public class ReceiveMessageBean extends AbstractTestAction {
+public class ReceiveMessageAction extends AbstractTestAction {
     /** Map holding message elements to be overwritten before sending */
     private Map messageElements = new HashMap();
 
@@ -80,7 +80,7 @@ public class ReceiveMessageBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ReceiveMessageBean.class);
+    private static final Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
      * Following actions will be executed:

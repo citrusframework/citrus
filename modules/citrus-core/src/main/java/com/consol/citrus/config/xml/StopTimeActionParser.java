@@ -6,12 +6,12 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.TimeWatcherBean;
+import com.consol.citrus.actions.StopTimeAction;
 
-public class TimeWatcherActionParser implements BeanDefinitionParser {
+public class StopTimeActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TimeWatcherBean.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopTimeAction.class);
 
         String id = element.getAttribute("id");
         if (id != null) {

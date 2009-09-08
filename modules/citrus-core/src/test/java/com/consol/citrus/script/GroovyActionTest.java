@@ -7,32 +7,32 @@ import org.testng.annotations.Test;
 import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class GroovyScriptBeanTest extends AbstractBaseTest {
+public class GroovyActionTest extends AbstractBaseTest {
     
     @Test
     public void testScript() {
-        GroovyScriptBean bean = new GroovyScriptBean();
+        GroovyAction bean = new GroovyAction();
         bean.setScript("println 'Hello TestFramework!'");
         bean.execute(context);
     }
     
     @Test
     public void testFileResource() {
-        GroovyScriptBean bean = new GroovyScriptBean();
+        GroovyAction bean = new GroovyAction();
         bean.setFileResource(new ClassPathResource("com/consol/citrus/script/example.groovy"));
         bean.execute(context);
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testScriptFailure() {
-        GroovyScriptBean bean = new GroovyScriptBean();
+        GroovyAction bean = new GroovyAction();
         bean.setScript("Some wrong script");
         bean.execute(context);
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testFileNotFound() {
-        GroovyScriptBean bean = new GroovyScriptBean();
+        GroovyAction bean = new GroovyAction();
         bean.setFileResource(new FileSystemResource("some/wrong/path/test.groovy"));
         bean.execute(context);
     }

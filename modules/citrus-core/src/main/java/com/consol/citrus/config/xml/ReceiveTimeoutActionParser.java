@@ -8,9 +8,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ValidateJMSTimeoutBean;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
 
-public class ValidateJMSTimeoutActionParser implements BeanDefinitionParser {
+public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String parentBeanName = element.getAttribute("connect");
@@ -20,7 +20,7 @@ public class ValidateJMSTimeoutActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
             beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ValidateJMSTimeoutBean.class);
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
             beanDefinition.addPropertyValue("name", element.getLocalName());
         }
 

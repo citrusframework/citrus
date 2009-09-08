@@ -11,10 +11,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 
 /**
- * Bean to start any startable test action
+ * Action starting a server instance during test
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
-public class StartupBean extends AbstractTestAction {
+public class StartServerAction extends AbstractTestAction {
     /** List of beans to start */
     private List serverList = new ArrayList();
 
@@ -23,7 +24,7 @@ public class StartupBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(StartupBean.class);
+    private static final Logger log = LoggerFactory.getLogger(StartServerAction.class);
 
     /**
      * (non-Javadoc)

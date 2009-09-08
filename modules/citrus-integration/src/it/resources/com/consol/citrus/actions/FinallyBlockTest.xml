@@ -18,7 +18,7 @@
 			the test, even in case off errors.
 			
 			In the example below the first action creates an order in the database. Then some more actions migth follow. Here it is a simple
-			InfoBean. But there can be errors in these actions. To be sure that the order in the database is deleted after the test, the
+			TraceVariablesAction. But there can be errors in these actions. To be sure that the order in the database is deleted after the test, the
 			finallyChain contains the respective action. This action will be executed even in case of errors in the testChain above.
 		</description>
         <variables>

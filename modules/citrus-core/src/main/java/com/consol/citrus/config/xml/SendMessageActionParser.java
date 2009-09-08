@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-public class SendActionParser implements BeanDefinitionParser {
+public class SendMessageActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String parent = element.getAttribute("parent");
@@ -25,7 +25,7 @@ public class SendActionParser implements BeanDefinitionParser {
             builder = BeanDefinitionBuilder.childBeanDefinition(parent);
             builder.addPropertyValue("name", element.getLocalName() + ":" + parent);
         } else if (StringUtils.hasText(messageSenderReference)) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageBean");
+            builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
             builder.addPropertyValue("name", element.getLocalName());
 
             builder.addPropertyReference("messageSender", messageSenderReference);

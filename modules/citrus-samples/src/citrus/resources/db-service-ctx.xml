@@ -28,7 +28,7 @@
         </property>
     </bean>
     
-    <bean id="customerDB" class="com.consol.citrus.actions.SqlQueryBean" abstract="true">
+    <bean id="customerDB" class="com.consol.citrus.actions.ExecuteSQLQueryAction" abstract="true">
         <property name="dbService" ref="customerDBService"/>
     </bean>       
        

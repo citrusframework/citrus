@@ -9,7 +9,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageBean;
+import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.validation.XMLMessageValidator;
@@ -20,14 +20,14 @@ public class ValidationTest extends AbstractBaseTest {
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    ReceiveMessageBean receiveMessageBean;
+    ReceiveMessageAction receiveMessageBean;
     
     @Override
     @BeforeMethod
     public void setup() {
         super.setup();
         
-        receiveMessageBean = new ReceiveMessageBean();
+        receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         receiveMessageBean.setValidator(validator);
     }

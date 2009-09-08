@@ -22,7 +22,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Bean to purge JMS queue destinations by simply consuming all available messages.
+ * Action to purge JMS queue destinations by simply consuming all available messages.
  *
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
  * @since 24.01.2007
