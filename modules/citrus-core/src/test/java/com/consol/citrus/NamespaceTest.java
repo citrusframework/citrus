@@ -47,7 +47,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -69,7 +69,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns2:root xmlns:ns2='http://testsuite'>"
@@ -91,7 +91,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
@@ -113,7 +113,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -135,7 +135,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite'>"
@@ -157,7 +157,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite'>"
@@ -179,7 +179,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -201,7 +201,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -223,7 +223,7 @@ public class NamespaceTest extends AbstractBaseTest {
                             + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite/wrong'>"
@@ -245,7 +245,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite'>"
@@ -272,7 +272,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</ns1:element>" 
                     + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
@@ -299,7 +299,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
@@ -327,7 +327,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -356,7 +356,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite'>"
@@ -383,7 +383,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</ns1:element>" 
                     + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
@@ -410,7 +410,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
@@ -438,7 +438,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -467,7 +467,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -496,7 +496,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</ns0:element>" 
                     + "</ns0:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -525,7 +525,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -554,7 +554,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -584,7 +584,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                     + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
@@ -615,7 +615,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -644,7 +644,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -673,7 +673,7 @@ public class NamespaceTest extends AbstractBaseTest {
                         + "</ns1:element>" 
                         + "</ns1:root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();

@@ -60,7 +60,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** The service to be used for receiving the message */
     private MessageReceiver messageReceiver;
     
-    private long receiveTimeout = 5000L;
+    private long receiveTimeout = 0L;
 
     /** Message ressource as a file */
     private Resource messageResource;
@@ -109,12 +109,19 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
                 receivedMessage = messageReceiver.receiveSelected(context.replaceDynamicContentInString(messageSelectorString));
             } else if (CollectionUtils.isEmpty(messageSelector) == false) {
-                receivedMessage = messageReceiver
-                        .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
-                                context.replaceVariablesInMap(messageSelector))
-                                .build(), receiveTimeout);
+                if(receiveTimeout > 0) {
+                    receivedMessage = messageReceiver
+                            .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
+                                    context.replaceVariablesInMap(messageSelector))
+                                    .build(), receiveTimeout);
+                } else {
+                    receivedMessage = messageReceiver
+                            .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
+                                    context.replaceVariablesInMap(messageSelector))
+                                    .build());
+                }
             } else {
-                receivedMessage = messageReceiver.receive(receiveTimeout); //TODO set this timeout from outside
+                receivedMessage = receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
             }
 
             if (receivedMessage == null)
@@ -367,5 +374,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public void setSchemaValidation(boolean enableSchemaValidation) {
         this.schemaValidation = enableSchemaValidation;
+    }
+
+    /**
+     * @param receiveTimeout the receiveTimeout to set
+     */
+    public void setReceiveTimeout(long receiveTimeout) {
+        this.receiveTimeout = receiveTimeout;
     }
 }

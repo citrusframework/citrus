@@ -35,6 +35,11 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         
         DescriptionElementParser.doParse(element, builder);
 
+        String receiveTimeout = element.getAttribute("timeout");
+        if(StringUtils.hasText(receiveTimeout)) {
+            builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
+        }
+        
         Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
         if (messageSelectorElement != null) {
             Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");

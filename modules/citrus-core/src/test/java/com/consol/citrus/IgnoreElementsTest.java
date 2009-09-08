@@ -38,7 +38,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -111,7 +111,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -138,7 +138,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
                         + "<element>Text</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"

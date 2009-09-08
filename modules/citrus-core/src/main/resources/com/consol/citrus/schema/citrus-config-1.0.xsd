@@ -6,7 +6,15 @@
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
 	<xs:element name="jms-message-sender" type="jmsAdapterType"/>
-	<xs:element name="jms-message-receiver" type="jmsAdapterType"/>
+	<xs:element name="jms-message-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="receive-timeout" type="xs:int"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 	<xs:element name="jms-sync-message-sender">
 		<xs:complexType>
 			<xs:complexContent>
@@ -19,7 +27,15 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="jms-sync-message-receiver" type="jmsAdapterType"/>
+	<xs:element name="jms-sync-message-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="receive-timeout" type="xs:int"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 	<xs:element name="jms-reply-message-handler">
 		<xs:complexType>
 			<xs:attribute name="id" type="xs:ID" use="required"/>

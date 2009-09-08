@@ -50,7 +50,7 @@ public class XPathTest extends AbstractBaseTest {
                         + "</ns1:root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -81,7 +81,7 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -112,7 +112,7 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -139,7 +139,7 @@ public class XPathTest extends AbstractBaseTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();

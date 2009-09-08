@@ -46,7 +46,7 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<!DOCTYPE root [ "
@@ -74,7 +74,7 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"

@@ -48,7 +48,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -73,7 +73,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
 //                        + "</element>" 
 //                        + "</root>").build();
 //        
-//        expect(messageReceiver.receive(anyLong())).andReturn(message);
+//        expect(messageReceiver.receive()).andReturn(message);
 //        replay(messageReceiver);
 //        
 //        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -97,7 +97,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -121,7 +121,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -145,7 +145,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -169,7 +169,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -193,7 +193,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -217,7 +217,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -249,7 +249,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -281,7 +281,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -319,7 +319,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -351,7 +351,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -383,7 +383,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -415,7 +415,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -447,7 +447,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -484,7 +484,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -521,7 +521,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"
@@ -556,7 +556,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>").build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean.setMessageData("<root>"

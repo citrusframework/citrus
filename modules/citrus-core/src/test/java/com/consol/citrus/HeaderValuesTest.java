@@ -40,7 +40,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -78,7 +78,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -118,7 +118,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -156,7 +156,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -194,7 +194,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -234,7 +234,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -274,7 +274,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive(anyLong())).andReturn(message);
+        expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();

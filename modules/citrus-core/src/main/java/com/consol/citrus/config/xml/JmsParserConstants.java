@@ -37,4 +37,8 @@ public class JmsParserConstants {
     static final String DESTINATION_HOLDER_ATTRIBUTE = "reply-destination-holder";
 
     static final String DESTINATION_HOLDER_PROPERTY = "replyDestinationHolder";
+
+    public static final String RECEIVE_TIMEOUT_ATTRIBUTE = "receive-timeout";
+
+    public static final String RECEIVE_TIMEOUT_PROPERTY = "receiveTimeout";
 }
