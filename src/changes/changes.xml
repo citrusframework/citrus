@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="3.0" date="01.09.2009" description="OpenSource">
+    <release version="0.9.10" date="01.09.2009" description="OpenSource">
         <action dev="deppisch" type="update">
           Switch to Maven build system.
         </action>
@@ -25,42 +25,42 @@
         <action dev="deppisch" type="update">
           Updating documentation.
         </action>
-        <action dev="deppisch" type="add">
-          Added groovy script support.
-        </action>
         <action dev="deppisch" type="remove">
           Removed support for legacy functionalities (e.g. legacy variable syntax, xpath functions, get current date, etc.)
         </action>
     </release>
     
-    <release version="2.2.9" date="26.08.2008" description="New features">
+    <release version="0.9.9" date="26.08.2008" description="New features">
+        <action dev="deppisch" type="add">
+          Added groovy script support.
+        </action>
         <action dev="deppisch" type="add">
           Dump received messages to file system for debugging.
         </action>
     </release>
     
-    <release version="2.2.8" date="05.08.2008" description="Database retires">
+    <release version="0.9.8" date="05.08.2008" description="Database retires">
         <action dev="deppisch" type="update">
           In case database queries fail offer automatic retry.
         </action>
     </release>
     
-    <release version="2.2.7" date="23.06.2008" description="Parallel testing">
+    <release version="0.9.7" date="23.06.2008" description="Parallel testing">
         <action dev="deppisch" type="add">
           Implemented multi threading in order to run tests in parallel.
         </action>
     </release>
     
-    <release version="2.2.6" date="18.06.2008" description="Further refactoring">
+    <release version="0.9.6" date="18.06.2008" description="Further refactoring">
     </release>
     
-    <release version="2.2.5" date="14.05.2008" description="WebService stub">
+    <release version="0.9.5" date="14.05.2008" description="WebService stub">
         <action dev="deppisch" type="add">
           Implemented generic WebService stub receiving messages using SOAP.
         </action>
     </release>
     
-    <release version="2.2.4" date="26.03.2008" description="Refactoring">
+    <release version="0.9.4" date="26.03.2008" description="Refactoring">
         <action dev="deppisch" type="add">
           Moved validation code to validator classes.
         </action>
@@ -69,7 +69,7 @@
         </action>
     </release>
     
-    <release version="2.2.3" date="05.02.2008" description="New features">
+    <release version="0.9.3" date="05.02.2008" description="New features">
         <action dev="deppisch" type="add">
           Added iterations executing test actions in loops.
         </action>
@@ -78,13 +78,13 @@
         </action>
     </release>
     
-    <release version="2.2.2" date="04.12.2007" description="Bugfix release">
+    <release version="0.9.2" date="04.12.2007" description="Bugfix release">
         <action dev="deppisch" type="fix">
           Fixed unit tests.
         </action>
     </release>
     
-    <release version="2.2.1" date="09.10.2007" description="Http server implementation">
+    <release version="0.9.1" date="09.10.2007" description="Http server implementation">
         <action dev="deppisch" type="add">
           Implemented generic Http server receiving messages using http protocol. 
         </action>
@@ -93,7 +93,7 @@
         </action>
     </release>
     
-    <release version="2.2.0" date="29.07.2007" description="Spring 2.0 upgrade">
+    <release version="0.9.0" date="29.07.2007" description="Spring 2.0 upgrade">
         <action dev="deppisch" type="update">
           Upgrade to Spring 2.0 features.
         </action>
@@ -102,76 +102,76 @@
         </action>
     </release>
     
-    <release version="2.1.10" date="22.03.2007" description="Deprecated code">
+    <release version="0.8.10" date="22.03.2007" description="Deprecated code">
         <action dev="deppisch" type="remove">
           Removed obsolete SQL execution bean.
         </action>
     </release>
     
-    <release version="2.1.9" date="21.03.2007" description="Bugfix release">
+    <release version="0.8.9" date="21.03.2007" description="Bugfix release">
     </release>
     
-    <release version="2.1.8" date="07.03.2007" description="Threadsafe JMS loopback dummies">
+    <release version="0.8.8" date="07.03.2007" description="Threadsafe JMS loopback dummies">
         <action dev="deppisch" type="update">
           Added threadsafe behavior to JMS loopback dummies.
         </action>
     </release>
     
-    <release version="2.1.7" date="07.03.2007" description="JMS loopback dummies">
+    <release version="0.8.7" date="07.03.2007" description="JMS loopback dummies">
         <action dev="deppisch" type="add">
           Implemented JMS loopback dummies.
         </action>
     </release>
     
-    <release version="2.1.6" date="07.03.2007" description="XPath functions">
+    <release version="0.8.6" date="07.03.2007" description="XPath functions">
         <action dev="deppisch" type="add">
           Added XPath function support.
         </action>
     </release>
     
-    <release version="2.1.5" date="21.02.2007" description="Reverting">
+    <release version="0.8.5" date="21.02.2007" description="Reverting">
         <action dev="deppisch" type="fix">
           Revert to version 2.1.3.
         </action>
     </release>
     
-    <release version="2.1.4" date="20.02.2007" description="XML Namespace handling">
+    <release version="0.8.4" date="20.02.2007" description="XML Namespace handling">
         <action dev="deppisch" type="update">
           Improved XML namespace handling.
         </action>
     </release>
     
-    <release version="2.1.3" date="15.02.2007" description="Testsuite cmd arguments">
+    <release version="0.8.3" date="15.02.2007" description="Testsuite cmd arguments">
         <action dev="deppisch" type="add">
           Additional command line arguments (-instance) to support testsuite instances.
         </action>
     </release>
     
-    <release version="2.1.2" date="15.02.2007" description="Multiple testsuite instances">
+    <release version="0.8.2" date="15.02.2007" description="Multiple testsuite instances">
         <action dev="deppisch" type="update">
           Handling multiple testsuite instances.
         </action>
     </release>
     
-    <release version="2.1.1" date="08.02.2007" description="TIBCO Hawk support">
+    <release version="0.8.1" date="08.02.2007" description="TIBCO Hawk support">
         <action dev="deppisch" type="add">
           Added TIBCO HawkAgent bean communicating with TIBCO Hawk.
         </action>
     </release>
     
-    <release version="2.1.0" date="07.02.2007" description="Classpath support">
+    <release version="0.8.0" date="07.02.2007" description="Classpath support">
         <action dev="deppisch" type="update">
           Framework is reading resource from classpath instead from file system (major changes).
         </action>
     </release>
   
-    <release version="2.0.6" date="02.02.2007" description="Bugfix release">
+    <release version="0.7.6" date="02.02.2007" description="Bugfix release">
         <action dev="deppisch" type="fix">
           Fixed SQL query functionality.
         </action>
     </release>
     
-    <release version="2.0.5" date="30.01.2007" description="KeyValueValidation Bean">
+    <release version="0.7.5" date="30.01.2007" description="KeyValueValidation Bean">
         <action dev="deppisch" type="add">
           Added action to validate key value pairs.
         </action>
@@ -181,46 +181,46 @@
         </action>
     </release>
   
-    <release version="2.0.4" date="26.01.2007" description="XPath support">
+    <release version="0.7.4" date="26.01.2007" description="XPath support">
         <action dev="deppisch" type="update">
           Extended XPath support.
         </action>
     </release>
     
-    <release version="2.0.3" date="24.01.2007" description="Alternative purgeing of JMS queues">
+    <release version="0.7.3" date="24.01.2007" description="Alternative purgeing of JMS queues">
         <action dev="deppisch" type="add">
           Implemented alternative purgeing of JMS queues.
         </action>
     </release>
     
-    <release version="2.0.2" date="16.01.2007" description="Program exit policy">
+    <release version="0.7.2" date="16.01.2007" description="Program exit policy">
         <action dev="deppisch" type="update">
           Changed System.exit policy in order to get clean program exiting in case of test failure.
         </action>
     </release>
     
-    <release version="2.0.1" date="09.01.2007" description="Project seperation">
+    <release version="0.7.1" date="09.01.2007" description="Project seperation">
         <action dev="deppisch" type="update">
           Seperated project specific code and core validation module in order to use the framework for future projects.
         </action>
     </release>
     
-    <release version="1.5" date="20.11.2006" description="XPath support">
+    <release version="0.7" date="20.11.2006" description="XPath support">
         <action dev="deppisch" type="add">
           Added XPath support when manipulating XML messages.
         </action>
     </release>
     
-    <release version="1.4.1" date="27.10.2006" description="Session bean support">
+    <release version="0.6.1" date="27.10.2006" description="Session bean support">
         <action dev="deppisch" type="add">
           Test routine is able to call session beans and validates return values.
         </action>
     </release>
     
-    <release version="1.4" date="12.10.2006" description="Bugfix release">
+    <release version="0.6" date="12.10.2006" description="Bugfix release">
     </release>
     
-    <release version="1.3" date="10.10.2006" description="CDATA sections">
+    <release version="0.5" date="10.10.2006" description="CDATA sections">
         <action dev="deppisch" type="add">
           Implemented inline declaration of XML messages to be sent/received.
         </action>
@@ -230,19 +230,19 @@
         </action>
     </release>
  
-    <release version="1.2" date="04.10.2006" description="Http support and file filter">
+    <release version="0.4" date="04.10.2006" description="Http support and file filter">
         <action dev="deppisch" type="add">
           Implemented functionality to send and receive messages using core http protocol.
         </action>
     </release>
     
-    <release version="1.1" date="29.09.2006" description="Synchrnous JMS support">
+    <release version="0.3" date="29.09.2006" description="Synchrnous JMS support">
         <action dev="deppisch" type="add">
           Added sysnchronous JMS messaging support.
         </action>
     </release>
   
-    <release version="1.0" date="28.09.2006" description="Core functionality">
+    <release version="0.2" date="28.09.2006" description="Core functionality">
         <action dev="deppisch" type="add">
           Implemented core actions for sending and receiving messages using JMS and SOAP.
         </action>

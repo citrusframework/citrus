@@ -4,42 +4,23 @@
 
 30 Minutes Quickstart
 
-  This quickstart gets this application running in less than 30 minutes,
-  starting with initial source code checkout and ending with a deployed application ready to play with.
+  This quickstart gets the Citrus project sources running in less than 30 minutes,
+  starting with initial source code checkout and ending with a deployed application ready for coding.
 
 * Preconditions
 
-  * a {{{http://www.subversion.org}subversion}} client. This can be
-    either a command line client or some graphical UI. For
+  * Subversion Client <<{{{http://subversion.tigris.org/}download}}>> 
+  
+    This can be either a command line client or some graphical UI. For
     simplicity, we assume you have the command line client <<<svn>>>
     installed.
 
-    Note: <<Make sure your client version is at least 1.5>>!
+    Note: Make sure your SVN client version is working with version 1.5 or higher!
 
-    Note: If you need subversion access permissions, please contact our {{{mailto:admins@consol.de?subject='SVN Access http://svn.consol.de/svn/cm/web/'}admins}}!
-
-    Please make sure to configure your subversion client for automatic properties - here is a {{{https://cmas.blogs.consol.de/2008/09/14/subversion-eol-handling/}howto}}.
-
-  * a working network connection to the internal ConSol network,
-    i.e. you need access to
-    <<<http://build.int.consol.de>>>. <<<http>>> access is sufficient,
-    via proxy or direct. <<<https>>> access via client certificates is
-    <not sufficient>. However, you can work offline as well as soon as
-    you have an initial setup. 
-
-  * Maven installed on your local machine. You can download {{{http://maven.apache.org}maven}} 
-    and put it somewhere on your machine. You should use at least version 2.0.9 please verify this using following command
-
----
-> mvn -version
-Maven version: 2.0.9
-Java version: 1.5.0_16
-Default locale: en_US, platform encoding: MacRoman
-OS name: "mac os x" version: "10.5.5" arch: "i386" family: "unix"
----
-
-  * a JDK 1.5 installed. The installation directory is refered in the
-    following as <<<JAVA_HOME>>>. You can verify your installation via your command line with
+  * JDK 1.5 (or higher version) 
+  
+    The installation directory is referred in the following as <<<JAVA_HOME>>>. 
+    You can verify your installation via your command line with
   
 ---
 > java -version
@@ -49,12 +30,23 @@ Java HotSpot(TM) Client VM (build 1.5.0_13-119, mixed mode, sharing)
 ---
 
     Note the correct version (1.5.x)!
+    
+  * Maven 2.0.9 (or higher version)
+  
+    Installed on your local machine. You can download {{{http://maven.apache.org}maven}} 
+    and put it somewhere on your machine. Please verify correct version and <<<MAVEN_HOME>>> using following command
+
+---
+> mvn -version
+Maven version: 2.0.9
+Java version: 1.5.0_16
+Default locale: en_US, platform encoding: MacRoman
+OS name: "mac os x" version: "10.5.5" arch: "i386" family: "unix"
+---
 
   * in case you want to connect to TIBCO EMS or in case you intend to connect with TIBCO Collaborator 
     you will need a TIBCO Installation on your local machine. For more information about TIBCO@ConSol use the {{{https://wiki.consol.de/wiki/Tibco}TIBCO Wiki pages}}.
     
-  That's all.
-
 * Initial checkout
 
   You need to checkout the Citrus sources from the subversion repository
@@ -65,8 +57,7 @@ svn co http://svn.consol.de/svn/citrus/trunk citrus-trunk
 ---
 
   This will checkout the main trunk of the Citrus repository in the
-  directory <<<citrus-trunk>>>.  (Subversion checkout could also be done via
-  https using a ConSol SSL client certificate). In the following the
+  directory <<<citrus-trunk>>>.  In the following the
   freshly created directory "citrus-trunk" is referenced to as
   <<<$PROJECT_HOME>>>. For detailed instructions about subversion, please
   consult the subversion
@@ -114,7 +105,7 @@ mvn idea:idea
 mvn eclipse:eclipse
 ---
 
-  This is the prefered way for creating IDE project files. It will
+  This is the preferred way for creating IDE project files. It will
   also install the sources for most libraries and can be called
   each time when dependencies changes.
 

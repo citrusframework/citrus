@@ -40,15 +40,15 @@ Why use Citrus?
 
 Project history
   
-  All software development projects at ConSol* use extensive automated testing and continous or nightly builds to ensure highest 
+  All software development projects at ConSol* use extensive automated testing and continuous or nightly builds to ensure highest 
   possible quality of our deliveries. When we started focusing on EAI projects we searched for a tool that supports automated integration 
   tests of EAI systems, simulating several connected systems using different protocols (the IT world discovered a surprisingly huge 
   variety of technologies two applications may use to talk to each other). Although we evaluated several non-commercial and commercial 
   tools, we didn't find one that even came close to our needs. Therefore we decided to write something on our own. 
   
-  Back at the year 2006 we implemented a first version for our customer needs. Since then we continuosly worked on improving the tool 
+  Back at the year 2006 we implemented a first version for our customer needs. Since then we continuously worked on improving the tool 
   over several years (and will do so in the future), resulting in what you can find here today. Citrus is used for all EAI projects 
-  at ConSol*, running in total thousands of complex multi-step test cases every day. 
+  at ConSol*, running in total thousands of complex test cases every day. 
   
   By this we are confident that it will be robust and stable for everything you intent to use it for. Feel free to prove us wrong!
 
