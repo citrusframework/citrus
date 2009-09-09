@@ -7,12 +7,13 @@
   </formats>
   <fileSets>
     <fileSet>
-      <includes>
-        <include>${project.basedir}/README*</include>
-        <include>${project.basedir}/LICENSE*</include>
-        <include>${project.basedir}/NOTICE*</include>
-      </includes>
-      <useDefaultExcludes>true</useDefaultExcludes>
+        <directory>${project.basedir}</directory>
+        <outputDirectory></outputDirectory>
+        <includes>
+          <include>README.txt</include>
+          <include>LICENSE.txt</include>
+          <include>NOTICE.txt</include>
+        </includes>
     </fileSet>
     <fileSet>
         <directory>modules/citrus-core/target</directory>
