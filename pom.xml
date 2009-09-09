@@ -13,7 +13,7 @@
   <licenses>
     <license>
       <name>GPL Version 3</name>
-      <url>http://www.gnu.org/licenses/gpl.txt</url>
+      <url>LICENSE.txt</url>
       <distribution>manual</distribution>
       <comments>Citrus is published free of charge under GNU GPL. You are allowed to use Citrus to test any kind of software 
       (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references 
