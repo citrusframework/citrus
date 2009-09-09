@@ -8,6 +8,7 @@
     <version>1.0.1</version>
   </skin>
   <poweredBy>
+    <logo name="ConSol Labs" href="http://labs.consol.de" img="images/logos/powered-by-labs-consol.png"/>    
     <logo name="ConSol" href="http://www.consol.de" img="images/logos/powered-by-consol.png"/>
     <logo name="Maven" href="http://maven.apache.org/"/>
   </poweredBy>
