@@ -16,16 +16,16 @@
     
     <programlisting>
   &lt;bean id=&quot;testFrameworkFunctionLibrary&quot; 
-           class=&quot;de.consol.testsuite.functions.FunctionLibrary&quot;&gt;
+           class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
       &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
       &lt;property name=&quot;prefix&quot; value=&quot;tsf:&quot;/&gt;
       &lt;property name=&quot;members&quot;&gt;
           &lt;map&gt;
             &lt;entry key=&quot;randomNumber&quot;&gt;
-                &lt;bean class=&quot;de.consol.testsuite.functions.RandomNumberFunction&quot;/&gt;
+                &lt;bean class=&quot;com.consol.citrus.functions.RandomNumberFunction&quot;/&gt;
             &lt;/entry&gt;
             &lt;entry key=&quot;randomString&quot;&gt;
-                &lt;bean class=&quot;de.consol.testsuite.functions.RandomStringFunction&quot;/&gt;
+                &lt;bean class=&quot;com.consol.citrus.functions.RandomStringFunction&quot;/&gt;
             &lt;/entry&gt;
             ...
           &lt;/map&gt;

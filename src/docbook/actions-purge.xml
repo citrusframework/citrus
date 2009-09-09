@@ -12,7 +12,7 @@
         
     <programlisting>
   &lt;bean id=&quot;purgeJmsQueues&quot;
-      class=&quot;de.consol.testsuite.actions.PurgeJmsQueuesAction&quot;&gt;
+      class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
       &lt;property name=&quot;connectionFactory&quot;&gt;
           &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
       &lt;/property&gt;
