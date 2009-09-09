@@ -9,7 +9,7 @@
     <para>The action syntax looks like follows:</para>
     
     <programlisting>
-  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+  &lt;java class=&quot;com.consol.citrus.test.util.InvocationDummy&quot;&gt;
       &lt;constructor&gt;
           &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
       &lt;/constructor&gt;
@@ -18,7 +18,7 @@
       &lt;/method&gt;
   &lt;/java&gt;
   
-  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+  &lt;java class=&quot;com.consol.citrus.test.util.InvocationDummy&quot;&gt;
       &lt;constructor&gt;
           &lt;argument type=&quot;&quot;&gt;Test Invocation&lt;/argument&gt;
       &lt;/constructor&gt;
@@ -29,7 +29,7 @@
       &lt;/method&gt;
   &lt;/java&gt;
       
-  &lt;java class=&quot;de.consol.testsuite.util.InvocationDummy&quot;&gt;
+  &lt;java class=&quot;com.consol.citrus.test.util.InvocationDummy&quot;&gt;
       &lt;method name=&quot;main&quot;&gt;
           &lt;argument type=&quot;String[]&quot;&gt;4,Test,true &lt;/argument&gt;
       &lt;/method&gt;

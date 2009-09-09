@@ -77,7 +77,7 @@
         
         <programlisting>
   &lt;bean id=&quot;cleanIcJobs&quot;
-      class=&quot;de.consol.testsuite.actions.CleanIcJobsBean&quot;&gt;
+      class=&quot;com.consol.citrus.actions.CleanIcJobsBean&quot;&gt;
       &lt;property name=&quot;userName&quot; value=&quot;${ic.username}&quot;/&gt;
       &lt;property name=&quot;password&quot; value=&quot;${ic.password}&quot;/&gt;
       &lt;property name=&quot;serverName&quot; value=&quot;${ic.servername}&quot;/&gt;
