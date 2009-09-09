@@ -4,8 +4,6 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
-    <import resource="classpath:com/consol/citrus/ws/hello/hello-service-context.xml"/>
-    
     <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
         <description>
             This interceptor logs the message payload.

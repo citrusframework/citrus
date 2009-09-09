@@ -156,6 +156,14 @@
             <include>*sources.jar</include>
         </includes>
     </fileSet>
+    <fileSet>
+      <includes>
+        <include>${project.basedir}/README*</include>
+        <include>${project.basedir}/LICENSE*</include>
+        <include>${project.basedir}/NOTICE*</include>
+      </includes>
+      <useDefaultExcludes>true</useDefaultExcludes>
+    </fileSet>
   </fileSets>
   <files>
     <file>
