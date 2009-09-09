@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-	<ns0:MessageId>123456789</ns0:MessageId>
-	<ns0:CorrelationId>CORR123456789</ns0:CorrelationId>
-	<ns0:User>TIBCO</ns0:User>
-	<ns0:Text>Hello TestFramework</ns0:Text>
-</ns0:HelloResponse>
