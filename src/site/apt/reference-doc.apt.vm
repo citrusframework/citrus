@@ -22,6 +22,8 @@ Reference Documentation
         
         * {{{modules/citrus-http/apidocs/index.html}citrus-http}}
         
+        * {{{modules/citrus-adapter/apidocs/index.html}citrus-adapter}}
+        
         * {{{modules/citrus-ws/apidocs/index.html}citrus-ws}}
         
         * {{{modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
@@ -30,9 +32,9 @@ Reference Documentation
     
 Citrus developers
     
-    * {{{dev-quickstart.html}Quickstart}}
+    ~~* {{{dev-quickstart.html}Quickstart}}
     
-    * {{{conventions.html}Coding conventions}}
+    ~~* {{{conventions.html}Coding conventions}}
     
     * {{{contributing.html}How to contribute changes}}
     

@@ -13,9 +13,36 @@ Citrus Conventions
 * Naming conventions
 
   * <<TODO>> 
-  
+
 ---
   ToDo.java  // Good
   TODO.java  // BAD, use camel back writing
   todo.java  // BAD, as reserved
 ---
+
+* Dependencies
+
+   Dependencies are managed with various POM files:
+
+  * <<PROJECT_HOME>></pom.xml> \
+    Contains all available dependencies (jars) for the framework including
+    version numbers.
+   
+  * <<PROJECT_HOME>></modules/citrus-tibco/pom.xml> \
+    Contains very specific TIBCO dependencies only used by this module. TIBCO dependencies go in here.
+
+  * The same applies to other modules. In case a dependency is very specific to a module the dependency goes into the 
+    modules POM. If you need a library specific for a module, add it there.
+
+    Note: If a new library in turn needs another new library the preferred way is to let Maven resolve this dependency. I.e. you need not declare this dependency explicitly.
+
+    A general rule for dependencies: add a dependency if
+
+    [[1]] it is directly referenced in the module sources, <<and>>
+
+    [[2]] it is not transitively inherited
+
+  []
+ 
+  Last note: Beware of the {{{http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Scope}Maven scopes}}!
+ 

@@ -17,8 +17,8 @@ Installation
    Use the Java IDE that you like best (e.g. {{{http://www.eclipse.org/}Eclipse}} or {{{http://www.jetbrains.com/idea/}IntelliJ IDEA}}).
  
  * Maven 2.0.10 or higher (optional)\
-   Citrus projects will fit best with the {{{http://maven.apache.org}Apache Maven}} build tool. But it is not required to use Maven. You can also run tests via
-   {{{http://ant.apache.org/}ANT}} for example.  
+   Citrus projects will fit best with the {{{http://maven.apache.org}Apache Maven}} build tool. But it is not required to use Maven. 
+   You can also run tests via {{{http://ant.apache.org/}ANT}} for example.  
    
  []
  
@@ -28,7 +28,7 @@ Installation
  
  * Extract the archive into an appropriate location on your local storage
  
- * Use the {{{tutorials.html}Citrus tutorials}} section to find out how to run tests using ANT.
+ * Use the {{{tutorials/run-with-ant.html}ANT tutorial}} in our tutorials section to find out how to run tests using ANT.
  
  * Read the {{{tutorials/run-with-maven.html}Maven tutorial}} to find out how to integrate the Citrus tests 
    into the Maven build lifecycle
