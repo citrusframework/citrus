@@ -75,19 +75,19 @@
   <mailingLists>
     <mailingList>
       <name>Project Announcments</name>
-      <subscribe>announce@citrus.framework.org</subscribe>
-      <unsubscribe>announce@citrus.framework.org</unsubscribe>
+      <!-- subscribe>announce@citrusframework.org</subscribe-->
+      <!--unsubscribe>announce@citrusframework.org</unsubscribe-->
     </mailingList>
     <mailingList>
       <name>Project Development List</name>
-      <subscribe>dev@citrusframework.org</subscribe>
-      <unsubscribe>dev@citrusframework.org</unsubscribe>
+      <!--subscribe>dev@citrusframework.org</subscribe-->
+      <!--unsubscribe>dev@citrusframework.org</unsubscribe-->
       <post>dev@citrusframework.org</post>
     </mailingList>
     <mailingList>
       <name>Project User List</name>
-      <subscribe>user@citrusframework.org</subscribe>
-      <unsubscribe>user@citrusframework.org</unsubscribe>
+      <!--subscribe>user@citrusframework.org</subscribe-->
+      <!--unsubscribe>user@citrusframework.org</unsubscribe-->
       <post>user@citrusframework.org</post>
     </mailingList>
     <mailingList>
@@ -408,6 +408,20 @@
         <snapshotRepository>
           <id>repository-consol-snapshots</id>
           <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+    
+    <profile>
+      <id>release-labs</id>
+      <distributionManagement>
+        <repository>
+          <id>consol-labs-release</id>
+          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/repository</url>
+        </repository>
+        <snapshotRepository>
+          <id>consol-labs-snapshots</id>
+          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
       </distributionManagement>
     </profile>
