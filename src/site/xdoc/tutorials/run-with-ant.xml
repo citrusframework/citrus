@@ -182,9 +182,10 @@
       
       <p>
         Citrus created an empty test case that does nothing but print a simple message to the console. The test is in status &quot;DRAFT&quot; 
-        which means it is not executable yet. You may code the test first and then change its status to &quot;FINAL&quot; in order to enable 
-        the test for execution. We do not want to code any additional logic into the test case for this tutorial, so we change its status right now
-        to &quot;FINAL&quot; and try to execute the test with Ant.
+        which means it is not finished yet but be aware that the test is executable in this state. In case you need to disable the test
+        because it is not entirely finished yet and may cause failures in a test run you can use the status DISABLED. You may code the test first 
+        and then change its status to &quot;FINAL&quot; in order to finally enable the test for execution. Right now we do not want to code any additional 
+        logic into the test case for this tutorial, so we change its status right now to &quot;FINAL&quot; and try to execute the test with Ant.
       </p>
       
       <p>
