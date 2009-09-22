@@ -181,10 +181,10 @@
     documentation generates HTML or Excel documents that list all tests with their metadata information and description.</para>
     
     <note>
-        <para>Tests in status DRAFT or DISABLED will not be executed during a testsuite run. So someone can just start adding
-        planned test cases that are not finished yet in status DRAFT without causing any failures during the test run. In addition 
-        someone could disable a test temporarily. Using these different status one can easily set up test plans and review the 
-        progress of test coverage by comparing the amount of test ins tatus DRAFT to those in FINAL state.</para>
+        <para>Tests in status DISABLED will not be executed during a test suite run. So someone can just start adding
+        planned test cases that are not finished yet in status DRAFT. In case a test is not runnable yet because not finished entirely
+        someone may disable a test temporarily to avoid causing failures during a test run. Using these different status one can 
+        easily set up test plans and review the progress of test coverage by comparing the amount of test in status DRAFT to those in FINAL state.</para>
     </note>
     
   </section>
