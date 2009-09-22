@@ -32,10 +32,10 @@
                 <message>ORDER creation time: citrus:currentDate('dd.MM.yyyy')</message>
             </echo>
         </actions>
-        <cleanup>
+        <finally>
             <updateDatabase connect="databaseAccess">
                 <statement>DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'</statement>
             </updateDatabase>
-        </cleanup>
+        </finally>
     </testcase>
 </spring:beans>

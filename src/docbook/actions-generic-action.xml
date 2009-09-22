@@ -15,6 +15,6 @@
   &lt;/testcase&gt;
     </programlisting>
     
-    <para>In the example the called actions are special database cleanup implementations. The actions are defined as Spring beans 
+    <para>In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans 
     in the Citrus configuration and get referenced by their bean name or id.</para>
 </section>

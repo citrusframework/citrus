@@ -29,7 +29,7 @@
 				<xs:element ref="description" minOccurs="0"/>
 				<xs:element ref="variables" minOccurs="0"/>
 				<xs:element ref="actions"/>
-				<xs:element ref="cleanup" minOccurs="0"/>
+				<xs:element ref="finally" minOccurs="0"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 		</xs:complexType>
@@ -208,7 +208,7 @@
 			<xs:attribute name="ignoreErrors" type="xs:boolean"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="cleanup">
+	<xs:element name="finally">
 		<xs:complexType>
 			<xs:group ref="action" maxOccurs="unbounded"/>
 		</xs:complexType>

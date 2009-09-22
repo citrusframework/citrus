@@ -128,7 +128,7 @@ public class TestCaseParser implements BeanDefinitionParser {
             } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
         }
 
-        Element finallyChainElement = DomUtils.getChildElementByTagName(element, "cleanup");
+        Element finallyChainElement = DomUtils.getChildElementByTagName(element, "finally");
         ManagedList finallyChain = new ManagedList();
 
         if (finallyChainElement != null) {
