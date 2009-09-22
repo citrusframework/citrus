@@ -35,21 +35,17 @@ import org.w3c.dom.Element;
 public class SendMessageActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parent = element.getAttribute("parent");
         String messageSenderReference = element.getAttribute("with");
         
         BeanDefinitionBuilder builder;
 
-        if (StringUtils.hasText(parent)) {
-            builder = BeanDefinitionBuilder.childBeanDefinition(parent);
-            builder.addPropertyValue("name", element.getLocalName() + ":" + parent);
-        } else if (StringUtils.hasText(messageSenderReference)) {
+        if (StringUtils.hasText(messageSenderReference)) {
             builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
             builder.addPropertyValue("name", element.getLocalName());
 
             builder.addPropertyReference("messageSender", messageSenderReference);
         } else {
-            throw new BeanCreationException("Either 'parent' or 'with' attribute has to be set!");
+            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
         }
         
         DescriptionElementParser.doParse(element, builder);
