@@ -3,7 +3,7 @@
     <title>Testsuite</title>
 
     <para>Tests often need to be grouped to test suites. Test suites also provide the functionality to do some work before and after the
-    tests are run. Database preparing and cleaning tasks or server starting and stopping fit well into these init and cleanup phases 
+    tests are run. Database preparing and cleaning tasks or server starting and stopping fit well into these initialization and cleanup phases 
     of a test suite. In Citrus a test suite is typically defined as Spring bean inside a XML configuration file.</para>
     
     <section id="testsuite-tasks">

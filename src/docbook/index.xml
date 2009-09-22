@@ -27,7 +27,7 @@
 <!ENTITY containers-iterate        SYSTEM "containers-iterate.xml">
 <!ENTITY containers-repeat         SYSTEM "containers-repeat.xml">
 <!ENTITY containers-repeat-onerror SYSTEM "containers-repeat-onerror.xml">
-<!ENTITY cleanup            SYSTEM "cleanup.xml">
+<!ENTITY finally            SYSTEM "finally-section.xml">
 <!ENTITY xpath              SYSTEM "xpath.xml">
 <!ENTITY jms                SYSTEM "jms.xml">
 <!ENTITY http               SYSTEM "http.xml">
@@ -70,7 +70,7 @@
     &actions;
     &templates;
     &containers;
-    &cleanup;
+    &finally;
     &xpath;
     &jms;
     &http;

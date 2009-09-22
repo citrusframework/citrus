@@ -133,20 +133,20 @@
         the action chain. Usually the tester tries to fit the designed use case scenario with the action chain.</para>
     </section>
     
-    <section id="testcase-cleanup">
+    <section id="testcase-finally">
         <title>Cleanup</title>
         
-        <para>The cleanup element also contains a list of test actions. These actions will be executed at the very
+        <para>The finally element also contains a list of test actions. These actions will be executed at the very
         end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously 
-        created by the test like cleaning up the database for instance. The cleanup section is described in more detail in <xref linkend="cleanup"/></para>
+        created by the test like cleaning up the database for instance. The finally section is described in more detail in <xref linkend="finally"/></para>
   
         <programlisting>      
-  &lt;cleanup&gt;
+  &lt;finally&gt;
       &lt;action&gt;[...]&lt;/action&gt;
       &lt;action&gt;[...]&lt;/action&gt;
       &lt;action&gt;[...]&lt;/action&gt;
       &lt;action&gt;[...]&lt;/action&gt;
-  &lt;/cleanup&gt;
+  &lt;/finally&gt;
         </programlisting>
     </section>
   </section>
