@@ -103,7 +103,7 @@
 		<br />
 	</xsl:template>
 
-	<xsl:template match="tsf:send | tsf:receive | tsf:expectTimeout | tsf:sleep | tsf:updateDatabase | tsf:queryDatabase | tsf:java | tsf:createVariables | tsf:purgeJmsQueues">
+	<xsl:template match="tsf:send | tsf:receive | tsf:expectTimeout | tsf:sleep | tsf:sql | tsf:java | tsf:createVariables | tsf:purgeJmsQueues">
 		<li>
 			<xsl:value-of select="local-name()" />
 		</li>

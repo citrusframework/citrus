@@ -34,7 +34,7 @@
               
                   <sequential>
                       <receive with="webServiceRequestReceiver">
-                      	<message schemaValidation="false">
+                      	<message schema-validation="false">
                       		<data>
                       			<![CDATA[
                       				<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
@@ -72,7 +72,7 @@
             </parallel>
             
             <receive with="webServiceReplyHandler">
-                <message schemaValidation="false">
+                <message schema-validation="false">
                     <data>
                         <![CDATA[
                             <ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">

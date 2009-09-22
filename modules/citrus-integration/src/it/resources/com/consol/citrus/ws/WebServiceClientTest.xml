@@ -31,7 +31,7 @@
             </send>
             
             <receive with="webServiceHelloReplyHandler">
-            	<message schemaValidation="false">
+            	<message schema-validation="false">
             		<data>
             			<![CDATA[
             				<ns0:HelloStandaloneResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">

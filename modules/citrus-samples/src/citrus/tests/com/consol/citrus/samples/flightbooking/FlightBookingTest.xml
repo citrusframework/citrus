@@ -212,12 +212,12 @@
                 </header>
             </receive>
             
-            <!-- queryDatabase connect="customerDB">
+            <!-- sql datasource="customerDBDataSource">
                 <statement>SELECT COUNT(1) AS BOOKINGCOUNT FROM BOOKINGS WHERE CORRELATIONID = '${correlationId}'</statement>
                 <statement>SELECT CUSTOMERID FROM BOOKINGS WHERE BOOKINGID = '${smartAirlineBookingId}'</statement>
                 <validate column="CUSTOMERID" value="${customerId}"/>
                 <validate column="BOOKINGCOUNT" value="2"/>
-            </queryDatabase-->
+            </sql-->
         </actions>
     </testcase>
 </spring:beans>

@@ -10,27 +10,27 @@
 		</meta-info>
 		
         <description>
-			Test of retry functionality in queryDatabase.
-            queryDatabase is configured so that it retries for 5 seconds with a pause of 1
+			Test of retry functionality in sql action.
+            Sql action is configured so that it retries for 5 seconds with a pause of 1
             second. The parallel task waits for 3 seconds and updates the database so
-            that the queryDatabase succeeds.
+            that the sql action succeeds.
 		</description>
         <actions>
 			<parallel>
 				<sequential>
-                    <updateDatabase connect="databaseAccess">
+                    <sql datasource="testDataSource">
                         <resource file="classpath:com/consol/citrus/actions/script.sql"/>
-                    </updateDatabase>
-        	        <queryDatabase connect="databaseQuery">
+                    </sql>
+        	        <sql datasource="testDataSource">
                         <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
                         <validate column="CUSTOMER_CNT" value="0"/>
-                    </queryDatabase>
+                    </sql>
 				</sequential>
 				<sequential>
                     <sleep time="3"/>
-                    <updateDatabase connect="databaseAccess">
+                    <sql datasource="testDataSource">
                         <statement>DELETE FROM CUSTOMERS</statement>
-                    </updateDatabase>
+                    </sql>
 				</sequential>
             </parallel>
         </actions>

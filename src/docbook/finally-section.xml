@@ -27,11 +27,11 @@
                        value=&quot;citrus:currentDate('dd.MM.yyyy')&quot;/&gt;
       &lt;/variables&gt;
       &lt;actions&gt;
-          &lt;updateDatabase connect=&quot;databaseAccess&quot;&gt;
+          &lt;sql datasource=&quot;testDataSource&quot;&gt;
               &lt;statement&gt;
                   INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
               &lt;/statement&gt;
-          &lt;/updateDatabase&gt;
+          &lt;/sql&gt;
           
           &lt;echo&gt;
               &lt;message&gt;
@@ -40,9 +40,9 @@
           &lt;/echo&gt;
       &lt;/actions&gt;
       &lt;finally&gt;
-          &lt;updateDatabase connect=&quot;databaseAccess&quot;&gt;
+          &lt;sql datasource=&quot;testDataSource&quot;&gt;
               &lt;statement&gt;DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'&lt;/statement&gt;
-          &lt;/updateDatabase&gt;
+          &lt;/sql&gt;
       &lt;/finally&gt;
   &lt;/testcase&gt;
     </programlisting>

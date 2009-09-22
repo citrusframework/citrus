@@ -35,8 +35,7 @@ public class TestActionRegistry {
     static {
         registerActionParser("send", new SendMessageActionParser());
         registerActionParser("receive", new ReceiveMessageActionParser());
-        registerActionParser("updateDatabase", new ExecuteSqlActionParser());
-        registerActionParser("queryDatabase", new ExecuteSQLQueryActionParser());
+        registerActionParser("sql", new SQLActionParser());
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
         registerActionParser("traceVariables", new TraceVariablesActionParser());
@@ -58,7 +57,7 @@ public class TestActionRegistry {
         registerActionParser("parallel", new ParallelParser());
         registerActionParser("catch", new CatchParser());
         registerActionParser("assert", new AssertParser());
-        registerActionParser("alterDatabase", new ExecutePLSQLActionParser());
+        registerActionParser("plsql", new ExecutePLSQLActionParser());
         registerActionParser("groovy", new GroovyActionParser());
     }
 

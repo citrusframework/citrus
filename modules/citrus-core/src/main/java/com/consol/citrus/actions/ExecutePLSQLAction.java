@@ -19,13 +19,9 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +29,6 @@ import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.service.DbService;
 
 /**
  * Executes PLSQL statements given inline or given by a file.
@@ -41,14 +36,11 @@ import com.consol.citrus.service.DbService;
  * @author deppisch Christoph Deppisch Consol*GmbH 2008
  *
  */
-public class ExecutePLSQLAction extends AbstractTestAction {
+public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
-
-    /** DBService */
-    private DbService dbService;
 
     /** SQL file resource */
     private Resource sqlResource;
@@ -124,7 +116,7 @@ public class ExecutePLSQLAction extends AbstractTestAction {
                         log.debug("Executing SQL statement: " + stmt);
                     }
                     
-                    dbService.execute(stmt);
+                    getJdbcTemplate().execute(stmt);
                     log.info("SQL statement execution successful");
                 } catch (Exception e) {
                     if (ignoreErrors) {
@@ -158,14 +150,6 @@ public class ExecutePLSQLAction extends AbstractTestAction {
      */
     public void setScript(String script) {
         this.script = script;
-    }
-
-    /**
-     * Spring property setter.
-     * @param dbService
-     */
-    public void setDbService(DbService dbService) {
-        this.dbService = dbService;
     }
 
     /**

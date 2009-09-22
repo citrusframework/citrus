@@ -50,7 +50,7 @@
             
             <programlisting>
   &lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
-      &lt;message schemaValidation=&quot;false&quot;&gt;
+      &lt;message schema-validation=&quot;false&quot;&gt;
           &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
                        value=&quot;${requestTag}&quot;/&gt;
           &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
@@ -82,7 +82,7 @@
         
         <programlisting>
   &lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
-      &lt;message schemaValidation=&quot;false&quot;&gt;
+      &lt;message schema-validation=&quot;false&quot;&gt;
           &lt;data&gt;
           &lt;![CDATA[
               &lt;!DOCTYPE root [
@@ -108,7 +108,7 @@
         
         <programlisting>
   &lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
-      &lt;message schemaValidation=&quot;false&quot;&gt;
+      &lt;message schema-validation=&quot;false&quot;&gt;
           &lt;data&gt;
           &lt;![CDATA[
               &lt;!DOCTYPE root SYSTEM 

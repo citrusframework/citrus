@@ -52,10 +52,6 @@
         </property>
     </bean>
     
-	<bean id="dbService" class="com.consol.citrus.service.DbService">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
@@ -65,7 +61,7 @@
 		</property>
 	</bean>
 
-  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+  <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
       <property name="driverClassName">
           <value>${jdbc.driver}</value>
       </property>

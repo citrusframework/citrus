@@ -49,20 +49,6 @@
 		</property>
 	</bean>
 	
-	<bean id="databaseAccess" class="com.consol.citrus.actions.ExecuteSQLAction" abstract="true">
-		<property name="dbService" ref="dbService"/>
-	</bean>
-	
-	<bean id="executePLSQL" class="com.consol.citrus.actions.ExecutePLSQLAction" abstract="true">
-		<property name="dbService" ref="dbService"/>
-	</bean>
-
-	<bean id="databaseQuery" class="com.consol.citrus.actions.ExecuteSQLQueryAction" abstract="true">
-		<property name="dbService" ref="dbService"/>
-		<property name="maxRetries" value="5"/>
-		<property name="retryPauseInMs" value="1000"/>
-	</bean>
-
 	<bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
 		<property name="queueNames">
 			<list>

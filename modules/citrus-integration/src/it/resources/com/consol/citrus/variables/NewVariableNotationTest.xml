@@ -21,18 +21,18 @@
             <variable name="newValue" value="54321"/>
         </variables>
         <actions>
-        	<updateDatabase connect="databaseAccess">
+        	<sql datasource="testDataSource">
                 <resource file="classpath:com/consol/citrus/actions/script.sql"/>
-            </updateDatabase>
-            <queryDatabase connect="databaseQuery">
+            </sql>
+            <sql datasource="testDataSource">
                 <statement>select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'</statement>
                 <statement>select COUNT(1) as overall_cnt from ERRORS</statement>
                 <validate column="NAME" value="Christoph"/>
                 <validate column="OVERALL_CNT" value="${rowsCount}"/>
-            </queryDatabase>
-            <updateDatabase connect="databaseAccess">
+            </sql>
+            <sql datasource="testDataSource">
                 <statement>DELETE FROM CUSTOMERS WHERE CUSTOMER_ID='${customerId}'</statement>
-            </updateDatabase>
+            </sql>
             <echo>
                 <message>CurrentTime is: ${time}</message>
             </echo>

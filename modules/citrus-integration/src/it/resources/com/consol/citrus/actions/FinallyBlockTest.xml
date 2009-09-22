@@ -25,17 +25,17 @@
             <variable name="orderId" value="1"/>
         </variables>
         <actions>
-            <updateDatabase connect="databaseAccess">
+            <sql datasource="testDataSource">
                 <statement>INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')</statement>
-            </updateDatabase>
+            </sql>
             <echo>
                 <message>ORDER creation time: citrus:currentDate('dd.MM.yyyy')</message>
             </echo>
         </actions>
         <finally>
-            <updateDatabase connect="databaseAccess">
+            <sql datasource="testDataSource">
                 <statement>DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'</statement>
-            </updateDatabase>
+            </sql>
         </finally>
     </testcase>
 </spring:beans>

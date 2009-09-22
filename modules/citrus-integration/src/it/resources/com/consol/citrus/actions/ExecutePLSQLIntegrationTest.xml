@@ -14,11 +14,11 @@
 		</description>
         
         <actions>
-            <alterDatabase connect="executePLSQL" ignoreErrors="true">
+            <plsql datasource="testDataSource" ignoreErrors="true">
                 <resource file="classpath:com/consol/citrus/actions/plsql.sql"/>
-            </alterDatabase>
+            </plsql>
             
-            <alterDatabase connect="executePLSQL" ignoreErrors="true">
+            <plsql datasource="testDataSource" ignoreErrors="true">
                 <script>
                 	<![CDATA[
                 		BEGIN
@@ -33,7 +33,7 @@
 						/
                 	]]>
                 </script>
-            </alterDatabase>
+            </plsql>
         </actions>
     </testcase>
 </spring:beans>
