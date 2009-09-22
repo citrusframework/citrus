@@ -26,7 +26,7 @@
         		<variable name="anotherVariable" value="${z}"/>
         	</createVariables>
         	
-        	<traceVariables/>
+        	<trace-variables/>
         	
         	<echo>
         		<message>${a}</message>

@@ -30,7 +30,7 @@
 			<echo><message>citrus:concat(${date}, ': Hallo', ' Test', ' Framework! ', ${right})</message></echo>
 			<echo><message>citrus:concat('Hallo ', ${date}, ' Test', ' Framework! ', ${right})</message></echo>
 			<echo><message>citrus:concat('Today is: ', ${date}, ' ', ${right})</message></echo>
-            <traceVariables/>
+            <trace-variables/>
         </actions>
     </testcase>
 </spring:beans>

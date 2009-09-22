@@ -23,7 +23,7 @@
           &lt;message&gt;Current time is: ${time}&lt;/message&gt;
       &lt;/echo&gt;
       
-      &lt;traceVariables/&gt;
+      &lt;trace-variables/&gt;
   &lt;/template&gt;
     </programlisting>
   

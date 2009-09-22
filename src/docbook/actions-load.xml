@@ -20,7 +20,7 @@
               &lt;properties file=&quot;file:tests/resources/load.properties&quot;/&gt;
           &lt;/load&gt;
           
-          &lt;traceVariables/&gt;
+          &lt;trace-variables/&gt;
       &lt;/actions&gt;
   &lt;/testcase&gt;
     </programlisting>

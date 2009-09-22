@@ -38,7 +38,7 @@ public class TestActionRegistry {
         registerActionParser("sql", new SQLActionParser());
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
-        registerActionParser("traceVariables", new TraceVariablesActionParser());
+        registerActionParser("trace-variables", new TraceVariablesActionParser());
         registerActionParser("createVariables", new CreateVariablesActionParser());
         registerActionParser("traceTime", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());

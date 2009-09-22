@@ -73,7 +73,7 @@
 			<echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y+1M-1d')</message></echo>
 			<echo><message>citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y-1M-1d')</message></echo>
 			       	
-            <traceVariables/>
+            <trace-variables/>
         </actions>
     </testcase>
 </spring:beans>
