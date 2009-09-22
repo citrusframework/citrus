@@ -88,7 +88,6 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="parent" type="xs:string"/>
 			<xs:attribute name="with" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
@@ -186,7 +185,6 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="parent" type="xs:string"/>
 			<xs:attribute name="with" type="xs:string"/>
             <xs:attribute name="timeout" type="xs:int"/>
 		</xs:complexType>
