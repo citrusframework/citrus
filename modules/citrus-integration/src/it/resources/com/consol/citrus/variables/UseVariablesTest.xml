@@ -75,13 +75,13 @@
 				<message>${operation}</message>
 			</echo>
 			
-			<traceVariables>
+			<trace-variables>
 				<variable name="${id}"/>
 				<variable name="${correlationId}"/>
                 <variable name="${operation}"/>
                 <variable name="${messageId}"/>
                 <variable name="${user}"/>
-			</traceVariables>
+			</trace-variables>
         </actions>
     </testcase>
 </spring:beans>

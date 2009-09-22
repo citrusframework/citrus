@@ -16,7 +16,7 @@
             	<properties file="classpath:com/consol/citrus/actions/load.properties"/>        
             </load>
             
-            <traceVariables/>
+            <trace-variables/>
         </actions>
     </testcase>
 </spring:beans>

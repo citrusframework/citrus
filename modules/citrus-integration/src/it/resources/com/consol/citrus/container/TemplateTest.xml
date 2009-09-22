@@ -27,7 +27,7 @@
             	<parameter name="param2" value="${text}"/>
             </call-template>
             
-            <traceVariables/>
+            <trace-variables/>
         </actions>
     </testcase>
 
@@ -42,7 +42,7 @@
     	<echo>
     		<message>Now tracing all available variables for test case:</message>
     	</echo>
-    	<traceVariables/>
+    	<trace-variables/>
     </template>
     
     <template name="print">

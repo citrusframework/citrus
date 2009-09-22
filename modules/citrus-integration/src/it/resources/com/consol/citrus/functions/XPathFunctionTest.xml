@@ -27,7 +27,7 @@
 		</variables>
         <actions>
         	<echo><message>citrus:concat('Today is: ', ${date})</message></echo>
-            <traceVariables/>
+            <trace-variables/>
         </actions>
     </testcase>
 </spring:beans>
