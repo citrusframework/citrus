@@ -9,7 +9,7 @@
     <section id="actions-database-update">
       <title>Updating the database</title>
   
-      <para>The &lt;updateDatabase&gt; action simply executes a group of SQL statements in order to change data in a database.
+      <para>The &lt;sql&gt; action simply executes a group of SQL statements in order to change data in a database.
       Typically the action is used to prepare the database at the beginning of a test or to clean up the
       database at the end of a test. You can specify SQL statements like INSERT, UPDATE,
       DELETE, CREATE TABLE, ALTER TABLE and many more.</para>
@@ -19,14 +19,14 @@
       
       <programlisting>
   &lt;actions&gt;
-      &lt;updateDatabase connect=&quot;someSchemaConnect&quot;&gt;
+      &lt;sql datasource=&quot;someDataSource&quot;&gt;
           &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
           &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
-      &lt;/updateDatabase&gt;
+      &lt;/sql&gt;
       
-      &lt;updateDatabase connect=&quot;mySchemaConnect&quot;&gt;
+      &lt;sql datasource=&quot;myDataSource&quot;&gt;
           &lt;resource file=&quot;file:tests/unit/resources/script.sql&quot;/&gt;
-      &lt;/updateDatabase&gt;
+      &lt;/sql&gt;
   &lt;/actions&gt;
       </programlisting>
       
@@ -54,19 +54,19 @@
         by using the &quot;file:&quot; or &quot;classpath:&quot; prefix.</para>
       </note>
       
-      <para>Both examples use the &quot;connect&quot; attribute. This value defines the database connection (datasource) to be used. The connection to
-      a datasource is mandatory, because the test case does not know about user credentials or database names. The 'connect' attribute 
-      references predefined datasources that are located in a seperate Spring configuration file.</para>
+      <para>Both examples use the &quot;datasource&quot; attribute. This value defines the database data source to be used. The connection to
+      a data source is mandatory, because the test case does not know about user credentials or database names. The 'datasource' attribute 
+      references predefined data sources that are located in a separate Spring configuration file.</para>
     </section>
     
     <section id="actions-database-query">
       <title>Verifying data from the database</title>
       
-      <para>The &lt;queryDatabase&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
+      <para>The &lt;sql&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
       The query results are validated against expected data as shown in the next example.</para>
       
       <programlisting>
-  &lt;queryDatabase connect=&quot;databaseQuery&quot;&gt;
+  &lt;sql datasource=&quot;testDataSource&quot;&gt;
       &lt;statement&gt;select NAME from CUSTOMERS where ID='${customerId}'&lt;/statement&gt;
       &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
       &lt;statement&gt;select ID from ORDERS where DESC LIKE 'Def%'&lt;/statement&gt;
@@ -76,10 +76,10 @@
       &lt;validate column=&quot;NAME&quot; value=&quot;Deppisch&quot;/&gt;
       &lt;validate column=&quot;COUNT(*)&quot; value=&quot;${rowsCount}&quot;/&gt;
       &lt;validate column=&quot;DESCRIPTION&quot; value=&quot;null&quot;/&gt;
-  &lt;/queryDatabase&gt;
+  &lt;/sql&gt;
       </programlisting>
       
-      <para>The action &lt;queryDatabase&gt; offers a wide range of validating functionality for database result sets. First
+      <para>The action &lt;sql&gt; offers a wide range of validating functionality for database result sets. First
       of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL
       statements or external file resource pattern.</para>
       

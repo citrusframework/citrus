@@ -7,7 +7,8 @@
 	<bean name="citrus-integration" class="com.consol.citrus.TestSuite">
 		<property name="tasksBefore">
 			<list>
-				<bean id="initDatabase" parent="databaseAccess">
+				<bean id="initDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
 					<property name="statements">
 						<list>
 							<value>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG char(250), CONVERSATION_ID  char(250), CREATION_DATE  char(250), DESCRIPTION char(250)) </value>
@@ -25,7 +26,8 @@
 		</property>
 		<property name="tasksAfter">
 			<list>
-				<bean id="destroyDatabase" parent="databaseAccess">
+				<bean id="destroyDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
                     <property name="ignoreErrors" value="true"/>
 					<property name="statements">
 						<list>

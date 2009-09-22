@@ -77,7 +77,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
-            String schemaValidation = messageElement.getAttribute("schemaValidation");
+            String schemaValidation = messageElement.getAttribute("schema-validation");
             if(StringUtils.hasText(schemaValidation)) {
                 builder.addPropertyValue("schemaValidation", schemaValidation);
             }

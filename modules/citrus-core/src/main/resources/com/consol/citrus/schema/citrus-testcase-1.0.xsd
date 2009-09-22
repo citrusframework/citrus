@@ -148,7 +148,7 @@
 								</xs:element>
 							</xs:sequence>
 						</xs:choice>
-						<xs:attribute name="schemaValidation" type="xs:boolean"/>
+						<xs:attribute name="schema-validation" type="xs:boolean"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="header" minOccurs="0">
@@ -191,7 +191,7 @@
             <xs:attribute name="timeout" type="xs:int"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="updateDatabase">
+	<xs:element name="sql">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
@@ -203,8 +203,14 @@
 					</xs:element>
 					<xs:element name="statement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:choice>
+                <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="column" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
 			</xs:sequence>
-			<xs:attribute name="connect" type="xs:string" use="required"/>
+			<xs:attribute name="datasource" type="xs:string" use="required"/>
 			<xs:attribute name="ignoreErrors" type="xs:boolean"/>
 		</xs:complexType>
 	</xs:element>
@@ -264,9 +270,8 @@
 		<xs:choice>
 			<xs:element ref="send"/>
 			<xs:element ref="receive"/>
-			<xs:element ref="updateDatabase"/>
-			<xs:element ref="queryDatabase"/>
-			<xs:element ref="alterDatabase"/>
+			<xs:element ref="sql"/>
+			<xs:element ref="plsql"/>
 			<xs:element ref="java"/>
 			<xs:element ref="sleep"/>
 			<xs:element ref="traceVariables"/>
@@ -352,28 +357,6 @@
 			</xs:sequence>
 			<xs:attribute name="connect" type="xs:string"/>
 			<xs:attribute name="wait" type="xs:int"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="queryDatabase">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="description" minOccurs="0"/>
-				<xs:choice>
-					<xs:element name="resource">
-						<xs:complexType>
-							<xs:attribute name="file" type="xs:string" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="statement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-				</xs:choice>
-				<xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:attribute name="column" type="xs:string" use="required"/>
-						<xs:attribute name="value" type="xs:string" use="required"/>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-			<xs:attribute name="connect" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="action">
@@ -521,7 +504,7 @@
 			<xs:attribute name="exception" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="alterDatabase">
+	<xs:element name="plsql">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
@@ -534,7 +517,7 @@
 					<xs:element name="script" type="xs:string"/>
 				</xs:choice>
 			</xs:sequence>
-			<xs:attribute name="connect" type="xs:string" use="required"/>
+			<xs:attribute name="datasource" type="xs:string" use="required"/>
 			<xs:attribute name="ignoreErrors" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>

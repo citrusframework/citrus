@@ -33,16 +33,11 @@ import com.consol.citrus.actions.ExecutePLSQLAction;
 public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("connect");
-        BeanDefinitionBuilder beanDefinition;
-
-        if (parentBeanName != null && parentBeanName.length()>0) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
-        } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
-        }
+        String dataSource = element.getAttribute("datasource");
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);
+        
+        beanDefinition.addPropertyValue("name", "psql:" + dataSource);
+        beanDefinition.addPropertyReference("dataSource", dataSource);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

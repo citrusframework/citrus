@@ -19,9 +19,7 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -35,7 +33,6 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.service.DbService;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
@@ -47,12 +44,9 @@ import com.consol.citrus.variable.VariableUtils;
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2008
  */
-public class ExecuteSQLQueryAction extends AbstractTestAction {
+public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
     /** Map holding all expected values to be validated */
     protected Map validationElements = new HashMap();
-
-    /** DbService */
-    private DbService dbService;
 
     /** SQL file resource */
     private Resource sqlResource;
@@ -113,7 +107,7 @@ public class ExecuteSQLQueryAction extends AbstractTestAction {
                             log.error("Error while parsing sql statement: " + stmt);
                             throw new CitrusRuntimeException(e);
                         }
-                        List list = dbService.queryForList(stmt);
+                        List list = getJdbcTemplate().queryForList(stmt);
 
                         checkOnResultSize(stmt, list);
 
@@ -291,14 +285,6 @@ public class ExecuteSQLQueryAction extends AbstractTestAction {
      */
     public void setStatements(List statements) {
         this.statements = statements;
-    }
-
-    /**
-     * Spring property setter.
-     * @param dbService
-     */
-    public void setDbService(DbService dbService) {
-        this.dbService = dbService;
     }
 
     /**

@@ -19,9 +19,7 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -33,24 +31,43 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
 
-public class ExecuteSqlActionParser implements BeanDefinitionParser {
+public class SQLActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("connect");
+        String dataSource = element.getAttribute("datasource");
+        
         BeanDefinitionBuilder beanDefinition;
 
-        if (parentBeanName != null && parentBeanName.length()>0) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
+        List validateElements = DomUtils.getChildElementsByTagName(element, "validate");
+        
+        if (validateElements.isEmpty() == false) {
+            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
+            beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
+            
+            Map<String, String> validateValues = new HashMap<String, String>();
+            for (Iterator iter = validateElements.iterator(); iter.hasNext();) {
+                Element validate = (Element) iter.next();
+                validateValues.put(validate.getAttribute("column"), validate.getAttribute("value"));
+            }
+            
+            beanDefinition.addPropertyValue("validationElements", validateValues);
         } else {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
+            beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
+            
+            String ignoreErrors = element.getAttribute("ignoreErrors");
+            if (ignoreErrors != null && ignoreErrors.equals("true")) {
+                beanDefinition.addPropertyValue("ignoreErrors", true);
+            }
         }
-
+        
+        beanDefinition.addPropertyReference("dataSource", dataSource);
+        
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        List statements = new ArrayList();
+        List<String> statements = new ArrayList<String>();
         List stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
         for (Iterator iter = stmtElements.iterator(); iter.hasNext();) {
             Element stmt = (Element) iter.next();
@@ -68,11 +85,6 @@ public class ExecuteSqlActionParser implements BeanDefinitionParser {
             } else {
                 beanDefinition.addPropertyValue("sqlResource", new FileSystemResource(filePath));
             }
-        }
-
-        String ignoreErrors = element.getAttribute("ignoreErrors");
-        if (ignoreErrors != null && ignoreErrors.equals("true")) {
-            beanDefinition.addPropertyValue("ignoreErrors", true);
         }
 
         return beanDefinition.getBeanDefinition();

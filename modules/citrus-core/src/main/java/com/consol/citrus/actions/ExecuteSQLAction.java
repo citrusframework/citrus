@@ -19,12 +19,8 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +28,6 @@ import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.service.DbService;
 
 /**
  * Executes sql statements given inline or given by a file resource.
@@ -40,14 +35,11 @@ import com.consol.citrus.service.DbService;
  * @author deppisch Christoph Deppisch, js Jan Szczepanski Consol*GmbH 2006
  *
  */
-public class ExecuteSQLAction extends AbstractTestAction {
+public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(ExecuteSQLAction.class);
-
-    /** DBService */
-    private DbService dbService;
 
     /** SQL file resource */
     private Resource sqlResource;
@@ -112,7 +104,7 @@ public class ExecuteSQLAction extends AbstractTestAction {
                     stmt = context.replaceDynamicContentInString(stmt);
 
                     log.info("Found Sql statement " + stmt);
-                    dbService.execute(stmt);
+                    getJdbcTemplate().execute(stmt);
                 } catch (Exception e) {
                     if (ignoreErrors) {
                         log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
@@ -145,13 +137,7 @@ public class ExecuteSQLAction extends AbstractTestAction {
     public void setStatements(List statements) {
         this.statements = statements;
     }
-    /**
-     * Spring property setter.
-     * @param dbService
-     */
-    public void setDbService(DbService dbService) {
-        this.dbService = dbService;
-    }
+    
     /**
      * Spring property setter.
      * @param sqlResource
