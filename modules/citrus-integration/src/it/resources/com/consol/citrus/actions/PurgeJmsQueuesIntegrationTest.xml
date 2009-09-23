@@ -29,7 +29,7 @@
 			configurations are done in the testSuiteContext.xml, where the test suite itself is configured.
 		</description>
         <actions>
-            <purgeJmsQueues connect="purgeJmsQueues">
+            <purge-jms-queues>
                 <queue name="TestSuite.Queue.Dummy"/>
                 <queue name="TestSuite.Queue.Dummy.One.In"/>
                 <queue name="TestSuite.Queue.Dummy.One.Out"/>
@@ -37,7 +37,17 @@
                 <queue name="TestSuite.Queue.Dummy.One.Out"/>
                 <queue name="TestSuite.Queue.Dummy.Three.In"/>
                 <queue name="TestSuite.Queue.Dummy.Three.Out"/>
-            </purgeJmsQueues>
+            </purge-jms-queues>
+            
+            <purge-jms-queues connection-factory="connectionFactory">
+                <queue name="TestSuite.Queue.Dummy"/>
+                <queue name="TestSuite.Queue.Dummy.One.In"/>
+                <queue name="TestSuite.Queue.Dummy.One.Out"/>
+                <queue name="TestSuite.Queue.Dummy.One.In"/>
+                <queue name="TestSuite.Queue.Dummy.One.Out"/>
+                <queue name="TestSuite.Queue.Dummy.Three.In"/>
+                <queue name="TestSuite.Queue.Dummy.Three.Out"/>
+            </purge-jms-queues>
         </actions>
     </testcase>
 </spring:beans>
