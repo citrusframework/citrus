@@ -5,8 +5,8 @@
 			<author>Christoph Deppisch</author>
 			<creationdate>2008-04-29</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-29T00:00:00</lastUpdatedOn>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-29T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -26,9 +26,9 @@
             <echo><message>user input was: ${userinput}</message></echo>
             <input message="Now press enter:" variable="userinput1"/>
             <echo><message>user input was: ${userinput1}</message></echo>
-            <input message="Do you want to continue?" validAnswers="y/n" variable="userinput2"/>
+            <input message="Do you want to continue?" valid-answers="y/n" variable="userinput2"/>
             <echo><message>user input was: ${userinput2}</message></echo>
-            <input message="Do you want to continue?" validAnswers="yes/no" variable="userinput3"/>
+            <input message="Do you want to continue?" valid-answers="yes/no" variable="userinput3"/>
             <echo><message>user input was: ${userinput3}</message></echo>
             <input variable="userinput4"/>
             <echo><message>user input was: ${userinput4}</message></echo>

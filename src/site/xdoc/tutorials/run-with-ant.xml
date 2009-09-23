@@ -165,8 +165,8 @@
               &lt;author&gt;Christoph&lt;/author&gt;
               &lt;creationdate&gt;2009-08-19&lt;/creationdate&gt;
               &lt;status&gt;DRAFT&lt;/status&gt;
-              &lt;lastUpdatedBy&gt;Christoph&lt;/lastUpdatedBy&gt;
-              &lt;lastUpdatedOn&gt;2009-08-19T11:18:06&lt;/lastUpdatedOn&gt;
+              &lt;last-updated-by&gt;Christoph&lt;/last-updated-by&gt;
+              &lt;last-updated-on&gt;2009-08-19T11:18:06&lt;/last-updated-on&gt;
           &lt;/meta-info&gt;
           
           &lt;description&gt;This is my first Citrus test&lt;/description&gt;

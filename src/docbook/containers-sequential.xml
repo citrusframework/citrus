@@ -14,12 +14,12 @@
   &lt;testcase name=&quot;sequentialTest&quot;&gt;
       &lt;actions&gt;
           &lt;sequential&gt;
-              &lt;traceTime/&gt;
+              &lt;trace-time/&gt;
               &lt;sleep/&gt;
               &lt;echo&gt;
                   &lt;message&gt;Hallo TestFramework&lt;/message&gt;
               &lt;/echo&gt;
-              &lt;traceTime/&gt;
+              &lt;trace-time/&gt;
           &lt;/sequential&gt;
       &lt;/actions&gt;
   &lt;/testcase&gt;

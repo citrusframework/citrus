@@ -38,17 +38,8 @@
   
     <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
     
-	<bean id="receiveTimeout" class="com.consol.citrus.actions.ReceiveTimeoutAction" abstract="true">
-		<property name="messageReceiver">
-			<bean class="com.consol.citrus.jms.JmsMessageReceiver">
-                <property name="connectionFactory">
-                    <ref bean="connectionFactory"/>
-                </property>
-                <property name="destinationName" value="${jms.queue.dummy}"/>
-            </bean>
-		</property>
-	</bean>
-	
+    <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.dummy}"/>
+    
 	<bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
 		<property name="queueNames">
 			<list>

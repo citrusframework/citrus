@@ -39,9 +39,9 @@ public class IterateParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String indexName = element.getAttribute("indexName");
-        if (StringUtils.hasText(indexName)) {
-            beanDefinition.addPropertyValue("indexName", indexName);
+        String index = element.getAttribute("index");
+        if (StringUtils.hasText(index)) {
+            beanDefinition.addPropertyValue("indexName", index);
         }
 
         String condition = element.getAttribute("condition");

@@ -45,7 +45,7 @@ public class InputActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("variable", variable);
         }
 
-        String validAnswers = element.getAttribute("validAnswers");
+        String validAnswers = element.getAttribute("valid-answers");
         if (StringUtils.hasText(validAnswers)) {
             beanDefinition.addPropertyValue("validAnswers", validAnswers);
         }

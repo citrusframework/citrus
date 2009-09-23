@@ -39,10 +39,10 @@ public class TestActionRegistry {
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
         registerActionParser("trace-variables", new TraceVariablesActionParser());
-        registerActionParser("createVariables", new CreateVariablesActionParser());
-        registerActionParser("traceTime", new StopTimeActionParser());
+        registerActionParser("create-variables", new CreateVariablesActionParser());
+        registerActionParser("trace-time", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());
-        registerActionParser("expectTimeout", new ReceiveTimeoutActionParser());
+        registerActionParser("expect-timeout", new ReceiveTimeoutActionParser());
         registerActionParser("purge-jms-queues", new PurgeJmsQueuesActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());

@@ -5,8 +5,8 @@
 			<author>Unknown</author>
 			<creationdate>2008-04-25</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Unknown</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+			<last-updated-by>Unknown</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -16,13 +16,13 @@
 			<variable name="message" value="Hello TestFramework"/>
 		</variables>
         <actions>
-        	<repeat-onerror-until-true condition="i = 5" indexName="i">
+        	<repeat-onerror-until-true condition="i = 5" index="i">
 	        	<echo>
 	        		<message>${i}. Versuch: ${message}</message>
 	        	</echo>
         	</repeat-onerror-until-true>
         	
-        	<repeat-onerror-until-true autoSleep="0" condition="i = 5" indexName="i">
+        	<repeat-onerror-until-true auto-sleep="0" condition="i = 5" index="i">
 	        	<echo>
 	        		<message>${i}. Versuch: ${message}</message>
 	        	</echo>

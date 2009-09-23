@@ -28,7 +28,7 @@
               &lt;/echo&gt;
               
               &lt;iterate condition=&quot;i lt= 5&quot; 
-                          indexName=&quot;i&quot;&gt;
+                          index=&quot;i&quot;&gt;
                   &lt;echo&gt;
                       &lt;message&gt;10&lt;/message&gt;
                   &lt;/echo&gt;

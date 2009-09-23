@@ -58,7 +58,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
             }
         }
 
-        String ignoreErrors = element.getAttribute("ignoreErrors");
+        String ignoreErrors = element.getAttribute("ignore-errors");
         if (ignoreErrors != null && ignoreErrors.equals("true")) {
             beanDefinition.addPropertyValue("ignoreErrors", true);
         }

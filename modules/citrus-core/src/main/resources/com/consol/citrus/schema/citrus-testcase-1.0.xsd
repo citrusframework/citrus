@@ -209,7 +209,7 @@
                 </xs:element>
 			</xs:sequence>
 			<xs:attribute name="datasource" type="xs:string" use="required"/>
-			<xs:attribute name="ignoreErrors" type="xs:boolean"/>
+			<xs:attribute name="ignore-errors" type="xs:boolean"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="finally">
@@ -273,10 +273,10 @@
 			<xs:element ref="java"/>
 			<xs:element ref="sleep"/>
 			<xs:element ref="trace-variables"/>
-			<xs:element ref="createVariables"/>
-			<xs:element ref="traceTime"/>
+			<xs:element ref="create-variables"/>
+			<xs:element ref="trace-time"/>
 			<xs:element ref="echo"/>
-			<xs:element ref="expectTimeout"/>
+			<xs:element ref="expect-timeout"/>
 			<xs:element ref="purge-jms-queues"/>
 			<xs:element ref="action"/>
 			<xs:element ref="call-template"/>
@@ -326,7 +326,7 @@
 			<xs:attribute name="connection-factory" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="createVariables">
+	<xs:element name="create-variables">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
@@ -339,7 +339,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="traceTime">
+	<xs:element name="trace-time">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
@@ -347,13 +347,13 @@
 			<xs:attribute name="id" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="expectTimeout">
+	<xs:element name="expect-timeout">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
 				<xs:element name="select" type="xs:string" minOccurs="0"/>
 			</xs:sequence>
-			<xs:attribute name="connect" type="xs:string"/>
+			<xs:attribute name="message-receiver" type="xs:string" use="required"/>
 			<xs:attribute name="wait" type="xs:int"/>
 		</xs:complexType>
 	</xs:element>
@@ -381,8 +381,8 @@
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
-				<xs:element name="lastUpdatedBy" type="xs:string" minOccurs="0"/>
-				<xs:element name="lastUpdatedOn" type="xs:dateTime" minOccurs="0"/>
+				<xs:element name="last-updated-by" type="xs:string" minOccurs="0"/>
+				<xs:element name="last-updated-on" type="xs:dateTime" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -415,7 +415,7 @@
 				<xs:element ref="description" minOccurs="0"/>
 				<xs:group ref="action" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="indexName" type="xs:string"/>
+			<xs:attribute name="index" type="xs:string"/>
 			<xs:attribute name="condition" type="xs:string" use="required"/>
 			<xs:attribute name="start" type="xs:string"/>
 			<xs:attribute name="step" type="xs:string"/>
@@ -427,7 +427,7 @@
 				<xs:element ref="description" minOccurs="0"/>
 				<xs:group ref="action" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="indexName" type="xs:string"/>
+			<xs:attribute name="index" type="xs:string"/>
 			<xs:attribute name="condition" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
@@ -437,9 +437,9 @@
 				<xs:element ref="description" minOccurs="0"/>
 				<xs:group ref="action" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="indexName" type="xs:string"/>
+			<xs:attribute name="index" type="xs:string"/>
 			<xs:attribute name="condition" type="xs:string" use="required"/>
-			<xs:attribute name="autoSleep" type="xs:int"/>
+			<xs:attribute name="auto-sleep" type="xs:int"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="sequential">
@@ -462,7 +462,7 @@
 		<xs:complexType>
 			<xs:attribute name="message" type="xs:string"/>
 			<xs:attribute name="variable" type="xs:string"/>
-			<xs:attribute name="validAnswers" type="xs:string"/>
+			<xs:attribute name="valid-answers" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="load">
@@ -516,7 +516,7 @@
 				</xs:choice>
 			</xs:sequence>
 			<xs:attribute name="datasource" type="xs:string" use="required"/>
-			<xs:attribute name="ignoreErrors" type="xs:string"/>
+			<xs:attribute name="ignore-errors" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="groovy">

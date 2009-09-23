@@ -14,8 +14,8 @@
     <programlisting>
   &lt;testcase name=&quot;receiveJMSimeoutTest&quot;&gt;
       &lt;actions&gt;
-          &lt;expectTimeout connect=&quot;myMessageReceiver&quot; 
-                            wait=&quot;500&quot;/&gt;
+          &lt;expect-timeout message-receiver=&quot;myMessageReceiver&quot; 
+                             wait=&quot;500&quot;/&gt;
       &lt;/actions&gt;
   &lt;/testcase&gt;
     </programlisting>
@@ -24,7 +24,7 @@
     
     <itemizedlist mark="opencircle">
         <listitem>
-            <para><emphasis>connect</emphasis>: Reference to a message receiver that will try to receive messages.</para>
+            <para><emphasis>message-receiver</emphasis>: Reference to a message receiver that will try to receive messages.</para>
         </listitem>
         <listitem>
             <para><emphasis>wait</emphasis>: Time period to wait for messages to arrive</para>
