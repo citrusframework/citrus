@@ -43,7 +43,7 @@ public class TestActionRegistry {
         registerActionParser("traceTime", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());
         registerActionParser("expectTimeout", new ReceiveTimeoutActionParser());
-        registerActionParser("purgeJmsQueues", new PurgeJmsQueuesActionParser());
+        registerActionParser("purge-jms-queues", new PurgeJmsQueuesActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());
         registerActionParser("call-template", new CallTemplateParser());

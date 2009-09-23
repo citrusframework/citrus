@@ -27,6 +27,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -35,19 +36,24 @@ import com.consol.citrus.actions.PurgeJmsQueuesAction;
 public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("connect");
-        BeanDefinitionBuilder beanDefinition;
-
-        if (parentBeanName != null && parentBeanName.length()>0) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
-        } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
-        }
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);
+        beanDefinition.addPropertyValue("name", element.getLocalName());
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
+        String connectionFactory = "connectionFactory"; //default value
+        
+        if(element.hasAttribute("connection-factory")) {
+            connectionFactory = element.getAttribute("connection-factory");
+        }
+        
+        if(!StringUtils.hasText(connectionFactory)) {
+            parserContext.getReaderContext().error(
+                    "'connection-factory' attribute must not be empty for this element", element);
+        }
+        
+        beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
+        
         List queueNames = new ArrayList();
         List queueElements = DomUtils.getChildElementsByTagName(element, "queue");
         for (Iterator iter = queueElements.iterator(); iter.hasNext();) {

@@ -277,7 +277,7 @@
 			<xs:element ref="traceTime"/>
 			<xs:element ref="echo"/>
 			<xs:element ref="expectTimeout"/>
-			<xs:element ref="purgeJmsQueues"/>
+			<xs:element ref="purge-jms-queues"/>
 			<xs:element ref="action"/>
 			<xs:element ref="call-template"/>
 			<xs:element ref="input"/>
@@ -313,7 +313,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="purgeJmsQueues">
+	<xs:element name="purge-jms-queues">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="description" minOccurs="0"/>
@@ -323,7 +323,7 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="connect" type="xs:string" use="required"/>
+			<xs:attribute name="connection-factory" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="createVariables">
