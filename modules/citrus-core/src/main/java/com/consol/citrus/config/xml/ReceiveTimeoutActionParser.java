@@ -19,6 +19,7 @@
 
 package com.consol.citrus.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -32,17 +33,15 @@ import com.consol.citrus.actions.ReceiveTimeoutAction;
 public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String parentBeanName = element.getAttribute("connect");
-        BeanDefinitionBuilder beanDefinition;
-
-        if (StringUtils.hasText(parentBeanName)) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
+    	String messageReceiver = element.getAttribute("message-receiver");
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
+        beanDefinition.addPropertyValue("name", element.getLocalName()+ ":" + messageReceiver);
+        
+        if(StringUtils.hasText(messageReceiver)) {
+        	beanDefinition.addPropertyReference("messageReceiver", messageReceiver);
         } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
+        	throw new BeanCreationException("Mandatory 'message-receiver' attribute has to be set");
         }
-
         DescriptionElementParser.doParse(element, beanDefinition);
 
         String wait = element.getAttribute("wait");

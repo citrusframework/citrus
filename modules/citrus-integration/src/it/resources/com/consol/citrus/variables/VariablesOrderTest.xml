@@ -5,8 +5,8 @@
 			<author>Christoph Deppisch</author>
 			<creationdate>2008-05-14</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
-			<lastUpdatedOn>2008-05-14T00:00:00</lastUpdatedOn>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-05-14T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -21,10 +21,10 @@
 		</variables>
 		
         <actions>
-        	<createVariables>
+        	<create-variables>
         		<variable name="z" value="success"/>
         		<variable name="anotherVariable" value="${z}"/>
-        	</createVariables>
+        	</create-variables>
         	
         	<trace-variables/>
         	

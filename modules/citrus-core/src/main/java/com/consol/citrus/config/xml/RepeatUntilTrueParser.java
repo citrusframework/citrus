@@ -38,8 +38,8 @@ public class RepeatUntilTrueParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String indexName = element.getAttribute("indexName");
-        beanDefinition.addPropertyValue("indexName", indexName);
+        String index = element.getAttribute("index");
+        beanDefinition.addPropertyValue("indexName", index);
 
         String condition = element.getAttribute("condition");
         beanDefinition.addPropertyValue("condition", condition);

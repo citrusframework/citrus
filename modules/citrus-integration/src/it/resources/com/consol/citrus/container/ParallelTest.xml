@@ -5,8 +5,8 @@
 			<author>Christoph Deppisch</author>
 			<creationdate>2008-06-13</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
-			<lastUpdatedOn>2008-06-13T00:00:00</lastUpdatedOn>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2008-06-13T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -27,7 +27,7 @@
 				<echo>
 					<message>3</message>
 				</echo>
-				<iterate condition="i lt= 5" indexName="i">
+				<iterate condition="i lt= 5" index="i">
 					<echo>
 						<message>10</message>
 					</echo>

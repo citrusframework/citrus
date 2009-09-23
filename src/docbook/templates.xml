@@ -11,9 +11,9 @@
   
     <programlisting>
   &lt;template name=&quot;doCreateVariables&quot;&gt;
-      &lt;createVariables&gt;
+      &lt;create-variables&gt;
           &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
-      &lt;/createVariables&gt;
+      &lt;/create-variables&gt;
       
       &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
   &lt;/template&gt;

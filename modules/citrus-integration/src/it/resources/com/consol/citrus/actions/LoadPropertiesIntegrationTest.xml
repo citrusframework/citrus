@@ -5,8 +5,8 @@
             <author>Christoph Deppisch</author>
             <creationdate>2008-05-15</creationdate>
             <status>FINAL</status>
-            <lastUpdatedBy>Christoph Deppisch</lastUpdatedBy>
-            <lastUpdatedOn>2008-05-15T00:00:00</lastUpdatedOn>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2008-05-15T00:00:00</last-updated-on>
         </meta-info>
         
         <description>Loading variables from properties file</description>

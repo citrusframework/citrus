@@ -5,8 +5,8 @@
 			<author>Unknown</author>
 			<creationdate>2008-04-25</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Unknown</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+			<last-updated-by>Unknown</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -16,37 +16,37 @@
 			<variable name="max" value="3"/>
 		</variables>
         <actions>
-        	<repeat-until-true condition="i gt citrus:randomNumber(1)" indexName="i">
+        	<repeat-until-true condition="i gt citrus:randomNumber(1)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</repeat-until-true>
 			
-			<repeat-until-true condition="i gt= 5" indexName="i">
+			<repeat-until-true condition="i gt= 5" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</repeat-until-true>
 			
-			<repeat-until-true condition="(i gt 5) or (i = 5)" indexName="i">
+			<repeat-until-true condition="(i gt 5) or (i = 5)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</repeat-until-true>
 			
-			<repeat-until-true condition="(i gt 5) and (i gt 3)" indexName="i">
+			<repeat-until-true condition="(i gt 5) and (i gt 3)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</repeat-until-true>
 			
-			<repeat-until-true condition="i gt 0" indexName="i">
+			<repeat-until-true condition="i gt 0" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</repeat-until-true>
 			
-			<repeat-until-true condition="${max} lt i" indexName="i">
+			<repeat-until-true condition="${max} lt i" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>

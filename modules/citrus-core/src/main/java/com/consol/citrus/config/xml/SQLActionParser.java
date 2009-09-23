@@ -57,7 +57,7 @@ public class SQLActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
             beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
             
-            String ignoreErrors = element.getAttribute("ignoreErrors");
+            String ignoreErrors = element.getAttribute("ignore-errors");
             if (ignoreErrors != null && ignoreErrors.equals("true")) {
                 beanDefinition.addPropertyValue("ignoreErrors", true);
             }

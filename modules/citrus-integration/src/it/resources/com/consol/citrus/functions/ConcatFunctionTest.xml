@@ -5,8 +5,8 @@
 			<author>Unknown</author>
 			<creationdate>2008-04-25</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Unknown</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+			<last-updated-by>Unknown</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -19,11 +19,11 @@
 			<variable name="str2" value="citrus:concat('Hallo', ' Test', ' Framework!')"/>
 		</variables>
         <actions>
-        	<createVariables>
+        	<create-variables>
         		<variable name="str3" value="citrus:concat(${str2})"/>
 				<variable name="str4" value="citrus:concat(${date}, ': Hallo', ' Test', ' Framework! ', ${right})"/>
 				<variable name="str5" value="citrus:concat('Hallo ', ${date}, ' Test', ' Framework! ', ${right})"/>
-        	</createVariables>
+        	</create-variables>
         	
         	<echo><message>citrus:concat('Today is: ', ${date}, ' ', ${right})</message></echo>
         	<echo><message>citrus:concat(${str2})</message></echo>

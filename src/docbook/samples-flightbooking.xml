@@ -219,8 +219,8 @@
               &lt;author&gt;Christoph Deppisch&lt;/author&gt;
               &lt;creationdate&gt;2009-04-15&lt;/creationdate&gt;
               &lt;status&gt;FINAL&lt;/status&gt;
-              &lt;lastUpdatedBy&gt;Christoph Deppisch&lt;/lastUpdatedBy&gt;
-              &lt;lastUpdatedOn&gt;2009-04-15T00:00:00&lt;/lastUpdatedOn&gt;
+              &lt;last-updated-by&gt;Christoph Deppisch&lt;/last-updated-by&gt;
+              &lt;last-updated-on&gt;2009-04-15T00:00:00&lt;/last-updated-on&gt;
           &lt;/meta-info&gt;
           &lt;description&gt;
               Test flight booking service.

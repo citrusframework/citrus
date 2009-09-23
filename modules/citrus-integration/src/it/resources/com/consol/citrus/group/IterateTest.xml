@@ -5,8 +5,8 @@
 			<author>Unknown</author>
 			<creationdate>2008-04-25</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Unknown</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+			<last-updated-by>Unknown</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -16,43 +16,43 @@
 			<variable name="max" value="3"/>
 		</variables>
         <actions>
-        	<iterate condition="i lt= citrus:randomNumber(1)" indexName="i">
+        	<iterate condition="i lt= citrus:randomNumber(1)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="i lt 20" indexName="i">
+			<iterate condition="i lt 20" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="(i lt 5) or (i = 5)" indexName="i">
+			<iterate condition="(i lt 5) or (i = 5)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="(i lt 5) and (i lt 3)" indexName="i">
+			<iterate condition="(i lt 5) and (i lt 3)" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="i = 0" indexName="i">
+			<iterate condition="i = 0" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="${max} gt= i" indexName="i">
+			<iterate condition="${max} gt= i" index="i">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
 			
-			<iterate condition="i lt= 50" indexName="i" start="0" step="5">
+			<iterate condition="i lt= 50" index="i" start="0" step="5">
 				<echo>
 					<message>index is: ${i}</message>
 				</echo>

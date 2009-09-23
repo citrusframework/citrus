@@ -5,8 +5,8 @@
             <author>@test.author@</author>
             <creationdate>@test.creation.date@</creationdate>
             <status>DRAFT</status>
-            <lastUpdatedBy>@test.author@</lastUpdatedBy>
-            <lastUpdatedOn>@test.updatedon.datetime@</lastUpdatedOn>
+            <last-updated-by>@test.author@</last-updated-by>
+            <last-updated-on>@test.updatedon.datetime@</last-updated-on>
         </meta-info>
         
         <description>@test.description@</description>

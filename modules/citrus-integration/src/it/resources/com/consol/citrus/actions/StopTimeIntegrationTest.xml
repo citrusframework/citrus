@@ -5,8 +5,8 @@
 			<author>Chrisotph Deppisch</author>
 			<creationdate>2008-04-25</creationdate>
 			<status>FINAL</status>
-			<lastUpdatedBy>Chrisotph Deppisch</lastUpdatedBy>
-			<lastUpdatedOn>2008-04-25T00:00:00</lastUpdatedOn>
+			<last-updated-by>Chrisotph Deppisch</last-updated-by>
+			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -19,13 +19,13 @@
 			again, using the respective id.	The elapsed time will be printed to the console.
 		</description>
         <actions>
-            <traceTime/>
-            <traceTime id="FirstTimeLineID"/>
+            <trace-time/>
+            <trace-time id="FirstTimeLineID"/>
             <sleep time="1.0"/>
-            <traceTime id="FirstTimeLineID"/>
+            <trace-time id="FirstTimeLineID"/>
             <sleep time="2.0"/>
-            <traceTime/>
-            <traceTime id="FirstTimeLineID"/>
+            <trace-time/>
+            <trace-time id="FirstTimeLineID"/>
         </actions>
     </testcase>
 </spring:beans>

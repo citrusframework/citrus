@@ -63,8 +63,8 @@ public class TestCaseParser implements BeanDefinitionParser {
             Element authorElement = DomUtils.getChildElementByTagName(metaInfoElement, "author");
             Element creationDateElement = DomUtils.getChildElementByTagName(metaInfoElement, "creationdate");
             Element statusElement = DomUtils.getChildElementByTagName(metaInfoElement, "status");
-            Element lastUpdatedByElement = DomUtils.getChildElementByTagName(metaInfoElement, "lastUpdatedBy");
-            Element lastUpdatedOnElement = DomUtils.getChildElementByTagName(metaInfoElement, "lastUpdatedOn");
+            Element lastUpdatedByElement = DomUtils.getChildElementByTagName(metaInfoElement, "last-updated-by");
+            Element lastUpdatedOnElement = DomUtils.getChildElementByTagName(metaInfoElement, "last-updated-on");
 
             metaInfo.setAuthor(DomUtils.getTextValue(authorElement));
             try {
