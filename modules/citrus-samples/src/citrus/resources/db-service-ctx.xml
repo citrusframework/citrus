@@ -11,16 +11,16 @@
     
     <bean id="customerDBDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName">
-            <value>${jdbc.driver}</value>
+            <value>org.hsqldb.jdbcDriver</value>
         </property>
         <property name="url">
-            <value>${jdbc.url}</value>
+            <value>jdbc:hsqldb:mem:test</value>
         </property>
         <property name="username">
-            <value>${db.user}</value>
+            <value>sa</value>
         </property>
         <property name="password">
-            <value>${db.password}</value>
+            <value></value>
         </property>
     </bean>
     
