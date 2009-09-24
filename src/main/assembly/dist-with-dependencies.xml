@@ -91,9 +91,8 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-samples/target/test-classes</directory>
-      <outputDirectory>samples/src/citrus/tests</outputDirectory>
+      <outputDirectory>samples/src/citrus/java</outputDirectory>
       <includes>
-          <include>**/*.class</include>
           <include>**/*.java</include>
       </includes>
       <lineEnding>unix</lineEnding>
@@ -173,6 +172,11 @@
     </file>
     <file>
       <source>modules/citrus-samples/src/main/script/build.xml</source>
+      <outputDirectory>samples</outputDirectory>
+      <lineEnding>unix</lineEnding>
+    </file>
+    <file>
+      <source>modules/citrus-samples/src/main/resources/README.txt</source>
       <outputDirectory>samples</outputDirectory>
       <lineEnding>unix</lineEnding>
     </file>
