@@ -17,11 +17,16 @@
     
 	<typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.0.jar"/>
 	
-	<target name="citrus.run.tests" description="Runs all Citrus tests">
+	<target name="compile.tests">
+	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>
+		<javac srcdir="src/citrus/tests" classpathref="citrus-classpath"/>
+	</target>
+	
+	<target name="citrus.run.tests" depends="compile.tests" description="Runs all Citrus tests">
 		<citrus suitename="citrus-samples" package="com.consol.citrus.*"/>
 	</target>
 	
-	<target name="citrus.run.single.test" description="Runs a single test by name">
+	<target name="citrus.run.single.test" depends="compile.tests" description="Runs a single test by name">
    	 	<touch file="test.history"/>
     	
     	<loadproperties srcfile="test.history"/>
