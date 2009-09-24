@@ -65,9 +65,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
 
                     log.info("Reading property file " + file.getFilename());
                     Properties props = PropertiesLoaderUtils.loadProperties(file);
-                    for (Iterator iter = props.entrySet().iterator(); iter.hasNext();) {
-                        Entry entry = (Entry) iter.next();
-                        
+                    for (Entry<?, ?> entry : props.entrySet()) {
                         String key = entry.getKey().toString();
 
                         log.info("Loading property: " + key + "=" + props.getProperty(key) + " into default variables");
@@ -100,7 +98,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     /**
      * @return the propertyFiles
      */
-    public List getPropertyFiles() {
+    public List<String> getPropertyFiles() {
         return propertyFiles;
     }
 

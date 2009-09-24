@@ -35,22 +35,23 @@ public class MessageSelectorBuilder {
         return new MessageSelectorBuilder(selectorString);
     }
     
-    public static MessageSelectorBuilder fromKeyValueMap(Map valueMap) {
+    public static MessageSelectorBuilder fromKeyValueMap(Map<String, Object> valueMap) {
         StringBuffer buf = new StringBuffer();
 
-        Iterator iter = valueMap.entrySet().iterator();
+        Iterator<Entry<String, Object>> iter = valueMap.entrySet().iterator();
 
         if (iter.hasNext()) {
-            Entry entry = (Entry) iter.next();
-            String key = entry.getKey().toString();
-            String value = (String)entry.getValue();
+            Entry<String, Object> entry = iter.next();
+            String key = entry.getKey();
+            String value = entry.getValue().toString();
 
             buf.append(key + " = '" + value + "'");
         }
 
         while (iter.hasNext()) {
-            String key = (String) iter.next();
-            String value = (String)valueMap.get(key);
+        	Entry<String, Object> entry = iter.next();
+        	String key = entry.getKey();
+            String value = entry.getValue().toString();
 
             buf.append(" AND " + key + " = '" + value + "'");
         }

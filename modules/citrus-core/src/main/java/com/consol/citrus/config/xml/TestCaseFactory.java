@@ -29,20 +29,20 @@ import com.consol.citrus.TestCase;
 
 public class TestCaseFactory implements FactoryBean {
     private TestCase testCase;
-    private List testChain;
-    private List finallyChain;
+    private List<TestAction> testChain;
+    private List<TestAction> finallyChain;
 
     public Object getObject() throws Exception {
         if (this.testChain != null && this.testChain.size() > 0) {
             for (int i = 0; i < testChain.size(); i++) {
-                TestAction action = (TestAction)testChain.get(i);
+                TestAction action = testChain.get(i);
                 testCase.addTestChainAction(action);
             }
         }
 
         if (this.finallyChain != null && this.finallyChain.size() > 0) {
             for (int i = 0; i < finallyChain.size(); i++) {
-                TestAction action = (TestAction)finallyChain.get(i);
+                TestAction action = finallyChain.get(i);
                 testCase.addFinallyChainAction(action);
             }
         }
@@ -50,7 +50,8 @@ public class TestCaseFactory implements FactoryBean {
         return this.testCase;
     }
 
-    public Class getObjectType() {
+    @SuppressWarnings("unchecked")
+	public Class getObjectType() {
         return TestCase.class;
     }
 
@@ -58,7 +59,7 @@ public class TestCaseFactory implements FactoryBean {
         return true;
     }
 
-    public void setFinallyChain(List finallyChain) {
+    public void setFinallyChain(List<TestAction> finallyChain) {
         this.finallyChain = finallyChain;
     }
 
@@ -66,7 +67,7 @@ public class TestCaseFactory implements FactoryBean {
         this.testCase = testCase;
     }
 
-    public void setTestChain(List testChain) {
+    public void setTestChain(List<TestAction> testChain) {
         this.testChain = testChain;
     }
 }

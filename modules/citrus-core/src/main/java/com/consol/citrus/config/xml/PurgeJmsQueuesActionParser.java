@@ -54,9 +54,9 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
         
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
         
-        List queueNames = new ArrayList();
-        List queueElements = DomUtils.getChildElementsByTagName(element, "queue");
-        for (Iterator iter = queueElements.iterator(); iter.hasNext();) {
+        List<String> queueNames = new ArrayList<String>();
+        List<?> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
+        for (Iterator<?> iter = queueElements.iterator(); iter.hasNext();) {
             Element queue = (Element) iter.next();
             queueNames.add(queue.getAttribute("name"));
         }

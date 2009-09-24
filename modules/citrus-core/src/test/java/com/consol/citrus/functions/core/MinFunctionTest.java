@@ -35,7 +35,7 @@ public class MinFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("5.2");
         params.add("4.7");

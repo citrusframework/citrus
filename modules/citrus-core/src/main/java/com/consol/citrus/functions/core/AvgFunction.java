@@ -19,7 +19,6 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.Iterator;
 import java.util.List;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
@@ -34,8 +33,7 @@ public class AvgFunction implements Function {
 
         double result = 0.0;
 
-        for (Iterator iterator = parameterList.iterator(); iterator.hasNext();) {
-            String token = (String) iterator.next();
+        for (String token : parameterList) {
             result += Double.valueOf(token);
         }
 

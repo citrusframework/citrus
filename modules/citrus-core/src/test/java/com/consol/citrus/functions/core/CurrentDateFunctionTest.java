@@ -125,7 +125,8 @@ public class CurrentDateFunctionTest extends AbstractBaseTest {
         function.execute(Collections.singletonList("no date format string"));
     }
     
-    @Test
+	@Test
+	@SuppressWarnings("unchecked")
     public void testNoParameters() {
         Assert.assertEquals(function.execute(Collections.EMPTY_LIST), String.format("%1$td.%1$tm.%1$tY", Calendar.getInstance()));
     }

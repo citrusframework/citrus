@@ -35,7 +35,7 @@ public class TranslateFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("H.llo TestFr.mework");
         params.add("\\.");
         params.add("a");
@@ -45,7 +45,7 @@ public class TranslateFunctionTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingParameter() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("H.llo TestFr.mework");
         params.add("\\.");
         function.execute(params);

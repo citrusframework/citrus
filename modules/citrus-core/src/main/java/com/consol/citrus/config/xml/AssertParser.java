@@ -46,7 +46,7 @@ public class AssertParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
 
         Element action = DOMUtil.getFirstChildElement(element);
 
@@ -55,7 +55,7 @@ public class AssertParser implements BeanDefinitionParser {
         }
 
         if (action != null) {
-            BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
+            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
         }
 

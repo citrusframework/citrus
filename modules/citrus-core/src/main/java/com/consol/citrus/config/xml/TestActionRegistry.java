@@ -22,12 +22,15 @@ package com.consol.citrus.config.xml;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
+
 /**
- * Registers BeanDefinitionParser for action in testcase.
+ * Registers BeanDefinitionParser for action in test case.
+ * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
 public class TestActionRegistry {
-    private static Map parser = new HashMap();
+    private static Map<String, BeanDefinitionParser> parser = new HashMap<String, BeanDefinitionParser>();
 
     /**
      * Default constructor.
@@ -66,7 +69,7 @@ public class TestActionRegistry {
      * @param actionName
      * @param parserObject
      */
-    public static void registerActionParser(String actionName, Object parserObject) {
+    public static void registerActionParser(String actionName, BeanDefinitionParser parserObject) {
         parser.put(actionName, parserObject);
     }
 
@@ -74,7 +77,7 @@ public class TestActionRegistry {
      * Getter for parser.
      * @return
      */
-    public static Map getRegisteredActionParser() {
+    public static Map<String, BeanDefinitionParser> getRegisteredActionParser() {
         return parser;
     }
 }

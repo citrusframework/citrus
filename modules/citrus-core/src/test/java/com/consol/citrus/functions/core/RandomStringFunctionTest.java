@@ -35,30 +35,30 @@ public class RandomStringFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         
         Assert.assertTrue(function.execute(params).length() == 3);
         
-        params = new ArrayList();
+        params = new ArrayList<String>();
         params.add("3");
         params.add("UPPERCASE");
         
         Assert.assertTrue(function.execute(params).length() == 3);
         
-        params = new ArrayList();
+        params = new ArrayList<String>();
         params.add("3");
         params.add("LOWERCASE");
         
         Assert.assertTrue(function.execute(params).length() == 3);
         
-        params = new ArrayList();
+        params = new ArrayList<String>();
         params.add("3");
         params.add("MIXED");
         
         Assert.assertTrue(function.execute(params).length() == 3);
         
-        params = new ArrayList();
+        params = new ArrayList<String>();
         params.add("3");
         params.add("UNKNOWN");
         
@@ -77,7 +77,7 @@ public class RandomStringFunctionTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testTooManyParameters() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("UPPERCASE");
         params.add("too much");

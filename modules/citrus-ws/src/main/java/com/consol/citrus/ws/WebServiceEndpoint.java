@@ -94,7 +94,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             }
         }
         
-        Message requestMessage = requestMessageBuilder.build();
+        Message<?> requestMessage = requestMessageBuilder.build();
         
         log.info("Received WebService request " + requestMessage);
         

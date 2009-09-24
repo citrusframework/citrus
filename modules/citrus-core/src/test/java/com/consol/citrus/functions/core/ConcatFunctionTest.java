@@ -35,7 +35,7 @@ public class ConcatFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("Hallo ");
         params.add("TestFramework");
         params.add("!");

@@ -75,7 +75,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                 }
             }
             
-            Class groovyClass = loader.parseClass(script.toString());
+            Class<?> groovyClass = loader.parseClass(script.toString());
     
             GroovyObject groovyObject;
             groovyObject = (GroovyObject) groovyClass.newInstance();

@@ -24,7 +24,7 @@ import org.springframework.integration.core.Message;
 
 public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler {
 
-    private Message replyMessage = null;
+    private Message<?> replyMessage = null;
     
     public Message<?> receive() {
         return replyMessage;
@@ -49,7 +49,7 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
     /**
      * @return the replyMessage
      */
-    public Message getReplyMessage() {
+    public Message<?> getReplyMessage() {
         return replyMessage;
     }
 

@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class BooleanExpressionParser {
-    private static Stack operators = new Stack();
-    private static Stack values = new Stack();
+    private static Stack<String> operators = new Stack<String>();
+    private static Stack<String> values = new Stack<String>();
 
     /**
      * Logger
@@ -54,9 +54,9 @@ public class BooleanExpressionParser {
                 continue; //ignore
             } else if (actChar == ')') {
                 String operator;
-                while ((operator = (String)operators.pop()) != "(") {
-                    String value = (String)values.pop();
-                    String value2 = (String)values.pop();
+                while ((operator = operators.pop()) != "(") {
+                    String value = values.pop();
+                    String value2 = values.pop();
                     if      (operator.equals("lt"))
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
                     else if (operator.equals("lt="))
@@ -105,9 +105,9 @@ public class BooleanExpressionParser {
         }
 
         while (!operators.isEmpty()) {
-            String operator = (String)operators.pop();
-            String value = (String)values.pop();
-            String value2 = (String)values.pop();
+            String operator = operators.pop();
+            String value = values.pop();
+            String value2 = values.pop();
             if      (operator.equals("lt"))
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
             else if (operator.equals("lt="))
@@ -129,7 +129,7 @@ public class BooleanExpressionParser {
             values.push(value);
         }
 
-        String value = (String)values.pop();
+        String value = values.pop();
         result = Boolean.valueOf(value).booleanValue();
 
         if(log.isDebugEnabled()) {

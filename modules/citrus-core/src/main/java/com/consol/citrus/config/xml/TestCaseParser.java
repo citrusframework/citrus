@@ -48,7 +48,8 @@ public class TestCaseParser implements BeanDefinitionParser {
      * (non-Javadoc)
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-    public final BeanDefinition parse(Element element, ParserContext parseContext) {
+    @SuppressWarnings("unchecked")
+	public final BeanDefinition parse(Element element, ParserContext parseContext) {
         BeanDefinitionBuilder testCaseFactory = BeanDefinitionBuilder.rootBeanDefinition(TestCaseFactory.class);
         BeanDefinitionBuilder testcase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);
 
@@ -104,16 +105,16 @@ public class TestCaseParser implements BeanDefinitionParser {
         Element testVariablesElement = DomUtils.getChildElementByTagName(element, "variables");
 
         if (testVariablesElement != null) {
-            Map testVariables = new LinkedHashMap();
-            List variableElements = DomUtils.getChildElementsByTagName(testVariablesElement, "variable");
-            for (Iterator iter = variableElements.iterator(); iter.hasNext();) {
+            Map<String, String> testVariables = new LinkedHashMap<String, String>();
+            List<?> variableElements = DomUtils.getChildElementsByTagName(testVariablesElement, "variable");
+            for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
                 Element variableDefinition = (Element) iter.next();
                 testVariables.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
             }
             testcase.addPropertyValue("variableDefinitions", testVariables);
         }
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
 
         Element testChainElement = DomUtils.getChildElementByTagName(element, "actions");
         ManagedList testChain = new ManagedList();

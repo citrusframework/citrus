@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Cass to provide general file utils, such as listing all xml files in a directory. Or finding certain
+ * Class to provide general file utilities, such as listing all XML files in a directory. Or finding certain
  * tests in a directory.
  *
  * @author deppisch Christoph Deppisch ConSol* Software GmbH
@@ -35,7 +35,7 @@ import java.util.Stack;
  */
 public class FileUtils {
     /**
-     * Method to retrieve all test defining xml files in given directory.
+     * Method to retrieve all test defining XML files in given directory.
      * Subfolders are supported.
      *
      * @param startDir the directory to hold the files
@@ -46,7 +46,7 @@ public class FileUtils {
         final List<String> files = new ArrayList<String>();
 
         /* Stack to hold potential sub directories */
-        final Stack dirs = new Stack();
+        final Stack<File> dirs = new Stack<File>();
         /* start directory */
         final File startdir = new File(startDir);
         
@@ -55,7 +55,7 @@ public class FileUtils {
 
         /* walk through the directories */
         while (dirs.size() > 0) {
-            File file = (File) dirs.pop();
+            File file = dirs.pop();
             File[] found = file.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     File tmp = new File(dir.getPath() + "/" + name);

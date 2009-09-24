@@ -34,7 +34,7 @@ import com.consol.citrus.util.BooleanExpressionParser;
 
 public class Iterate extends AbstractTestAction {
     /** List of actions to be executed */
-    private List actions = new ArrayList();
+    private List<TestAction> actions = new ArrayList<TestAction>();
 
     private String condition;
 
@@ -74,7 +74,7 @@ public class Iterate extends AbstractTestAction {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
         for (int i = 0; i < actions.size(); i++) {
-            TestAction action = ((TestAction)actions.get(i));
+            TestAction action = actions.get(i);
 
             if (log.isDebugEnabled()) {
                 log.debug("Executing action " + action.getClass().getName());
@@ -94,7 +94,7 @@ public class Iterate extends AbstractTestAction {
         return BooleanExpressionParser.evaluate(conditionString);
     }
 
-    public void setActions(List actions) {
+    public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 

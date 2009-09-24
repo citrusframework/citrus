@@ -35,7 +35,7 @@ public class SubstringFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add("6");
         Assert.assertEquals(function.execute(params), "TestFramework");
@@ -48,7 +48,7 @@ public class SubstringFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testEndIndex() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add("6");
         params.add("10");
@@ -63,7 +63,7 @@ public class SubstringFunctionTest extends AbstractBaseTest {
 
     @Test(expectedExceptions = {StringIndexOutOfBoundsException.class})
     public void testIndexOutOfBounds() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("Test");
         params.add("-1");
         function.execute(params);

@@ -20,7 +20,6 @@
 package com.consol.citrus.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.consol.citrus.context.TestContext;
@@ -32,18 +31,13 @@ import com.consol.citrus.server.Server;
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
 public class StopServerAction extends AbstractTestAction {
-    private List serverList = new ArrayList();
+    private List<Server> serverList = new ArrayList<Server>();
 
     private Server server;
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     */
     @Override
     public void execute(TestContext context) {
-        for (Iterator iter = serverList.iterator(); iter.hasNext();) {
-            Server actServer = (Server) iter.next();
+        for (Server actServer : serverList) {
             actServer.stop();
         }
 
@@ -62,7 +56,7 @@ public class StopServerAction extends AbstractTestAction {
     /**
      * @param serverList the servers to set
      */
-    public void setServerList(List serverList) {
+    public void setServerList(List<Server> serverList) {
         this.serverList = serverList;
     }
 
@@ -76,7 +70,7 @@ public class StopServerAction extends AbstractTestAction {
     /**
      * @return the serverList
      */
-    public List getServerList() {
+    public List<Server> getServerList() {
         return serverList;
     }
 }

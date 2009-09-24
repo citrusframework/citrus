@@ -37,7 +37,7 @@ import com.consol.citrus.context.TestContext;
 public class Sequence extends AbstractTestAction {
 
     /** List of actions to be executed */
-    private List actions = new ArrayList();
+    private List<TestAction> actions = new ArrayList<TestAction>();
 
     /**
      * Logger
@@ -53,7 +53,7 @@ public class Sequence extends AbstractTestAction {
         log.info("Executing action sequence - containing " + actions.size() + " actions");
 
         for (int i = 0; i < actions.size(); i++) {
-            TestAction action = ((TestAction)actions.get(i));
+            TestAction action = actions.get(i);
 
             if(log.isDebugEnabled()) {
                 log.debug("Executing action " + action.getClass().getName());
@@ -67,7 +67,7 @@ public class Sequence extends AbstractTestAction {
     /**
      * @param actions
      */
-    public void setActions(List actions) {
+    public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 }

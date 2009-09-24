@@ -60,7 +60,7 @@ public class GroovyAction extends AbstractTestAction {
             ClassLoader parent = getClass().getClassLoader();
             GroovyClassLoader loader = new GroovyClassLoader(parent);
             
-            Class groovyClass;
+            Class<?> groovyClass;
             
             if(script != null) {
                 groovyClass = loader.parseClass(context.replaceDynamicContentInString(script));

@@ -28,5 +28,5 @@ import org.springframework.integration.core.Message;
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
 public interface MessageHandler {
-    Message handleMessage(Message message);
+    Message<?> handleMessage(Message<?> message);
 }

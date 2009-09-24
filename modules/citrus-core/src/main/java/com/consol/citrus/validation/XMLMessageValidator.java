@@ -29,11 +29,11 @@ import org.springframework.integration.core.Message;
 import com.consol.citrus.context.TestContext;
 
 public interface XMLMessageValidator extends MessageValidator {
-    public boolean validateXMLSchema(Message receivedMessage);
+    public boolean validateXMLSchema(Message<?> receivedMessage);
 
-    public boolean validateDTD(Resource dtdResource, Message receivedMessage);
+    public boolean validateDTD(Resource dtdResource, Message<?> receivedMessage);
 
-    public boolean validateNamespaces(Map expectedNamespaces, Message receivedMessage);
+    public boolean validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage);
     
-    public boolean validateMessageElements(Map<String, String> validateElements, Message receivedMessage, NamespaceContext nsContext, TestContext context);
+    public boolean validateMessageElements(Map<String, String> validateElements, Message<?> receivedMessage, NamespaceContext nsContext, TestContext context);
 }

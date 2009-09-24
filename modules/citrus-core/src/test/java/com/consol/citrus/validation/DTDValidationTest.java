@@ -50,7 +50,8 @@ public class DTDValidationTest extends AbstractBaseTest {
         receiveMessageBean.setValidator(validator);
     }
     
-    @Test
+	@Test
+	@SuppressWarnings("unchecked")
     public void testInlineDTD() {
         reset(messageReceiver);
         
@@ -83,6 +84,7 @@ public class DTDValidationTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testExternalDTD() {
         reset(messageReceiver);
         

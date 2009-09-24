@@ -39,9 +39,9 @@ public class TraceVariablesActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        List variableNames = new ArrayList();
-        List variableElements = DomUtils.getChildElementsByTagName(element, "variable");
-        for (Iterator iter = variableElements.iterator(); iter.hasNext();) {
+        List<String> variableNames = new ArrayList<String>();
+        List<?> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
+        for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
             Element variable = (Element) iter.next();
             variableNames.add(variable.getAttribute("name"));
         }

@@ -94,7 +94,7 @@ public class HttpServer extends AbstractServer {
 
                 log.info("[HttpServer] parsing request ...");
 
-                final Message request;
+                final Message<?> request;
                 Map<String, Object> requestHeaders = new HashMap<String, Object>();
                 
                 String readLine = in.readLine();
@@ -166,7 +166,7 @@ public class HttpServer extends AbstractServer {
                     return;
                 }
 
-                Message response = messageHandler.handleMessage(request);
+                Message<?> response = messageHandler.handleMessage(request);
                 
                 if(response != null) {
                     String responseStr = HttpUtils.generateResponse(response);
@@ -314,7 +314,7 @@ public class HttpServer extends AbstractServer {
 
             Socket socket = new Socket(addr, port);
 
-            Message httpRequest;
+            Message<?> httpRequest;
             
             httpRequest = MessageBuilder.withPayload("quit")
                             .setHeader("HTTPVersion", HttpConstants.HTTP_VERSION)

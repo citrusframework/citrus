@@ -44,6 +44,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     ReceiveMessageAction receiveMessageBean;
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValues() {
         reset(messageReceiver);
         
@@ -82,6 +83,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesComplete() {
         reset(messageReceiver);
         
@@ -122,6 +124,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesWrongExpectedValue() {
         reset(messageReceiver);
         
@@ -160,6 +163,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesForWrongElement() {
         reset(messageReceiver);
         
@@ -198,6 +202,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateEmptyHeaderValues() {
         reset(messageReceiver);
         
@@ -238,6 +243,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesNullComparison() {
         reset(messageReceiver);
         
@@ -278,6 +284,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testExtractHeaderValues() {
         reset(messageReceiver);
         

@@ -76,7 +76,7 @@ public class CurrentDateFunction implements Function {
 
     private int getDateValueOffset(String offsetString, char c) {
         int index = 0;
-        ArrayList charList = new ArrayList();
+        ArrayList<Character> charList = new ArrayList<Character>();
 
         if ((index = offsetString.indexOf(c)) != -1) {
             for (int i = index-1; i >= 0; i--) {

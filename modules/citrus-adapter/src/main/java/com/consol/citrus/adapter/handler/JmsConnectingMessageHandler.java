@@ -59,7 +59,7 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public Message handleMessage(final Message request) {
+    public Message<?> handleMessage(final Message<?> request) {
         log.info("[HttpServer] Forwarding request to: " + getDestinationName());
 
         if(log.isDebugEnabled()) {
@@ -72,7 +72,7 @@ public class JmsConnectingMessageHandler implements MessageHandler {
         MessageConsumer messageConsumer = null;
         Destination replyDestination = null;
         
-        Message replyMessage = null;
+        Message<?> replyMessage = null;
         try {
             connection = createConnection();
             session = createSession(connection);

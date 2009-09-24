@@ -19,9 +19,15 @@
 
 package com.consol.citrus.actions;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -31,7 +37,9 @@ import org.springframework.dao.DataAccessException;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -46,18 +54,18 @@ import com.consol.citrus.variable.VariableUtils;
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
     /** Map holding all expected values to be validated */
-    protected Map validationElements = new HashMap();
+    protected Map<String, String> validationElements = new HashMap<String, String>();
 
     /** SQL file resource */
     private Resource sqlResource;
 
-    /** List of sql statemens */
-    private List statements = new ArrayList();
+    /** List of SQL statements */
+    private List<String> statements = new ArrayList<String>();
 
     /** Number of retries when validation fails. */
     private int maxRetries = 0;
 
-    /** Pause between retries (in ms). */
+    /** Pause between retries (in milliseconds). */
     private int retryPauseInMs = 1000;
 
     /**
@@ -69,7 +77,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @see com.consol.citrus.TestAction#execute(TestContext)
      * @throws CitrusRuntimeException
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void execute(TestContext context) {
         BufferedReader reader = null;
         
@@ -91,15 +100,15 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
             }
 
-            Map resultMap = new HashMap();
+            Map<String, Object> resultMap = new HashMap<String, Object>();
             int countRetries = 0;
             boolean successful = false;
             while (!successful) {
                 try {
-                    Iterator iter = statements.iterator();
+                    Iterator<String> iter = statements.iterator();
 
                     while (iter.hasNext()) {
-                        String stmt = (String)iter.next();
+                        String stmt = iter.next();
 
                         try {
                             stmt = context.replaceDynamicContentInString(stmt);
@@ -135,19 +144,15 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
             }
 
-            for (Iterator iterator = resultMap.entrySet().iterator(); iterator.hasNext();) {
-                Entry entry = (Entry) iterator.next();
-                String key = entry.getKey().toString();
+            for (Entry<String, Object> entry : resultMap.entrySet()) {
                 if (entry.getValue() == null) {
-                    resultMap.put(key, "NULL");
+                    resultMap.put(entry.getKey(), "NULL");
                 }
             }
 
-            Map variableMap = new HashMap();
-            for (Iterator iterator = resultMap.entrySet().iterator(); iterator.hasNext();) {
-                Entry entry = (Entry) iterator.next();
-                String key = entry.getKey().toString();
-                variableMap.put(CitrusConstants.VARIABLE_PREFIX + key + CitrusConstants.VARIABLE_SUFFIX, entry.getValue());
+            Map<String, String> variableMap = new HashMap<String, String>();
+            for (Entry<String, Object> entry : resultMap.entrySet()) {
+                variableMap.put(CitrusConstants.VARIABLE_PREFIX + entry.getKey() + CitrusConstants.VARIABLE_SUFFIX, entry.getValue().toString());
             }
 
             context.addVariables(variableMap);
@@ -173,10 +178,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Checks on the size of the result list:
      * if no rows were returned a CitrusRuntimeException is thrown, if more than one row
      * is returned some logging entries are made.
-     * @param stmt The sql statement (just needed for logging).
+     * @param stmt The SQL statement (just needed for logging).
      * @param resultList The list which is checked.
      */
-    private void checkOnResultSize(String stmt, List resultList) {
+    @SuppressWarnings("unchecked")
+	private void checkOnResultSize(String stmt, List resultList) {
         if (resultList.size() == 0) {
             throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);
         }
@@ -188,9 +194,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             if (log.isDebugEnabled()) {
                 log.debug("Other data rows are:");
                 for (int i=1; i<resultList.size(); i++) {
-                    final StringBuffer r = new StringBuffer();
-                    final Map row = (Map) resultList.get(i);
-                    Iterator it = row.entrySet().iterator();
+                    StringBuffer r = new StringBuffer();
+                    Iterator it = ((Map) resultList.get(i)).entrySet().iterator();
                     while (it.hasNext()) {
                         Entry entry = (Entry) it.next();
                         String key = entry.getKey().toString();
@@ -226,15 +231,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @throws UnknownElementException
      * @throws ValidationException
      */
-    protected boolean validate(final Map expectedValues, final Map resultValues, TestContext context) throws UnknownElementException, ValidationException
+    protected boolean validate(final Map<String, String> expectedValues, final Map<String, Object> resultValues, TestContext context) throws UnknownElementException, ValidationException
     {
         log.info("Start database query validation ...");
 
-        final Iterator it = expectedValues.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry entry = (Entry)it.next();
-            String columnName = entry.getKey().toString();
-            String expectedValue = (String)entry.getValue();
+        for (Entry<String, String> entry : expectedValues.entrySet()) {
+            String columnName = entry.getKey();
+            String expectedValue = entry.getValue();
             
             if (!resultValues.containsKey(columnName)) {
                 throw new CitrusRuntimeException("Could not find column " + columnName + " in SQL result set");
@@ -283,7 +286,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Spring property setter.
      * @param statements
      */
-    public void setStatements(List statements) {
+    public void setStatements(List<String> statements) {
         this.statements = statements;
     }
 
@@ -299,7 +302,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Spring property setter.
      * @param validateDBValues
      */
-    public void setValidationElements(Map validationElements) {
+    public void setValidationElements(Map<String, String> validationElements) {
         this.validationElements = validationElements;
     }
 

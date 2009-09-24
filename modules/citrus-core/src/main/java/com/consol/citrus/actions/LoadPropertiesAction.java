@@ -66,8 +66,8 @@ public class LoadPropertiesAction extends AbstractTestAction {
             throw new CitrusRuntimeException(e);
         }
 
-        for (Iterator iter = props.entrySet().iterator(); iter.hasNext();) {
-            String key = ((Entry)iter.next()).getKey().toString();
+        for (Iterator<Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
+            String key = ((Entry<Object, Object>)iter.next()).getKey().toString();
 
             log.info("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
 

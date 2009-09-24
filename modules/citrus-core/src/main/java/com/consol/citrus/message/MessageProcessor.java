@@ -29,11 +29,11 @@ import org.springframework.integration.core.Message;
  *
  */
 public interface MessageProcessor {
-    Message processMessage(Message message);
+    Message<?> processMessage(Message<?> message);
 
-    List getMessageHandler();
+    List<MessageHandler> getMessageHandler();
 
-    void setMessageHandler(List messageHandler);
+    void setMessageHandler(List<MessageHandler> messageHandler);
 
     MessageHandler getDefaultMessageHandler();
 

@@ -19,9 +19,9 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ import com.consol.citrus.variable.VariableUtils;
 public class CreateVariablesAction extends AbstractTestAction {
 
     /** Variables to set */
-    private Map newVariables = new LinkedHashMap();
+    private Map<String, String> newVariables = new LinkedHashMap<String, String>();
 
     /**
      * Logger
@@ -51,11 +51,9 @@ public class CreateVariablesAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        Iterator it = newVariables.keySet().iterator();
-        String value;
-        while (it.hasNext()) {
-            String key = (String)it.next();
-            value = (String)newVariables.get(key);
+        for (Entry<String, String> entry : newVariables.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
 
             log.info("Try to set variable: " +  key + " to value " + value);
 
@@ -75,7 +73,7 @@ public class CreateVariablesAction extends AbstractTestAction {
      * Setter for variables
      * @param variables
      */
-    public void setVariables(Map variables) {
+    public void setVariables(Map<String, String> variables) {
         this.newVariables = variables;
     }
 

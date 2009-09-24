@@ -53,7 +53,7 @@ public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
             log.debug(getReplyMessage().toString());
         }
 
-        Message httpResponse;
+        Message<?> httpResponse;
         try {
             BufferedReader reader = new BufferedReader(new StringReader(getReplyMessage().getPayload().toString()));
 

@@ -56,6 +56,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElements() {
         reset(messageReceiver);
         
@@ -105,6 +106,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
 //    }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementAttributes() {
         reset(messageReceiver);
         
@@ -129,6 +131,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsWrongExpectedElement() {
         reset(messageReceiver);
         
@@ -153,6 +156,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsWrongExpectedValue() {
         reset(messageReceiver);
         
@@ -177,6 +181,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementAttributesWrongExpectedValue() {
         reset(messageReceiver);
         
@@ -201,6 +206,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
         reset(messageReceiver);
         
@@ -225,6 +231,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testSetMessageElements() {
         reset(messageReceiver);
         
@@ -257,6 +264,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementsUsingEmptyString() {
         reset(messageReceiver);
         
@@ -289,6 +297,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementsAndValidate() {
         reset(messageReceiver);
         
@@ -327,6 +336,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementAttributes() {
         reset(messageReceiver);
         
@@ -359,6 +369,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementsError() {
         reset(messageReceiver);
         
@@ -391,6 +402,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementAttributesError() {
         reset(messageReceiver);
         
@@ -423,6 +435,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testSetMessageElementAttributesErrorWrongElement() {
         reset(messageReceiver);
         
@@ -455,6 +468,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }    
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testExtractMessageElements() {
         reset(messageReceiver);
         
@@ -492,6 +506,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testExtractMessageAttributes() {
         reset(messageReceiver);
         
@@ -529,6 +544,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testExtractMessageElementsForWrongElement() {
         reset(messageReceiver);
         
@@ -564,6 +580,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @SuppressWarnings("unchecked")
     public void testExtractMessageElementsForWrongAtribute() {
         reset(messageReceiver);
         

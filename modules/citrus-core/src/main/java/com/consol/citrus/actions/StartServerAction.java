@@ -20,7 +20,6 @@
 package com.consol.citrus.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ import com.consol.citrus.server.Server;
  */
 public class StartServerAction extends AbstractTestAction {
     /** List of beans to start */
-    private List serverList = new ArrayList();
+    private List<Server> serverList = new ArrayList<Server>();
 
     private Server server;
 
@@ -53,8 +52,7 @@ public class StartServerAction extends AbstractTestAction {
     public void execute(TestContext context) {
         log.info("Starting up servers");
 
-        for (Iterator iter = serverList.iterator(); iter.hasNext();) {
-            Server actServer = (Server) iter.next();
+        for (Server actServer : serverList) {
             actServer.start();
             log.info("Started server: " + actServer.getName());
         }
@@ -75,7 +73,7 @@ public class StartServerAction extends AbstractTestAction {
     /**
      * @param serverList the servers to set
      */
-    public void setServerList(List serverList) {
+    public void setServerList(List<Server> serverList) {
         this.serverList = serverList;
     }
 
@@ -89,7 +87,7 @@ public class StartServerAction extends AbstractTestAction {
     /**
      * @return the serverList
      */
-    public List getServerList() {
+    public List<Server> getServerList() {
         return serverList;
     }
 }

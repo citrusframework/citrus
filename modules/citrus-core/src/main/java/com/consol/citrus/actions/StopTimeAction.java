@@ -31,14 +31,14 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Action used for time measurement during test workflow
+ * Action used for time measurement during test
  * 
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
  */
 public class StopTimeAction extends AbstractTestAction {
 
     /** Static member to hold all time stamps */
-    private static Map timeStamps = new HashMap();
+    private static Map<String, Long> timeStamps = new HashMap<String, Long>();
 
     /** Default time stamp id */
     private static String DEFAULT_ID = "DEFAULT_TIME";
@@ -68,9 +68,9 @@ public class StopTimeAction extends AbstractTestAction {
         try {
             if (timeStamps.containsKey(id)) {
                 if (description != null)
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - ((Long)timeStamps.get(id)).longValue())/(double)1000) + " seconds (" + description + ")");
+                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds (" + description + ")");
                 else
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - ((Long)timeStamps.get(id)).longValue())/(double)1000) + " seconds");
+                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds");
             } else {
                 log.info("Starting TimeWatcher: " + id);
                 timeStamps.put(id, Long.valueOf(System.currentTimeMillis()));

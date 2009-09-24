@@ -46,7 +46,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public Message handleMessage(Message request) {
+    public Message<?> handleMessage(Message<?> request) {
         Assert.notNull(messageHandlerContext, "MessageHandler application context must not be empty or null");
         
         try {

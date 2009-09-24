@@ -25,7 +25,7 @@ import java.util.Map;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 
 public class FunctionLibrary {
-    private Map members = new HashMap();
+    private Map<String, Function> members = new HashMap<String, Function>();
 
     private static final String DEFAULT_PREFIX = "citrus:";
 
@@ -38,7 +38,7 @@ public class FunctionLibrary {
             throw new NoSuchFunctionException("Can not find function " + functionName + " in library " + name + " (" + prefix + ")");
         }
 
-        return (Function)members.get(functionName);
+        return members.get(functionName);
     }
 
     public boolean knowsFunction(String functionName) {
@@ -55,7 +55,7 @@ public class FunctionLibrary {
         }
     }
 
-    public void setMembers(Map members) {
+    public void setMembers(Map<String, Function> members) {
         this.members = members;
     }
 

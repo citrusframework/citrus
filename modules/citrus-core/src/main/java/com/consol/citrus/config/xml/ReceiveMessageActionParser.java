@@ -62,9 +62,9 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 builder.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
             }
 
-            Map messageSelector = new HashMap();
-            List messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
-            for (Iterator iter = messageSelectorElements.iterator(); iter.hasNext();) {
+            Map<String, String> messageSelector = new HashMap<String, String>();
+            List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
+            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
                 Element selectorElement = (Element) iter.next();
                 messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
             }
@@ -95,36 +95,36 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 }
             }
 
-            Map setMessageValues = new HashMap();
-            List messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
-            for (Iterator iter = messageValueElements.iterator(); iter.hasNext();) {
+            Map<String, String> setMessageValues = new HashMap<String, String>();
+            List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
             }
             builder.addPropertyValue("messageElements", setMessageValues);
 
-            List ignoreValues = new ArrayList();
-            List ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
-            for (Iterator iter = ignoreElements.iterator(); iter.hasNext();) {
+            List<String> ignoreValues = new ArrayList<String>();
+            List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
+            for (Iterator<?> iter = ignoreElements.iterator(); iter.hasNext();) {
                 Element ignoreValue = (Element) iter.next();
                 ignoreValues.add(ignoreValue.getAttribute("path"));
             }
             builder.addPropertyValue("ignoreMessageElements", ignoreValues);
 
-            Map validateValues = new HashMap();
-            List validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
+            Map<String, String> validateValues = new HashMap<String, String>();
+            List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
             if (validateElements.size() > 0) {
-                for (Iterator iter = validateElements.iterator(); iter.hasNext();) {
+                for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                     Element validateValue = (Element) iter.next();
                     validateValues.put(validateValue.getAttribute("path"), validateValue.getAttribute("value"));
                 }
                 builder.addPropertyValue("validateMessageElements", validateValues);
             }
             
-            Map namespaces = new HashMap();
-            List namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+            Map<String, String> namespaces = new HashMap<String, String>();
+            List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
             if (namespaceElements.size() > 0) {
-                for (Iterator iter = namespaceElements.iterator(); iter.hasNext();) {
+                for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext();) {
                     Element namespaceElement = (Element) iter.next();
                     namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                 }
@@ -133,10 +133,10 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         }
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
-        Map setHeaderValues = new HashMap();
+        Map<String, String> setHeaderValues = new HashMap<String, String>();
         if (headerElement != null) {
-            List elements = DomUtils.getChildElementsByTagName(headerElement, "element");
-            for (Iterator iter = elements.iterator(); iter.hasNext();) {
+            List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
+            for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
@@ -144,18 +144,18 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         }
 
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map getMessageValues = new HashMap();
-        Map getHeaderValues = new HashMap();
+        Map<String, String> getMessageValues = new HashMap<String, String>();
+        Map<String, String> getHeaderValues = new HashMap<String, String>();
         if (extractElement != null) {
-            List headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
-            for (Iterator iter = headerValueElements.iterator(); iter.hasNext();) {
+            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
+            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
                 getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
             }
             builder.addPropertyValue("extractHeaderValues", getHeaderValues);
 
-            List messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
-            for (Iterator iter = messageValueElements.iterator(); iter.hasNext();) {
+            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 getMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("variable"));
             }

@@ -136,7 +136,7 @@ public class Citrus {
     public static String getClassNameForTest(final String startDir, final String testName)
         throws IOException, FileNotFoundException {
         /* Stack to hold potential sub directories */
-        final Stack dirs = new Stack();
+        final Stack<File> dirs = new Stack<File>();
         /* start directory */
         final File startdir = new File(startDir);
 
@@ -145,7 +145,7 @@ public class Citrus {
 
         /* walk through the directories */
         while (dirs.size() > 0) {
-            File file = (File) dirs.pop();
+            File file = dirs.pop();
             File[] found = file.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     File tmp = new File(dir.getPath() + "/" + name);

@@ -53,9 +53,9 @@ import com.consol.citrus.report.TestSuiteListeners;
  */
 public class TestSuite implements BeanNameAware {
     /** List of tasks before, between and after */
-    private List tasksBefore = new ArrayList();
-    private List tasksBetween = new ArrayList();
-    private List tasksAfter = new ArrayList();
+    private List<TestAction> tasksBefore = new ArrayList<TestAction>();
+    private List<TestAction> tasksBetween = new ArrayList<TestAction>();
+    private List<TestAction> tasksAfter = new ArrayList<TestAction>();
 
     private String name = "";
 
@@ -81,7 +81,7 @@ public class TestSuite implements BeanNameAware {
         log.info("Found " + tasksBefore.size() + " tasks in init phase");
 
         for(int i=0; i<tasksBefore.size();i++)  {
-            final TestAction testAction = (TestAction)tasksBefore.get(i);
+            final TestAction testAction = tasksBefore.get(i);
 
             try {
                 /* Executing test action and validate its success */
@@ -119,7 +119,7 @@ public class TestSuite implements BeanNameAware {
         }
 
         for(int i=0; i<tasksAfter.size();i++)  {
-            final TestAction testAction = (TestAction)tasksAfter.get(i);
+            final TestAction testAction = tasksAfter.get(i);
 
             try {
                 /* Executing test action and validate its success */
@@ -153,7 +153,7 @@ public class TestSuite implements BeanNameAware {
         }
 
         for(int j=0; j<tasksBetween.size();j++)  {
-            final TestAction testAction = (TestAction)tasksBetween.get(j);
+            final TestAction testAction = tasksBetween.get(j);
 
             /* Executing test action */
             testAction.execute(context);
@@ -165,7 +165,7 @@ public class TestSuite implements BeanNameAware {
      * Injects the tasks after
      * @param tasksAfter
      */
-    public void setTasksAfter(List tasksAfter) {
+    public void setTasksAfter(List<TestAction> tasksAfter) {
         this.tasksAfter = tasksAfter;
     }
 
@@ -174,7 +174,7 @@ public class TestSuite implements BeanNameAware {
      * Injects the tasks before
      * @param tasksBefore
      */
-    public void setTasksBefore(List tasksBefore) {
+    public void setTasksBefore(List<TestAction> tasksBefore) {
         this.tasksBefore = tasksBefore;
     }
 
@@ -183,7 +183,7 @@ public class TestSuite implements BeanNameAware {
      * Injects the tasks between
      * @param tasksBetween
      */
-    public void setTasksBetween(List tasksBetween) {
+    public void setTasksBetween(List<TestAction> tasksBetween) {
         this.tasksBetween = tasksBetween;
     }
 

@@ -159,7 +159,7 @@ public class TestContextTest extends AbstractBaseTest {
     
     @Test
     public void testAddVariables() {
-        Map vars = new HashMap();
+        Map<String, String> vars = new HashMap<String, String>();
         vars.put("${test1}", "123");
         vars.put("${test2}", "");
         
@@ -173,7 +173,7 @@ public class TestContextTest extends AbstractBaseTest {
     public void testReplaceVariablesInMap() {
         context.getVariables().put("test", "123");
         
-        Map testMap = new HashMap();
+        Map<String, Object> testMap = new HashMap<String, Object>();
         testMap.put("plainText", "Hello TestFramework!");
         testMap.put("value", "${test}");
         
@@ -200,12 +200,12 @@ public class TestContextTest extends AbstractBaseTest {
     public void testReplaceVariablesInList() {
         context.getVariables().put("test", "123");
         
-        List testList = new ArrayList();
+        List<String> testList = new ArrayList<String>();
         testList.add("Hello TestFramework!");
         testList.add("${test}");
         testList.add("test");
         
-        List replaceValues = context.replaceVariablesInList(testList);
+        List<String> replaceValues = context.replaceVariablesInList(testList);
         
         Assert.assertEquals(replaceValues.get(0), "Hello TestFramework!");
         Assert.assertEquals(replaceValues.get(1), "123");

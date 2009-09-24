@@ -20,7 +20,11 @@
 package com.consol.citrus.context;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -104,16 +108,16 @@ public class TestContext {
     }
     
     /**
-     * All variables in map will be added to global varibables.
+     * All variables in map will be added to global variables.
      * Existing variables will be overwritten.
      * @param context
      */
     public void addVariables(Map<String, String> variablesToSet) {
-        for (Entry entry : variablesToSet.entrySet()) {
+        for (Entry<String, String> entry : variablesToSet.entrySet()) {
             if (entry.getValue() != null) {
-                setVariable(entry.getKey().toString(), entry.getValue().toString());
+                setVariable(entry.getKey(), entry.getValue());
             } else {
-                setVariable(entry.getKey().toString(), "");
+                setVariable(entry.getKey(), "");
             }
         }
     }
@@ -126,18 +130,16 @@ public class TestContext {
      * @param doc W3C XML document, holding the variable values.
      * @throws UnknownElementException
      */
-    public void createVariablesFromMessageValues(final Map messageElements, Message message) throws UnknownElementException {
+    public void createVariablesFromMessageValues(final Map<String, String> messageElements, Message<?> message) throws UnknownElementException {
         if (messageElements == null || messageElements.isEmpty()) return;
 
         if(log.isDebugEnabled()) {
             log.debug("Reading XML elements from document");
         }
 
-        Iterator it = messageElements.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry entry = (Entry) it.next();
-            String pathExpression = entry.getKey().toString();
-            String variableName = (String)entry.getValue();
+        for (Entry<String, String> entry : messageElements.entrySet()) {
+            String pathExpression = entry.getKey();
+            String variableName = entry.getValue();
 
             if(log.isDebugEnabled()) {
                 log.debug("Reading element: " + pathExpression);
@@ -175,12 +177,11 @@ public class TestContext {
      *
      * @param map
      */
-    public Map replaceVariablesInMap(final Map map) {
-        Map target = new HashMap();
+    public Map<String, Object> replaceVariablesInMap(final Map<String, ?> map) {
+        Map<String, Object> target = new HashMap<String, Object>();
         
-        for (Iterator iterMap = map.entrySet().iterator(); iterMap.hasNext();) {
-            Entry entry = (Entry) iterMap.next();
-            String key = entry.getKey().toString();
+        for (Entry<String, ?> entry : map.entrySet()) {
+            String key = entry.getKey();
             String value = (String)entry.getValue();
 
             // If value is a variable
@@ -201,11 +202,11 @@ public class TestContext {
      * Replace variables in list with respective values
      * @param list
      */
-    public List replaceVariablesInList(List list) {
-        List variableFreeList = new ArrayList();
+    public List<String> replaceVariablesInList(List<String> list) {
+        List<String> variableFreeList = new ArrayList<String>();
 
         for (int i = 0; i < list.size(); i++) {
-            String variable = (String)list.get(i);
+            String variable = list.get(i);
             if (VariableUtils.isVariableName(variable)) {
                 // then replace variable by variable value
                 variableFreeList.add(getVariable(variable));
@@ -225,13 +226,12 @@ public class TestContext {
      * @param extractHeaderValues map containing elements to be extracted from message header
      * @param receivedHeaderValues header elements from received message
      */
-    public void createVariablesFromHeaderValues(final Map extractHeaderValues, final Map receivedHeaderValues) throws UnknownElementException {
+    public void createVariablesFromHeaderValues(final Map<String, String> extractHeaderValues, final Map<String, ?> receivedHeaderValues) throws UnknownElementException {
         if (extractHeaderValues== null || extractHeaderValues.isEmpty()) return;
 
-        for (Iterator iter = extractHeaderValues.entrySet().iterator(); iter.hasNext();) {
-            Entry entry = (Entry) iter.next();
-            String headerElementName = entry.getKey().toString();
-            String targetVariableName = (String)entry.getValue();
+        for (Entry<String, String> entry : extractHeaderValues.entrySet()) {
+            String headerElementName = entry.getKey();
+            String targetVariableName = entry.getValue();
 
             if (receivedHeaderValues.get(headerElementName) == null) {
                 throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
@@ -253,18 +253,16 @@ public class TestContext {
      * @throws CitrusRuntimeException
      * @throws UnknownElementException
      */
-    public String replaceMessageValues(final Map messageElements, String messagePayload) {
+    public String replaceMessageValues(final Map<String, String> messageElements, String messagePayload) {
         Document doc = XMLUtils.parseMessagePayload(messagePayload);
 
         if (doc == null) {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
         }
         
-        Iterator it = messageElements.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry entry = (Entry) it.next();
-            String pathExpression = entry.getKey().toString();
-            String valueExpression = (String)entry.getValue();
+        for (Entry<String, String> entry : messageElements.entrySet()) {
+            String pathExpression = entry.getKey();
+            String valueExpression = entry.getValue();
 
             if (VariableUtils.isVariableName(valueExpression)) {
                 valueExpression = getVariable(valueExpression);
@@ -331,7 +329,7 @@ public class TestContext {
      * Getter for global variables
      * @return global variables
      */
-    public Map getVariables() {
+    public Map<String, String> getVariables() {
         return variables;
     }
 

@@ -19,7 +19,11 @@
 
 package com.consol.citrus.group;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +47,9 @@ public class Template extends AbstractTestAction {
     private String name;
 
     /** List of actions to be executed */
-    private List actions = new ArrayList();
+    private List<TestAction> actions = new ArrayList<TestAction>();
 
-    private Map parameter = new LinkedHashMap();
+    private Map<String, String> parameter = new LinkedHashMap<String, String>();
     
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -55,18 +59,13 @@ public class Template extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Template.class);
 
-    /*
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute()
-     */
     @Override
     public void execute(TestContext context) {
         log.info("Executing action template '" + name + "' - containing " + actions.size() + " actions");
 
-        for (Iterator iterator = parameter.keySet().iterator(); iterator.hasNext();) {
-            String param = (String) iterator.next();
-
-            String paramValue = (String)parameter.get(param);
+        for (Entry<String, String> entry : parameter.entrySet()) {
+            String param = entry.getKey();
+            String paramValue = entry.getValue();
 
             if (VariableUtils.isVariableName(paramValue)) {
                 paramValue = context.getVariable(paramValue);
@@ -80,7 +79,7 @@ public class Template extends AbstractTestAction {
         }
 
         for (int i = 0; i < actions.size(); i++) {
-            TestAction action = ((TestAction)actions.get(i));
+            TestAction action = actions.get(i);
 
             if (log.isDebugEnabled()) {
                 log.debug("Executing action " + action.getClass().getName());
@@ -95,7 +94,7 @@ public class Template extends AbstractTestAction {
     /**
      * @param actions
      */
-    public void setActions(List actions) {
+    public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 
@@ -110,7 +109,7 @@ public class Template extends AbstractTestAction {
     /**
      * @param parameter the parameter to set
      */
-    public void setParameter(Map parameter) {
+    public void setParameter(Map<String, String> parameter) {
         this.parameter = parameter;
     }
 }

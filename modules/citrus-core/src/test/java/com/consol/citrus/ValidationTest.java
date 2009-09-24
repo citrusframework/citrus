@@ -52,6 +52,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTree() {
         reset(messageReceiver);
         
@@ -78,6 +79,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeDifferentAttributeOrder() {
         reset(messageReceiver);
         
@@ -104,6 +106,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeMissingElement() {
         reset(messageReceiver);
         
@@ -129,6 +132,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeAdditionalElement() {
         reset(messageReceiver);
         
@@ -156,6 +160,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeMissingAttribute() {
         reset(messageReceiver);
         
@@ -182,6 +187,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeAdditionalAttribute() {
         reset(messageReceiver);
         
@@ -208,6 +214,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeWrongAttribute() {
         reset(messageReceiver);
         
@@ -234,6 +241,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeWrongElement() {
         reset(messageReceiver);
         
@@ -260,6 +268,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeWrongNodeValue() {
         reset(messageReceiver);
         
@@ -286,6 +295,7 @@ public class ValidationTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
+    @SuppressWarnings("unchecked")
     public void testValidateXMLTreeWrongAttributeValue() {
         reset(messageReceiver);
         

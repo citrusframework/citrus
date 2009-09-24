@@ -55,6 +55,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsVariablesSupport() {
         reset(messageReceiver);
         
@@ -82,6 +83,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsFunctionSupport() {
         reset(messageReceiver);
         
@@ -110,6 +112,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsVariableSupportInExpression() {
         reset(messageReceiver);
         
@@ -136,6 +139,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateMessageElementsFunctionSupportInExpression() {
         reset(messageReceiver);
         
@@ -163,6 +167,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesVariablesSupport() {
         reset(messageReceiver);
         
@@ -204,6 +209,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testValidateHeaderValuesFunctionSupport() {
         reset(messageReceiver);
         
@@ -243,6 +249,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testHeaderNameVariablesSupport() {
         reset(messageReceiver);
         
@@ -284,6 +291,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testHeaderNameFunctionSupport() {
         reset(messageReceiver);
         
@@ -321,6 +329,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testExtractMessageElementsVariablesSupport() {
         reset(messageReceiver);
         
@@ -362,6 +371,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testExtractHeaderValuesVariablesSupport() {
         reset(messageReceiver);
         

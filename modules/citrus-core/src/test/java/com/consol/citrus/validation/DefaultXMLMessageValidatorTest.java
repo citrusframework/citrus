@@ -40,7 +40,7 @@ import com.consol.citrus.xml.XsdSchemaRepository;
 public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
-        Message message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -62,7 +62,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void validateXMLSchemaError() throws SAXException, IOException, ParserConfigurationException {
-        Message message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -85,7 +85,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectDefaultNamespace() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -100,7 +100,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectNamespace() {
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -115,7 +115,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectMixedNamespaces() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -131,7 +131,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectMultipleNamespaces() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -148,7 +148,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceError() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -163,7 +163,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceError() {
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -178,7 +178,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMixedNamespacesError() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -194,7 +194,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMultipleNamespacesError() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -211,7 +211,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectWrongNamespacePrefix() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -228,7 +228,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceButNamespace() {
-        Message message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
@@ -245,7 +245,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButDefaultNamespace() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -262,7 +262,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectAdditionalNamespace() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -280,7 +280,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButNamespaceMissing() {
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
