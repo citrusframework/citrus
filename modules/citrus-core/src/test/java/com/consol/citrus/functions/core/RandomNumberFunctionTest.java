@@ -35,12 +35,12 @@ public class RandomNumberFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         
         Assert.assertTrue(Integer.valueOf(function.execute(params)) < 1000);
         
-        params = new ArrayList();
+        params = new ArrayList<String>();
         params.add("3");
         params.add("true");
         
@@ -59,7 +59,7 @@ public class RandomNumberFunctionTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testTooManyParameters() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("true");
         params.add("too much");

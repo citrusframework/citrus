@@ -33,14 +33,15 @@ import com.consol.citrus.container.Parallel;
 
 public class ParallelParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    @SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
         beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Parallel.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
         Element action = DOMUtil.getFirstChildElement(element);

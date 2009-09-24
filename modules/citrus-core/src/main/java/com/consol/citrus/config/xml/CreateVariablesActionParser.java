@@ -40,9 +40,9 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        Map variables = new LinkedHashMap();
-        List variableElements = DomUtils.getChildElementsByTagName(element, "variable");
-        for (Iterator iter = variableElements.iterator(); iter.hasNext();) {
+        Map<String, String> variables = new LinkedHashMap<String, String>();
+        List<?> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
+        for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
             Element variable = (Element) iter.next();
             variables.put(variable.getAttribute("name"), variable.getAttribute("value"));
         }

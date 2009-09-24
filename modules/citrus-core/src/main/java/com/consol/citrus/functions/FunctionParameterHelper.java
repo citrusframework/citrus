@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 
 public class FunctionParameterHelper {
     public static List<String> getParameterList(String parameterString) {
-        List parameterList = new ArrayList();
+        List<String> parameterList = new ArrayList<String>();
 
         StringTokenizer tok = new StringTokenizer(parameterString, ",");
         while (tok.hasMoreElements()) {

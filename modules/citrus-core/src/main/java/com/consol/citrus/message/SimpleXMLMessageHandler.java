@@ -36,10 +36,10 @@ public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
 
     private String handlerName;
 
-    public Message handleMessage(Message message) {
+    public Message<?> handleMessage(Message<?> message) {
         log.info("MessageHandler " + handlerName  + " handling message " + message.getPayload());
 
-        Message response;
+        Message<?> response;
 
         if (xmlData != null) {
             response = MessageBuilder.withPayload(xmlData).build();
@@ -50,14 +50,9 @@ public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
         return response;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
-     */
     public void setBeanName(String name) {
         this.handlerName = name;
     }
-
 
     public void setXmlData(String xmlData) {
         this.xmlData = xmlData;

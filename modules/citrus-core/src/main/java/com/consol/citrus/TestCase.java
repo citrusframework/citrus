@@ -19,7 +19,12 @@
 
 package com.consol.citrus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +43,14 @@ import com.consol.citrus.variable.VariableUtils;
 public class TestCase implements BeanNameAware {
 
     /** Test chain containing test actions to be executed */
-    private List testChain = new ArrayList();
+    private List<TestAction> testChain = new ArrayList<TestAction>();
 
     /** Further chain of test actions to be executed in any case (Success, error)
      * Usually used to clean up database in any case of test result */
-    private List finallyChain = new ArrayList();
+    private List<TestAction> finallyChain = new ArrayList<TestAction>();
 
     /** Tests variables */
-    private Map variableDefinitions = new HashMap();
+    private Map<String, String> variableDefinitions = new HashMap<String, String>();
 
     /** Variables valid for this test **/
     @Autowired
@@ -76,11 +81,9 @@ public class TestCase implements BeanNameAware {
 
         /* build up the global test variables in TestContext by
          * getting the names and the current values of all variables */
-        Iterator itVariables = variableDefinitions.keySet().iterator();
-
-        while (itVariables.hasNext()) {
-            final String key = (String)itVariables.next();
-            String value = (String)variableDefinitions.get(key);
+        for (Entry<String, String> entry : variableDefinitions.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
 
             if (VariableUtils.isVariableName(value)) {
                 value = context.getVariable(value);
@@ -94,16 +97,14 @@ public class TestCase implements BeanNameAware {
         /* Debug print all variables */
         if (context.hasVariables() && log.isDebugEnabled()) {
             log.debug("TestCase using the following global variables:");
-            Iterator it = context.getVariables().keySet().iterator();
-            while (it.hasNext()) {
-                String key = it.next().toString();
-                log.debug(key + " = " + context.getVariables().get(key));
+            for (Entry<String, String> entry : context.getVariables().entrySet()) {
+                log.debug(entry.getKey() + " = " + entry.getValue());
             }
         }
 
         /* execute the test actions */
         for (int i = 0; i < testChain.size(); i++) {
-            final TestAction action = (TestAction)testChain.get(i);
+            final TestAction action = testChain.get(i);
 
             log.info("");
             log.info((i+1) + ". action in test chain");
@@ -124,10 +125,7 @@ public class TestCase implements BeanNameAware {
         }
 
         /* walk through the finally chain and execute the actions in there */
-        Iterator itActions = finallyChain.iterator();
-        while (itActions.hasNext()) {
-            TestAction action = (TestAction)itActions.next();
-
+        for (TestAction action : finallyChain) {
             if (log.isDebugEnabled()) {
                 log.debug("Executing action " + action.getClass().getName());
             }
@@ -141,14 +139,14 @@ public class TestCase implements BeanNameAware {
      * Spring property setter.
      * @param testChain
      */
-    public void setTestChain(List testChain) {
+    public void setTestChain(List<TestAction> testChain) {
         this.testChain = testChain;
     }
     /**
      * Spring property setter.
      * @param variableDefinitions
      */
-    public void setVariableDefinitions(Map variableDefinitions) {
+    public void setVariableDefinitions(Map<String, String> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
     }
 
@@ -164,7 +162,7 @@ public class TestCase implements BeanNameAware {
      * Setter for finally chain
      * @param finallyChain
      */
-    public void setFinallyChain(List finallyChain) {
+    public void setFinallyChain(List<TestAction> finallyChain) {
         this.finallyChain = finallyChain;
     }
 
@@ -174,17 +172,16 @@ public class TestCase implements BeanNameAware {
 
         buf.append("[testVariables:");
 
-        for (Iterator iter = variableDefinitions.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
-            buf.append(key + "=" + variableDefinitions.get(key) + ";");
+        for (Entry<String, String> entry : variableDefinitions.entrySet()) {
+            buf.append(entry.getKey() + "=" + entry.getValue() + ";");
         }
 
         buf.append("] ");
 
         buf.append("[testChain:");
 
-        for (Iterator iter = testChain.iterator(); iter.hasNext();) {
-            String className = (String) iter.next().getClass().getName();
+        for (Iterator<TestAction> iter = testChain.iterator(); iter.hasNext();) {
+            String className = iter.next().getClass().getName();
             buf.append(className + ";");
         }
 
@@ -240,14 +237,14 @@ public class TestCase implements BeanNameAware {
     /**
      * @return the finallyChain
      */
-    public List getFinallyChain() {
+    public List<TestAction> getFinallyChain() {
         return finallyChain;
     }
 
     /**
      * @return the testChain
      */
-    public List getTestChain() {
+    public List<TestAction> getTestChain() {
         return testChain;
     }
 

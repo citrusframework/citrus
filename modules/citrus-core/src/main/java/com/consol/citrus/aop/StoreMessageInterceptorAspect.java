@@ -19,8 +19,10 @@
 
 package com.consol.citrus.aop;
 
-import java.io.*;
-import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,7 +57,7 @@ public class StoreMessageInterceptorAspect {
     public void doInterceptMessage(Object message) {
         //in case of receive timeout message will be null, check that
         if(message != null) {
-            storeMessage((Message)message);
+            storeMessage((Message<?>)message);
         }
     }
     
@@ -63,7 +65,7 @@ public class StoreMessageInterceptorAspect {
      * @param receivedMessage
      * @throws CitrusRuntimeException
      */
-    private void storeMessage(Message receivedMessage) {
+    private void storeMessage(Message<?> receivedMessage) {
         Writer output = null;
         
         try {
@@ -84,12 +86,10 @@ public class StoreMessageInterceptorAspect {
 
             //write header message
             output = new BufferedWriter(new FileWriter(file_header.getFile()));
-            Map header = receivedMessage.getHeaders();
+            Map<String, Object> header = receivedMessage.getHeaders();
 
-            Iterator it = header.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry entry = (Entry)it.next();
-                output.write(entry.getKey().toString() + "=" + entry.getValue() + "\n");
+            for (Entry<String, Object> entry : header.entrySet()) {
+                output.write(entry.getKey() + "=" + entry.getValue() + "\n");
             }
             
         } catch (IOException e) {

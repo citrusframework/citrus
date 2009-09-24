@@ -25,13 +25,13 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
- * @author roland
- * @since Apr 8, 2008
+ * 
+ * @author deppisch
  */
 public class EasyMockFactoryBean implements FactoryBean {
 
     boolean singleton = true;
-    Class type;
+    Class<?> type;
     IMocksControl mockControl;
     org.easymock.classextension.IMocksControl classMockControl;
 
@@ -49,7 +49,7 @@ public class EasyMockFactoryBean implements FactoryBean {
         }
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return type;
     }
 

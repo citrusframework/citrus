@@ -34,7 +34,8 @@ import com.consol.citrus.group.RepeatOnErrorUntilTrue;
 
 public class RepeatOnErrorUntilTrueParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    @SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(RepeatOnErrorUntilTrue.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
@@ -50,7 +51,7 @@ public class RepeatOnErrorUntilTrueParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("autoSleep", autoSleep);
         }
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
         Element action = DOMUtil.getFirstChildElement(element);

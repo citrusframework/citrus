@@ -36,7 +36,8 @@ import com.consol.citrus.group.Template;
 
 public class CallTemplateParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    @SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
         String parentBeanName = element.getAttribute("name");
@@ -54,7 +55,7 @@ public class CallTemplateParser implements BeanDefinitionParser {
         List parameterElements = DomUtils.getChildElementsByTagName(element, "parameter");
 
         if (parameterElements != null && parameterElements.size() > 0) {
-            Map parameters = new LinkedHashMap();
+            Map<String, String> parameters = new LinkedHashMap<String, String>();
 
             for (Iterator iter = parameterElements.iterator(); iter.hasNext();) {
                 Element variableDefinition = (Element) iter.next();

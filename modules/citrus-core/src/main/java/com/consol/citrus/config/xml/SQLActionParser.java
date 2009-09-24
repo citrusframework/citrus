@@ -40,14 +40,14 @@ public class SQLActionParser implements BeanDefinitionParser {
         
         BeanDefinitionBuilder beanDefinition;
 
-        List validateElements = DomUtils.getChildElementsByTagName(element, "validate");
+        List<?> validateElements = DomUtils.getChildElementsByTagName(element, "validate");
         
         if (validateElements.isEmpty() == false) {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
             beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
             
             Map<String, String> validateValues = new HashMap<String, String>();
-            for (Iterator iter = validateElements.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                 Element validate = (Element) iter.next();
                 validateValues.put(validate.getAttribute("column"), validate.getAttribute("value"));
             }
@@ -68,8 +68,8 @@ public class SQLActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, beanDefinition);
 
         List<String> statements = new ArrayList<String>();
-        List stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
-        for (Iterator iter = stmtElements.iterator(); iter.hasNext();) {
+        List<?> stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
+        for (Iterator<?> iter = stmtElements.iterator(); iter.hasNext();) {
             Element stmt = (Element) iter.next();
             statements.add(DomUtils.getTextValue(stmt));
         }

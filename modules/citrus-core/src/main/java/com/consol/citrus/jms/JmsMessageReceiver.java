@@ -55,9 +55,9 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
             throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
         }
         
-        Message receivedMessage;
-        if (receivedObject instanceof Message) {
-            receivedMessage = (Message)receivedObject;
+        Message<?> receivedMessage;
+        if (receivedObject instanceof Message<?>) {
+            receivedMessage = (Message<?>)receivedObject;
         } else {
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }
@@ -79,9 +79,9 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
             throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
         }
         
-        Message receivedMessage;
-        if (receivedObject instanceof Message) {
-            receivedMessage = (Message)receivedObject;
+        Message<?> receivedMessage;
+        if (receivedObject instanceof Message<?>) {
+            receivedMessage = (Message<?>)receivedObject;
         } else {
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }

@@ -41,7 +41,7 @@ import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.util.MessageUtils;
 
 public class HttpMessageSender implements MessageSender {
-    /** Http url as service detination */
+    /** Http url as service destination */
     private String requestUrl;
 
     /** Request method */
@@ -82,8 +82,8 @@ public class HttpMessageSender implements MessageSender {
             requestHeaders.put("HTTPPort", getPort());
 
             /* before sending set header values */
-            for (Entry headerEntry : message.getHeaders().entrySet()) {
-                final String key = headerEntry.getKey().toString();
+            for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
+                final String key = headerEntry.getKey();
                 
                 if(MessageUtils.isSpringIntegrationHeaderEntry(key)) {
                     continue;
@@ -98,7 +98,7 @@ public class HttpMessageSender implements MessageSender {
                 requestHeaders.put(key, value);
             }
 
-            Message request;
+            Message<?> request;
             if (requestMethod.equals(HttpConstants.HTTP_POST)) {
                 request = MessageBuilder.withPayload(message.getPayload()).copyHeaders(requestHeaders).build();
             } else if (requestMethod.equals(HttpConstants.HTTP_GET)) {

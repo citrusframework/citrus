@@ -33,7 +33,7 @@ public class StaticResponseProducingMessageHandler implements MessageHandler {
     
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
     
-    public Message handleMessage(Message message) {
+    public Message<?> handleMessage(Message<?> message) {
         return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();
     }
 

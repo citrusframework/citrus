@@ -35,7 +35,7 @@ public class SubstringBeforeFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add(",");
         Assert.assertEquals(function.execute(params), "Hallo");

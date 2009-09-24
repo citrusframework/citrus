@@ -32,9 +32,9 @@ import com.consol.citrus.context.TestContext;
 
 public class Parallel extends AbstractTestAction {
 
-    List actions = new ArrayList();
+    List<TestAction> actions = new ArrayList<TestAction>();
 
-    Stack threads = new Stack();
+    Stack<Thread> threads = new Stack<Thread>();
 
     /**
      * Logger
@@ -46,7 +46,7 @@ public class Parallel extends AbstractTestAction {
         log.info("Executing action parallel - containing " + actions.size() + " actions");
 
         for (int i = 0; i < actions.size(); i++) {
-            TestAction action = (TestAction)actions.get(i);
+            TestAction action = actions.get(i);
 
             Thread t = new Thread(new ActionThread(action, context));
 
@@ -56,7 +56,7 @@ public class Parallel extends AbstractTestAction {
 
         while (!threads.isEmpty()) {
             try {
-                ((Thread)threads.pop()).join();
+                threads.pop().join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -80,7 +80,7 @@ public class Parallel extends AbstractTestAction {
     /**
      * @param actions the actions to set
      */
-    public void setActions(List actions) {
+    public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 }

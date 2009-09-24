@@ -36,7 +36,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class TraceVariablesAction extends AbstractTestAction {
     /** Values to be validated */
-    private List variableNames;
+    private List<String> variableNames;
 
     /**
      * Logger
@@ -51,7 +51,7 @@ public class TraceVariablesAction extends AbstractTestAction {
     public void execute(TestContext context) {
         boolean isSuccess = true;
 
-        Iterator it;
+        Iterator<String> it;
         if (variableNames != null && variableNames.size() > 0) {
             log.info("Validating variables using custom map:");
             
@@ -63,7 +63,7 @@ public class TraceVariablesAction extends AbstractTestAction {
         }
 
         while (it.hasNext()) {
-            String key = (String)it.next();
+            String key = it.next();
             String value = context.getVariable(key);
 
             log.info("Current value of variable " + key + " = " + value);
@@ -84,7 +84,7 @@ public class TraceVariablesAction extends AbstractTestAction {
      * Setter for info values list
      * @param variableNames
      */
-    public void setVariableNames(List variableNames) {
+    public void setVariableNames(List<String> variableNames) {
         this.variableNames = variableNames;
     }
 }

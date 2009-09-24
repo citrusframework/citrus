@@ -33,7 +33,7 @@ public class HttpUtils {
      * @param request
      * @return
      */
-    public static String generateRequest(Message request) {
+    public static String generateRequest(Message<?> request) {
         StringBuffer sBuf = new StringBuffer();
 
         // output status line
@@ -77,7 +77,7 @@ public class HttpUtils {
         return sBuf.toString();
     }
 
-    public static String generateResponse(Message response) {
+    public static String generateResponse(Message<?> response) {
         String httpVersion = HttpConstants.HTTP_VERSION;
         String httpStatusCode = HttpConstants.HTTP_CODE_200;
         String httpReasonPhrase = HttpConstants.HTTP_STATUS_OK;

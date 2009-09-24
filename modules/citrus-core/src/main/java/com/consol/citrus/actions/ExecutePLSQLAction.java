@@ -48,16 +48,16 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /** In line script */
     private String script = null;
 
-    /** boolean flag marking that possible sql errors will be ignored */
+    /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
 
-    /** List of sql statements */
-    private List statements = new ArrayList();
+    /** List of SQL statements */
+    private List<String> statements = new ArrayList<String>();
 
     /**
      * @param statements the statements to set
      */
-    public void setStatements(List statements) {
+    public void setStatements(List<String> statements) {
         this.statements = statements;
     }
 

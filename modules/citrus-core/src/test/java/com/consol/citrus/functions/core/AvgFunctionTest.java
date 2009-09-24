@@ -35,7 +35,7 @@ public class AvgFunctionTest extends AbstractBaseTest {
     
     @Test
     public void testFunction() {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("3");
         params.add("3");

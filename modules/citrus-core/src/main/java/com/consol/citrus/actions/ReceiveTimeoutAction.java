@@ -57,7 +57,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     @Override
     public void execute(TestContext context) {
         try {
-            Message receivedMessage;
+            Message<?> receivedMessage;
             
             if (StringUtils.hasText(messageSelector)) {
                 receivedMessage = messageReceiver.receiveSelected(messageSelector, timeout);

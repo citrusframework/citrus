@@ -30,7 +30,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Executes sql statements given inline or given by a file resource.
+ * Executes SQL statements that are embedded in the test or given by a file resource.
  * 
  * @author deppisch Christoph Deppisch, js Jan Szczepanski Consol*GmbH 2006
  *
@@ -44,13 +44,13 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /** SQL file resource */
     private Resource sqlResource;
 
-    /** List of sql statements */
-    private List statements = new ArrayList();
+    /** List of SQL statements */
+    private List<String> statements = new ArrayList<String>();
 
-    /** Constant representing sql comment */
+    /** Constant representing SQL comment */
     private static final String SQL_COMMENT = "--";
 
-    /** boolean flag marking that possible sql errors will be ignored */
+    /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
 
     /**
@@ -91,10 +91,10 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
                 }
             }
 
-            Iterator it = statements.iterator();
+            Iterator<String> it = statements.iterator();
             while (it.hasNext())  {
                 try {
-                    stmt = it.next().toString();
+                    stmt = it.next();
                     stmt = stmt.trim();
 
                     if (stmt.endsWith(";")) {
@@ -134,7 +134,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
      * Spring property setter.
      * @param statements
      */
-    public void setStatements(List statements) {
+    public void setStatements(List<String> statements) {
         this.statements = statements;
     }
     

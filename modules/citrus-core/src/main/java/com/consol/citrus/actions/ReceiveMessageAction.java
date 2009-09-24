@@ -46,32 +46,32 @@ import com.consol.citrus.validation.XMLMessageValidator;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
- * This bean recieves messages from a service destination. The received message is validated
+ * This bean receives messages from a service destination. The received message is validated
  * through a validator in its body and header.
  *
  * @author deppisch Christoph Deppisch Consol*GmbH 2008
  */
 public class ReceiveMessageAction extends AbstractTestAction {
     /** Map holding message elements to be overwritten before sending */
-    private Map messageElements = new HashMap();
+    private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** Map containing header values. The received message must fit this header */
-    private Map headerValues = new HashMap();
+    private Map<String, String> headerValues = new HashMap<String, String>();
 
     /** Map extracting message elements to variables */
-    private Map extractMessageElements = new HashMap();
+    private Map<String, String> extractMessageElements = new HashMap<String, String>();
 
-    /** Map extracting header valdues to variables */
-    private Map extractHeaderValues = new HashMap();
+    /** Map extracting header values to variables */
+    private Map<String, String> extractHeaderValues = new HashMap<String, String>();
 
     /** Map holding message elements that will be ignored in validation */
-    private Set ignoreMessageElements = new HashSet();
+    private Set<String> ignoreMessageElements = new HashSet<String>();
 
     /** Map for namespace validation */
-    private Map expectedNamespaces = new HashMap();
+    private Map<String, String> expectedNamespaces = new HashMap<String, String>();
 
     /** Select messages to receive */
-    private Map messageSelector = new HashMap();
+    private Map<String, String> messageSelector = new HashMap<String, String>();
 
     /** Select messages to receive by string configuration */
     private String messageSelectorString;
@@ -118,7 +118,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     public void execute(TestContext context) {
         boolean isSuccess = true;
         
-        Message receivedMessage;
+        Message<?> receivedMessage;
         
         try {
             if (StringUtils.hasText(messageSelectorString)) {
@@ -262,7 +262,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Spring property setter.
      * @param setMessageValues
      */
-    public void setMessageElements(HashMap messageElements) {
+    public void setMessageElements(Map<String, String> messageElements) {
         this.messageElements = messageElements;
     }
 
@@ -270,42 +270,42 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Spring property setter.
      * @param ignoreMessageElements
      */
-    public void setIgnoreMessageElements(Set ignoreMessageElements) {
+    public void setIgnoreMessageElements(Set<String> ignoreMessageElements) {
         this.ignoreMessageElements = ignoreMessageElements;
     }
 
     /**
      * @param expectedNamespaces the expectedNamespaces to set
      */
-    public void setExpectedNamespaces(Map expectedNamespaces) {
+    public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
         this.expectedNamespaces = expectedNamespaces;
     }
 
     /**
      * @param getHeaderValues the getHeaderValues to set
      */
-    public void setExtractHeaderValues(HashMap extractHeaderValues) {
+    public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
         this.extractHeaderValues = extractHeaderValues;
     }
 
     /**
      * @param extractMessageElements the extractMessageElements to set
      */
-    public void setExtractMessageElements(HashMap extractMessageElements) {
+    public void setExtractMessageElements(Map<String, String> extractMessageElements) {
         this.extractMessageElements = extractMessageElements;
     }
 
     /**
      * @param headerValues the headerValues to set
      */
-    public void setHeaderValues(Map headerValues) {
+    public void setHeaderValues(Map<String, String> headerValues) {
         this.headerValues = headerValues;
     }
 
     /**
      * @param setMessageValues the setMessageValues to set
      */
-    public void setSetMessageValues(HashMap setMessageValues) {
+    public void setSetMessageValues(Map<String, String> setMessageValues) {
         this.messageElements = setMessageValues;
     }
 
@@ -335,7 +335,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Setter for messageSelector
      * @param messageSelector
      */
-    public void setMessageSelector(Map messageSelector) {
+    public void setMessageSelector(Map<String, String> messageSelector) {
         this.messageSelector = messageSelector;
     }
 
@@ -356,7 +356,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * @param validateMessageElements the validateMessageElements to set
      */
-    public void setValidateMessageElements(Map validateMessageElements) {
+    public void setValidateMessageElements(Map<String, String> validateMessageElements) {
         this.messageElements = validateMessageElements;
     }
 

@@ -69,9 +69,9 @@ public class SendMessageActionParser implements BeanDefinitionParser {
                 }
             }
 
-            Map setMessageValues = new HashMap();
-            List messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
-            for (Iterator iter = messageValueElements.iterator(); iter.hasNext();) {
+            Map<String, String> setMessageValues = new HashMap<String, String>();
+            List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
                 setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
             }
@@ -79,10 +79,10 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         }
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
-        Map setHeaderValues = new HashMap();
+        Map<String, String> setHeaderValues = new HashMap<String, String>();
         if (headerElement != null) {
-            List elements = DomUtils.getChildElementsByTagName(headerElement, "element");
-            for (Iterator iter = elements.iterator(); iter.hasNext();) {
+            List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
+            for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }

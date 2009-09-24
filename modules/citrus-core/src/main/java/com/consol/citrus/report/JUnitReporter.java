@@ -54,8 +54,8 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
      */
     private static final Logger log = LoggerFactory.getLogger(JUnitReporter.class);
 
-    private Map testExecutionTime = new HashMap();
-    private Map testSuiteExecutionTime = new HashMap();
+    private Map<String, Long> testExecutionTime = new HashMap<String, Long>();
+    private Map<String, Long> testSuiteExecutionTime = new HashMap<String, Long>();
 
     /** Common decimal format for percentage calculation in report **/
     private static DecimalFormat decFormat = new DecimalFormat("0.000");
@@ -255,7 +255,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     private String getTestSuiteExecutionTime(String testSuiteName) {
-        return decFormat.format(((double)(System.currentTimeMillis() - (Long)testSuiteExecutionTime.get(testSuiteName)))/1000);
+        return decFormat.format(((double)(System.currentTimeMillis() - testSuiteExecutionTime.get(testSuiteName)))/1000);
     }
 
     private void startTestExecution(String testName) {
@@ -263,7 +263,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     private String getTestExecutionTime(String testName) {
-        return decFormat.format(((double)(System.currentTimeMillis() - (Long)testExecutionTime.get(testName)))/1000);
+        return decFormat.format(((double)(System.currentTimeMillis() - testExecutionTime.get(testName)))/1000);
     }
 
     private void removeTestExecutionTime(String testName) {

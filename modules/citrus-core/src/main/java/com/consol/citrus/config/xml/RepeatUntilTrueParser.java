@@ -33,7 +33,8 @@ import com.consol.citrus.group.RepeatUntilTrue;
 
 public class RepeatUntilTrueParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    @SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
@@ -44,7 +45,7 @@ public class RepeatUntilTrueParser implements BeanDefinitionParser {
         String condition = element.getAttribute("condition");
         beanDefinition.addPropertyValue("condition", condition);
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
         Element action = DOMUtil.getFirstChildElement(element);

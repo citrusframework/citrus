@@ -34,7 +34,8 @@ import com.consol.citrus.group.Template;
 
 public class TemplateParser implements BeanDefinitionParser {
 
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+    @SuppressWarnings("unchecked")
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
         beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Template.class);
@@ -49,7 +50,7 @@ public class TemplateParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", parserContext.getReaderContext().generateBeanName(beanDefinition.getBeanDefinition()));
         }
 
-        Map actionRegistry = TestActionRegistry.getRegisteredActionParser();
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
         Element action = DOMUtil.getFirstChildElement(element);

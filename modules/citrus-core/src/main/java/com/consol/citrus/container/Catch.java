@@ -32,7 +32,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Catch extends AbstractTestAction {
     /** List of actions to be executed */
-    private List actions = new ArrayList();
+    private List<TestAction> actions = new ArrayList<TestAction>();
 
     /** Exception type to be caught */
     private String exception = CitrusRuntimeException.class.getName();
@@ -52,7 +52,7 @@ public class Catch extends AbstractTestAction {
 
         for (int i = 0; i < actions.size(); i++) {
             try {
-                TestAction action = ((TestAction)actions.get(i));
+                TestAction action = actions.get(i);
 
                 if (log.isDebugEnabled()) {
                     log.debug("Executing action " + action.getClass().getName());
@@ -72,7 +72,7 @@ public class Catch extends AbstractTestAction {
     /**
      * @param actions
      */
-    public void setActions(List actions) {
+    public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 

@@ -55,6 +55,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testUsingXPath() {
         reset(messageReceiver);
         
@@ -86,6 +87,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testUsingXPathWithDefaultNamespace() {
         reset(messageReceiver);
         
@@ -117,6 +119,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testUsingXPathWithExplicitNamespace() {
         reset(messageReceiver);
         
@@ -144,6 +147,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testUsingXPathWithExplicitNamespaceInElementDefinition() {
         reset(messageReceiver);
         

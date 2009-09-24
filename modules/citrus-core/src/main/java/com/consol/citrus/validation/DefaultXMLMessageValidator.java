@@ -20,7 +20,6 @@
 package com.consol.citrus.validation;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -38,7 +37,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
-import org.w3c.dom.*;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.LSException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -74,7 +77,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @see com.consol.citrus.validation.MessageValidator#validateMessage(com.consol.citrus.message.Message, com.consol.citrus.message.Message, java.util.Map)
      * @throws CitrusRuntimeException
      */
-    public boolean validateMessage(Message expectedMessage, Message receivedMessage, Set<String> ignoreElements, TestContext context) {
+    public boolean validateMessage(Message<?> expectedMessage, Message<?> receivedMessage, Set<String> ignoreElements, TestContext context) {
         try {
             log.info("Start XML tree validation");
             
@@ -174,7 +177,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         return true;
     }
     
-    public boolean validateMessageElements(Map<String, String> elements, Message receivedMessage, TestContext context) {
+    public boolean validateMessageElements(Map<String, String> elements, Message<?> receivedMessage, TestContext context) {
         return validateMessageElements(elements, receivedMessage, null, context);
     }
 
@@ -182,7 +185,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateMessageElements(java.util.Map, org.w3c.dom.Document)
      */
-    public boolean validateMessageElements(Map<String, String> validateElements, Message receivedMessage, NamespaceContext nsContext, TestContext context) {
+    public boolean validateMessageElements(Map<String, String> validateElements, Message<?> receivedMessage, NamespaceContext nsContext, TestContext context) {
         if (validateElements == null) return false;
         if (validateElements.isEmpty()) return true;
         
@@ -261,7 +264,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateDTD(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
      */
-    public boolean validateDTD(Resource dtdResource, Message receivedMessage) {
+    public boolean validateDTD(Resource dtdResource, Message<?> receivedMessage) {
         //TODO implement this
         return false;
     }
@@ -270,7 +273,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @see com.consol.citrus.validation.XMLMessageValidator#validateXMLSchema(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
      * @throws CitrusRuntimeException
      */
-    public boolean validateXMLSchema(Message receivedMessage) {
+    public boolean validateXMLSchema(Message<?> receivedMessage) {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
@@ -306,7 +309,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * (non-Javadoc)
      * @see com.consol.citrus.validation.XMLMessageValidator#validateNamespaces(org.w3c.dom.Document, java.util.Map)
      */
-    public boolean validateNamespaces(Map expectedNamespaces, Message receivedMessage) {
+    public boolean validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
         if (expectedNamespaces == null || expectedNamespaces.isEmpty()) {
             return true;
         }
@@ -315,16 +318,15 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
         
-        Map foundNamespaces = XMLUtils.lookupNamespaces(received.getFirstChild());
+        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(received.getFirstChild());
 
         if (foundNamespaces.size() != expectedNamespaces.size()) {
             throw new ValidationException("Number of namespace declarations not equal for node " + XMLUtils.getNodesPathName(received.getFirstChild()) + " found " + foundNamespaces.size() + " expected " + expectedNamespaces.size());
         }
 
-        for (Iterator iter = expectedNamespaces.entrySet().iterator(); iter.hasNext();) {
-            Entry entry = (Entry) iter.next();
-            String namespace = entry.getKey().toString();
-            String url = (String)entry.getValue();
+        for (Entry<String, String> entry : expectedNamespaces.entrySet()) {
+            String namespace = entry.getKey();
+            String url = entry.getValue();
 
             if (foundNamespaces.containsKey(namespace)) {
                 if (foundNamespaces.get(namespace).equals(url) == false) {
@@ -542,7 +544,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @param node the attribute node.
      * @return boolean flag to mark ignore
      */
-    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set ignoreMessageElements) {
+    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set<String> ignoreMessageElements) {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
             return false;
 
@@ -563,8 +565,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
          * And ignoreValues contains just: AreaCode
          * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
          */
-        for (Iterator iter = ignoreMessageElements.iterator(); iter.hasNext();) {
-            Node foundAttributeNode = XMLUtils.findNodeByName(elementNode.getOwnerDocument(), (String) iter.next());
+        for (String expression : ignoreMessageElements) {
+            Node foundAttributeNode = XMLUtils.findNodeByName(elementNode.getOwnerDocument(), expression);
 
             if (foundAttributeNode != null && attributeNode.isSameNode(foundAttributeNode)) {
                 return true;
@@ -574,8 +576,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         /** This is the XPath version using XPath expressions in
          * ignoreValues to identify nodes to be ignored
          */
-        for (Iterator iter = ignoreMessageElements.iterator(); iter.hasNext();) {
-            String expression = (String) iter.next();
+        for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
                 Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression);
                 if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
@@ -602,7 +603,7 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @param node The node the test.
      * @return true if <tt>node</tt> has to be ignored.
      */
-    private boolean isNodeIgnored(final Node node, Set ignoreMessageElements) {
+    private boolean isNodeIgnored(final Node node, Set<String> ignoreMessageElements) {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
             return false;
 
@@ -623,16 +624,15 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
          * And ignoreValues contains just: AreaCode
          * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
          */
-        for (Iterator iter = ignoreMessageElements.iterator(); iter.hasNext();) {
-            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), (String) iter.next()))
+        for (String expression : ignoreMessageElements) {
+            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), expression))
                 return true;
         }
 
         /** This is the XPath version using XPath expressions in
          * ignoreValues to identify nodes to be ignored
          */
-        for (Iterator iter = ignoreMessageElements.iterator(); iter.hasNext();) {
-            String expression = (String) iter.next();
+        for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
                 Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression);
 

@@ -51,7 +51,7 @@ public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     
     @Test
     public void testStoreMessage() {
-        Message message = MessageBuilder.withPayload("<message>"
+        Message<?> message = MessageBuilder.withPayload("<message>"
                                     + "<text>Hello TestFramework</text>"
                                   + "</message>").setHeader("operation", "greeting").build();
         
@@ -63,7 +63,7 @@ public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     
     @Test
     public void testStoreMessageWithoutHeader() {
-        Message message = MessageBuilder.withPayload("<message>"
+        Message<?> message = MessageBuilder.withPayload("<message>"
                                     + "<text>Hello TestFramework</text>"
                                   + "</message>").build();
         

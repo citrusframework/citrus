@@ -44,20 +44,20 @@ public class SendMessageAction extends AbstractTestAction {
      * Keys in the map specify the element paths inside the message body. Value set will contain
      * static values or variables
      * */
-    private Map messageElements = new HashMap();
+    private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** Map containing header values to be set in message header before sending.
      * Key set describes the header names. Value set will hold static values or variables
      */
-    private Map headerValues = new HashMap();
+    private Map<String, Object> headerValues = new HashMap<String, Object>();
 
-    /** The service with which the message is beeing sent or received */
+    /** The service with which the message is being sent or received */
     private MessageSender messageSender;
 
-    /** The message ressource as a file resource */
+    /** The message resource as a file resource */
     private Resource messageResource;
 
-    /** The message ressource as a inline definition within the spring application context */
+    /** The message resource as a inline definition within the spring application context */
     private String messageData;
 
     /**
@@ -95,10 +95,10 @@ public class SendMessageAction extends AbstractTestAction {
             messagePayload = context.replaceMessageValues(messageElements, messagePayload);
 
             /* Set message header */
-            Map headerValuesCopy = context.replaceVariablesInMap(headerValues);
+            Map<String, Object> headerValuesCopy = context.replaceVariablesInMap(headerValues);
 
             /* store header values map to context - service will read the map */
-            Message sendMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
+            Message<String> sendMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
 
             /* message is sent */
             messageSender.send(sendMessage);
@@ -126,43 +126,29 @@ public class SendMessageAction extends AbstractTestAction {
     /**
      * @param headerValues the headerValues to set
      */
-    public void setHeaderValues(HashMap headerValues) {
+    public void setHeaderValues(Map<String, Object> headerValues) {
         this.headerValues = headerValues;
     }
 
     /**
      * @param messageElements the messageElements to set
      */
-    public void setMessageElements(HashMap setMessageElements) {
+    public void setMessageElements(Map<String, String> setMessageElements) {
         this.messageElements = setMessageElements;
     }
 
     /**
      * @return the headerValues
      */
-    public Map getHeaderValues() {
+    public Map<String, Object> getHeaderValues() {
         return headerValues;
-    }
-
-    /**
-     * @param headerValues the headerValues to set
-     */
-    public void setHeaderValues(Map headerValues) {
-        this.headerValues = headerValues;
     }
 
     /**
      * @return the messageElements
      */
-    public Map getMessageElements() {
+    public Map<String, String> getMessageElements() {
         return messageElements;
-    }
-
-    /**
-     * @param messageElements the messageElements to set
-     */
-    public void setMessageElements(Map messageElements) {
-        this.messageElements = messageElements;
     }
 
     /**

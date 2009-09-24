@@ -51,11 +51,13 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase.setTestChain(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksBefore(Collections.singletonList(new EchoAction()));
+        TestAction beforeAction = new EchoAction();
+        testsuite.setTasksBefore(Collections.singletonList(beforeAction));
         
         Assert.assertTrue(testsuite.beforeSuite());
     }
@@ -72,7 +74,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase.setTestChain(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -94,11 +97,13 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase.setTestChain(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksAfter(Collections.singletonList(new EchoAction()));
+        TestAction afterAction = new EchoAction();
+        testsuite.setTasksAfter(Collections.singletonList(afterAction));
         
         Assert.assertTrue(testsuite.afterSuite());
     }
@@ -115,7 +120,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase.setMetaInfo(metaInfo);
         
-        testcase.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase.setTestChain(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -137,7 +143,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase1.setMetaInfo(metaInfo1);
         
-        testcase1.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase1.setTestChain(Collections.singletonList(echoAction));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -147,11 +154,13 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setMetaInfo(metaInfo2);
         
-        testcase2.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction2 = new EchoAction();
+        testcase2.setTestChain(Collections.singletonList(echoAction2));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
-        testsuite.setTasksBetween(Collections.singletonList(new EchoAction()));
+        TestAction betweenAction = new EchoAction();
+        testsuite.setTasksBetween(Collections.singletonList(betweenAction));
         
         testsuite.beforeTest();
     }
@@ -168,7 +177,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase1.setMetaInfo(metaInfo1);
         
-        testcase1.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction = new EchoAction();
+        testcase1.setTestChain(Collections.singletonList(echoAction));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -178,7 +188,8 @@ public class TestSuiteTest extends AbstractBaseTest {
         
         testcase2.setMetaInfo(metaInfo2);
         
-        testcase2.setTestChain(Collections.singletonList(new EchoAction()));
+        TestAction echoAction2 = new EchoAction();
+        testcase2.setTestChain(Collections.singletonList(echoAction2));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         

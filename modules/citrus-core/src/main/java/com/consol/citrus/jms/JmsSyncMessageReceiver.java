@@ -31,7 +31,7 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
     
     @Override
     public Message<?> receive(long timeout) {
-        Message receivedMessage = super.receive(timeout);
+        Message<?> receivedMessage = super.receive(timeout);
         
         replyDestination = (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO);
         
@@ -40,7 +40,7 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
     
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        Message receivedMessage = super.receiveSelected(selector, timeout);
+        Message<?> receivedMessage = super.receiveSelected(selector, timeout);
         
         replyDestination = (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO);
         

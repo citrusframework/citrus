@@ -44,6 +44,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
@@ -119,6 +120,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testIgnoreAttributesUsingArrays() {
         reset(messageReceiver);
         
@@ -150,6 +152,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testIgnoreRootElement() {
         reset(messageReceiver);
         
