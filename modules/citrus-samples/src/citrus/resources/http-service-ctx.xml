@@ -10,7 +10,7 @@
        http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config-1.0.xsd">
 	
     <citrus-http:server id="royalAirlineHttpServer" 
-                        port="${http.port}" uri="${http.urlpath}" 
+                        port="8088" uri="/test" 
                         message-handler="jmsForwardingMessageHandler"/>
             
     <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
