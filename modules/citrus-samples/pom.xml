@@ -2,7 +2,7 @@
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.0.RC1</version>
+    <version>1.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -68,12 +68,12 @@
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-core</artifactId>
-        <version>1.0.RC1</version>
+        <version>1.0</version>
     </dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-http</artifactId>
-        <version>1.0.RC1</version>
+        <version>1.0</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.integration</groupId>

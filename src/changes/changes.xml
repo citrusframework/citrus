@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="1.0.RC1" date="25.09.2009" description="OpenSource">
+    <release version="1.0" date="25.09.2009" description="OpenSource">
         <action dev="deppisch" type="update">
           Switch to Maven build system.
         </action>
