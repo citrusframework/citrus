@@ -85,7 +85,7 @@ p {
 }
 #container {
   padding-top: 10px;
-  margin: 0 auto;
+  margin: 0 200px;
   padding-bottom: 20px;
   text-align: left;
   width: 978px;
@@ -133,6 +133,10 @@ p {
   background-image: url(../images/h5.jpg);
   background-repeat: no-repeat;
   background-position: left bottom;
+}
+
+#contentBox {
+  padding-top: 2px;
 }
 
 table.bodyTable th {
@@ -223,7 +227,9 @@ table {
   background: transparent url(../images/bg_footer.png) repeat-y scroll 0 0;
 }
 #navcolumn img {
-  margin: 0px;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 0px;
 }
 
 .errormark, .warningmark, .donemark, .infomark {
