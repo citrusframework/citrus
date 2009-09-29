@@ -2,14 +2,14 @@
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ws</artifactId>
   <name>citrus-ws</name>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <build>
   	<plugins>
         <plugin>
@@ -21,12 +21,12 @@
   	<dependency>
   		<groupId>com.consol.citrus</groupId>
   		<artifactId>citrus-core</artifactId>
-  		<version>1.0</version>
+  		<version>1.1-SNAPSHOT</version>
   	</dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-adapter</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>

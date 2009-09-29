@@ -4,12 +4,12 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-tibco</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>citrus-tibco</name>
   <parent>
   	<artifactId>citrus</artifactId>
   	<groupId>com.consol.citrus</groupId>
-  	<version>1.0</version>
+  	<version>1.1-SNAPSHOT</version>
   	<relativePath>../../pom.xml</relativePath>
   </parent>
   <build>
@@ -23,7 +23,7 @@
   	<dependency>
   		<groupId>com.consol.citrus</groupId>
   		<artifactId>citrus-core</artifactId>
-  		<version>1.0</version>
+  		<version>1.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
     	<groupId>com.tibco.workflow.api</groupId>

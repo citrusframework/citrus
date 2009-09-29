@@ -4,7 +4,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>${project.artifactId} (Main)</name>
   <description>ConSol* Test Framework</description>
   <url>http://citrus.consol.de</url>
