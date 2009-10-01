@@ -29,8 +29,7 @@ import com.consol.citrus.util.TestCaseCreator;
  *
  * @goal create-test
  */
-public class CreateTestCaseMojo extends AbstractMojo
-{
+public class CreateTestCaseMojo extends AbstractMojo {
     /** @parameter expression="${name}"
      *  @required */
     private String name;
@@ -45,11 +44,12 @@ public class CreateTestCaseMojo extends AbstractMojo
      *          default-value="TODO: Description" */
     private String description;
     
-    /** @parameter default-value="com.consol.citrus" */
+    /** @parameter 
+     *          expression="${targetPackage}"
+     *          default-value="com.consol.citrus" */
     private String targetPackage;
     
-    public void execute() throws MojoExecutionException
-    {
+    public void execute() throws MojoExecutionException {
         try {    
             TestCaseCreator creator = TestCaseCreator.build()
                 .withName(name)
@@ -60,7 +60,7 @@ public class CreateTestCaseMojo extends AbstractMojo
             creator.createTestCase();
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info("Wrong usage exception!");
-            getLog().info("Use parameters in the following way: [test.name] [test.author] [test.description] [test.subfolder]");
+            getLog().info("Use parameters in the following way: [test.name] [test.author] [test.description] [test.package]");
         }
     }
 }

@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven</artifactId>
   <packaging>pom</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>${project.artifactId} (Main)</name>
   <description>Citrus Maven Parent</description>
   <url>http://citrus.consol.de</url>
