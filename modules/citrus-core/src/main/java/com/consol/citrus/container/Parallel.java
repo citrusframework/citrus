@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Parallel extends AbstractTestAction {
 
@@ -36,6 +37,8 @@ public class Parallel extends AbstractTestAction {
 
     Stack<Thread> threads = new Stack<Thread>();
 
+    Stack<Exception> exceptions = new Stack<Exception>();
+    
     /**
      * Logger
      */
@@ -45,10 +48,13 @@ public class Parallel extends AbstractTestAction {
     public void execute(TestContext context) {
         log.info("Executing action parallel - containing " + actions.size() + " actions");
 
-        for (int i = 0; i < actions.size(); i++) {
-            TestAction action = actions.get(i);
-
-            Thread t = new Thread(new ActionThread(action, context));
+        for (TestAction action : actions) {
+            Thread t = new Thread(new ActionRunner(action, context) {
+                @Override
+                public void exceptionCallback(Exception e) {
+                    exceptions.push(e);
+                }
+            });
 
             threads.push(t);
             t.start();
@@ -58,23 +64,34 @@ public class Parallel extends AbstractTestAction {
             try {
                 threads.pop().join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("Unable to join thread", e);
             }
+        }
+        
+        if(exceptions.isEmpty() == false) {
+            throw new  CitrusRuntimeException("Parallel container failed! Caused by one or more error in embedded test actions");
         }
     }
 
-    private static class ActionThread implements Runnable {
+    private abstract static class ActionRunner implements Runnable {
         TestAction action;
         TestContext context;
         
-        public ActionThread(TestAction action, TestContext context) {
+        public ActionRunner(TestAction action, TestContext context) {
             this.action = action;
             this.context = context;
         }
 
         public void run() {
-            action.execute(context);
+            try {
+                action.execute(context);
+            } catch (CitrusRuntimeException e) {
+                log.error("Parallel test action raised error", e);
+                exceptionCallback(e);
+            }
         }
+        
+        public abstract void exceptionCallback(Exception e);
     }
 
     /**

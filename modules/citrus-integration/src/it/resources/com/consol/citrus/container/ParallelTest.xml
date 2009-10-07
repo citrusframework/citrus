@@ -33,6 +33,31 @@
 					</echo>
 				</iterate>
 			</parallel>
+      
+            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+              <parallel>
+                  <sleep  time="1.5"/>
+                  <sequential>
+                      <sleep time="1.0"/>
+                      <fail message="This went wrong too"/>
+                      <echo>
+                          <message>1</message>
+                      </echo>
+                  </sequential>
+                  <fail message="This went wrong"/>
+                  <echo>
+                      <message>2</message>
+                  </echo>
+                  <echo>
+                      <message>3</message>
+                  </echo>
+                  <iterate condition="i lt= 5" index="i">
+                      <echo>
+                          <message>10</message>
+                      </echo>
+                  </iterate>
+              </parallel>
+            </assert>
         </actions>
     </testcase>
 </spring:beans>
