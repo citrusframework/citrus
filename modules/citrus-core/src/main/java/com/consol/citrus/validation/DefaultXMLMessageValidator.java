@@ -148,20 +148,20 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                     Assert.isTrue(expectedValue != null, 
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
-                                + actualValue + "' but was '"
-                                + null + "'");
+                                + null + "' but was '"
+                                + actualValue + "'");
     
                     Assert.isTrue(actualValue.equals(expectedValue),
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
-                                + actualValue + "' but was '"
-                                + expectedValue + "'");
+                                + expectedValue + "' but was '"
+                                + actualValue + "'");
                 } else {
                     Assert.isTrue(expectedValue == null || expectedValue.length() == 0, 
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
-                                + null + "' but was '"
-                                + expectedValue + "'");
+                                + expectedValue + "' but was '"
+                                + null + "'");
                 }
             } catch (IllegalArgumentException e) {
                 throw new ValidationException("Validation failed:", e);
@@ -231,20 +231,20 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                     Assert.isTrue(expectedValue != null, 
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
-                                + actualValue + "' but was '"
-                                + null + "'");
+                                + null + "' but was '"
+                                + actualValue + "'");
     
                     Assert.isTrue(actualValue.equals(expectedValue),
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
-                                + actualValue + "' but was '"
-                                + expectedValue + "'");
+                                + expectedValue + "' but was '"
+                                + actualValue + "'");
                 } else {
                     Assert.isTrue(expectedValue == null || expectedValue.length() == 0, 
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
-                                + null + "' but was '"
-                                + expectedValue + "'");
+                                + expectedValue + "' but was '"
+                                + null + "'");
                 }
             } catch (IllegalArgumentException e) {
                 throw new ValidationException("Validation failed:", e);
@@ -389,8 +389,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             Assert.isTrue(source.getNamespaceURI() != null, 
                     "Element namespace not equal for element '"
                         + received.getLocalName() + "', expected '"
-                        + received.getNamespaceURI() + "' but was '"
-                        + null + "'");
+                        + null + "' but was '"
+                        + received.getNamespaceURI() + "'");
 
             Assert.isTrue(received.getNamespaceURI().equals(source.getNamespaceURI()),
                     "Element namespace not equal for element '"
@@ -401,8 +401,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             Assert.isTrue(source.getNamespaceURI() == null, 
                     "Element namespace not equal for element '"
                         + received.getLocalName() + "', expected '"
-                        + null + "' but was '"
-                        + source.getNamespaceURI() + "'");
+                        + source.getNamespaceURI() + "' but was '"
+                        + null + "'");
         }
 
         if (isNodeIgnored(received, ignoreMessageElements)) {
@@ -422,8 +422,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         Assert.isTrue(countAttributes(receivedAttr) == countAttributes(sourceAttr),
                 "Number of attributes not equal for element '"
                     + received.getLocalName() + "', expected "
-                    + countAttributes(receivedAttr) + " but was "
-                    + countAttributes(sourceAttr));
+                    + countAttributes(sourceAttr) + " but was "
+                    + countAttributes(receivedAttr));
 
         for(int i = 0; i<receivedAttr.getLength(); i++) {
             doAttribute(received, receivedAttr.item(i), sourceAttr, ignoreMessageElements);
@@ -436,8 +436,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         Assert.isTrue(receivedChilds.getLength() == sourceChilds.getLength(),
                 "Number of child elements not equal for element '"
                     + received.getLocalName() + "', expected "
-                    + receivedChilds.getLength() + " but was "
-                    + sourceChilds.getLength());
+                    + sourceChilds.getLength() + " but was "
+                    + receivedChilds.getLength());
 
         for(int i = 0; i<receivedChilds.getLength(); i++) {
             this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), ignoreMessageElements);
@@ -457,8 +457,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
             Assert.isTrue(source.getNodeValue() != null, 
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
-                            + received.getNodeValue().trim() + "' but was '"
-                            + null + "'");
+                            + null + "' but was '"
+                            + received.getNodeValue().trim() + "'");
             
             Assert.isTrue(received.getNodeValue().trim().equals(source.getNodeValue().trim()),
                     "Node value not equal for element '"
@@ -507,8 +507,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         Assert.isTrue(receivedValue.equals(sourceValue),
                 "Values not equal for attribute '"
                     + receivedName + "', expected '"
-                    + receivedValue + "' but was '"
-                    + sourceValue + "'");
+                    + sourceValue + "' but was '"
+                    + receivedValue + "'");
 
         if(log.isDebugEnabled()) {
             log.debug("Attribute '" + receivedName + "'='" + receivedValue + "': OK");
