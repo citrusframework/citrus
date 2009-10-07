@@ -21,10 +21,12 @@
                     <sql datasource="testDataSource">
                         <resource file="classpath:com/consol/citrus/actions/script.sql"/>
                     </sql>
-        	        <sql datasource="testDataSource">
-                        <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
-                        <validate column="CUSTOMER_CNT" value="0"/>
-                    </sql>
+                    <repeat-onerror-until-true auto-sleep="1" condition="i = 5" index="i">
+            	        <sql datasource="testDataSource">
+                            <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
+                            <validate column="CUSTOMER_CNT" value="0"/>
+                        </sql>
+                    </repeat-onerror-until-true>
 				</sequential>
 				<sequential>
                     <sleep time="3"/>
