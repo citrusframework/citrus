@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
+import org.apache.commons.cli.*;
+
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -43,21 +45,38 @@ public class TestCaseCreator {
     private String targetPackage;
     
     public static void main(String[] args) {
-        try {    
+        Options options = new TestCaseCreatorCliOptions();
+        CommandLineParser cliParser = new GnuParser();
+        
+        CommandLine cmd = null;
+        
+        try {
+            cmd = cliParser.parse(options, args);
+            
+            if(cmd.hasOption("help")) {
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("CITRUS test creation", options);
+                return;
+            }
+            
             TestCaseCreator creator = TestCaseCreator.build()
-                .withName(args[0])
-                .withAuthor(args[1])
-                .withDescription(args[2])
-                .usePackage(args[3]);
+                .withName(cmd.getOptionValue("name"))
+                .withAuthor(cmd.getOptionValue("author", "Unknown"))
+                .withDescription(cmd.getOptionValue("description", "TODO: Description"))
+                .usePackage(cmd.getOptionValue("package", "com.consol.citrus"));
             
             creator.createTestCase();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new CitrusRuntimeException("Wrong usage exception! " +
-            		"Use parameters in the following way: [test.name] [test.author] [test.description] [test.subfolder]", e);
+        } catch (ParseException e) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("\n **** CITRUS TESTCREATOR ****", "\n CLI options:", options, "");
         }
     }
     
     public void createTestCase() {
+        if(Character.isLowerCase(name.charAt(0))) {
+            throw new CitrusRuntimeException("Test name must start with an uppercase letter");
+        }
+        
         Properties properties = new Properties();
         properties.put("test.name", name);
         properties.put("test.author", author);
@@ -187,6 +206,37 @@ public class TestCaseCreator {
     public TestCaseCreator usePackage(String targetPackage) {
         this.targetPackage = targetPackage;
         return this;
+    }
+    
+    private static class TestCaseCreatorCliOptions extends Options {
+        @SuppressWarnings("static-access")
+        public TestCaseCreatorCliOptions() {
+            this.addOption(new Option("help", "print usage help"));
+            
+            this.addOption(OptionBuilder.withArgName("name")
+                    .hasArg()
+                    .withDescription("the test name (required)")
+                    .isRequired(true)
+                    .create("name"));
+            
+            this.addOption(OptionBuilder.withArgName("author")
+                    .hasArg()
+                    .withDescription("the author of the test (optional)")
+                    .isRequired(false)
+                    .create("author"));
+            
+            this.addOption(OptionBuilder.withArgName("description")
+                    .hasArg()
+                    .withDescription("describes the test (optional)")
+                    .isRequired(false)
+                    .create("description"));
+            
+            this.addOption(OptionBuilder.withArgName("package")
+                    .hasArg()
+                    .withDescription("the package to use (optional)")
+                    .isRequired(false)
+                    .create("package"));
+        }        
     }
 
     /**
