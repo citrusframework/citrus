@@ -1,2 +1,3 @@
 http\://www.citrusframework.org/schema/testcase/citrus-testcase-1.0.xsd=com/consol/citrus/schema/citrus-testcase-1.0.xsd
 http\://www.citrusframework.org/schema/config/citrus-config-1.0.xsd=com/consol/citrus/schema/citrus-config-1.0.xsd
+http\://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd=com/consol/citrus/schema/citrus-testcase-1.1.xsd

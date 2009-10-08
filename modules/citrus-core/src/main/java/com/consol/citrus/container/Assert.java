@@ -26,14 +26,22 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 
+/**
+ * 
+ * @author deppisch Christoph Deppisch Consol* Software GmbH 2009
+ */
 public class Assert extends AbstractTestAction {
     /** TestAction to be executed */
     private TestAction action;
 
-    /** Aserted exception */
-    private String exception = CitrusRuntimeException.class.getName();
+    /** Asserted exception */
+    private Class<? extends Throwable> exception = CitrusRuntimeException.class;
 
+    /** localized exception message */
+    private String message = null;
+    
     /**
      * Logger
      */
@@ -55,24 +63,27 @@ public class Assert extends AbstractTestAction {
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating caught exception ...");
-            if (exception != null) {
-                if (exception.equals(e.getClass().getName())) {
-                    log.info("Exception is " + e.getClass() + ": " + e.getLocalizedMessage());
-                    log.info("Exception validation OK");
-                    return;
-                } else {
-                    throw new CitrusRuntimeException("Caught exception does not fit expected exception type '" + exception + "' caught: " + e.getClass().getName());
+            if (exception.isAssignableFrom(e.getClass())) {
+                
+                if(message != null && message.equals(e.getLocalizedMessage()) == false) {
+                    throw new ValidationException("Caught exception message does not fit - expected: '" + message + "' but was: '" + e.getLocalizedMessage() + "'");
                 }
+                
+                log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
+                log.info("Exception validation successful");
+                return;
+            } else {
+                throw new ValidationException("Caught exception type does not fit - expected: '" + exception + "' but was: '" + e.getClass().getName() + "'");
             }
         }
 
-        throw new CitrusRuntimeException("Asserted exception " + exception + " was not thrown as expected");
+        throw new ValidationException("Missing asserted exception '" + exception + "'");
     }
 
     /**
      * @param exception the exception to set
      */
-    public void setException(String exception) {
+    public void setException(Class<Throwable> exception) {
         this.exception = exception;
     }
 
@@ -81,5 +92,19 @@ public class Assert extends AbstractTestAction {
      */
     public void setAction(TestAction action) {
         this.action = action;
+    }
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
     }
 }

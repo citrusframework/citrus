@@ -43,6 +43,12 @@ public class AssertParser implements BeanDefinitionParser {
         if (StringUtils.hasText(exception)) {
             beanDefinition.addPropertyValue("exception", exception);
         }
+        
+        String message = element.getAttribute("message");
+
+        if (StringUtils.hasText(message)) {
+            beanDefinition.addPropertyValue("message", message);
+        }
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
