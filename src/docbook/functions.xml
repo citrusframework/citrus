@@ -18,7 +18,7 @@
   &lt;bean id=&quot;testFrameworkFunctionLibrary&quot; 
            class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
       &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
-      &lt;property name=&quot;prefix&quot; value=&quot;tsf:&quot;/&gt;
+      &lt;property name=&quot;prefix&quot; value=&quot;citrus:&quot;/&gt;
       &lt;property name=&quot;members&quot;&gt;
           &lt;map&gt;
             &lt;entry key=&quot;randomNumber&quot;&gt;
@@ -45,19 +45,19 @@
   &lt;testcase name=&quot;concatFunctionTest&quot;&gt;
       &lt;variables&gt;
           &lt;variable name=&quot;date&quot; 
-                       value=&quot;tsf:currentDate(yyyy-MM-dd)&quot; /&gt;
+                       value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
           &lt;variable name=&quot;text&quot; 
                        value=&quot;Hallo Test Framework!&quot; /&gt;
       &lt;/variables&gt;
       &lt;actions&gt;
           &lt;echo&gt;
               &lt;message&gt;
-                  tsf:concat('Today is: ', ${date}, ' right!?')
+                  citrus:concat('Today is: ', ${date}, ' right!?')
               &lt;/message&gt;
           &lt;/echo&gt;
           &lt;echo&gt;
               &lt;message&gt;
-                  tsf:concat('Text is: ', ${text})
+                  citrus:concat('Text is: ', ${text})
               &lt;/message&gt;
           &lt;/echo&gt;
       &lt;/actions&gt;
@@ -75,7 +75,7 @@
         <programlisting>
   &lt;message&gt;
       &lt;validate path=&quot;//element/element&quot; 
-                   value=&quot;tsf:concat('Cx1x', ${generatedId})&quot;/&gt;
+                   value=&quot;citrus:concat('Cx1x', ${generatedId})&quot;/&gt;
   &lt;/message&gt;
         </programlisting>
     </section>
@@ -94,12 +94,12 @@
         <programlisting>
   &lt;echo&gt;
       &lt;message&gt;
-          tsf:substring('Hallo Test Framework', 6)
+          citrus:substring('Hallo Test Framework', 6)
       &lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
       &lt;message&gt;
-          tsf:substring('Hallo Test Framework', 0, 5)
+          citrus:substring('Hallo Test Framework', 0, 5)
       &lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
@@ -116,7 +116,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:stringLength('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:stringLength('Hallo Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -133,7 +133,7 @@
         <programlisting>
   &lt;echo&gt;
       &lt;message&gt;
-          tsf:translate('H.llo Test Fr.mework', '\.', 'a')
+          citrus:translate('H.llo Test Fr.mework', '\.', 'a')
       &lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
@@ -154,7 +154,7 @@
         <programlisting>
   &lt;echo&gt;
       &lt;message&gt;
-          tsf:substringBefore('Test/Framework', '/')
+          citrus:substringBefore('Test/Framework', '/')
       &lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
@@ -174,7 +174,7 @@
         <programlisting>
   &lt;echo&gt;
       &lt;message&gt;
-          tsf:substringAfter('Test/Framework', '/')
+          citrus:substringAfter('Test/Framework', '/')
       &lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
@@ -194,7 +194,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:round('3.14')&lt;/message&gt;
+      &lt;message&gt;citrus:round('3.14')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -209,7 +209,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:floor('3.14')&lt;/message&gt;
+      &lt;message&gt;citrus:floor('3.14')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -224,7 +224,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:ceiling('3.14')&lt;/message&gt;
+      &lt;message&gt;citrus:ceiling('3.14')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -245,11 +245,11 @@
         <programlisting>
   &lt;variables&gt;
       &lt;variable name=&quot;rndNumber1&quot; 
-                   value=&quot;tsf:randomNumber(10)&quot;/&gt;
+                   value=&quot;citrus:randomNumber(10)&quot;/&gt;
       &lt;variable name=&quot;rndNumber2&quot; 
-                   value=&quot;tsf:randomNumber(10, true)&quot;/&gt;
+                   value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
       &lt;variable name=&quot;rndNumber3&quot; 
-                   value=&quot;tsf:randomNumber(10, false)&quot;/&gt;
+                   value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
   &lt;/variables&gt;
         </programlisting>
         
@@ -268,15 +268,15 @@
         <programlisting>
   &lt;variables&gt;
       &lt;variable name=&quot;rndString0&quot; 
-                   value=&quot;${tsf:randomString(10)}&quot;/&gt;
+                   value=&quot;${citrus:randomString(10)}&quot;/&gt;
       &lt;variable name=&quot;rndString1&quot; 
-                   value=&quot;tsf:randomString(10)&quot;/&gt;
+                   value=&quot;citrus:randomString(10)&quot;/&gt;
       &lt;variable name=&quot;rndString2&quot; 
-                   value=&quot;tsf:randomString(10, UPPERCASE)&quot;/&gt;
+                   value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
       &lt;variable name=&quot;rndString3&quot; 
-                   value=&quot;tsf:randomString(10, LOWERCASE)&quot;/&gt;
+                   value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
       &lt;variable name=&quot;rndString4&quot; 
-                   value=&quot;tsf:randomString(10, MIXED)&quot;/&gt;
+                   value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
   &lt;/variables&gt;
         </programlisting>
         
@@ -296,37 +296,37 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate()&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate()&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
-      &lt;message&gt;tsf:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -348,7 +348,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:upperCase('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:upperCase('Hallo Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -363,7 +363,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;tsf:lowerCase('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:lowerCase('Hallo Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -378,7 +378,7 @@
         
         <programlisting>
   &lt;variable name=&quot;avg&quot; 
-               value=&quot;tsf:average('3', '4', '5')&quot;/&gt;
+               value=&quot;citrus:average('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>avg = <emphasis>4.0</emphasis></para>
@@ -391,7 +391,7 @@
         
         <programlisting>
   &lt;variable name=&quot;min&quot; 
-               value=&quot;tsf:minimum('3', '4', '5')&quot;/&gt;
+               value=&quot;citrus:minimum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>min = <emphasis>3.0</emphasis></para>
@@ -404,7 +404,7 @@
         
         <programlisting>
   &lt;variable name=&quot;max&quot; 
-               value=&quot;tsf:maximum('3', '4', '5')&quot;/&gt;
+               value=&quot;citrus:maximum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>max = <emphasis>5.0</emphasis></para>
@@ -417,7 +417,7 @@
         
         <programlisting>
   &lt;variable name=&quot;sum&quot; 
-               value=&quot;tsf:sum('3', '4', '5')&quot;/&gt;
+               value=&quot;citrus:sum('3', '4', '5')&quot;/&gt;
         </programlisting>
         
         <para>sum = <emphasis>12.0</emphasis></para>
@@ -430,7 +430,7 @@
         
         <programlisting>
   &lt;variable name=&quot;abs&quot; 
-               value=&quot;tsf:absolute('-3')&quot;/&gt;
+               value=&quot;citrus:absolute('-3')&quot;/&gt;
         </programlisting>
         
         <para>abs = <emphasis>3.0</emphasis></para>

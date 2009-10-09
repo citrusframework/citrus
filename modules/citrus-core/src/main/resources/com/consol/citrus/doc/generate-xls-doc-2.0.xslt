@@ -19,7 +19,7 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
-	xmlns:tsf="http://www.citrusframework.org/schema/testcase"
+	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
 	xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 	xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
 	exclude-result-prefixes="ss tsf spring">
@@ -27,10 +27,10 @@
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/>
 
 	<xsl:template match="/spring:beans">
-		<xsl:apply-templates select="tsf:testcase" />
+		<xsl:apply-templates select="citrus:testcase" />
 	</xsl:template>
 
-	<xsl:template match="/spring:beans/tsf:testcase">
+	<xsl:template match="/spring:beans/citrus:testcase">
 		<Cell>
 			<Data ss:Type="String">
 				<xsl:value-of select="@name" />
@@ -40,28 +40,28 @@
 		
 		<Cell>
 			<Data ss:Type="String">
-				<xsl:value-of select="tsf:meta-info/tsf:author" />
+				<xsl:value-of select="citrus:meta-info/citrus:author" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
 		
 		<Cell>
 			<Data ss:Type="String">
-				<xsl:value-of select="tsf:meta-info/tsf:status" />
+				<xsl:value-of select="citrus:meta-info/citrus:status" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
 
 		<Cell>
 			<Data ss:Type="String">
-				<xsl:value-of select="normalize-space(tsf:description)" />
+				<xsl:value-of select="normalize-space(citrus:description)" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>				
 		
 		<Cell>
 			<Data ss:Type="String">
-				<xsl:value-of select="tsf:meta-info/tsf:creationdate" />
+				<xsl:value-of select="citrus:meta-info/citrus:creationdate" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>

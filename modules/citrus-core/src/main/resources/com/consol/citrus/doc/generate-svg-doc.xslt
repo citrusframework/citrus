@@ -19,7 +19,7 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:spring="http://www.springframework.org/schema/beans" 
-	xmlns:tsf="http://www.citrusframework.org/schema/testcase"	
+	xmlns:citrus="http://www.citrusframework.org/schema/testcase"	
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns="http://www.w3.org/2000/svg"
@@ -28,13 +28,13 @@
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" doctype-public="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"/>
 	
 	<xsl:template match="spring:beans">
-		<xsl:apply-templates select="tsf:testcase" />
+		<xsl:apply-templates select="citrus:testcase" />
 	</xsl:template>
 	
-	<xsl:template match="/spring:beans/tsf:testcase">
+	<xsl:template match="/spring:beans/citrus:testcase">
 		<svg xmlns:svg="http://www.w3.org/2000/svg" version="1.0" width="210mm" height="297mm">
 			<title><xsl:value-of select="@name"/></title>
-   			<desc><xsl:value-of select="tsf:description/text()"/></desc>
+   			<desc><xsl:value-of select="citrus:description/text()"/></desc>
    			<defs>
 				<linearGradient id="lnrGradientStart"
 					gradientTransform="scale(1.40,0.75)" x1="65" y1="70" x2="8" y2="15" gradientUnits="userSpaceOnUse">
@@ -164,7 +164,7 @@
 				
 				<text x="20" y="70" style="font-size:14px;fill:grey">
 					<xsl:call-template name="word-wrap">
-						<xsl:with-param name="tobewrapped" select="normalize-space(tsf:description/text())"/>
+						<xsl:with-param name="tobewrapped" select="normalize-space(citrus:description/text())"/>
 						<xsl:with-param name="linelength" select="110"/>
 					</xsl:call-template>
 				</text>
@@ -176,11 +176,11 @@
 						<xsl:with-param name="endPoint">255,250</xsl:with-param>
 					</xsl:call-template>
 					
-					<xsl:apply-templates select="tsf:actions/tsf:send | tsf:actions/tsf:receive | tsf:actions/tsf:echo | tsf:actions/tsf:sleep"/>
+					<xsl:apply-templates select="citrus:actions/citrus:send | citrus:actions/citrus:receive | citrus:actions/citrus:echo | citrus:actions/citrus:sleep"/>
 					
 					<xsl:element name="use">
 						<xsl:attribute name="x">200</xsl:attribute>
-						<xsl:attribute name="y"><xsl:value-of select="250 + (count(tsf:actions/tsf:send)+count(tsf:actions/tsf:receive)+count(tsf:actions/tsf:echo)+count(tsf:actions/tsf:sleep))*100"/></xsl:attribute>
+						<xsl:attribute name="y"><xsl:value-of select="250 + (count(citrus:actions/citrus:send)+count(citrus:actions/citrus:receive)+count(citrus:actions/citrus:echo)+count(citrus:actions/citrus:sleep))*100"/></xsl:attribute>
 						<xsl:attribute name="xlink:href">#end</xsl:attribute>
 					</xsl:element>
 				</g>
@@ -188,7 +188,7 @@
 		</svg>
 	</xsl:template>
 	
-	<xsl:template match="tsf:send | tsf:receive">
+	<xsl:template match="citrus:send | citrus:receive">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
 			<xsl:attribute name="x">200</xsl:attribute>
@@ -201,10 +201,10 @@
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
 			<xsl:attribute name="style">font-size:14px;fill:black;stroke:blue;stroke-opacity:0.5</xsl:attribute>
 			<tspan x="350" dy="20"><xsl:value-of select="@type"/></tspan>
-			<xsl:if test="tsf:description">
+			<xsl:if test="citrus:description">
 				<tspan x="350" dy="20" style="font-size:10px;fill:grey;">
-					"<xsl:value-of select="substring(tsf:description, 1, 80)"/>
-					<xsl:if test="string-length(tsf:description)>80"> ...</xsl:if>
+					"<xsl:value-of select="substring(citrus:description, 1, 80)"/>
+					<xsl:if test="string-length(citrus:description)>80"> ...</xsl:if>
 					"
 				</tspan>
 			</xsl:if>
@@ -216,7 +216,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<xsl:template match="tsf:echo">
+	<xsl:template match="citrus:echo">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
 			<xsl:attribute name="x">200</xsl:attribute>
@@ -227,10 +227,10 @@
 		<xsl:element name="text">
 			<xsl:attribute name="x">350</xsl:attribute>
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
-			<xsl:if test="tsf:message">
+			<xsl:if test="citrus:message">
 				<tspan x="350" dy="20" style="font-size:12px;fill:grey;">
-					"<xsl:value-of select="substring(tsf:message, 1, 80)"/>
-					<xsl:if test="string-length(tsf:message)>80"> ...</xsl:if>
+					"<xsl:value-of select="substring(citrus:message, 1, 80)"/>
+					<xsl:if test="string-length(citrus:message)>80"> ...</xsl:if>
 					"
 				</tspan>
 			</xsl:if>
@@ -242,7 +242,7 @@
 		</xsl:call-template>
 	</xsl:template>
 	
-	<xsl:template match="tsf:sleep">
+	<xsl:template match="citrus:sleep">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
 			<xsl:attribute name="x">200</xsl:attribute>
@@ -255,10 +255,10 @@
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
 			<xsl:attribute name="style">font-size:12px;fill:grey;</xsl:attribute>
 			<tspan x="350" dy="20"><xsl:value-of select="@time"/> seconds</tspan>
-			<xsl:if test="tsf:description">
+			<xsl:if test="citrus:description">
 				<tspan x="350" dy="20" style="font-size:10px;fill:grey;">
-					"<xsl:value-of select="substring(tsf:description, 1, 80)"/>
-					<xsl:if test="string-length(tsf:description)>80"> ...</xsl:if>
+					"<xsl:value-of select="substring(citrus:description, 1, 80)"/>
+					<xsl:if test="string-length(citrus:description)>80"> ...</xsl:if>
 					"
 				</tspan>
 			</xsl:if>
