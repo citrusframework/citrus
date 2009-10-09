@@ -38,8 +38,8 @@
   TimeWatcher time_line_id after 8.5 seconds
     </programlisting>
     
-    <note>In case no time line id is specified the frameowrk will measure the time for a default time line.</note>
+    <note>In case no time line id is specified the framework will measure the time for a default time line.</note>
     
     <para>To print out the current elapsed time for a time line you simply have to place the &lt;trace-time&gt; action into
-    the action chain again and again, using the respective ids. The elapsed time will be printed out to the console every time.</para>
+    the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.</para>
 </section>
