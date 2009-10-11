@@ -14,6 +14,7 @@
         <property name="mappings">
             <props>
                 <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}InvalidRequest">soapFaultGeneratingEndpoint</prop>
             </props>
         </property>
         <property name="interceptors">
@@ -21,7 +22,19 @@
                 <ref bean="loggingInterceptor"/>
             </list>
         </property>
+        <property name="defaultEndpoint" ref="defaultWsEndpoint"/>
     </bean>
+    
+    <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <property name="defaultFault" value="{http://www.citrusframework.org/faults}CITRUS:TEC-1000,Internal server error"/>
+        <property name="exceptionMappings">
+            <value>
+                com.consol.citrus.exceptions.CitrusRuntimeException={http://www.citrusframework.org/faults}CITRUS:TEC-1001,Invalid request
+            </value>
+        </property>
+    </bean>
+    
+    <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.SoapFaultGeneratingEndpoint"/>
     
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">
@@ -46,20 +59,6 @@
                     </map>
                 </property>
             </bean>
-        </property>
-    </bean>
-    
-    <bean id="defaultPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
-        <description>
-            This endpoint mapping is the default mapping for all incoming requests. Mapping will be used in case no other endpoint mapping fits
-            the incoming request. Other endpoint mappings can be found in the imported context files, where service implementations are defined.
-            The default mapping has only logging interceptor defined.
-        </description>
-        <property name="defaultEndpoint" ref="defaultWsEndpoint"/>
-        <property name="interceptors">
-            <list>
-                <ref bean="loggingInterceptor"/>
-            </list>
         </property>
     </bean>
     

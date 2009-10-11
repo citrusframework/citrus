@@ -17,58 +17,59 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.ws.config.xml;
 
 import java.util.Map;
 
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.RepeatUntilTrue;
+import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.config.xml.TestActionRegistry;
+import com.consol.citrus.ws.actions.AssertSoapFault;
 
-public class RepeatUntilTrueParser implements BeanDefinitionParser {
+public class AssertSoapFaultParser implements BeanDefinitionParser {
 
-    @SuppressWarnings("unchecked")
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinition;
+
+        beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(AssertSoapFault.class);
+
+        String faultCode = element.getAttribute("fault-code");
+
+        if (StringUtils.hasText(faultCode)) {
+            beanDefinition.addPropertyValue("faultCode", faultCode);
+        }
+        
+        String faultString = element.getAttribute("fault-string");
+
+        if (StringUtils.hasText(faultString)) {
+            beanDefinition.addPropertyValue("faultString", faultString);
+        }
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String index = element.getAttribute("index");
-        beanDefinition.addPropertyValue("indexName", index);
-
-        String condition = element.getAttribute("condition");
-        beanDefinition.addPropertyValue("condition", condition);
-
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-        ManagedList actions = new ManagedList();
 
         Element action = DOMUtil.getFirstChildElement(element);
 
         if (action != null && action.getTagName().equals("description")) {
-            beanDefinition.addPropertyValue("description", action.getNodeValue());
             action = DOMUtil.getNextSiblingElement(action);
         }
 
         if (action != null) {
-            do {
-                BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-
-                if(parser ==  null) {
-                	actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
-                } else {
-                	actions.add(parser.parse(action, parserContext));
-                }
-            } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
-        }
-
-        if (actions.size() > 0) {
-            beanDefinition.addPropertyValue("actions", actions);
+            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
+            
+            if(parser ==  null) {
+            	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+            } else {
+            	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
+            }
         }
 
         beanDefinition.addPropertyValue("name", element.getLocalName());

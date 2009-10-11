@@ -54,8 +54,12 @@ public class ParallelParser implements BeanDefinitionParser {
         if (action != null) {
             do {
                 BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-
-                actions.add(parser.parse(action, parserContext));
+                
+                if(parser ==  null) {
+                	actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+                } else {
+                	actions.add(parser.parse(action, parserContext));
+                }
             } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
         }
 

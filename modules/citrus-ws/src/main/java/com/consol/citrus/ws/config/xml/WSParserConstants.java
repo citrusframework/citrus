@@ -49,4 +49,16 @@ public class WSParserConstants {
 
     static final String MESSAGE_FACTORY_PROPERTY = "messageFactory";
     
+    static final String MESSAGE_SENDER_ATTRIBUTE = "message-sender";
+
+    static final String MESSAGE_SENDER_PROPERTY = "messageSender";
+    
+    static final String MESSAGE_SENDERS_ATTRIBUTE = "message-senders";
+
+    static final String MESSAGE_SENDERS_PROPERTY = "messageSenders";
+
+	static final String WS_TEMPLATE_ATTRIBUTE = "web-service-template";
+
+	static final String WS_TEMPLATE_PROPERTY = "webServiceTemplate";
+    
 }

@@ -49,7 +49,7 @@ public class TestCaseParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     @SuppressWarnings("unchecked")
-	public final BeanDefinition parse(Element element, ParserContext parseContext) {
+	public final BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder testCaseFactory = BeanDefinitionBuilder.rootBeanDefinition(TestCaseFactory.class);
         BeanDefinitionBuilder testcase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);
 
@@ -123,9 +123,12 @@ public class TestCaseParser implements BeanDefinitionParser {
         if (action != null) {
             do {
                 BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-                BeanDefinition beanDefinition = parser.parse(action, parseContext);
-
-                testChain.add(beanDefinition);
+                
+                if(parser ==  null) {
+                	testChain.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+                } else {
+                	testChain.add(parser.parse(action, parserContext));
+                }
             } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
         }
 
@@ -137,9 +140,12 @@ public class TestCaseParser implements BeanDefinitionParser {
             if (action != null) {
                 do {
                     BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-                    BeanDefinition beanDefinition = parser.parse(action, parseContext);
-
-                    finallyChain.add(beanDefinition);
+                    
+                    if(parser ==  null) {
+                    	finallyChain.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+                    } else {
+                    	finallyChain.add(parser.parse(action, parserContext));
+                    }
                 } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
             }
         }
@@ -149,11 +155,11 @@ public class TestCaseParser implements BeanDefinitionParser {
         testCaseFactory.addPropertyValue("finallyChain", finallyChain);
 
         if (testCaseName != null) {
-            parseContext.getRegistry().registerBeanDefinition(testCaseName, testCaseFactory.getBeanDefinition());
+            parserContext.getRegistry().registerBeanDefinition(testCaseName, testCaseFactory.getBeanDefinition());
         } else {
             throw new RuntimeException("Test case name is missing");
         }
 
-        return parseContext.getRegistry().getBeanDefinition(testCaseName);
+        return parserContext.getRegistry().getBeanDefinition(testCaseName);
     }
 }

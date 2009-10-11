@@ -19,6 +19,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -39,12 +40,25 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
             builder.addPropertyValue(WSParserConstants.REQUEST_URL_PROPERTY, requestUrl);
         }
     
+        String webServiceTemplate = element.getAttribute(WSParserConstants.WS_TEMPLATE_ATTRIBUTE);
+        
+        if(StringUtils.hasText(webServiceTemplate)) {
+        	if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE) ||
+                    element.hasAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE) ||
+                    element.hasAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE)) {
+                throw new BeanCreationException("When providing a '" + WSParserConstants.WS_TEMPLATE_ATTRIBUTE + "' reference, none of " +
+                        "'" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "', '" + WSParserConstants.MESSAGE_SENDER_ATTRIBUTE + 
+                        "', or '" + WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE + "' should be provided.");
+            }
+        	
+        	builder.addPropertyReference(WSParserConstants.WS_TEMPLATE_PROPERTY, webServiceTemplate);
+        }
+        
         String messageFactory = "messageFactory"; //default value
         
         if(element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
             messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
         }
-        
         
         if(!StringUtils.hasText(messageFactory)) {
             parserContext.getReaderContext().error(
@@ -53,6 +67,18 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         
         builder.addPropertyReference(WSParserConstants.MESSAGE_FACTORY_PROPERTY, messageFactory);
         
+        String messageSender = element.getAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE);
+		String messageSenderList = element.getAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE);
+		if (StringUtils.hasText(messageSender) && StringUtils.hasText(messageSenderList)) {
+			parserContext.getReaderContext().error("Either 'message-sender' or 'message-senders' attribute has to be specified - not both of them.", element);
+		}
+		
+		if (StringUtils.hasText(messageSender)) {
+			builder.addPropertyReference(WSParserConstants.MESSAGE_SENDER_PROPERTY, messageSender);
+		} else if (StringUtils.hasText(messageSenderList)) {
+			builder.addPropertyReference(WSParserConstants.MESSAGE_SENDERS_PROPERTY, messageSenderList);
+		}
+		
         String replyHandler = element.getAttribute(WSParserConstants.REPLY_HANDLER_ATTRIBUTE);
         
         if (StringUtils.hasText(replyHandler)) {

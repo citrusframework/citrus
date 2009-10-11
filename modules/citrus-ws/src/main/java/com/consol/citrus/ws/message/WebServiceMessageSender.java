@@ -19,12 +19,10 @@
 
 package com.consol.citrus.ws.message;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,16 +30,22 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.core.FaultMessageResolver;
+import org.springframework.ws.client.core.SimpleFaultMessageResolver;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.ReplyMessageHandler;
 
-public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender {
+public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, FaultMessageResolver {
 
     private ReplyMessageHandler replyMessageHandler;
     
@@ -60,11 +64,16 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
             log.debug(message.toString());
         }
         
-        StringWriter responseWriter = new StringWriter();
-        StreamResult result = new StreamResult(responseWriter);
+        if(message.getPayload() instanceof String == false) {
+        	throw new CitrusRuntimeException("Unsupported payload type '" + message.getPayload().getClass() +
+    				"' Currently only 'java.lang.String' is supported as payload type.");
+        }
+        
+        StringResult result = new StringResult();
 
-        StreamSource source = new StreamSource(new StringReader(message.getPayload().toString()));
-        getWebServiceTemplate().sendSourceAndReceiveToResult(source, 
+        getWebServiceTemplate().setFaultMessageResolver(this);
+        
+        getWebServiceTemplate().sendSourceAndReceiveToResult(new StringSource((String)message.getPayload()), 
                 new WebServiceMessageCallback() {
                     public void doWithMessage(WebServiceMessage requestMessage)
                             throws IOException, TransformerException {
@@ -91,14 +100,8 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                     }
         }, result);
 
-        responseWriter.flush();
         if(replyMessageHandler != null) {
-            replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(responseWriter.toString()).build());
-        }
-        try {
-            responseWriter.close();
-        } catch (IOException e) {
-            log.error("Error while closing output stream", e);
+            replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(result.toString()).build());
         }
     }
 
@@ -108,5 +111,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
     }
-
+    
+	public void resolveFault(WebServiceMessage message) throws IOException {
+		if(message instanceof SoapMessage) {
+			new SoapFaultMessageResolver().resolveFault(message);
+		} else {
+			new SimpleFaultMessageResolver().resolveFault(message);
+		}
+	}
 }
