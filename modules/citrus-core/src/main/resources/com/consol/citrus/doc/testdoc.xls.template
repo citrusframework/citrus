@@ -6,12 +6,12 @@
  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
  xmlns:html="http://www.w3.org/TR/REC-html40">
  <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
-  <Author>TestFramework</Author>
-  <LastAuthor>TestFramework</LastAuthor>
-  <LastPrinted>2007-12-12T07:48:58Z</LastPrinted>
-  <Created>2007-12-12T07:40:21Z</Created>
-  <LastSaved>2007-12-12T07:49:11Z</LastSaved>
-  <Company>ConSol Software GmbH</Company>
+  <Author>@author@</Author>
+  <LastAuthor>@author@</LastAuthor>
+  <LastPrinted>@date@T12:00:00Z</LastPrinted>
+  <Created>@date@T12:00:00Z</Created>
+  <LastSaved>@date@T12:00:00Z</LastSaved>
+  <Company>@company@</Company>
   <Version>11.6360</Version>
  </DocumentProperties>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">

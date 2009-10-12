@@ -41,9 +41,9 @@ public class FileUtils {
      * @param startDir the directory to hold the files
      * @return list of test files as filename paths
      */
-    public static List<String> getTestFiles(final String startDir) {
+    public static List<File> getTestFiles(final String startDir) {
         /* file names to be returned */
-        final List<String> files = new ArrayList<String>();
+        final List<File> files = new ArrayList<File>();
 
         /* Stack to hold potential sub directories */
         final Stack<File> dirs = new Stack<File>();
@@ -74,7 +74,7 @@ public class FileUtils {
                 if (found[i].isDirectory())
                     dirs.push(found[i]);
                 else {
-                    files.add(file.getPath().substring(startDir.length()));
+                    files.add(found[i]);
                 }
             }
         }

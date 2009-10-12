@@ -22,7 +22,7 @@
 	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
 	xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 	xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
-	exclude-result-prefixes="ss tsf spring">
+	exclude-result-prefixes="ss citrus spring">
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/>
 

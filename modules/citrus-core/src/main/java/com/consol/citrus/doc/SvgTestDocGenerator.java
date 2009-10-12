@@ -19,12 +19,18 @@
 
 package com.consol.citrus.doc;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -55,7 +61,7 @@ public class SvgTestDocGenerator {
                 testDirectory = args[1];
             }
 
-            List<String> fileNames = FileUtils.getTestFiles(testDirectory);
+            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
             String xslSource;
             if (args.length > 0) {
@@ -76,12 +82,11 @@ public class SvgTestDocGenerator {
 
             log.info("XSL transformer was created");
 
-            for (int i = 0; i < fileNames.size(); i++) {
-                String fileName = (String)fileNames.get(i);
-                log.info("Working on test " + fileName);
+            for (File testFile : testFiles) {
+                log.info("Working on test " + testFile.getName());
 
                 StringWriter stringWriter = new StringWriter();
-                StreamSource xml = new StreamSource(fileName);
+                StreamSource xml = new StreamSource(testFile);
                 StreamResult res = new StreamResult(stringWriter);
 
                 try {
@@ -92,13 +97,13 @@ public class SvgTestDocGenerator {
                     stringWriter.close();
 
                     if (fileContent!= null && fileContent.indexOf("svg")!=-1) {
-                        log.info("Created file " + fileName.substring(0, fileName.lastIndexOf('.')) + ".svg");
-                        FileWriter fileWriter = new FileWriter(fileName.substring(0, fileName.lastIndexOf('.')) + ".svg");
+                        log.info("Created file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
+                        FileWriter fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                         fileWriter.write(stringWriter.toString());
                         fileWriter.flush();
                         fileWriter.close();
                     } else {
-                        log.warn("Could not create file " + fileName.substring(0, fileName.lastIndexOf('.')) + ".svg");
+                        log.warn("Could not create file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                     }
                 } catch(TransformerException e) {
                     log.error("XSLT tranformation failed", e);

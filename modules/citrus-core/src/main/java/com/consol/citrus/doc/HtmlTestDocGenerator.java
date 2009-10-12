@@ -19,15 +19,24 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-import java.util.Collections;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -99,9 +108,7 @@ public class HtmlTestDocGenerator {
                 props.load(HtmlTestDocGenerator.class.getResourceAsStream(DEFAULT_PROPERTIES_FILE));
             }
 
-            List<String> fileNames = FileUtils.getTestFiles(testDirectory);
-
-            Collections.sort(fileNames);
+            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
             Source xsl = new StreamSource(HtmlTestDocGenerator.class.getResourceAsStream(xslSource), 
                     HtmlTestDocGenerator.class.getResource(xslSource).getPath());
@@ -136,13 +143,13 @@ public class HtmlTestDocGenerator {
                 }
             }
 
-            int maxEntries = fileNames.size() / new Integer(props.getProperty("overview.columns")).intValue();
+            int maxEntries = testFiles.size() / new Integer(props.getProperty("overview.columns")).intValue();
 
             buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
             buffered.write("<ol>".getBytes());
 
-            for (int i = 0; i < fileNames.size(); i++) {
-                if (i != 0 && i % maxEntries == 0 && fileNames.size() - i >= maxEntries) {
+            for (int i = 0; i < testFiles.size(); i++) {
+                if (i != 0 && i % maxEntries == 0 && testFiles.size() - i >= maxEntries) {
                     buffered.write("</ol>".getBytes());
                     buffered.write("</td>".getBytes());
                     buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
@@ -151,7 +158,7 @@ public class HtmlTestDocGenerator {
 
                 buffered.write("<li>".getBytes());
                 buffered.write(("<a href=\"#" + i + "\">").getBytes());
-                buffered.write(fileNames.get(i).toString().getBytes());
+                buffered.write(testFiles.get(i).toString().getBytes());
                 buffered.write("</a>".getBytes());
             }
 
@@ -166,19 +173,18 @@ public class HtmlTestDocGenerator {
                 }
             }
 
-            for (int i = 0; i < fileNames.size(); i++) {
+            int testNumber = 1;
+            for (File testFile : testFiles) {
                 buffered.write("<tr>".getBytes());
 
-                String fileName = (String)fileNames.get(i);
-                log.info("Working on test " + fileName);
+                log.info("Working on test " + testFile.getName());
 
-                Source xml = new DOMSource(builder.parse(fileName));
-                String testNumber = i+1+". ";
-                buffered.write(("<td style=\"border:1px solid #bbbbbb\">" + testNumber + "</td>").getBytes());
+                Source xml = new DOMSource(builder.parse(testFile));
+                buffered.write(("<td style=\"border:1px solid #bbbbbb\">" + testNumber + ".</td>").getBytes());
 
                 buffered.write("<td style=\"border:1px solid #bbbbbb\">".getBytes());
                 t.transform(xml, res);
-                buffered.write(("<a name=\"" + (i+1) + "\" href=\"file:///" + new File(fileName).getAbsolutePath() + "\">" + fileName + "</a>").getBytes());
+                buffered.write(("<a name=\"" + testNumber + "\" href=\"file:///" + testFile.getAbsolutePath() + "\">" + testFile.getName() + "</a>").getBytes());
                 buffered.write("</td>".getBytes());
 
                 buffered.write("</tr>".getBytes());

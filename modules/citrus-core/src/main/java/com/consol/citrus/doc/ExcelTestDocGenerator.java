@@ -19,25 +19,33 @@
 
 package com.consol.citrus.doc;
 
-import java.io.*;
-import java.util.Collections;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
 
@@ -47,76 +55,40 @@ import com.consol.citrus.util.PropertyUtils;
  * @since 02.03.2007
  */
 public class ExcelTestDocGenerator {
-    private final static String DEFAULT_OUTPUT_FILE = "doc/consol/test_documentation.xls";
-    private final static String DEFAULT_XSLT_SOURCE = "generate-xls-doc-2.0.xslt";
-    private final static String DEFAULT_TEST_DIRECTORY = "tests";
-    private final static String DEFAULT_TESTDOC_TEMPLATE = "testdoc.xls.template";
-    private final static String DEFAULT_PROPERTIES_FILE = "testdoc.properties";
-
-    //	private final static String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private final static String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(ExcelTestDocGenerator.class);
-
-    public static void main(String[] args) {
+    private String testDirectory = "src/citrus/tests";
+    
+    private String outputFile = "target/CitrusTests.xls";
+    
+    private String testDocTemplate = "testdoc.xls.template";
+    
+    private String pageTitle = "Citrus Test Documentation";
+    
+    private String company = "Unknown";
+    
+    private String author = "Citrus Testframework";
+    
+    public void generateDoc() {
         try {
-            String xslSource;
-            if (args.length > 0) {
-                xslSource = args[0];
-            } else {
-                xslSource = DEFAULT_XSLT_SOURCE;
-            }
-
-            String filename;
-            if (args.length > 1) {
-                filename = args[1];
-            } else {
-                filename = DEFAULT_OUTPUT_FILE;
-            }
-
-            String testDirectory;
-            if (args.length > 2) {
-                testDirectory = args[2];
-            } else {
-                testDirectory = DEFAULT_TEST_DIRECTORY;
-            }
-
-            String testdocTemplate;
-            if (args.length > 3) {
-                testdocTemplate = args[3];
-            } else {
-                testdocTemplate = DEFAULT_TESTDOC_TEMPLATE;
-            }
+            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
             Properties props = new Properties();
-            if (args.length > 4) {
-                Resource testdocProperties = new ClassPathResource(args[4]);
-                props.load(testdocProperties.getInputStream());
-            } else {
-                props.load(ExcelTestDocGenerator.class.getResourceAsStream(DEFAULT_PROPERTIES_FILE));
-            }
-
-            List<String> fileNames = FileUtils.getTestFiles(testDirectory);
-
-            Collections.sort(fileNames);
-
-            Source xsl = new StreamSource(ExcelTestDocGenerator.class.getResourceAsStream(xslSource), 
-                    ExcelTestDocGenerator.class.getResource(xslSource).getPath());
+            props.setProperty("page.title", pageTitle);
+            props.setProperty("company", company);
+            props.setProperty("author", author);
+            props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
             
-            log.info("XSLT stylesheet was set: " + xsl.getSystemId());
-
+            Source xsl = new StreamSource(new ClassPathResource("generate-xls-doc.xslt", ExcelTestDocGenerator.class).getInputStream());
+            
             TransformerFactory factory = TransformerFactory.newInstance();
 
             Transformer t = factory.newTransformer(xsl);
-            log.info("XSL transformer was created: " + t);
 
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
             t.setOutputProperty(OutputKeys.METHOD, "xml");
 
-            FileOutputStream file = new FileOutputStream(filename);
+            FileOutputStream file = new FileOutputStream(outputFile);
             OutputStream buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 
@@ -125,7 +97,7 @@ public class ExcelTestDocGenerator {
             DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
             documentBuilderFactory.setNamespaceAware(true);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testdocTemplate)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().equalsIgnoreCase(BODY_PLACEHOLDER) == false) {
@@ -135,21 +107,20 @@ public class ExcelTestDocGenerator {
                 }
             }
 
-            for (int i = 0; i < fileNames.size(); i++) {
-                buffered.write("<Row>".getBytes());
+            int testNumber = 1;
+            for (File testFile : testFiles) {
+            	buffered.write("<Row>".getBytes());
 
-                String fileName = (String)fileNames.get(i);
-                log.info("Working on test " + fileName);
-
-                Source xml = new DOMSource(builder.parse(fileName));
-                int testNumber = i+1;
+                Source xml = new DOMSource(builder.parse(testFile));
                 buffered.write(("<Cell><Data ss:Type=\"Number\">" + testNumber + "</Data></Cell>").getBytes());
 
                 t.transform(xml, res);
 
-                buffered.write(("<Cell><Data ss:Type=\"String\">" + fileName + "</Data></Cell>").getBytes());
+                buffered.write(("<Cell><Data ss:Type=\"String\">" + testFile.getName() + "</Data></Cell>").getBytes());
 
                 buffered.write("</Row>".getBytes());
+                
+                testNumber++;
             }
 
             while ((line = reader.readLine()) != null) {
@@ -158,15 +129,129 @@ public class ExcelTestDocGenerator {
 
             buffered.flush();
             file.close();
-
         } catch (IOException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (TransformerException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (SAXException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (ParserConfigurationException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         }
+    }
+    
+    public static ExcelTestDocGenerator build() {
+        return new ExcelTestDocGenerator();
+    }
+    
+    public ExcelTestDocGenerator withOutputFile(String filename) {
+        this.setOutputFile(filename);
+        return this;
+    }
+    
+    public ExcelTestDocGenerator withPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+        return this;
+    }
+    
+    public ExcelTestDocGenerator useTestDirectory(String testDir) {
+        this.setTestDirectory(testDir);
+        return this;
+    }
+    
+    public ExcelTestDocGenerator withAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+    
+    public ExcelTestDocGenerator withCompany(String company) {
+        this.company = company;
+        return this;
+    }
+    
+    public static void main(String[] args) {
+        try {    
+            ExcelTestDocGenerator creator = ExcelTestDocGenerator.build()
+                .useTestDirectory(args[0])
+                .withOutputFile(args[1])
+                .withPageTitle(args[2])
+                .withAuthor(args[3])
+                .withCompany(args[4]);
+            
+            creator.generateDoc();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new CitrusRuntimeException("Wrong usage exception! " +
+                    "Use parameters in the following way: [test.directory] [output.file]", e);
+        }
+    }
+
+    /**
+     * @param testDirectory the testDirectory to set
+     */
+    public void setTestDirectory(String testDirectory) {
+        this.testDirectory = testDirectory;
+    }
+
+    /**
+     * @return the testDirectory
+     */
+    public String getTestDirectory() {
+        return testDirectory;
+    }
+
+    /**
+     * @param outputFile the outputFile to set
+     */
+    public void setOutputFile(String outputFile) {
+        this.outputFile = outputFile;
+    }
+
+    /**
+     * @return the outputFile
+     */
+    public String getOutputFile() {
+        return outputFile;
+    }
+
+    /**
+     * @param pageTitle the pageTitle to set
+     */
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
+
+    /**
+     * @return the pageTitle
+     */
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    /**
+     * @return the company
+     */
+    public String getCompany() {
+        return company;
+    }
+
+    /**
+     * @param company the company to set
+     */
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    /**
+     * @return the author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * @param author the author to set
+     */
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }
