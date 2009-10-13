@@ -17,7 +17,7 @@
          xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
          xsi:schemaLocation=&quot;
          http://www.springframework.org/schema/beans 
-         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
          http://www.citrusframework.org/schema/config 
          http://www.citrusframework.org/schema/config/citrus-config.xsd&quot;&gt;
          

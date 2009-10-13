@@ -19,7 +19,7 @@
       xmlns=&quot;http://www.springframework.org/schema/beans&quot;
       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd&quot;&gt;
       
       &lt;bean name=&quot;myFirstTest&quot; 
                class=&quot;com.consol.citrus.model.TestCase&quot;&gt;
@@ -45,7 +45,7 @@
       xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
       xsi:schemaLocation=&quot;
       http://www.springframework.org/schema/beans 
-      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
       http://www.citrusframework.org/schema/testcase 
       http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;&gt;
       
