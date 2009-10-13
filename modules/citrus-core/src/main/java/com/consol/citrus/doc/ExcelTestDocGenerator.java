@@ -19,30 +19,19 @@
 
 package com.consol.citrus.doc;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.StringSource;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -68,6 +57,10 @@ public class ExcelTestDocGenerator {
     private String company = "Unknown";
     
     private String author = "Citrus Testframework";
+    
+    private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocGenerator.class);
+    
+    private String customHeaders = "";
     
     public void generateDoc() {
         try {
@@ -107,6 +100,13 @@ public class ExcelTestDocGenerator {
                 }
             }
 
+            if(StringUtils.hasText(customHeaders)) {
+                t.transform(new StringSource(buildHeaderXml()), res);
+            } else {
+                //first generate header row
+                t.transform(new StreamSource(headers.getInputStream()), res);
+            }
+            
             int testNumber = 1;
             for (File testFile : testFiles) {
             	buffered.write("<Row>".getBytes());
@@ -140,6 +140,22 @@ public class ExcelTestDocGenerator {
         }
     }
     
+    private String buildHeaderXml() {
+        StringBuffer buf = new StringBuffer();
+        
+        buf.append("<headers xmlns=\"http://www.citrusframework.org/schema/doc/header\">");
+        
+        StringTokenizer tok = new StringTokenizer(customHeaders, ";");
+        
+        while (tok.hasMoreElements()) {
+            buf.append("<header>" + tok.nextToken() + "</header>");
+        }
+        
+        buf.append("</headers>");
+        
+        return buf.toString();
+    }
+
     public static ExcelTestDocGenerator build() {
         return new ExcelTestDocGenerator();
     }
@@ -169,14 +185,21 @@ public class ExcelTestDocGenerator {
         return this;
     }
     
+    public ExcelTestDocGenerator withCustomHeaders(String customHeaders) {
+        this.customHeaders = customHeaders;
+        return this;
+    }
+    
     public static void main(String[] args) {
         try {    
-            ExcelTestDocGenerator creator = ExcelTestDocGenerator.build()
-                .useTestDirectory(args[0])
-                .withOutputFile(args[1])
-                .withPageTitle(args[2])
-                .withAuthor(args[3])
-                .withCompany(args[4]);
+            ExcelTestDocGenerator creator = ExcelTestDocGenerator.build();
+            
+            creator.useTestDirectory(args.length == 1 ? args[0] : creator.testDirectory)
+                .withOutputFile(args.length == 2 ? args[1] : creator.outputFile)
+                .withPageTitle(args.length == 3 ? args[2] : creator.pageTitle)
+                .withAuthor(args.length == 4 ? args[3] : creator.author)
+                .withCompany(args.length == 5 ? args[4] : creator.company)
+                .withCustomHeaders(args.length == 6 ? args[5] : "");
             
             creator.generateDoc();
         } catch (ArrayIndexOutOfBoundsException e) {

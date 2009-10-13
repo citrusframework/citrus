@@ -49,6 +49,9 @@ public class CreateExcelDocMojo extends AbstractMojo {
     /** @parameter default-value="src/citrus/tests" */
     private String testDirectory;
     
+    /** @parameter default-value="" */
+    private String customHeaders;
+    
     /** @parameter 
      *          expression="${interactiveMode}"
      *          default-value="true" */
@@ -65,12 +68,10 @@ public class CreateExcelDocMojo extends AbstractMojo {
 				author = prompter.prompt("Enter author:", author);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
 				outputFile = prompter.prompt("Enter output file:", outputFile);
+				customHeaders = prompter.prompt("Enter custom headers:", customHeaders);
 				
-				String confirm = prompter.prompt("Confirm Excel documentation:\n" +
-    			        "company: " + company + "\n" +
-    					"author: " + author + "\n" +
-    					"pageTitle: " + pageTitle + "\n" +
-    					"outputFile: " + outputFile + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+				String confirm = prompter.prompt("Confirm Excel documentation: outputFile='" + outputFile + "'\n", 
+				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
 		    	if(confirm.equalsIgnoreCase("n")) {
 		    		return;
@@ -82,12 +83,12 @@ public class CreateExcelDocMojo extends AbstractMojo {
 			                .withPageTitle(pageTitle)
 			                .withAuthor(author)
 			                .withCompany(company)
-			                .useTestDirectory(testDirectory);
+			                .useTestDirectory(testDirectory)
+			                .withCustomHeaders(customHeaders);
 			
 			creator.generateDoc();
 			
-			getLog().info("Successfully created Excel documentation \n" +
-					"outputFile: " + outputFile);
+			getLog().info("Successfully created Excel documentation: outputFile='" + outputFile + "'");
 		} catch (PrompterException e) {
 			getLog().info(e);
 		}

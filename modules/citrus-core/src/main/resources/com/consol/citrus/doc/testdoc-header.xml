@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<headers xmlns="http://www.citrusframework.org/schema/doc/header">
+    <header>Id</header>
+    <header>Name</header>
+    <header>Author</header>
+    <header>Status</header>
+    <header>Description</header>
+    <header>Date</header>
+    <header>File</header>
+</headers>

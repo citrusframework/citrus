@@ -20,12 +20,26 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
+    xmlns:header="http://www.citrusframework.org/schema/doc/header"
 	xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 	xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
-	exclude-result-prefixes="ss citrus spring">
+	exclude-result-prefixes="ss citrus spring header">
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/>
 
+    <xsl:template match="/header:headers">
+        <Row>
+            <xsl:for-each select="./header:header">
+                <Cell ss:StyleID="sTop">
+                    <Data ss:Type="String">
+                        <xsl:value-of select="."/>
+                    </Data>
+                    <NamedCell ss:Name="_FilterDatabase"/>
+                </Cell>
+            </xsl:for-each>
+        </Row>
+    </xsl:template>
+    
 	<xsl:template match="/spring:beans">
 		<xsl:apply-templates select="citrus:testcase" />
 	</xsl:template>
@@ -65,8 +79,23 @@
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
+        
+        <xsl:apply-templates select="citrus:meta-info/*"/>
 	</xsl:template>
-	
+    
+    <xsl:template match="citrus:meta-info/*">
+        <xsl:if test="namespace-uri(.) != 'http://www.citrusframework.org/schema/testcase'">
+            <Cell>
+                <Data ss:Type="String">
+                    <xsl:value-of select="." />
+                </Data>
+                <NamedCell ss:Name="_FilterDatabase"/>
+            </Cell>
+        </xsl:if> 
+        
+        <xsl:apply-templates/>       
+    </xsl:template>
+    
 	<xsl:template match="text()" />
 
 </xsl:stylesheet>

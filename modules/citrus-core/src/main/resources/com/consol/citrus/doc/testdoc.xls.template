@@ -25,13 +25,18 @@
  <Styles>
   <Style ss:ID="Default" ss:Name="Normal">
    <Alignment ss:Vertical="Top"/>
-   <Borders/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
    <Font/>
    <Interior/>
    <NumberFormat/>
    <Protection/>
   </Style>
-  <Style ss:ID="m27359236">
+  <Style ss:ID="sHeader">
    <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -41,7 +46,7 @@
    </Borders>
    <Font x:Family="Swiss" ss:Size="20" ss:Bold="1"/>
   </Style>
-  <Style ss:ID="s30">
+  <Style ss:ID="sNormal">
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
     <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -49,7 +54,7 @@
     <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
    </Borders>
   </Style>
-  <Style ss:ID="s31">
+  <Style ss:ID="sTop">
    <Alignment ss:Horizontal="Center" ss:Vertical="Bottom"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -60,18 +65,7 @@
    <Font x:Family="Swiss" ss:Bold="1"/>
    <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
   </Style>
-  <Style ss:ID="s34">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Bottom" ss:WrapText="1"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font x:Family="Swiss" ss:Bold="1"/>
-   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="s35">
+  <Style ss:ID="sWrapText">
    <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -85,48 +79,25 @@
   <Names>
    <NamedRange ss:Name="_FilterDatabase" ss:RefersTo="='@page.title@'!R2C1:R143C7" ss:Hidden="1"/>
   </Names>
-  <Table ss:ExpandedColumnCount="7" x:FullColumns="1"
-   x:FullRows="1" ss:DefaultColumnWidth="60">
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="25"/>
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="250"/>
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="150"/>
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="75"/>
-   <Column ss:StyleID="s35" ss:AutoFitWidth="1" ss:Width="250"/>
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="100"/>
-   <Column ss:StyleID="s30" ss:AutoFitWidth="1" ss:Width="650"/>
+  <Table x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="60">
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="25"/>
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="250"/>
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="150"/>
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="75"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1" ss:Width="250"/>
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="100"/>
+   <Column ss:StyleID="sNormal" ss:AutoFitWidth="1" ss:Width="200"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
+   <Column ss:StyleID="sWrapText" ss:AutoFitWidth="1"/>
    <Row ss:AutoFitHeight="0" ss:Height="51">
-    <Cell ss:MergeAcross="6" ss:StyleID="m27359236">
+    <Cell ss:MergeAcross="7" ss:StyleID="sHeader">
     	<Data ss:Type="String">@page.title@</Data>
-    </Cell>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">Nr.</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">Name</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">Author</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">Status</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s34">
-    	<Data ss:Type="String">Description</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">Date</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
-    </Cell>
-    <Cell ss:StyleID="s31">
-    	<Data ss:Type="String">File</Data>
-    	<NamedCell ss:Name="_FilterDatabase"/>
     </Cell>
    </Row>
    +++++ BODY +++++
@@ -141,8 +112,7 @@
    <ProtectObjects>False</ProtectObjects>
    <ProtectScenarios>False</ProtectScenarios>
   </WorksheetOptions>
-  <AutoFilter x:Range="R2C1:R143C7"
-   xmlns="urn:schemas-microsoft-com:office:excel">
+  <AutoFilter x:Range="R2C1:R143C15" xmlns="urn:schemas-microsoft-com:office:excel">
   </AutoFilter>
  </Worksheet>
 </Workbook>
