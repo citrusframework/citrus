@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Copyright 2006-2009 ConSol* Software GmbH.
+ 
+ This file is part of Citrus.
+ 
+   Citrus is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   Citrus is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns="http://www.citrusframework.org/schema/config"
+     targetNamespace="http://www.citrusframework.org/schema/config"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+    <xs:element name="jms-message-sender" type="jmsAdapterType"/>
+    <xs:element name="jms-message-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="receive-timeout" type="xs:int"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-sync-message-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="reply-destination" type="xs:string"/>
+                    <xs:attribute name="reply-destination-name" type="xs:string"/>
+                    <xs:attribute name="reply-timeout" type="xs:string"/>
+                    <xs:attribute name="reply-handler" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-sync-message-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="receive-timeout" type="xs:int"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-reply-message-handler">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-reply-message-sender">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="reply-destination-holder" type="xs:string"/>
+            <xs:attribute name="connection-factory" type="xs:string"/>
+            <xs:attribute name="jms-template" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="jmsAdapterType">
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="destination" type="xs:string"/>
+        <xs:attribute name="destination-name" type="xs:string"/>
+        <xs:attribute name="connection-factory" type="xs:string"/>
+        <xs:attribute name="jms-template" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>
