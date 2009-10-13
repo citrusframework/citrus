@@ -18,10 +18,10 @@
    along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.citrusframework.org/ws/schema/config"
-	 targetNamespace="http://www.citrusframework.org/schema/ws/config"
-	 elementFormDefault="qualified"
-	 attributeFormDefault="unqualified">
+     xmlns="http://www.citrusframework.org/ws/schema/config"
+     targetNamespace="http://www.citrusframework.org/schema/ws/config"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
     <xs:element name="jetty-server">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
@@ -31,7 +31,7 @@
             <xs:attribute name="resource-base" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-	<xs:element name="message-sender">
+    <xs:element name="message-sender">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="request-url" type="xs:string" use="required"/>
@@ -39,9 +39,9 @@
             <xs:attribute name="reply-handler" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-	<xs:element name="reply-message-handler">
-		<xs:complexType>
-			<xs:attribute name="id" type="xs:ID" use="required"/>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="reply-message-handler">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
