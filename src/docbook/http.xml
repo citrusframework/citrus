@@ -17,11 +17,11 @@
          xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
          xsi:schemaLocation=&quot;
          http://www.springframework.org/schema/beans 
-         http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.citrusframework.org/schema/config 
-         http://www.citrusframework.org/schema/config/citrus-config-1.0.xsd
+         http://www.citrusframework.org/schema/config/citrus-config.xsd
          http://www.citrusframework.org/schema/http/config 
-         http://www.citrusframework.org/schema/http/config/citrus-http-config-1.0.xsd&quot;&gt;
+         http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;&gt;
          
       [...]
       

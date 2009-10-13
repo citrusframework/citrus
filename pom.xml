@@ -715,7 +715,7 @@
                     <resource>
                       <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
-                          <include>citrus-config-*.xsd</include>
+                          <include>citrus-config*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
@@ -733,7 +733,7 @@
                     <resource>
                       <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
-                          <include>citrus-testcase-*.xsd</include>
+                          <include>citrus-testcase*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
@@ -751,7 +751,7 @@
                     <resource>
                       <directory>modules/citrus-http/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
-                          <include>citrus-http-config-*.xsd</include>
+                          <include>citrus-http-config*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
@@ -761,7 +761,7 @@
                 </goals>
               </execution>
               <execution>
-                <id>copy-citrus-ws-schemas</id>
+                <id>copy-citrus-ws-config-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/ws/config</outputDirectory>
@@ -769,7 +769,25 @@
                     <resource>
                       <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
-                          <include>citrus-ws-config-*.xsd</include>
+                          <include>citrus-ws-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-ws-testcase-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${basedir}/target/site/schema/ws/testcase</outputDirectory>
+                  <resources>          
+                    <resource>
+                      <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                          <include>citrus-ws-testcase*.xsd</include>
                       </includes>
                     </resource>
                   </resources>

@@ -156,9 +156,9 @@
                    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
                    xsi:schemaLocation=&quot;
                    http://www.springframework.org/schema/beans 
-                   http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+                   http://www.springframework.org/schema/beans/spring-beans.xsd 
                    http://www.citrusframework.org/schema/testcase 
-                   http://www.citrusframework.org/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
+                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;&gt;
                    
       &lt;testcase name=&quot;MyFirstTest&quot;&gt;
           &lt;meta-info&gt;

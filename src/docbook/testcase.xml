@@ -47,7 +47,7 @@
       http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.citrusframework.org/schema/testcase 
-      http://www.citrusframework.org/schema/testcase/citrus-testcase-1.0.xsd&quot;&gt;
+      http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;&gt;
       
       &lt;testcase name=&quot;myFirstTest&quot;&gt;
           &lt;description&gt;
