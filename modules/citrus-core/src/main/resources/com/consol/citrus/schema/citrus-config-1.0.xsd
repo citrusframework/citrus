@@ -18,12 +18,12 @@
    along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.citrusframework.org/schema/config"
-	 targetNamespace="http://www.citrusframework.org/schema/config"
-	 elementFormDefault="qualified"
-	 attributeFormDefault="unqualified">
-	<xs:element name="jms-message-sender" type="jmsAdapterType"/>
-	<xs:element name="jms-message-receiver">
+     xmlns="http://www.citrusframework.org/schema/config"
+     targetNamespace="http://www.citrusframework.org/schema/config"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+    <xs:element name="jms-message-sender" type="jmsAdapterType"/>
+    <xs:element name="jms-message-receiver">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
@@ -32,19 +32,19 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-	<xs:element name="jms-sync-message-sender">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="jmsAdapterType">
-					<xs:attribute name="reply-destination" type="xs:string"/>
-					<xs:attribute name="reply-destination-name" type="xs:string"/>
-					<xs:attribute name="reply-timeout" type="xs:string"/>
-					<xs:attribute name="reply-handler" type="xs:string"/>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="jms-sync-message-receiver">
+    <xs:element name="jms-sync-message-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType">
+                    <xs:attribute name="reply-destination" type="xs:string"/>
+                    <xs:attribute name="reply-destination-name" type="xs:string"/>
+                    <xs:attribute name="reply-timeout" type="xs:string"/>
+                    <xs:attribute name="reply-handler" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-sync-message-receiver">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
@@ -53,24 +53,24 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-	<xs:element name="jms-reply-message-handler">
-		<xs:complexType>
-			<xs:attribute name="id" type="xs:ID" use="required"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="jms-reply-message-sender">
-		<xs:complexType>
-			<xs:attribute name="id" type="xs:ID" use="required"/>
-			<xs:attribute name="reply-destination-holder" type="xs:string"/>
-			<xs:attribute name="connection-factory" type="xs:string"/>
-			<xs:attribute name="jms-template" type="xs:string"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:complexType name="jmsAdapterType">
-		<xs:attribute name="id" type="xs:ID"/>
-		<xs:attribute name="destination" type="xs:string"/>
-		<xs:attribute name="destination-name" type="xs:string"/>
-		<xs:attribute name="connection-factory" type="xs:string"/>
-		<xs:attribute name="jms-template" type="xs:string"/>
-	</xs:complexType>
+    <xs:element name="jms-reply-message-handler">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jms-reply-message-sender">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="reply-destination-holder" type="xs:string"/>
+            <xs:attribute name="connection-factory" type="xs:string"/>
+            <xs:attribute name="jms-template" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="jmsAdapterType">
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="destination" type="xs:string"/>
+        <xs:attribute name="destination-name" type="xs:string"/>
+        <xs:attribute name="connection-factory" type="xs:string"/>
+        <xs:attribute name="jms-template" type="xs:string"/>
+    </xs:complexType>
 </xs:schema>
