@@ -17,15 +17,21 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.ws.config.xml;
+package com.consol.citrus.ws;
 
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import org.testng.ITestContext;
+import org.testng.annotations.Test;
 
-public class CitrusWSTestcaseNamespaceHandler extends NamespaceHandlerSupport {
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
-    public void init() {
-        registerBeanDefinitionParser("assert", new AssertSoapFaultParser());
-        registerBeanDefinitionParser("send", new SendSoapMessageActionParser());
+/**
+ * 
+ * @author deppisch Christoph Deppisch Consol* Software GmbH
+ * @since 13.10.2009
+ */
+public class SendSoapMessageWithAttachmentTest extends AbstractTestNGCitrusTest {
+    @Test
+    public void sendSoapMessageWithAttachmentTest(ITestContext testContext) {
+        executeTest(testContext);
     }
-
 }

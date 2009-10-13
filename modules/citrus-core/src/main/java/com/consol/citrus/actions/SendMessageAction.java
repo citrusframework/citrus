@@ -52,7 +52,7 @@ public class SendMessageAction extends AbstractTestAction {
     private Map<String, Object> headerValues = new HashMap<String, Object>();
 
     /** The service with which the message is being sent or received */
-    private MessageSender messageSender;
+    protected MessageSender messageSender;
 
     /** The message resource as a file resource */
     private Resource messageResource;
@@ -71,6 +71,10 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
+        messageSender.send(createMessage(context));
+    }
+    
+    protected Message<?> createMessage(TestContext context) {
         try {
             String messagePayload = null;
             
@@ -90,18 +94,15 @@ public class SendMessageAction extends AbstractTestAction {
             } else {
                 throw new CitrusRuntimeException("Could not find message data. Either message-data or message-resource must be specified");
             }
-
+    
             /* explicitly overwrite message elements */
             messagePayload = context.replaceMessageValues(messageElements, messagePayload);
-
+    
             /* Set message header */
             Map<String, Object> headerValuesCopy = context.replaceVariablesInMap(headerValues);
-
+    
             /* store header values map to context - service will read the map */
-            Message<String> sendMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
-
-            /* message is sent */
-            messageSender.send(sendMessage);
+            return MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         } catch (ParseException e) {

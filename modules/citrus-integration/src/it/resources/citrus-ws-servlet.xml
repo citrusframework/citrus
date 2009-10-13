@@ -14,7 +14,8 @@
         <property name="mappings">
             <props>
                 <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}InvalidRequest">soapFaultGeneratingEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapMessageWithAttachmentRequest">soapAttachmentHandlingEndpoint</prop>
             </props>
         </property>
         <property name="interceptors">
@@ -35,6 +36,8 @@
     </bean>
     
     <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.SoapFaultGeneratingEndpoint"/>
+    
+    <bean id="soapAttachmentHandlingEndpoint" class="com.consol.citrus.ws.SoapAttachmentHandlingEndpoint"/>
     
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">

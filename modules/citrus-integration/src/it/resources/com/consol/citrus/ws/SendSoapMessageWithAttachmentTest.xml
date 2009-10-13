@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd
+                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-1.1.xsd">
+    <testcase name="SendSoapMessageWithAttachmentTest">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2009-10-13</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2009-10-13T00:00:00</last-updated-on>
+        </meta-info>
+        
+        <description>Sending SOAP messages with attachments</description>
+        
+        <actions>
+        	<ws:send with="webServiceRequestSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <ns0:SoapMessageWithAttachmentRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                                <ns0:Operation>Read the attachment</ns0:Operation>
+                            </ns0:SoapMessageWithAttachmentRequest>
+                        ]]>
+                    </data>
+                </message>
+                <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
+                    <ws:resource file="classpath:com/consol/citrus/ws/soapAttachment.txt"/>
+                </ws:attachment>
+            </ws:send>
+        </actions>
+    </testcase>
+</spring:beans>

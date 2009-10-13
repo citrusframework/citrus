@@ -20,19 +20,19 @@
 package com.consol.citrus.ws.message;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map.Entry;
 
 import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.FaultMessageResolver;
-import org.springframework.ws.client.core.SimpleFaultMessageResolver;
-import org.springframework.ws.client.core.WebServiceMessageCallback;
+import org.springframework.ws.client.core.*;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
@@ -54,7 +54,11 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      */
     private static final Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
     
-    public void send(final Message<?> message) {
+    public void send(Message<?> message) {
+        send(message, null, null, null);
+    }
+    
+    public void send(final Message<?> message, final Resource attachment, final String contentId, final String contentType) {
         Assert.notNull(message, "Can not send empty message");
         
         log.info("Sending message to: " + getDefaultUri());
@@ -96,7 +100,19 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                                 
                                 headerElement.setText(headerEntry.getValue().toString());
                             }
-                        }                        
+                        }
+                        
+                        if(attachment != null) {
+                            if(log.isDebugEnabled()) {
+                                log.debug("Adding attachment to SOAP message: " + attachment.getFilename() + "('" + contentId + "', '" + contentType + "')");
+                            }
+                            
+                            soapRequest.addAttachment(contentId, new InputStreamSource() {
+                                public InputStream getInputStream() throws IOException {
+                                    return attachment.getInputStream();
+                                }
+                            }, contentType);
+                        }
                     }
         }, result);
 
