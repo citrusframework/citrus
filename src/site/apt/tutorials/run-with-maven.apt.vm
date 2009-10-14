@@ -133,7 +133,7 @@ Integrate Citrus with Maven
   <plugin>
     <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-maven-plugin</artifactId>
-    <version>1.0</version>
+    <version>${project.version}</version>
     <configuration>
       <author>Mickey Mouse</author>
       <targetPackage>com.consol.citrus</targetPackage>

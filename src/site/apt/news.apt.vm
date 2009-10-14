@@ -4,6 +4,26 @@
  
 News
 
+* Okt. 14, 2009 <<Snapshot for version 1.1 released>>
+ 
+ Citrus is now also available as snapshot release in version 1.1. We already have incorporated some really great new features and
+ fixed some issues. See below a list of new features for 1.1-SNAPSHOT - for detailed list of changes since version 1.0 see the 
+ {{{changes.html}changes report}}. 
+ 
+ New features in first 1.1-SNAPSHOT release
+ 
+ * Sending SOAP attachments as a client
+
+ * SOAP Fault validation (validate SOAP faults with SOAPFaultCode and SOAPFaultString)
+  
+ * Extended exception validation (error message validation)
+ 
+ * Generate test documentation in Excel
+ 
+ * Extend test case meta-info with custom elements
+ 
+ * Write custom actions and extend test case with custom actions
+ 
 * Sep. 25, 2009 <<Citrus goes OpenSource - version 1.0 released>>
  
  We are proud to present you the initial OpenSource version of the Citrus integration test framework! In case you do not have an idea what 

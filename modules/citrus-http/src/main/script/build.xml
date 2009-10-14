@@ -8,9 +8,9 @@
 	    </typedef>
 	
 	    <artifact:dependencies pathId="classpath">
-	        <dependency groupId="com.consol.citrus" artifactId="citrus-core" version="1.0"/>
-	    	<dependency groupId="com.consol.citrus" artifactId="citrus-tibco" version="1.0"/>
-	    	<dependency groupId="com.consol.citrus" artifactId="citrus-http" version="1.0"/>
+	        <dependency groupId="com.consol.citrus" artifactId="citrus-core" version="1.1-SNAPSHOT"/>
+	    	<dependency groupId="com.consol.citrus" artifactId="citrus-tibco" version="1.1-SNAPSHOT"/>
+	    	<dependency groupId="com.consol.citrus" artifactId="citrus-http" version="1.1-SNAPSHOT"/>
 	    	<dependency groupId="org.slf4j" artifactId="slf4j-log4j12" version="1.5.6"/>
 	    </artifact:dependencies>
 	</target>

@@ -4,19 +4,26 @@
  
 Download Citrus
 
-  Citrus ${project.version} ist the current stable release.
+  Citrus ${citrus.stable.release} is the current stable release.
 
-  <<Latest stable release>>: ${project.version}
+  <<Latest stable release>>: ${citrus.stable.release}
   
-  * citrus-${project.version}-with-dependencies ({{{dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
+  * citrus-${citrus.stable.release}-with-dependencies ({{{dist/citrus-${citrus.stable.release}-with-dependencies.zip}zip}}/{{{dist/citrus-${citrus.stable.release}-with-dependencies.tar.gz}tar.gz}})
   
-  ~~* citrus-${project.version}-project ({{{dist/citrus-${project.version}-project.zip}zip}}/{{{dist/citrus-${project.version}-project.tar.gz}tar.gz}})
-  
-  * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
+  * citrus-${citrus.stable.release}-src ({{{dist/citrus-${citrus.stable.release}-src.zip}zip}}/{{{dist/citrus-${citrus.stable.release}-src.tar.gz}tar.gz}})
   
   []
   
-  The Citrus ${project.version} project requires JDK 1.5 (or newer version) to run.
+  Citrus ${project.version} is the latest snapshot release. With this version you are always up to date with the newest features and bugfixes.
+  Help us test the latest snapshot! 
+
+  <<Latest snapshot release>>: ${project.version}
+  
+  * citrus-${project.version}-with-dependencies ({{{dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
+  
+  * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
+  
+  The Citrus project requires JDK 1.5 (or newer version) to run.
   
 Logging framework notice
 
