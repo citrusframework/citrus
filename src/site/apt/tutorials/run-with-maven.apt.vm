@@ -56,28 +56,34 @@ Integrate Citrus with Maven
   dependencies to your projects POM (pom.xml).
 
 +---
-  <repository>
-    <id>consol-labs-release</id>
-    <url>http://labs.consol.de/maven/repository/</url>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-  </repository>
-  <repository>
-    <id>consol-labs-snapshots</id>
-    <url>http://labs.consol.de/maven/snapshots-repository/</url>
-    <snapshots>
-      <enabled>true</enabled>
-      <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-      <updatePolicy>10080</updatePolicy>
-    </snapshots>
-    <releases>
-      <enabled>false</enabled>
-    </releases>
-  </repository>
+  <repositories>
+    [...]
+  
+    <repository>
+      <id>consol-labs-release</id>
+      <url>http://labs.consol.de/maven/repository/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>consol-labs-snapshots</id>
+      <url>http://labs.consol.de/maven/snapshots-repository/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
+        <updatePolicy>10080</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+    
+    [...]
+  </repositories>
 +---
 
 +---
@@ -90,8 +96,38 @@ Integrate Citrus with Maven
 +---
 
   The next step is optional. Citrus also provides a Maven plugin for creating test cases very easily. Of course you can also use other mechanisms 
-  in order to create the Citrus test cases, but no doubt the Maven plugin fits best in our example project. So we add the Citrus Maven plugin to 
-  our project's POM too.
+  in order to create the Citrus test cases, but no doubt the Maven plugin fits best in our example project. So we add the Citrus Maven plugin 
+  and the needed plugin repositories to our project's POM too.
+
++---
+  <pluginRepositories>
+    [...]
+  
+    <pluginRepository>
+      <id>consol-labs-release</id>
+      <url>http://labs.consol.de/maven/repository/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+    <pluginRepository>
+      <id>consol-labs-snapshots</id>
+      <url>http://labs.consol.de/maven/snapshots-repository/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>10080</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    
+    [...]
+  </pluginRepositories>
++---
 
 +---
   <plugin>
