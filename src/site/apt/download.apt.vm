@@ -4,13 +4,13 @@
  
 Download Citrus
 
-  Citrus ${citrus.stable.release} is the current stable release.
+  Citrus 1.0 is the current stable release.
 
-  <<Latest stable release>>: ${citrus.stable.release}
+  <<Latest stable release>>: 1.0
   
-  * citrus-${citrus.stable.release}-with-dependencies ({{{dist/citrus-${citrus.stable.release}-with-dependencies.zip}zip}}/{{{dist/citrus-${citrus.stable.release}-with-dependencies.tar.gz}tar.gz}})
+  * citrus-1.0-with-dependencies ({{{dist/citrus-1.0-with-dependencies.zip}zip}}/{{{dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-${citrus.stable.release}-src ({{{dist/citrus-${citrus.stable.release}-src.zip}zip}}/{{{dist/citrus-${citrus.stable.release}-src.tar.gz}tar.gz}})
+  * citrus-1.0-src ({{{dist/citrus-1.0-src.zip}zip}}/{{{dist/citrus-1.0-src.tar.gz}tar.gz}})
   
   []
   
