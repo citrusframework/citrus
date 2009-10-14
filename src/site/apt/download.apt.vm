@@ -23,6 +23,8 @@ Download Citrus
   
   * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
   
+  []
+  
   The Citrus project requires JDK 1.5 (or newer version) to run.
   
 Logging framework notice
