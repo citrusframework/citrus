@@ -6,7 +6,7 @@
   <body>
     <section name="Welcome to Citrus">
       <p>
-        Citrus is an integration testing framework written in Java that tests your software application to fit into your customers 
+        Citrus is an integration testing framework written in Java that tests your software application to fit into your customer's 
         environment. The tool can easily simulate surrounding systems across various transports (e.g. Http, JMS, TCP/IP, SOAP, ...) 
         in order to perform automatic end-to-end use case testing.
       </p>
@@ -29,6 +29,7 @@
         <ul>
           <li>Find out why testing can be a hard challenge: <a href="introduction.html">Why use Citrus?</a></li>
           <li>Check the complete <a href="features.html">Feature List</a></li>
+          <li>Find the latest release: <a href="download.html">Download</a></li>
           <li>Go to the <a href="reference-doc.html">Reference Documentation</a></li>
           <li>Check out the <a href="tutorials.html">Tutorials</a> section</li>
         </ul>
