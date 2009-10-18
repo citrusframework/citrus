@@ -18,24 +18,49 @@
    along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.citrusframework.org/schema/ws/testcase"
-     xmlns:tc="http://www.citrusframework.org/schema/testcase"
-	 targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
-	 elementFormDefault="qualified"
-	 attributeFormDefault="unqualified">
-	
-    <xs:import namespace="http://www.citrusframework.org/schema/testcase" schemaLocation="citrus-testcase-1.1.xsd" />
+     xmlns="http://www.citrusframework.org/schema/ws/testcase"
+     xmlns:core="http://www.citrusframework.org/schema/testcase"
+     targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
     
-	<xs:element name="assert">
-		<xs:complexType>
+    <xs:import namespace="http://www.citrusframework.org/schema/testcase" 
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd" />
+    
+    <xs:element name="assert">
+        <xs:complexType>
             <xs:complexContent>
-    			<xs:extension base="tc:actionType">
-    				<xs:group ref="tc:actionGroup"/>
+                <xs:extension base="core:actionType">
+                    <xs:group ref="core:actionGroup"/>
                     <xs:attribute name="fault-code" type="xs:string" use="required"/>
                     <xs:attribute name="fault-string" type="xs:string"/>
-    			</xs:extension>
+                </xs:extension>
             </xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="send">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="core:sendActionType">
+                    <xs:sequence>
+                        <xs:element name="attachment">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="resource">
+                                        <xs:complexType>
+                                            <xs:attribute name="file" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="content-id"/>
+                                <xs:attribute name="content-type"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
 </xs:schema>
