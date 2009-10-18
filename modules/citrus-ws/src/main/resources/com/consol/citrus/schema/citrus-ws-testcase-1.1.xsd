@@ -24,7 +24,8 @@
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
 	
-    <xs:import namespace="http://www.citrusframework.org/schema/testcase" schemaLocation="citrus-testcase-1.1.xsd" />
+    <xs:import namespace="http://www.citrusframework.org/schema/testcase" 
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd" />
     
 	<xs:element name="assert">
 		<xs:complexType>
