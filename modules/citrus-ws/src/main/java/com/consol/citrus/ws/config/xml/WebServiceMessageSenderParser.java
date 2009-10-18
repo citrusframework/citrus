@@ -84,7 +84,13 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         if (StringUtils.hasText(replyHandler)) {
             builder.addPropertyReference(WSParserConstants.REPLY_HANDLER_PROPERTY, replyHandler);
         }
-    
+        
+        String replyMessageCorrelator = element.getAttribute(WSParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(replyMessageCorrelator)) {
+            builder.addPropertyReference(WSParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+        }
+
         return builder.getBeanDefinition();
     }
 }

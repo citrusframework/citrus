@@ -36,8 +36,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.message.ReplyMessageHandler;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.MessageUtils;
 
 public class HttpMessageSender implements MessageSender {
@@ -51,6 +50,8 @@ public class HttpMessageSender implements MessageSender {
     private Socket socket;
     
     private ReplyMessageHandler replyMessageHandler;
+    
+    private ReplyMessageCorrelator correlator = null;
     
     /**
      * Logger
@@ -123,7 +124,12 @@ public class HttpMessageSender implements MessageSender {
             }
 
             if(replyMessageHandler != null) {
-                replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(buffer.toString()).build());
+                if(correlator != null) {
+                    replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(buffer.toString()).build(),
+                            correlator.getCorrelationKey(message));
+                } else {
+                    replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(buffer.toString()).build());
+                }
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -232,5 +238,12 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
+    }
+
+    /**
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
     }
 }

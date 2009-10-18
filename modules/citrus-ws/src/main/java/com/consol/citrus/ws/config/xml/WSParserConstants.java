@@ -60,5 +60,9 @@ public class WSParserConstants {
 	static final String WS_TEMPLATE_ATTRIBUTE = "web-service-template";
 
 	static final String WS_TEMPLATE_PROPERTY = "webServiceTemplate";
+
+    public static final String REPLY_CORRELATOR_ATTRIBUTE = "reply-message-correlator";
+
+    public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
     
 }

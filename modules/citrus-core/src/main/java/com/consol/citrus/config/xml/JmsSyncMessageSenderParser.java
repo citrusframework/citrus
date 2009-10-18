@@ -52,6 +52,12 @@ public class JmsSyncMessageSenderParser extends AbstractJmsConfigParser {
             builder.addPropertyReference(JmsParserConstants.REPLY_HANDLER_PROPERTY, replyHandler);
         }
         
+        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(replyMessageCorrelator)) {
+            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+        }
+        
         return builder;
     }
 

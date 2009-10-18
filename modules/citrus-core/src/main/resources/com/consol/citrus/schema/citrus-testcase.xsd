@@ -52,14 +52,162 @@
             <xs:any namespace="##other" processContents="strict" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+    
+    <xs:complexType name="sendActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="message">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:choice>
+                            <xs:element name="data" type="xs:string"/>
+                            <xs:element name="resource">
+                                <xs:complexType>
+                                    <xs:attribute name="file" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="path" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="header" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="element" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="extract" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="variable" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="with" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:complexType name="receiveActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="selector" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="value" type="xs:string"/>
+                        <xs:element name="element" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="message">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:sequence minOccurs="0">
+                            <xs:choice>
+                                <xs:element name="data" type="xs:string"/>
+                                <xs:element name="resource">
+                                    <xs:complexType>
+                                        <xs:attribute name="file" type="xs:string" use="required"/>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                            <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="path" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ignore" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="path" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:sequence minOccurs="0">
+                            <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="path" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="prefix" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:choice>
+                    <xs:attribute name="schema-validation" type="xs:boolean"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="header" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="element" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="extract" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="variable" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="message" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="path" type="xs:string" use="required"/>
+                                        <xs:attribute name="variable" type="xs:string" use="required"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="with" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:int"/>
+    </xs:complexType>
 
     <xs:element name="description" type="xs:string"/>
 
     <xs:group name="actionGroup">
         <xs:choice>
             <xs:element ref="action"/>
-            <xs:element ref="send"/>
-            <xs:element ref="receive"/>
+            <xs:element name="send" type="sendActionType"/>
+            <xs:element name="receive" type="receiveActionType"/>
             <xs:element ref="sql"/>
             <xs:element ref="plsql"/>
             <xs:element ref="java"/>
@@ -109,146 +257,6 @@
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="send">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="description" minOccurs="0"/>
-                <xs:element name="message">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:choice>
-                                <xs:element name="data" type="xs:string"/>
-                                <xs:element name="resource">
-                                    <xs:complexType>
-                                        <xs:attribute name="file" type="xs:string" use="required"/>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:choice>
-                            <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="path" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="header" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="element" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-            <xs:attribute name="with" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="receive">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="description" minOccurs="0"/>
-                <xs:element name="selector" minOccurs="0">
-                    <xs:complexType>
-                        <xs:choice>
-                            <xs:element name="value" type="xs:string"/>
-                            <xs:element name="element" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:choice>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="message">
-                    <xs:complexType>
-                        <xs:choice>
-                            <xs:sequence minOccurs="0">
-                                <xs:choice>
-                                    <xs:element name="data" type="xs:string"/>
-                                    <xs:element name="resource">
-                                        <xs:complexType>
-                                            <xs:attribute name="file" type="xs:string" use="required"/>
-                                        </xs:complexType>
-                                    </xs:element>
-                                </xs:choice>
-                                <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
-                                    <xs:complexType>
-                                        <xs:attribute name="path" type="xs:string" use="required"/>
-                                        <xs:attribute name="value" type="xs:string" use="required"/>
-                                    </xs:complexType>
-                                </xs:element>
-                                <xs:element name="ignore" minOccurs="0" maxOccurs="unbounded">
-                                    <xs:complexType>
-                                        <xs:attribute name="path" type="xs:string" use="required"/>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                            <xs:sequence minOccurs="0">
-                                <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
-                                    <xs:complexType>
-                                        <xs:attribute name="path" type="xs:string" use="required"/>
-                                        <xs:attribute name="value" type="xs:string" use="required"/>
-                                    </xs:complexType>
-                                </xs:element>
-                                <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
-                                    <xs:complexType>
-                                        <xs:attribute name="prefix" type="xs:string" use="required"/>
-                                        <xs:attribute name="value" type="xs:string" use="required"/>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                        </xs:choice>
-                        <xs:attribute name="schema-validation" type="xs:boolean"/>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="header" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="element" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="extract" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
-                                    <xs:attribute name="variable" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                            <xs:element name="message" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:simpleContent>
-                                        <xs:extension base="xs:string">
-                                            <xs:attribute name="path" type="xs:string" use="required"/>
-                                            <xs:attribute name="variable" type="xs:string" use="required"/>
-                                        </xs:extension>
-                                    </xs:simpleContent>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-            <xs:attribute name="with" type="xs:string"/>
-            <xs:attribute name="timeout" type="xs:int"/>
         </xs:complexType>
     </xs:element>
     

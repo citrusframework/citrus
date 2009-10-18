@@ -50,7 +50,13 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
         if (StringUtils.hasText(replyHandler)) {
             builder.addPropertyReference(HttpParserConstants.REPLY_HANDLER_PROPERTY, replyHandler);
         }
-    
+
+        String replyMessageCorrelator = element.getAttribute(HttpParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(replyMessageCorrelator)) {
+            builder.addPropertyReference(HttpParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+        }
+        
         return builder.getBeanDefinition();
     }
 }

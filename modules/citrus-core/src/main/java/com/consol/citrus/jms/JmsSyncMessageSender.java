@@ -270,4 +270,11 @@ public class JmsSyncMessageSender implements MessageSender {
     public void setReplyTimeout(long replyTimeout) {
         this.replyTimeout = replyTimeout;
     }
+
+    /**
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
+    }
 }

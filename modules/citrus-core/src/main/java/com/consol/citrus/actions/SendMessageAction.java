@@ -59,6 +59,9 @@ public class SendMessageAction extends AbstractTestAction {
 
     /** The message resource as a inline definition within the spring application context */
     private String messageData;
+    
+    /** Save dynamic messages headers to variables */
+    protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
 
     /**
      * Following actions will be executed:
@@ -71,7 +74,11 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        messageSender.send(createMessage(context));
+        Message message = createMessage(context);
+        
+        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
+        
+        messageSender.send(message);
     }
     
     protected Message<?> createMessage(TestContext context) {
@@ -171,5 +178,12 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public void setMessageSender(MessageSender messageSender) {
         this.messageSender = messageSender;
+    }
+
+    /**
+     * @param extractHeaderValues the extractHeaderValues to set
+     */
+    public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
+        this.extractHeaderValues = extractHeaderValues;
     }
 }

@@ -40,6 +40,7 @@
                     <xs:attribute name="reply-destination-name" type="xs:string"/>
                     <xs:attribute name="reply-timeout" type="xs:string"/>
                     <xs:attribute name="reply-handler" type="xs:string"/>
+                    <xs:attribute name="reply-message-correlator" type="xs:string"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>

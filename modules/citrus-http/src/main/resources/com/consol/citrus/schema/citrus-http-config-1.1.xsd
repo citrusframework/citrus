@@ -38,6 +38,7 @@
             <xs:attribute name="request-url" type="xs:string" use="required"/>
             <xs:attribute name="request-method" type="xs:string"/>
             <xs:attribute name="reply-handler" type="xs:string"/>
+            <xs:attribute name="reply-message-correlator" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="reply-message-handler">

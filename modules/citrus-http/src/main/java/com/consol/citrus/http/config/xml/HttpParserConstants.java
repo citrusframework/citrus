@@ -51,4 +51,8 @@ public class HttpParserConstants {
     static final String MESSAGE_HANDLER_ATTRIBUTE = "message-handler";
     
     static final String MESSAGE_HANDLER_PROPERTY = "messageHandler";
+
+    public static final String REPLY_CORRELATOR_ATTRIBUTE = "reply-message-correlator";
+
+    public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
 }

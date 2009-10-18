@@ -88,6 +88,17 @@ public class SendMessageActionParser implements BeanDefinitionParser {
             }
             builder.addPropertyValue("headerValues", setHeaderValues);
         }
+        
+        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
+        Map<String, String> getHeaderValues = new HashMap<String, String>();
+        if (extractElement != null) {
+            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
+            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
+                Element headerValue = (Element) iter.next();
+                getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
+            }
+            builder.addPropertyValue("extractHeaderValues", getHeaderValues);
+        }
 
         return builder.getBeanDefinition();
     }

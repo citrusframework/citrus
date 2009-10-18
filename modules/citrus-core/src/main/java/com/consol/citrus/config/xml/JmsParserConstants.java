@@ -60,4 +60,8 @@ public class JmsParserConstants {
     public static final String RECEIVE_TIMEOUT_ATTRIBUTE = "receive-timeout";
 
     public static final String RECEIVE_TIMEOUT_PROPERTY = "receiveTimeout";
+
+    public static final String REPLY_CORRELATOR_ATTRIBUTE = "reply-message-correlator";
+
+    public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
 }

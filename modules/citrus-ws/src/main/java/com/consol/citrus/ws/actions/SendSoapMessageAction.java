@@ -39,6 +39,8 @@ public class SendSoapMessageAction extends SendMessageAction {
     public void execute(TestContext context) {
         Message<?> message = createMessage(context);
         
+        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
+        
         if(messageSender instanceof WebServiceMessageSender == false) {
             throw new CitrusRuntimeException("Sending SOAP messages requires a " +
             		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + message.getClass().getName() + "'");

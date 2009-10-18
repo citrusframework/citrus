@@ -42,12 +42,13 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.message.ReplyMessageHandler;
+import com.consol.citrus.message.*;
 
 public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, FaultMessageResolver {
 
     private ReplyMessageHandler replyMessageHandler;
+    
+    private ReplyMessageCorrelator correlator = null;
     
     /**
      * Logger
@@ -117,7 +118,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         }, result);
 
         if(replyMessageHandler != null) {
-            replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(result.toString()).build());
+            if(correlator != null) {
+                replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(result.toString()).build(),
+                        correlator.getCorrelationKey(message));
+            } else {
+                replyMessageHandler.onReplyMessage(MessageBuilder.withPayload(result.toString()).build());
+            }
         }
     }
 
@@ -135,4 +141,11 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 			new SimpleFaultMessageResolver().resolveFault(message);
 		}
 	}
+
+    /**
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
+    }
 }
