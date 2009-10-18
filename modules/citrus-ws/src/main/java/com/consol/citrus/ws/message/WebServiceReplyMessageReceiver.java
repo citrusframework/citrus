@@ -19,8 +19,8 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
-public class WebServiceReplyMessageReceiver extends ReplyMessageReceiver {
+public class WebServiceReplyMessageReceiver extends AbstractReplyMessageReceiver {
 
 }

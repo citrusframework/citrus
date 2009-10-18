@@ -21,8 +21,9 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
 
-public interface ReplyMessageHandler {
-    void onReplyMessage(Message<?> replyMessage);
-    
-    void onReplyMessage(Message<?> replyMessage, String correlationKey);
+/**
+ * @author Christoph Christoph Deppisch Consol* Software GmbH
+ */
+public interface ReplyMessageCorrelator {
+    public String getCorrelationKey(Message<?> request);
 }

@@ -34,8 +34,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.ReplyMessageHandler;
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.*;
 
 public class JmsSyncMessageSender implements MessageSender {
 
@@ -52,6 +51,8 @@ public class JmsSyncMessageSender implements MessageSender {
     private ReplyMessageHandler replyMessageHandler;
     
     private long replyTimeout = 5000L;
+    
+    private ReplyMessageCorrelator correlator = null;
     
     /**
      * Logger
@@ -99,7 +100,12 @@ public class JmsSyncMessageSender implements MessageSender {
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             if(replyMessageHandler != null) {
-                replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage));
+                if(correlator != null) {
+                    replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage),
+                        correlator.getCorrelationKey(message));
+                } else {
+                    replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage));
+                }
             }
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);

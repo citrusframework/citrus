@@ -181,7 +181,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @param stmt The SQL statement (just needed for logging).
      * @param resultList The list which is checked.
      */
-    @SuppressWarnings("unchecked")
 	private void checkOnResultSize(String stmt, List resultList) {
         if (resultList.size() == 0) {
             throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);

@@ -28,7 +28,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("jms-message-receiver", new JmsMessageReceiverParser());
         registerBeanDefinitionParser("jms-sync-message-sender", new JmsSyncMessageSenderParser());
         registerBeanDefinitionParser("jms-sync-message-receiver", new JmsSyncMessageReceiverParser());
-        registerBeanDefinitionParser("jms-reply-message-handler", new ReplyMessageReceiverParser());
+        registerBeanDefinitionParser("jms-reply-message-handler", new JmsReplyMessageReceiverParser());
         registerBeanDefinitionParser("jms-reply-message-sender", new JmsReplyMessageSenderParser());
     }
 

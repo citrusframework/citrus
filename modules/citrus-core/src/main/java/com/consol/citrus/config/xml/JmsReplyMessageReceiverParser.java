@@ -25,12 +25,12 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-public class ReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
+public class JmsReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.message.ReplyMessageReceiver");
+            .genericBeanDefinition("com.consol.citrus.jms.JmsReplyMessageReceiver");
         
         return builder.getBeanDefinition();
     }

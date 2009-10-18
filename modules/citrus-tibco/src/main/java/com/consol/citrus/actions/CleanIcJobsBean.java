@@ -59,7 +59,6 @@ public class CleanIcJobsBean extends AbstractTestAction {
      * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
-    @SuppressWarnings("unchecked")
 	@Override
     public void execute(TestContext context) {
         int cntJobsDeleted = 0;

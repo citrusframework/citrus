@@ -50,7 +50,6 @@ public class TestCaseFactory implements FactoryBean {
         return this.testCase;
     }
 
-    @SuppressWarnings("unchecked")
 	public Class getObjectType() {
         return TestCase.class;
     }

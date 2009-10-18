@@ -17,12 +17,10 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.message;
+package com.consol.citrus.jms;
 
-import org.springframework.integration.core.Message;
+import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
-public interface ReplyMessageHandler {
-    void onReplyMessage(Message<?> replyMessage);
-    
-    void onReplyMessage(Message<?> replyMessage, String correlationKey);
+public class JmsReplyMessageReceiver extends AbstractReplyMessageReceiver {
+
 }

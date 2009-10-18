@@ -33,9 +33,9 @@ import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
-public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
+public class HttpReplyMessageReceiver extends AbstractReplyMessageReceiver {
     
     /**
      * Logger
@@ -43,20 +43,24 @@ public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
     private static final Logger log = LoggerFactory.getLogger(HttpReplyMessageReceiver.class);
     
     /**
-     * @see com.consol.citrus.message.ReplyMessageReceiver#receive()
+     * @see com.consol.citrus.message.AbstractReplyMessageReceiver#receive()
      * @throws CitrusRuntimeException
      */
     @Override
     public Message<?> receive() {
-        if (log.isDebugEnabled()) {
-            log.debug("Message received:");
-            log.debug(getReplyMessage().toString());
-        }
+        return buildMessage(super.receive());
+    }
+    
+    @Override
+    public Message<?> receiveSelected(String selector) {
+        return buildMessage(super.receiveSelected(selector));
+    }
 
+    private Message<?> buildMessage(Message<?> receivedMessage) {
         Message<?> httpResponse;
         try {
-            BufferedReader reader = new BufferedReader(new StringReader(getReplyMessage().getPayload().toString()));
-
+            BufferedReader reader = new BufferedReader(new StringReader(receivedMessage.getPayload().toString()));
+            
             String readLine = null;
             readLine = reader.readLine();
 
@@ -107,6 +111,11 @@ public class HttpReplyMessageReceiver extends ReplyMessageReceiver {
             throw new CitrusRuntimeException(e);
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("Message received:");
+            log.debug(httpResponse.toString());
+        }
+        
         return httpResponse;
     }
 }

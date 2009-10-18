@@ -54,7 +54,6 @@ public class TestContextFactoryBean implements FactoryBean {
         return context;
     }
 
-    @SuppressWarnings("unchecked")
 	public Class getObjectType() {
         return TestContext.class;
     }

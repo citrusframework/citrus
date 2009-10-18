@@ -36,7 +36,6 @@ import com.consol.citrus.group.Template;
 
 public class CallTemplateParser implements BeanDefinitionParser {
 
-    @SuppressWarnings("unchecked")
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
