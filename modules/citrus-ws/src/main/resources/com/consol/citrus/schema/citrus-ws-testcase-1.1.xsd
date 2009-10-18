@@ -18,26 +18,26 @@
    along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.citrusframework.org/schema/ws/testcase"
+     xmlns="http://www.citrusframework.org/schema/ws/testcase"
      xmlns:core="http://www.citrusframework.org/schema/testcase"
-	 targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
-	 elementFormDefault="qualified"
-	 attributeFormDefault="unqualified">
-	
+     targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+    
     <xs:import namespace="http://www.citrusframework.org/schema/testcase" 
                schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd" />
     
-	<xs:element name="assert">
-		<xs:complexType>
+    <xs:element name="assert">
+        <xs:complexType>
             <xs:complexContent>
-    			<xs:extension base="core:actionType">
-    				<xs:group ref="core:actionGroup"/>
+                <xs:extension base="core:actionType">
+                    <xs:group ref="core:actionGroup"/>
                     <xs:attribute name="fault-code" type="xs:string" use="required"/>
                     <xs:attribute name="fault-string" type="xs:string"/>
-    			</xs:extension>
+                </xs:extension>
             </xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+        </xs:complexType>
+    </xs:element>
     
     <xs:element name="send">
         <xs:complexType>
@@ -62,5 +62,5 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-	
+    
 </xs:schema>
