@@ -20,6 +20,7 @@
 package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
+import org.springframework.integration.core.MessageHeaders;
 
 /**
  * @author Christoph Christoph Deppisch Consol* Software GmbH
@@ -27,7 +28,7 @@ import org.springframework.integration.core.Message;
 public class SimpleReplyMessageCorrelator implements ReplyMessageCorrelator {
 
     public String getCorrelationKey(Message<?> request) {
-        return request.getHeaders().getId().toString();
+        return MessageHeaders.ID + " = '" + request.getHeaders().getId().toString() + "'";
     }
 
 }

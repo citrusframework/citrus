@@ -237,7 +237,7 @@ public class TestContext {
                 throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
             }
 
-            setVariable(targetVariableName, (String)receivedHeaderValues.get(headerElementName));
+            setVariable(targetVariableName, receivedHeaderValues.get(headerElementName).toString());
         }
     }
     
