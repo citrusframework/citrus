@@ -46,18 +46,12 @@
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
-                <extract>
-                    <header name="springintegration_id" variable="syncMessageCorrelatorId"></header>
-                </extract>
             </send>
             
             <receive with="syncHelloResponseHandler">
             	<description>
             		Receive sync hello response: HelloService -> TestFramework
             	</description>
-                <selector>
-                    <element name="springintegration_id" value="${syncMessageCorrelatorId}"/>
-                </selector>
                 <message>
                     <data>
                         <![CDATA[
@@ -96,18 +90,12 @@
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
-                <extract>
-                    <header name="springintegration_id" variable="syncMessageCorrelatorId"></header>
-                </extract>
             </send>
             
             <receive with="syncHelloResponseHandler">
                 <description>
                     Receive sync hello response: HelloService -> TestFramework
                 </description>
-                <selector>
-                    <element name="springintegration_id" value="${syncMessageCorrelatorId}"/>
-                </selector>
                 <message>
                     <data>
                         <![CDATA[

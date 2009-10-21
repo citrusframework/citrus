@@ -25,10 +25,13 @@ import org.springframework.integration.core.MessageHeaders;
 /**
  * @author Christoph Christoph Deppisch Consol* Software GmbH
  */
-public class SimpleReplyMessageCorrelator implements ReplyMessageCorrelator {
+public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
 
     public String getCorrelationKey(Message<?> request) {
         return MessageHeaders.ID + " = '" + request.getHeaders().getId().toString() + "'";
     }
 
+    public String getCorrelationKey(String id) {
+        return MessageHeaders.ID + " = '" + id + "'";
+    }
 }

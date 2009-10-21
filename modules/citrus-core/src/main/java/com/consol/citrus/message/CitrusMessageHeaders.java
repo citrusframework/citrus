@@ -19,13 +19,11 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.integration.core.Message;
-
 /**
  * @author Christoph Christoph Deppisch Consol* Software GmbH
  */
-public interface ReplyMessageCorrelator {
-    public String getCorrelationKey(Message<?> request);
+public class CitrusMessageHeaders {
+    public static final String PREFIX = "citrus_";
     
-    public String getCorrelationKey(String id);
+    public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";
 }

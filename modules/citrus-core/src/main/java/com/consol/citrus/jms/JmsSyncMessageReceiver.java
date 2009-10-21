@@ -19,21 +19,28 @@
 
 package com.consol.citrus.jms;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jms.Destination;
 
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.JmsHeaders;
 
+import com.consol.citrus.message.ReplyMessageCorrelator;
+
 
 public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsReplyDestinationHolder {
     
-    private Destination replyDestination;
+    private Map<String, Destination> replyDestinations = new HashMap<String, Destination>();
+    
+    private ReplyMessageCorrelator correlator = null;
     
     @Override
     public Message<?> receive(long timeout) {
         Message<?> receivedMessage = super.receive(timeout);
         
-        replyDestination = (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO);
+        saveReplyDestination(receivedMessage);
         
         return receivedMessage;
     }
@@ -42,12 +49,36 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
     public Message<?> receiveSelected(String selector, long timeout) {
         Message<?> receivedMessage = super.receiveSelected(selector, timeout);
         
-        replyDestination = (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO);
+        saveReplyDestination(receivedMessage);
         
         return receivedMessage;
     }
 
-    public Destination getReplyDestination() {
-        return replyDestination;
+    /**
+     * @param receivedMessage
+     */
+    private void saveReplyDestination(Message<?> receivedMessage) {
+        if(correlator != null) {
+            replyDestinations.put(correlator.getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
+        } else {
+            replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
+        }
     }
+
+    public Destination getReplyDestination(String correlationKey) {
+        return replyDestinations.remove(correlationKey);
+    }
+
+    public Destination getReplyDestination() {
+        return replyDestinations.remove("");
+    }
+
+    /**
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
+    }
+
+    
 }

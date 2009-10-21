@@ -50,6 +50,7 @@
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
                     <xs:attribute name="receive-timeout" type="xs:string"/>
+                    <xs:attribute name="reply-message-correlator" type="xs:string"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
@@ -63,6 +64,7 @@
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="reply-destination-holder" type="xs:string"/>
+            <xs:attribute name="reply-message-correlator" type="xs:string"/>
             <xs:attribute name="connection-factory" type="xs:string"/>
             <xs:attribute name="jms-template" type="xs:string"/>
         </xs:complexType>

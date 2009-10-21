@@ -65,6 +65,9 @@
                       <element name="Operation" value="${operation}"/>
                       <element name="ConversationId" value="${conversationId}"/>
                   </header>
+                  <extract>
+                      <header name="springintegration_id" variable="syncRequestCorrelatorId"></header>
+                  </extract>
               </send>
               
               <sequential>
@@ -88,6 +91,9 @@
                         <element name="Operation" value="${operation}"/>
                         <element name="ConversationId" value="${conversationId}"/>
                     </header>
+                    <extract>
+                        <header name="springintegration_id" variable="syncMessageCorrelatorId"></header>
+                    </extract>
                 </receive>
                 <send with="getDateRequestReplySender">
                     <message>
@@ -109,12 +115,16 @@
                     <header>
                         <element name="Operation" value="${operation}"/>
                         <element name="ConversationId" value="${conversationId}"/>
+                        <element name="citrus_sync_message_correlator" value="${syncMessageCorrelatorId}"/>
                     </header>
                 </send>
                 
                 <sleep time="1"/>
                  
                 <receive with="syncGetDateResponseHandler">
+                    <selector>
+                        <element name="springintegration_id" value="${syncRequestCorrelatorId}"/>
+                    </selector>
                     <message>
                         <data>
                         <![CDATA[

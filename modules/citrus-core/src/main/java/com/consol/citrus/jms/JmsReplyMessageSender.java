@@ -27,11 +27,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
 import org.springframework.integration.jms.JmsHeaderMapper;
+import org.springframework.integration.message.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.util.Assert;
 
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.*;
 
 
 public class JmsReplyMessageSender implements MessageSender, InitializingBean {
@@ -47,6 +48,8 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
 
     private final Object initializationMonitor = new Object();
     
+    private ReplyMessageCorrelator correlator = null;
+    
     /**
      * Logger
      */
@@ -61,16 +64,31 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
 
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
-        Assert.notNull(replyDestinationHolder.getReplyDestination(), "No reply destination found");
         
-        log.info("Sending message to: " + getDestinationName());
+        Destination replyDestination;
+        
+        if(correlator != null) {
+            Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+            		"you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
+            
+            replyDestination = replyDestinationHolder.getReplyDestination(correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString()));
+            
+            //remove citrus specific header from message
+            message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
+        } else {
+            replyDestination = replyDestinationHolder.getReplyDestination();
+        }
+        
+        Assert.notNull(replyDestination, "Not able to find temporary reply destination");
+        
+        log.info("Sending message to: " + getDestinationName(replyDestination));
 
         if (log.isDebugEnabled()) {
             log.debug("Message to be sent:");
             log.debug(message.toString());
         }
         
-        getJmsTemplate().convertAndSend(replyDestinationHolder.getReplyDestination(), message);
+        getJmsTemplate().convertAndSend(replyDestination, message);
     }
     
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
@@ -103,15 +121,15 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     /**
      * @return the destinationName
      */
-    protected String getDestinationName() {
+    protected String getDestinationName(Destination destination) {
         try {
-            if(replyDestinationHolder.getReplyDestination() != null) {
-                if(replyDestinationHolder.getReplyDestination() instanceof Queue) {
-                    return ((Queue)replyDestinationHolder.getReplyDestination()).getQueueName();
-                } else if(replyDestinationHolder.getReplyDestination() instanceof Topic) {
-                    return ((Topic)replyDestinationHolder.getReplyDestination()).getTopicName();
+            if(destination != null) {
+                if(destination instanceof Queue) {
+                    return ((Queue)destination).getQueueName();
+                } else if(destination instanceof Topic) {
+                    return ((Topic)destination).getTopicName();
                 } else {
-                    return replyDestinationHolder.getReplyDestination().toString();
+                    return destination.toString();
                 }
             } else {
                 return null;
@@ -148,5 +166,12 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
             hmmc.setExtractIntegrationMessagePayload(true);
             jmsTemplate.setMessageConverter(hmmc);
         }
+    }
+
+    /**
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
     }
 }

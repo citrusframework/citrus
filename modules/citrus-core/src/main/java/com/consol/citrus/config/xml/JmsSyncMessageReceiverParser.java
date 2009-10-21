@@ -37,6 +37,12 @@ public class JmsSyncMessageReceiverParser extends AbstractJmsConfigParser {
             builder.addPropertyValue(JmsParserConstants.RECEIVE_TIMEOUT_PROPERTY, replyTimeout);
         }
         
+        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(replyMessageCorrelator)) {
+            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+        }
+        
         return builder;
     }
 

@@ -16,24 +16,26 @@
 	<citrus:jms-sync-message-sender id="syncHelloRequestSender" 
                                     destination-name="${jms.queue.hello.sync.request}"
                                     reply-handler="syncHelloResponseHandler"
-                                    reply-timeout="1000"
-                                    reply-message-correlator="replyMessageCorrelator"/>
+                                    reply-timeout="1000"/>
 	
     <citrus:jms-reply-message-handler id="syncHelloResponseHandler"/>
     
     <citrus:jms-sync-message-sender id="syncGetDateRequestSender" 
                                     destination-name="${jms.queue.date.sync.request}"
                                     reply-handler="syncGetDateResponseHandler"
+                                    reply-message-correlator="replyMessageCorrelator"
                                     reply-timeout="1000"/>
     
     <citrus:jms-reply-message-handler id="syncGetDateResponseHandler"/>
     
     <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver"
                                       receive-timeout="5000" 
-                                      destination-name="${jms.queue.date.sync.request}"/>
+                                      destination-name="${jms.queue.date.sync.request}"
+                                      reply-message-correlator="replyMessageCorrelator"/>
   
     <citrus:jms-reply-message-sender id="getDateRequestReplySender"
-                                     reply-destination-holder="syncGetDateRequestReceiver"/>
+                                     reply-destination-holder="syncGetDateRequestReceiver"
+                                     reply-message-correlator="replyMessageCorrelator"/>
     
     <citrus:jms-message-sender id="testMessageSender" destination-name="${jms.queue.test}"/>
   

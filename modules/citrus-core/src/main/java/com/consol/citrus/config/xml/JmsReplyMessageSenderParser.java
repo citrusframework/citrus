@@ -63,7 +63,13 @@ public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
         if (StringUtils.hasText(destinationHolder)) {
             builder.addPropertyReference(JmsParserConstants.DESTINATION_HOLDER_PROPERTY, destinationHolder);
         } else {
-            
+            throw new BeanCreationException("Element must define " + JmsParserConstants.DESTINATION_HOLDER_ATTRIBUTE + " attribute");
+        }
+        
+        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(replyMessageCorrelator)) {
+            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
         }
         
         return builder.getBeanDefinition();

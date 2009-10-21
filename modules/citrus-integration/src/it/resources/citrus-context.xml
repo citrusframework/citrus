@@ -61,7 +61,7 @@
 		</property>
 	</bean>
 
-    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.SimpleReplyMessageCorrelator"/>
+    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
     
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
