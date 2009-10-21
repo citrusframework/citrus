@@ -605,7 +605,7 @@
       <id>site</id>
       <properties>
         <clover.plugin.version>2.4.1</clover.plugin.version>
-        <clover.plugin.licenseLocation>${PROJECT_HOME}/tools/clover2.license</clover.plugin.licenseLocation>
+        <clover.plugin.licenseLocation>${CLOVER_LICENSE}</clover.plugin.licenseLocation>
       </properties>
       <dependencies>
         <dependency>
