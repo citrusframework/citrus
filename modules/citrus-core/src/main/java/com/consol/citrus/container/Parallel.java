@@ -85,7 +85,7 @@ public class Parallel extends AbstractTestAction {
         public void run() {
             try {
                 action.execute(context);
-            } catch (CitrusRuntimeException e) {
+            } catch (Exception e) {
                 log.error("Parallel test action raised error", e);
                 exceptionCallback(e);
             }
