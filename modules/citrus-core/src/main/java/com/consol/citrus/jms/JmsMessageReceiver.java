@@ -73,6 +73,7 @@ public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implemen
     public Message<?> receiveSelected(String selector, long timeout) {
         log.info("Receiving message from: " + getDestinationName() + "(" + selector + ")");
         
+        getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
         
         if(receivedObject == null) {
