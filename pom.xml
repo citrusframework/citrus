@@ -5,9 +5,9 @@
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>${project.artifactId} (Main)</name>
-  <description>ConSol* Test Framework</description>
-  <url>http://citrus.consol.de</url>
+  <name>citrus</name>
+  <description>Citrus Test Framework</description>
+  <url>http://www.citrusframework.org</url>
   <inceptionYear>2008</inceptionYear>
   
   <licenses>
@@ -42,6 +42,8 @@
     <module>modules/citrus-tibco</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-integration</module>
+    <module>modules/ant/citrus-ant-tasks</module>
+    <module>modules/mvn</module>
   </modules>
   
   <developers>

@@ -2,175 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
+  <parent>
+    <artifactId>citrus</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>1.1-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven</artifactId>
   <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>${project.artifactId} (Main)</name>
+  <name>citrus-maven</name>
   <description>Citrus Maven Parent</description>
-  <url>http://citrus.consol.de</url>
-  <inceptionYear>2008</inceptionYear>
   
   <modules>
     <module>plugins/citrus-maven-plugin</module>
     <module>skins/citrus-default-skin</module>
   </modules>
-  
-  <build>
-    <pluginManagement>
-        <plugins>
-            <plugin>
-              <!-- http://maven.apache.org/plugins/maven-idea-plugin/plugin-info.html -->
-              <artifactId>maven-idea-plugin</artifactId>
-              <version>2.2</version>
-              <configuration>
-                <downloadSources>true</downloadSources>
-                <linkModules>true</linkModules>
-                <jdkLevel>1.5</jdkLevel>
-              </configuration>
-            </plugin>
-            <plugin>
-              <!-- http://maven.apache.org/plugins/maven-eclipse-plugin/plugin-info.html -->
-              <artifactId>maven-eclipse-plugin</artifactId>
-              <version>2.5.1</version>
-              <configuration>
-                <downloadSources>true</downloadSources>
-                <downloadJavadoc>true</downloadJavadoc>
-              </configuration>
-            </plugin>
-            <plugin>
-              <artifactId>maven-deploy-plugin</artifactId>
-              <version>2.4</version>
-            </plugin>
-        </plugins>
-    </pluginManagement>
-  </build>
-  
-  <profiles>
-    <!-- Distribution Management -->
-    <profile>
-      <id>release</id>
-      <distributionManagement>
-        <repository>
-          <id>repository-consol-releases</id>
-          <url>http://build.int.consol.de/nexus/content/repositories/inhouse</url>
-        </repository>
-        <snapshotRepository>
-          <id>repository-consol-snapshots</id>
-          <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
-    
-    <profile>
-      <id>release-labs</id>
-      <distributionManagement>
-        <repository>
-          <id>consol-labs-release</id>
-          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/repository</url>
-        </repository>
-        <snapshotRepository>
-          <id>consol-labs-snapshots</id>
-          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
-  
-    <profile>
-      <!-- Profile containing all settings if ConSol environment is not available -->
-      <id>repository-home</id>
-      <repositories>
-        <repository>
-          <id>jboss</id>
-          <url>http://repository.jboss.com/maven2</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-      </repositories>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-    </profile>
-    <profile>
-      <!-- Profile containing all settings specific to ConSol  -->
-      <id>repository-consol</id>
-      <repositories>
-        <repository>
-          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-        <repository>
-          <id>release</id>
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-        <repository>
-          <id>snapshots</id>
-          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-        </repository>
-      </repositories>
-
-      <pluginRepositories>
-        <pluginRepository>
-          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>release</id>
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>snapshots</id>
-          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
-
-      <activation>
-        <file>
-          <missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing>
-        </file>
-      </activation>
-    </profile>
-  </profiles>
 </project>
