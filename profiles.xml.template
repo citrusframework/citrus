@@ -15,6 +15,7 @@
                by running setup.sh 
                In Windows, you needs a '/' before the Device name (E.g.  /D:/projects/cm-web)-->
           <PROJECT_HOME>[[PROJECT_HOME]]</PROJECT_HOME>
+          <PROJECT_ENV>consol</PROJECT_ENV>
           <CLOVER_LICENSE>/home/bamboo/tools/clover/clover2.license</CLOVER_LICENSE>
         </properties>
     

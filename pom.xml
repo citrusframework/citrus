@@ -445,6 +445,10 @@
       </repositories>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>PROJECT_ENV</name>
+          <value>home</value>
+        </property>
       </activation>
     </profile>
     
@@ -520,9 +524,11 @@
       </pluginRepositories>
 
       <activation>
-        <file>
-          <missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing>
-        </file>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>PROJECT_ENV</name>
+          <value>consol</value>
+        </property>
       </activation>
     </profile>
     
