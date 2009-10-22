@@ -4,6 +4,11 @@
  
 News
 
+* Okt. 22, 2009 <<Snapshot update for version 1.1>>
+ 
+ We improved some issues in 1.1-SNAPSHOT, so you may update the Citrus snapshot version. 
+ For a detailed overview of our fixes and new features see the complete {{{changes.html}changes report}} for version 1.1.
+
 * Okt. 14, 2009 <<Snapshot for version 1.1 released>>
  
  Citrus is now also available as snapshot release in version 1.1. We already have incorporated some really great new features and
