@@ -42,8 +42,8 @@
     <module>modules/citrus-tibco</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-integration</module>
-    <module>modules/ant/citrus-ant-tasks</module>
-    <module>modules/mvn</module>
+    <module>modules/citrus-ant-tasks</module>
+    <module>modules/citrus-maven</module>
   </modules>
   
   <developers>

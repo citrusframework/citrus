@@ -6,7 +6,7 @@
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>1.1-SNAPSHOT</version>
-    <relativePath>../../../pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   
   <groupId>com.consol.citrus.ant</groupId>
