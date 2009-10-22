@@ -11,7 +11,7 @@
   
   <groupId>com.consol.citrus.ant</groupId>
   <artifactId>citrus-ant-tasks</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>citrus-ant-tasks</name>
   <description>Citrus Ant Tasks</description>
   
