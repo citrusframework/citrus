@@ -40,7 +40,7 @@ public class CreateHtmlDocMojo extends AbstractMojo {
     private String columns;
     
     /** @parameter expression="${outputFile}" 
-     *             default-value="target/CitrusTests.html" */
+     *             default-value="CitrusTests" */
     private String outputFile;
     
     /** @parameter default-value="Citrus Test Documentation" */
@@ -49,7 +49,7 @@ public class CreateHtmlDocMojo extends AbstractMojo {
     /** @parameter default-value="src/citrus/tests" */
     private String testDirectory;
     
-    /** @parameter default-value="img/logo.png" */
+    /** @parameter default-value="logo.png" */
     private String logo;
     
     /** @parameter 
@@ -67,10 +67,10 @@ public class CreateHtmlDocMojo extends AbstractMojo {
 				overviewTitle = prompter.prompt("Enter overview title:", overviewTitle);
 				columns = prompter.prompt("Enter number of columns in overview:", columns);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
-				outputFile = prompter.prompt("Enter output file:", outputFile);
+				outputFile = prompter.prompt("Enter output file name:", outputFile);
 				logo = prompter.prompt("Enter file path to logo:", logo);
 				
-				String confirm = prompter.prompt("Confirm HTML documentation: outputFile='" + outputFile + "'\n", 
+				String confirm = prompter.prompt("Confirm HTML documentation: outputFile='target/" + outputFile + ".html'\n", 
 				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
 		    	if(confirm.equalsIgnoreCase("n")) {
@@ -88,7 +88,7 @@ public class CreateHtmlDocMojo extends AbstractMojo {
 			
 			creator.generateDoc();
 			
-			getLog().info("Successfully created HTML documentation: outputFile='" + outputFile + "'");
+			getLog().info("Successfully created HTML documentation: outputFile='target/" + outputFile + ".html'");
 		} catch (PrompterException e) {
 			getLog().info(e);
 		}

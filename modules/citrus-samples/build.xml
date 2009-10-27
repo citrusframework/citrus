@@ -60,24 +60,23 @@
 	
 	<target name="create.html.doc" depends="init" description="Creates test documentation in html">
         <mkdir dir="target"/>
-		<mkdir dir="target/img"/>
         
         <java classname="com.consol.citrus.doc.HtmlTestDocGenerator">
             <classpath refid="citrus-classpath" />    
             
         	<arg value="src/citrus/tests"/>
-            <arg value="target/CitrusTests.html"/>
+            <arg value="CitrusTests"/>
             <arg value="Citrus Test Documentation"/>
-            <arg value="img/logo.png"/>
+            <arg value="logo.png"/>
             <arg value="Overview"/>
         </java>
         
-        <copy todir="target/img" file="src/citrus/resources/logo.png"/>
+        <copy todir="target" file="src/citrus/resources/logo.png"/>
         
         <zip destfile="target/CitrusTests.zip">
             <fileset dir="target">
-                <include name="*.html"/>
-                <include name="img/*"/>
+                <include name="CitrusTests.html"/>
+                <include name="logo.png"/>
             </fileset>
         </zip>
     </target>
@@ -89,7 +88,7 @@
             <classpath refid="citrus-classpath" />
             
         	<arg value="src/citrus/tests"/>
-            <arg value="target/CitrusTests.xls"/>
+            <arg value="CitrusTests"/>
             <arg value="Citrus Test Documentation"/>
             <arg value="Citrus Testframework"/>
             <arg value="ConSol* Software GmbH"/>

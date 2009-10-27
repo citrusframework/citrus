@@ -52,9 +52,9 @@ public class HtmlTestDocGenerator {
     
     private String overviewColumns = "1";
     
-    private String logoFilePath = "img/logo.png";
+    private String logoFilePath = "logo.png";
     
-    private String outputFile = "target/CitrusTests.html";
+    private String outputFile = "CitrusTests";
     
     private String testDocTemplate = "testdoc.html.template";
     
@@ -78,7 +78,7 @@ public class HtmlTestDocGenerator {
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/html");
             t.setOutputProperty(OutputKeys.METHOD, "html");
 
-            FileOutputStream file = new FileOutputStream(outputFile);
+            FileOutputStream file = new FileOutputStream("target/" + outputFile + ".html");
             OutputStream buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 
@@ -112,7 +112,7 @@ public class HtmlTestDocGenerator {
 
                 buffered.write("<li>".getBytes());
                 buffered.write(("<a href=\"#" + i + "\">").getBytes());
-                buffered.write(testFiles.get(i).toString().getBytes());
+                buffered.write(testFiles.get(i).getName().getBytes());
                 buffered.write("</a>".getBytes());
             }
 
@@ -140,6 +140,8 @@ public class HtmlTestDocGenerator {
                 buffered.write("</td>".getBytes());
 
                 buffered.write("</tr>".getBytes());
+                
+                testNumber++;
             }
 
             while ((line = reader.readLine()) != null) {

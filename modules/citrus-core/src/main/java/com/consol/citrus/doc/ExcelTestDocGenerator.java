@@ -48,7 +48,7 @@ public class ExcelTestDocGenerator {
 
     private String testDirectory = "src/citrus/tests";
     
-    private String outputFile = "target/CitrusTests.xls";
+    private String outputFile = "CitrusTests";
     
     private String testDocTemplate = "testdoc.xls.template";
     
@@ -81,7 +81,7 @@ public class ExcelTestDocGenerator {
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
             t.setOutputProperty(OutputKeys.METHOD, "xml");
 
-            FileOutputStream file = new FileOutputStream(outputFile);
+            FileOutputStream file = new FileOutputStream("target/" + outputFile + ".xls");
             OutputStream buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 

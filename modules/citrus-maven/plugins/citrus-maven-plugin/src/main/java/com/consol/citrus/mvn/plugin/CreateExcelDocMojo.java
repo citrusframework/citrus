@@ -40,7 +40,7 @@ public class CreateExcelDocMojo extends AbstractMojo {
     private String author;
     
     /** @parameter expression="${outputFile}" 
-     *             default-value="target/CitrusTests.xls" */
+     *             default-value="CitrusTests" */
     private String outputFile;
     
     /** @parameter default-value="Citrus Test Documentation" */
@@ -67,10 +67,10 @@ public class CreateExcelDocMojo extends AbstractMojo {
 				company = prompter.prompt("Enter company:", company);
 				author = prompter.prompt("Enter author:", author);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
-				outputFile = prompter.prompt("Enter output file:", outputFile);
+				outputFile = prompter.prompt("Enter output file name:", outputFile);
 				customHeaders = prompter.prompt("Enter custom headers:", customHeaders);
 				
-				String confirm = prompter.prompt("Confirm Excel documentation: outputFile='" + outputFile + "'\n", 
+				String confirm = prompter.prompt("Confirm Excel documentation: outputFile='target/" + outputFile + ".xls'\n", 
 				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
 		    	if(confirm.equalsIgnoreCase("n")) {
@@ -88,7 +88,7 @@ public class CreateExcelDocMojo extends AbstractMojo {
 			
 			creator.generateDoc();
 			
-			getLog().info("Successfully created Excel documentation: outputFile='" + outputFile + "'");
+			getLog().info("Successfully created Excel documentation: outputFile='target/" + outputFile + ".xls'");
 		} catch (PrompterException e) {
 			getLog().info(e);
 		}
