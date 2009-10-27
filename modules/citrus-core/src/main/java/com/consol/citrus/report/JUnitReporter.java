@@ -111,7 +111,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                     }
 
                     serializer.writeToURI(doc, outputFile.getFile().toURI().toString());
-                } catch(Throwable e) {
+                } catch(Exception e) {
                     log.error("Error during report generation", e);
                     continue;
                 }
