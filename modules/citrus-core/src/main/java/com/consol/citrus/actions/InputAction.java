@@ -86,8 +86,9 @@ public class InputAction extends AbstractTestAction {
         StringTokenizer tok = new StringTokenizer(validAnswers, "/");
 
         while (tok.hasMoreTokens()) {
-            if (tok.nextElement().toString().trim().toLowerCase().equals(input.trim().toLowerCase()))
+            if (tok.nextElement().toString().trim().toLowerCase().equals(input.trim().toLowerCase())) {
                 return true;
+            }
         }
 
         log.info("User input is not valid");

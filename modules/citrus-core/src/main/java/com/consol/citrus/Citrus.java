@@ -43,6 +43,8 @@ public class Citrus {
      */
     private static final Logger log = LoggerFactory.getLogger(Citrus.class);
 
+    private Citrus() {}
+    
     public static void main(String[] args) {
         log.info("CITRUS TESTFRAMEWORK ");
         log.info("");
@@ -162,9 +164,9 @@ public class Citrus {
 
             for (int i = 0; i < found.length; i++) {
                 /* Subfolder support */
-                if (found[i].isDirectory())
+                if (found[i].isDirectory()) {
                     dirs.push(found[i]);
-                else {
+                } else {
                     if ((testName + ".xml").equalsIgnoreCase(found[i].getName())) {
                         String fileName = found[i].getPath();
                         fileName = fileName.substring(0, (fileName.length()-".xml".length()));

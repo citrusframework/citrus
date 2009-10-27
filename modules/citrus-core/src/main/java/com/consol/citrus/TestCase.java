@@ -253,8 +253,9 @@ public class TestCase implements BeanNameAware {
      * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
      */
     public void setBeanName(String name) {
-        if (this.name == null)
+        if (this.name == null) {
             this.name = name;
+        }
     }
 
     /**

@@ -131,7 +131,7 @@ public class TestContext {
      * @throws UnknownElementException
      */
     public void createVariablesFromMessageValues(final Map<String, String> messageElements, Message<?> message) throws UnknownElementException {
-        if (messageElements == null || messageElements.isEmpty()) return;
+        if (messageElements == null || messageElements.isEmpty()) {return;}
 
         if(log.isDebugEnabled()) {
             log.debug("Reading XML elements from document");
@@ -227,7 +227,7 @@ public class TestContext {
      * @param receivedHeaderValues header elements from received message
      */
     public void createVariablesFromHeaderValues(final Map<String, String> extractHeaderValues, final Map<String, ?> receivedHeaderValues) throws UnknownElementException {
-        if (extractHeaderValues== null || extractHeaderValues.isEmpty()) return;
+        if (extractHeaderValues== null || extractHeaderValues.isEmpty()) {return;}
 
         for (Entry<String, String> entry : extractHeaderValues.entrySet()) {
             String headerElementName = entry.getKey();

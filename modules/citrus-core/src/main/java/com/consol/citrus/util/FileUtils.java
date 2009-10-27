@@ -72,9 +72,9 @@ public class FileUtils {
 
             for (int i = 0; i < found.length; i++) {
                 /* Subfolder support */
-                if (found[i].isDirectory())
+                if (found[i].isDirectory()) {
                     dirs.push(found[i]);
-                else {
+                } else {
                     files.add(found[i]);
                 }
             }

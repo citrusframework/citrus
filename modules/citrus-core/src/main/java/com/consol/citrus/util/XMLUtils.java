@@ -105,7 +105,7 @@ public class XMLUtils {
                     parent = parent.getParentNode();
                 }
             } while (parent != null && --cnt > 0);
-            if (pathName.toString().equals(sourcePathName)) return elements.item(j);
+            if (pathName.toString().equals(sourcePathName)) {return elements.item(j);}
         }
 
         return null;
@@ -216,8 +216,9 @@ public class XMLUtils {
             stripWhitespaceNodes(child);
         }
 
-        if (element.getNodeType() == Node.TEXT_NODE && element.getNodeValue().trim().length()==0)
+        if (element.getNodeType() == Node.TEXT_NODE && element.getNodeValue().trim().length()==0) {
             element.getParentNode().removeChild(element);
+        }
     }
 
     /**

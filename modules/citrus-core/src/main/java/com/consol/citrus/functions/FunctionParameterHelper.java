@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class FunctionParameterHelper {
+    private FunctionParameterHelper() {}
+    
     public static List<String> getParameterList(String parameterString) {
         List<String> parameterList = new ArrayList<String>();
 

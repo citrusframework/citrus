@@ -23,6 +23,8 @@ package com.consol.citrus.message;
  * @author Christoph Christoph Deppisch Consol* Software GmbH
  */
 public class CitrusMessageHeaders {
+    private CitrusMessageHeaders() {}
+    
     public static final String PREFIX = "citrus_";
     
     public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";

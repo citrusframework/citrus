@@ -143,8 +143,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 receivedMessage = receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
             }
 
-            if (receivedMessage == null)
+            if (receivedMessage == null) {
                 throw new CitrusRuntimeException("Received message is null!");
+            }
 
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
@@ -215,8 +216,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 /** 4.2. The received message is validated against the source message,
                  * but elements ignoreValues will not be validated.
                  */
-                if (validator.validateMessage(expectedMessage, receivedMessage, ignoreMessageElements, context) == false)
+                if (validator.validateMessage(expectedMessage, receivedMessage, ignoreMessageElements, context) == false) {
                     isSuccess = false;
+                }
             }
             
             NamespaceContext nsContext = null;

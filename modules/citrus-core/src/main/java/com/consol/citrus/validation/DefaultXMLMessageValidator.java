@@ -115,8 +115,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @see com.consol.citrus.validation.MessageValidator#validateMessageHeader(java.util.Map, java.util.Map)
      */
     public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
-        if (expectedHeaderValues == null) return false;
-        if (expectedHeaderValues.isEmpty()) return true;
+        if (expectedHeaderValues == null) {return false;}
+        if (expectedHeaderValues.isEmpty()) {return true;}
         
         log.info("Start message header validation");
 
@@ -186,8 +186,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @see com.consol.citrus.validation.XMLMessageValidator#validateMessageElements(java.util.Map, org.w3c.dom.Document)
      */
     public boolean validateMessageElements(Map<String, String> validateElements, Message<?> receivedMessage, NamespaceContext nsContext, TestContext context) {
-        if (validateElements == null) return false;
-        if (validateElements.isEmpty()) return true;
+        if (validateElements == null) {return false;}
+        if (validateElements.isEmpty()) {return true;}
         
         log.info("Start XML elements validation");
 
@@ -533,8 +533,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         int cntAttributes = 0;
 
         for (int i = 0; i < attributesR.getLength(); i++) {
-            if (!attributesR.item(i).getNodeName().startsWith("xmlns"))
+            if (!attributesR.item(i).getNodeName().startsWith("xmlns")) {
                 cntAttributes++;
+            }
         }
 
         return cntAttributes;
@@ -546,8 +547,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @return boolean flag to mark ignore
      */
     private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set<String> ignoreMessageElements) {
-        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
+        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
             return false;
+        }
 
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
@@ -605,8 +607,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
      * @return true if <tt>node</tt> has to be ignored.
      */
     private boolean isNodeIgnored(final Node node, Set<String> ignoreMessageElements) {
-        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty())
+        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
             return false;
+        }
 
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
@@ -626,8 +629,9 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
          * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
          */
         for (String expression : ignoreMessageElements) {
-            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), expression))
+            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), expression)) {
                 return true;
+            }
         }
 
         /** This is the XPath version using XPath expressions in

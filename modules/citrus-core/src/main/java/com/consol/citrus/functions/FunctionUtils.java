@@ -28,6 +28,8 @@ import com.consol.citrus.variable.VariableUtils;
 
 public class FunctionUtils {
 
+    private FunctionUtils() {}
+    
     /**
      *
      * @param str
