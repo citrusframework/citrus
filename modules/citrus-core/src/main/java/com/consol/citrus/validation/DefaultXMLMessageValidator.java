@@ -215,10 +215,11 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
             }
 
-            if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null)
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
                 actualValue = node.getFirstChild().getNodeValue();
-            else //if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+            } else { //if (node.getNodeType() == Node.ATTRIBUTE_NODE)
                 actualValue = node.getNodeValue();
+            }
 
             if (VariableUtils.isVariableName(expectedValue)) {
                 expectedValue = context.getVariable(expectedValue);

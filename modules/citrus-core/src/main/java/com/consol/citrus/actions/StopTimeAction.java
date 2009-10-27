@@ -67,10 +67,11 @@ public class StopTimeAction extends AbstractTestAction {
 
         try {
             if (timeStamps.containsKey(id)) {
-                if (description != null)
+                if (description != null) {
                     log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds (" + description + ")");
-                else
+                } else {
                     log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds");
+                }
             } else {
                 log.info("Starting TimeWatcher: " + id);
                 timeStamps.put(id, Long.valueOf(System.currentTimeMillis()));

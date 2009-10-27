@@ -50,8 +50,9 @@ public class FileUtils {
         /* start directory */
         final File startdir = new File(startDir);
         
-        if (startdir.isDirectory())
+        if (startdir.isDirectory()) {
             dirs.push(startdir);
+        }
 
         /* walk through the directories */
         while (dirs.size() > 0) {

@@ -84,10 +84,11 @@ public class XMLUtils {
             sourcePathName = sourcePathName.substring(0, sourcePathName.length()-attributeName.length()-1);
             Node found = findNodeByName(doc, sourcePathName);
 
-            if (found != null)
+            if (found != null) {
                 return found.getAttributes().getNamedItem(attributeName);
-            else
-                return null;
+            } else {
+                 return null;
+            }
         }
 
         StringBuffer pathName;

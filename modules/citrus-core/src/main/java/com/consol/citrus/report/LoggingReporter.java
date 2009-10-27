@@ -57,10 +57,11 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         }
         
         for (TestResult testResult : testResults) {
-            if (testResult.getResult().equals(RESULT.SKIP))
+            if (testResult.getResult().equals(RESULT.SKIP)) {
                 log.debug(testResult.toString());
-            else
+            } else {
                 log.info(testResult.toString());
+            }
         }
         
         log.info("");

@@ -57,21 +57,21 @@ public class BooleanExpressionParser {
                 while ((operator = operators.pop()) != "(") {
                     String value = values.pop();
                     String value2 = values.pop();
-                    if      (operator.equals("lt"))
+                    if (operator.equals("lt")) {
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
-                    else if (operator.equals("lt="))
+                    } else if (operator.equals("lt=")) {
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value).intValue()).toString();
-                    else if (operator.equals("gt"))
+                    } else if (operator.equals("gt")) {
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value).intValue()).toString();
-                    else if (operator.equals("gt="))
+                    } else if (operator.equals("gt=")) {
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value).intValue()).toString();
-                    else if (operator.equals("="))
+                    } else if (operator.equals("=")) {
                         value = Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value).intValue()).toString();
-                    else if (operator.equals("and"))
+                    } else if (operator.equals("and")) {
                         value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value).booleanValue()).toString();
-                    else if (operator.equals("or"))
+                    } else if (operator.equals("or")) {
                         value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
-                    else {
+                    } else {
                         throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
                     }
 
@@ -108,21 +108,21 @@ public class BooleanExpressionParser {
             String operator = operators.pop();
             String value = values.pop();
             String value2 = values.pop();
-            if      (operator.equals("lt"))
+            if (operator.equals("lt")) {
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
-            else if (operator.equals("lt="))
+            } else if (operator.equals("lt=")) {
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value).intValue()).toString();
-            else if (operator.equals("gt"))
+            } else if (operator.equals("gt")) {
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value).intValue()).toString();
-            else if (operator.equals("gt="))
+            } else if (operator.equals("gt=")) {
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value).intValue()).toString();
-            else if (operator.equals("="))
+            } else if (operator.equals("=")) {
                 value = Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value).intValue()).toString();
-            else if (operator.equals("and"))
+            } else if (operator.equals("and")) {
                 value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value).booleanValue()).toString();
-            else if (operator.equals("or"))
+            } else if (operator.equals("or")) {
                 value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
-            else {
+            } else {
                 throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
             }
 
