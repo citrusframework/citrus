@@ -25,22 +25,22 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 
-import com.consol.citrus.doc.ExcelTestDocGenerator;
+import com.consol.citrus.doc.HtmlTestDocGenerator;
 
 /**
- * Goal which creates a test documentation in excel.
+ * Goal which creates a test documentation in html.
  *
- * @goal create-excel-doc
+ * @goal create-html-doc
  */
-public class CreateExcelDocMojo extends AbstractMojo {
-    /** @parameter default-value="Unknown" */
-    private String company;
+public class CreateHtmlDocMojo extends AbstractMojo {
+    /** @parameter default-value="Overview" */
+    private String overviewTitle;
     
-    /** @parameter default-value="Citrus Testframework" */
-    private String author;
+    /** @parameter default-value="1" */
+    private String columns;
     
     /** @parameter expression="${outputFile}" 
-     *             default-value="target/CitrusTests.xls" */
+     *             default-value="target/CitrusTests.html" */
     private String outputFile;
     
     /** @parameter default-value="Citrus Test Documentation" */
@@ -49,8 +49,8 @@ public class CreateExcelDocMojo extends AbstractMojo {
     /** @parameter default-value="src/citrus/tests" */
     private String testDirectory;
     
-    /** @parameter default-value="" */
-    private String customHeaders;
+    /** @parameter default-value="img/logo.png" */
+    private String logo;
     
     /** @parameter 
      *          expression="${interactiveMode}"
@@ -64,13 +64,13 @@ public class CreateExcelDocMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
     	try {
 			if(interactiveMode) {
-				company = prompter.prompt("Enter company:", company);
-				author = prompter.prompt("Enter author:", author);
+				overviewTitle = prompter.prompt("Enter overview title:", overviewTitle);
+				columns = prompter.prompt("Enter number of columns in overview:", columns);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
 				outputFile = prompter.prompt("Enter output file:", outputFile);
-				customHeaders = prompter.prompt("Enter custom headers:", customHeaders);
+				logo = prompter.prompt("Enter file path to logo:", logo);
 				
-				String confirm = prompter.prompt("Confirm Excel documentation: outputFile='" + outputFile + "'\n", 
+				String confirm = prompter.prompt("Confirm HTML documentation: outputFile='" + outputFile + "'\n", 
 				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
 		    	if(confirm.equalsIgnoreCase("n")) {
@@ -78,17 +78,17 @@ public class CreateExcelDocMojo extends AbstractMojo {
 		    	}
 			}
 			
-			ExcelTestDocGenerator creator = ExcelTestDocGenerator.build()
+			HtmlTestDocGenerator creator = HtmlTestDocGenerator.build()
 			                .withOutputFile(outputFile)
 			                .withPageTitle(pageTitle)
-			                .withAuthor(author)
-			                .withCompany(company)
+			                .withOverviewTitle(overviewTitle)
+			                .withColumns(columns)
 			                .useTestDirectory(testDirectory)
-			                .withCustomHeaders(customHeaders);
+			                .withLogo(logo);
 			
 			creator.generateDoc();
 			
-			getLog().info("Successfully created Excel documentation: outputFile='" + outputFile + "'");
+			getLog().info("Successfully created HTML documentation: outputFile='" + outputFile + "'");
 		} catch (PrompterException e) {
 			getLog().info(e);
 		}

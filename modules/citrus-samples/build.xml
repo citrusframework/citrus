@@ -19,13 +19,13 @@
 	
 	<typedef resource="citrustasks" classpath="citrus-ant-tasks-1.0.jar"/>
 	
-	<target name="citrus.run.tests" depends="init">
+	<target name="citrus.run.tests" depends="init" description="Runs all tests">
 	    <citrus suitename="citrus-samples" package="com.consol.citrus.*">
             <classpath path="src/main/resources"/>
 	    </citrus>
 	</target>
 	
-	<target name="citrus.run.single.test" depends="init">
+	<target name="citrus.run.single.test" depends="init" description="Runs a single test">
    	 	<touch file="target/test.history"/>
     	
     	<loadproperties srcfile="target/test.history"/>
@@ -58,4 +58,42 @@
         </java>
     </target>
 	
+	<target name="create.html.doc" depends="init" description="Creates test documentation in html">
+        <mkdir dir="target"/>
+		<mkdir dir="target/img"/>
+        
+        <java classname="com.consol.citrus.doc.HtmlTestDocGenerator">
+            <classpath refid="citrus-classpath" />    
+            
+        	<arg value="src/citrus/tests"/>
+            <arg value="target/CitrusTests.html"/>
+            <arg value="Citrus Test Documentation"/>
+            <arg value="img/logo.png"/>
+            <arg value="Overview"/>
+        </java>
+        
+        <copy todir="target/img" file="src/citrus/resources/logo.png"/>
+        
+        <zip destfile="target/CitrusTests.zip">
+            <fileset dir="target">
+                <include name="*.html"/>
+                <include name="img/*"/>
+            </fileset>
+        </zip>
+    </target>
+    
+    <target name="create.xls.doc" depends="init" description="Creates test documentation in excel">
+        <mkdir dir="target"/>
+        
+        <java classname="com.consol.citrus.doc.ExcelTestDocGenerator">
+            <classpath refid="citrus-classpath" />
+            
+        	<arg value="src/citrus/tests"/>
+            <arg value="target/CitrusTests.xls"/>
+            <arg value="Citrus Test Documentation"/>
+            <arg value="Citrus Testframework"/>
+            <arg value="ConSol* Software GmbH"/>
+        </java>
+    </target>
+    
 </project>

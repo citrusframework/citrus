@@ -19,34 +19,19 @@
 
 package com.consol.citrus.doc;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
 
@@ -56,76 +41,45 @@ import com.consol.citrus.util.PropertyUtils;
  * @since 02.03.2007
  */
 public class HtmlTestDocGenerator {
-    private final static String DEFAULT_OUTPUT_FILE = "doc/consol/test_documentation.html";
-    private final static String DEFAULT_XSLT_SOURCE = "generate-html-doc-2.0.xsl";
-    private final static String DEFAULT_TEST_DIRECTORY = "tests";
-    private final static String DEFAULT_TESTDOC_TEMPLATE = "testdoc.html.template";
-    private final static String DEFAULT_PROPERTIES_FILE = "testdoc.properties";
-
-    private final static String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private final static String BODY_PLACEHOLDER = "+++++ BODY +++++";
-
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(HtmlTestDocGenerator.class);
-
-    public static void main(String[] args) {
+    private final static String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
+    
+    private String testDirectory = "src/citrus/tests";
+    
+    private String pageTitle = "Citrus Test Documentation";
+    
+    private String overviewTitle = "Overview";
+    
+    private String overviewColumns = "1";
+    
+    private String logoFilePath = "img/logo.png";
+    
+    private String outputFile = "target/CitrusTests.html";
+    
+    private String testDocTemplate = "testdoc.html.template";
+    
+    public void generateDoc() {
         try {
-            String xslSource;
-            if (args.length > 0) {
-                xslSource = args[0];
-            } else {
-                xslSource = DEFAULT_XSLT_SOURCE;
-            }
-
-            String filename;
-            if (args.length > 1) {
-                filename = args[1];
-            } else {
-                filename = DEFAULT_OUTPUT_FILE;
-            }
-
-            String testDirectory;
-            if (args.length > 2) {
-                testDirectory = args[2];
-            } else {
-                testDirectory = DEFAULT_TEST_DIRECTORY;
-            }
-
-            String testdocTemplate;
-            if (args.length > 3) {
-                testdocTemplate = args[3];
-            } else {
-                testdocTemplate = DEFAULT_TESTDOC_TEMPLATE;
-            }
-
-            Properties props = new Properties();
-            if (args.length > 4) {
-                Resource testdocProperties = new ClassPathResource(args[4]);
-                props.load(testdocProperties.getInputStream());
-            } else {
-                props.load(HtmlTestDocGenerator.class.getResourceAsStream(DEFAULT_PROPERTIES_FILE));
-            }
-
             List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
-            Source xsl = new StreamSource(HtmlTestDocGenerator.class.getResourceAsStream(xslSource), 
-                    HtmlTestDocGenerator.class.getResource(xslSource).getPath());
+            Properties props = new Properties();
+            props.setProperty("page.title", pageTitle);
+            props.setProperty("overview.title", overviewTitle);
+            props.setProperty("overview.columns", overviewColumns);
+            props.setProperty("logo.file.path", logoFilePath);
+            props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
             
-            log.info("XSLT stylesheet was set: " + xsl.getSystemId());
-
+            Source xsl = new StreamSource(new ClassPathResource("generate-html-doc.xslt", HtmlTestDocGenerator.class).getInputStream());
+            
             TransformerFactory factory = TransformerFactory.newInstance();
 
             Transformer t = factory.newTransformer(xsl);
-            log.info("XSL transformer was created");
 
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/html");
             t.setOutputProperty(OutputKeys.METHOD, "html");
 
-            File outputFile = new File(filename);
-            FileOutputStream fos = new FileOutputStream(outputFile);
-            OutputStream buffered = new BufferedOutputStream(fos);
+            FileOutputStream file = new FileOutputStream(outputFile);
+            OutputStream buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -133,7 +87,7 @@ public class HtmlTestDocGenerator {
             DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
             documentBuilderFactory.setNamespaceAware(true);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(HtmlTestDocGenerator.class.getResourceAsStream(testdocTemplate)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(HtmlTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().equalsIgnoreCase(OVERVIEW_PLACEHOLDER) == false) {
@@ -177,8 +131,6 @@ public class HtmlTestDocGenerator {
             for (File testFile : testFiles) {
                 buffered.write("<tr>".getBytes());
 
-                log.info("Working on test " + testFile.getName());
-
                 Source xml = new DOMSource(builder.parse(testFile));
                 buffered.write(("<td style=\"border:1px solid #bbbbbb\">" + testNumber + ".</td>").getBytes());
 
@@ -195,17 +147,110 @@ public class HtmlTestDocGenerator {
             }
 
             buffered.flush();
-            fos.flush();
-            fos.close();
-            
+            file.close();
         } catch (IOException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (TransformerException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (SAXException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         } catch (ParserConfigurationException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException(e);
         }
+    }
+    
+    public static HtmlTestDocGenerator build() {
+        return new HtmlTestDocGenerator();
+    }
+    
+    public HtmlTestDocGenerator withOutputFile(String filename) {
+        this.setOutputFile(filename);
+        return this;
+    }
+    
+    public HtmlTestDocGenerator withPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+        return this;
+    }
+    
+    public HtmlTestDocGenerator withOverviewTitle(String overvieTitle) {
+        this.overviewTitle = overvieTitle;
+        return this;
+    }
+    
+    public HtmlTestDocGenerator withColumns(String columns) {
+        this.overviewColumns = columns;
+        return this;
+    }
+    
+    public HtmlTestDocGenerator withLogo(String logoFilePath) {
+        this.logoFilePath = logoFilePath;
+        return this;
+    }
+    
+    public HtmlTestDocGenerator useTestDirectory(String testDir) {
+        this.setTestDirectory(testDir);
+        return this;
+    }
+    
+    public static void main(String[] args) {
+        try {    
+            HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
+            
+            creator.useTestDirectory(args.length == 1 ? args[0] : creator.testDirectory)
+                .withOutputFile(args.length == 2 ? args[1] : creator.outputFile)
+                .withPageTitle(args.length == 3 ? args[2] : creator.pageTitle)
+                .withLogo(args.length == 4 ? args[3] : creator.logoFilePath)
+                .withOverviewTitle(args.length == 5 ? args[4] : creator.overviewTitle)
+                .withColumns(args.length == 6 ? args[5] : creator.overviewColumns);
+                
+            
+            creator.generateDoc();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new CitrusRuntimeException("Wrong usage exception! " +
+                    "Use parameters in the following way: [test.directory] [output.file]", e);
+        }
+    }
+
+    /**
+     * @param testDirectory the testDirectory to set
+     */
+    public void setTestDirectory(String testDirectory) {
+        this.testDirectory = testDirectory;
+    }
+
+    /**
+     * @return the testDirectory
+     */
+    public String getTestDirectory() {
+        return testDirectory;
+    }
+
+    /**
+     * @param outputFile the outputFile to set
+     */
+    public void setOutputFile(String outputFile) {
+        this.outputFile = outputFile;
+    }
+
+    /**
+     * @return the outputFile
+     */
+    public String getOutputFile() {
+        return outputFile;
+    }
+
+    /**
+     * @param pageTitle the pageTitle to set
+     */
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
+
+    /**
+     * @return the pageTitle
+     */
+    public String getPageTitle() {
+        return pageTitle;
     }
 }

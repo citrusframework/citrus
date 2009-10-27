@@ -20,7 +20,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
-	exclude-result-prefixes="spring tsf">
+	exclude-result-prefixes="spring citrus">
 
 	<xsl:output method="text" version="1.0" encoding="UTF-8" indent="yes" cdata-section-elements="data" />
 
