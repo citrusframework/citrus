@@ -199,7 +199,13 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
      * @param methodParameters the methodParameters to set
      */
     public void setMethodParameters(DataElement[] methodParameters) {
-        this.methodParameters = methodParameters;
+        this.methodParameters = new DataElement[methodParameters.length];
+        
+        int i = 0;
+        for (DataElement dataElement : methodParameters) {
+            this.methodParameters[i] = dataElement;
+            i++;
+        }
     }
 
     /**
