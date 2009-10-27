@@ -21,13 +21,19 @@ package com.consol.citrus.samples.flightbooking.model;
 
 
 public class Flight {
-    String flightId;
-    String airline;
-    String fromAirport;
-    String toAirport;
-    String date;
-    String scheduledDeparture;
-    String scheduledArrival;
+    private String flightId;
+    
+    private String airline;
+    
+    private String fromAirport;
+    
+    private String toAirport;
+    
+    private String date;
+    
+    private String scheduledDeparture;
+    
+    private String scheduledArrival;
     
     /**
      * @return the flightId

@@ -28,7 +28,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import com.consol.citrus.TestAction;
 
 public class GroovyTestActionBuilder {
-    GenericApplicationContext applicationContext;
+    private GenericApplicationContext applicationContext;
     
     public TestAction build(String name, Map<String, Object> properties) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.childBeanDefinition(name);

@@ -30,7 +30,7 @@ public class ReporterInvokingTestSuiteListener extends BasicTestSuiteListener {
     private int testSuitesStarted = 0;
     private int testSuitesFinished = 0;
     
-    ArrayList<TestSuite> suites = new ArrayList<TestSuite>();
+    private ArrayList<TestSuite> suites = new ArrayList<TestSuite>();
     
     /** List of testsuite reporter **/
     @Autowired

@@ -27,7 +27,7 @@ import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 public class LSResolverImpl implements LSResourceResolver {
-    DOMImplementationLS domImpl;
+    private DOMImplementationLS domImpl;
     
     public LSResolverImpl(DOMImplementationLS domImpl) {
         this.domImpl = domImpl;

@@ -36,7 +36,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class GlobalVariablesPropertyLoader implements InitializingBean {
     @Autowired
-    GlobalVariables globalVariables;
+    private GlobalVariables globalVariables;
     
     /** list of property files to be loaded as global variables */
     private List<String> propertyFiles = new ArrayList<String>();

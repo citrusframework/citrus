@@ -27,9 +27,9 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.xml.sax.SAXException;
 
 public class XsdSchemaRepository {
-    List<XsdSchema> schemas = new ArrayList<XsdSchema>();
+    private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
     
-    XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
+    private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
     
     public XsdSchema getSchemaByNamespace(String namespace) throws IOException, SAXException {
         return schemaMappingStrategy.getSchema(schemas, namespace);

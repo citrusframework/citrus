@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 
 public class MessageSelectorBuilder {
     
-    String selectorString = "";
+    private String selectorString = "";
     
     public MessageSelectorBuilder(String selectorString) {
         this.selectorString = selectorString;

@@ -27,9 +27,9 @@ import com.consol.citrus.report.TestResult.RESULT;
 public class TestResults extends ArrayList<TestResult> {
     private boolean cached = false;
     
-    int cntSuccess = 0;
-    int cntFailed = 0;
-    int cntSkipped = 0;
+    private int cntSuccess = 0;
+    private int cntFailed = 0;
+    private int cntSkipped = 0;
     
     private final Object cacheLock = new Object();
     

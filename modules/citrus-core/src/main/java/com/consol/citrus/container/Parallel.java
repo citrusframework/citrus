@@ -33,11 +33,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class Parallel extends AbstractTestAction {
 
-    List<TestAction> actions = new ArrayList<TestAction>();
+    private List<TestAction> actions = new ArrayList<TestAction>();
 
-    Stack<Thread> threads = new Stack<Thread>();
+    private Stack<Thread> threads = new Stack<Thread>();
 
-    Stack<Exception> exceptions = new Stack<Exception>();
+    private Stack<Exception> exceptions = new Stack<Exception>();
     
     /**
      * Logger
@@ -74,8 +74,9 @@ public class Parallel extends AbstractTestAction {
     }
 
     private abstract static class ActionRunner implements Runnable {
-        TestAction action;
-        TestContext context;
+        private TestAction action;
+        
+        private TestContext context;
         
         public ActionRunner(TestAction action, TestContext context) {
             this.action = action;

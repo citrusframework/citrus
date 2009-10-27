@@ -36,7 +36,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class LoadPropertiesAction extends AbstractTestAction {
 
-    String file = null;
+    private String file = null;
 
     /**
      * Logger

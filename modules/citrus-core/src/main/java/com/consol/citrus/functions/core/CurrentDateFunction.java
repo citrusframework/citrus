@@ -32,7 +32,7 @@ import com.consol.citrus.functions.Function;
 
 public class CurrentDateFunction implements Function {
 
-    SimpleDateFormat dateFormat;
+    private SimpleDateFormat dateFormat;
 
     /**
      * Logger

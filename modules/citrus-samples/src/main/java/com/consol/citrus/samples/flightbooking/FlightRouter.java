@@ -31,7 +31,7 @@ import com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage
 
 public class FlightRouter extends AbstractMessageRouter {
     
-    ChannelResolver channelResolver;
+    private ChannelResolver channelResolver;
     
     @Override
     public Collection<MessageChannel> determineTargetChannels(Message<?> message) {

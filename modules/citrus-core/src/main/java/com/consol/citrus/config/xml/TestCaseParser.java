@@ -42,7 +42,7 @@ import com.consol.citrus.TestCaseMetaInfo.Status;
 
 public class TestCaseParser implements BeanDefinitionParser {
 
-    String testCaseName = "";
+    private String testCaseName = "";
 
     /**
      * (non-Javadoc)
