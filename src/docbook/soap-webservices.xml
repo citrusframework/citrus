@@ -63,7 +63,7 @@
                          port=&quot;8091&quot; 
                          auto-start=&quot;true&quot;
                          context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
-                         resource-base=&quot;src/it/resources&quot;/&gt;
+                         resource-base=&quot;src/citrus/resources&quot;/&gt;
         </programlisting>
         
         <para>The Jetty server is able to startup automatically during application startup. In the example above the Server is
