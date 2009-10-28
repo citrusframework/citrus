@@ -18,7 +18,7 @@
     <target name="start.http.stub" depends="init">
         <java classname="com.consol.citrus.http.HttpServer" fork="true">
             <classpath refid="classpath" />
-            <classpath path="src/it/resources" />
+            <classpath path="src/citrus/resources" />
         </java>
     </target>
     
@@ -26,7 +26,7 @@
         <java classname="com.consol.citrus.http.HttpServer" fork="true">
             <arg line="quit" />
             <classpath refid="classpath" />
-            <classpath path="src/it/resources" />
+            <classpath path="src/citrus/resources" />
         </java>
     </target>
     
