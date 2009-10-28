@@ -12,7 +12,7 @@
     <citrus-ws:jetty-server id="jettyServer" port="8081"
                                              auto-start="true"
                                              context-config-location="classpath:citrus-ws-servlet.xml"
-                                             resource-base="src/it/resources"/>
+                                             resource-base="src/citrus/resources"/>
 
     <bean id="axiomMessageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"/>
                                                  

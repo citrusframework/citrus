@@ -18,32 +18,19 @@
           <!-- Version is required as mvn has currently a problem updating. -->
           <version>2.4.3</version>
           <configuration>
-            <skip>true</skip>
+            <properties>
+                <property>
+                    <name>suitename</name>
+                    <value>citrus-integration</value>
+                </property>
+            </properties>
           </configuration>
-          <executions>
-            <execution>
-              <id>surefire-it</id>
-              <phase>integration-test</phase>
-              <goals>
-                <goal>test</goal>
-              </goals>
-              <configuration>
-                <skip>false</skip>
-                <properties>
-                    <property>
-                        <name>suitename</name>
-                        <value>citrus-integration</value>
-                    </property>
-                </properties>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
     </plugins>
-  	<testSourceDirectory>src/it/java</testSourceDirectory>
+  	<testSourceDirectory>src/citrus/java</testSourceDirectory>
   	<testResources>
         <testResource>
-            <directory>src/it/java</directory>
+            <directory>src/citrus/java</directory>
             <includes>
                 <include>**</include>
             </includes>
@@ -52,7 +39,7 @@
             </excludes>
         </testResource>
   		<testResource>
-  			<directory>src/it/resources</directory>
+  			<directory>src/citrus/resources</directory>
             <includes>
                 <include>**/*</include>
             </includes>
