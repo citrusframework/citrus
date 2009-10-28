@@ -41,10 +41,10 @@ public class StopTimeAction extends AbstractTestAction {
     private static Map<String, Long> timeStamps = new HashMap<String, Long>();
 
     /** Default time stamp id */
-    private static String DEFAULT_ID = "DEFAULT_TIME";
+    public static String DEFAULT_TIMELINE_ID = "CITRUS_TIMELINE";
 
     /** Id of the time measurement */
-    private String id = DEFAULT_ID;
+    private String id = DEFAULT_TIMELINE_ID;
 
     /** Description of time line */
     private String description;
@@ -96,5 +96,12 @@ public class StopTimeAction extends AbstractTestAction {
     @Override
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return the timeStamps
+     */
+    public static Map<String, Long> getTimeStamps() {
+        return timeStamps;
     }
 }
