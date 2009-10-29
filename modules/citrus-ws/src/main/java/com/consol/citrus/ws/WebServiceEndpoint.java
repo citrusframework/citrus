@@ -22,10 +22,7 @@ package com.consol.citrus.ws;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 
 import org.slf4j.Logger;
@@ -36,17 +33,15 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.*;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 
 public class WebServiceEndpoint implements MessageEndpoint {
 
@@ -86,10 +81,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
             SoapHeader soapHeader = soapMessage.getSoapHeader();
             
             if (soapHeader != null) {
-                Iterator<?> iter = soapHeader.getAllAttributes();
+                Iterator<?> iter = soapHeader.examineAllHeaderElements();
                 while (iter.hasNext()) {
-                    QName name = (QName) iter.next();
-                    requestMessageBuilder.setHeader(name.toString(), soapHeader.getAttributeValue(name));
+                    SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
+                    requestMessageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
                 }
             }
         }
