@@ -50,10 +50,7 @@
 
 		<java classname="com.consol.citrus.util.TestCaseCreator">
             <classpath refid="citrus-classpath"/>
-            <arg value="${test.name}"/>
-			<arg value="${test.author}"/>
-			<arg value="${test.description}"/>
-			<arg value="${test.package}"/>
+			<arg line="-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package}"/>
         </java>
     </target>
 	
