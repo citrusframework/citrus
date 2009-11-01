@@ -12,6 +12,13 @@
     <citrus:jms-message-receiver id="helloResponseReceiver"
                                  receive-timeout="5000" 
                                  destination-name="${jms.queue.hello.response}"/>
+                                 
+    <citrus:jms-message-sender id="helloTopicRequestSender" 
+                               jms-template="topicJmsTemplate"/>
+  
+    <citrus:jms-message-receiver id="helloTopicRequestReceiver"
+                                 receive-timeout="5000" 
+                                 jms-template="topicJmsTemplate"/>
 	
 	<citrus:jms-sync-message-sender id="syncHelloRequestSender" 
                                     destination-name="${jms.queue.hello.sync.request}"

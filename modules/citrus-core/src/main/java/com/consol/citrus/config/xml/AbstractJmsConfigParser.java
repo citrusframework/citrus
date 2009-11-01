@@ -58,7 +58,7 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
             } else {
                 builder.addPropertyValue(JmsParserConstants.DESTINATION_NAME_PROPERTY, destinationName);
             }
-        } else {
+        } else if(!StringUtils.hasText(element.getAttribute(JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE))){
             throw new BeanCreationException("Either a '" + JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE + "' reference " +
                     "or one of '" + JmsParserConstants.DESTINATION_ATTRIBUTE + "' or '" + JmsParserConstants.DESTINATION_NAME_ATTRIBUTE + "' must be provided.");
         }
