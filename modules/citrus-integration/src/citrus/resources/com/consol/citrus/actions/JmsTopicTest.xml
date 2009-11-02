@@ -16,6 +16,50 @@
         </variables>
         <actions>
             <parallel>
+              <receive with="helloTopicRequestReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                        <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                           <messageId>${messageId}</messageId>
+                           <correlationId>${correlationId}</correlationId>
+                           <user>${user}</user>
+                           <text>Hello TestFramework</text>
+                        </HelloRequest>
+                      ]]>
+                  </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+              </receive>
+              
+              <receive with="helloTopicRequestReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                        <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                           <messageId>${messageId}</messageId>
+                           <correlationId>${correlationId}</correlationId>
+                           <user>${user}</user>
+                           <text>Hello TestFramework</text>
+                        </HelloRequest>
+                      ]]>
+                  </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+              </receive>
+              
               <send with="helloTopicRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
@@ -37,50 +81,6 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
               </send>
-              
-              <receive with="helloTopicRequestReceiver" timeout="5000">
-                <description>
-                    Receive asynchronous hello response: HelloService -> TestFramework
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                        <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                           <messageId>${messageId}</messageId>
-                           <correlationId>${correlationId}</correlationId>
-                           <user>${user}</user>
-                           <text>Hello TestFramework</text>
-                        </HelloRequest>
-                      ]]>
-                  </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-              </receive>
-              
-              <receive with="helloTopicRequestReceiver" timeout="5000">
-                <description>
-                    Receive asynchronous hello response: HelloService -> TestFramework
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                        <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                           <messageId>${messageId}</messageId>
-                           <correlationId>${correlationId}</correlationId>
-                           <user>${user}</user>
-                           <text>Hello TestFramework</text>
-                        </HelloRequest>
-                      ]]>
-                  </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-              </receive>
            </parallel>
         </actions>
     </testcase>
