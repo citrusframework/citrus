@@ -4,6 +4,10 @@
  
 News
 
+* Nov. 02, 2009 <<Bugfix update for snapshot version 1.1>>
+ 
+ Version 1.1-SNAPSHOT has fixed some issues. The {{{changes.html}changes report}} gives you the detailed picture on the latest version.
+ 
 * Okt. 22, 2009 <<Snapshot update for version 1.1>>
  
  We improved some issues in 1.1-SNAPSHOT, so you may update the Citrus snapshot version. 

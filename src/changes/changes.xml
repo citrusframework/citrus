@@ -15,84 +15,93 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="22.10.2009" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="02.11.2009" description="1.1 snapshot release">
         <action dev="deppisch" type="fix">
-          Receive timeout configuration not compliant with PropertyPlaceholderConfigurer
-        </action>
-        <action dev="deppisch" type="fix">
-          Sync reply destination holder not threadsafe
+          #212 JMSTemplate interference with default destination setting
         </action>
         <action dev="deppisch" type="fix">
-          Sync reply message handler not threadsafe
+          #210 Creating new test cases with ant
         </action>
         <action dev="deppisch" type="fix">
-          JMS receiver ignoring timeout setting when adding JMS selector
-        </action>
-        <action dev="deppisch" type="add">
-          Sending SOAP attachments as a client
-        </action>
-        <action dev="deppisch" type="add">
-          SOAP Fault validation
-        </action>
-        <action dev="deppisch" type="add">
-          Extended exception validation
-        </action>
-        <action dev="deppisch" type="add">
-          Generate test documentation in Excel
-        </action>
-        <action dev="deppisch" type="add">
-          Extend test case meta-info with custom elements
-        </action>
-        <action dev="deppisch" type="add">
-          Write custom actions / extend test case with custom actions
-        </action>
-        <action dev="deppisch" type="add">
-          Interactive test creation in Maven plugin
-        </action>
-        <action dev="deppisch" type="add">
-          Interactive Excel doc generation in Maven plugin
+          #211 SOAP header mapping for WSEndpoint implementation
         </action>
         <action dev="deppisch" type="fix">
-          XML validation - fixed assert error messages
+          #205 Receive timeout configuration not compliant with PropertyPlaceholderConfigurer
         </action>
         <action dev="deppisch" type="fix">
-          Avoid lower case test names
+          #207 Sync reply destination holder not threadsafe
         </action>
         <action dev="deppisch" type="fix">
-          Set targetPackage for test creation in Maven plugin
+          #206 Sync reply message handler not threadsafe
         </action>
         <action dev="deppisch" type="fix">
-          Parallel container not failing correctly
+          #208 JMS receiver ignoring timeout setting when adding JMS selector
+        </action>
+        <action dev="deppisch" type="add">
+          #203 Sending SOAP attachments as a client
+        </action>
+        <action dev="deppisch" type="add">
+          #189 SOAP Fault validation
+        </action>
+        <action dev="deppisch" type="add">
+          #187 Extended exception validation
+        </action>
+        <action dev="deppisch" type="add">
+          #204 Generate test documentation in Excel
+        </action>
+        <action dev="deppisch" type="add">
+          #202 Extend test case meta-info with custom elements
+        </action>
+        <action dev="deppisch" type="add">
+          #201 Write custom actions / extend test case with custom actions
+        </action>
+        <action dev="deppisch" type="add">
+          #213 Interactive test creation in Maven plugin
+        </action>
+        <action dev="deppisch" type="add">
+          #214 Interactive Excel doc generation in Maven plugin
+        </action>
+        <action dev="deppisch" type="fix">
+          #186 XML validation - fixed assert error messages
+        </action>
+        <action dev="deppisch" type="fix">
+          #184 Avoid lower case test names
+        </action>
+        <action dev="deppisch" type="fix">
+          #183 Set targetPackage for test creation in Maven plugin
+        </action>
+        <action dev="deppisch" type="fix">
+          #185 Parallel container not failing correctly
         </action>
     </release>
     
     <release version="1.0" date="25.09.2009" description="1.0 open source release">
         <action dev="deppisch" type="update">
-          Switch to Maven build system
+          #000 Switch to Maven build system
         </action>
         <action dev="deppisch" type="update">
-          Code refactoring
+          #000 Code refactoring
         </action>
         <action dev="deppisch" type="update">
-          Documentation update
+          #000 Documentation update
         </action>
         <action dev="deppisch" type="update">
-          Installation process
+          #000 Installation process
         </action>
         <action dev="deppisch" type="add">
-          Maven plugin for test case creation
+          #000 Maven plugin for test case creation
         </action>
         <action dev="deppisch" type="add">
-          Citrus ANT tasks
+          #000 Citrus ANT tasks
         </action>
         <action dev="deppisch" type="add">
-          Custom Spring 2.x XML configuration schema
+          #000 Custom Spring 2.x XML configuration schema
         </action>
     </release>
     
     <release version="0.1 - 0.9" date="25.09.2006 - 26.08.2008" description="Older versions for internal use">
         <action dev="deppisch" type="add">
-            Older versions of Citrus for internal use
+          #000 Older versions of Citrus for internal use
         </action>
     </release>
   </body>
