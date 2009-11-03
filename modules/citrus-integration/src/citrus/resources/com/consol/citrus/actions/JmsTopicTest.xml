@@ -3,10 +3,10 @@
     <testcase name="JmsTopicTest">
 		<meta-info>
 			<author>Christoph Deppisch</author>
-			<creationdate>2009-09-01</creationdate>
+			<creationdate>2009-11-02</creationdate>
 			<status>FINAL</status>
 			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2009-09-01T00:00:00</last-updated-on>
+			<last-updated-on>2009-11-02T00:00:00</last-updated-on>
 		</meta-info>
 		
         <variables>
