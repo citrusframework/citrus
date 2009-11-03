@@ -60,27 +60,31 @@
                 </header>
               </receive>
               
-              <send with="helloTopicRequestSender">
-                <description>
-                    Send asynchronous hello request: TestFramework -> HelloService
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                         <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                             <messageId>${messageId}</messageId>
-                             <correlationId>${correlationId}</correlationId>
-                             <user>${user}</user>
-                             <text>Hello TestFramework</text>
-                         </HelloRequest>                              
-                      ]]>
-                  </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-              </send>
+              <sequential>
+                  <sleep time="1"/>
+                  
+                  <send with="helloTopicRequestSender">
+                    <description>
+                        Send asynchronous hello request: TestFramework -> HelloService
+                    </description>
+                    <message>
+                        <data>
+                            <![CDATA[
+                             <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                 <messageId>${messageId}</messageId>
+                                 <correlationId>${correlationId}</correlationId>
+                                 <user>${user}</user>
+                                 <text>Hello TestFramework</text>
+                             </HelloRequest>                              
+                          ]]>
+                      </data>
+                    </message>
+                    <header>
+                        <element name="Operation" value="sayHello"/>
+                        <element name="CorrelationId" value="${correlationId}"/>
+                    </header>
+                  </send>
+              </sequential>
            </parallel>
         </actions>
     </testcase>
