@@ -19,14 +19,11 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Topic;
+import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.integration.message.GenericMessage;
@@ -36,7 +33,7 @@ import org.springframework.jms.support.converter.MessageConverter;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
 
-public class JmsMessageReceiver extends AbstractJmsTemplateBasedAdapter implements MessageReceiver {
+public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageReceiver {
     
     private long receiveTimeout = 5000L;
     

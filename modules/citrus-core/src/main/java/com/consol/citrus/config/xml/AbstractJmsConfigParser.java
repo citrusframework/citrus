@@ -63,6 +63,11 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
                     "or one of '" + JmsParserConstants.DESTINATION_ATTRIBUTE + "' or '" + JmsParserConstants.DESTINATION_NAME_ATTRIBUTE + "' must be provided.");
         }
         
+        String pubSubDomain = element.getAttribute(JmsParserConstants.PUB_SUB_DOMAIN_ATTRIBUTE);
+        if(StringUtils.hasText(pubSubDomain)) {
+            builder.addPropertyValue(JmsParserConstants.PUB_SUB_DOMAIN_PROPERTY, pubSubDomain);
+        }
+        
         return builder.getBeanDefinition();
     }
     

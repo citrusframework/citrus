@@ -14,13 +14,31 @@
                                  destination-name="${jms.queue.hello.response}"/>
                                  
     <citrus:jms-message-sender id="helloTopicRequestSender" 
-                               jms-template="topicJmsTemplate"/>
+                               destination-name="${jms.topic.hello.request}"
+                               pub-sub-domain="true"/>
   
     <citrus:jms-message-receiver id="helloTopicRequestReceiver"
                                  receive-timeout="5000" 
-                                 jms-template="topicJmsTemplate"/>
+                                 destination-name="${jms.topic.hello.request}"
+                                 pub-sub-domain="true"/>
 	
-	<citrus:jms-sync-message-sender id="syncHelloRequestSender" 
+	<citrus:jms-sync-message-sender id="syncHelloTopicRequestSender" 
+                                    destination-name="${jms.topic.hello.sync.request}"
+                                    reply-handler="syncHelloResponseHandler"
+                                    reply-timeout="1000"
+                                    pub-sub-domain="true"/>
+                                    
+    <citrus:jms-sync-message-receiver id="syncHelloTopicRequestReceiver"
+                                      receive-timeout="5000" 
+                                      destination-name="${jms.topic.hello.sync.request}"
+                                      reply-message-correlator="replyMessageCorrelator"
+                                      pub-sub-domain="true"/>
+  
+    <citrus:jms-reply-message-sender id="syncHelloTopicReplySender"
+                                     reply-destination-holder="syncHelloTopicRequestReceiver"
+                                     reply-message-correlator="replyMessageCorrelator"/>                                    
+                                    
+    <citrus:jms-sync-message-sender id="syncHelloRequestSender" 
                                     destination-name="${jms.queue.hello.sync.request}"
                                     reply-handler="syncHelloResponseHandler"
                                     reply-timeout="1000"/>

@@ -23,6 +23,7 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
@@ -36,7 +37,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
-public class JmsSyncMessageSender implements MessageSender {
+public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
 
     private ConnectionFactory connectionFactory;
     
@@ -53,6 +54,10 @@ public class JmsSyncMessageSender implements MessageSender {
     private long replyTimeout = 5000L;
     
     private ReplyMessageCorrelator correlator = null;
+    
+    private boolean pubSubDomain = false;
+    
+    private String name;
     
     /**
      * Logger
@@ -88,14 +93,19 @@ public class JmsSyncMessageSender implements MessageSender {
             replyDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyDestination);
             connection.start();
-            messageProducer.send(jmsRequest);
             if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyDestination);
-            } else {
+            } else if(replyDestination instanceof Queue) {
                 String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
                 String messageSelector = "JMSCorrelationID = '" + messageId + "'";
                 messageConsumer = session.createConsumer(replyDestination, messageSelector);
+            } else {
+                String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
+                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
+                messageConsumer = session.createDurableSubscriber((Topic)replyDestination, name, messageSelector, false);
             }
+            
+            messageProducer.send(jmsRequest);
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
@@ -139,15 +149,19 @@ public class JmsSyncMessageSender implements MessageSender {
             } else {
                 return new DynamicDestinationResolver().resolveDestinationName(session, 
                                 message.getHeaders().getReplyChannel().toString(), 
-                                false);
+                                pubSubDomain);
             }
         } else if (replyDestination != null) {
             return replyDestination;
         } else if (StringUtils.hasText(replyDestinationName)) {
-            return new DynamicDestinationResolver().resolveDestinationName(session, this.replyDestinationName, false);
+            return new DynamicDestinationResolver().resolveDestinationName(session, this.replyDestinationName, pubSubDomain);
         }
         
-        return session.createTemporaryQueue();
+        if(pubSubDomain && session instanceof TopicSession){
+            return session.createTemporaryTopic();
+        } else {
+            return session.createTemporaryQueue();
+        }
     }
 
     private Destination getDestination(Session session) throws JMSException {
@@ -155,7 +169,7 @@ public class JmsSyncMessageSender implements MessageSender {
             return destination;
         }
         
-        return new DynamicDestinationResolver().resolveDestinationName(session, destinationName, false);
+        return new DynamicDestinationResolver().resolveDestinationName(session, destinationName, pubSubDomain);
     }
     
     /**
@@ -185,9 +199,15 @@ public class JmsSyncMessageSender implements MessageSender {
      * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
-        if (connectionFactory instanceof QueueConnectionFactory) {
+        if (!pubSubDomain && connectionFactory instanceof QueueConnectionFactory) {
             return ((QueueConnectionFactory) connectionFactory).createQueueConnection();
+        } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
+            return ((TopicConnectionFactory) connectionFactory).createTopicConnection();
+        } else {
+            log.warn("Not able to create a connection with connection factory '" + connectionFactory + "'" +
+                    " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
         }
+        
         return connectionFactory.createConnection();
     }
     
@@ -198,9 +218,16 @@ public class JmsSyncMessageSender implements MessageSender {
      * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
-        if (connection instanceof QueueConnection) {
+        if (!pubSubDomain && connection instanceof QueueConnection) {
             return ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+        } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
+            connection.setClientID(name);
+            return ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+        } else {
+            log.warn("Not able to create a session with connection factory '" + connectionFactory + "'" +
+                    " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
         }
+        
         return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
     
@@ -276,5 +303,23 @@ public class JmsSyncMessageSender implements MessageSender {
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
+    }
+
+    /**
+     * @param pubSubDomain the pubSubDomain to set
+     */
+    public void setPubSubDomain(boolean pubSubDomain) {
+        this.pubSubDomain = pubSubDomain;
+    }
+
+    /**
+     * @return the pubSubDomain
+     */
+    public boolean isPubSubDomain() {
+        return pubSubDomain;
+    }
+
+    public void setBeanName(String name) {
+        this.name = name;
     }
 }

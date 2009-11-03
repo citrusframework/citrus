@@ -15,14 +15,6 @@
 		<property name="brokerURL" value="tcp://localhost:61616" />
 	</bean>
   
-    <bean id="topicJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory">
-            <ref bean="connectionFactory"/>
-        </property>
-        <property name="defaultDestinationName" value="Citrus.Test.Topic"/>
-        <property name="pubSubDomain" value="true"/>
-    </bean>
-
     <!-- bean id="connectionFactory" class="com.tibco.tibjms.TibjmsQueueConnectionFactory">
         <property name="serverUrl" value="tcp://localhost:61616" />
         <property name="userName" value="admin"/>

@@ -64,4 +64,9 @@ public class JmsParserConstants {
     public static final String REPLY_CORRELATOR_ATTRIBUTE = "reply-message-correlator";
 
     public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
+
+    public static final String PUB_SUB_DOMAIN_ATTRIBUTE = "pub-sub-domain";
+
+    public static final String PUB_SUB_DOMAIN_PROPERTY = "pubSubDomain";
+    
 }

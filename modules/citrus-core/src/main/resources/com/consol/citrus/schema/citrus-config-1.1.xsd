@@ -75,5 +75,6 @@
         <xs:attribute name="destination-name" type="xs:string"/>
         <xs:attribute name="connection-factory" type="xs:string"/>
         <xs:attribute name="jms-template" type="xs:string"/>
+        <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
     </xs:complexType>
 </xs:schema>
