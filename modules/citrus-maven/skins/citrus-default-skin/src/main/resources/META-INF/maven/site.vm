@@ -363,7 +363,7 @@
         </div>
         <div id="footer">
             <div class="xleft">#publishDate( "bottom" $decoration.publishDate $decoration.version )</div>
-            <div class="xright">&#169;#copyright() - <a href="http://maven.apache.org/privacy-policy.html">Privacy Policy</a></div>
+            <div class="xright">&#169;#copyright() - <a href="http://www.consol.de/impressum/">Imprint</a></div>
             <div class="clear">
               <hr/>
             </div>
