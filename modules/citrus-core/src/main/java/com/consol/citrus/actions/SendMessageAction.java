@@ -19,7 +19,6 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import org.springframework.integration.message.MessageBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.util.FileUtils;
 
 
 /**
@@ -74,7 +74,7 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        Message message = createMessage(context);
+        Message<?> message = createMessage(context);
         
         context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
         
@@ -86,16 +86,7 @@ public class SendMessageAction extends AbstractTestAction {
             String messagePayload = null;
             
             if (messageResource != null) {
-                BufferedInputStream reader = new BufferedInputStream(messageResource.getInputStream());
-                StringBuffer contentBuffer = new StringBuffer();
-                
-                byte[] contents = new byte[1024];
-                int bytesRead=0;
-                while( (bytesRead = reader.read(contents)) != -1){
-                    contentBuffer.append(new String(contents, 0, bytesRead));
-                }
-                
-                messagePayload = contentBuffer.toString();
+                messagePayload = FileUtils.readToString(messageResource);
             } else if (messageData != null){
                 messagePayload = context.replaceDynamicContentInString(messageData);
             } else {

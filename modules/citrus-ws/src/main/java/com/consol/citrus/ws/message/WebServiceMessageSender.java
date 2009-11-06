@@ -27,13 +27,14 @@ import javax.xml.transform.TransformerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.*;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.*;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
@@ -56,10 +57,10 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     private static final Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
     
     public void send(Message<?> message) {
-        send(message, null, null, null);
+        send(message, null);
     }
     
-    public void send(final Message<?> message, final Resource attachment, final String contentId, final String contentType) {
+    public void send(final Message<?> message, final Attachment attachment) {
         Assert.notNull(message, "Can not send empty message");
         
         log.info("Sending message to: " + getDefaultUri());
@@ -105,14 +106,14 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                         
                         if(attachment != null) {
                             if(log.isDebugEnabled()) {
-                                log.debug("Adding attachment to SOAP message: " + attachment.getFilename() + "('" + contentId + "', '" + contentType + "')");
+                                log.debug("Adding attachment to SOAP message: '" + attachment.getContentId() + "' ('" + attachment.getContentType() + "')");
                             }
                             
-                            soapRequest.addAttachment(contentId, new InputStreamSource() {
+                            soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
                                 public InputStream getInputStream() throws IOException {
                                     return attachment.getInputStream();
                                 }
-                            }, contentType);
+                            }, attachment.getContentType());
                         }
                     }
         }, result);

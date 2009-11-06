@@ -19,7 +19,6 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -36,10 +35,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.MissingExpectedMessageException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MissingExpectedMessageException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.XMLMessageValidator;
@@ -187,16 +187,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             String expectedMessagePayload = null;
             
             if (messageResource != null) {
-                BufferedInputStream reader = new BufferedInputStream(messageResource.getInputStream());
-                StringBuffer contentBuffer = new StringBuffer();
-                
-                byte[] contents = new byte[1024];
-                int bytesRead=0;
-                while( (bytesRead = reader.read(contents)) != -1){
-                    contentBuffer.append(new String(contents, 0, bytesRead));
-                }
-                
-                expectedMessagePayload = contentBuffer.toString();
+                expectedMessagePayload = FileUtils.readToString(messageResource);
             } else if (messageData != null){
                 expectedMessagePayload = context.replaceDynamicContentInString(messageData);
             } else if (messageElements.isEmpty() == false){

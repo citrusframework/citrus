@@ -46,15 +46,17 @@
                     <xs:sequence>
                         <xs:element name="attachment">
                             <xs:complexType>
-                                <xs:sequence>
+                                <xs:choice>
+                                    <xs:element name="data" type="xs:string"/>
                                     <xs:element name="resource">
                                         <xs:complexType>
                                             <xs:attribute name="file" type="xs:string" use="required"/>
                                         </xs:complexType>
                                     </xs:element>
-                                </xs:sequence>
+                                </xs:choice>
                                 <xs:attribute name="content-id"/>
                                 <xs:attribute name="content-type"/>
+                                <xs:attribute name="charset-name"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>

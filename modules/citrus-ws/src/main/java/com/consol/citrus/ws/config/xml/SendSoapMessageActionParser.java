@@ -103,16 +103,26 @@ public class SendSoapMessageActionParser implements BeanDefinitionParser {
             builder.addPropertyValue("contentType", contentType);
         }
         
+        String charset = attachmentElement.getAttribute("charset-name");
+        if(StringUtils.hasText(charset)) {
+            builder.addPropertyValue("charsetName", charset);
+        }
+        
         if (attachmentElement != null) {
+            Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
+            if (attachmentDataElement != null) {
+                builder.addPropertyValue("attachmentData", DomUtils.getTextValue(attachmentDataElement));
+            }
+            
             Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
             if (attachmentResourceElement != null) {
                 String attachmentFilePath = attachmentResourceElement.getAttribute("file");
                 if (attachmentFilePath.startsWith("classpath:")) {
-                    builder.addPropertyValue("attachment", new ClassPathResource(attachmentFilePath.substring("classpath:".length())));
+                    builder.addPropertyValue("attachmentResource", new ClassPathResource(attachmentFilePath.substring("classpath:".length())));
                 } else if (attachmentFilePath.startsWith("file:")) {
-                    builder.addPropertyValue("attachment", new FileSystemResource(attachmentFilePath.substring("file:".length())));
+                    builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath.substring("file:".length())));
                 } else {
-                    builder.addPropertyValue("attachment", new FileSystemResource(attachmentFilePath));
+                    builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath));
                 }
             }
         }

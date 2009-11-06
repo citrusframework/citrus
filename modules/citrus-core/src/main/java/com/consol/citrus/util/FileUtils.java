@@ -19,11 +19,10 @@
 
 package com.consol.citrus.util;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.io.*;
+import java.util.*;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Class to provide general file utilities, such as listing all XML files in a directory. Or finding certain
@@ -34,6 +33,24 @@ import java.util.Stack;
  *
  */
 public class FileUtils {
+    
+    private FileUtils() {
+        //prevent instantiation
+    }
+    
+    public static String readToString(Resource resource) throws IOException {
+        BufferedInputStream reader = new BufferedInputStream(resource.getInputStream());
+        StringBuilder builder = new StringBuilder();
+        
+        byte[] contents = new byte[1024];
+        int bytesRead=0;
+        while( (bytesRead = reader.read(contents)) != -1){
+            builder.append(new String(contents, 0, bytesRead));
+        }
+        
+        return builder.toString();
+    }
+    
     /**
      * Method to retrieve all test defining XML files in given directory.
      * Subfolders are supported.
