@@ -71,7 +71,7 @@ public class Parallel extends AbstractTestAction {
         if(!exceptions.isEmpty()) {
             if(exceptions.size() == 1) {
                 Exception exception = exceptions.pop();
-                throw new  CitrusRuntimeException("Parallel container failed with exception: " + exception.getMessage(), exception);
+                throw new  CitrusRuntimeException("Parallel container failed with exception: " + exception, exception);
             } else {
                 throw new  CitrusRuntimeException("Parallel container failed! Caused by several errors in embedded test actions");
             }
