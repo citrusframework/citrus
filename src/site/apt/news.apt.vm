@@ -4,6 +4,12 @@
  
 News
 
+* Nov. 09, 2009 <<Improved JMS Topic support in version 1.1-SNAPSHOT>>
+ 
+ Citrus talks to JMS Topics. Version 1.1-SNAPSHOT fixed and improved the handling of JMS Topics. With the latest version someone
+ can easily publish and subscribe to JMS Topics. Still open is the support for durable subscribers, but we are working on it. 
+ All other improvements and fixes in this version are listed in the {{{changes-report.html}changes report}}.  
+
 * Nov. 02, 2009 <<Bugfix update for snapshot version 1.1>>
  
  Version 1.1-SNAPSHOT has fixed some issues. The {{{changes-report.html}changes report}} gives you the detailed picture on the latest version.
