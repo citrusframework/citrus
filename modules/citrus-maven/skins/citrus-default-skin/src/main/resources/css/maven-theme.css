@@ -18,10 +18,10 @@
  */
 
 body {
-  background: #F0F0F0
-    url(../images/bg_citrus.png)
-    no-repeat left top;
-  background-repeat: no-repeat;
+  background: #DADADA
+    url(../images/bg_body.gif)
+    repeat-x left top;
+  background-repeat: repeat-x;
   font-family: Verdana, Helvetica, Arial, sans-serif;
   margin-left: auto;
   margin-right: auto;
@@ -84,15 +84,14 @@ p {
   color: #000;
 }
 #container {
-  padding-top: 10px;
   margin: 0 auto;
-  padding-bottom: 20px;
   text-align: left;
   width: 978px;
   height: 100%;
+  background: transparent url(../images/bg_main.png) repeat-y scroll 0 0;
 }
 #header { 
-  background: #F0F0F0 url(../images/header.png) no-repeat scroll 0 0;
+  background: #DADADA url(../images/header.png) no-repeat scroll 0 0;
 }
 #bannerLeft img {
   margin-left: 15px;
@@ -104,20 +103,21 @@ p {
 }
 #breadcrumbs {
   height: 6px;
-  padding: 5px 10px 14px 20px;
+  padding: 5px 10px 14px 205px;
 }
 * html #breadcrumbs {
   padding-bottom: 8px;
 }
 #main {
-  background: transparent url(../images/bg_main.png) repeat-y scroll 0 0;
+  background: transparent url(../images/header.png) no-repeat scroll 0 0;
   padding-bottom: 10px;
+  padding-top: 188px;
 }
 #bodyColumn {
   padding-left:25px;
   padding-right:25px;
   height: 100%;
-  margin-left: 184px;
+  margin-left: 185px;
   margin-right: 0px;
 }
 #leftColumn {
@@ -188,12 +188,12 @@ table {
 .xright a:hover {
   color: #003300;
 }
-#breadcrumbs .xright a:link, #breadcrumbs .xright a:visited, #breadcrumbs .xright a:active, #breadcrumbs .xright a:hover {
+#breadcrumbs .xleft a:link, #breadcrumbs .xleft a:visited, #breadcrumbs .xleft a:active, #breadcrumbs .xleft a:hover {
   color: #FF9622;
   font-weight: bold;
 }
 #banner {
-  height: 133px;
+  height: 235px;
 }
 
 #navcolumn ul {
@@ -221,10 +221,11 @@ table {
 #footer {
   padding-top: 5px;
   padding-right: 10px;
+  padding-left: 205px;
   color: #333333;
   height: 17px;
-  width: 958px;
-  background: transparent url(../images/bg_footer.png) repeat-y scroll 0 0;
+  background: #DADADA url(../images/bg_footer.png) repeat-y scroll 0 0;
+  margin-bottom: 10px;
 }
 #navcolumn img {
   margin-left: 10px;

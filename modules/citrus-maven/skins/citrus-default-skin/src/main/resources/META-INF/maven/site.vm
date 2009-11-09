@@ -318,31 +318,6 @@
   </head>
   <body class="composite">
     <div id="container">
-        <div id="header">
-            <div id="banner">
-              #if ( $StringUtils.isEmpty( $decoration.bannerLeft ) || $StringUtils.isEmpty( $decoration.bannerLeft.src ))
-                <a href="http://www.citrusframework.org" id="bannerLeft"><img src="$relativePath/images/logo_citrus.png" alt="Citrus Logo" /></a>
-              #else
-                #banner( $decoration.bannerLeft "bannerLeft" )
-              #end
-              
-              #if ( $StringUtils.isEmpty( $decoration.bannerRight ) )
-                <a href="http://www.consol.de" id="bannerRight"></a>
-              #else
-                #banner( $decoration.bannerRight "bannerRight" )
-              #end
-              <div class="clear">
-                <hr/>
-              </div>
-            </div>
-            <div id="breadcrumbs">
-              #publishDate( "left" $decoration.publishDate $decoration.version )
-              <div class="xright">#links( $decoration.body.links )#publishDate( "right" $decoration.publishDate $decoration.version )</div>
-              <div class="clear">
-                <hr/>
-              </div>
-            </div>
-        </div>
         <div id="main">
             <div id="leftColumn">
               <div id="navcolumn">
