@@ -17,10 +17,10 @@
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
         <action dev="deppisch" type="update">
-          #217 Improved JMS Topic support in sender/receiver
+          #216 Improved JMS Topic support in sender/receiver
         </action>
         <action dev="deppisch" type="fix">
-          #218 Fixed sender/receiver configuration when using JMS topics
+          #217 Fixed sender/receiver configuration when using JMS topics
         </action>
         <action dev="deppisch" type="update">
           #215 Parallel container failing meaningful when handling single exception
