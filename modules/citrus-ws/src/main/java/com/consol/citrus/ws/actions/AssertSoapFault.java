@@ -94,7 +94,7 @@ public class AssertSoapFault extends AbstractTestAction {
                 log.info("SOAP fault validation successful");
                 return;
             } else {
-                throw new ValidationException("SOAP fault validation failed! Caught exception type does not fit - expected: '" + SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'");
+                throw new ValidationException("SOAP fault validation failed! Caught exception type does not fit - expected: '" + SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
             }
         }
 
