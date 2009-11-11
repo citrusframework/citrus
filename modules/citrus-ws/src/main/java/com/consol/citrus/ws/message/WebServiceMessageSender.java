@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.integration.core.Message;
+import org.springframework.integration.core.MessageHeaders;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -86,7 +87,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                         SoapMessage soapRequest = ((SoapMessage)requestMessage);
                         
                         for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-                            if(headerEntry.getKey().startsWith("springintegration")) {
+                            if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                                 continue;
                             }
                             
