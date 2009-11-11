@@ -19,8 +19,10 @@
 
 package com.consol.citrus.util;
 
+import org.springframework.integration.core.MessageHeaders;
+
 public class MessageUtils {
     public static boolean isSpringIntegrationHeaderEntry(String key) {
-        return key.startsWith("springintegration_");
+        return key.startsWith(MessageHeaders.PREFIX);
     }
 }
