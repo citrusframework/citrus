@@ -35,11 +35,11 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
 
 public class NamespaceTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

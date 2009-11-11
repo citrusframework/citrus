@@ -34,7 +34,7 @@ import com.consol.citrus.message.MessageReceiver;
 
 public class DTDValidationTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
-import javax.xml.namespace.NamespaceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +34,12 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.MissingExpectedMessageException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.XmlValidationContext;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
@@ -52,23 +49,11 @@ import com.consol.citrus.xml.NamespaceContextImpl;
  * @author deppisch Christoph Deppisch Consol*GmbH 2008
  */
 public class ReceiveMessageAction extends AbstractTestAction {
-    /** Map holding message elements to be overwritten before sending */
-    private Map<String, String> messageElements = new HashMap<String, String>();
-
-    /** Map containing header values. The received message must fit this header */
-    private Map<String, String> headerValues = new HashMap<String, String>();
-
     /** Map extracting message elements to variables */
     private Map<String, String> extractMessageElements = new HashMap<String, String>();
 
     /** Map extracting header values to variables */
     private Map<String, String> extractHeaderValues = new HashMap<String, String>();
-
-    /** Map holding message elements that will be ignored in validation */
-    private Set<String> ignoreMessageElements = new HashSet<String>();
-
-    /** Map for namespace validation */
-    private Map<String, String> expectedNamespaces = new HashMap<String, String>();
 
     /** Select messages to receive */
     private Map<String, String> messageSelector = new HashMap<String, String>();
@@ -86,12 +71,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /** Inline message resource definition as string */
     private String messageData;
+    
+    /** Map holding message elements to be overwritten before sending */
+    private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** Validator doing all message validation tasks */
     @Autowired
     private MessageValidator validator;
     
-    private boolean schemaValidation = true;
+    /** validation context holding information like expected message payload, ignored elements and so on */
+    private XmlValidationContext validationContext = new XmlValidationContext();
     
     /** XML namespace declaration used for xpath expression evaluation*/
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -116,8 +105,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        boolean isSuccess = true;
-        
         Message<?> receivedMessage;
         
         try {
@@ -149,15 +136,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
-            /** 2. Validation of the received header values.*/
-            if (hasHeaderValues()) {
-                log.info("Now validating message header values");
-
-                if (validator.validateMessageHeader(headerValues, receivedMessage.getHeaders(), context) == false) {
-                    isSuccess = false;
-                }
-            }
-
             if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
                 if (messageResource == null && (messageData == null || messageData.length() == 0)) {
                     log.info("Received message body is empty as expected - therefore no message validation");
@@ -167,111 +145,67 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             }
 
-            /** 3. If a XML validation schema is defined, is received message
-             * schema is validated.
-             */
-            if (schemaValidation) {
-                if(validator instanceof XMLMessageValidator) {
-                    ((XMLMessageValidator)validator).validateXMLSchema(receivedMessage);
-                } else {
-                    throw new CitrusRuntimeException("XML schema validation is not valid for validators other than XMLMessageValidator");
-                }
-            }
-
-            if(validator instanceof XMLMessageValidator) {
-                ((XMLMessageValidator)validator).validateNamespaces(expectedNamespaces, receivedMessage);
-            } else {
-                throw new CitrusRuntimeException("XML namespace validation is not valid for validators other than XMLMessageValidator");
-            }
-
-            String expectedMessagePayload = null;
-            
+            String expectedMessagePayload = "";
             if (messageResource != null) {
                 expectedMessagePayload = FileUtils.readToString(messageResource);
             } else if (messageData != null){
                 expectedMessagePayload = context.replaceDynamicContentInString(messageData);
-            } else if (messageElements.isEmpty() == false){
-                expectedMessagePayload = "";
-            } else {
-                throw new MissingExpectedMessageException("No validation elements specifyed. You need to declare at least one element to be validated");
             }
 
             if (StringUtils.hasText(expectedMessagePayload)) {
-                /** and for each key within setMessageValues the value is set
-                 * within the source.
-                 */
                 expectedMessagePayload = context.replaceMessageValues(messageElements, expectedMessagePayload);
-
                 Message<String> expectedMessage = MessageBuilder.withPayload(expectedMessagePayload).build();
                 
-                /** 4.2. The received message is validated against the source message,
-                 * but elements ignoreValues will not be validated.
-                 */
-                if (validator.validateMessage(expectedMessage, receivedMessage, ignoreMessageElements, context) == false) {
-                    isSuccess = false;
-                }
+                validationContext.setExpectedMessage(expectedMessage);
             }
             
-            NamespaceContext nsContext = null;
-            if(namespaces.isEmpty() == false) {
+            if(!namespaces.isEmpty()) {
                 namespaces.putAll(XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString()).getFirstChild()));
-                nsContext = new NamespaceContextImpl(namespaces);
+                validationContext.setNamespaceContext(new NamespaceContextImpl(namespaces));
             }
+            
+            validator.validateMessage(receivedMessage, context, validationContext);
+            validateMessage(receivedMessage, context);
 
-            /** 5. Validation of the received message values. */
-            if (messageData == null && messageResource == null &&
-                    ((XMLMessageValidator)validator).validateMessageElements(messageElements, receivedMessage, nsContext, context) == false) {
-                    isSuccess = false;
-            }
-
-            if (isSuccess == true) {
-                /* call getMessageValues() only if no error has occured until now,
-			 	   otherwise we may read false values */
-                /** 6. The received message element values for each key within
-                 * getMessageValues are read into the corresponding variables.
-                 */
-                context.createVariablesFromMessageValues(extractMessageElements, receivedMessage);
-            }
+            /** 6. The received message element values for each key within
+             * getMessageValues are read into the corresponding variables.
+             */
+            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage);
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
-
-        if (!isSuccess) {
-            throw new CitrusRuntimeException("Validation failed for received message");
-        }
     }
 
     /**
-     * Check if validate header values are present
-     * @return boolean flag to mark existence
+     * Override this message if you want to add additional message validation
+     * @param receivedMessage
      */
-    public boolean hasHeaderValues() {
-        return (this.headerValues != null && !this.headerValues.isEmpty());
+    protected void validateMessage(Message<?> receivedMessage, TestContext context) {
     }
 
     /**
      * Spring property setter.
      * @param setMessageValues
      */
-    public void setMessageElements(Map<String, String> messageElements) {
-        this.messageElements = messageElements;
+    public void setValidateMessageElements(Map<String, String> messageElements) {
+        validationContext.setExpectedMessageElements(messageElements);
     }
 
     /**
      * Spring property setter.
      * @param ignoreMessageElements
      */
-    public void setIgnoreMessageElements(Set<String> ignoreMessageElements) {
-        this.ignoreMessageElements = ignoreMessageElements;
+    public void setIgnoreMessageElements(Set<String> ignoredMessageElements) {
+        validationContext.setIgnoreMessageElements(ignoredMessageElements);
     }
 
     /**
      * @param expectedNamespaces the expectedNamespaces to set
      */
     public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
-        this.expectedNamespaces = expectedNamespaces;
+        validationContext.setExpectedNamespaces(expectedNamespaces);
     }
 
     /**
@@ -291,15 +225,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * @param headerValues the headerValues to set
      */
-    public void setHeaderValues(Map<String, String> headerValues) {
-        this.headerValues = headerValues;
-    }
-
-    /**
-     * @param setMessageValues the setMessageValues to set
-     */
-    public void setSetMessageValues(Map<String, String> setMessageValues) {
-        this.messageElements = setMessageValues;
+    public void setHeaderValues(Map<String, Object> headerValues) {
+        validationContext.setExpectedMessageHeaders(MessageBuilder.withPayload("")
+                .copyHeaders(headerValues).build().getHeaders());
     }
 
     /**
@@ -342,15 +270,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * @param validator the validator to set
      */
-    public void setValidator(XMLMessageValidator validator) {
+    public void setValidator(MessageValidator validator) {
         this.validator = validator;
-    }
-
-    /**
-     * @param validateMessageElements the validateMessageElements to set
-     */
-    public void setValidateMessageElements(Map<String, String> validateMessageElements) {
-        this.messageElements = validateMessageElements;
     }
 
     /**
@@ -385,7 +306,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param enableSchemaValidation the schemaValidation to set
      */
     public void setSchemaValidation(boolean enableSchemaValidation) {
-        this.schemaValidation = enableSchemaValidation;
+        validationContext.setSchemaValidation(enableSchemaValidation);
     }
 
     /**
@@ -393,5 +314,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
+    }
+
+    /**
+     * @param messageElements the messageElements to set
+     */
+    public void setMessageElements(Map<String, String> messageElements) {
+        this.messageElements = messageElements;
     }
 }

@@ -32,11 +32,11 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
 
 public class IgnoreElementsLegacyTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

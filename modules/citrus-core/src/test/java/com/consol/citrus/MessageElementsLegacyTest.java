@@ -35,11 +35,11 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
 
 public class MessageElementsLegacyTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -100,7 +100,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
 //        validateMessageElements.put("root.element.sub-elementA", "");
 //        validateMessageElements.put("sub-elementB", "");
 //        
-//        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+//        receiveMessageBean.setExpectedMessageElements(validateMessageElements);
 //        
 //        receiveMessageBean.execute();
 //    }

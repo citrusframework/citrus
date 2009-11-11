@@ -34,11 +34,11 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
 
 public class VariableSupportTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -198,7 +198,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         context.getVariables().put("variableB", "B");
         context.getVariables().put("variableC", "C");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "${variableA}");
         validateHeaderValues.put("header-valueB", "${variableB}");
         validateHeaderValues.put("header-valueC", "${variableC}");
@@ -238,7 +238,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         
         context.getVariables().put("variableC", "c");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "citrus:upperCase('a')");
         validateHeaderValues.put("header-valueB", "citrus:upperCase('b')");
         validateHeaderValues.put("header-valueC", "citrus:upperCase(${variableC})");
@@ -280,7 +280,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         context.getVariables().put("variableB", "header-valueB");
         context.getVariables().put("variableC", "header-valueC");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("${variableA}", "A");
         validateHeaderValues.put("${variableB}", "B");
         validateHeaderValues.put("${variableC}", "C");
@@ -318,7 +318,7 @@ public class VariableSupportTest extends AbstractBaseTest {
                 + "</element>" 
                 + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("citrus:concat('header', '-', 'valueA')", "A");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueB')", "B");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueC')", "C");

@@ -33,11 +33,11 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.validation.XMLMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
 
 public class HeaderValuesTest extends AbstractBaseTest {
     @Autowired
-    XMLMessageValidator validator;
+    MessageValidator validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -74,7 +74,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         
         receiveMessageBean.setHeaderValues(validateHeaderValues);
@@ -113,7 +113,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         validateHeaderValues.put("header-valueB", "B");
         validateHeaderValues.put("header-valueC", "C");
@@ -154,7 +154,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "wrong");
         
         receiveMessageBean.setHeaderValues(validateHeaderValues);
@@ -193,7 +193,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-wrong", "A");
         
         receiveMessageBean.setHeaderValues(validateHeaderValues);
@@ -232,7 +232,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "");
         validateHeaderValues.put("header-valueB", "");
         validateHeaderValues.put("header-valueC", "");
@@ -273,7 +273,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
                             + "</element>" 
                             + "</root>");
         
-        HashMap<String, String> validateHeaderValues = new HashMap<String, String>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "null");
         validateHeaderValues.put("header-valueB", "null");
         validateHeaderValues.put("header-valueC", "null");

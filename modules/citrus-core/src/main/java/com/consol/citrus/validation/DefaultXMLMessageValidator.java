@@ -33,23 +33,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageHeaders;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.w3c.dom.ls.LSException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
@@ -57,11 +50,12 @@ import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
 /**
- * Historical message validator. Using W3C DOM object validation.
+ * Default message validator implementation. Working on XML message payload
+ * providing 
  *
  * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
  */
-public class DefaultXMLMessageValidator implements XMLMessageValidator {
+public class DefaultXMLMessageValidator implements MessageValidator {
     /**
      * Logger
      */
@@ -73,32 +67,37 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
     @Autowired
     private XsdSchemaRepository schemaRepository;
     
-    /**
-     * @see com.consol.citrus.validation.MessageValidator#validateMessage(com.consol.citrus.message.Message, com.consol.citrus.message.Message, java.util.Map)
-     * @throws CitrusRuntimeException
-     */
-    public boolean validateMessage(Message<?> expectedMessage, Message<?> receivedMessage, Set<String> ignoreElements, TestContext context) {
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
+        if(validationContext instanceof XmlValidationContext == false) {
+            throw new IllegalArgumentException("DefaultXmlMessageValidator must have an instance of XmlValidationContext, " +
+                    "but was " + validationContext.getClass());
+        }
+        
+        if(validationContext.getExpectedMessage() != null && 
+                !(validationContext.getExpectedMessage().getPayload() instanceof String)) {
+            throw new IllegalArgumentException("DefaultXmlMessageValidator does only support message payload of type String, " +
+                    "but was " + validationContext.getExpectedMessage().getPayload().getClass());
+        }
+        
+        XmlValidationContext xmlValidationContext = (XmlValidationContext)validationContext;
+        
         try {
-            log.info("Start XML tree validation");
+            log.info("Start message validation");
             
-            Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-            Document source = XMLUtils.parseMessagePayload(expectedMessage.getPayload().toString());
-            
-            XMLUtils.stripWhitespaceNodes(received);
-            XMLUtils.stripWhitespaceNodes(source);
-            
-            if (log.isDebugEnabled()) {
-                log.debug("Received message:");
-                log.debug(XMLUtils.serialize(received));
-                log.debug("Source message:");
-                log.debug(XMLUtils.serialize(source));
+            if(xmlValidationContext.isSchemaValidation()) {
+                validateXMLSchema(receivedMessage);
+                validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
             }
-
-            validateXmlTree(received, source, ignoreElements);
+            
+            validateNamespaces(xmlValidationContext.getExpectedNamespaces(), receivedMessage);
+            validateMessageHeader(xmlValidationContext.getExpectedMessageHeaders(), receivedMessage.getHeaders(), context);
+            validateXmlPayload(receivedMessage, xmlValidationContext.getExpectedMessage(), xmlValidationContext.getIgnoreMessageElements());
+            validateMessageElements(xmlValidationContext.getExpectedMessageElements(), 
+                    receivedMessage, xmlValidationContext.getNamespaceContext(), 
+                    xmlValidationContext.getIgnoreMessageElements(), context);
+            
 
             log.info("XML tree validation finished successfully: All values OK");
-                
-            return true;
         } catch (ClassCastException e) {
             throw new CitrusRuntimeException(e);
         } catch (DOMException e) {
@@ -110,20 +109,17 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         }
     }
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.validation.MessageValidator#validateMessageHeader(java.util.Map, java.util.Map)
-     */
-    public boolean validateMessageHeader(Map<String, String> expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
-        if (expectedHeaderValues == null) {return false;}
-        if (expectedHeaderValues.isEmpty()) {return true;}
+    public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
+        if (CollectionUtils.isEmpty(expectedHeaderValues)) {return;}
         
         log.info("Start message header validation");
 
-        for (Entry<String, String> entry : expectedHeaderValues.entrySet()) {
+        for (Entry<String, Object> entry : expectedHeaderValues.entrySet()) {
             String headerName = entry.getKey();
-            String expectedValue = entry.getValue();
+            String expectedValue = entry.getValue().toString();
             String actualValue = null;
+            
+            if(headerName.startsWith(MessageHeaders.PREFIX)) {continue;}
             
             if (VariableUtils.isVariableName(headerName)) {
                 headerName = context.getVariable(headerName);
@@ -131,8 +127,8 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 headerName = FunctionUtils.resolveFunction(headerName, context);
             } 
             
-            if (receivedHeaderValues.containsKey(headerName)) {
-                actualValue = (String)receivedHeaderValues.get(headerName);
+            if (receivedHeaderValues.containsKey(headerName) && receivedHeaderValues.get(headerName) != null) {
+                actualValue = receivedHeaderValues.get(headerName).toString();
             } else {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
@@ -173,21 +169,14 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         }
         
         log.info("Validation of message headers finished successfully: All properties OK");
-        
-        return true;
     }
     
-    public boolean validateMessageElements(Map<String, String> elements, Message<?> receivedMessage, TestContext context) {
-        return validateMessageElements(elements, receivedMessage, null, context);
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.validation.XMLMessageValidator#validateMessageElements(java.util.Map, org.w3c.dom.Document)
-     */
-    public boolean validateMessageElements(Map<String, String> validateElements, Message<?> receivedMessage, NamespaceContext nsContext, TestContext context) {
-        if (validateElements == null) {return false;}
-        if (validateElements.isEmpty()) {return true;}
+    public void validateMessageElements(Map<String, String> validateElements, 
+            Message<?> receivedMessage, 
+            NamespaceContext nsContext,
+            Set<String> ignoreMessageElements,
+            TestContext context) {
+        if (CollectionUtils.isEmpty(validateElements)) {return;}
         
         log.info("Start XML elements validation");
 
@@ -215,6 +204,10 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
                 throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
             }
 
+            if(isNodeIgnored(node, ignoreMessageElements)) {
+                continue;
+            }
+            
             if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
                 actualValue = node.getFirstChild().getNodeValue();
             } else { //if (node.getNodeType() == Node.ATTRIBUTE_NODE)
@@ -257,29 +250,18 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         }
         
         log.info("Validation of XML elements finished successfully: All elements OK");
-        
-        return true;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.validation.XMLMessageValidator#validateDTD(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
-     */
-    public boolean validateDTD(Resource dtdResource, Message<?> receivedMessage) {
+    public void validateDTD(Resource dtdResource, Message<?> receivedMessage) {
         //TODO implement this
-        return false;
     }
 
-    /**
-     * @see com.consol.citrus.validation.XMLMessageValidator#validateXMLSchema(org.springframework.core.io.Resource, com.consol.citrus.message.Message)
-     * @throws CitrusRuntimeException
-     */
-    public boolean validateXMLSchema(Message<?> receivedMessage) {
+    public void validateXMLSchema(Message<?> receivedMessage) {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
             if(StringUtils.hasText(doc.getFirstChild().getNamespaceURI()) == false) {
-                return true;
+                return;
             }
              
             log.info("Starting XML schema validation ...");
@@ -302,18 +284,10 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         } catch (SAXException e) {
             throw new CitrusRuntimeException(e);
         }
-
-        return true;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.validation.XMLMessageValidator#validateNamespaces(org.w3c.dom.Document, java.util.Map)
-     */
-    public boolean validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
-        if (expectedNamespaces == null || expectedNamespaces.isEmpty()) {
-            return true;
-        }
+    public void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
+        if (CollectionUtils.isEmpty(expectedNamespaces)) {return;}
 
         log.info("Start XML namespace validation");
 
@@ -341,8 +315,27 @@ public class DefaultXMLMessageValidator implements XMLMessageValidator {
         }
 
         log.info("XML namespace validation finished successfully: All values OK");
-
-        return true;
+    }
+    
+    private void validateXmlPayload(Message<?> receivedMessage, Message<?> controlMessage, Set<String> ignoreMessageElements) {
+        if(controlMessage == null || controlMessage.getPayload() == null) {return;}
+        
+        log.info("Start XML tree validation ...");
+        
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+        Document source = XMLUtils.parseMessagePayload(controlMessage.getPayload().toString());
+        
+        XMLUtils.stripWhitespaceNodes(received);
+        XMLUtils.stripWhitespaceNodes(source);
+        
+        if (log.isDebugEnabled()) {
+            log.debug("Received message:");
+            log.debug(XMLUtils.serialize(received));
+            log.debug("Control message:");
+            log.debug(XMLUtils.serialize(source));
+        }
+        
+        validateXmlTree(received, source, ignoreMessageElements);
     }
 
     private void validateXmlTree(Node received, Node source, Set<String> ignoreMessageElements) {
