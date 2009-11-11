@@ -164,7 +164,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 validationContext.setNamespaceContext(new NamespaceContextImpl(namespaces));
             }
             
-            validator.validateMessage(receivedMessage, context, validationContext);
             validateMessage(receivedMessage, context);
 
             /** 6. The received message element values for each key within
@@ -183,6 +182,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param receivedMessage
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {
+        validator.validateMessage(receivedMessage, context, validationContext);
     }
 
     /**
