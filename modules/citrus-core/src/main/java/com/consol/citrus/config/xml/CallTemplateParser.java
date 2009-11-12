@@ -51,12 +51,12 @@ public class CallTemplateParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        List parameterElements = DomUtils.getChildElementsByTagName(element, "parameter");
+        List<?> parameterElements = DomUtils.getChildElementsByTagName(element, "parameter");
 
         if (parameterElements != null && parameterElements.size() > 0) {
             Map<String, String> parameters = new LinkedHashMap<String, String>();
 
-            for (Iterator iter = parameterElements.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = parameterElements.iterator(); iter.hasNext();) {
                 Element variableDefinition = (Element) iter.next();
                 parameters.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
             }
