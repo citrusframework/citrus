@@ -39,7 +39,11 @@ public class FileUtils {
     }
     
     public static String readToString(Resource resource) throws IOException {
-        BufferedInputStream reader = new BufferedInputStream(resource.getInputStream());
+        return readToString(resource.getInputStream());
+    }
+    
+    public static String readToString(InputStream inputStream) throws IOException {
+        BufferedInputStream reader = new BufferedInputStream(inputStream);
         StringBuilder builder = new StringBuilder();
         
         byte[] contents = new byte[1024];

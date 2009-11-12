@@ -44,23 +44,36 @@
             <xs:complexContent>
                 <xs:extension base="core:sendActionType">
                     <xs:sequence>
-                        <xs:element name="attachment">
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="resource">
-                                        <xs:complexType>
-                                            <xs:attribute name="file" type="xs:string" use="required"/>
-                                        </xs:complexType>
-                                    </xs:element>
-                                </xs:sequence>
-                                <xs:attribute name="content-id"/>
-                                <xs:attribute name="content-type"/>
-                            </xs:complexType>
-                        </xs:element>
+                        <xs:element name="attachment" type="soapAttachmentType"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="receive">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="core:receiveActionType">
+                    <xs:sequence>
+                        <xs:element name="attachment" type="soapAttachmentType"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="soapAttachmentType">
+        <xs:choice>
+            <xs:element name="data" type="xs:string"/>
+            <xs:element name="resource">
+                <xs:complexType>
+                    <xs:attribute name="file" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="content-id"/>
+        <xs:attribute name="content-type"/>
+        <xs:attribute name="charset-name"/>
+    </xs:complexType>    
 </xs:schema>

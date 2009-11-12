@@ -15,7 +15,7 @@
             <props>
                 <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
                 <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapMessageWithAttachmentRequest">soapAttachmentHandlingEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
             </props>
         </property>
         <property name="interceptors">
@@ -36,8 +36,6 @@
     </bean>
     
     <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.SoapFaultGeneratingEndpoint"/>
-    
-    <bean id="soapAttachmentHandlingEndpoint" class="com.consol.citrus.ws.SoapAttachmentHandlingEndpoint"/>
     
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">
@@ -75,7 +73,10 @@
                         <property name="brokerURL" value="tcp://localhost:61616" />
                     </bean>
                 </property>
-                <property name="replyTimeout" value="2000"/>
+                <property name="messageCallback">
+                    <bean class="com.consol.citrus.ws.message.SoapAttachmentAwareJmsMessageCallback"/>
+                </property>
+                <property name="replyTimeout" value="5000"/>
             </bean>
         </property>
     </bean>

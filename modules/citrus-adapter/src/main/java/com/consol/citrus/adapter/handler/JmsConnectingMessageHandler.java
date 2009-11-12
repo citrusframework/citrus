@@ -50,20 +50,27 @@ public class JmsConnectingMessageHandler implements MessageHandler {
     
     private long replyTimeout = 5000L;
     
+    private JmsMessageCallback messageCallback;
+    
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
+
+    public static interface JmsMessageCallback {
+        /** Opportunity to decorate generated jms message before forwarding */
+        void doWithMessage(javax.jms.Message message, Message<?> request) throws JMSException;
+    }
 
     /**
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(final Message<?> request) {
-        log.info("[HttpServer] Forwarding request to: " + getDestinationName());
+        log.info("Forwarding request to: " + getDestinationName());
 
         if(log.isDebugEnabled()) {
-            log.debug("[HttpServer] Message is: " + request.getPayload());
+            log.debug("Message is: " + request.getPayload());
         }
 
         Connection connection = null;
@@ -77,10 +84,16 @@ public class JmsConnectingMessageHandler implements MessageHandler {
             connection = createConnection();
             session = createSession(connection);
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(request, session);
+            
             messageProducer = session.createProducer(getDestination(session));
 
             replyDestination = getReplyDestination(session, request);
             jmsRequest.setJMSReplyTo(replyDestination);
+            
+            if(messageCallback != null) {
+                messageCallback.doWithMessage(jmsRequest, request);
+            }
+            
             connection.start();
             messageProducer.send(jmsRequest);
             if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
@@ -107,8 +120,9 @@ public class JmsConnectingMessageHandler implements MessageHandler {
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);
-            JmsUtils.closeSession(session);
             deleteTemporaryDestination(replyDestination);
+            JmsUtils.closeSession(session);
+            
             if(connection != null) {
                 ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
             }
@@ -260,5 +274,12 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      */
     public void setReplyTimeout(long replyTimeout) {
         this.replyTimeout = replyTimeout;
+    }
+
+    /**
+     * @param messageCallback the messageCallback to set
+     */
+    public void setMessageCallback(JmsMessageCallback messageCallback) {
+        this.messageCallback = messageCallback;
     }
 }

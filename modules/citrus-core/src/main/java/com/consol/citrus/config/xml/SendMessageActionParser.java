@@ -40,7 +40,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder builder;
 
         if (StringUtils.hasText(messageSenderReference)) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
+            builder = parseComponent(element, parserContext);
             builder.addPropertyValue("name", element.getLocalName());
 
             builder.addPropertyReference("messageSender", messageSenderReference);
@@ -101,5 +101,14 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         }
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * @param element
+     * @param parserContext
+     * @return
+     */
+    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
     }
 }

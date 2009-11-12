@@ -17,21 +17,18 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.ws.config.xml;
+package com.consol.citrus.ws;
 
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Element;
 
-import com.consol.citrus.config.xml.SendMessageActionParser;
-
-public class SendSoapMessageActionParser extends SendMessageActionParser {
-
-    public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.SendSoapMessageAction");
-        
-        SoapAttachmentParser.parseAttachment(builder, element, parserContext);
-
-        return builder;
-    }
+/**
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ */
+public abstract class SoapAttachmentHeaders {
+    public static final String PREFIX = "citrus_soapattachment_";
+    
+    public static final String CONTENT_ID = PREFIX + "contentId";
+    
+    public static final String CONTENT_TYPE = PREFIX + "contentType";
+    
+    public static final String CONTENT = PREFIX + "content";
 }

@@ -18,20 +18,71 @@
         <description>Sending SOAP messages with attachments</description>
         
         <actions>
-        	<ws:send with="webServiceRequestSender">
-                <message>
+            <parallel>
+            	<ws:send with="webServiceRequestSender">
+                    <message>
+                        <data>
+                            <![CDATA[
+                                <ns0:SoapMessageWithAttachmentRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                                    <ns0:Operation>Read the attachment</ns0:Operation>
+                                </ns0:SoapMessageWithAttachmentRequest>
+                            ]]>
+                        </data>
+                    </message>
+                    <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
+                        <ws:resource file="classpath:com/consol/citrus/ws/soapAttachment.txt"/>
+                    </ws:attachment>
+                </ws:send>
+                
+                <sequential>
+                    <ws:receive with="webServiceRequestReceiver">
+                        <message schema-validation="false">
+                            <data>
+                                <![CDATA[
+                                    <ns0:SoapMessageWithAttachmentRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                                        <ns0:Operation>Read the attachment</ns0:Operation>
+                                    </ns0:SoapMessageWithAttachmentRequest>
+                                ]]>
+                            </data>
+                        </message>
+                        <extract>
+                            <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                        </extract>
+                        <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
+                            <ws:resource file="classpath:com/consol/citrus/ws/soapAttachment.txt"/>
+                        </ws:attachment>
+                    </ws:receive>
+                    
+                    <send with="webServiceResponseSender">
+                        <message>
+                            <data>
+                                <![CDATA[
+                                    <ns0:SoapMessageWithAttachmentResponse xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                                        <ns0:Operation>Read the attachment</ns0:Operation>
+                                        <ns0:Success>true</ns0:Success>
+                                    </ns0:SoapMessageWithAttachmentResponse>
+                                ]]>
+                            </data>
+                        </message>
+                        <header>
+                            <element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                        </header>
+                      </send>
+                </sequential>
+            </parallel>
+            
+            <receive with="webServiceReplyHandler">
+                <message schema-validation="false">
                     <data>
                         <![CDATA[
-                            <ns0:SoapMessageWithAttachmentRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                            <ns0:SoapMessageWithAttachmentResponse xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
                                 <ns0:Operation>Read the attachment</ns0:Operation>
-                            </ns0:SoapMessageWithAttachmentRequest>
+                                <ns0:Success>true</ns0:Success>
+                            </ns0:SoapMessageWithAttachmentResponse>
                         ]]>
                     </data>
                 </message>
-                <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
-                    <ws:resource file="classpath:com/consol/citrus/ws/soapAttachment.txt"/>
-                </ws:attachment>
-            </ws:send>
+            </receive>
         </actions>
     </testcase>
 </spring:beans>

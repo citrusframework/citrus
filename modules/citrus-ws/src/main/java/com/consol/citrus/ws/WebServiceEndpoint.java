@@ -28,10 +28,13 @@ import javax.xml.transform.dom.DOMSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
+import org.springframework.integration.core.MessageHeaders;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.namespace.QNameUtils;
@@ -87,6 +90,22 @@ public class WebServiceEndpoint implements MessageEndpoint {
                     requestMessageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
                 }
             }
+            
+            Iterator<?> attachments = soapMessage.getAttachments();
+            while (attachments.hasNext()) {
+                Attachment attachment = (Attachment)attachments.next();
+                
+                if(StringUtils.hasText(attachment.getContentId())) {
+                    String contentId = attachment.getContentId();
+                    
+                    if(contentId.startsWith("<")) {contentId = contentId.substring(1);}
+                    if(contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
+                    
+                    requestMessageBuilder.setHeader(contentId, attachment);
+                } else {
+                    log.warn("Could not handle attachment with empty 'contentId'. Attachment is ignored in further processing");
+                }
+            }
         }
         
         Message<?> requestMessage = requestMessageBuilder.build();
@@ -121,7 +140,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
                 
-                if(headerEntry.getKey().startsWith("springintegration")) {
+                if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                     continue;
                 }
                 

@@ -26,85 +26,77 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
-public class SendSoapMessageAction extends SendMessageAction {
-
+/**
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ */
+public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private String attachmentData;
     
     private Resource attachmentResource;
     
-    private SoapAttachment attachment = new SoapAttachment();
+    private SoapAttachment controlAttachment = new SoapAttachment();
+    
+    @javax.annotation.Resource(name="soapAttachmentValidator")
+    private SoapAttachmentValidator attachmentValidator;
     
     @Override
-    public void execute(final TestContext context) {
-        Message<?> message = createMessage(context);
+    protected void validateMessage(Message<?> receivedMessage, TestContext context) {
+        super.validateMessage(receivedMessage, context);
         
-        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
-        
-        if(messageSender instanceof WebServiceMessageSender == false) {
-            throw new CitrusRuntimeException("Sending SOAP messages requires a " +
-            		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + message.getClass().getName() + "'");
-        }
-        
-        String content = null;
         try {
             if(StringUtils.hasText(attachmentData)) {
-                content = context.replaceDynamicContentInString(attachmentData);
+                controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
             } else if(attachmentResource != null) {
-                content = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
+                controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource)));
             }
-        
-            if(content != null) {
-                attachment.setContent(content);
-                ((WebServiceMessageSender)messageSender).send(message, attachment);
-            } else {
-                ((WebServiceMessageSender)messageSender).send(message);
-            }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
+            
+            attachmentValidator.validateAttachment(receivedMessage, controlAttachment);
         } catch (ParseException e) {
+            throw new CitrusRuntimeException(e);
+        } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }
-    
+
     /**
-     * @param attachment the attachment to set
+     * @param attachmentData the attachmentData to set
      */
-    public void setAttachmentResource(Resource attachment) {
-        this.attachmentResource = attachment;
+    public void setAttachmentData(String attachmentData) {
+        this.attachmentData = attachmentData;
+    }
+
+    /**
+     * @param attachmentResource the attachmentResource to set
+     */
+    public void setAttachmentResource(Resource attachmentResource) {
+        this.attachmentResource = attachmentResource;
     }
 
     /**
      * @param contentType the contentType to set
      */
     public void setContentType(String contentType) {
-        attachment.setContentType(contentType);
+        controlAttachment.setContentType(contentType);
     }
 
     /**
      * @param contentId the contentId to set
      */
     public void setContentId(String contentId) {
-        attachment.setContentId(contentId);
+        controlAttachment.setContentId(contentId);
     }
-    
+
     /**
      * @param charsetName the charsetName to set
      */
     public void setCharsetName(String charsetName) {
-        attachment.setCharsetName(charsetName);
-    }
-
-    /**
-     * @param attachmentContent the attachmentContent to set
-     */
-    public void setAttachmentContent(String attachmentContent) {
-        this.attachmentData = attachmentContent;
+        controlAttachment.setCharsetName(charsetName);
     }
 }

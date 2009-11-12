@@ -23,15 +23,19 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.xml.SendMessageActionParser;
+import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 
-public class SendSoapMessageActionParser extends SendMessageActionParser {
+/**
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ */
+public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 
-    public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.SendSoapMessageAction");
+    @Override
+    protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.ReceiveSoapMessageAction");
         
         SoapAttachmentParser.parseAttachment(builder, element, parserContext);
-
-        return builder;
+        
+        return builder; 
     }
 }
