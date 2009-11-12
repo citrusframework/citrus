@@ -22,7 +22,8 @@ package com.consol.citrus.ws.actions;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.springframework.core.io.Resource;
+import javax.annotation.Resource;
+
 import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
 
@@ -39,11 +40,11 @@ import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private String attachmentData;
     
-    private Resource attachmentResource;
+    private org.springframework.core.io.Resource attachmentResource;
     
     private SoapAttachment controlAttachment = new SoapAttachment();
     
-    @javax.annotation.Resource(name="soapAttachmentValidator")
+    @Resource(name="soapAttachmentValidator")
     private SoapAttachmentValidator attachmentValidator;
     
     @Override
@@ -75,7 +76,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     /**
      * @param attachmentResource the attachmentResource to set
      */
-    public void setAttachmentResource(Resource attachmentResource) {
+    public void setAttachmentResource(org.springframework.core.io.Resource attachmentResource) {
         this.attachmentResource = attachmentResource;
     }
 
