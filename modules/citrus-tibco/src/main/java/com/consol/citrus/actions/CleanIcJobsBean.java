@@ -87,7 +87,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
             //			WfJobManager manager = session.getWfJobManager();
             WfJobSet jobSet = session.getUser().getJobsOwned();
 
-            for (Iterator iter = jobSet.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = jobSet.iterator(); iter.hasNext();) {
                 WfJob job = (WfJob) iter.next();
 
                 if (!job.getName().equals("Permanent Job")) {
