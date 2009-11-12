@@ -60,6 +60,9 @@ a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:acti
   background: url(../images/newwindow.png) left top no-repeat;
   padding-left: 18px;
 }
+#navcolumn {
+  padding: 12px 4px 0 8px;
+}
 a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWindow:hover {
   background: url(../images/newwindow.png) right center no-repeat;
   padding-right: 18px;
@@ -125,11 +128,11 @@ p {
   padding-left: 5px;
 }
 #navcolumn h5 {
-  font-size: smaller;
+  font-size: 11px;
   border-bottom: 1px solid #aaaaaa;
   padding-top: 2px;
-  padding-left: 9px;
-  color: #49635a;
+  padding-left: 10px;
+  color: #333333;
   background-image: url(../images/h5.jpg);
   background-repeat: no-repeat;
   background-position: left bottom;
@@ -199,11 +202,14 @@ table {
 #navcolumn ul {
   margin: 5px 0 10px -0em;
 }
+#navcolumn ul ul{
+  margin: 1px 0px;
+}
 #navcolumn ul a {
   color: #333333;
 }
 #navcolumn ul a:hover {
-  color: red;
+  color: #333333;
 }
 #intro {
   border: solid #ccc 1px;
@@ -214,7 +220,6 @@ table {
   margin-left: 3px;
   color: #333333;
 }
-
 .subsection p {
   font-size: 12px;
 }
