@@ -214,8 +214,8 @@
     <section id="message-receiving-selector">
         <title>Messages selectors</title>
         
-        <para>The <emphasis>&lt;selector&gt;</emphasis> element inside the receiving action defines key-value paris in order to 
-        filter the messages beeing received. The key value paris apply to the message headers. This means that a receiver will 
+        <para>The <emphasis>&lt;selector&gt;</emphasis> element inside the receiving action defines key-value pairs in order to 
+        filter the messages beeing received. The key value pairs apply to the message headers. This means that a receiver will 
         only accept messages that meet the key-value pairs in its header. Using this mechanism you can explicitly listen for 
         messages that belong to your test. This is very helpful to avoid receiving messages from other tests that are still available 
         on the message destination.</para>
