@@ -14,6 +14,7 @@
   &actions-measure-time;
   &actions-create-variables;
   &actions-trace;
+  &actions-groovy;
   &actions-fail;
   &actions-input;
   &actions-load;

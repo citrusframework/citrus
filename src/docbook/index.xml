@@ -15,6 +15,7 @@
 <!ENTITY actions-measure-time     SYSTEM "actions-measure-time.xml">
 <!ENTITY actions-create-variables SYSTEM "actions-create-variables.xml">
 <!ENTITY actions-trace            SYSTEM "actions-trace.xml">
+<!ENTITY actions-groovy             SYSTEM "actions-groovy.xml">
 <!ENTITY actions-fail             SYSTEM "actions-fail.xml">
 <!ENTITY actions-input            SYSTEM "actions-input.xml">
 <!ENTITY actions-load             SYSTEM "actions-load.xml">
