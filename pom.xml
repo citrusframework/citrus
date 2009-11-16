@@ -427,6 +427,20 @@
         </snapshotRepository>
       </distributionManagement>
     </profile>
+    
+    <profile>
+      <id>release-local</id>
+      <distributionManagement>
+        <repository>
+          <id>local-release</id>
+          <url>file://d:/daten/temp/citrus-release</url>
+        </repository>
+        <snapshotRepository>
+          <id>local-snapshots</id>
+          <url>file://d:/daten/temp/citrus-snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
       
     <profile>
       <!-- Profile containing all settings if ConSol environment is not available -->
