@@ -68,9 +68,11 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
                 executeActions(context);
                 break;
             } catch (CitrusRuntimeException e) {
+                index++;
                 if (checkCondition()) {
                     throw new CitrusRuntimeException(e);
                 } else {
+                    index--;
                     log.info("Caught exception of type " + e.getClass().getName() + " '" + e.getMessage() + "' - repeating because of error");
                 }
             } finally {

@@ -89,6 +89,34 @@ public class IterateTest extends AbstractBaseTest {
     }
     
     @Test
+    public void testStart() {
+        Iterate iterate = new Iterate();
+        
+        List<TestAction> actions = new ArrayList<TestAction>();
+        TestAction action = EasyMock.createMock(TestAction.class);
+
+        reset(action);
+        
+        action.execute(context);
+        expectLastCall().times(5);
+        
+        replay(action);
+        
+        actions.add(action);
+        iterate.setActions(actions);
+        
+        iterate.setCondition("i lt= 10");
+        iterate.setIndexName("i");
+        iterate.setStep(2);
+        iterate.setIndex(2);
+        
+        iterate.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "10");
+    }
+    
+    @Test
     public void testNoIterationBasedOnCondition() {
         Iterate iterate = new Iterate();
         
