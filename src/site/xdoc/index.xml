@@ -7,19 +7,26 @@
     <section name="Welcome to Citrus">
       <p>
         Citrus is an integration testing framework written in Java that tests your software application to fit into your customer's 
-        environment. The tool can easily simulate surrounding systems across various transports (e.g. Http, JMS, TCP/IP, SOAP, ...) 
+        environment. The tool simulates surrounding systems across various transports (e.g. Http, JMS, TCP/IP, SOAP, ...) 
         in order to perform automatic end-to-end use case testing.
       </p>
       
-      <p>  
-        Citrus aims to
-        <ul>
-          <li>automate the integration testing for applications</li>
-          <li>easily simulate interface partners supporting a wide range of protocols</li>
-          <li>perform fully qualified use case end-to-end tests</li>
-          <li>provide high test coverage for your software application</li>          
-        </ul>
-      </p>
+      <div id="download">
+        <a href="dist/citrus-1.1-SNAPSHOT-src.zip"><img src="images/download.png"/></a>
+        <div>
+          <span id="download"><a href="dist/citrus-1.1-SNAPSHOT-src.zip">Download<br/>Citrus</a></span><br/>
+          <span id="download_text">Download the latest release 1.1-SNAPSHOT</span><br/>
+          <span id="download_more"><a href="download.html">More Downloads</a></span>
+        </div>
+      </div>
+      
+      <p>Citrus</p>
+      <ul>
+        <li>easily simulates interface partners supporting a wide range of protocols</li>
+        <li>automates the integration testing for enterprise applications</li>
+        <li>performs fully qualified use case end-to-end tests</li>
+        <li>brings back the fun for integration testing</li>          
+      </ul>
     </section>
     
     <section name="Overview">

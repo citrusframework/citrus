@@ -46,7 +46,7 @@ a:visited {
   color:#68a;
 }
 a:active, a:hover {
-  color:#990000;
+  color:#FEAB00;
 }
 #legend li.externalLink {
   background: url(../images/external.png) left top no-repeat;
@@ -252,4 +252,29 @@ table {
 
 .infomark {
   background-image: url(../images/icon_info_sml.gif);
+}
+div#download {
+  background: url(../images/download_box.png) no-repeat;
+  width: 225px;
+  height: 130px;
+  padding: 10px;
+  float: right;
+}
+div#download img {
+  float: left;
+  margin-right: 10px;
+}
+span#download a {
+  font-size: 130%;
+  font-weight: bold;
+  color: #B8B9BC;
+}
+span#download_text {
+  color: #B8B9BC;
+}
+span#download_more a {
+  font-weight: bold;
+  color: #FEAB00;
+  background: url(../images/download_arrow.png) no-repeat right;
+  padding-right: 20px;
 }
