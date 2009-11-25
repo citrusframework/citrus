@@ -22,19 +22,10 @@ package com.consol.citrus.actions;
 import java.util.Collections;
 import java.util.List;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.Session;
+import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
@@ -56,7 +47,6 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /** List of queues to be purged */
     private List<Queue> queues = Collections.emptyList();
     
-	@Autowired
     /** ConnectionFactory */
     private ConnectionFactory connectionFactory;
 
