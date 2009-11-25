@@ -19,6 +19,7 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.jms.Connection;
@@ -26,6 +27,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
+import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
@@ -48,10 +50,13 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class PurgeJmsQueuesAction extends AbstractTestAction {
 
-    /** List of queues to be purged */
-    private List<String> queueNames;
+    /** List of queue names to be purged */
+    private List<String> queueNames = Collections.emptyList();
 
-    @Autowired
+    /** List of queues to be purged */
+    private List<Queue> queues = Collections.emptyList();
+    
+	@Autowired
     /** ConnectionFactory */
     private ConnectionFactory connectionFactory;
 
@@ -73,36 +78,23 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
         Connection connection = null;
         Session session = null;
-        MessageConsumer messageConsumer = null;
         
         try {
         	connection = createConnection();
             session = createSession(connection);
             connection.start();
             
-            for (String queueName : queueNames) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Try to purge queue " + queueName);
-                }
-
-                messageConsumer = session.createConsumer(getDestination(session, queueName));
-                
-                javax.jms.Message message;
-                do {
-                	message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
-                	
-                    if (message != null && log.isDebugEnabled()) {
-                        log.debug("Removed message from queue " + queueName);
-                    }
-                } while (message != null);
-
-                JmsUtils.closeMessageConsumer(messageConsumer);
+            for (Queue queue : queues) {
+                purgeQueue(queue, session);
             }
+            for (String queueName : queueNames) {
+                purgeQueue(queueName, session);
+            }
+
         } catch (JMSException e) {
             log.error("Error while establishing jms queue connection", e);
             throw new CitrusRuntimeException(e);
         } finally {
-        	JmsUtils.closeMessageConsumer(messageConsumer);
             JmsUtils.closeSession(session);
 
             if(connection != null) {
@@ -112,6 +104,43 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
         log.info("JMS queues purged successfully");
     }
+
+    /** Purges a queue identified by its name. */
+    private void purgeQueue(String queueName, Session session) throws JMSException {
+        purgeDestination(getDestination(session, queueName), session, queueName);
+    }
+
+    /** Purges a queue identified by its instance. */
+    private void purgeQueue(Queue queue, Session session) throws JMSException {
+        purgeDestination(queue, session, queue.getQueueName());
+    }
+
+
+    private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
+        if (log.isDebugEnabled()) {
+            log.debug("Try to purge queue " + destinationName);
+        }
+
+        MessageConsumer messageConsumer = null;
+        try {
+            javax.jms.Message message;
+            do {
+                messageConsumer = session.createConsumer(destination);
+
+                message = (receiveTimeout >= 0) ? messageConsumer
+                        .receive(receiveTimeout) : messageConsumer.receive();
+    
+                if (message != null && log.isDebugEnabled()) {
+                    log.debug("Removed message from queue " + destinationName);
+                }
+            } while (message != null);
+    
+            JmsUtils.closeMessageConsumer(messageConsumer);
+        } finally {
+            JmsUtils.closeMessageConsumer(messageConsumer);
+        }
+    }
+    
     
     private Destination getDestination(Session session, String queueName) throws JMSException {
     	return new DynamicDestinationResolver().resolveDestinationName(session, queueName, false);
@@ -161,4 +190,12 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     public List<String> getQueueNames() {
         return queueNames;
     }
+
+    /**
+     * @param queues The queues which are to be purged.
+     */
+    public void setQueues(List<Queue> queues) {
+		this.queues = queues;
+	}
+
 }

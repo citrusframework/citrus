@@ -3,9 +3,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	
 	<citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
@@ -85,6 +87,17 @@
 				<value>${jms.queue.date.sync.request}</value>
 			</list>
 		</property>
+        <property name="queues">
+            <list>
+                <ref bean="testQueue1"/>
+                <ref bean="testQueue2"/>
+                <ref bean="testQueue3"/>
+            </list>
+        </property>
 	</bean>
-	
+    
+    <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
+    <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
+    <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
+    	
 </beans>

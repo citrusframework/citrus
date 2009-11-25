@@ -19,12 +19,12 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
@@ -35,6 +35,7 @@ import com.consol.citrus.actions.PurgeJmsQueuesAction;
 
 public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
+    @SuppressWarnings("unchecked")
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);
         beanDefinition.addPropertyValue("name", element.getLocalName());
@@ -55,12 +56,25 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
         
         List<String> queueNames = new ArrayList<String>();
+        ManagedList queueRefs = new ManagedList();
+        
         List<?> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
         for (Iterator<?> iter = queueElements.iterator(); iter.hasNext();) {
             Element queue = (Element) iter.next();
-            queueNames.add(queue.getAttribute("name"));
+            String queueName = queue.getAttribute("name");
+            String queueRef = queue.getAttribute("ref");
+            
+            if(StringUtils.hasText(queueName)) {
+                queueNames.add(queueName);
+            } else if(StringUtils.hasText(queueName)) {
+                queueRefs.add(BeanDefinitionBuilder.childBeanDefinition(queueRef).getBeanDefinition());
+            } else {
+                throw new BeanCreationException("Element 'queue' must set one of the attributes 'name' or 'ref'");
+            }
         }
+        
         beanDefinition.addPropertyValue("queueNames", queueNames);
+        beanDefinition.addPropertyValue("queues", queueRefs);
 
         return beanDefinition.getBeanDefinition();
     }

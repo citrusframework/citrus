@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="PurgeJmsQueuesIntegrationTest">
 		<meta-info>
 			<author>Christoph Deppisch</author>
@@ -48,6 +52,17 @@
                 <queue name="TestSuite.Queue.Dummy.Three.In"/>
                 <queue name="TestSuite.Queue.Dummy.Three.Out"/>
             </purge-jms-queues>
+            
+            <purge-jms-queues>
+                <queue ref="testQueue1"/>
+                <queue ref="testQueue2"/>
+                <queue ref="testQueue3"/>
+                <queue name="TestSuite.Queue.Dummy.One.In"/>
+                <queue name="TestSuite.Queue.Dummy.One.Out"/>
+                <queue name="TestSuite.Queue.Dummy.Three.In"/>
+                <queue name="TestSuite.Queue.Dummy.Three.Out"/>
+            </purge-jms-queues>
         </actions>
     </testcase>
+    
 </spring:beans>

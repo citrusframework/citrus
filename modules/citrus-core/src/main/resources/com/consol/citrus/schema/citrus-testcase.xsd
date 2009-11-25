@@ -361,7 +361,8 @@
                 <xs:element ref="description" minOccurs="0"/>
                 <xs:element name="queue" maxOccurs="unbounded">
                     <xs:complexType>
-                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="ref" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
