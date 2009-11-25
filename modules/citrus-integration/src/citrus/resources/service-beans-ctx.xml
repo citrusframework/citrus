@@ -71,6 +71,7 @@
     <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.dummy}"/>
     
 	<bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
+        <property name="connectionFactory" ref="connectionFactory"/>
 		<property name="queueNames">
 			<list>
 				<value>${jms.queue.http.request.forward}</value>
