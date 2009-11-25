@@ -66,7 +66,7 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
             
             if(StringUtils.hasText(queueName)) {
                 queueNames.add(queueName);
-            } else if(StringUtils.hasText(queueName)) {
+            } else if(StringUtils.hasText(queueRef)) {
                 queueRefs.add(BeanDefinitionBuilder.childBeanDefinition(queueRef).getBeanDefinition());
             } else {
                 throw new BeanCreationException("Element 'queue' must set one of the attributes 'name' or 'ref'");
