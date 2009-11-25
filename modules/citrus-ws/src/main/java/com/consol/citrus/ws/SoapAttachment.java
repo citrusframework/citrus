@@ -24,7 +24,6 @@ import java.io.*;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
-import org.apache.activemq.util.ByteArrayInputStream;
 import org.springframework.ws.mime.Attachment;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
