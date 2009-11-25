@@ -17,6 +17,12 @@
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
         <action dev="deppisch" type="update">
+          #220 Purge JMS queue destinations (JNDI support)
+        </action>
+        <action dev="deppisch" type="update">
+          #219 Validating SOAP attachments
+        </action>
+        <action dev="deppisch" type="update">
           #216 Improved JMS Topic support in sender/receiver
         </action>
         <action dev="deppisch" type="fix">
