@@ -55,6 +55,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
+    
+    private static final String DEFAULT_JMS_HEADER_PREFIX = "JMS";
 
     /**
      * @see org.springframework.ws.server.endpoint.MessageEndpoint#invoke(org.springframework.ws.context.MessageContext)
@@ -140,7 +142,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
                 
-                if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
+                if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX) || 
+                        headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                     continue;
                 }
                 
