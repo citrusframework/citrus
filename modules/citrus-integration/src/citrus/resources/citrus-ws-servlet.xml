@@ -64,6 +64,8 @@
     </bean>
     
     <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
+        <property name="defaultNamespaceUri" value="http://citrusframework.org/default"/>
+        <property name="defaultPrefix" value="ns0"/>
         <property name="messageHandler">
             <bean class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
                 <property name="destinationName" value="TestSuite.Ws.Stub.RequestQueue"/>

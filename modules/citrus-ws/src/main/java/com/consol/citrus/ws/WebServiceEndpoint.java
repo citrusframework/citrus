@@ -22,6 +22,7 @@ package com.consol.citrus.ws;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 
@@ -50,6 +51,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
 
     /** MessageHandler handling incoming requests and providing proper responses */
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
+    
+    /** Default namespace for all SOAP header entries */
+    private String defaultNamespaceUri;
+    
+    /** Default prefix for all SOAP header entries */
+    private String defaultPrefix = "";
     
     /**
      * Logger
@@ -152,9 +159,16 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 } else {
                     SoapHeaderElement headerElement;
                     if(QNameUtils.validateQName(headerEntry.getKey())) {
-                        headerElement = response.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
+                        QName qname = QNameUtils.parseQNameString(headerEntry.getKey());
+                        
+                        if(StringUtils.hasText(qname.getNamespaceURI())) {
+                            headerElement = response.getSoapHeader().addHeaderElement(qname);
+                        } else {
+                            headerElement = response.getSoapHeader().addHeaderElement(getDefaultQName(headerEntry.getKey()));
+                        }
                     } else {
-                        headerElement = response.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
+                        throw new SoapHeaderException("Failed to add SOAP header '" + headerEntry.getKey() + "', " +
+                        		"because of invalid QName");
                     }
                     
                     headerElement.setText(headerEntry.getValue().toString());
@@ -167,9 +181,36 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * @param key
+     * @return
+     */
+    private QName getDefaultQName(String localPart) {
+        if(StringUtils.hasText(defaultNamespaceUri)) {
+            return QNameUtils.createQName(defaultNamespaceUri, localPart, defaultPrefix);
+        } else {
+            throw new SoapHeaderException("Failed to add SOAP header '" + localPart + "', " +
+            		"because neither valid QName nor default namespace-uri is set!");
+        }
+    }
+
+    /**
      * @param messageHandler the messageHandler to set
      */
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
+    }
+
+    /**
+     * @param defaultNamespaceUri the defaultNamespaceUri to set
+     */
+    public void setDefaultNamespaceUri(String defaultNamespaceUri) {
+        this.defaultNamespaceUri = defaultNamespaceUri;
+    }
+
+    /**
+     * @param defaultPrefix the defaultPrefix to set
+     */
+    public void setDefaultPrefix(String defaultPrefix) {
+        this.defaultPrefix = defaultPrefix;
     }
 }
