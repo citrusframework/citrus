@@ -16,6 +16,15 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
+        <action dev="deppisch" type="add">
+          #196 Add documentation for auto-sleep in repeat-on-error-until-true 
+        </action>
+        <action dev="deppisch" type="add">
+          #194 Add documentation for Groovy support 
+        </action>
+        <action dev="deppisch" type="fix">
+          #221 JMS to SOAP header conversion
+        </action>
         <action dev="deppisch" type="update">
           #220 Purge JMS queue destinations (JNDI support)
         </action>
