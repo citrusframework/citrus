@@ -4,16 +4,6 @@
  
 Download Citrus
 
-  Citrus 1.0 is the current stable release.
-
-  <<Latest stable release>>: 1.0
-  
-  * citrus-1.0-with-dependencies ({{{dist/citrus-1.0-with-dependencies.zip}zip}}/{{{dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
-  
-  * citrus-1.0-src ({{{dist/citrus-1.0-src.zip}zip}}/{{{dist/citrus-1.0-src.tar.gz}tar.gz}})
-  
-  []
-  
   Citrus ${project.version} is the latest snapshot release. With this version you are always up to date with the newest features and bugfixes.
   Help us test the latest snapshot! 
 
@@ -24,7 +14,17 @@ Download Citrus
   * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
   
   []
+
+  Citrus 1.0 is the current stable release.
+
+  <<Latest stable release>>: 1.0
   
+  * citrus-1.0-with-dependencies ({{{dist/citrus-1.0-with-dependencies.zip}zip}}/{{{dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
+  
+  * citrus-1.0-src ({{{dist/citrus-1.0-src.zip}zip}}/{{{dist/citrus-1.0-src.tar.gz}tar.gz}})
+  
+  []
+    
   The Citrus project requires JDK 1.5 (or newer version) to run.
   
 Logging framework notice
