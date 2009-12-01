@@ -44,7 +44,7 @@
             <xs:complexContent>
                 <xs:extension base="core:sendActionType">
                     <xs:sequence>
-                        <xs:element name="attachment" type="soapAttachmentType"/>
+                        <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -56,7 +56,7 @@
             <xs:complexContent>
                 <xs:extension base="core:receiveActionType">
                     <xs:sequence>
-                        <xs:element name="attachment" type="soapAttachmentType"/>
+                        <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
