@@ -217,6 +217,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("${STATE}"), "in_progress");
     }
 	
+	@Test
     public void testResultSetValidationError() {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
@@ -233,7 +234,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         executeSQLQueryAction.setStatements(stmts);
         
         Map<String, String> validationElements = new HashMap<String, String>();
-        validationElements.put("ORDERTYPE", "xxl");
+        validationElements.put("ORDERTYPE", "xxl"); //this is supposed to cause an error
         validationElements.put("STATUS", "in_progress");
         
         executeSQLQueryAction.setValidationElements(validationElements);
@@ -241,10 +242,56 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         try {
             executeSQLQueryAction.execute(context);
         } catch (ValidationException e) {
-            Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
-            Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
-            Assert.assertNotNull(context.getVariable("${STATUS}"));
-            Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+            Assert.assertNull(context.getVariables().get("${ORDERTYPE}"));
+            Assert.assertNull(context.getVariables().get("${STATUS}"));
+            
+            return;
+        }
+        
+        Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
+    }
+    
+    @Test
+    public void testMultipleStatementsValidationError() {
+        String sql1 = "select ORDERTYPE, STATUS from orders where ID=5";
+        String sql2 = "select NAME, HEIGHT from customers where ID=1";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap1 = new HashMap<String, String>();
+        resultMap1.put("ORDERTYPE", "small");
+        resultMap1.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
+        
+        Map<String, String> resultMap2 = new HashMap<String, String>();
+        resultMap2.put("NAME", "Mickey Mouse");
+        resultMap2.put("HEIGHT", "0,3");
+        
+        expect(jdbcTemplate.queryForList(sql2)).andReturn(Collections.singletonList(resultMap2));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = new ArrayList<String>();
+        stmts.add(sql1);
+        stmts.add(sql2);
+        
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> validationElements = new HashMap<String, String>();
+        validationElements.put("ORDERTYPE", "small");
+        validationElements.put("STATUS", "in_progress");
+        validationElements.put("NAME", "Donald Duck"); //this is supposed to cause an error
+        validationElements.put("HEIGHT", "0,3");
+        
+        executeSQLQueryAction.setValidationElements(validationElements);
+        
+        try {
+            executeSQLQueryAction.execute(context);
+        } catch (ValidationException e) {
+            Assert.assertNull(context.getVariables().get("${ORDERTYPE}"));
+            Assert.assertNull(context.getVariables().get("${STATUS}"));
+            Assert.assertNull(context.getVariables().get("${NAME}"));
+            Assert.assertNull(context.getVariables().get("${HEIGHT}"));
             
             return;
         }
