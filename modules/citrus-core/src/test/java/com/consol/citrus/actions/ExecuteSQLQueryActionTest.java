@@ -31,6 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import com.consol.citrus.AbstractBaseTest;
+import com.consol.citrus.exceptions.ValidationException;
 
 public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	
@@ -214,5 +215,40 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("${TYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATE}"));
         Assert.assertEquals(context.getVariable("${STATE}"), "in_progress");
+    }
+	
+    public void testResultSetValidationError() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> validationElements = new HashMap<String, String>();
+        validationElements.put("ORDERTYPE", "xxl");
+        validationElements.put("STATUS", "in_progress");
+        
+        executeSQLQueryAction.setValidationElements(validationElements);
+        
+        try {
+            executeSQLQueryAction.execute(context);
+        } catch (ValidationException e) {
+            Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+            Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+            Assert.assertNotNull(context.getVariable("${STATUS}"));
+            Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+            
+            return;
+        }
+        
+        Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
     }
 }
