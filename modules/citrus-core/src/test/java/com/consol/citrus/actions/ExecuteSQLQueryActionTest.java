@@ -28,19 +28,19 @@ import java.util.*;
 import org.easymock.classextension.EasyMock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import com.consol.citrus.AbstractBaseTest;
 
 public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	
-    private ExecuteSQLQueryAction executeSQLQueryAction = new ExecuteSQLQueryAction();
+    private ExecuteSQLQueryAction executeSQLQueryAction;
     
     private JdbcTemplate jdbcTemplate = EasyMock.createMock(JdbcTemplate.class);
     
-    @BeforeClass
+    @BeforeMethod
     public void setUp() {
+        executeSQLQueryAction  = new ExecuteSQLQueryAction();
         executeSQLQueryAction.setJdbcTemplate(jdbcTemplate);
     }
     
@@ -128,5 +128,91 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));
         Assert.assertEquals(context.getVariable("${STATUS}"), "NULL");
+    }
+	
+	@Test
+    public void testVariableSupport() {
+	    context.setVariable("orderId", "5");
+	    
+        String sql = "select ORDERTYPE, STATUS from orders where ID=${orderId}";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList("select ORDERTYPE, STATUS from orders where ID=5")).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+	
+	@Test
+    public void testResultSetValidation() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> validationElements = new HashMap<String, String>();
+        validationElements.put("ORDERTYPE", "small");
+        validationElements.put("STATUS", "in_progress");
+        
+        executeSQLQueryAction.setValidationElements(validationElements);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+	
+	@Test
+    public void testResultSetValidationWithAliasNames() {
+        String sql = "select ORDERTYPE AS TYPE, STATUS AS STATE from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("TYPE", "small");
+        resultMap.put("STATE", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> validationElements = new HashMap<String, String>();
+        validationElements.put("TYPE", "small");
+        validationElements.put("STATE", "in_progress");
+        
+        executeSQLQueryAction.setValidationElements(validationElements);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${TYPE}"));
+        Assert.assertEquals(context.getVariable("${TYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATE}"));
+        Assert.assertEquals(context.getVariable("${STATE}"), "in_progress");
     }
 }
