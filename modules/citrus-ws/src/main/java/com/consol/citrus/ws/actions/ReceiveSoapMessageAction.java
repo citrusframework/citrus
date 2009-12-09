@@ -22,8 +22,6 @@ package com.consol.citrus.ws.actions;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
@@ -45,8 +43,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     
     private SoapAttachment controlAttachment = new SoapAttachment();
     
-    @Autowired()
-    @Qualifier("soapAttachmentValidator")
     private SoapAttachmentValidator attachmentValidator;
     
     @Override
@@ -101,5 +97,12 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      */
     public void setCharsetName(String charsetName) {
         controlAttachment.setCharsetName(charsetName);
+    }
+
+    /**
+     * @param attachmentValidator the attachmentValidator to set
+     */
+    public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
+        this.attachmentValidator = attachmentValidator;
     }
 }

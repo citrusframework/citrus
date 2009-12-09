@@ -56,7 +56,15 @@
             <xs:complexContent>
                 <xs:extension base="core:receiveActionType">
                     <xs:sequence>
-                        <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
+                        <xs:element name="attachment" minOccurs="0">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="soapAttachmentType">
+                                        <xs:attribute name="validator" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>

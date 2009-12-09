@@ -36,7 +36,7 @@ public class SoapAttachment implements Attachment {
     
     private String contentType = "text/plain";
     
-    private String contentId = "SOAPAttachment";
+    private String contentId = null;
     
     private String charsetName = "UTF-8";
     

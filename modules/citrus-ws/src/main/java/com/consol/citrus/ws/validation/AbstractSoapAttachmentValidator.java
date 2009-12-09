@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.SoapAttachment;
@@ -57,9 +58,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             
             SoapAttachment attachment = new SoapAttachment();
             
-            if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT_ID)) {
-                attachment.setContentId(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_ID).toString());
-            }
+            attachment.setContentId(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_ID).toString());
             
             if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT_TYPE)) {
                 attachment.setContentType(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_TYPE).toString());
@@ -69,50 +68,8 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                 attachment.setContent(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT).toString());
             }
             
-            if(attachment.getContentId() != null) {
-                Assert.isTrue(controlAttachment.getContentId() != null, 
-                        "Values not equal for attachment contentId, expected '"
-                            + null + "' but was '"
-                            + attachment.getContentId() + "'");
-
-                Assert.isTrue(attachment.getContentId().equals(controlAttachment.getContentId()),
-                        "Values not equal for attachment contentId, expected '"
-                            + controlAttachment.getContentId() + "' but was '"
-                            + attachment.getContentId() + "'");
-            } else {
-                Assert.isTrue(controlAttachment.getContentId() == null || controlAttachment.getContentId().length() == 0, 
-                        "Values not equal for attachment contentId, expected '"
-                            + controlAttachment.getContentId() + "' but was '"
-                            + null + "'");
-            }
-            
-            if(log.isDebugEnabled()) {
-                log.debug("Validating attachment contentId: " + attachment.getContentId() + 
-                        "='" + controlAttachment.getContentId() + "': OK.");
-            }
-            
-            if(attachment.getContentType() != null) {
-                Assert.isTrue(controlAttachment.getContentType() != null, 
-                        "Values not equal for attachment contentType, expected '"
-                            + null + "' but was '"
-                            + attachment.getContentType() + "'");
-
-                Assert.isTrue(attachment.getContentType().equals(controlAttachment.getContentType()),
-                        "Values not equal for attachment contentType, expected '"
-                            + controlAttachment.getContentType() + "' but was '"
-                            + attachment.getContentType() + "'");
-            } else {
-                Assert.isTrue(controlAttachment.getContentType() == null || controlAttachment.getContentType().length() == 0, 
-                        "Values not equal for attachment contentType, expected '"
-                            + controlAttachment.getContentType() + "' but was '"
-                            + null + "'");
-            }
-            
-            if(log.isDebugEnabled()) {
-                log.debug("Validating attachment contentType: " + attachment.getContentType() + 
-                        "='" + controlAttachment.getContentType() + "': OK.");
-            }
-            
+            validateAttachmentContentId(attachment, controlAttachment);
+            validateAttachmentContentType(attachment, controlAttachment);
             validateAttachmentContent(attachment, controlAttachment);
             
             log.info("Validation of SOAP attachment finished successfully: All values OK");
@@ -120,10 +77,64 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             throw new CitrusRuntimeException("Missing SOAP attachment with contentId '" + controlAttachment.getContentId() + "'");
         }
     }
+    
+    protected void validateAttachmentContentId(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
+        //in case contentId was not set in test case, skip validation 
+        if(!StringUtils.hasText(controlAttachment.getContentId())) { return; }
+        
+        if(receivedAttachment.getContentId() != null) {
+            Assert.isTrue(controlAttachment.getContentId() != null, 
+                    "Values not equal for attachment contentId, expected '"
+                        + null + "' but was '"
+                        + receivedAttachment.getContentId() + "'");
+
+            Assert.isTrue(receivedAttachment.getContentId().equals(controlAttachment.getContentId()),
+                    "Values not equal for attachment contentId, expected '"
+                        + controlAttachment.getContentId() + "' but was '"
+                        + receivedAttachment.getContentId() + "'");
+        } else {
+            Assert.isTrue(controlAttachment.getContentId() == null || controlAttachment.getContentId().length() == 0, 
+                    "Values not equal for attachment contentId, expected '"
+                        + controlAttachment.getContentId() + "' but was '"
+                        + null + "'");
+        }
+        
+        if(log.isDebugEnabled()) {
+            log.debug("Validating attachment contentId: " + receivedAttachment.getContentId() + 
+                    "='" + controlAttachment.getContentId() + "': OK.");
+        }
+    }
+    
+    protected void validateAttachmentContentType(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
+        //in case contentType was not set in test case, skip validation
+        if(!StringUtils.hasText(controlAttachment.getContentType())) { return; }
+        
+        if(receivedAttachment.getContentType() != null) {
+            Assert.isTrue(controlAttachment.getContentType() != null, 
+                    "Values not equal for attachment contentType, expected '"
+                        + null + "' but was '"
+                        + receivedAttachment.getContentType() + "'");
+
+            Assert.isTrue(receivedAttachment.getContentType().equals(controlAttachment.getContentType()),
+                    "Values not equal for attachment contentType, expected '"
+                        + controlAttachment.getContentType() + "' but was '"
+                        + receivedAttachment.getContentType() + "'");
+        } else {
+            Assert.isTrue(controlAttachment.getContentType() == null || controlAttachment.getContentType().length() == 0, 
+                    "Values not equal for attachment contentType, expected '"
+                        + controlAttachment.getContentType() + "' but was '"
+                        + null + "'");
+        }
+        
+        if(log.isDebugEnabled()) {
+            log.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
+                    "='" + controlAttachment.getContentType() + "': OK.");
+        }
+    }
 
     /**
      * @param attachment
      * @param controlAttachment
      */
-    protected abstract void validateAttachmentContent(SoapAttachment receivedAttContent, SoapAttachment controlAttachment);
+    protected abstract void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment);
 }
