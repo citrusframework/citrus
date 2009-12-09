@@ -27,6 +27,21 @@
             	<parameter name="param2" value="${text}"/>
             </call-template>
             
+            <parallel>
+                <call-template name="print">
+                    <parameter name="param1" value="1"/>
+                    <parameter name="param2" value="Hello World"/>
+                </call-template>
+                <call-template name="print">
+                    <parameter name="param1" value="2"/>
+                    <parameter name="param2" value="Hello South"/>
+                </call-template>
+                <call-template name="print">
+                    <parameter name="param1" value="3"/>
+                    <parameter name="param2" value="Hello North"/>
+                </call-template>
+            </parallel>
+            
             <trace-variables/>
         </actions>
     </testcase>
@@ -45,7 +60,7 @@
     	<trace-variables/>
     </template>
     
-    <template name="print">
+    <template name="print" global-context="false">
     	<echo>
     		<message>${param1}</message>
     	</echo>

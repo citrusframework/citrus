@@ -34,6 +34,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
@@ -53,6 +54,8 @@ public class Template extends AbstractTestAction {
     
     @Autowired
     private FunctionRegistry functionRegistry;
+    
+    private boolean globalContext = true;
 
     /**
      * Logger
@@ -63,6 +66,20 @@ public class Template extends AbstractTestAction {
     public void execute(TestContext context) {
         log.info("Executing action template '" + name + "' - containing " + actions.size() + " actions");
 
+        TestContext innerContext;
+        
+        //decide wheather to use global test context or not
+        if(globalContext) {
+            innerContext = context;
+        } else {
+            innerContext = new TestContext();
+            innerContext.setFunctionRegistry(context.getFunctionRegistry());
+            GlobalVariables globalVariables = new GlobalVariables();
+            globalVariables.getVariables().putAll(context.getGlobalVariables());
+            innerContext.setGlobalVariables(globalVariables);
+            innerContext.getVariables().putAll(context.getVariables());
+        }
+        
         for (Entry<String, String> entry : parameter.entrySet()) {
             String param = entry.getKey();
             String paramValue = entry.getValue();
@@ -75,7 +92,7 @@ public class Template extends AbstractTestAction {
 
             log.info("Setting parameter for template " + param + "=" + paramValue);
 
-            context.setVariable(param, paramValue);
+            innerContext.setVariable(param, paramValue);
         }
 
         for (int i = 0; i < actions.size(); i++) {
@@ -85,7 +102,7 @@ public class Template extends AbstractTestAction {
                 log.debug("Executing action " + action.getClass().getName());
             }
 
-            action.execute(context);
+            action.execute(innerContext);
         }
 
         log.info("Template was executed successfully");
@@ -111,5 +128,12 @@ public class Template extends AbstractTestAction {
      */
     public void setParameter(Map<String, String> parameter) {
         this.parameter = parameter;
+    }
+
+    /**
+     * @param globalContext the globalContext to set
+     */
+    public void setGlobalContext(boolean globalContext) {
+        this.globalContext = globalContext;
     }
 }

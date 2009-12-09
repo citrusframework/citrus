@@ -554,6 +554,7 @@
                 <xs:group ref="actionGroup" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="global-context" type="xs:boolean"/>
         </xs:complexType>
     </xs:element>
     

@@ -50,6 +50,11 @@ public class TemplateParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("name", parserContext.getReaderContext().generateBeanName(beanDefinition.getBeanDefinition()));
         }
 
+        String globalContext = element.getAttribute("global-context");
+        if (StringUtils.hasText(globalContext)) {
+            beanDefinition.addPropertyValue("globalContext", globalContext);
+        }
+        
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
