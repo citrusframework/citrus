@@ -16,6 +16,12 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
+        <action dev="deppisch" type="fix">
+          #225 Validate SOAP attachment with unknown content-id
+        </action>
+        <action dev="deppisch" type="fix">
+          #224 Set SOAP attachment validator in test case
+        </action>
         <action dev="deppisch" type="add">
           #196 Add documentation for auto-sleep in repeat-on-error-until-true 
         </action>
