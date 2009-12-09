@@ -160,6 +160,7 @@
                         </xs:sequence>
                     </xs:choice>
                     <xs:attribute name="schema-validation" type="xs:boolean"/>
+                    <xs:attribute name="validator" type="xs:string"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="header" minOccurs="0">

@@ -78,6 +78,13 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 builder.addPropertyValue("schemaValidation", schemaValidation);
             }
             
+            String messageValidator = messageElement.getAttribute("validator");
+            if(StringUtils.hasText(messageValidator)) {
+                builder.addPropertyReference("validator", messageValidator);
+            } else { //set default message validator defined in root-context
+                builder.addPropertyReference("validator", "messageValidator");
+            }
+            
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
                 builder.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));

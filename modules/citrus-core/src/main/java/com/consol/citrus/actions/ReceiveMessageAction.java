@@ -76,7 +76,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** Validator doing all message validation tasks */
-    @Autowired
     private MessageValidator validator;
     
     /** validation context holding information like expected message payload, ignored elements and so on */
