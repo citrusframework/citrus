@@ -17,6 +17,9 @@
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
         <action dev="deppisch" type="fix">
+          #222 Template parameter in parallel container
+        </action>
+        <action dev="deppisch" type="fix">
           #227 Overwrite message validator instance in test case
         </action>
         <action dev="deppisch" type="fix">
