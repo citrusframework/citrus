@@ -102,9 +102,9 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
-     * @param attachmentContent the attachmentContent to set
+     * @param attachmentData the attachmentData to set
      */
-    public void setAttachmentContent(String attachmentContent) {
-        this.attachmentData = attachmentContent;
+    public void setAttachmentData(String attachmentData) {
+        this.attachmentData = attachmentData;
     }
 }

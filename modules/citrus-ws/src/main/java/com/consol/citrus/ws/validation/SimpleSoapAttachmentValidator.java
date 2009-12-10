@@ -42,8 +42,8 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         if(log.isDebugEnabled()) {
             log.debug("Validating SOAP attachment content ...");
-            log.debug("Received attachment content: " + receivedAttachment.getContent());
-            log.debug("Control attachment content: " + controlAttachment.getContent());
+            log.debug("Received attachment content: " + receivedAttachment.getContent().trim());
+            log.debug("Control attachment content: " + controlAttachment.getContent().trim());
         }
         
         if(receivedAttachment.getContent() != null) {
@@ -51,18 +51,18 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
                     "Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
                         + null + "' but was '"
-                        + receivedAttachment.getContent() + "'");
+                        + receivedAttachment.getContent().trim() + "'");
 
-            Assert.isTrue(receivedAttachment.getContent().equals(controlAttachment.getContent()),
+            Assert.isTrue(receivedAttachment.getContent().trim().equals(controlAttachment.getContent().trim()),
                     "Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
-                        + controlAttachment.getContent() + "' but was '"
-                        + receivedAttachment.getContent() + "'");
+                        + controlAttachment.getContent().trim() + "' but was '"
+                        + receivedAttachment.getContent().trim() + "'");
         } else {
-            Assert.isTrue(controlAttachment.getContent() == null || controlAttachment.getContent().length() == 0, 
+            Assert.isTrue(controlAttachment.getContent() == null || controlAttachment.getContent().trim().length() == 0, 
                     "Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
-                        + controlAttachment.getContent() + "' but was '"
+                        + controlAttachment.getContent().trim() + "' but was '"
                         + null + "'");
         }
         
