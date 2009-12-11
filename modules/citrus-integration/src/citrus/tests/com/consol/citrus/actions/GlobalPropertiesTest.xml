@@ -14,8 +14,11 @@
 		</description>
 		<actions>
 			<echo>
-				<message>Using JDBC URL: ${jdbc.url}</message>
+				<message>Project name is: ${project.name}</message>
 			</echo>
+            <echo>
+                <message>Testing global variables from properties: ${myGlobalVariable}</message>
+            </echo>
 		</actions>
 	</testcase>
 </spring:beans>

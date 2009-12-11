@@ -2,20 +2,22 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config-1.1.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config-1.1.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	 
-	<import resource="jms-service-ctx.xml"/>
-	<import resource="service-beans-ctx.xml"/>
-	<import resource="test-suite-ctx.xml"/>
-	<import resource="web-service-ctx.xml"/>
-	<import resource="http-service-ctx.xml"/>
 	<import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
 	
+    <!-- Common settings -->
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
             <list>
@@ -26,20 +28,12 @@
         </property>
     </bean>
     
-	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>citrus.properties</value>
-			</list>
-		</property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"></property>
-	</bean>
+    <context:property-placeholder location="classpath:citrus.properties"/>
 	
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
-                <entry key="project.name" value="Integration Testing"/>
-                <entry key="jdbc.url" value="${jdbc.url}"/>
+                <entry key="project.name" value="Citrus Integration Testing"/>
             </map>
         </property>
     </bean>
@@ -47,49 +41,256 @@
     <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
         <property name="propertyFiles">
             <list>
-                <value>classpath:citrus.properties</value>
+                <value>classpath:citrus-variable.properties</value>
             </list>
         </property>
     </bean>
     
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<value>citrus</value>
-				<value>version</value>			
-			</list>
-		</property>
-	</bean>
-
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
     
+    <!-- JMS settings -->
+    <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="persistent" value="false"/>
+        <property name="autoStart" value="true"/>
+    </bean>
+    
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+  
+    <!-- bean id="connectionFactory" class="com.tibco.tibjms.TibjmsQueueConnectionFactory">
+        <property name="serverUrl" value="tcp://localhost:61616" />
+        <property name="userName" value="admin"/>
+        <property name="userPassword" value=""/>
+    </bean-->
+    
+    <!-- SOAP WebService settings -->
+    <citrus-ws:jetty-server id="jettyServer" port="8081"
+                                             auto-start="true"
+                                             context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
+                                             resource-base="src/citrus/resources"/>
+
+    <bean id="saajMessageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    
+    <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
+                                                 
+    <citrus-ws:message-sender id="webServiceRequestSender"
+                              request-url="http://localhost:8081"
+                              reply-handler="webServiceReplyHandler"
+                              message-factory="saajMessageFactory"/>
+    
+    <citrus-ws:reply-message-handler id="webServiceReplyHandler"/>
+    
+    <citrus:jms-message-receiver id="webServiceRequestReceiver" destination-name="${jms.ws.stub.request}"/>
+    
+    <citrus:jms-message-sender id="webServiceResponseSender" destination-name="${jms.ws.stub.response}"/>
+    
+    <citrus-ws:message-sender id="webServiceHelloRequestSender"
+                              request-url="http://localhost:8081/hello"
+                              reply-handler="webServiceHelloReplyHandler"
+                              message-factory="saajMessageFactory"/>
+    
+    <citrus-ws:reply-message-handler id="webServiceHelloReplyHandler"/>
+    
+    <!-- HTTP settings -->
+    <citrus-http:server id="httpServer" 
+                        port="8090" uri="/test" 
+                        deamon="false" 
+                        message-handler="jmsForwardingMessageHandler"
+                        auto-start="true"/>
+
+    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
+        <property name="destinationName" value="${jms.queue.http.request.forward}"/>
+        <property name="replyDestinationName" value="${jms.queue.http.request.ack}"/>
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="${jms.server.url}" />
+            </bean>
+        </property>
+        <property name="replyTimeout" value="2000"/>
+    </bean>
+        
+    <citrus-http:server id="httpStandaloneServer" 
+                        port="8091" uri="/test" 
+                        deamon="false" 
+                        message-handler="xpathDispatchingHandler"
+                        auto-start="true"/>
+                        
+    <bean id="xpathDispatchingHandler" class="com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler">
+        <property name="messageHandlerContext" value="classpath:com/consol/citrus/http/message-handler-context.xml"/>
+    </bean>
+        
+    <citrus-http:message-sender id="httpMessageSender" 
+                                request-url="http://localhost:8090/test" 
+                                request-method="POST"
+                                reply-handler="httpResponseReceiver"/>
+  
+    <citrus-http:message-sender id="httpMessageSenderStandalone" 
+                                request-url="http://localhost:8091/test" 
+                                request-method="POST"
+                                reply-handler="httpResponseReceiver"/>
+  
+    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
+    
+    <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
+    
+    <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}"/>
+    
+    <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
             <value>${jdbc.driver}</value>
         </property>
-        
         <property name="url">
             <value>${jdbc.url}</value>
         </property>
-        
         <property name="username">
             <value>${db.user}</value>
         </property>
-        
         <property name="password">
             <value>${db.password}</value>
         </property>
-  
         <property name="initialSize">
             <value>1</value>
         </property>
-        
         <property name="maxActive">
             <value>5</value>
         </property>
-        
         <property name="maxIdle">
             <value>2</value>
         </property>
-    </bean>  
+    </bean>
+    
+    <!-- Message sender/receiver -->
+    <citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
+  
+    <citrus:jms-message-receiver id="helloResponseReceiver"
+                                 receive-timeout="5000" 
+                                 destination-name="${jms.queue.hello.response}"/>
+                                 
+    <citrus:jms-message-sender id="helloTopicRequestSender" 
+                               destination-name="${jms.topic.hello.request}"
+                               pub-sub-domain="true"/>
+  
+    <citrus:jms-message-receiver id="helloTopicRequestReceiver"
+                                 receive-timeout="5000" 
+                                 destination-name="${jms.topic.hello.request}"
+                                 pub-sub-domain="true"/>
+    
+    <citrus:jms-sync-message-sender id="syncHelloTopicRequestSender" 
+                                    destination-name="${jms.topic.hello.sync.request}"
+                                    reply-handler="syncHelloResponseHandler"
+                                    reply-timeout="1000"
+                                    pub-sub-domain="true"/>
+                                    
+    <citrus:jms-sync-message-receiver id="syncHelloTopicRequestReceiver"
+                                      receive-timeout="5000" 
+                                      destination-name="${jms.topic.hello.sync.request}"
+                                      reply-message-correlator="replyMessageCorrelator"
+                                      pub-sub-domain="true"/>
+  
+    <citrus:jms-reply-message-sender id="syncHelloTopicReplySender"
+                                     reply-destination-holder="syncHelloTopicRequestReceiver"
+                                     reply-message-correlator="replyMessageCorrelator"/>                                    
+                                    
+    <citrus:jms-sync-message-sender id="syncHelloRequestSender" 
+                                    destination-name="${jms.queue.hello.sync.request}"
+                                    reply-handler="syncHelloResponseHandler"
+                                    reply-timeout="1000"/>
+    
+    <citrus:jms-reply-message-handler id="syncHelloResponseHandler"/>
+    
+    <citrus:jms-sync-message-sender id="syncGetDateRequestSender" 
+                                    destination-name="${jms.queue.date.sync.request}"
+                                    reply-handler="syncGetDateResponseHandler"
+                                    reply-message-correlator="replyMessageCorrelator"
+                                    reply-timeout="1000"/>
+    
+    <citrus:jms-reply-message-handler id="syncGetDateResponseHandler"/>
+    
+    <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver"
+                                      receive-timeout="5000" 
+                                      destination-name="${jms.queue.date.sync.request}"
+                                      reply-message-correlator="replyMessageCorrelator"/>
+  
+    <citrus:jms-reply-message-sender id="getDateRequestReplySender"
+                                     reply-destination-holder="syncGetDateRequestReceiver"
+                                     reply-message-correlator="replyMessageCorrelator"/>
+    
+    <citrus:jms-message-sender id="testMessageSender" destination-name="${jms.queue.test}"/>
+  
+    <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
+    
+    <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
+    
+    <!-- Utility beans -->
+    <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="queueNames">
+            <list>
+                <value>${jms.queue.http.request.forward}</value>
+                <value>${jms.queue.http.request.ack}</value>
+                
+                <value>${jms.ws.stub.request}</value>
+                <value>${jms.ws.stub.response}</value>
+                
+                <value>${jms.queue.test}</value>
+                
+                <value>${jms.queue.hello.request}</value>
+                <value>${jms.queue.hello.response}</value>
+                <value>${jms.queue.hello.sync.request}</value>
+                <value>${jms.queue.date.sync.request}</value>
+            </list>
+        </property>
+        <property name="queues">
+            <list>
+                <ref bean="testQueue1"/>
+                <ref bean="testQueue2"/>
+                <ref bean="testQueue3"/>
+            </list>
+        </property>
+    </bean>
+    
+    <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
+    <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
+    <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
+    
+    <!-- TestSuite definition -->
+    <bean name="citrus-integration" class="com.consol.citrus.TestSuite">
+        <property name="tasksBefore">
+            <list>
+                <bean id="initDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
+                    <property name="statements">
+                        <list>
+                            <value>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG char(250), CONVERSATION_ID  char(250), CREATION_DATE  char(250), DESCRIPTION char(250)) </value>
+                            <value>CREATE TABLE CUSTOMERS (CUSTOMER_ID integer, NAME char(250), DESCRIPTION char(250))</value>
+                            <value>CREATE TABLE ERRORS (ERROR_ID integer, DESCRIPTION char(250))</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+        <property name="tasksBetween">
+            <list>
+                <ref bean="purgeJmsQueues"/>
+            </list>
+        </property>
+        <property name="tasksAfter">
+            <list>
+                <bean id="destroyDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
+                    <property name="ignoreErrors" value="true"/>
+                    <property name="statements">
+                        <list>
+                            <value>DROP TABLE ORDERS</value>
+                            <value>DROP TABLE CUSTOMERS</value>
+                            <value>DROP TABLE ERRORS</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
 </beans>
