@@ -26,6 +26,9 @@ package com.consol.citrus.exceptions;
  *
  */
 public class TestEngineFailedException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
     public TestEngineFailedException() {
     }
 

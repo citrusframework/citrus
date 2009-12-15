@@ -25,6 +25,8 @@ package com.consol.citrus.exceptions;
  */
 public class NoSuchFunctionLibraryException extends CitrusRuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public NoSuchFunctionLibraryException() {
         super();
     }

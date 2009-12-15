@@ -24,6 +24,9 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
 public class CitrusCliOptions extends Options {
+
+    private static final long serialVersionUID = 1L;
+
     @SuppressWarnings("static-access")
     public CitrusCliOptions() {
         

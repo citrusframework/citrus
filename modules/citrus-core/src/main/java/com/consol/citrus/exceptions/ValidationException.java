@@ -24,6 +24,8 @@ package com.consol.citrus.exceptions;
  */
 public class ValidationException extends CitrusRuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public ValidationException() {
     }
 

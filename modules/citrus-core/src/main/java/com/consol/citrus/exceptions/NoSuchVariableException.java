@@ -27,6 +27,9 @@ package com.consol.citrus.exceptions;
  *
  */
 public class NoSuchVariableException extends CitrusRuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
     public NoSuchVariableException() {
         super();
     }

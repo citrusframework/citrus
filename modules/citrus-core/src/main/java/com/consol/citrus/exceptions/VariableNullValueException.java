@@ -24,6 +24,8 @@ package com.consol.citrus.exceptions;
  */
 public class VariableNullValueException extends CitrusRuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public VariableNullValueException() {
         super();
     }

@@ -25,6 +25,9 @@ import java.util.Collection;
 import com.consol.citrus.report.TestResult.RESULT;
 
 public class TestResults extends ArrayList<TestResult> {
+
+    private static final long serialVersionUID = 1L;
+
     private boolean cached = false;
     
     private int cntSuccess = 0;

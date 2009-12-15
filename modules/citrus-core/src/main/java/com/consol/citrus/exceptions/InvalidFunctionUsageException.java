@@ -24,6 +24,8 @@ package com.consol.citrus.exceptions;
  */
 public class InvalidFunctionUsageException extends CitrusRuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public InvalidFunctionUsageException() {
         super();
     }

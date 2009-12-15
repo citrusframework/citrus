@@ -24,6 +24,8 @@ package com.consol.citrus.exceptions;
  */
 public class UnknownElementException extends CitrusRuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public UnknownElementException() {
         super();
     }

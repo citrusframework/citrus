@@ -209,6 +209,9 @@ public class TestCaseCreator {
     }
     
     private static class TestCaseCreatorCliOptions extends Options {
+
+        private static final long serialVersionUID = 1L;
+
         @SuppressWarnings("static-access")
         public TestCaseCreatorCliOptions() {
             this.addOption(new Option("help", "print usage help"));
