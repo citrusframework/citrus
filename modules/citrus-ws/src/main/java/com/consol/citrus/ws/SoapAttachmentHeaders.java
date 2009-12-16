@@ -31,4 +31,6 @@ public abstract class SoapAttachmentHeaders {
     public static final String CONTENT_TYPE = PREFIX + "contentType";
     
     public static final String CONTENT = PREFIX + "content";
+    
+    public static final String CHARSET_NAME = PREFIX + "charset";
 }

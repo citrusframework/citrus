@@ -65,7 +65,23 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             }
             
             if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT)) {
-                attachment.setContent(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT).toString());
+                Object contentObject = receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT);
+                
+                if(contentObject instanceof byte[]) {
+                    String content = new String((byte[])contentObject, controlAttachment.getCharsetName());
+                    
+                    if(content.contains("<?xml")) {
+                        //strip off possible leading prolog characters in xml content
+                        attachment.setContent(content.substring(content.indexOf("<")));
+                    } else {
+                        attachment.setContent(content);
+                    }
+                } else if(contentObject instanceof String) {
+                    attachment.setContent(contentObject.toString());
+                } else {
+                    throw new IllegalArgumentException("Unsupported attachment content object (" + contentObject.getClass() + ")." +
+                    		" Either byte[] or java.lang.String are supported.");
+                }
             }
             
             validateAttachmentContentId(attachment, controlAttachment);

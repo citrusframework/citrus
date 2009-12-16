@@ -55,7 +55,8 @@ public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback
                     
                     jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT_ID, contentId);
                     jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT_TYPE, attachment.getContentType());
-                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()));
+                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
+                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CHARSET_NAME, "UTF-8");
                 }
             }
         } catch(IOException e) {

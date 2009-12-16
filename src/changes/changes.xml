@@ -17,6 +17,9 @@
   <body>
     <release version="1.1-SNAPSHOT" date="09.11.2009" description="1.1 snapshot release">
         <action dev="deppisch" type="fix">
+          #236 Handle large SOAP attachments
+        </action>
+        <action dev="deppisch" type="fix">
           #235 Inline attachment data setter in ws:send
         </action>
         <action dev="deppisch" type="fix">
