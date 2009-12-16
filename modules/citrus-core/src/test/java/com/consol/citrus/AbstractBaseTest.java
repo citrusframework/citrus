@@ -28,9 +28,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 
-@ContextConfiguration(locations = {"spring/root-application-ctx.xml",
-                                   "/citrus-context.xml", 
-                                   "functions/citrus-function-ctx.xml"})
+@ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml",
+                                   "classpath:citrus-context.xml", 
+                                   "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
 public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests {
     protected TestContext context;
     
