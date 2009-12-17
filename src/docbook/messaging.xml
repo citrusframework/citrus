@@ -19,7 +19,7 @@
     is not specified in the test case directly, but in the message sender definitions. We will see later in this document how message 
     senders for various transports are configured in Citrus.</para>
     
-    <para>The advantage of this seperation of configuration is definitely the flexibility of test cases. The test case does not know 
+    <para>The advantage of this separation of configuration is definitely the flexibility of test cases. The test case does not know 
     anything about JMS ConnectionFactories, queue names or Http URLs. The transport underneath a sending action can change easily 
     without affecting the test case definition.</para>
     
@@ -77,15 +77,15 @@
         beginning. The test case reaches better maintainability and flexibility using variables.</para>
     </tip>
     
-    <para>Now lets have a closer look at the sending action. The 'with' attribute might catch someones attention at first. So what does the 
+    <para>Now lets have a closer look at the sending action. The 'with' attribute might catch someone's attention at first. So what does the 
     'with' attribute do? This attribute references a message sender definition by name. As previously mentioned the message sender 
-    definition lies in a seperate configuration file and contains the actual message transport configurations. In this example the 
+    definition lies in a separate configuration file and contains the actual message transport configurations. In this example the 
     <emphasis>&quot;getCustomerRequestMessageSender&quot;</emphasis> is used to send the message over JMS to a destination queue. 
     The test case is not aware of these details, because it does not have to. The advantage is obvious: Many test cases may use 
     the same message sender in order to send messages of type 'getCustomerRequest'.</para>
     
     <para>In other words the attribute &quot;with&quot; in the &lt;send&gt; element specifies which message sender definition 
-    to use for sendinging the message. Once again all available message senders are configured in a seperate Spring configuration file. 
+    to use for sending the message. Once again all available message senders are configured in a separate Spring configuration file. 
     We will come to this later. Be sure to always pick the right message sender type in order to publish your message to the right 
     destination endpoint.</para>
     
@@ -215,13 +215,13 @@
         <title>Messages selectors</title>
         
         <para>The <emphasis>&lt;selector&gt;</emphasis> element inside the receiving action defines key-value pairs in order to 
-        filter the messages beeing received. The key value pairs apply to the message headers. This means that a receiver will 
+        filter the messages being received. The key value pairs apply to the message headers. This means that a receiver will 
         only accept messages that meet the key-value pairs in its header. Using this mechanism you can explicitly listen for 
         messages that belong to your test. This is very helpful to avoid receiving messages from other tests that are still available 
         on the message destination.</para>
         
         <para>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry 
-        situations where the application's error handling automatically tries to solve a communication problem that occured 
+        situations where the application's error handling automatically tries to solve a communication problem that occurred 
         during previous test cases. As a result the EAI application keeps sending messages that are not valid any more for the currently 
         running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
         received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer informations 
