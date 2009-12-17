@@ -5,7 +5,7 @@
     <para>Citrus will receive a lot of messages during a test run. The user may want to persist these messages to the 
     filesystem for further investigations.</para>
     
-    <para>Citrus offers an easy way to debug all received messages to the filesystem. You need to enable a specific aspect in the
+    <para>Citrus offers an easy way to debug all received messages to the file system. You need to enable a specific aspect in the
     Citrus Spring configuration.</para>
     
     <programlisting>
@@ -21,7 +21,7 @@
     <para><literal>logs/debug/messages/message2.header</literal></para>
     <para><literal>logs/debug/messages/message2.body</literal></para>
     
-    <para>The framework uses a simple counter that is increased whenever a message is written to the file system. Citrus seperates 
+    <para>The framework uses a simple counter that is increased whenever a message is written to the file system. Citrus separates 
     message header and message body into extra files with respective extension (".header" and ".body"). By default the debug directory is 
     <literal>logs/debug/messages/</literal> relative to the project root directory. But you can set your own debug directory in the 
     configuration.</para>

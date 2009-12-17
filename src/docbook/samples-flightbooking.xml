@@ -3,11 +3,11 @@
     <title>The FlightBooking sample</title>
     
     <para>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that 
-    handles travel requests from a travel agency. A travel request consits of a complete travel route including several flights. The 
-    FlightBookingService application will split the complete travel booking into seperate flight bookings that are sent to the respective
+    handles travel requests from a travel agency. A travel request consists of a complete travel route including several flights. The 
+    FlightBookingService application will split the complete travel booking into separate flight bookings that are sent to the respective
     airlines in charge. The booking and customer data is persisted in a database.</para>
     
-    <para>The arilines will confirm or deny the flight bookings. The FlightBookingService application consolidates all incoming flight 
+    <para>The airlines will confirm or deny the flight bookings. The FlightBookingService application consolidates all incoming flight 
     confirmations and combines them to a complete travel confirmation or denial that is sent back to the travel agency. Next picture
     tries to put the architecture into graphics:</para>
     
@@ -23,7 +23,7 @@
       </mediaobject>
     </para>
     
-    <para>In our example two different arilines are connected to the FlightBookingService application: the SmartAriline over JMS and
+    <para>In our example two different airlines are connected to the FlightBookingService application: the SmartAriline over JMS and
     the RoyalAirline over Http.</para>
     
     <section id="samples-flightbooking-usecase">
@@ -53,7 +53,7 @@
     <section id="samples-flightbooking-configuration">
         <title>Configure the simulated systems</title>
         
-        <para>Citrus simulates all surrounding applications in their behaviour during the test. The simulated applications are:
+        <para>Citrus simulates all surrounding applications in their behavior during the test. The simulated applications are:
         TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first.
         The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</para>
         
@@ -79,7 +79,7 @@
         we connect to a ActiveMQ message broker. A connection to other JMS brokers like TIBCO EMS or IBM Websphere MQ is possible too by
         simply changing the connection factory implementation.</para>
         
-        <para>The identifyers of the message senders and receivers are very important. We should think of suitable ids that give the
+        <para>The identifiers of the message senders and receivers are very important. We should think of suitable ids that give the
         reader a first hint what the sender/receiver is used for. As we want to simulate the TravelAgency in combination with sending
         booking requests our id is "travelAgencyBookingRequestSender" for example.</para>
         

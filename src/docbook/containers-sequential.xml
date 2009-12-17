@@ -7,7 +7,7 @@
     does show only in combination with other containers like iterations and parallels. We will see this later when handling 
     these containers.</para>
     
-    <para>For now the sequential container seems very unspectacular - one might say boring - because it simply groups a pair of test
+    <para>For now the sequential container seems not very sensational - one might say boring - because it simply groups a pair of test
     actions to sequential execution.</para>
     
     <programlisting>

@@ -2,7 +2,7 @@
 <chapter id="testcase">
   <title>Test case</title>
 
-  <para>Now let us start writing test cases! The upcoming guide will introduce all possible actions inside a test case 
+  <para>Now let us start writing test cases! The following guide will introduce all possible actions inside a test case 
   and explain how to connect to other systems by sending and receiving messages over various transports.</para>
   
   <para>Citrus specifies test cases through simple XML files. The whole test case description will take place in one single
@@ -124,7 +124,7 @@
         </programlisting>
         
         <para>All actions have individual names and properties that define 
-        the action behaviour. Citrus offers a wide range of test actions from scratch, but you are also able to write your own 
+        the action behavior. Citrus offers a wide range of test actions from scratch, but you are also able to write your own 
         test actions in Java or Groovy and execute them during a test. <xref linkend="actions"/> gives you a brief description of all available 
         actions that can be part of a test case execution.</para>
         

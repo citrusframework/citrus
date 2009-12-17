@@ -133,11 +133,11 @@
   &lt;/beans&gt;
         </programlisting>
         
-        <para>The programlisting above describes a normal request mapping. The mapping is responsible to forward incoming requests to
+        <para>The program listing above describes a normal request mapping. The mapping is responsible to forward incoming requests to
         an endpoint which will handle the request and provide a response. First of all Spring's logging interceptor is added to the 
         context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming 
         <literal>'HelloStandaloneRequest'</literal> SOAP messages to the <literal>'helloServiceEndpoint'</literal>. The enpoint definition
-        follows at the very end of the programlisting. Inside the endpoint configuration we can see the well known message handler that 
+        follows at the very end of the program listing. Inside the endpoint configuration we can see the well known message handler that 
         is responsible for providing a proper response message for the client. The various message handlers in Citrus were already 
         described in <xref linkend="http"/>.</para>
         

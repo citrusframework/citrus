@@ -31,7 +31,7 @@
       </programlisting>
       
       <para>The first action uses inline SQL statements defined directly inside the test case. The next action uses an external 
-      SQL resource file instead. The file resource can hold several SQL statements seperated by new lines. All statements inside 
+      SQL resource file instead. The file resource can hold several SQL statements separated by new lines. All statements inside 
       the file are executed sequentially by the framework.</para>
       
       <important>

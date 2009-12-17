@@ -26,7 +26,7 @@
     </itemizedlist>
     
     <para>Usually one would choose the with-dependencies archive in order to use Citrus, because this archive includes the Citrus binaries
-    plus all needed depedency libraries. In case you want to get in touch with developing Citrus you should go with the project archive.
+    plus all needed dependency libraries. In case you want to get in touch with developing Citrus you should go with the project archive.
     This archive will give you the complete Citrus project sources. Using Maven you will easily be able to build Citrus on your own and
     extend Citrus with your own code.</para>
     

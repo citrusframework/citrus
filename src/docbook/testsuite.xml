@@ -9,7 +9,7 @@
     <section id="testsuite-tasks">
         <title>Tasks before, between and after the test run</title>
         
-        <para>A tester can influence the behaviour of a test suite before, after and during the test run. See the next code example to find
+        <para>A tester can influence the behavior of a test suite before, after and during the test run. See the next code example to find
         out how it works:</para>
         
         <programlisting>
@@ -37,7 +37,7 @@
         </programlisting>
         
         <para>The test suite bean is of the type com.consol.citrus.TestSuite and offers the following properties to affect
-        the basic behaviour:</para>
+        the basic behavior:</para>
         
         <itemizedlist mark="opencircle">
             <listitem>
@@ -56,7 +56,7 @@
         element.</para>
         
         <tip>
-            <para>The framework offers special startup and shutdon actions that may start and stop server implmentations. This might 
+            <para>The framework offers special startup and shutdown actions that may start and stop server implementations. This might 
             be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a 
             JMS broker.</para>
             

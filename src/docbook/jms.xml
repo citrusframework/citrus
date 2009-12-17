@@ -2,7 +2,7 @@
 <chapter id="jms">
     <title>Connecting with JMS</title>
 
-    <para>Citrus provides support for sending and receiving JMS messages. We have to seperate between synchronous and asynchronous
+    <para>Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous
     communication. So in this chapter we explain how to setup JMS message senders and receivers for synchronous and asynchronous
     outbound and inbound communication</para>
     
@@ -33,7 +33,7 @@
         <title>JMS message sender</title>
         
         <para>First of all we deal with asynchronous message senders, which means that Citrus is publishing messages to a JMS destination
-        (queue or topic). The test case itself does not know about JMS tranport details like queue names or connection 
+        (queue or topic). The test case itself does not know about JMS transport details like queue names or connection 
         credentials. This information is stored in the basic Spring configuration. So let us have a look at a simple JMS message sender 
         configuration in Citrus.</para>
         

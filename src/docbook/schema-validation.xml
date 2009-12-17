@@ -33,7 +33,7 @@
   &lt;/bean&gt;
         </programlisting>
         
-        <para>By convention the schema respository instance is defined in the Citrus Spring configuration with the id "schemaRepository".
+        <para>By convention the schema repository instance is defined in the Citrus Spring configuration with the id "schemaRepository".
         Spring is then able to inject this schema repository instance into every message receiving action. The receiving action receives 
         XML messages and will ask the repository for a matching schema definition file in order to validate the document structure.</para>
         
@@ -43,7 +43,7 @@
         automatically over the target namespace.</para>
         
         <important>
-            <para>In case Citrus rceives a classified XML message using namespaces Citrus will try to validate the structure of the message 
+            <para>In case Citrus receives a classified XML message using namespaces Citrus will try to validate the structure of the message 
             by default. Consequently you will also get errors in case no matching schema definition file is found inside the schema 
             repository. So if you explicitly do not want to validate the XML schema for some reason you have to disable the validation
             explicitly in your test.</para>

@@ -8,7 +8,7 @@
     
     <note>
         <para>Similar to the JMS specific configuration schema, Citrus provides a customized Http configuration schema that
-        is used in Spring configuration files. Simply include the http-config namespace in the confguration XML as follows.</para>
+        is used in Spring configuration files. Simply include the http-config namespace in the configuration XML as follows.</para>
         
         <programlisting>
   &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
@@ -82,7 +82,7 @@
             <title>Empty response producing message handler</title>
             
             <para>This is the simplest message handler you can think of. It simply provides an empty success response using the Http
-            reponse code 202. In the introducing example this message handler was used to provide reponse messages to the calling client.
+            response code 202. In the introducing example this message handler was used to provide response messages to the calling client.
             The handler does not need any configurations or properties as it simply responds with an empty Http response.</para>
             
             <programlisting>
@@ -127,10 +127,10 @@
         <section id="http-message-handler-xpath">
             <title>Xpath dispatching message handler</title>
             
-            <para>The idea behind the xpath-dispatching-message-handler is that the incoming requests are dispathed to several
+            <para>The idea behind the xpath-dispatching-message-handler is that the incoming requests are dispatched to several
             message handlers according to an element value inside the message payload. The XPath expression will evaluate and
             call the respective message handler. The message handler mapping is done by their names inside a message handler Spring
-            configuration context. The seperate context is loaded in advance.</para>
+            configuration context. The separate context is loaded in advance.</para>
             
             <programlisting>
   &lt;bean id=&quot;xpathDispatchingHandler&quot; class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;

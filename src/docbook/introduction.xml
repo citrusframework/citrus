@@ -7,14 +7,14 @@
   the cooperation of several applications exchanging information with each other. Therefore it is essential to test 
   this cooperation/communication between the applications in several integration tests.</para>
   
-  <para>In software devlopment integration testing aims to test the interaction of software components that 
-  depend on each other. In EAI projects these components are loosely coupled sofware systems communicating with each other
+  <para>In software development integration testing aims to test the interaction of software components that 
+  depend on each other. In EAI projects these components are loosely coupled software systems communicating with each other
   over various transports exchanging messages and information. The interaction of these components is essential to 
   successfully process a use case scenario.</para>
   
   <para>How can somebody test use case scenarios that include several interface partners interacting with each other? How can 
   somebody ensure that the software component he/she is in charge of is working correctly with the other software systems.
-  How can somebody run positive and negative integration test cases in an automated reproducable way? 
+  How can somebody run positive and negative integration test cases in an automated reproducible way? 
   Citrus tries to answer these questions by offering fully automated integration testing always looking at the whole picture of several
   systems interacting with each other.</para>
 

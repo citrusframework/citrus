@@ -47,7 +47,7 @@
           &lt;variable name=&quot;date&quot; 
                        value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
           &lt;variable name=&quot;text&quot; 
-                       value=&quot;Hallo Test Framework!&quot; /&gt;
+                       value=&quot;Hello Test Framework!&quot; /&gt;
       &lt;/variables&gt;
       &lt;actions&gt;
           &lt;echo&gt;
@@ -94,19 +94,19 @@
         <programlisting>
   &lt;echo&gt;
       &lt;message&gt;
-          citrus:substring('Hallo Test Framework', 6)
+          citrus:substring('Hello Test Framework', 6)
       &lt;/message&gt;
   &lt;/echo&gt;
   &lt;echo&gt;
       &lt;message&gt;
-          citrus:substring('Hallo Test Framework', 0, 5)
+          citrus:substring('Hello Test Framework', 0, 5)
       &lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
         <para><emphasis>Test Framework</emphasis></para>
-        <para><emphasis>Hallo</emphasis></para>
+        <para><emphasis>Hello</emphasis></para>
     </section>
     
     <section id="functions-string-length">
@@ -116,7 +116,7 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;citrus:stringLength('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:stringLength('Hello Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
@@ -142,7 +142,7 @@
         replacement string value.</para>
         
         <para>Function output:</para>
-        <para><emphasis>Hallo Test Framework</emphasis></para>
+        <para><emphasis>Hello Test Framework</emphasis></para>
     </section>
     
     <section id="functions-substring-before">
@@ -179,7 +179,7 @@
   &lt;/echo&gt;
         </programlisting>
         
-        <para>Analogue to the substringBefore function the ‘/’ character is found in the string. But now the remaining
+        <para>Similar to the substringBefore function the ‘/’ character is found in the string. But now the remaining
         string is returned by the function meaning the substring after this character index.</para>
         
         <para>Function output:</para>
@@ -189,7 +189,7 @@
     <section id="functions-round">
         <title>citrus:round()</title>
         
-        <para>This is a simple mathematic function that will round decimal numbers representations to their nearest nondecimal
+        <para>This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal
         number.</para>
         
         <programlisting>
@@ -348,12 +348,12 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;citrus:upperCase('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:upperCase('Hello Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
-        <para><emphasis>HALLO TEST FRAMEWORK</emphasis></para>
+        <para><emphasis>HELLO TEST FRAMEWORK</emphasis></para>
     </section>    
     
     <section id="functions-lower-case">
@@ -363,12 +363,12 @@
         
         <programlisting>
   &lt;echo&gt;
-      &lt;message&gt;citrus:lowerCase('Hallo Test Framework')&lt;/message&gt;
+      &lt;message&gt;citrus:lowerCase('Hello Test Framework')&lt;/message&gt;
   &lt;/echo&gt;
         </programlisting>
         
         <para>Function output:</para>
-        <para><emphasis>hallo test framework</emphasis></para>
+        <para><emphasis>hello test framework</emphasis></para>
     </section>
     
     <section id="functions-average">

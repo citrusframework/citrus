@@ -53,7 +53,7 @@
     </itemizedlist>
     
     <note>
-        <para>When user input is restrited to a set of valid answers the input validation of course can fail due to mismatch. 
+        <para>When user input is restricted to a set of valid answers the input validation of course can fail due to mismatch. 
         In this case the user is again asked to provide the input until a valid answer is given.</para>
     </note>
     

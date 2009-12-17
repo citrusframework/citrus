@@ -5,7 +5,7 @@
     <para>In some cases it might be necessary to validate that a message is <emphasis>not</emphasis> present on a destination. 
     This means that this action expects a timeout when receiving a message from an endpoint destination. For instance the tester 
     intends to ensure that no message is sent to a certain destination in a time period. In that case the timeout would 
-    not be a test aborting error but the expected behaviour. And in contrast to the normal behaviour when a message is received 
+    not be a test aborting error but the expected behavior. And in contrast to the normal behavior when a message is received 
     in the time period the test will fail with error.</para>
     
     <para>In order to validate such a timeout situation the action &lt;expectTimout&gt; shall help. The usage

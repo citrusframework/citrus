@@ -13,7 +13,7 @@
     at the end of the test action chain may not be executed correctly.</para>
     
     <para>Dirty states inside the database or still running server instances then might cause problems for 
-    upcoming test cases. To avoid this problems you should use the finally block of the test case. The &lt;finally&gt; 
+    following test cases. To avoid this problems you should use the finally block of the test case. The &lt;finally&gt; 
     section contains actions that are executed even in case the test fails. Using this strategy the database 
     cleaning tasks mentioned before will find execution in every case (success or failure).</para>
     
