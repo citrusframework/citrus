@@ -4,6 +4,12 @@
  
 News
 
+* Dec. 17, 2009 <<Last snapshot version 1.1-SNAPSHOT before final release>>
+ 
+ Shortly before the holidays we update the snapshot version 1.1-SNAPSHOT on more time. The latest changes are related to extended
+ SOAP attachment support and bugfixing. This snapshot version will be the last one before the final 1.1 release in January. Again 
+ have a look at the {{{changes-report.html}changes report}} to see the latest changes and new features in 1.1-SNAPSHOT.
+ 
 * Nov. 09, 2009 <<Improved JMS Topic support in version 1.1-SNAPSHOT>>
  
  Citrus talks to JMS Topics. Version 1.1-SNAPSHOT fixed and improved the handling of JMS Topics. With the latest version someone
