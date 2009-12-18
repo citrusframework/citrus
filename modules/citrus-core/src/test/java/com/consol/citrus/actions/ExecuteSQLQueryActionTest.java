@@ -30,8 +30,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	

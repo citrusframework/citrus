@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 

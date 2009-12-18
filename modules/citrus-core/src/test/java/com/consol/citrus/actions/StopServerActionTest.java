@@ -26,8 +26,8 @@ import java.util.*;
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.server.Server;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class StopServerActionTest extends AbstractBaseTest {
     

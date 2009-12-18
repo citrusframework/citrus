@@ -24,10 +24,10 @@ import java.util.Collections;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class FunctionUtilsTest extends AbstractBaseTest {
     @Test

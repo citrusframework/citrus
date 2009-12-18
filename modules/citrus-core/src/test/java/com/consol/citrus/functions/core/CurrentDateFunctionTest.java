@@ -25,9 +25,9 @@ import java.util.Collections;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.functions.FunctionParameterHelper;
 import com.consol.citrus.functions.core.CurrentDateFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class CurrentDateFunctionTest extends AbstractBaseTest {
     CurrentDateFunction function = new CurrentDateFunction();

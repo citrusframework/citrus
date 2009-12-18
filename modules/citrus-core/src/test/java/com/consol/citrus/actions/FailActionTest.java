@@ -22,8 +22,8 @@ package com.consol.citrus.actions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class FailActionTest extends AbstractBaseTest {
 	

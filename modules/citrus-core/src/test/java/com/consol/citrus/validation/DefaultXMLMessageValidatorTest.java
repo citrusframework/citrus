@@ -33,8 +33,8 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
 public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {

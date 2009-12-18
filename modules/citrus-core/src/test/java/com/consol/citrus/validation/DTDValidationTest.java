@@ -28,9 +28,9 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class DTDValidationTest extends AbstractBaseTest {
     @Autowired

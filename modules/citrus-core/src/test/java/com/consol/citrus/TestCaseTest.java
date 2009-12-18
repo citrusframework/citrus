@@ -28,6 +28,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class TestCaseTest extends AbstractBaseTest {
     

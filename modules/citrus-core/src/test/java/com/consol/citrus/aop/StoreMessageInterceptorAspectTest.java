@@ -27,7 +27,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     @Autowired

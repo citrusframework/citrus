@@ -28,8 +28,8 @@ import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
  * @author Christoph Christoph Deppisch Consol* Software GmbH

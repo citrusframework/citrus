@@ -31,10 +31,10 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
  * @author deppisch Christoph Deppisch ConSol* Software GmbH

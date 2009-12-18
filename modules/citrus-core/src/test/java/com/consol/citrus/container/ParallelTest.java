@@ -27,10 +27,10 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 
 /**

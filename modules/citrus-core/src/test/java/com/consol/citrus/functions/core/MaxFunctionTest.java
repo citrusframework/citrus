@@ -26,9 +26,9 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.MaxFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class MaxFunctionTest extends AbstractBaseTest {
     MaxFunction function = new MaxFunction();

@@ -26,9 +26,9 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.SubstringBeforeFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class SubstringBeforeFunctionTest extends AbstractBaseTest {
     SubstringBeforeFunction function = new SubstringBeforeFunction();

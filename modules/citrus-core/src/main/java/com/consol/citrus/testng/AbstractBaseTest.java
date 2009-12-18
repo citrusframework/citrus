@@ -17,7 +17,7 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus;
+package com.consol.citrus.testng;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

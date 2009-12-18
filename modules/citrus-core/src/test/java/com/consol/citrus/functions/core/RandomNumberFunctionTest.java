@@ -26,9 +26,9 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.RandomNumberFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class RandomNumberFunctionTest extends AbstractBaseTest {
     RandomNumberFunction function = new RandomNumberFunction();

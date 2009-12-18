@@ -26,10 +26,10 @@ import static org.easymock.EasyMock.*;
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 
 /**

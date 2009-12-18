@@ -23,6 +23,8 @@ import org.apache.commons.cli.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.testng.AbstractBaseTest;
+
 public class CitrusCliOptionsTest extends AbstractBaseTest {
     
     @Test

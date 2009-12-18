@@ -25,11 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
+import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.variable.GlobalVariables;
 
 public class TestContextTest extends AbstractBaseTest {

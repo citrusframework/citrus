@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 
 public class IgnoreElementsTest extends AbstractBaseTest {

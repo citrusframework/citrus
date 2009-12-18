@@ -24,9 +24,9 @@ import java.util.Collections;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.AbstractBaseTest;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.AbsoluteFunction;
+import com.consol.citrus.testng.AbstractBaseTest;
 
 public class AbsoluteFunctionTest extends AbstractBaseTest {
     AbsoluteFunction function = new AbsoluteFunction();
