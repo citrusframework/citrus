@@ -145,7 +145,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             String expectedMessagePayload = "";
             if (messageResource != null) {
-                expectedMessagePayload = FileUtils.readToString(messageResource);
+                expectedMessagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
             } else if (messageData != null){
                 expectedMessagePayload = context.replaceDynamicContentInString(messageData);
             }

@@ -86,7 +86,7 @@ public class SendMessageAction extends AbstractTestAction {
             String messagePayload = null;
             
             if (messageResource != null) {
-                messagePayload = FileUtils.readToString(messageResource);
+                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
             } else if (messageData != null){
                 messagePayload = context.replaceDynamicContentInString(messageData);
             } else {

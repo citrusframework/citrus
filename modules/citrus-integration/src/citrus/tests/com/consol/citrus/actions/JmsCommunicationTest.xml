@@ -64,16 +64,7 @@
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
                 <message>
-                    <data>
-                        <![CDATA[
-                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
-                           </HelloRequest>                              
-                        ]]>
-                    </data>
+                    <resource file="classpath:com/consol/citrus/actions/helloRequest.xml"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -86,16 +77,7 @@
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
                 <message>
-                    <data>
-                        <![CDATA[
-                            <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                <messageId>${messageId}</messageId>
-                                <correlationId>${correlationId}</correlationId>
-                                <user>HelloService</user>
-                                <text>Hello ${user}</text>
-                            </HelloResponse>
-                        ]]>
-                    </data>
+                    <resource file="classpath:com/consol/citrus/actions/helloResponse.xml"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
