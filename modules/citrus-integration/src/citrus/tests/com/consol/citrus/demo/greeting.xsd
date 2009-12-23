@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://www.citrusframework.org/samples/greeting" 
+        xmlns:tns="http://www.citrusframework.org/samples/greeting" elementFormDefault="qualified">
+        
+        <element name="GreetingRequestMessage">
+            <complexType>
+                <sequence>
+                    <element name="CorrelationId" type="string"/>
+                    <element name="Operation" type="string"/>
+                    <element name="User" type="string"/>
+                    <element name="Text" type="string"/>
+                </sequence>
+            </complexType>
+        </element>
+        
+        <element name="GreetingResponseMessage">
+            <complexType>
+                <sequence>
+                    <element name="CorrelationId" type="string"/>
+                    <element name="Operation" type="string"/>
+                    <element name="User" type="string"/>
+                    <element name="Text" type="string"/>
+                </sequence>
+            </complexType>
+        </element>
+</schema>

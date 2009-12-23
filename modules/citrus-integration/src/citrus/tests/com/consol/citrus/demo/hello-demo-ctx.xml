@@ -90,4 +90,24 @@
     </channel>
     
     <beans:bean id="loggingInterceptor" class="com.consol.citrus.demo.util.LoggingInterceptor"/>
+    
+    <channel id="greetings">
+        <queue/>
+        <interceptors>
+            <wire-tap channel="logger"/>
+            <beans:bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+                <beans:constructor-arg>
+                    <beans:bean class="org.springframework.integration.xml.transformer.XsltPayloadTransformer">
+                        <beans:constructor-arg value="classpath:com/consol/citrus/demo/transform-greetings.xsl"/>
+                        <beans:constructor-arg>
+                            <beans:bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+                        </beans:constructor-arg>
+                    </beans:bean>
+                </beans:constructor-arg>
+            </beans:bean>
+            <wire-tap channel="logger"/>
+        </interceptors>
+    </channel>
+    
+    <logging-channel-adapter id="logger" level="INFO"/>
 </beans:beans>

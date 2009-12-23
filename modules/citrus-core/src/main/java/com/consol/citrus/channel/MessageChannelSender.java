@@ -25,6 +25,7 @@ import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 
 /**
@@ -49,7 +50,9 @@ public class MessageChannelSender implements MessageSender {
             log.debug(message.toString());
         }
         
-        messageChannelTemplate.send(message, channel);
+        if(!messageChannelTemplate.send(message, channel)) {
+            throw new CitrusRuntimeException("Failed to send message to channel" + channel.getName());
+        }
     }
 
     /**

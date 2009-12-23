@@ -22,7 +22,9 @@
      targetNamespace="http://www.citrusframework.org/schema/config"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
+   
     <xs:element name="jms-message-sender" type="jmsAdapterType"/>
+    
     <xs:element name="jms-message-receiver">
         <xs:complexType>
             <xs:complexContent>
@@ -32,6 +34,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="jms-sync-message-sender">
         <xs:complexType>
             <xs:complexContent>
@@ -45,6 +48,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="jms-sync-message-receiver">
         <xs:complexType>
             <xs:complexContent>
@@ -55,11 +59,13 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="jms-reply-message-handler">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="jms-reply-message-sender">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
@@ -69,6 +75,7 @@
             <xs:attribute name="jms-template" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    
     <xs:complexType name="jmsAdapterType">
         <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="destination" type="xs:string"/>
@@ -76,5 +83,31 @@
         <xs:attribute name="connection-factory" type="xs:string"/>
         <xs:attribute name="jms-template" type="xs:string"/>
         <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+    </xs:complexType>
+    
+    <xs:element name="message-channel-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="messageChannelAdapterType">
+                    <xs:attribute name="channel" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="message-channel-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="messageChannelAdapterType">
+                    <xs:attribute name="channel" type="xs:string"/>
+                    <xs:attribute name="receive-timeout" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="messageChannelAdapterType">
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="message-channel-template" type="xs:string"/>
     </xs:complexType>
 </xs:schema>

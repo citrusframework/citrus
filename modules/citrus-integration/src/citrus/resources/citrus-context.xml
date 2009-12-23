@@ -24,6 +24,9 @@
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
                     <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
                 </bean>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/demo/greeting.xsd"/>
+                </bean>
             </list>
         </property>
     </bean>
@@ -223,6 +226,14 @@
     <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
     
     <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
+    
+    <!-- Message channel adapter -->
+    <citrus:message-channel-sender id="greetingChannelRequestSender" 
+                                   channel="greetings"/>
+    
+    <citrus:message-channel-receiver id="greetingChannelResponseReceiver" 
+                                     channel="greetings"
+                                     receive-timeout="5000"/>
     
     <!-- Utility beans -->
     <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
