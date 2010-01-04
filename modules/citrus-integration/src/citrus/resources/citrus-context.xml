@@ -27,16 +27,32 @@
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
                     <property name="xsd" value="classpath:com/consol/citrus/demo/greeting.xsd"/>
                 </bean>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/flightbooking/schema/TravelAgencySchema.xsd"/>
+                </bean>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/flightbooking/schema/AirlineSchema.xsd"/>
+                </bean>
             </list>
         </property>
     </bean>
     
     <context:property-placeholder location="classpath:citrus.properties"/>
 	
+    <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="persistent" value="false"/>
+        <property name="autoStart" value="true"/>
+    </bean>
+    
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+    
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
-                <entry key="project.name" value="Citrus Integration Testing"/>
+                <entry key="project.name" value="Citrus Samples Testing"/>
             </map>
         </property>
     </bean>
@@ -50,23 +66,33 @@
     </bean>
     
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
+
+    <!-- FlightBookingService Sample -->
+    <citrus-http:server id="royalAirlineHttpServer" 
+                        port="8088" uri="/test" 
+                        message-handler="fbsForwardingMessageHandler"/>
+            
+    <bean id="fbsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
+        <property name="destinationName" value="${royal.airline.request.queue}"/>
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="replyTimeout" value="2000"/>
+    </bean>        
+                        
+    <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
+                                 destination-name="${royal.airline.request.queue}"/>
+                                   
+    <citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
+                                reply-destination-holder="royalAirlineBookingRequestReceiver"/>
+        
+    <citrus:jms-message-sender id="travelAgencyBookingRequestSender" destination-name="${travel.agency.request.queue}"/>
     
-    <!-- JMS settings -->
-    <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-        <property name="persistent" value="false"/>
-        <property name="autoStart" value="true"/>
-    </bean>
+    <citrus:jms-message-receiver id="travelAgencyBookingResponseReceiver" 
+                                 destination-name="${travel.agency.response.queue}"/>
     
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-    </bean>
-  
-    <!-- bean id="connectionFactory" class="com.tibco.tibjms.TibjmsQueueConnectionFactory">
-        <property name="serverUrl" value="tcp://localhost:61616" />
-        <property name="userName" value="admin"/>
-        <property name="userPassword" value=""/>
-    </bean-->
+    <citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
+                                 destination-name="${smart.airline.request.queue}"/>
+    
+    <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
     
     <!-- SOAP WebService settings -->
     <citrus-ws:jetty-server id="jettyServer" port="8081"
@@ -242,16 +268,20 @@
             <list>
                 <value>${jms.queue.http.request.forward}</value>
                 <value>${jms.queue.http.request.ack}</value>
-                
                 <value>${jms.ws.stub.request}</value>
                 <value>${jms.ws.stub.response}</value>
-                
                 <value>${jms.queue.test}</value>
-                
                 <value>${jms.queue.hello.request}</value>
                 <value>${jms.queue.hello.response}</value>
                 <value>${jms.queue.hello.sync.request}</value>
                 <value>${jms.queue.date.sync.request}</value>
+                
+                <!-- FlightBookingService -->
+                <value>${travel.agency.request.queue}</value>
+                <value>${travel.agency.response.queue}</value>
+                <value>${smart.airline.request.queue}</value>
+                <value>${smart.airline.response.queue}</value>
+                <value>${royal.airline.request.queue}</value>
             </list>
         </property>
         <property name="queues">
@@ -281,6 +311,10 @@
                         </list>
                     </property>
                 </bean>
+                
+                <bean class="com.consol.citrus.actions.StartServerAction">
+                    <property name="server" ref="royalAirlineHttpServer"/>
+                </bean>
             </list>
         </property>
         <property name="tasksBetween">
@@ -300,6 +334,10 @@
                             <value>DROP TABLE ERRORS</value>
                         </list>
                     </property>
+                </bean>
+                
+                <bean class="com.consol.citrus.actions.StopServerAction">
+                    <property name="server" ref="royalAirlineHttpServer"/>
                 </bean>
             </list>
         </property>

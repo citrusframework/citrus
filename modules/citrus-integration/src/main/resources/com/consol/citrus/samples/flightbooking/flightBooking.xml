@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/jms
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
+    
+    <jms:message-driven-channel-adapter id="bookingIn" destination-name="Travel.Agency.Request.Queue" channel="bookingsXML"/>
+    
+    <int:channel id="bookingsXML"/>
+    <int:transformer input-channel="bookingsXML" ref="unmarshallingTransformer" output-channel="bookings"/>
+    
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <constructor-arg>
+            <ref bean="bookingMarshaller"/>
+        </constructor-arg>
+    </bean>    
+    
+    <bean id="bookingMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+        <property name="aliases">
+            <props>
+                <prop key="flight">com.consol.citrus.samples.flightbooking.model.Flight</prop>
+                <prop key="customer">com.consol.citrus.samples.flightbooking.model.Customer</prop>
+                <prop key="FlightBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage</prop>
+                <prop key="FlightBookingConfirmationMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage</prop>
+                <prop key="TravelBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingRequestMessage</prop>
+                <prop key="TravelBookingResponseMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage</prop>
+            </props>
+        </property>
+        <property name="useAttributeFor">
+            <map key-type="java.lang.Class">
+                <entry key="com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage" value="xmlns"/>
+                <entry key="com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage" value="xmlns"/>
+            </map>
+        </property>
+    </bean>
+    
+	<int:channel id="bookings"/>
+	<int:splitter input-channel="bookings" ref="bookingSplitter" output-channel="flights"/>
+  
+    <bean id="bookingSplitter" class="com.consol.citrus.samples.flightbooking.BookingSplitter"/>
+
+	<int:channel id="flights"/>
+	<int:router input-channel="flights" ref="flightRouter"/>
+  
+    <bean id="flightRouter" class="com.consol.citrus.samples.flightbooking.FlightRouter">
+        <property name="channelResolver">
+            <bean class="org.springframework.integration.channel.MapBasedChannelResolver">
+                <property name="channelMap">
+                    <map>
+                        <entry key="RoyalAirline" value-ref="royalAirlineFlights"/>
+                        <entry key="SmartAirline" value-ref="smartAirlineFlights"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+	<int:channel id="royalAirlineFlights"/>
+    <int:channel id="royalAirlineFlightsXML">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:transformer input-channel="royalAirlineFlights" ref="marshallingTransformer" output-channel="royalAirlineFlightsXML"/>
+    <jms:outbound-gateway id="royalAirlineGateway" 
+                          request-channel="royalAirlineFlightsXML" 
+                          request-destination-name="Royal.Airline.Request.Queue"
+                          reply-channel="confirmedFlightsXML"/>
+    
+	<int:channel id="smartAirlineFlights"/>
+    <int:channel id="smartAirlineFlightsXML">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:transformer input-channel="smartAirlineFlights" ref="marshallingTransformer" output-channel="smartAirlineFlightsXML"/>
+    
+    <jms:outbound-channel-adapter id="smartAirlineAdapter" channel="smartAirlineFlightsXML" destination-name="Smart.Airline.Request.Queue"/>
+
+    <int:channel id="confirmedFlightsXML">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+        </int:interceptors>
+    </int:channel>
+    
+    <jms:message-driven-channel-adapter id="smartConfirmedFlightsAdapter" destination-name="Smart.Airline.Response.Queue" channel="confirmedFlightsXML"/>
+    
+    <int:channel id="confirmedFlights"/>
+    <int:transformer input-channel="confirmedFlightsXML" ref="unmarshallingTransformer" output-channel="confirmedFlights"/>
+    
+    <int:aggregator input-channel="confirmedFlights" 
+            ref="flightAggregator" 
+            method="processFlights" 
+            output-channel="bookingResults"
+            completion-strategy="flightCompletionStrategy"
+            completion-strategy-method="isComplete"
+            correlation-strategy="flightCorrelationStrategy"
+            correlation-strategy-method="getCorrelationKey"
+            timeout="60"
+            send-partial-result-on-timeout="true"/>
+            
+    <bean id="flightAggregator" class="com.consol.citrus.samples.flightbooking.FlightAggregator"/>
+    <bean id="flightCompletionStrategy" class="com.consol.citrus.samples.flightbooking.FlightCompletionStrategy"/>
+    <bean id="flightCorrelationStrategy" class="com.consol.citrus.samples.flightbooking.FlightCorrelationStrategy"/>
+
+    <int:channel id="bookingResultsXML">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+        </int:interceptors>
+    </int:channel>
+    <int:transformer input-channel="bookingResults" ref="marshallingTransformer" output-channel="bookingResultsXML"/>
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <constructor-arg>
+            <ref bean="bookingMarshaller"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </constructor-arg>
+    </bean>
+  
+    <jms:outbound-channel-adapter id="bookingOut" channel="bookingResultsXML" destination-name="Travel.Agency.Response.Queue"/>
+</beans>
