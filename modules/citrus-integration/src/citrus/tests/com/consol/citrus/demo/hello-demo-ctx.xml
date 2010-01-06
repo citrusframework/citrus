@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/integration"
+<beans xmlns="http://www.springframework.org/schema/beans" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:stream="http://www.springframework.org/schema/integration/stream"
+    xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
             http://www.springframework.org/schema/integration
             http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd
-            http://www.springframework.org/schema/integration/stream
-            http://www.springframework.org/schema/integration/stream/spring-integration-stream-1.0.xsd">
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
 
-    <poller id="poller" default="true">
-       <interval-trigger interval="1000"/>
-    </poller>
+    <int:poller id="poller" default="true">
+       <int:interval-trigger interval="1000"/>
+    </int:poller>
     
     <jms:message-driven-channel-adapter id="helloReqeustIn" destination-name="Demo.Hello.Request.Queue" channel="helloRequestsXML"/>
     
@@ -23,91 +20,73 @@
                          request-destination-name="Demo.Sync.Hello.Request.Queue"
                          request-channel="syncHelloRequestsXML"/>
                       
-    <channel id="helloRequestsXML"/>
-    <transformer input-channel="helloRequestsXML" ref="unmarshallingTransformer" output-channel="helloRequests"/>
-    <beans:bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
-        <beans:constructor-arg>
-            <beans:ref bean="helloMarshaller"/>
-        </beans:constructor-arg>
-    </beans:bean>
+    <int:channel id="helloRequestsXML"/>
+    <int:transformer input-channel="helloRequestsXML" ref="unmarshallingTransformer" output-channel="helloRequests"/>
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <constructor-arg>
+            <ref bean="helloMarshaller"/>
+        </constructor-arg>
+    </bean>
     
-    <channel id="syncHelloRequestsXML"/>
-    <transformer input-channel="syncHelloRequestsXML" ref="unmarshallingTransformer" output-channel="syncHelloRequests"/>
+    <int:channel id="syncHelloRequestsXML"/>
+    <int:transformer input-channel="syncHelloRequestsXML" ref="unmarshallingTransformer" output-channel="syncHelloRequests"/>
     
-    <beans:bean id="helloMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
-        <beans:property name="aliases">
-            <beans:props>
-                <beans:prop key="HelloRequest">com.consol.citrus.demo.HelloRequestMessage</beans:prop>
-                <beans:prop key="HelloResponse">com.consol.citrus.demo.HelloResponseMessage</beans:prop>
-            </beans:props>
-        </beans:property>
-        <beans:property name="useAttributeFor">
-            <beans:map key-type="java.lang.Class">
-                <beans:entry key="com.consol.citrus.demo.HelloRequestMessage" value="xmlns"/>
-                <beans:entry key="com.consol.citrus.demo.HelloResponseMessage" value="xmlns"/>
-            </beans:map>
-        </beans:property>
-    </beans:bean>
+    <bean id="helloMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+        <property name="aliases">
+            <props>
+                <prop key="HelloRequest">com.consol.citrus.demo.HelloRequestMessage</prop>
+                <prop key="HelloResponse">com.consol.citrus.demo.HelloResponseMessage</prop>
+            </props>
+        </property>
+        <property name="useAttributeFor">
+            <map key-type="java.lang.Class">
+                <entry key="com.consol.citrus.demo.HelloRequestMessage" value="xmlns"/>
+                <entry key="com.consol.citrus.demo.HelloResponseMessage" value="xmlns"/>
+            </map>
+        </property>
+    </bean>
     
-    <channel id="helloRequests"/>
-    <service-activator input-channel="helloRequests" 
+    <int:channel id="helloRequests"/>
+    <int:service-activator input-channel="helloRequests" 
                        output-channel="helloResponses"
                        ref="helloService" 
                        method="sayHello"/>
                        
-    <channel id="syncHelloRequests"/>
-    <service-activator input-channel="syncHelloRequests" 
+    <int:channel id="syncHelloRequests"/>
+    <int:service-activator input-channel="syncHelloRequests" 
                        ref="syncHelloService" 
                        method="sayHello"/>                   
                        
-    <beans:bean id="helloService" class="com.consol.citrus.demo.HelloServiceImpl"/>
+    <bean id="helloService" class="com.consol.citrus.demo.HelloServiceImpl"/>
     
-    <beans:bean id="syncHelloService" class="com.consol.citrus.demo.SyncHelloServiceImpl"/>
+    <bean id="syncHelloService" class="com.consol.citrus.demo.SyncHelloServiceImpl"/>
      
-    <channel id="helloResponses"/>
-    <channel id="helloResponsesXML">
-        <interceptors>
-            <beans:ref bean="loggingInterceptor"/>
-        </interceptors>
-    </channel>
+    <int:channel id="helloResponses"/>
+    <int:channel id="helloResponsesXML">
+        <int:interceptors>
+            <ref bean="loggingInterceptor"/>
+        </int:interceptors>
+    </int:channel>
     
-    <transformer input-channel="helloResponses" ref="marshallingTransformer" output-channel="helloResponsesXML"/>
-    <beans:bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
-        <beans:constructor-arg>
-            <beans:ref bean="helloMarshaller"/>
-        </beans:constructor-arg>
-        <beans:constructor-arg>
-            <beans:bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
-        </beans:constructor-arg>
-    </beans:bean>
+    <int:transformer input-channel="helloResponses" ref="marshallingTransformer" output-channel="helloResponsesXML"/>
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <constructor-arg>
+            <ref bean="helloMarshaller"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </constructor-arg>
+    </bean>
   
     <jms:outbound-channel-adapter id="helloResponseOut" channel="helloResponsesXML" destination-name="Demo.Hello.Response.Queue"/>
     
-    <channel id="errorChannel">
-        <interceptors>
-            <beans:ref bean="loggingInterceptor"/>
-        </interceptors>
-    </channel>
+    <int:channel id="errorChannel">
+        <int:interceptors>
+            <ref bean="loggingInterceptor"/>
+        </int:interceptors>
+    </int:channel>
     
-    <beans:bean id="loggingInterceptor" class="com.consol.citrus.demo.util.LoggingInterceptor"/>
+    <bean id="loggingInterceptor" class="com.consol.citrus.demo.util.LoggingInterceptor"/>
     
-    <channel id="greetings">
-        <queue/>
-        <interceptors>
-            <wire-tap channel="logger"/>
-            <beans:bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
-                <beans:constructor-arg>
-                    <beans:bean class="org.springframework.integration.xml.transformer.XsltPayloadTransformer">
-                        <beans:constructor-arg value="classpath:com/consol/citrus/demo/transform-greetings.xsl"/>
-                        <beans:constructor-arg>
-                            <beans:bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
-                        </beans:constructor-arg>
-                    </beans:bean>
-                </beans:constructor-arg>
-            </beans:bean>
-            <wire-tap channel="logger"/>
-        </interceptors>
-    </channel>
-    
-    <logging-channel-adapter id="logger" level="INFO"/>
-</beans:beans>
+    <int:logging-channel-adapter id="logger" level="INFO"/>
+</beans>

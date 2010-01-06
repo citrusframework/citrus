@@ -16,6 +16,7 @@
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	 
 	<import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
+    <import resource="com/consol/citrus/samples/greeting/channel/greetings.xml"/>
 	
     <!-- Common settings -->
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
@@ -25,7 +26,7 @@
                     <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
                 </bean>
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/demo/greeting.xsd"/>
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/greeting/channel/schema/greeting.xsd"/>
                 </bean>
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
                     <property name="xsd" value="classpath:com/consol/citrus/samples/flightbooking/schema/TravelAgencySchema.xsd"/>

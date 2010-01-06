@@ -17,7 +17,7 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.channel;
+package com.consol.citrus.samples.greeting.channel;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -29,9 +29,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author deppisch Christoph Deppisch Consol* Software GmbH
  * @since 31.10.2008
  */
-public class MessageChannelIntegrationTest extends AbstractTestNGCitrusTest {
+public class GreetingChannelTest extends AbstractTestNGCitrusTest {
     @Test
-    public void echoTest(ITestContext testContext) {
+    public void greetingChannelTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
