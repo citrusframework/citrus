@@ -17,17 +17,27 @@
  *  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.samples.flightbooking.model;
+package com.consol.citrus.samples.greeting.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TravelBookingResponseMessage {
+public class GreetingRequestMessage {
+    private String operation;
     private String correlationId;
+    private String text;
+    private String user;
     
-    private boolean success;
+    /**
+     * @return the operation
+     */
+    public String getOperation() {
+        return operation;
+    }
     
-    private List<Flight> flights = new ArrayList<Flight>();
+    /**
+     * @param operation the operation to set
+     */
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
     
     /**
      * @return the correlationId
@@ -44,30 +54,31 @@ public class TravelBookingResponseMessage {
     }
     
     /**
-     * @return the success
+     * @return the text
      */
-    public boolean isSuccess() {
-        return success;
-    }
-    /**
-     * @param success the success to set
-     */
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public String getText() {
+        return text;
     }
     
     /**
-     * @return the flights
+     * @param text the text to set
      */
-    public List<Flight> getFlights() {
-        return flights;
+    public void setText(String text) {
+        this.text = text;
     }
     
     /**
-     * @param flights the flights to set
+     * @return the user
      */
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
+    public String getUser() {
+        return user;
+    }
+    
+    /**
+     * @param user the user to set
+     */
+    public void setUser(String user) {
+        this.user = user;
     }
     
 }

@@ -23,10 +23,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -39,9 +39,9 @@
             
             <receive with="helloResponseReceiver">
                 <message>
-                    <validate path="//:HelloResponse/:messageId" value="${messageId}"/>
-                    <validate path="//:HelloResponse/:correlationId" value="${correlationId}"/>
-                    <validate path="//:HelloResponse/:text" value="citrus:concat('Hello ', ${user})"/>
+                    <validate path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
+                    <validate path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
+                    <validate path="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -57,10 +57,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -73,9 +73,9 @@
             
             <receive with="helloResponseReceiver">
                 <message>
-                    <validate path="//ns1:HelloResponse/ns1:messageId" value="${messageId}"/>
-                    <validate path="//ns1:HelloResponse/ns1:correlationId" value="${correlationId}"/>
-                    <validate path="//ns1:HelloResponse/ns1:text" value="citrus:concat('Hello ', ${user})"/>
+                    <validate path="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
+                    <validate path="//ns1:HelloResponse/ns1:CorrelationId" value="${correlationId}"/>
+                    <validate path="//ns1:HelloResponse/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
                     <namespace prefix="ns1" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
@@ -92,10 +92,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -108,9 +108,9 @@
             
             <receive with="helloResponseReceiver">
                 <message>
-                    <validate path="//:HelloResponse/:messageId" value="${messageId}"/>
-                    <validate path="//:HelloResponse/:correlationId" value="${correlationId}"/>
-                    <validate path="//:HelloResponse/:text" value="citrus:concat('Hello ', ${user})"/>
+                    <validate path="//:HelloResponse/:MessageId" value="${messageId}"/>
+                    <validate path="//:HelloResponse/:CorrelationId" value="${correlationId}"/>
+                    <validate path="//:HelloResponse/:Text" value="citrus:concat('Hello ', ${user})"/>
                     <namespace prefix="" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>

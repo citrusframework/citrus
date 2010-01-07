@@ -28,8 +28,6 @@ public class FlightBookingRequestMessage {
     
     private Flight flight;
     
-    private String xmlns = "http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd";
-    
     /**
      * @return the correlationId
      */
@@ -86,17 +84,4 @@ public class FlightBookingRequestMessage {
         this.flight = flight;
     }
     
-    /**
-     * @param xmlns the xmlns to set
-     */
-    public void setXmlns(String xmlns) {
-        this.xmlns = xmlns;
-    }
-    
-    /**
-     * @return the xmlns
-     */
-    public String getXmlns() {
-        return xmlns;
-    }
 }

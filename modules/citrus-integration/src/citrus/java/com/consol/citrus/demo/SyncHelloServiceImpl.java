@@ -24,14 +24,14 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.xml.transform.StringResult;
 
 public class SyncHelloServiceImpl implements SyncHelloService  {
     
     @Autowired
-    XStreamMarshaller helloMarshaller;
+    Marshaller helloMarshaller;
     
     public Message<String> sayHello(Message<HelloRequestMessage> request) {
         HelloResponseMessage helloResponse = new HelloResponseMessage();

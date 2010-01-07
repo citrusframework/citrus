@@ -31,18 +31,16 @@
     <int:channel id="syncHelloRequestsXML"/>
     <int:transformer input-channel="syncHelloRequestsXML" ref="unmarshallingTransformer" output-channel="syncHelloRequests"/>
     
-    <bean id="helloMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
-        <property name="aliases">
+    <bean id="helloMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
             <props>
-                <prop key="HelloRequest">com.consol.citrus.demo.HelloRequestMessage</prop>
-                <prop key="HelloResponse">com.consol.citrus.demo.HelloResponseMessage</prop>
+                <prop key="ns0">http://www.consol.de/schemas/samples/sayHello.xsd</prop>
             </props>
         </property>
-        <property name="useAttributeFor">
-            <map key-type="java.lang.Class">
-                <entry key="com.consol.citrus.demo.HelloRequestMessage" value="xmlns"/>
-                <entry key="com.consol.citrus.demo.HelloResponseMessage" value="xmlns"/>
-            </map>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/demo/hello-mapping.xml</value>
+            </list>
         </property>
     </bean>
     

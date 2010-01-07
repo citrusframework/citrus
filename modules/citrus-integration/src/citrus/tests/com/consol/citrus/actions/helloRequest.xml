@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-     <messageId>${messageId}</messageId>
-     <correlationId>${correlationId}</correlationId>
-     <user>${user}</user>
-     <text>Hello TestFramework</text>
- </HelloRequest>
+     <MessageId>${messageId}</MessageId>
+     <CorrelationId>${correlationId}</CorrelationId>
+     <User>${user}</User>
+     <Text>Hello TestFramework</Text>
+</HelloRequest>

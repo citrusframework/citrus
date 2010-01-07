@@ -21,22 +21,16 @@
         </constructor-arg>
     </bean>    
     
-    <bean id="bookingMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
-        <property name="aliases">
+    <bean id="bookingMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
             <props>
-                <prop key="flight">com.consol.citrus.samples.flightbooking.model.Flight</prop>
-                <prop key="customer">com.consol.citrus.samples.flightbooking.model.Customer</prop>
-                <prop key="FlightBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage</prop>
-                <prop key="FlightBookingConfirmationMessage">com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage</prop>
-                <prop key="TravelBookingRequestMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingRequestMessage</prop>
-                <prop key="TravelBookingResponseMessage">com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage</prop>
+                <prop key="fbs">http://www.consol.com/schemas/flightbooking</prop>
             </props>
         </property>
-        <property name="useAttributeFor">
-            <map key-type="java.lang.Class">
-                <entry key="com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage" value="xmlns"/>
-                <entry key="com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage" value="xmlns"/>
-            </map>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/samples/flightbooking/castor/flightbooking-mapping.xml</value>
+            </list>
         </property>
     </bean>
     

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" 
+                         "http://castor.org/mapping.dtd">
+                         
+<mapping>
+    <description>FlightBooking mappings</description>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.Flight">
+        <map-to xml="Flight" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="flightId">
+            <bind-xml name="flightId" node="element"/>
+        </field>
+                
+        <field name="airline">
+            <bind-xml name="airline" node="element"/>
+        </field>
+        
+        <field name="fromAirport">
+            <bind-xml name="fromAirport" node="element"/>
+        </field>
+        
+        <field name="toAirport">
+            <bind-xml name="toAirport" node="element"/>
+        </field>
+        
+        <field name="date">
+            <bind-xml name="date" node="element"/>
+        </field>
+        
+        <field name="scheduledDeparture">
+            <bind-xml name="scheduledDeparture" node="element"/>
+        </field>
+        
+        <field name="scheduledArrival">
+            <bind-xml name="scheduledArrival" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.Customer">
+        <map-to xml="Customer" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="id">
+            <bind-xml name="id" node="element"/>
+        </field>
+                
+        <field name="firstname">
+            <bind-xml name="firstname" node="element"/>
+        </field>
+        
+        <field name="lastname">
+            <bind-xml name="lastname" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage">
+        <map-to xml="FlightBookingRequestMessage" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="correlationId">
+            <bind-xml name="correlationId" node="element"/>
+        </field>
+                
+        <field name="bookingId">
+            <bind-xml name="bookingId" node="element"/>
+        </field>
+        
+        <field name="customer" type="com.consol.citrus.samples.flightbooking.model.Customer">
+            <bind-xml name="customer" node="element"/>
+        </field>
+        
+        <field name="flight" type="com.consol.citrus.samples.flightbooking.model.Flight">
+            <bind-xml name="flight" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage">
+        <map-to xml="FlightBookingConfirmationMessage" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="correlationId">
+            <bind-xml name="correlationId" node="element"/>
+        </field>
+                
+        <field name="bookingId">
+            <bind-xml name="bookingId" node="element"/>
+        </field>
+        
+        <field name="success" type="java.lang.Boolean">
+            <bind-xml name="success" node="element"/>
+        </field>
+        
+        <field name="flight" type="com.consol.citrus.samples.flightbooking.model.Flight">
+            <bind-xml name="flight" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.TravelBookingRequestMessage">
+        <map-to xml="TravelBookingRequestMessage" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="correlationId">
+            <bind-xml name="correlationId" node="element"/>
+        </field>
+                
+        <field name="customer" type="com.consol.citrus.samples.flightbooking.model.Customer">
+            <bind-xml name="customer" node="element"/>
+        </field>
+        
+        <field name="flights" collection="arraylist" type="com.consol.citrus.samples.flightbooking.model.Flight">
+            <bind-xml name="flight" node="element" location="flights"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage">
+        <map-to xml="TravelBookingResponseMessage" ns-prefix="fbs" ns-uri="http://www.consol.com/schemas/flightbooking"/>
+
+        <field name="correlationId">
+            <bind-xml name="correlationId" node="element"/>
+        </field>
+                
+        <field name="success" type="java.lang.Boolean">
+            <bind-xml name="success" node="element"/>
+        </field>
+        
+        <field name="flights" collection="arraylist" type="com.consol.citrus.samples.flightbooking.model.Flight">
+            <bind-xml name="flight" node="element" location="flights"/>
+        </field>
+    </class>
+</mapping>

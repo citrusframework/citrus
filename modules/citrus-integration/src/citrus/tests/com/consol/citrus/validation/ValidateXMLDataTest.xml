@@ -23,10 +23,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -42,16 +42,16 @@
                     <data>
 	                    <![CDATA[
 							<HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                <messageId>_</messageId>
-                                <correlationId>_</correlationId>
-                                <user>HelloService</user>
-                                <text>xxx</text>
+                                <MessageId>_</MessageId>
+                                <CorrelationId>_</CorrelationId>
+                                <User>HelloService</User>
+                                <Text>xxx</Text>
                             </HelloResponse>						
 						]]>
 					</data>
-                    <element path="HelloResponse.messageId" value="${messageId}"/>
-                    <element path="correlationId" value="${correlationId}"/>
-                    <ignore path="HelloResponse.text"/>
+                    <element path="HelloResponse.MessageId" value="${messageId}"/>
+                    <element path="CorrelationId" value="${correlationId}"/>
+                    <ignore path="HelloResponse.Text"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -67,10 +67,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>${user}</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -85,17 +85,17 @@
                 <message>
                     <data>
                         <![CDATA[
-							<HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                <messageId>_</messageId>
-                                <correlationId>_</correlationId>
-                                <user>HelloService</user>
-                                <text>xxx</text>
-                            </HelloResponse>
+							<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                <ns0:MessageId>_</ns0:MessageId>
+                                <ns0:CorrelationId>_</ns0:CorrelationId>
+                                <ns0:User>HelloService</ns0:User>
+                                <ns0:Text>xxx</ns0:Text>
+                            </ns0:HelloResponse>
 					    ]]>
 					</data>
-                    <element path="//:HelloResponse/:messageId" value="${messageId}"/>
-                    <element path="//:HelloResponse/:correlationId" value="${correlationId}"/>
-                    <ignore path="//:HelloResponse/:text"/>
+                    <element path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
+                    <element path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
+                    <ignore path="//ns0:HelloResponse/ns0:Text"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

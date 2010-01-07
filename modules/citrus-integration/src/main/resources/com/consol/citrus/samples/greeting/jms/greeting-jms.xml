@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/jms
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
+    
+    <jms:message-driven-channel-adapter id="greetingReqeustIn" destination-name="Citrus.Samples.Greeting.Request.Queue" channel="greetingRequestsXML"/>
+    
+    <int:channel id="greetingRequestsXML"/>
+    <int:transformer input-channel="greetingRequestsXML" ref="unmarshallingTransformer" output-channel="greetingRequests"/>
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <constructor-arg>
+            <ref bean="xmlMarshaller"/>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="xmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="greet">http://www.citrusframework.org/samples/greeting</prop>
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/samples/greeting/castor/greeting-mapping.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <int:channel id="greetingRequests"/>
+    <int:service-activator input-channel="greetingRequests" 
+                       output-channel="greetingResponses"
+                       ref="greetingService" 
+                       method="sayHello"/>
+                       
+    <bean id="greetingService" class="com.consol.citrus.samples.greeting.GreetingService"/>
+    
+    <int:channel id="greetingResponses"/>
+    <int:channel id="greetingResponsesXML">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:transformer input-channel="greetingResponses" ref="marshallingTransformer" output-channel="greetingResponsesXML"/>
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <constructor-arg>
+            <ref bean="xmlMarshaller"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </constructor-arg>
+    </bean>
+  
+    <jms:outbound-channel-adapter id="greetingResponseOut" channel="greetingResponsesXML" destination-name="Citrus.Samples.Greeting.Response.Queue"/>                       
+</beans>

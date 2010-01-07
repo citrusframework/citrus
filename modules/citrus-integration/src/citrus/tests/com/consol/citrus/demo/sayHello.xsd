@@ -8,33 +8,33 @@
 	<xs:element name="HelloRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="messageId"/>
-				<xs:element ref="correlationId"/>
-				<xs:element ref="user"/>
-				<xs:element ref="text"/>
+				<xs:element ref="MessageId"/>
+				<xs:element ref="CorrelationId"/>
+				<xs:element ref="User"/>
+				<xs:element ref="Text"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="HelloResponse">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="messageId"/>
-				<xs:element ref="correlationId"/>
-				<xs:element ref="user"/>
-				<xs:element ref="text"/>
-				<xs:element ref="exception" minOccurs="0"/>
+				<xs:element ref="MessageId"/>
+				<xs:element ref="CorrelationId"/>
+				<xs:element ref="User"/>
+				<xs:element ref="Text"/>
+				<xs:element ref="Exception" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="messageId" type="xs:string"/>
-	<xs:element name="correlationId" type="xs:string"/>
-	<xs:element name="text" type="xs:string"/>
-	<xs:element name="user" type="xs:string"/>
-	<xs:element name="exception">
+	<xs:element name="MessageId" type="xs:string"/>
+	<xs:element name="CorrelationId" type="xs:string"/>
+	<xs:element name="Text" type="xs:string"/>
+	<xs:element name="User" type="xs:string"/>
+	<xs:element name="Exception">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="code" type="xs:string"/>
-				<xs:element name="message" type="xs:string"/>
+				<xs:element name="Code" type="xs:string"/>
+				<xs:element name="Message" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

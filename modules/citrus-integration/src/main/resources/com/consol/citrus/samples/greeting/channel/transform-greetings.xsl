@@ -6,7 +6,7 @@
 		<tns:GreetingResponseMessage>
             <tns:CorrelationId><xsl:value-of select="tns:CorrelationId"/></tns:CorrelationId>
             <tns:Operation><xsl:value-of select="tns:Operation"/></tns:Operation>
-            <tns:User>GreetingServer</tns:User>
+            <tns:User>GreetingService</tns:User>
             <tns:Text>Hello <xsl:value-of select="tns:User"/>!</tns:Text>
         </tns:GreetingResponseMessage>
 	</xsl:template>

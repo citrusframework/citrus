@@ -24,10 +24,10 @@
                     <data>
                         <![CDATA[
                         <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                           <messageId>${messageId}</messageId>
-                           <correlationId>${correlationId}</correlationId>
-                           <user>${user}</user>
-                           <text>Hello TestFramework</text>
+                           <MessageId>${messageId}</MessageId>
+                           <CorrelationId>${correlationId}</CorrelationId>
+                           <User>${user}</User>
+                           <Text>Hello TestFramework</Text>
                         </HelloRequest>
                       ]]>
                   </data>
@@ -46,10 +46,10 @@
                     <data>
                         <![CDATA[
                         <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                           <messageId>${messageId}</messageId>
-                           <correlationId>${correlationId}</correlationId>
-                           <user>${user}</user>
-                           <text>Hello TestFramework</text>
+                           <MessageId>${messageId}</MessageId>
+                           <CorrelationId>${correlationId}</CorrelationId>
+                           <User>${user}</User>
+                           <Text>Hello TestFramework</Text>
                         </HelloRequest>
                       ]]>
                   </data>
@@ -71,10 +71,10 @@
                         <data>
                             <![CDATA[
                              <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                 <messageId>${messageId}</messageId>
-                                 <correlationId>${correlationId}</correlationId>
-                                 <user>${user}</user>
-                                 <text>Hello TestFramework</text>
+                                 <MessageId>${messageId}</MessageId>
+                                 <CorrelationId>${correlationId}</CorrelationId>
+                                 <User>${user}</User>
+                                 <Text>Hello TestFramework</Text>
                              </HelloRequest>                              
                           ]]>
                       </data>

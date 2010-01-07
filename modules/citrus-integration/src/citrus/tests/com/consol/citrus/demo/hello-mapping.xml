@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" 
+                         "http://castor.org/mapping.dtd">
+                         
+<mapping>
+    <description>Hello request/response mapping</description>
+    
+    <class name="com.consol.citrus.demo.HelloRequestMessage">
+        <map-to xml="HelloRequest" ns-prefix="ns0" ns-uri="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+
+        <field name="messageId">
+            <bind-xml name="MessageId" node="element"/>
+        </field>
+                
+        <field name="correlationId">
+            <bind-xml name="CorrelationId" node="element"/>
+        </field>
+        
+        <field name="user">
+            <bind-xml name="User" node="element"/>
+        </field>
+        
+        <field name="text">
+            <bind-xml name="Text" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.demo.HelloResponseMessage">
+        <map-to xml="HelloResponse" ns-prefix="ns0" ns-uri="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+        
+        <field name="messageId">
+            <bind-xml name="MessageId" node="element"/>
+        </field>
+        
+        <field name="correlationId">
+            <bind-xml name="CorrelationId" node="element"/>
+        </field>
+        
+        <field name="user">
+            <bind-xml name="User" node="element"/>
+        </field>
+        
+        <field name="text">
+            <bind-xml name="Text" node="element"/>
+        </field>
+        
+        <field name="exception">
+            <bind-xml name="Exception" node="element"/>
+        </field>
+    </class>
+</mapping>

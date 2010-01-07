@@ -46,10 +46,10 @@
                     <data>
                         <![CDATA[
                            <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                               <messageId>${messageId}</messageId>
-                               <correlationId>${correlationId}</correlationId>
-                               <user>Christoph</user>
-                               <text>Hello TestFramework</text>
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>Christoph</User>
+                               <Text>Hello TestFramework</Text>
                            </HelloRequest>                              
                         ]]>
                     </data>
@@ -62,12 +62,12 @@
             
 			<receive with="helloResponseReceiver">
 				<message>
-					<validate path="HelloResponse.correlationId" value="${correlationId}"/>
+					<validate path="HelloResponse.CorrelationId" value="${correlationId}"/>
 				</message>
 				<extract>
 					<header name="Operation" variable="${operation}"/>
 					<header name="CorrelationId" variable="${id}"/>
-					<message path="//:HelloResponse/:user" variable="${user}"/>
+					<message path="//ns0:HelloResponse/ns0:User" variable="${user}"/>
 				</extract>
 			</receive>
 			

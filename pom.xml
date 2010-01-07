@@ -456,6 +456,11 @@
             <enabled>true</enabled>
           </releases>
         </repository>
+        <repository>
+            <id>codehaus</id>
+            <name>Codehaus Maven repository</name>
+            <url>http://repository.codehaus.org/</url>
+        </repository>
       </repositories>
       <activation>
         <activeByDefault>false</activeByDefault>
