@@ -160,7 +160,7 @@
     
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
-        <property name="url" value="jdbc:hsqldb:mem:my-project-test"/>
+        <property name="url" value="jdbc:hsqldb:mem:flightbooking-test"/>
         <property name="username" value="sa"/>
         <property name="password" value=""/>
     </bean>
