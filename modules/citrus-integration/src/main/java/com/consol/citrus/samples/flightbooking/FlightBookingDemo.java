@@ -29,7 +29,7 @@ public class FlightBookingDemo extends CitrusSamplesDemo {
     }
     
     @Override
-    protected Class getDemoClass() {
+    protected Class<? extends CitrusSamplesDemo> getDemoClass() {
         return FlightBookingDemo.class;
     }
 }

@@ -19,11 +19,24 @@
 
 package com.consol.citrus.samples.flightbooking.model;
 
-public class Customer {
+import java.io.Serializable;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "FBS_CUSTOMER")
+public class Customer implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @Column(name = "ID")
     private String id;
     
+    @Column(name = "FIRSTNAME", length = 150, nullable = false)
     private String firstname;
     
+    @Column(name = "LASTNAME", length = 150, nullable = false)
     private String lastname;
     
     /**

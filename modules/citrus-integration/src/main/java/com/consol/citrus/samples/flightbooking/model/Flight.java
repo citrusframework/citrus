@@ -19,20 +19,34 @@
 
 package com.consol.citrus.samples.flightbooking.model;
 
+import javax.persistence.*;
 
+@Entity
+@Table(name = "FBS_FLIGHT")
 public class Flight {
+    
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @Column(name = "FLIGHT_ID")
     private String flightId;
     
+    @Column(name = "AIRLINE", length = 150, nullable = false)
     private String airline;
     
+    @Column(name = "FROM_AIRPORT", length = 3, nullable = false)
     private String fromAirport;
     
+    @Column(name = "TO_AIRPORT", length = 3, nullable = false)
     private String toAirport;
     
+    @Column(name = "DATE", length = 20, nullable = false)
     private String date;
     
+    @Column(name = "SCHEDULED_DEPARTURE", length = 40, nullable = false)
     private String scheduledDeparture;
     
+    @Column(name = "SCHEDULED_ARRIVAL", length = 40, nullable = false)
     private String scheduledArrival;
     
     /**

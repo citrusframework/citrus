@@ -22,18 +22,18 @@ package com.consol.citrus.samples.flightbooking;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.springframework.integration.annotation.Router;
 import org.springframework.integration.channel.ChannelResolver;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.router.AbstractMessageRouter;
 
 import com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage;
 
-public class FlightRouter extends AbstractMessageRouter {
+public class FlightRouter {
     
     private ChannelResolver channelResolver;
     
-    @Override
+    @Router
     public Collection<MessageChannel> determineTargetChannels(Message<?> message) {
         
         FlightBookingRequestMessage request = (FlightBookingRequestMessage)message.getPayload();

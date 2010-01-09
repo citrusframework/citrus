@@ -50,6 +50,11 @@
   </build>
   <dependencies>
     <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>1.0</version>
+    </dependency>
+    <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <scope>test</scope>
@@ -80,6 +85,11 @@
         <version>3.6</version>
     </dependency>
     <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>3.4.0.GA</version>
+    </dependency>
+    <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-core</artifactId>
     </dependency> 
@@ -98,6 +108,11 @@
     <dependency>
         <groupId>org.springframework.ws</groupId>
         <artifactId>spring-oxm</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${spring.version}</version>
     </dependency>
     <dependency>
         <groupId>org.codehaus.castor</groupId>

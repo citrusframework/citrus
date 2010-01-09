@@ -72,7 +72,7 @@ public class CitrusSamplesDemo {
      * 
      * @return class
      */
-    protected Class getDemoClass() {
+    protected Class<? extends CitrusSamplesDemo> getDemoClass() {
         return CitrusSamplesDemo.class;
     }
     

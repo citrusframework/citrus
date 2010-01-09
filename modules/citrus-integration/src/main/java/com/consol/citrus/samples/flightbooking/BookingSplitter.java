@@ -22,15 +22,20 @@ package com.consol.citrus.samples.flightbooking;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.integration.annotation.Splitter;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
-import org.springframework.integration.splitter.AbstractMessageSplitter;
 
 import com.consol.citrus.samples.flightbooking.model.*;
+import com.consol.citrus.samples.flightbooking.persistence.CustomerDao;
+import com.consol.citrus.samples.flightbooking.persistence.FlightDao;
 
-public class BookingSplitter extends AbstractMessageSplitter {
+public class BookingSplitter {
+    private CustomerDao customerDao;
     
-    @Override
+    private FlightDao flightDao;
+    
+    @Splitter
     public Object splitMessage(Message<?> message) {
         List<Message<FlightBookingRequestMessage>> flightRequests = new ArrayList<Message<FlightBookingRequestMessage>>();
         
@@ -40,7 +45,17 @@ public class BookingSplitter extends AbstractMessageSplitter {
         
         TravelBookingRequestMessage request  = ((TravelBookingRequestMessage)message.getPayload());
         
+        //Save customer if not already present
+        if(customerDao.find(request.getCustomer().getId()) == null) {
+            customerDao.persist(request.getCustomer());
+        }
+        
         for (Flight flight : request.getFlights()) {
+            //Save flight if necessary
+            if (flightDao.find(flight.getFlightId()) == null) {
+                flightDao.persist(flight);
+            }
+            
             FlightBookingRequestMessage flightRequest = new FlightBookingRequestMessage();
             flightRequest.setFlight(flight);
             flightRequest.setCorrelationId(request.getCorrelationId());
@@ -54,5 +69,19 @@ public class BookingSplitter extends AbstractMessageSplitter {
         }
         
         return flightRequests;
+    }
+
+    /**
+     * @param customerDao the customerDao to set
+     */
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    /**
+     * @param flightDao the flightDao to set
+     */
+    public void setFlightDao(FlightDao flightDao) {
+        this.flightDao = flightDao;
     }
 }

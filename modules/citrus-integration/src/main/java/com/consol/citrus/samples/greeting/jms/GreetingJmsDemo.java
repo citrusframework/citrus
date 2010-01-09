@@ -29,7 +29,7 @@ public class GreetingJmsDemo extends CitrusSamplesDemo {
     }
     
     @Override
-    protected Class getDemoClass() {
+    protected Class<? extends CitrusSamplesDemo> getDemoClass() {
         return GreetingJmsDemo.class;
     }
 }
