@@ -79,6 +79,4 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
     }
-
-    
 }
