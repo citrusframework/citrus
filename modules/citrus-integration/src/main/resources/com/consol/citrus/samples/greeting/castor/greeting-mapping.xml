@@ -6,7 +6,7 @@
     <description>Greeting request/response mapping</description>
     
     <class name="com.consol.citrus.samples.greeting.model.GreetingRequestMessage">
-        <map-to xml="GreetingRequestMessage" ns-prefix="greet" ns-uri="http://www.citrusframework.org/samples/greeting"/>
+        <map-to xml="GreetingRequestMessage" ns-prefix="tns" ns-uri="http://www.citrusframework.org/samples/greeting"/>
         
         <field name="correlationId">
             <bind-xml name="CorrelationId" node="element"/>
@@ -26,7 +26,7 @@
     </class>
     
     <class name="com.consol.citrus.samples.greeting.model.GreetingResponseMessage">
-        <map-to xml="GreetingResponseMessage" ns-prefix="greet" ns-uri="http://www.citrusframework.org/samples/greeting"/>
+        <map-to xml="GreetingResponseMessage" ns-prefix="tns" ns-uri="http://www.citrusframework.org/samples/greeting"/>
         
         <field name="correlationId">
             <bind-xml name="CorrelationId" node="element"/>
@@ -42,10 +42,6 @@
         
         <field name="text">
             <bind-xml name="Text" node="element"/>
-        </field>
-        
-        <field name="exception">
-            <bind-xml name="Exception" node="element"/>
         </field>
     </class>
 </mapping>

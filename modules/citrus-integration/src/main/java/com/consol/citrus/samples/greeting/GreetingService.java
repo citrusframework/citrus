@@ -22,12 +22,13 @@ package com.consol.citrus.samples.greeting;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
+import com.consol.citrus.samples.common.AbstractMarshallingMessageService;
 import com.consol.citrus.samples.greeting.model.GreetingRequestMessage;
 import com.consol.citrus.samples.greeting.model.GreetingResponseMessage;
 
-public class GreetingService {
+public class GreetingService extends AbstractMarshallingMessageService<GreetingRequestMessage, GreetingResponseMessage> {
 
-    public Message<GreetingResponseMessage> sayHello(Message<GreetingRequestMessage> request) {
+    public Message<GreetingResponseMessage> processMessage(Message<GreetingRequestMessage> request) {
         GreetingResponseMessage response = new GreetingResponseMessage();
         response.setOperation(request.getPayload().getOperation());
         response.setCorrelationId(request.getPayload().getCorrelationId());
