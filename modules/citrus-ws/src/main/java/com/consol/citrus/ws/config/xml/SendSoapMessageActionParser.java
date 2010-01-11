@@ -27,6 +27,7 @@ import com.consol.citrus.config.xml.SendMessageActionParser;
 
 public class SendSoapMessageActionParser extends SendMessageActionParser {
 
+    @Override
     public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.SendSoapMessageAction");
         

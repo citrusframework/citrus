@@ -28,6 +28,7 @@ import com.consol.citrus.samples.greeting.model.GreetingResponseMessage;
 
 public class GreetingService extends AbstractMarshallingMessageService<GreetingRequestMessage, GreetingResponseMessage> {
 
+    @Override
     public Message<GreetingResponseMessage> processMessage(Message<GreetingRequestMessage> request) {
         GreetingResponseMessage response = new GreetingResponseMessage();
         response.setOperation(request.getPayload().getOperation());
