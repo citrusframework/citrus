@@ -46,7 +46,8 @@
       <p>
         Citrus uses following technologies
         <ul> 
-          <li><a href="http://www.springframework.org">Spring 2.5.x</a> as the glue for everything</li>
+          <li><a href="http://www.springsource.org">Spring 2.5.x</a> as the glue for everything</li>
+          <li><a href="http://www.springsource.org/spring-integration">Spring Integration 1.0.3</a> as messaging solution</li>
           <li><a href="http://testng.org/">TestNG</a> runs Citrus tests</li>
           <li><a href="http://www.slf4j.org/">SLF4J</a> for logging</li>
           <li><a href="http://maven.apache.org">Maven</a> as build tool with support for multi module projects</li>
