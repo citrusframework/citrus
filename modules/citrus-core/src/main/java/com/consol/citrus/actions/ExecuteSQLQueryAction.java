@@ -19,15 +19,9 @@
 
 package com.consol.citrus.actions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -37,9 +31,7 @@ import org.springframework.dao.DataAccessException;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -67,6 +59,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     /** Pause between retries (in milliseconds). */
     private int retryPauseInMs = 1000;
+    
+    /** Use this map in order to save db values to variables */
+    private Map<String, String> extractToVariablesMap = new HashMap<String, String>();
 
     /**
      * Logger
@@ -150,6 +145,17 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
             }
 
+            //go through extract elements and save db values to variables
+            for (Entry<String, String> entry : extractToVariablesMap.entrySet()) {
+                String columnName = entry.getKey().toUpperCase();
+                if(resultMap.containsKey(columnName)) {
+                    context.setVariable(entry.getValue().toString(), resultMap.get(columnName).toString());
+                } else {
+                    throw new CitrusRuntimeException("Unable to find column '" + columnName + "' in database result set");
+                }
+            }
+
+            //legacy: save all columns as variables TODO: remove in major version upgrade 
             Map<String, String> variableMap = new HashMap<String, String>();
             for (Entry<String, Object> entry : resultMap.entrySet()) {
                 variableMap.put(CitrusConstants.VARIABLE_PREFIX + entry.getKey() + CitrusConstants.VARIABLE_SUFFIX, entry.getValue().toString());
@@ -320,5 +326,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     public void setRetryPauseInMs(int retryPauseInMs) {
         this.retryPauseInMs = retryPauseInMs;
+    }
+
+
+    /**
+     * @param extractToVariables the extractToVariables to set
+     */
+    public void setExtractToVariablesMap(Map<String, String> extractToVariablesMap) {
+        this.extractToVariablesMap = extractToVariablesMap;
     }
 }

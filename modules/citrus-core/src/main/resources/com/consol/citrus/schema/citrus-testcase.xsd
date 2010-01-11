@@ -279,6 +279,12 @@
                         <xs:attribute name="value" type="xs:string" use="required"/>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="extract" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="column" type="xs:string" use="required"/>
+                        <xs:attribute name="variable" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
             <xs:attribute name="datasource" type="xs:string" use="required"/>
             <xs:attribute name="ignore-errors" type="xs:boolean"/>

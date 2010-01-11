@@ -30,6 +30,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
@@ -155,6 +156,59 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));
         Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+	
+	@Test
+    public void testExtractToVariables() {
+	    String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> extractVariables = new HashMap<String, String>();
+        extractVariables.put("STATUS", "orderStatus");
+        executeSQLQueryAction.setExtractToVariablesMap(extractVariables);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${orderStatus}"));
+        Assert.assertEquals(context.getVariable("${orderStatus}"), "in_progress");
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+	
+	@Test(expectedExceptions = {CitrusRuntimeException.class})
+    public void testExtractToVariablesUnknownColumnMapping() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> extractVariables = new HashMap<String, String>();
+        extractVariables.put("UNKNOWN_COLUMN", "orderStatus");
+        executeSQLQueryAction.setExtractToVariablesMap(extractVariables);
+        
+        executeSQLQueryAction.execute(context);
     }
 	
 	@Test

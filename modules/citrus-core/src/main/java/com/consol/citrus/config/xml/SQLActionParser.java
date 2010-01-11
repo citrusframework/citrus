@@ -41,8 +41,9 @@ public class SQLActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder beanDefinition;
 
         List<?> validateElements = DomUtils.getChildElementsByTagName(element, "validate");
+        List<?> extractElements = DomUtils.getChildElementsByTagName(element, "extract");
         
-        if (validateElements.isEmpty() == false) {
+        if (!validateElements.isEmpty() || !extractElements.isEmpty()) {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
             beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
             
@@ -53,6 +54,14 @@ public class SQLActionParser implements BeanDefinitionParser {
             }
             
             beanDefinition.addPropertyValue("validationElements", validateValues);
+            
+            Map<String, String> extractToVariables = new HashMap<String, String>();
+            for (Iterator<?> iter = extractElements.iterator(); iter.hasNext();) {
+                Element validate = (Element) iter.next();
+                extractToVariables.put(validate.getAttribute("column"), validate.getAttribute("variable"));
+            }
+            
+            beanDefinition.addPropertyValue("extractToVariablesMap", extractToVariables);
         } else {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
             beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
