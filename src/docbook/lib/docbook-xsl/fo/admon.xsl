@@ -8,8 +8,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -24,7 +24,7 @@
   </xsl:choose>
 </xsl:template>
 
-<xsl:template name="admon.graphic.width">
+<xsl:template match="*" mode="admon.graphic.width">
   <xsl:param name="node" select="."/>
   <xsl:text>36pt</xsl:text>
 </xsl:template>
@@ -35,11 +35,11 @@
   <xsl:variable name="filename">
     <xsl:value-of select="$admon.graphics.path"/>
     <xsl:choose>
-      <xsl:when test="name($node)='note'">note</xsl:when>
-      <xsl:when test="name($node)='warning'">warning</xsl:when>
-      <xsl:when test="name($node)='caution'">caution</xsl:when>
-      <xsl:when test="name($node)='tip'">tip</xsl:when>
-      <xsl:when test="name($node)='important'">important</xsl:when>
+      <xsl:when test="local-name($node)='note'">note</xsl:when>
+      <xsl:when test="local-name($node)='warning'">warning</xsl:when>
+      <xsl:when test="local-name($node)='caution'">caution</xsl:when>
+      <xsl:when test="local-name($node)='tip'">tip</xsl:when>
+      <xsl:when test="local-name($node)='important'">important</xsl:when>
       <xsl:otherwise>note</xsl:otherwise>
     </xsl:choose>
     <xsl:value-of select="$admon.graphics.extension"/>
@@ -64,18 +64,18 @@
     <xsl:call-template name="object.id"/>
   </xsl:variable>
   <xsl:variable name="graphic.width">
-     <xsl:call-template name="admon.graphic.width"/>
+     <xsl:apply-templates select="." mode="admon.graphic.width"/>
   </xsl:variable>
 
-  <fo:block id="{$id}">
+  <fo:block id="{$id}"
+            xsl:use-attribute-sets="graphical.admonition.properties">
     <fo:list-block provisional-distance-between-starts="{$graphic.width} + 18pt"
-    		provisional-label-separation="18pt"
-		xsl:use-attribute-sets="list.block.spacing">
+                    provisional-label-separation="18pt">
       <fo:list-item>
           <fo:list-item-label end-indent="label-end()">
             <fo:block>
               <fo:external-graphic width="auto" height="auto"
-	      		           content-width="{$graphic.width}" >
+                                         content-width="{$graphic.width}" >
                 <xsl:attribute name="src">
                   <xsl:call-template name="admon.graphic"/>
                 </xsl:attribute>
@@ -83,9 +83,13 @@
             </fo:block>
           </fo:list-item-label>
           <fo:list-item-body start-indent="body-start()">
-            <fo:block xsl:use-attribute-sets="admonition.title.properties">
-              <xsl:apply-templates select="." mode="object.title.markup"/>
-            </fo:block>
+            <xsl:if test="$admon.textlabel != 0 or title or info/title">
+              <fo:block xsl:use-attribute-sets="admonition.title.properties">
+                <xsl:apply-templates select="." mode="object.title.markup">
+		  <xsl:with-param name="allow-anchors" select="1"/>
+		</xsl:apply-templates>
+              </fo:block>
+            </xsl:if>
             <fo:block xsl:use-attribute-sets="admonition.properties">
               <xsl:apply-templates/>
             </fo:block>
@@ -100,16 +104,16 @@
     <xsl:call-template name="object.id"/>
   </xsl:variable>
 
-  <fo:block space-before.minimum="0.8em"
-            space-before.optimum="1em"
-            space-before.maximum="1.2em"
-            start-indent="0.25in"
-            end-indent="0.25in"
-            id="{$id}">
-    <fo:block keep-with-next='always'
-              xsl:use-attribute-sets="admonition.title.properties">
-      <xsl:apply-templates select="." mode="object.title.markup"/>
-    </fo:block>
+  <fo:block id="{$id}"
+            xsl:use-attribute-sets="nongraphical.admonition.properties">
+    <xsl:if test="$admon.textlabel != 0 or title or info/title">
+      <fo:block keep-with-next.within-column='always'
+                xsl:use-attribute-sets="admonition.title.properties">
+         <xsl:apply-templates select="." mode="object.title.markup">
+	   <xsl:with-param name="allow-anchors" select="1"/>
+	 </xsl:apply-templates>
+      </fo:block>
+    </xsl:if>
 
     <fo:block xsl:use-attribute-sets="admonition.properties">
       <xsl:apply-templates/>

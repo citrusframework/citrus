@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:mml="http://www.w3.org/1998/Math/MathML"
+                exclude-result-prefixes="mml"
                 version='1.0'>
 
 <!-- ********************************************************************
@@ -9,8 +10,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -32,45 +33,40 @@
 <xsl:template match="alt">
 </xsl:template>
 
+<xsl:template match="mathphrase">
+  <fo:inline>
+    <xsl:apply-templates/>
+  </fo:inline>
+</xsl:template>
+
 <!-- "Support" for MathML -->
+
+<xsl:template match="mml:math" xmlns:mml="http://www.w3.org/1998/Math/MathML">
+  <xsl:choose>
+    <!-- * If user is using passivetex, we don't wrap the output in -->
+    <!-- * fo:instream-foreign-object (which passivetex doesn't support). -->
+    <xsl:when test="not($passivetex.extensions = 0)">
+      <xsl:copy>
+        <xsl:copy-of select="@*"/>
+        <xsl:apply-templates/>
+      </xsl:copy>
+    </xsl:when>
+    <xsl:otherwise>
+      <fo:instream-foreign-object>
+        <xsl:copy>
+          <xsl:copy-of select="@*"/>
+          <xsl:apply-templates/>
+        </xsl:copy>
+      </fo:instream-foreign-object>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
 
 <xsl:template match="mml:*" xmlns:mml="http://www.w3.org/1998/Math/MathML">
   <xsl:copy>
     <xsl:copy-of select="@*"/>
     <xsl:apply-templates/>
   </xsl:copy>
-</xsl:template>
-
-<xsl:template match="equation/mediaobject | informalequation/mediaobject">
-  <xsl:if test="$passivetex.extensions = 0 or $tex.math.in.alt = ''">
-    <xsl:variable name="olist" select="imageobject|imageobjectco
-                       |videoobject|audioobject
-  		     |textobject"/>
-  
-    <xsl:variable name="object.index">
-      <xsl:call-template name="select.mediaobject.index">
-        <xsl:with-param name="olist" select="$olist"/>
-        <xsl:with-param name="count" select="1"/>
-      </xsl:call-template>
-    </xsl:variable>
-  
-    <xsl:variable name="object" select="$olist[position() = $object.index]"/>
-  
-    <xsl:variable name="align">
-      <xsl:value-of select="$object/imagedata[@align][1]/@align"/>
-    </xsl:variable>
-  
-    <fo:block>
-      <xsl:if test="$align != '' ">
-        <xsl:attribute name="text-align">
-          <xsl:value-of select="$align"/>
-        </xsl:attribute>
-      </xsl:if>
-  
-      <xsl:apply-templates select="$object"/>
-      <xsl:apply-templates select="caption"/>
-    </fo:block>
-  </xsl:if>
 </xsl:template>
 
 <xsl:template match="equation/graphic | informalequation/graphic">

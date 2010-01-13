@@ -10,8 +10,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -56,23 +56,31 @@ to be incomplete. Don't forget to read the source, too :-)</para>
 
   <xsl:choose>
     <xsl:when test="title">
-      <fo:table-and-caption id="{$id}"
-                            xsl:use-attribute-sets="formal.object.properties">
-        <fo:table-caption>
-          <fo:block xsl:use-attribute-sets="formal.title.properties">
-            <xsl:apply-templates select="." mode="object.title.markup"/>
-          </fo:block>
-        </fo:table-caption>
+      <fo:block id="{$id}" xsl:use-attribute-sets="formal.object.properties">
+        <xsl:call-template name="formal.object.heading">
+          <xsl:with-param name="placement" select="'before'"/>
+        </xsl:call-template>
+
         <fo:table table-layout="fixed" width="100%">
-          <fo:table-body>
+          <fo:table-column column-number="1" column-width="3%"/>
+          <fo:table-column column-number="2" column-width="15%"/>
+          <fo:table-column column-number="3" column-width="5%"/>
+          <fo:table-column column-number="4" column-width="52%"/>
+          <fo:table-column column-number="5" column-width="25%"/>
+          <fo:table-body start-indent="0pt" end-indent="0pt">
             <xsl:apply-templates select="production|productionrecap"/>
           </fo:table-body>
         </fo:table>
-      </fo:table-and-caption>
+      </fo:block>
     </xsl:when>
     <xsl:otherwise>
-      <fo:table table-layout="fixed" width="100%">
-        <fo:table-body>
+      <fo:table id="{$id}" table-layout="fixed" width="100%">
+        <fo:table-column column-number="1" column-width="3%"/>
+        <fo:table-column column-number="2" column-width="15%"/>
+        <fo:table-column column-number="3" column-width="5%"/>
+        <fo:table-column column-number="4" column-width="52%"/>
+        <fo:table-column column-number="5" column-width="25%"/>
+        <fo:table-body start-indent="0pt" end-indent="0pt">
           <xsl:apply-templates select="production|productionrecap"/>
         </fo:table-body>
       </fo:table>
@@ -88,14 +96,14 @@ to be incomplete. Don't forget to read the source, too :-)</para>
   <xsl:param name="recap" select="false()"/>
   <xsl:variable name="id"><xsl:call-template name="object.id"/></xsl:variable>
   <fo:table-row>
-    <fo:table-cell width="3%">
+    <fo:table-cell>
       <fo:block text-align="start">
         <xsl:text>[</xsl:text>
         <xsl:number count="production" level="any"/>
         <xsl:text>]</xsl:text>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell width="10%">
+    <fo:table-cell>
       <fo:block text-align="end">
         <xsl:choose>
           <xsl:when test="$recap">
@@ -112,19 +120,18 @@ to be incomplete. Don't forget to read the source, too :-)</para>
         </xsl:choose>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell width="5%">
+    <fo:table-cell>
       <fo:block text-align="center">
-        <fo:inline font-family="{$monospace.font.family}">
-          <xsl:text>::=</xsl:text>
-        </fo:inline>
+        <xsl:copy-of select="$ebnf.assignment"/>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell width="52%">
+    <fo:table-cell>
       <fo:block>
         <xsl:apply-templates select="rhs"/>
+        <xsl:copy-of select="$ebnf.statement.terminator"/>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell width="30%" border-start-width="3pt">
+    <fo:table-cell border-start-width="3pt">
       <fo:block text-align="start">
         <xsl:choose>
           <xsl:when test="rhs/lineannotation|constraint">

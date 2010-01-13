@@ -8,8 +8,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -17,7 +17,7 @@
 
 <xsl:attribute-set name="book.titlepage.recto.style">
   <xsl:attribute name="font-family">
-    <xsl:value-of select="$title.font.family"/>
+    <xsl:value-of select="$title.fontset"/>
   </xsl:attribute>
   <xsl:attribute name="font-weight">bold</xsl:attribute>
   <xsl:attribute name="font-size">12pt</xsl:attribute>
@@ -48,6 +48,9 @@
 
 <xsl:attribute-set name="dedication.titlepage.recto.style"/>
 <xsl:attribute-set name="dedication.titlepage.verso.style"/>
+
+<xsl:attribute-set name="acknowledgements.titlepage.recto.style"/>
+<xsl:attribute-set name="acknowledgements.titlepage.verso.style"/>
 
 <xsl:attribute-set name="preface.titlepage.recto.style"/>
 <xsl:attribute-set name="preface.titlepage.verso.style"/>
@@ -82,13 +85,19 @@
 <xsl:attribute-set name="colophon.titlepage.recto.style"/>
 <xsl:attribute-set name="colophon.titlepage.verso.style"/>
 
+<xsl:attribute-set name="sidebar.titlepage.recto.style"/>
+<xsl:attribute-set name="sidebar.titlepage.verso.style"/>
+
+<xsl:attribute-set name="qandaset.titlepage.recto.style"/>
+<xsl:attribute-set name="qandaset.titlepage.verso.style"/>
+
 <xsl:attribute-set name="section.titlepage.recto.style">
-  <xsl:attribute name="keep-together">always</xsl:attribute>
+  <xsl:attribute name="keep-together.within-column">always</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="section.titlepage.verso.style">
-  <xsl:attribute name="keep-together">always</xsl:attribute>
-  <xsl:attribute name="keep-with-next">always</xsl:attribute>
+  <xsl:attribute name="keep-together.within-column">always</xsl:attribute>
+  <xsl:attribute name="keep-with-next.within-column">always</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="sect1.titlepage.recto.style"
@@ -119,6 +128,11 @@
 <xsl:attribute-set name="simplesect.titlepage.recto.style"
                    use-attribute-sets="section.titlepage.recto.style"/>
 <xsl:attribute-set name="simplesect.titlepage.verso.style"
+                   use-attribute-sets="section.titlepage.verso.style"/>
+
+<xsl:attribute-set name="refnamediv.titlepage.recto.style"
+                   use-attribute-sets="section.titlepage.recto.style"/>
+<xsl:attribute-set name="refnamediv.titlepage.verso.style"
                    use-attribute-sets="section.titlepage.verso.style"/>
 
 <xsl:attribute-set name="refsynopsisdiv.titlepage.recto.style"
@@ -179,15 +193,20 @@
 </xsl:template>
 
 <xsl:template match="abstract" mode="titlepage.mode">
-  <fo:block>
-    <xsl:if test="title"> <!-- FIXME: add param for using default title? -->
-      <xsl:call-template name="formal.object.heading">
-        <xsl:with-param name="title">
-          <xsl:apply-templates select="." mode="title.markup"/>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-    <xsl:apply-templates mode="titlepage.mode"/>
+  <fo:block xsl:use-attribute-sets="abstract.properties">
+    <fo:block xsl:use-attribute-sets="abstract.title.properties">
+      <xsl:choose>
+	<xsl:when test="title|info/title">
+	  <xsl:apply-templates select="title|info/title"/>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:call-template name="gentext">
+	    <xsl:with-param name="key" select="'Abstract'"/>
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
+    </fo:block>
+    <xsl:apply-templates select="*[not(self::title)]" mode="titlepage.mode"/>
   </fo:block>
 </xsl:template>
 
@@ -233,9 +252,7 @@
 
 <xsl:template match="authorgroup" mode="titlepage.mode">
   <fo:wrapper>
-    <xsl:if test="@id">
-      <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-    </xsl:if>
+    <xsl:call-template name="anchor"/>
     <xsl:apply-templates mode="titlepage.mode"/>
   </fo:wrapper>
 </xsl:template>
@@ -315,9 +332,16 @@
 
 <xsl:template match="holder" mode="titlepage.mode">
   <xsl:apply-templates/>
+  <xsl:if test="position() &lt; last()">
+    <xsl:text>, </xsl:text>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="corpauthor" mode="titlepage.mode">
+  <xsl:apply-templates mode="titlepage.mode"/>
+</xsl:template>
+
+<xsl:template match="corpcredit" mode="titlepage.mode">
   <xsl:apply-templates mode="titlepage.mode"/>
 </xsl:template>
 
@@ -338,13 +362,16 @@
 </xsl:template>
 
 <xsl:template match="editor" mode="titlepage.mode">
-  <xsl:call-template name="person.name"/>
+  <!-- The first editor is dealt with in the following template,
+       which in turn displays all editors of the same mode. -->
 </xsl:template>
 
 <xsl:template match="editor[1]" priority="2" mode="titlepage.mode">
   <xsl:call-template name="gentext.edited.by"/>
   <xsl:call-template name="gentext.space"/>
-  <xsl:call-template name="person.name"/>
+  <xsl:call-template name="person.name.list">
+    <xsl:with-param name="person.list" select="../editor"/>
+  </xsl:call-template>
 </xsl:template>
 
 <xsl:template match="firstname" mode="titlepage.mode">
@@ -394,23 +421,20 @@
 </xsl:template>
 
 <xsl:template match="legalnotice" mode="titlepage.mode">
-  <fo:block>
+
+  <xsl:variable name="id">
+    <xsl:call-template name="object.id"/>
+  </xsl:variable>
+
+  <fo:block id="{$id}">
     <xsl:if test="title"> <!-- FIXME: add param for using default title? -->
-    <xsl:call-template name="formal.object.heading">
-        <xsl:with-param name="title">
-          <xsl:apply-templates select="." mode="title.markup"/>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:call-template name="formal.object.heading"/>
     </xsl:if>
     <xsl:apply-templates mode="titlepage.mode"/>
   </fo:block>
 </xsl:template>
 
 <xsl:template match="legalnotice/title" mode="titlepage.mode">
-</xsl:template>
-
-<xsl:template match="legalnotice/title" mode="titlepage.legalnotice.title.mode">
-  <xsl:apply-templates mode="titlepage.mode"/>
 </xsl:template>
 
 <xsl:template match="lineage" mode="titlepage.mode">
@@ -422,6 +446,9 @@
 </xsl:template>
 
 <xsl:template match="orgdiv" mode="titlepage.mode">
+  <xsl:if test="preceding-sibling::*[1][self::orgname]">
+    <xsl:text> </xsl:text>
+  </xsl:if>
   <xsl:apply-templates mode="titlepage.mode"/>
 </xsl:template>
 
@@ -498,32 +525,60 @@
 </xsl:template>
 
 <xsl:template match="revhistory" mode="titlepage.mode">
-  <fo:table table-layout="fixed">
-    <fo:table-column column-number="1" column-width="33%"/>
-    <fo:table-column column-number="2" column-width="33%"/>
-    <fo:table-column column-number="3" column-width="33%"/>
-    <fo:table-body>
+
+  <xsl:variable name="explicit.table.width">
+    <xsl:call-template name="pi.dbfo_table-width"/>
+  </xsl:variable>
+
+  <xsl:variable name="table.width">
+    <xsl:choose>
+      <xsl:when test="$explicit.table.width != ''">
+        <xsl:value-of select="$explicit.table.width"/>
+      </xsl:when>
+      <xsl:when test="$default.table.width = ''">
+        <xsl:text>100%</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$default.table.width"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+ <fo:table table-layout="fixed" width="{$table.width}" xsl:use-attribute-sets="revhistory.table.properties">
+    <fo:table-column column-number="1" column-width="proportional-column-width(1)"/>
+    <fo:table-column column-number="2" column-width="proportional-column-width(1)"/>
+    <fo:table-column column-number="3" column-width="proportional-column-width(1)"/>
+    <fo:table-body start-indent="0pt" end-indent="0pt">
       <fo:table-row>
-        <fo:table-cell number-columns-spanned="3">
-          <fo:block>
-            <xsl:call-template name="gentext">
-              <xsl:with-param name="key" select="'RevHistory'"/>
-            </xsl:call-template>
-          </fo:block>
+        <fo:table-cell number-columns-spanned="3" xsl:use-attribute-sets="revhistory.table.cell.properties">
+          <fo:block xsl:use-attribute-sets="revhistory.title.properties">
+	    <xsl:choose>
+	      <xsl:when test="title|info/title">
+		<xsl:apply-templates select="title|info/title" mode="titlepage.mode"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:call-template name="gentext">
+		  <xsl:with-param name="key" select="'RevHistory'"/>
+		</xsl:call-template>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </fo:block>
         </fo:table-cell>
       </fo:table-row>
-      <xsl:apply-templates mode="titlepage.mode"/>
+      <xsl:apply-templates select="*[not(self::title)]" mode="titlepage.mode"/>
     </fo:table-body>
   </fo:table>
+
 </xsl:template>
 
+
 <xsl:template match="revhistory/revision" mode="titlepage.mode">
-  <xsl:variable name="revnumber" select=".//revnumber"/>
-  <xsl:variable name="revdate"   select=".//date"/>
-  <xsl:variable name="revauthor" select=".//authorinitials"/>
-  <xsl:variable name="revremark" select=".//revremark|.//revdescription"/>
+  <xsl:variable name="revnumber" select="revnumber"/>
+  <xsl:variable name="revdate"   select="date"/>
+  <xsl:variable name="revauthor" select="authorinitials|author"/>
+  <xsl:variable name="revremark" select="revremark|revdescription"/>
   <fo:table-row>
-    <fo:table-cell>
+    <fo:table-cell xsl:use-attribute-sets="revhistory.table.cell.properties">
       <fo:block>
         <xsl:if test="$revnumber">
           <xsl:call-template name="gentext">
@@ -534,20 +589,25 @@
         </xsl:if>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell>
+    <fo:table-cell xsl:use-attribute-sets="revhistory.table.cell.properties">
       <fo:block>
         <xsl:apply-templates select="$revdate[1]" mode="titlepage.mode"/>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell>
+    <fo:table-cell xsl:use-attribute-sets="revhistory.table.cell.properties">
       <fo:block>
-        <xsl:apply-templates select="$revauthor[1]" mode="titlepage.mode"/>
+        <xsl:for-each select="$revauthor">
+          <xsl:apply-templates select="." mode="titlepage.mode"/>
+          <xsl:if test="position() != last()">
+            <xsl:text>, </xsl:text>
+          </xsl:if>
+        </xsl:for-each>
       </fo:block>
     </fo:table-cell>
   </fo:table-row>
   <xsl:if test="$revremark">
     <fo:table-row>
-      <fo:table-cell number-columns-spanned="3">
+      <fo:table-cell number-columns-spanned="3" xsl:use-attribute-sets="revhistory.table.cell.properties">
         <fo:block>
           <xsl:apply-templates select="$revremark[1]" mode="titlepage.mode"/>
         </fo:block>
@@ -565,6 +625,10 @@
 </xsl:template>
 
 <xsl:template match="revision/authorinitials" mode="titlepage.mode">
+  <xsl:apply-templates mode="titlepage.mode"/>
+</xsl:template>
+
+<xsl:template match="revision/author" mode="titlepage.mode">
   <xsl:apply-templates mode="titlepage.mode"/>
 </xsl:template>
 
@@ -617,16 +681,11 @@
 
 <!-- book recto -->
 
-<xsl:template match="bookinfo/authorgroup" mode="titlepage.mode" priority="2">
+<xsl:template match="bookinfo/authorgroup|book/info/authorgroup"
+              mode="titlepage.mode" priority="2">
   <fo:block>
-    <xsl:if test="@id">
-      <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
-    </xsl:if>
-    <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="'by'"/>
-    </xsl:call-template>
-    <xsl:text> </xsl:text>
-    <xsl:call-template name="person.name.list"/>
+    <xsl:call-template name="anchor"/>
+    <xsl:apply-templates mode="titlepage.mode"/>
   </fo:block>
 </xsl:template>
 
@@ -637,10 +696,12 @@
     <xsl:apply-templates mode="titlepage.mode"/>
 
     <xsl:if test="following-sibling::subtitle
+                  |following-sibling::info/subtitle
                   |following-sibling::bookinfo/subtitle">
       <xsl:text>: </xsl:text>
 
       <xsl:apply-templates select="(following-sibling::subtitle
+                                   |following-sibling::info/subtitle
                                    |following-sibling::bookinfo/subtitle)[1]"
                            mode="book.verso.subtitle.mode"/>
     </xsl:if>
@@ -662,34 +723,32 @@
       <xsl:with-param name="key" select="'by'"/>
     </xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:call-template name="person.name.list"/>
+    <xsl:call-template name="person.name.list">
+      <xsl:with-param name="person.list" select="author|corpauthor|editor"/>
+    </xsl:call-template>
   </fo:block>
+  <xsl:apply-templates select="othercredit" mode="titlepage.mode"/>
 </xsl:template>
 
-<xsl:template match="bookinfo/author" mode="titlepage.mode" priority="2">
+<xsl:template match="bookinfo/author|book/info/author"
+              mode="titlepage.mode" priority="2">
   <fo:block>
-    <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="'by'"/>
-    </xsl:call-template>
-    <xsl:text> </xsl:text>
     <xsl:call-template name="person.name"/>
   </fo:block>
 </xsl:template>
 
-<xsl:template match="bookinfo/corpauthor" mode="titlepage.mode" priority="2">
+<xsl:template match="bookinfo/corpauthor|book/info/corpauthor"
+              mode="titlepage.mode" priority="2">
   <fo:block>
-    <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="'by'"/>
-    </xsl:call-template>
-    <xsl:text> </xsl:text>
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
 
-<xsl:template match="bookinfo/pubdate" mode="titlepage.mode" priority="2">
+<xsl:template match="bookinfo/pubdate|book/info/pubdate"
+              mode="titlepage.mode" priority="2">
   <fo:block>
     <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="'published'"/>
+      <xsl:with-param name="key" select="'pubdate'"/>
     </xsl:call-template>
     <xsl:text> </xsl:text>
     <xsl:apply-templates mode="titlepage.mode"/>

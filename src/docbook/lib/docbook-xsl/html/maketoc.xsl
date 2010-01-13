@@ -3,12 +3,35 @@
 		version="1.0"
                 exclude-result-prefixes="doc">
 
+<!-- ********************************************************************
+     $Id$
+     ********************************************************************
+
+     This file is part of the XSL DocBook Stylesheet distribution.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
+
+     ******************************************************************** -->
+
+<!-- ==================================================================== -->
+
 <xsl:import href="docbook.xsl"/>
 <xsl:import href="chunk.xsl"/>
 
 <xsl:output method="xml" indent="no" encoding='utf-8'/>
 
 <xsl:param name="toc.list.type" select="'tocentry'"/>
+
+<!-- refentry in autotoc.xsl does not use subtoc, so must
+     handle it explicitly here. -->
+<xsl:template match="refentry" mode="toc">
+  <xsl:param name="toc-context" select="."/>
+
+  <xsl:call-template name="subtoc">
+    <xsl:with-param name="toc-context" select="$toc-context"/>
+  </xsl:call-template>
+</xsl:template>
+
 
 <xsl:template name="subtoc">
   <xsl:param name="nodes" select="NOT-AN-ELEMENT"/>
@@ -22,7 +45,10 @@
 
   <xsl:if test="$chunk != 0">
     <xsl:call-template name="indent-spaces"/>
-    <tocentry linkend="{@id}">
+    <xsl:variable name="id">
+      <xsl:call-template name="object.id"/>
+    </xsl:variable>
+    <tocentry linkend="{$id}">
       <xsl:processing-instruction name="dbhtml">
         <xsl:text>filename="</xsl:text>
         <xsl:value-of select="$filename"/>

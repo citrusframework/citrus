@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:sverb="http://nwalsh.com/xslt/ext/com.nwalsh.saxon.Verbatim"
-                xmlns:xverb="com.nwalsh.xalan.Verbatim"
+                xmlns:xverb="xalan://com.nwalsh.xalan.Verbatim"
                 xmlns:lxslt="http://xml.apache.org/xslt"
                 exclude-result-prefixes="sverb xverb lxslt"
                 version='1.0'>
@@ -11,8 +11,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -50,7 +50,8 @@
       <xsl:choose>
         <xsl:when test="$verbatim/@linenumbering = 'numbered'
                         and $linenumbering.extension != '0'">
-          <div class="{name(.)}">
+          <div>
+            <xsl:call-template name="common.html.attributes"/>
             <xsl:call-template name="number.rtf.lines">
               <xsl:with-param name="rtf" select="$rtf-with-callouts"/>
               <xsl:with-param name="pi.context"
@@ -60,7 +61,8 @@
           </div>
         </xsl:when>
         <xsl:otherwise>
-          <div class="{name(.)}">
+          <div>
+            <xsl:call-template name="common.html.attributes"/>
             <xsl:copy-of select="$rtf-with-callouts"/>
             <xsl:apply-templates select="calloutlist"/>
           </div>
@@ -68,7 +70,8 @@
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
-      <div class="{name(.)}">
+      <div>
+        <xsl:apply-templates select="." mode="common.html.attributes"/>
         <xsl:apply-templates/>
       </div>
     </xsl:otherwise>
@@ -86,16 +89,17 @@
   <xsl:number count="area|areaset" format="1"/>
 </xsl:template>
 
-<xsl:template match="co">
+<xsl:template match="co" name="co">
   <!-- Support a single linkend in HTML -->
   <xsl:variable name="targets" select="key('id', @linkends)"/>
   <xsl:variable name="target" select="$targets[1]"/>
   <xsl:choose>
     <xsl:when test="$target">
       <a>
-        <xsl:if test="@id">
+        <xsl:apply-templates select="." mode="common.html.attributes"/>
+        <xsl:if test="@id or @xml:id">
           <xsl:attribute name="name">
-            <xsl:value-of select="@id"/>
+            <xsl:value-of select="(@id|@xml:id)[1]"/>
           </xsl:attribute>
         </xsl:if>
         <xsl:attribute name="href">
@@ -113,10 +117,37 @@
   </xsl:choose>
 </xsl:template>
 
+<xsl:template match="coref">
+  <!-- tricky; this relies on the fact that we can process the "co" that's -->
+  <!-- "over there" as if it were "right here" -->
+
+  <xsl:variable name="co" select="key('id', @linkend)"/>
+  <xsl:choose>
+    <xsl:when test="not($co)">
+      <xsl:message>
+        <xsl:text>Error: coref link is broken: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:when test="local-name($co) != 'co'">
+      <xsl:message>
+        <xsl:text>Error: coref doesn't point to a co: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:apply-templates select="$co"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template match="co" mode="callout-bug">
   <xsl:call-template name="callout-bug">
     <xsl:with-param name="conum">
-      <xsl:number count="co" format="1"/>
+      <xsl:number count="co"
+                  level="any"
+                  from="programlisting|screen|literallayout|synopsis"
+                  format="1"/>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>

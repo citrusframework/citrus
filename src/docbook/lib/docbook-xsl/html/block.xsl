@@ -7,15 +7,23 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
 <!-- ==================================================================== -->
+<!-- What should we do about styling blockinfo? -->
+
+<xsl:template match="blockinfo|info">
+  <!-- suppress -->
+</xsl:template>
+
+<!-- ==================================================================== -->
 
 <xsl:template name="block.object">
-  <div class="{name(.)}">
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:call-template name="anchor"/>
     <xsl:apply-templates/>
   </div>
@@ -49,11 +57,16 @@
 
   <xsl:variable name="p">
     <p>
-      <xsl:if test="$class != ''">
-        <xsl:attribute name="class">
-          <xsl:value-of select="$class"/>
-        </xsl:attribute>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="$class != ''">
+          <xsl:call-template name="common.html.attributes">
+            <xsl:with-param name="class" select="$class"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="locale.html.attributes"/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:copy-of select="$content"/>
     </p>
   </xsl:variable>
@@ -73,10 +86,11 @@
 <xsl:template match="simpara">
   <!-- see also listitem/simpara in lists.xsl -->
   <p>
+    <xsl:call-template name="locale.html.attributes"/>
     <xsl:if test="@role and $para.propagates.style != 0">
-      <xsl:attribute name="class">
-        <xsl:value-of select="@role"/>
-      </xsl:attribute>
+      <xsl:apply-templates select="." mode="class.attribute">
+        <xsl:with-param name="class" select="@role"/>
+      </xsl:apply-templates>
     </xsl:if>
 
     <xsl:call-template name="anchor"/>
@@ -98,8 +112,15 @@
   </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="formalpara/title">
-  <xsl:variable name="titleStr" select="."/>
+<!-- Only use title from info -->
+<xsl:template match="formalpara/info">
+  <xsl:apply-templates select="title"/>
+</xsl:template>
+
+<xsl:template match="formalpara/title|formalpara/info/title">
+  <xsl:variable name="titleStr">
+      <xsl:apply-templates/>
+  </xsl:variable>
   <xsl:variable name="lastChar">
     <xsl:if test="$titleStr != ''">
       <xsl:value-of select="substring($titleStr,string-length($titleStr),1)"/>
@@ -107,7 +128,7 @@
   </xsl:variable>
 
   <b>
-    <xsl:apply-templates/>
+    <xsl:copy-of select="$titleStr"/>
     <xsl:if test="$lastChar != ''
                   and not(contains($runinhead.title.end.punct, $lastChar))">
       <xsl:value-of select="$runinhead.default.title.end.punct"/>
@@ -123,10 +144,8 @@
 <!-- ==================================================================== -->
 
 <xsl:template match="blockquote">
-  <div class="{local-name(.)}">
-    <xsl:if test="@lang or @xml:lang">
-      <xsl:call-template name="language.attribute"/>
-    </xsl:if>
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:call-template name="anchor"/>
 
     <xsl:choose>
@@ -142,16 +161,17 @@
             <td width="10%" valign="top">&#160;</td>
           </tr>
           <tr>
-            <td colspan="2" align="right" valign="top">
+            <td width="10%" valign="top">&#160;</td>
+            <td colspan="2" align="{$direction.align.end}" valign="top">
               <xsl:text>--</xsl:text>
               <xsl:apply-templates select="attribution"/>
             </td>
-            <td width="10%" valign="top">&#160;</td>
           </tr>
         </table>
       </xsl:when>
       <xsl:otherwise>
-        <blockquote class="{local-name(.)}">
+        <blockquote>
+          <xsl:call-template name="common.html.attributes"/>
           <xsl:apply-templates/>
         </blockquote>
       </xsl:otherwise>
@@ -159,7 +179,7 @@
   </div>
 </xsl:template>
 
-<xsl:template match="blockquote/title">
+<xsl:template match="blockquote/title|blockquote/info/title">
   <div class="blockquote-title">
     <p>
       <b>
@@ -169,36 +189,31 @@
   </div>
 </xsl:template>
 
+<!-- Use an em dash per Chicago Manual of Style and https://sourceforge.net/tracker/index.php?func=detail&aid=2793878&group_id=21935&atid=373747 -->
 <xsl:template match="epigraph">
-  <div class="{name(.)}">
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
       <xsl:apply-templates select="para|simpara|formalpara|literallayout"/>
-    <span>--<xsl:apply-templates select="attribution"/></span>
+      <xsl:if test="attribution">
+        <div class="attribution">
+          <span>&#x2014;<xsl:apply-templates select="attribution"/></span>
+        </div>
+      </xsl:if>
   </div>
 </xsl:template>
 
 <xsl:template match="attribution">
-  <span class="{name(.)}"><xsl:apply-templates/></span>
-</xsl:template>
-
-<!-- ==================================================================== -->
-
-<xsl:template match="sidebar">
-  <div class="{name(.)}">
-    <xsl:call-template name="anchor"/>
+  <span>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:apply-templates/>
-  </div>
-</xsl:template>
-
-<xsl:template match="sidebar/title">
-  <p class="title">
-    <b><xsl:apply-templates/></b>
-  </p>
+  </span>
 </xsl:template>
 
 <!-- ==================================================================== -->
 
-<xsl:template match="abstract">
-  <div class="{name(.)}">
+<xsl:template match="abstract|sidebar">
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:call-template name="anchor"/>
     <xsl:call-template name="formal.object.heading">
       <xsl:with-param name="title">
@@ -211,8 +226,10 @@
   </div>
 </xsl:template>
 
-<xsl:template match="abstract/title">
+<xsl:template match="abstract/title|sidebar/title">
 </xsl:template>
+
+<xsl:template match="sidebar/sidebarinfo|sidebar/info"/>
 
 <!-- ==================================================================== -->
 
@@ -311,10 +328,11 @@
 <!-- ==================================================================== -->
 
 <xsl:template match="revhistory">
-  <div class="{name(.)}">
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
     <table border="0" width="100%" summary="Revision history">
       <tr>
-        <th align="left" valign="top" colspan="3">
+        <th align="{$direction.align.start}" valign="top" colspan="3">
           <b>
             <xsl:call-template name="gentext">
               <xsl:with-param name="key" select="'RevHistory'"/>
@@ -328,12 +346,12 @@
 </xsl:template>
 
 <xsl:template match="revhistory/revision">
-  <xsl:variable name="revnumber" select=".//revnumber"/>
-  <xsl:variable name="revdate"   select=".//date"/>
-  <xsl:variable name="revauthor" select=".//authorinitials"/>
-  <xsl:variable name="revremark" select=".//revremark|.//revdescription"/>
+  <xsl:variable name="revnumber" select="revnumber"/>
+  <xsl:variable name="revdate"   select="date"/>
+  <xsl:variable name="revauthor" select="authorinitials|author"/>
+  <xsl:variable name="revremark" select="revremark|revdescription"/>
   <tr>
-    <td align="left">
+    <td align="{$direction.align.start}">
       <xsl:if test="$revnumber">
         <xsl:call-template name="gentext">
           <xsl:with-param name="key" select="'Revision'"/>
@@ -342,27 +360,32 @@
         <xsl:apply-templates select="$revnumber"/>
       </xsl:if>
     </td>
-    <td align="left">
+    <td align="{$direction.align.start}">
       <xsl:apply-templates select="$revdate"/>
     </td>
     <xsl:choose>
       <xsl:when test="count($revauthor)=0">
-        <td align="left">
+        <td align="{$direction.align.start}">
           <xsl:call-template name="dingbat">
             <xsl:with-param name="dingbat">nbsp</xsl:with-param>
           </xsl:call-template>
         </td>
       </xsl:when>
       <xsl:otherwise>
-        <td align="left">
-          <xsl:apply-templates select="$revauthor"/>
+        <td align="{$direction.align.start}">
+          <xsl:for-each select="$revauthor">
+            <xsl:apply-templates select="."/>
+            <xsl:if test="position() != last()">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
+          </xsl:for-each>
         </td>
       </xsl:otherwise>
     </xsl:choose>
   </tr>
   <xsl:if test="$revremark">
     <tr>
-      <td align="left" colspan="3">
+      <td align="{$direction.align.start}" colspan="3">
         <xsl:apply-templates select="$revremark"/>
       </td>
     </tr>
@@ -396,8 +419,9 @@
 
 <!-- ==================================================================== -->
 
-<xsl:template match="ackno">
-  <p class="{name(.)}">
+<xsl:template match="ackno|acknowledgements[parent::article]">
+  <p>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:apply-templates/>
   </p>
 </xsl:template>

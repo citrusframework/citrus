@@ -12,8 +12,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -84,15 +84,46 @@
 </xsl:template>
 
 <xsl:template match="co">
-  <fo:inline id="{@id}">
+  <fo:inline>
+    <xsl:call-template name="anchor"/>
     <xsl:apply-templates select="." mode="callout-bug"/>
   </fo:inline>
+</xsl:template>
+
+<xsl:template match="coref">
+  <!-- tricky; this relies on the fact that we can process the "co" that's -->
+  <!-- "over there" as if it were "right here" -->
+
+  <xsl:variable name="co" select="key('id', @linkend)"/>
+  <xsl:choose>
+    <xsl:when test="not($co)">
+      <xsl:message>
+        <xsl:text>Error: coref link is broken: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:when test="local-name($co) != 'co'">
+      <xsl:message>
+        <xsl:text>Error: coref doesn't point to a co: </xsl:text>
+        <xsl:value-of select="@linkend"/>
+      </xsl:message>
+    </xsl:when>
+    <xsl:otherwise>
+      <fo:inline>
+        <xsl:call-template name="anchor"/>
+        <xsl:apply-templates select="$co" mode="callout-bug"/>
+      </fo:inline>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="co" mode="callout-bug">
   <xsl:call-template name="callout-bug">
     <xsl:with-param name="conum">
-      <xsl:number count="co" format="1"/>
+      <xsl:number count="co"
+                  level="any"
+                  from="programlisting|screen|literallayout|synopsis"
+                  format="1"/>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>
@@ -105,9 +136,11 @@
     <xsl:when test="$callout.graphics != '0'
                     and $conum &lt;= $callout.graphics.number.limit">
       <xsl:variable name="filename"
-                    select="concat($callout.graphics.path,$conum,$callout.graphics.extension)"/>
+                    select="concat($callout.graphics.path, $conum,
+		                   $callout.graphics.extension)"/>
 
-      <fo:external-graphic>
+      <fo:external-graphic content-width="{$callout.icon.size}"
+                           width="{$callout.icon.size}">
         <xsl:attribute name="src">
           <xsl:choose>
             <xsl:when test="$passivetex.extensions != 0
@@ -156,7 +189,7 @@
                        padding-start="0.2em"
                        padding-end="0.2em"
                        baseline-shift="0.1em"
-                       font-family="{$body.font.family}"
+                       font-family="{$body.fontset}"
                        font-weight="bold"
                        font-size="75%">
               <xsl:value-of select="$conum"/>
@@ -186,7 +219,7 @@
                  padding-start="0.2em"
                  padding-end="0.2em"
                  baseline-shift="0.1em"
-                 font-family="{$body.font.family}"
+                 font-family="{$body.fontset}"
                  font-weight="bold"
                  font-size="75%">
         <xsl:value-of select="$conum"/>

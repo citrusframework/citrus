@@ -1,7 +1,7 @@
 <!-- ...................................................................... -->
-<!-- DocBook additional general entities V4.2 ............................. -->
+<!-- DocBook additional general entities V4.5 ............................. -->
 
-<!-- Copyright 1992-2002 HaL Computer Systems, Inc.,
+<!-- Copyright 1992-2004 HaL Computer Systems, Inc.,
      O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
      Corporation, Norman Walsh, Sun Microsystems, Inc., and the
      Organization for the Advancement of Structured Information
@@ -11,7 +11,7 @@
      declaration that uses the public identifier shown below:
 
      <!ENTITY % dbgenent PUBLIC
-     "-//OASIS//ENTITIES DocBook Additional General Entities V4.2//EN"
+     "-//OASIS//ENTITIES DocBook Additional General Entities V4.5//EN"
      "dbgenent.mod">
      %dbgenent;
 -->
@@ -37,5 +37,5 @@
        %all-titles;
 -->
 
-<!-- End of DocBook additional general entities V4.2 ...................... -->
+<!-- End of DocBook additional general entities V4.5 ...................... -->
 <!-- ...................................................................... -->

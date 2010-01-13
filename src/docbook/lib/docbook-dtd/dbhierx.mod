@@ -1,14 +1,14 @@
 <!-- ...................................................................... -->
-<!-- DocBook document hierarchy module V4.2 ............................... -->
+<!-- DocBook document hierarchy module V4.5 ............................... -->
 <!-- File dbhierx.mod ..................................................... -->
 
-<!-- Copyright 1992-2002 HaL Computer Systems, Inc.,
+<!-- Copyright 1992-2004 HaL Computer Systems, Inc.,
      O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
      Corporation, Norman Walsh, Sun Microsystems, Inc., and the
      Organization for the Advancement of Structured Information
      Standards (OASIS).
 
-     $Id: dbhierx.mod,v 1.1 2003/06/08 10:55:18 turin42 Exp $
+     $Id: dbhierx.mod 6340 2006-10-03 13:23:24Z nwalsh $
 
      Permission to use, copy, modify and distribute the DocBook DTD
      and its accompanying documentation for any purpose and without fee
@@ -44,7 +44,7 @@
      declaration that uses the public identifier shown below:
 
      <!ENTITY % dbhier PUBLIC
-     "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.2//EN"
+     "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.5//EN"
      "dbhierx.mod">
      %dbhier;
 
@@ -103,10 +103,6 @@
 <!-- ...................................................................... -->
 <!-- Entities for element mixtures ........................................ -->
 
-<!-- The DocBook TC may produce an official forms module for DocBook. -->
-<!-- This PE provides the hook by which it can be inserted into the DTD. -->
-<!ENTITY % forms.hook "">
-
 <!ENTITY % local.divcomponent.mix "">
 <!ENTITY % divcomponent.mix
 		"%list.class;		|%admon.class;
@@ -126,7 +122,8 @@
 		|%formal.class;		|%compound.class;
 		|%genobj.class;		|%descobj.class;
 		|%ndxterm.class;        |beginpage
-		%local.refcomponent.mix;">
+		%forms.hook;
+                %local.refcomponent.mix;">
 
 <!ENTITY % local.indexdivcomponent.mix "">
 <!ENTITY % indexdivcomponent.mix
@@ -209,7 +206,8 @@
 
 <!ENTITY % set.element "INCLUDE">
 <![%set.element;[
-<!ELEMENT set %ho; ((%div.title.content;)?, setinfo?, toc?, (%book.class;)+,
+<!--doc:A collection of books.-->
+<!ELEMENT set %ho; ((%div.title.content;)?, setinfo?, toc?, (set|%book.class;)+,
 		setindex?)
 		%ubiq.inclusion;>
 <!--end of set.element-->]]>
@@ -236,6 +234,7 @@
 
 <!ENTITY % setinfo.element "INCLUDE">
 <![%setinfo.element;[
+<!--doc:Meta-information for a Set.-->
 <!ELEMENT setinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of setinfo.element-->]]>
@@ -269,6 +268,7 @@
 
 <!ENTITY % book.element "INCLUDE">
 <![%book.element;[
+<!--doc:A book.-->
 <!ELEMENT book %ho; ((%div.title.content;)?, bookinfo?,
  		(dedication | toc | lot
  		| glossary | bibliography | preface
@@ -302,6 +302,7 @@
 
 <!ENTITY % bookinfo.element "INCLUDE">
 <![%bookinfo.element;[
+<!--doc:Meta-information for a Book.-->
 <!ELEMENT bookinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of bookinfo.element-->]]>
@@ -333,6 +334,7 @@
 
 <!ENTITY % dedication.element "INCLUDE">
 <![%dedication.element;[
+<!--doc:A wrapper for the dedication section of a book.-->
 <!ELEMENT dedication %ho; ((%sect.title.content;)?, (%legalnotice.mix;)+)>
 <!--end of dedication.element-->]]>
 
@@ -354,6 +356,7 @@
 
 <!ENTITY % colophon.element "INCLUDE">
 <![ %colophon.element; [
+<!--doc:Text at the back of a book describing facts about its production.-->
 <!ELEMENT colophon %ho; ((%sect.title.content;)?, (%textobject.mix;)+)>
 <!--end of colophon.element-->]]>
 
@@ -376,6 +379,7 @@
 
 <!ENTITY % toc.element "INCLUDE">
 <![%toc.element;[
+<!--doc:A table of contents.-->
 <!ELEMENT toc %ho; (beginpage?,
 		(%bookcomponent.title.content;)?,
 		tocfront*,
@@ -400,6 +404,7 @@
 
 <!ENTITY % tocfront.element "INCLUDE">
 <![%tocfront.element;[
+<!--doc:An entry in a table of contents for a front matter component.-->
 <!ELEMENT tocfront %ho; (%para.char.mix;)*>
 <!--end of tocfront.element-->]]>
 
@@ -425,6 +430,7 @@
 
 <!ENTITY % tocentry.element "INCLUDE">
 <![%tocentry.element;[
+<!--doc:A component title in a table of contents.-->
 <!ELEMENT tocentry %ho; (%para.char.mix;)*>
 <!--end of tocentry.element-->]]>
 
@@ -449,6 +455,7 @@
 
 <!ENTITY % tocpart.element "INCLUDE">
 <![%tocpart.element;[
+<!--doc:An entry in a table of contents for a part of a book.-->
 <!ELEMENT tocpart %ho; (tocentry+, tocchap*)>
 <!--end of tocpart.element-->]]>
 
@@ -469,6 +476,7 @@
 
 <!ENTITY % tocchap.element "INCLUDE">
 <![%tocchap.element;[
+<!--doc:An entry in a table of contents for a component in the body of a document.-->
 <!ELEMENT tocchap %ho; (tocentry+, toclevel1*)>
 <!--end of tocchap.element-->]]>
 
@@ -490,6 +498,7 @@
 
 <!ENTITY % toclevel1.element "INCLUDE">
 <![%toclevel1.element;[
+<!--doc:A top-level entry within a table of contents entry for a chapter-like component.-->
 <!ELEMENT toclevel1 %ho; (tocentry+, toclevel2*)>
 <!--end of toclevel1.element-->]]>
 
@@ -510,6 +519,7 @@
 
 <!ENTITY % toclevel2.element "INCLUDE">
 <![%toclevel2.element;[
+<!--doc:A second-level entry within a table of contents entry for a chapter-like component.-->
 <!ELEMENT toclevel2 %ho; (tocentry+, toclevel3*)>
 <!--end of toclevel2.element-->]]>
 
@@ -530,6 +540,7 @@
 
 <!ENTITY % toclevel3.element "INCLUDE">
 <![%toclevel3.element;[
+<!--doc:A third-level entry within a table of contents entry for a chapter-like component.-->
 <!ELEMENT toclevel3 %ho; (tocentry+, toclevel4*)>
 <!--end of toclevel3.element-->]]>
 
@@ -550,6 +561,7 @@
 
 <!ENTITY % toclevel4.element "INCLUDE">
 <![%toclevel4.element;[
+<!--doc:A fourth-level entry within a table of contents entry for a chapter-like component.-->
 <!ELEMENT toclevel4 %ho; (tocentry+, toclevel5*)>
 <!--end of toclevel4.element-->]]>
 
@@ -570,6 +582,7 @@
 
 <!ENTITY % toclevel5.element "INCLUDE">
 <![%toclevel5.element;[
+<!--doc:A fifth-level entry within a table of contents entry for a chapter-like component.-->
 <!ELEMENT toclevel5 %ho; (tocentry+)>
 <!--end of toclevel5.element-->]]>
 
@@ -590,6 +603,7 @@
 
 <!ENTITY % tocback.element "INCLUDE">
 <![%tocback.element;[
+<!--doc:An entry in a table of contents for a back matter component.-->
 <!ELEMENT tocback %ho; (%para.char.mix;)*>
 <!--end of tocback.element-->]]>
 
@@ -618,6 +632,7 @@
 
 <!ENTITY % lot.element "INCLUDE">
 <![%lot.element;[
+<!--doc:A list of the titles of formal objects (as tables or figures) in a document.-->
 <!ELEMENT lot %ho; (beginpage?, (%bookcomponent.title.content;)?, lotentry*)>
 <!--end of lot.element-->]]>
 
@@ -639,6 +654,7 @@
 
 <!ENTITY % lotentry.element "INCLUDE">
 <![%lotentry.element;[
+<!--doc:An entry in a list of titles.-->
 <!ELEMENT lotentry %ho; (%para.char.mix;)*>
 <!--end of lotentry.element-->]]>
 
@@ -669,6 +685,7 @@
 
 <!ENTITY % appendix.element "INCLUDE">
 <![%appendix.element;[
+<!--doc:An appendix in a Book or Article.-->
 <!ELEMENT appendix %ho; (beginpage?,
                      appendixinfo?,
                      (%bookcomponent.title.content;),
@@ -698,6 +715,7 @@
 
 <!ENTITY % chapter.element "INCLUDE">
 <![%chapter.element;[
+<!--doc:A chapter, as of a book.-->
 <!ELEMENT chapter %ho; (beginpage?,
                     chapterinfo?,
                     (%bookcomponent.title.content;),
@@ -723,7 +741,7 @@
 <!ENTITY % part.module "INCLUDE">
 <![%part.module;[
 
-<!-- Note that Part was to have its content model reduced in V4.2.  This
+<!-- Note that Part was to have its content model reduced in V4.5.  This
 change will not be made after all. -->
 
 <!ENTITY % local.part.attrib "">
@@ -731,6 +749,7 @@ change will not be made after all. -->
 
 <!ENTITY % part.element "INCLUDE">
 <![%part.element;[
+<!--doc:A division in a book.-->
 <!ELEMENT part %ho; (beginpage?,
                 partinfo?, (%bookcomponent.title.content;), partintro?,
 		(%partcontent.mix;)+)
@@ -757,6 +776,7 @@ change will not be made after all. -->
 
 <!ENTITY % preface.element "INCLUDE">
 <![%preface.element;[
+<!--doc:Introductory matter preceding the first chapter of a book.-->
 <!ELEMENT preface %ho; (beginpage?,
                     prefaceinfo?,
                     (%bookcomponent.title.content;),
@@ -785,6 +805,7 @@ change will not be made after all. -->
 
 <!ENTITY % reference.element "INCLUDE">
 <![%reference.element;[
+<!--doc:A collection of reference entries.-->
 <!ELEMENT reference %ho; (beginpage?,
                      referenceinfo?,
                      (%bookcomponent.title.content;), partintro?,
@@ -812,6 +833,7 @@ change will not be made after all. -->
 
 <!ENTITY % partintro.element "INCLUDE">
 <![%partintro.element;[
+<!--doc:An introduction to the contents of a part.-->
 <!ELEMENT partintro %ho; ((%div.title.content;)?, (%bookcomponent.content;))
 		%ubiq.inclusion;>
 <!--end of partintro.element-->]]>
@@ -837,6 +859,7 @@ change will not be made after all. -->
 
 <!ENTITY % appendixinfo.element "INCLUDE">
 <![ %appendixinfo.element; [
+<!--doc:Meta-information for an Appendix.-->
 <!ELEMENT appendixinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of appendixinfo.element-->]]>
@@ -858,6 +881,7 @@ change will not be made after all. -->
 
 <!ENTITY % bibliographyinfo.element "INCLUDE">
 <![ %bibliographyinfo.element; [
+<!--doc:Meta-information for a Bibliography.-->
 <!ELEMENT bibliographyinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of bibliographyinfo.element-->]]>
@@ -879,6 +903,7 @@ change will not be made after all. -->
 
 <!ENTITY % chapterinfo.element "INCLUDE">
 <![ %chapterinfo.element; [
+<!--doc:Meta-information for a Chapter.-->
 <!ELEMENT chapterinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of chapterinfo.element-->]]>
@@ -900,6 +925,7 @@ change will not be made after all. -->
 
 <!ENTITY % glossaryinfo.element "INCLUDE">
 <![ %glossaryinfo.element; [
+<!--doc:Meta-information for a Glossary.-->
 <!ELEMENT glossaryinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of glossaryinfo.element-->]]>
@@ -921,6 +947,7 @@ change will not be made after all. -->
 
 <!ENTITY % indexinfo.element "INCLUDE">
 <![ %indexinfo.element; [
+<!--doc:Meta-information for an Index.-->
 <!ELEMENT indexinfo %ho; ((%info.class;)+)>
 <!--end of indexinfo.element-->]]>
 
@@ -941,6 +968,7 @@ change will not be made after all. -->
 
 <!ENTITY % setindexinfo.element "INCLUDE">
 <![ %setindexinfo.element; [
+<!--doc:Meta-information for a SetIndex.-->
 <!ELEMENT setindexinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of setindexinfo.element-->]]>
@@ -962,6 +990,7 @@ change will not be made after all. -->
 
 <!ENTITY % partinfo.element "INCLUDE">
 <![ %partinfo.element; [
+<!--doc:Meta-information for a Part.-->
 <!ELEMENT partinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of partinfo.element-->]]>
@@ -983,6 +1012,7 @@ change will not be made after all. -->
 
 <!ENTITY % prefaceinfo.element "INCLUDE">
 <![ %prefaceinfo.element; [
+<!--doc:Meta-information for a Preface.-->
 <!ELEMENT prefaceinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of prefaceinfo.element-->]]>
@@ -1004,6 +1034,7 @@ change will not be made after all. -->
 
 <!ENTITY % refentryinfo.element "INCLUDE">
 <![ %refentryinfo.element; [
+<!--doc:Meta-information for a Refentry.-->
 <!ELEMENT refentryinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refentryinfo.element-->]]>
@@ -1025,6 +1056,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsectioninfo.element "INCLUDE">
 <![ %refsectioninfo.element; [
+<!--doc:Meta-information for a refsection.-->
 <!ELEMENT refsectioninfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refsectioninfo.element-->]]>
@@ -1046,6 +1078,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect1info.element "INCLUDE">
 <![ %refsect1info.element; [
+<!--doc:Meta-information for a RefSect1.-->
 <!ELEMENT refsect1info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refsect1info.element-->]]>
@@ -1067,6 +1100,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect2info.element "INCLUDE">
 <![ %refsect2info.element; [
+<!--doc:Meta-information for a RefSect2.-->
 <!ELEMENT refsect2info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refsect2info.element-->]]>
@@ -1088,6 +1122,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect3info.element "INCLUDE">
 <![ %refsect3info.element; [
+<!--doc:Meta-information for a RefSect3.-->
 <!ELEMENT refsect3info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refsect3info.element-->]]>
@@ -1109,6 +1144,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsynopsisdivinfo.element "INCLUDE">
 <![ %refsynopsisdivinfo.element; [
+<!--doc:Meta-information for a RefSynopsisDiv.-->
 <!ELEMENT refsynopsisdivinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of refsynopsisdivinfo.element-->]]>
@@ -1130,6 +1166,7 @@ change will not be made after all. -->
 
 <!ENTITY % referenceinfo.element "INCLUDE">
 <![ %referenceinfo.element; [
+<!--doc:Meta-information for a Reference.-->
 <!ELEMENT referenceinfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of referenceinfo.element-->]]>
@@ -1149,6 +1186,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect1info.element "INCLUDE">
 <![%sect1info.element;[
+<!--doc:Meta-information for a Sect1.-->
 <!ELEMENT sect1info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sect1info.element-->]]>
@@ -1167,6 +1205,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect2info.element "INCLUDE">
 <![%sect2info.element;[
+<!--doc:Meta-information for a Sect2.-->
 <!ELEMENT sect2info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sect2info.element-->]]>
@@ -1185,6 +1224,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect3info.element "INCLUDE">
 <![%sect3info.element;[
+<!--doc:Meta-information for a Sect3.-->
 <!ELEMENT sect3info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sect3info.element-->]]>
@@ -1203,6 +1243,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect4info.element "INCLUDE">
 <![%sect4info.element;[
+<!--doc:Meta-information for a Sect4.-->
 <!ELEMENT sect4info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sect4info.element-->]]>
@@ -1221,6 +1262,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect5info.element "INCLUDE">
 <![%sect5info.element;[
+<!--doc:Meta-information for a Sect5.-->
 <!ELEMENT sect5info %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sect5info.element-->]]>
@@ -1246,6 +1288,7 @@ change will not be made after all. -->
 
 <!ENTITY % section.element "INCLUDE">
 <![ %section.element; [
+<!--doc:A recursive section.-->
 <!ELEMENT section %ho; (sectioninfo?,
 			(%sect.title.content;),
 			(%nav.class;)*,
@@ -1275,6 +1318,7 @@ change will not be made after all. -->
 
 <!ENTITY % sectioninfo.element "INCLUDE">
 <![ %sectioninfo.element; [
+<!--doc:Meta-information for a recursive section.-->
 <!ELEMENT sectioninfo %ho; ((%info.class;)+)
 		%beginpage.exclusion;>
 <!--end of sectioninfo.element-->]]>
@@ -1300,6 +1344,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect1.element "INCLUDE">
 <![%sect1.element;[
+<!--doc:A top-level section of document.-->
 <!ELEMENT sect1 %ho; (sect1info?, (%sect.title.content;), (%nav.class;)*,
 		(((%divcomponent.mix;)+,
 		((%refentry.class;)* | sect2* | simplesect*))
@@ -1334,6 +1379,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect2.element "INCLUDE">
 <![%sect2.element;[
+<!--doc:A subsection within a Sect1.-->
 <!ELEMENT sect2 %ho; (sect2info?, (%sect.title.content;), (%nav.class;)*,
 		(((%divcomponent.mix;)+,
 		((%refentry.class;)* | sect3* | simplesect*))
@@ -1367,6 +1413,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect3.element "INCLUDE">
 <![%sect3.element;[
+<!--doc:A subsection within a Sect2.-->
 <!ELEMENT sect3 %ho; (sect3info?, (%sect.title.content;), (%nav.class;)*,
 		(((%divcomponent.mix;)+,
 		((%refentry.class;)* | sect4* | simplesect*))
@@ -1400,6 +1447,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect4.element "INCLUDE">
 <![%sect4.element;[
+<!--doc:A subsection within a Sect3.-->
 <!ELEMENT sect4 %ho; (sect4info?, (%sect.title.content;), (%nav.class;)*,
 		(((%divcomponent.mix;)+,
 		((%refentry.class;)* | sect5* | simplesect*))
@@ -1433,6 +1481,7 @@ change will not be made after all. -->
 
 <!ENTITY % sect5.element "INCLUDE">
 <![%sect5.element;[
+<!--doc:A subsection within a Sect4.-->
 <!ELEMENT sect5 %ho; (sect5info?, (%sect.title.content;), (%nav.class;)*,
 		(((%divcomponent.mix;)+, ((%refentry.class;)* | simplesect*))
 		| (%refentry.class;)+ | simplesect+), (%nav.class;)*)>
@@ -1465,6 +1514,7 @@ change will not be made after all. -->
 
 <!ENTITY % simplesect.element "INCLUDE">
 <![%simplesect.element;[
+<!--doc:A section of a document with no subdivisions.-->
 <!ELEMENT simplesect %ho; ((%sect.title.content;), (%divcomponent.mix;)+)
 		%ubiq.inclusion;>
 <!--end of simplesect.element-->]]>
@@ -1491,6 +1541,7 @@ change will not be made after all. -->
 
 <!ENTITY % bibliography.element "INCLUDE">
 <![%bibliography.element;[
+<!--doc:A bibliography.-->
 <!ELEMENT bibliography %ho; (bibliographyinfo?,
                         (%bookcomponent.title.content;)?,
                         (%component.mix;)*,
@@ -1515,6 +1566,7 @@ change will not be made after all. -->
 
 <!ENTITY % bibliodiv.element "INCLUDE">
 <![%bibliodiv.element;[
+<!--doc:A section of a Bibliography.-->
 <!ELEMENT bibliodiv %ho; ((%sect.title.content;)?, (%component.mix;)*,
 		(biblioentry|bibliomixed)+)>
 <!--end of bibliodiv.element-->]]>
@@ -1543,6 +1595,7 @@ change will not be made after all. -->
 
 <!ENTITY % glossary.element "INCLUDE">
 <![%glossary.element;[
+<!--doc:A glossary.-->
 <!ELEMENT glossary %ho; (glossaryinfo?,
                     (%bookcomponent.title.content;)?,
                     (%component.mix;)*,
@@ -1567,6 +1620,7 @@ change will not be made after all. -->
 
 <!ENTITY % glossdiv.element "INCLUDE">
 <![%glossdiv.element;[
+<!--doc:A division in a Glossary.-->
 <!ELEMENT glossdiv %ho; ((%sect.title.content;), (%component.mix;)*,
 		glossentry+)>
 <!--end of glossdiv.element-->]]>
@@ -1595,6 +1649,7 @@ change will not be made after all. -->
 
 <!ENTITY % index.element "INCLUDE">
 <![%index.element;[
+<!--doc:An index.-->
 <!ELEMENT index %ho; (indexinfo?,
                  (%bookcomponent.title.content;)?,
                  (%component.mix;)*,
@@ -1605,6 +1660,7 @@ change will not be made after all. -->
 <!ENTITY % index.attlist "INCLUDE">
 <![%index.attlist;[
 <!ATTLIST index
+		type		CDATA		#IMPLIED
 		%common.attrib;
 		%indexes.role.attrib;
 		%local.indexes.attrib;
@@ -1613,6 +1669,7 @@ change will not be made after all. -->
 
 <!ENTITY % setindex.element "INCLUDE">
 <![%setindex.element;[
+<!--doc:An index to a set of books.-->
 <!ELEMENT setindex %ho; (setindexinfo?,
                     (%bookcomponent.title.content;)?,
                     (%component.mix;)*,
@@ -1641,6 +1698,7 @@ change will not be made after all. -->
 
 <!ENTITY % indexdiv.element "INCLUDE">
 <![%indexdiv.element;[
+<!--doc:A division in an index.-->
 <!ELEMENT indexdiv %ho; ((%sect.title.content;)?, ((%indexdivcomponent.mix;)*,
 		(indexentry+ | segmentedlist)))>
 <!--end of indexdiv.element-->]]>
@@ -1664,6 +1722,7 @@ change will not be made after all. -->
 
 <!ENTITY % indexentry.element "INCLUDE">
 <![%indexentry.element;[
+<!--doc:An entry in an index.-->
 <!ELEMENT indexentry %ho; (primaryie, (seeie|seealsoie)*,
 		(secondaryie, (seeie|seealsoie|tertiaryie)*)*)>
 <!--end of indexentry.element-->]]>
@@ -1685,6 +1744,7 @@ change will not be made after all. -->
 
 <!ENTITY % primaryie.element "INCLUDE">
 <![%primaryie.element;[
+<!--doc:A primary term in an index entry, not in the text.-->
 <!ELEMENT primaryie %ho; (%ndxterm.char.mix;)*>
 <!--end of primaryie.element-->]]>
 
@@ -1701,6 +1761,7 @@ change will not be made after all. -->
 
 <!ENTITY % secondaryie.element "INCLUDE">
 <![%secondaryie.element;[
+<!--doc:A secondary term in an index entry, rather than in the text.-->
 <!ELEMENT secondaryie %ho; (%ndxterm.char.mix;)*>
 <!--end of secondaryie.element-->]]>
 
@@ -1717,6 +1778,7 @@ change will not be made after all. -->
 
 <!ENTITY % tertiaryie.element "INCLUDE">
 <![%tertiaryie.element;[
+<!--doc:A tertiary term in an index entry, rather than in the text.-->
 <!ELEMENT tertiaryie %ho; (%ndxterm.char.mix;)*>
 <!--end of tertiaryie.element-->]]>
 
@@ -1740,6 +1802,7 @@ change will not be made after all. -->
 
 <!ENTITY % seeie.element "INCLUDE">
 <![%seeie.element;[
+<!--doc:A See entry in an index, rather than in the text.-->
 <!ELEMENT seeie %ho; (%ndxterm.char.mix;)*>
 <!--end of seeie.element-->]]>
 
@@ -1763,6 +1826,7 @@ change will not be made after all. -->
 
 <!ENTITY % seealsoie.element "INCLUDE">
 <![%seealsoie.element;[
+<!--doc:A See also entry in an index, rather than in the text.-->
 <!ELEMENT seealsoie %ho; (%ndxterm.char.mix;)*>
 <!--end of seealsoie.element-->]]>
 
@@ -1792,10 +1856,11 @@ change will not be made after all. -->
 
 <!ENTITY % refentry.element "INCLUDE">
 <![%refentry.element;[
+<!--doc:A reference page (originally a UNIX man-style reference page).-->
 <!ELEMENT refentry %ho; (beginpage?,
                     (%ndxterm.class;)*,
                     refentryinfo?, refmeta?, (remark|%link.char.class;)*,
-                    refnamediv, refsynopsisdiv?, (refsect1+|refsection+))
+                    refnamediv+, refsynopsisdiv?, (refsect1+|refsection+))
 		%ubiq.inclusion;>
 <!--end of refentry.element-->]]>
 
@@ -1817,6 +1882,7 @@ change will not be made after all. -->
 
 <!ENTITY % refmeta.element "INCLUDE">
 <![%refmeta.element;[
+<!--doc:Meta-information for a reference entry.-->
 <!ELEMENT refmeta %ho; ((%ndxterm.class;)*,
                    refentrytitle, manvolnum?, refmiscinfo*,
                    (%ndxterm.class;)*)
@@ -1840,6 +1906,7 @@ change will not be made after all. -->
 
 <!ENTITY % refmiscinfo.element "INCLUDE">
 <![%refmiscinfo.element;[
+<!--doc:Meta-information for a reference entry other than the title and volume number.-->
 <!ELEMENT refmiscinfo %ho; (%docinfo.char.mix;)*>
 <!--end of refmiscinfo.element-->]]>
 
@@ -1864,6 +1931,7 @@ change will not be made after all. -->
 
 <!ENTITY % refnamediv.element "INCLUDE">
 <![%refnamediv.element;[
+<!--doc:The name, purpose, and classification of a reference page.-->
 <!ELEMENT refnamediv %ho; (refdescriptor?, refname+, refpurpose, refclass*,
 		(remark|%link.char.class;)*)>
 <!--end of refnamediv.element-->]]>
@@ -1885,6 +1953,7 @@ change will not be made after all. -->
 
 <!ENTITY % refdescriptor.element "INCLUDE">
 <![%refdescriptor.element;[
+<!--doc:A description of the topic of a reference page.-->
 <!ELEMENT refdescriptor %ho; (%refname.char.mix;)*>
 <!--end of refdescriptor.element-->]]>
 
@@ -1905,6 +1974,7 @@ change will not be made after all. -->
 
 <!ENTITY % refname.element "INCLUDE">
 <![%refname.element;[
+<!--doc:The name of (one of) the subject(s) of a reference page.-->
 <!ELEMENT refname %ho; (%refname.char.mix;)*>
 <!--end of refname.element-->]]>
 
@@ -1925,6 +1995,7 @@ change will not be made after all. -->
 
 <!ENTITY % refpurpose.element "INCLUDE">
 <![%refpurpose.element;[
+<!--doc:A short (one sentence) synopsis of the topic of a reference page.-->
 <!ELEMENT refpurpose %ho; (%refinline.char.mix;)*>
 <!--end of refpurpose.element-->]]>
 
@@ -1945,6 +2016,7 @@ change will not be made after all. -->
 
 <!ENTITY % refclass.element "INCLUDE">
 <![%refclass.element;[
+<!--doc:The scope or other indication of applicability of a reference entry.-->
 <!ELEMENT refclass %ho; (%refclass.char.mix;)*>
 <!--end of refclass.element-->]]>
 
@@ -1965,6 +2037,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsynopsisdiv.element "INCLUDE">
 <![%refsynopsisdiv.element;[
+<!--doc:A syntactic synopsis of the subject of the reference page.-->
 <!ELEMENT refsynopsisdiv %ho; (refsynopsisdivinfo?, (%refsect.title.content;)?,
 		(((%refcomponent.mix;)+, refsect2*) | (refsect2+)))>
 <!--end of refsynopsisdiv.element-->]]>
@@ -1986,6 +2059,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsection.element "INCLUDE">
 <![%refsection.element;[
+<!--doc:A recursive section in a refentry.-->
 <!ELEMENT refsection %ho; (refsectioninfo?, (%refsect.title.content;),
 		(((%refcomponent.mix;)+, refsection*) | refsection+))>
 <!--end of refsection.element-->]]>
@@ -2008,6 +2082,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect1.element "INCLUDE">
 <![%refsect1.element;[
+<!--doc:A major subsection of a reference entry.-->
 <!ELEMENT refsect1 %ho; (refsect1info?, (%refsect.title.content;),
 		(((%refcomponent.mix;)+, refsect2*) | refsect2+))>
 <!--end of refsect1.element-->]]>
@@ -2030,6 +2105,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect2.element "INCLUDE">
 <![%refsect2.element;[
+<!--doc:A subsection of a RefSect1.-->
 <!ELEMENT refsect2 %ho; (refsect2info?, (%refsect.title.content;),
 	(((%refcomponent.mix;)+, refsect3*) | refsect3+))>
 <!--end of refsect2.element-->]]>
@@ -2052,6 +2128,7 @@ change will not be made after all. -->
 
 <!ENTITY % refsect3.element "INCLUDE">
 <![%refsect3.element;[
+<!--doc:A subsection of a RefSect2.-->
 <!ELEMENT refsect3 %ho; (refsect3info?, (%refsect.title.content;),
 	(%refcomponent.mix;)+)>
 <!--end of refsect3.element-->]]>
@@ -2081,9 +2158,10 @@ change will not be made after all. -->
 
 <!ENTITY % article.element "INCLUDE">
 <![%article.element;[
+<!--doc:An article.-->
 <!ELEMENT article %ho; ((%div.title.content;)?, articleinfo?, tocchap?, lot*,
 			(%bookcomponent.content;),
-			((%nav.class;) | (%appendix.class;) | ackno)*)
+			(%nav.class;|%appendix.class;|colophon|ackno)*)
 		%ubiq.inclusion;>
 <!--end of article.element-->]]>
 
@@ -2111,5 +2189,5 @@ change will not be made after all. -->
 <!--end of article.attlist-->]]>
 <!--end of article.module-->]]>
 
-<!-- End of DocBook document hierarchy module V4.2 ........................ -->
+<!-- End of DocBook document hierarchy module V4.5 ........................ -->
 <!-- ...................................................................... -->

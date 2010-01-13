@@ -1,15 +1,27 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:saxon="http://icl.com/saxon"
                 xmlns:lxslt="http://xml.apache.org/xslt"
-                xmlns:xalanredirect="org.apache.xalan.xslt.extensions.Redirect"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
                 xmlns:exsl="http://exslt.org/common"
                 xmlns:doc="http://nwalsh.com/xsl/documentation/1.0"
-		version="1.1"
+		version="1.0"
                 exclude-result-prefixes="doc"
-                extension-element-prefixes="saxon xalanredirect lxslt exsl">
+                extension-element-prefixes="saxon redirect lxslt exsl">
+
+<!-- ********************************************************************
+     $Id$
+     ********************************************************************
+
+     This file is part of the XSL DocBook Stylesheet distribution.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
+
+     ******************************************************************** -->
+
+<!-- ==================================================================== -->
 
 <!-- This stylesheet works with XSLT implementations that support -->
-<!-- exsl:document, saxon:output, or xalanredirect:write -->
+<!-- exsl:document, saxon:output, or Xalan's redirect:write -->
 <!-- Note: Only Saxon 6.4.2 or later is supported. -->
 
 <xsl:param name="chunker.output.method" select="'html'"/>
@@ -21,6 +33,7 @@
 <xsl:param name="chunker.output.doctype-system" select="''"/>
 <xsl:param name="chunker.output.media-type" select="''"/>
 <xsl:param name="chunker.output.cdata-section-elements" select="''"/>
+<xsl:param name="chunker.output.quiet" select="0"/>
 
 <xsl:param name="saxon.character.representation" select="'entity;decimal'"/>
 
@@ -47,7 +60,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
-    <xsl:when test="element-available('xalanredirect:write')">
+    <xsl:when test="element-available('redirect:write')">
       <!-- Xalan doesn't make the chunks relative -->
       <xsl:value-of select="concat($base.dir,$base.name)"/>
     </xsl:when>
@@ -62,7 +75,10 @@
 
 <xsl:template name="write.chunk">
   <xsl:param name="filename" select="''"/>
-  <xsl:param name="quiet" select="0"/>
+  <xsl:param name="quiet" select="$chunker.output.quiet"/>
+  <xsl:param name="suppress-context-node-name" select="0"/>
+  <xsl:param name="message-prolog"/>
+  <xsl:param name="message-epilog"/>
 
   <xsl:param name="method" select="$chunker.output.method"/>
   <xsl:param name="encoding" select="$chunker.output.encoding"/>
@@ -80,16 +96,22 @@
 
   <xsl:if test="$quiet = 0">
     <xsl:message>
+      <xsl:if test="not($message-prolog = '')">
+        <xsl:value-of select="$message-prolog"/>
+      </xsl:if>
       <xsl:text>Writing </xsl:text>
       <xsl:value-of select="$filename"/>
-      <xsl:if test="name(.) != ''">
+      <xsl:if test="name(.) != '' and $suppress-context-node-name = 0">
         <xsl:text> for </xsl:text>
         <xsl:value-of select="name(.)"/>
-        <xsl:if test="@id">
+        <xsl:if test="@id or @xml:id">
           <xsl:text>(</xsl:text>
-          <xsl:value-of select="@id"/>
+          <xsl:value-of select="(@id|@xml:id)[1]"/>
           <xsl:text>)</xsl:text>
         </xsl:if>
+      </xsl:if>
+      <xsl:if test="not($message-epilog = '')">
+        <xsl:value-of select="$message-epilog"/>
       </xsl:if>
     </xsl:message>
   </xsl:if>
@@ -331,11 +353,11 @@
       </xsl:choose>
     </xsl:when>
 
-    <xsl:when test="element-available('xalanredirect:write')">
-      <!-- Xalan uses xalanredirect -->
-      <xalanredirect:write file="{$filename}">
+    <xsl:when test="element-available('redirect:write')">
+      <!-- Xalan uses redirect -->
+      <redirect:write file="{$filename}">
         <xsl:copy-of select="$content"/>
-      </xalanredirect:write>
+      </redirect:write>
     </xsl:when>
 
     <xsl:otherwise>
@@ -351,7 +373,7 @@
 
 <xsl:template name="write.chunk.with.doctype">
   <xsl:param name="filename" select="''"/>
-  <xsl:param name="quiet" select="0"/>
+  <xsl:param name="quiet" select="$chunker.output.quiet"/>
 
   <xsl:param name="method" select="$chunker.output.method"/>
   <xsl:param name="encoding" select="$chunker.output.encoding"/>
@@ -385,7 +407,10 @@
 
 <xsl:template name="write.text.chunk">
   <xsl:param name="filename" select="''"/>
-  <xsl:param name="quiet" select="0"/>
+  <xsl:param name="quiet" select="$chunker.output.quiet"/>
+  <xsl:param name="suppress-context-node-name" select="0"/>
+  <xsl:param name="message-prolog"/>
+  <xsl:param name="message-epilog"/>
   <xsl:param name="method" select="'text'"/>
   <xsl:param name="encoding" select="$chunker.output.encoding"/>
   <xsl:param name="media-type" select="$chunker.output.media-type"/>
@@ -394,6 +419,9 @@
   <xsl:call-template name="write.chunk">
     <xsl:with-param name="filename" select="$filename"/>
     <xsl:with-param name="quiet" select="$quiet"/>
+    <xsl:with-param name="suppress-context-node-name" select="$suppress-context-node-name"/>
+    <xsl:with-param name="message-prolog" select="$message-prolog"/>
+    <xsl:with-param name="message-epilog" select="$message-epilog"/>
     <xsl:with-param name="method" select="$method"/>
     <xsl:with-param name="encoding" select="$encoding"/>
     <xsl:with-param name="indent" select="'no'"/>
@@ -406,5 +434,6 @@
     <xsl:with-param name="content" select="$content"/>
   </xsl:call-template>
 </xsl:template>
+
 
 </xsl:stylesheet>

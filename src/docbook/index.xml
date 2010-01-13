@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding="iso-8859-1" ?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "lib/docbook-dtd/docbookx.dtd"
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "lib/docbook-dtd/docbookx.dtd"
 [
 <!ENTITY preface            SYSTEM "preface.xml">
 <!ENTITY introduction       SYSTEM "introduction.xml">

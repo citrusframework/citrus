@@ -1,19 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="ASCII"?>
 <!-- ********************************************************************
      $Id$
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      This module implements DTD-independent functions
 
      ******************************************************************** -->
-
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:src="http://nwalsh.com/xmlns/litprog/fragment" exclude-result-prefixes="src" version="1.0">
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
 <xsl:template name="dot.count">
   <!-- Returns the number of "." characters in a string -->
@@ -31,8 +28,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="copy-string">
   <!-- returns 'count' copies of 'string' -->
   <xsl:param name="string"/>
@@ -55,8 +50,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="string.subst">
   <xsl:param name="string"/>
   <xsl:param name="target"/>
@@ -78,8 +71,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="xpointer.idref">
   <xsl:param name="xpointer">http://...</xsl:param>
   <xsl:choose>
@@ -94,8 +85,6 @@
     <!-- otherwise it's a pointer to some other document -->
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="length-magnitude">
   <xsl:param name="length" select="'0pt'"/>
 
@@ -109,8 +98,6 @@
     </xsl:when>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="length-units">
   <xsl:param name="length" select="'0pt'"/>
   <xsl:param name="default.units" select="'px'"/>
@@ -133,8 +120,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="length-spec">
   <xsl:param name="length" select="'0pt'"/>
   <xsl:param name="default.units" select="'px'"/>
@@ -166,8 +151,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="length-in-points">
   <xsl:param name="length" select="'0pt'"/>
   <xsl:param name="em.size" select="10"/>
@@ -197,7 +180,7 @@
       <xsl:value-of select="$magnitude * 72.0"/>
     </xsl:when>
     <xsl:when test="$units = 'pc'">
-      <xsl:value-of select="$magnitude div 6.0 * 72.0"/>
+      <xsl:value-of select="$magnitude * 12.0"/>
     </xsl:when>
     <xsl:when test="$units = 'px'">
       <xsl:value-of select="$magnitude div $pixels.per.inch * 72.0"/>
@@ -214,10 +197,8 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="pi-attribute">
-  <xsl:param name="pis" select="processing-instruction('')"/>
+  <xsl:param name="pis" select="processing-instruction('BOGUS_PI')"/>
   <xsl:param name="attribute">filename</xsl:param>
   <xsl:param name="count">1</xsl:param>
 
@@ -229,9 +210,12 @@
       <xsl:variable name="pi">
         <xsl:value-of select="$pis[$count]"/>
       </xsl:variable>
+      <xsl:variable name="pivalue">
+        <xsl:value-of select="concat(' ', normalize-space($pi))"/>
+      </xsl:variable>
       <xsl:choose>
-        <xsl:when test="contains($pi,concat($attribute, '='))">
-          <xsl:variable name="rest" select="substring-after($pi,concat($attribute,'='))"/>
+        <xsl:when test="contains($pivalue,concat(' ', $attribute, '='))">
+          <xsl:variable name="rest" select="substring-after($pivalue,concat(' ', $attribute,'='))"/>
           <xsl:variable name="quote" select="substring($rest,1,1)"/>
           <xsl:value-of select="substring-before(substring($rest,2),$quote)"/>
         </xsl:when>
@@ -246,8 +230,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="lookup.key">
   <xsl:param name="key" select="''"/>
   <xsl:param name="table" select="''"/>
@@ -274,8 +256,6 @@
     </xsl:choose>
   </xsl:if>
 </xsl:template>
-
-
 <xsl:template name="xpath.location">
   <xsl:param name="node" select="."/>
   <xsl:param name="path" select="''"/>
@@ -299,8 +279,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="comment-escape-string">
   <xsl:param name="string" select="''"/>
 
@@ -316,8 +294,6 @@
     <xsl:text> </xsl:text>
   </xsl:if>
 </xsl:template>
-
-
 <xsl:template name="comment-escape-string.recursive">
   <xsl:param name="string" select="''"/>
   <xsl:choose>
@@ -333,8 +309,86 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
+  <xsl:template name="str.tokenize.keep.delimiters">
+    <xsl:param name="string" select="''"/>
+    <xsl:param name="delimiters" select="' '"/>
+    <xsl:choose>
+      <xsl:when test="not($string)"/>
+      <xsl:when test="not($delimiters)">
+        <xsl:call-template name="str.tokenize.keep.delimiters-characters">
+          <xsl:with-param name="string" select="$string"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="str.tokenize.keep.delimiters-delimiters">
+          <xsl:with-param name="string" select="$string"/>
+          <xsl:with-param name="delimiters" select="$delimiters"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <xsl:template name="str.tokenize.keep.delimiters-characters">
+    <xsl:param name="string"/>
+    <xsl:if test="$string">
+      <ssb:token xmlns:ssb="http://sideshowbarker.net/ns"><xsl:value-of select="substring($string, 1, 1)"/></ssb:token>
+      <xsl:call-template name="str.tokenize.keep.delimiters-characters">
+        <xsl:with-param name="string" select="substring($string, 2)"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+  <xsl:template name="str.tokenize.keep.delimiters-delimiters">
+    <xsl:param name="string"/>
+    <xsl:param name="delimiters"/>
+    <xsl:variable name="delimiter" select="substring($delimiters, 1, 1)"/>
+    <xsl:choose>
+      <xsl:when test="not($delimiter)">
+        <ssb:token xmlns:ssb="http://sideshowbarker.net/ns"><xsl:value-of select="$string"/></ssb:token>
+      </xsl:when>
+      <xsl:when test="contains($string, $delimiter)">
+        <xsl:if test="not(starts-with($string, $delimiter))">
+          <xsl:call-template name="str.tokenize.keep.delimiters-delimiters">
+            <xsl:with-param name="string" select="substring-before($string, $delimiter)"/>
+            <xsl:with-param name="delimiters" select="substring($delimiters, 2)"/>
+          </xsl:call-template>
+        </xsl:if>
+        <!-- output each delimiter -->
+        <xsl:value-of select="$delimiter"/>
+        <xsl:call-template name="str.tokenize.keep.delimiters-delimiters">
+          <xsl:with-param name="string" select="substring-after($string, $delimiter)"/>
+          <xsl:with-param name="delimiters" select="$delimiters"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="str.tokenize.keep.delimiters-delimiters">
+          <xsl:with-param name="string" select="$string"/>
+          <xsl:with-param name="delimiters" select="substring($delimiters, 2)"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+    <xsl:template name="apply-string-subst-map">
+      <xsl:param name="content"/>
+      <xsl:param name="map.contents"/>
+      <xsl:variable name="replaced_text">
+        <xsl:call-template name="string.subst">
+          <xsl:with-param name="string" select="$content"/>
+          <xsl:with-param name="target" select="$map.contents[1]/@oldstring"/>
+          <xsl:with-param name="replacement" select="$map.contents[1]/@newstring"/>
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$map.contents[2]">
+          <xsl:call-template name="apply-string-subst-map">
+            <xsl:with-param name="content" select="$replaced_text"/>
+            <xsl:with-param name="map.contents" select="$map.contents[position() &gt; 1]"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$replaced_text"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+  
 <xsl:template name="count.uri.path.depth">
   <xsl:param name="filename" select="''"/>
   <xsl:param name="count" select="0"/>
@@ -351,8 +405,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <xsl:template name="trim.common.uri.paths">
   <xsl:param name="uriA" select="''"/>
   <xsl:param name="uriB" select="''"/>
@@ -379,5 +431,50 @@
   </xsl:choose>
 </xsl:template>
 
+  <xsl:template name="trim.text">
+    <xsl:param name="contents" select="."/>
+    <xsl:variable name="contents-left-trimmed">
+      <xsl:call-template name="trim-left">
+        <xsl:with-param name="contents" select="$contents"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="contents-trimmed">
+      <xsl:call-template name="trim-right">
+        <xsl:with-param name="contents" select="$contents-left-trimmed"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:value-of select="$contents-trimmed"/>
+  </xsl:template>
+
+  <xsl:template name="trim-left">
+    <xsl:param name="contents"/>
+    <xsl:choose>
+      <xsl:when test="starts-with($contents,'&#10;') or                       starts-with($contents,'&#13;') or                       starts-with($contents,' ') or                       starts-with($contents,'&#9;')">
+        <xsl:call-template name="trim-left">
+          <xsl:with-param name="contents" select="substring($contents, 2)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$contents"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="trim-right">
+    <xsl:param name="contents"/>
+    <xsl:variable name="last-char">
+      <xsl:value-of select="substring($contents, string-length($contents), 1)"/>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="($last-char = '&#10;') or                       ($last-char = '&#13;') or                       ($last-char = ' ') or                       ($last-char = '&#9;')">
+        <xsl:call-template name="trim-right">
+          <xsl:with-param name="contents" select="substring($contents, 1, string-length($contents) - 1)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$contents"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 </xsl:stylesheet>

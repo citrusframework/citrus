@@ -7,8 +7,8 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
@@ -17,8 +17,12 @@
 <xsl:template match="section">
   <xsl:variable name="depth" select="count(ancestor::section)+1"/>
 
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
     <xsl:call-template name="section.titlepage"/>
 
     <xsl:variable name="toc.params">
@@ -49,14 +53,32 @@
                                         |ancestor::sect4
                                         |ancestor::sect5)[last()]"/>
 
+  <xsl:variable name="renderas">
+    <xsl:choose>
+      <xsl:when test="$section/@renderas = 'sect1'">1</xsl:when>
+      <xsl:when test="$section/@renderas = 'sect2'">2</xsl:when>
+      <xsl:when test="$section/@renderas = 'sect3'">3</xsl:when>
+      <xsl:when test="$section/@renderas = 'sect4'">4</xsl:when>
+      <xsl:when test="$section/@renderas = 'sect5'">5</xsl:when>
+      <xsl:otherwise><xsl:value-of select="''"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
   <xsl:variable name="level">
-    <xsl:call-template name="section.level">
-      <xsl:with-param name="node" select="$section"/>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$renderas != ''">
+        <xsl:value-of select="$renderas"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="section.level">
+          <xsl:with-param name="node" select="$section"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
 
   <xsl:call-template name="section.heading">
-    <xsl:with-param name="section" select=".."/>
+    <xsl:with-param name="section" select="$section"/>
     <xsl:with-param name="level" select="$level"/>
     <xsl:with-param name="title">
       <xsl:apply-templates select="$section" mode="object.title.markup">
@@ -66,14 +88,38 @@
   </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="section/title" mode="titlepage.mode" priority="2">
+<xsl:template match="section/title
+                    |section/info/title
+                    |sectioninfo/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="sect1">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
-    <xsl:call-template name="sect1.titlepage"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="@renderas = 'sect2'">
+        <xsl:call-template name="sect2.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect3'">
+        <xsl:call-template name="sect3.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect4'">
+        <xsl:call-template name="sect4.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect5'">
+        <xsl:call-template name="sect5.titlepage"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sect1.titlepage"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:variable name="toc.params">
       <xsl:call-template name="find.path.params">
@@ -93,14 +139,38 @@
   </div>
 </xsl:template>
 
-<xsl:template match="sect1/title" mode="titlepage.mode" priority="2">
+<xsl:template match="sect1/title
+                    |sect1/info/title
+                    |sect1info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="sect2">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
-    <xsl:call-template name="sect2.titlepage"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="@renderas = 'sect1'">
+        <xsl:call-template name="sect1.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect3'">
+        <xsl:call-template name="sect3.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect4'">
+        <xsl:call-template name="sect4.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect5'">
+        <xsl:call-template name="sect5.titlepage"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sect2.titlepage"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:variable name="toc.params">
       <xsl:call-template name="find.path.params">
@@ -116,17 +186,42 @@
       <xsl:call-template name="section.toc.separator"/>
     </xsl:if>
     <xsl:apply-templates/>
+    <xsl:call-template name="process.chunk.footnotes"/>
   </div>
 </xsl:template>
 
-<xsl:template match="sect2/title" mode="titlepage.mode" priority="2">
+<xsl:template match="sect2/title
+                    |sect2/info/title
+                    |sect2info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="sect3">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
-    <xsl:call-template name="sect3.titlepage"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="@renderas = 'sect1'">
+        <xsl:call-template name="sect1.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect2'">
+        <xsl:call-template name="sect2.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect4'">
+        <xsl:call-template name="sect4.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect5'">
+        <xsl:call-template name="sect5.titlepage"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sect3.titlepage"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:variable name="toc.params">
       <xsl:call-template name="find.path.params">
@@ -142,17 +237,42 @@
       <xsl:call-template name="section.toc.separator"/>
     </xsl:if>
     <xsl:apply-templates/>
+    <xsl:call-template name="process.chunk.footnotes"/>
   </div>
 </xsl:template>
 
-<xsl:template match="sect3/title" mode="titlepage.mode" priority="2">
+<xsl:template match="sect3/title
+                    |sect3/info/title
+                    |sect3info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="sect4">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
-    <xsl:call-template name="sect4.titlepage"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="@renderas = 'sect1'">
+        <xsl:call-template name="sect1.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect2'">
+        <xsl:call-template name="sect2.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect3'">
+        <xsl:call-template name="sect3.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect5'">
+        <xsl:call-template name="sect5.titlepage"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sect4.titlepage"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:variable name="toc.params">
       <xsl:call-template name="find.path.params">
@@ -168,17 +288,42 @@
       <xsl:call-template name="section.toc.separator"/>
     </xsl:if>
     <xsl:apply-templates/>
+    <xsl:call-template name="process.chunk.footnotes"/>
   </div>
 </xsl:template>
 
-<xsl:template match="sect4/title" mode="titlepage.mode" priority="2">
+<xsl:template match="sect4/title
+                    |sect4/info/title
+                    |sect4info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="sect5">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
-    <xsl:call-template name="sect5.titlepage"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
+    <xsl:choose>
+      <xsl:when test="@renderas = 'sect1'">
+        <xsl:call-template name="sect1.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect2'">
+        <xsl:call-template name="sect2.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect3'">
+        <xsl:call-template name="sect3.titlepage"/>
+      </xsl:when>
+      <xsl:when test="@renderas = 'sect4'">
+        <xsl:call-template name="sect4.titlepage"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sect5.titlepage"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:variable name="toc.params">
       <xsl:call-template name="find.path.params">
@@ -194,22 +339,32 @@
       <xsl:call-template name="section.toc.separator"/>
     </xsl:if>
     <xsl:apply-templates/>
+    <xsl:call-template name="process.chunk.footnotes"/>
   </div>
 </xsl:template>
 
-<xsl:template match="sect5/title" mode="titlepage.mode" priority="2">
+<xsl:template match="sect5/title
+                    |sect5/info/title
+                    |sect5info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
 <xsl:template match="simplesect">
-  <div class="{name(.)}">
-    <xsl:call-template name="language.attribute"/>
+  <xsl:call-template name="id.warning"/>
+
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
+
     <xsl:call-template name="simplesect.titlepage"/>
     <xsl:apply-templates/>
   </div>
 </xsl:template>
 
-<xsl:template match="simplesect/title" mode="titlepage.mode" priority="2">
+<xsl:template match="simplesect/title|simplesect/info/title" 
+              mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.title"/>
 </xsl:template>
 
@@ -217,35 +372,42 @@
 <xsl:template match="section/titleabbrev"></xsl:template>
 <xsl:template match="section/subtitle"></xsl:template>
 <xsl:template match="sectioninfo"></xsl:template>
+<xsl:template match="section/info"></xsl:template>
 
 <xsl:template match="sect1/title"></xsl:template>
 <xsl:template match="sect1/titleabbrev"></xsl:template>
 <xsl:template match="sect1/subtitle"></xsl:template>
 <xsl:template match="sect1info"></xsl:template>
+<xsl:template match="sect1/info"></xsl:template>
 
 <xsl:template match="sect2/title"></xsl:template>
 <xsl:template match="sect2/subtitle"></xsl:template>
 <xsl:template match="sect2/titleabbrev"></xsl:template>
 <xsl:template match="sect2info"></xsl:template>
+<xsl:template match="sect2/info"></xsl:template>
 
 <xsl:template match="sect3/title"></xsl:template>
 <xsl:template match="sect3/subtitle"></xsl:template>
 <xsl:template match="sect3/titleabbrev"></xsl:template>
 <xsl:template match="sect3info"></xsl:template>
+<xsl:template match="sect3/info"></xsl:template>
 
 <xsl:template match="sect4/title"></xsl:template>
 <xsl:template match="sect4/subtitle"></xsl:template>
 <xsl:template match="sect4/titleabbrev"></xsl:template>
 <xsl:template match="sect4info"></xsl:template>
+<xsl:template match="sect4/info"></xsl:template>
 
 <xsl:template match="sect5/title"></xsl:template>
 <xsl:template match="sect5/subtitle"></xsl:template>
 <xsl:template match="sect5/titleabbrev"></xsl:template>
 <xsl:template match="sect5info"></xsl:template>
+<xsl:template match="sect5/info"></xsl:template>
 
 <xsl:template match="simplesect/title"></xsl:template>
 <xsl:template match="simplesect/subtitle"></xsl:template>
 <xsl:template match="simplesect/titleabbrev"></xsl:template>
+<xsl:template match="simplesect/info"></xsl:template>
 
 <!-- ==================================================================== -->
 
@@ -254,9 +416,16 @@
   <xsl:param name="level" select="1"/>
   <xsl:param name="allow-anchors" select="1"/>
   <xsl:param name="title"/>
+  <xsl:param name="class" select="'title'"/>
 
   <xsl:variable name="id">
     <xsl:choose>
+      <!-- Make sure the subtitle doesn't get the same id as the title -->
+      <xsl:when test="self::subtitle">
+        <xsl:call-template name="object.id">
+          <xsl:with-param name="object" select="."/>
+        </xsl:call-template>
+      </xsl:when>
       <!-- if title is in an *info wrapper, get the grandparent -->
       <xsl:when test="contains(local-name(..), 'info')">
         <xsl:call-template name="object.id">
@@ -272,19 +441,31 @@
   </xsl:variable>
 
   <!-- HTML H level is one higher than section level -->
-  <xsl:variable name="hlevel" select="$level + 1"/>
+  <xsl:variable name="hlevel">
+    <xsl:choose>
+      <!-- highest valid HTML H level is H6; so anything nested deeper
+           than 5 levels down just becomes H6 -->
+      <xsl:when test="$level &gt; 5">6</xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$level + 1"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:element name="h{$hlevel}">
-    <xsl:attribute name="class">title</xsl:attribute>
+    <xsl:attribute name="class"><xsl:value-of select="$class"/></xsl:attribute>
     <xsl:if test="$css.decoration != '0'">
       <xsl:if test="$hlevel&lt;3">
         <xsl:attribute name="style">clear: both</xsl:attribute>
       </xsl:if>
     </xsl:if>
-    <xsl:if test="$allow-anchors != 0">
+    <xsl:if test="$allow-anchors != 0 and $generate.id.attributes = 0">
       <xsl:call-template name="anchor">
         <xsl:with-param name="node" select="$section"/>
         <xsl:with-param name="conditional" select="0"/>
       </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="$generate.id.attributes != 0 and not(local-name(.) = 'appendix')">
+      <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
     </xsl:if>
     <xsl:copy-of select="$title"/>
   </xsl:element>
@@ -376,6 +557,10 @@
   <xsl:call-template name="section.subtitle"/>
 </xsl:template>
 
+<xsl:template match="simplesect/subtitle" mode="titlepage.mode" priority="2">
+  <xsl:call-template name="section.subtitle"/>
+</xsl:template>
+
 <xsl:template match="sect1/subtitle" mode="titlepage.mode" priority="2">
   <xsl:call-template name="section.subtitle"/>
 </xsl:template>
@@ -417,6 +602,7 @@
     <xsl:with-param name="allow-anchors" select="0"/>
     <!-- subtitle heading level one higher than section level -->
     <xsl:with-param name="level" select="$level + 1"/>
+    <xsl:with-param name="class" select="'subtitle'"/>
     <xsl:with-param name="title">
       <xsl:apply-templates select="$section" mode="object.subtitle.markup">
         <xsl:with-param name="allow-anchors" select="0"/>

@@ -1,12 +1,14 @@
 <!-- ...................................................................... -->
-<!-- DocBook XML DTD V4.2 ................................................. -->
+<!-- DocBook XML DTD V4.5 ................................................. -->
 <!-- File docbookx.dtd .................................................... -->
 
-<!-- Copyright 1992-2002 HaL Computer Systems, Inc.,
+<!-- Copyright 1992-2006 HaL Computer Systems, Inc.,
      O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
      Corporation, Norman Walsh, Sun Microsystems, Inc., and the
      Organization for the Advancement of Structured Information
      Standards (OASIS).
+
+     See also http://docbook.org/specs/
 
      $Id$
 
@@ -30,24 +32,24 @@
 
 <!-- ...................................................................... -->
 
-<!-- This is the driver file for V4.2 of the DocBook DTD.
+<!-- This is the driver file for V4.5 of the DocBook DTD.
      Please use the following formal public identifier to identify it:
 
-     "-//OASIS//DTD DocBook XML V4.2//EN"
+     "-//OASIS//DTD DocBook XML V4.5//EN"
 
      For example, if your document's top-level element is Book, and
      you are using DocBook directly, use the FPI in the DOCTYPE
      declaration:
 
-     <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-                    "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
+     <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
                     [...]>
 
      Or, if you have a higher-level driver file that customizes DocBook,
      use the FPI in the parameter entity declaration:
 
-     <!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-                "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+     <!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
      %DocBookDTD;
 
      See the documentation for detailed information on the parameter
@@ -94,7 +96,7 @@
 <!ENTITY % dbnotn.module "INCLUDE">
 <![%dbnotn.module;[
 <!ENTITY % dbnotn PUBLIC
-"-//OASIS//ENTITIES DocBook Notations V4.2//EN"
+"-//OASIS//ENTITIES DocBook Notations V4.5//EN"
 "dbnotnx.mod">
 %dbnotn;
 ]]>
@@ -105,15 +107,18 @@
 <!ENTITY % dbcent.module "INCLUDE">
 <![%dbcent.module;[
 
+<!ENTITY % dbcent.euro "INCLUDE">
+<![%dbcent.euro;[
 <![%sgml.features;[
-<!ENTITY euro "[euro  ]"><!-- euro sign, U+20AC NEW -->
+<!ENTITY euro SDATA "[euro  ]"><!-- euro sign -->
 ]]>
 <![%xml.features;[
 <!ENTITY euro "&#x20AC;"><!-- euro sign, U+20AC NEW -->
 ]]>
+]]>
 
 <!ENTITY % dbcent PUBLIC
-"-//OASIS//ENTITIES DocBook Character Entities V4.2//EN"
+"-//OASIS//ENTITIES DocBook Character Entities V4.5//EN"
 "dbcentx.mod">
 %dbcent;
 ]]>
@@ -126,7 +131,7 @@
 <!ENTITY % dbpool.module "INCLUDE">
 <![ %dbpool.module; [
 <!ENTITY % dbpool PUBLIC
-"-//OASIS//ELEMENTS DocBook Information Pool V4.2//EN"
+"-//OASIS//ELEMENTS DocBook Information Pool V4.5//EN"
 "dbpoolx.mod">
 %dbpool;
 ]]>
@@ -145,7 +150,7 @@
 <!ENTITY % dbhier.module "INCLUDE">
 <![ %dbhier.module; [
 <!ENTITY % dbhier PUBLIC
-"-//OASIS//ELEMENTS DocBook Document Hierarchy V4.2//EN"
+"-//OASIS//ELEMENTS DocBook Document Hierarchy V4.5//EN"
 "dbhierx.mod">
 %dbhier;
 ]]>
@@ -156,10 +161,10 @@
 <!ENTITY % dbgenent.module "INCLUDE">
 <![ %dbgenent.module; [
 <!ENTITY % dbgenent PUBLIC
-"-//OASIS//ENTITIES DocBook Additional General Entities V4.2//EN"
+"-//OASIS//ENTITIES DocBook Additional General Entities V4.5//EN"
 "dbgenent.mod">
 %dbgenent;
 ]]>
 
-<!-- End of DocBook XML DTD V4.2 .......................................... -->
+<!-- End of DocBook XML DTD V4.5 .......................................... -->
 <!-- ...................................................................... -->

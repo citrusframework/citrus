@@ -11,6 +11,7 @@
                 exclude-result-prefixes="#default">
                 
     <xsl:import href="../lib/docbook-xsl/html/chunk.xsl"/>
+    <xsl:import href="../lib/docbook-xsl/html/highlight.xsl"/>
 
 <!--###################################################
                      HTML Settings
@@ -100,5 +101,12 @@
             <xsl:apply-templates mode="titlepage.mode" />
         </div>
     </xsl:template>
-  
+
+<!--###################################################
+                       Highlighting
+    ################################################### -->
+    
+    <xsl:param name="highlight.source">1</xsl:param>
+    <xsl:param name="highlight.default.language">xml</xsl:param>
+      
 </xsl:stylesheet>

@@ -23,6 +23,12 @@ translates characters with code>255 back to ASCII.
 "'aaaccccddeeeeeegggghhiiiiijklllllnnnnooorrrsssstttuuuuuuwyzzzAAACCCCDDEEEEEEGGGGHHIIIIIJKLLLLLNNNNOOORRRSSSSTTTUUUUUUWYYZZZ'"/>
 
 <xsl:template match="*" mode="fop.outline">
+  <xsl:variable name="id">
+    <xsl:value-of select="(@id|@xml:id)[1]"/>
+  </xsl:variable>
+  <xsl:if test="$id != ''">
+    <fox:destination internal-destination="{$id}"/>
+  </xsl:if>
   <xsl:apply-templates select="*" mode="fop.outline"/>
 </xsl:template>
 
@@ -42,6 +48,7 @@ translates characters with code>255 back to ASCII.
   <!-- If the object is a set or book, generate a bookmark for the toc -->
 
   <xsl:choose>
+    <xsl:when test="self::index and $generate.index = 0"/>	
     <xsl:when test="parent::*">
       <fox:outline internal-destination="{$id}">
         <fox:label>
@@ -62,10 +69,12 @@ translates characters with code>255 back to ASCII.
           <xsl:with-param name="table" select="normalize-space($generate.toc)"/>
         </xsl:call-template>
       </xsl:variable>
+
       <xsl:if test="contains($toc.params, 'toc')
-                    and section|sect1|refentry
-                        |article|bibliography|glossary
-                        |appendix">
+                    and (book|part|reference|preface|chapter|appendix|article
+                         |glossary|bibliography|index|setindex
+                         |refentry
+                         |sect1|sect2|sect3|sect4|sect5|section)">
         <fox:outline internal-destination="toc...{$id}">
           <fox:label>
             <xsl:call-template name="gentext">
@@ -77,6 +86,7 @@ translates characters with code>255 back to ASCII.
       <xsl:apply-templates select="*" mode="fop.outline"/>
     </xsl:otherwise>
   </xsl:choose>
+  <fox:destination internal-destination="{$id}"/>
 </xsl:template>
 
 </xsl:stylesheet>

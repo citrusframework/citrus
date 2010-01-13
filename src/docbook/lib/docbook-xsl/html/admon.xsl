@@ -7,12 +7,12 @@
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
-     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
-     and other information.
+     See ../README or http://docbook.sf.net/release/xsl/current/ for
+     copyright and other information.
 
      ******************************************************************** -->
 
-<xsl:template name="admon.graphic.width">
+<xsl:template match="*" mode="admon.graphic.width">
   <xsl:param name="node" select="."/>
   <xsl:text>25</xsl:text>
 </xsl:template>
@@ -54,7 +54,14 @@
     </xsl:choose>
   </xsl:variable>
 
-  <div class="{name(.)}">
+  <xsl:variable name="alt">
+    <xsl:call-template name="gentext">
+      <xsl:with-param name="key" select="$admon.type"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <div>
+    <xsl:call-template name="common.html.attributes"/>
     <xsl:if test="$admon.style != ''">
       <xsl:attribute name="style">
         <xsl:value-of select="$admon.style"/>
@@ -64,29 +71,31 @@
     <table border="0">
       <xsl:attribute name="summary">
         <xsl:value-of select="$admon.type"/>
-        <xsl:if test="title">
+        <xsl:if test="title|info/title">
           <xsl:text>: </xsl:text>
-          <xsl:value-of select="title"/>
+          <xsl:value-of select="(title|info/title)[1]"/>
         </xsl:if>
       </xsl:attribute>
       <tr>
         <td rowspan="2" align="center" valign="top">
           <xsl:attribute name="width">
-            <xsl:call-template name="admon.graphic.width"/>
+            <xsl:apply-templates select="." mode="admon.graphic.width"/>
           </xsl:attribute>
-          <img alt="[{$admon.type}]">
+          <img alt="[{$alt}]">
             <xsl:attribute name="src">
               <xsl:call-template name="admon.graphic"/>
             </xsl:attribute>
           </img>
         </td>
-        <th align="left">
+        <th align="{$direction.align.start}">
           <xsl:call-template name="anchor"/>
-          <xsl:apply-templates select="." mode="object.title.markup"/>
+          <xsl:if test="$admon.textlabel != 0 or title or info/title">
+            <xsl:apply-templates select="." mode="object.title.markup"/>
+          </xsl:if>
         </th>
       </tr>
       <tr>
-        <td colspan="2" align="left" valign="top">
+        <td align="{$direction.align.start}" valign="top">
           <xsl:apply-templates/>
         </td>
       </tr>
@@ -95,17 +104,22 @@
 </xsl:template>
 
 <xsl:template name="nongraphical.admonition">
-  <div class="{name(.)}">
+  <div>
+    <xsl:call-template name="common.html.attributes">
+      <xsl:with-param name="inherit" select="1"/>
+    </xsl:call-template>
     <xsl:if test="$admon.style">
       <xsl:attribute name="style">
         <xsl:value-of select="$admon.style"/>
       </xsl:attribute>
     </xsl:if>
 
-    <h3 class="title">
-      <xsl:call-template name="anchor"/>
-      <xsl:apply-templates select="." mode="object.title.markup"/>
-    </h3>
+    <xsl:if test="$admon.textlabel != 0 or title or info/title">
+      <h3 class="title">
+        <xsl:call-template name="anchor"/>
+        <xsl:apply-templates select="." mode="object.title.markup"/>
+      </h3>
+    </xsl:if>
 
     <xsl:apply-templates/>
   </div>

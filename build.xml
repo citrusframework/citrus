@@ -33,6 +33,7 @@
             </classpath>
             <jvmarg value="-Xmx256M"/>
             <jvmarg value="-XX:MaxPermSize=128m"/>
+        	<sysproperty key="xslthl.config" value="file:///${basedir}/src/docbook/lib/docbook-xsl/highlighting/xslthl-config.xml"/>
             <arg value="${basedir}/src/docbook/index.xml"/>
             <arg value="${basedir}/src/docbook/styles/reference-html-chunk.xsl"/>
         </java>
@@ -61,6 +62,7 @@
             </classpath>
             <jvmarg value="-Xmx256M"/>
             <jvmarg value="-XX:MaxPermSize=128m"/>
+        	<sysproperty key="xslthl.config" value="file:///${basedir}/src/docbook/lib/docbook-xsl/highlighting/xslthl-config.xml"/>
             <arg value="-o"/>
             <arg value="${basedir}/target/doc/html_single/index.html"/>
             <arg value="${basedir}/src/docbook/index.xml"/>
@@ -91,6 +93,7 @@
             </classpath>
             <jvmarg value="-Xmx256M"/>
             <jvmarg value="-XX:MaxPermSize=128m"/>
+        	<sysproperty key="xslthl.config" value="file:///${basedir}/src/docbook/lib/docbook-xsl/highlighting/xslthl-config.xml"/>
             <arg value="-o"/>
             <arg value="${basedir}/target/doc/pdf/docbook_fop.tmp"/>
             <arg value="${basedir}/src/docbook/index.xml"/>
