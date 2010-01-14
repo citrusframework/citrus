@@ -52,7 +52,12 @@
             	<include name="**/"/>
             </fileset>
         </copy>
-        <copy todir="${basedir}/target/doc/html_single/" file="${basedir}/src/docbook/styles/reference-html.css" failonerror="false"/>
+		
+        <copy todir="${basedir}/target/doc/html_single/" failonerror="false">
+            <fileset dir="${basedir}/src/docbook/styles">
+                <include name="*.css"/>
+            </fileset>
+        </copy>
     
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}/src/docbook">
             <classpath>

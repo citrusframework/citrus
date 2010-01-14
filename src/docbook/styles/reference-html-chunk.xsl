@@ -5,10 +5,11 @@
 <!DOCTYPE xsl:stylesheet [
 ]>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns="http://www.w3.org/TR/xhtml1/transitional"
+                xmlns:xslthl="http://xslthl.sf.net"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0"
-                xmlns="http://www.w3.org/TR/xhtml1/transitional"
-                exclude-result-prefixes="#default">
+                exclude-result-prefixes="#default xslthl">
                 
     <xsl:import href="../lib/docbook-xsl/html/chunk.xsl"/>
     <xsl:import href="../lib/docbook-xsl/html/highlight.xsl"/>
@@ -108,5 +109,17 @@
     
     <xsl:param name="highlight.source">1</xsl:param>
     <xsl:param name="highlight.default.language">xml</xsl:param>
+    
+    <xsl:template match="xslthl:tag" mode="xslthl">
+        <span class="hl-tag"><xsl:apply-templates mode="xslthl"/></span>
+    </xsl:template>
+    
+    <xsl:template match='xslthl:attribute' mode="xslthl">
+      <span class="hl-attribute"><xsl:apply-templates mode="xslthl"/></span>
+    </xsl:template>
+    
+    <xsl:template match='xslthl:value' mode="xslthl">
+      <span class="hl-value"><xsl:apply-templates mode="xslthl"/></span>
+    </xsl:template>
       
 </xsl:stylesheet>
