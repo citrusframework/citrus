@@ -7,11 +7,12 @@
     <!ENTITY copyright "&#xA9;">
 ]>
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0"
-                xmlns="http://www.w3.org/TR/xhtml1/transitional"
+<xsl:stylesheet xmlns="http://www.w3.org/TR/xhtml1/transitional"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                exclude-result-prefixes="#default">
+                xmlns:xslthl="http://xslthl.sf.net"
+                version="1.0"
+                exclude-result-prefixes="#default xslthl">
                 
     <xsl:import href="../lib/docbook-xsl/fo/docbook.xsl"/>
     <xsl:import href="../lib/docbook-xsl/fo/highlight.xsl"/>
@@ -381,10 +382,8 @@
     
     <!-- Verbatim text formatting (programlistings) -->
     <xsl:attribute-set name="monospace.verbatim.properties">
-        <xsl:attribute name="font-size">
-            <xsl:value-of select="$body.font.small * 1.0"/>
-            <xsl:text>pt</xsl:text>
-        </xsl:attribute>
+        <xsl:attribute name="font-family">Courier</xsl:attribute>
+        <xsl:attribute name="font-size">0.9em</xsl:attribute>
     </xsl:attribute-set>
     
     <xsl:attribute-set name="verbatim.properties">
@@ -496,4 +495,15 @@
     <xsl:param name="highlight.source">1</xsl:param>
     <xsl:param name="highlight.default.language">xml</xsl:param>
     
+    <xsl:template match='xslthl:tag' mode="xslthl">
+      <fo:inline color="teal"><xsl:apply-templates mode="xslthl"/></fo:inline>
+    </xsl:template>
+    
+    <xsl:template match='xslthl:attribute' mode="xslthl">
+      <fo:inline color="purple"><xsl:apply-templates mode="xslthl"/></fo:inline>
+    </xsl:template>
+    
+    <xsl:template match='xslthl:value' mode="xslthl">
+      <fo:inline color="blue"><xsl:apply-templates mode="xslthl"/></fo:inline>
+    </xsl:template>
 </xsl:stylesheet>
