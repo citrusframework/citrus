@@ -23,6 +23,7 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
@@ -36,7 +37,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
-public class JmsConnectingMessageHandler implements MessageHandler {
+public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean {
 
     private Destination destination;
     
@@ -47,6 +48,10 @@ public class JmsConnectingMessageHandler implements MessageHandler {
     private String replyDestinationName;
     
     private ConnectionFactory connectionFactory;
+    
+    private Connection connection = null;
+    
+    private Session session = null;
     
     private long replyTimeout = 5000L;
     
@@ -73,16 +78,20 @@ public class JmsConnectingMessageHandler implements MessageHandler {
             log.debug("Message is: " + request.getPayload());
         }
 
-        Connection connection = null;
-        Session session = null;
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
         Destination replyDestination = null;
         
         Message<?> replyMessage = null;
         try {
-            connection = createConnection();
-            session = createSession(connection);
+            if(connection == null) { 
+                connection = createConnection();
+            }
+            
+            if(session == null) {
+                session = createSession(connection);
+            }
+            
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(request, session);
             
             messageProducer = session.createProducer(getDestination(session));
@@ -121,11 +130,6 @@ public class JmsConnectingMessageHandler implements MessageHandler {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);
             deleteTemporaryDestination(replyDestination);
-            JmsUtils.closeSession(session);
-            
-            if(connection != null) {
-                ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
-            }
         }
         
         return replyMessage;
@@ -196,10 +200,19 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
-        if (connectionFactory instanceof QueueConnectionFactory) {
-            return ((QueueConnectionFactory) connectionFactory).createQueueConnection();
+        if(connection == null) {
+            if (connectionFactory instanceof QueueConnectionFactory) {
+                this.connection = ((QueueConnectionFactory) connectionFactory).createQueueConnection();
+            } else {
+                this.connection = connectionFactory.createConnection();
+            }
+            
+            if(log.isDebugEnabled()) {
+                log.debug("Created new JMS connection [" + connection + "]");
+            }
         }
-        return connectionFactory.createConnection();
+        
+        return connection;
     }
     
     /**
@@ -209,10 +222,32 @@ public class JmsConnectingMessageHandler implements MessageHandler {
      * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
-        if (connection instanceof QueueConnection) {
-            return ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+        if(session == null) {
+            if (connection instanceof QueueConnection) {
+                session = ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+            } else {
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
+            
+            if(log.isDebugEnabled()) {
+                log.debug("Created new JMS session [" + session + "]");
+            }
+            
+            return session;
         }
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        
+        return session;
+    }
+    
+    /**
+     * Destroy method closing JMS session and connection
+     */
+    public void destroy() {
+        JmsUtils.closeSession(session);
+        
+        if(connection != null) {
+            ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
+        }
     }
     
     /**
@@ -224,6 +259,10 @@ public class JmsConnectingMessageHandler implements MessageHandler {
         hmmc.setExtractIntegrationMessagePayload(true);
 
         return hmmc;
+    }
+    
+    public void afterPropertiesSet() throws Exception {
+        createConnection();
     }
 
     /**
