@@ -133,10 +133,10 @@
             
             <programlisting>
   &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
-                              destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
-                              reply-destination-name=&quot;Citrus.JMS.Customer.Queue.Reply&quot;
-                              reply-handler=&quot;getCustomerReplyHandler&quot;
-                              reply-timeout=&quot;1000&quot;/&gt;
+                  destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
+                  reply-destination-name=&quot;Citrus.JMS.Customer.Queue.Reply&quot;
+                  reply-handler=&quot;getCustomerReplyHandler&quot;
+                  reply-timeout=&quot;1000&quot;/&gt;
             </programlisting>
             
             <para>Instead of using the <emphasis>reply-destination-name</emphasis> feel free to use the destination reference
@@ -161,10 +161,10 @@
         
         <programlisting>
   &lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 
-                                       destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
+                      destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
                                        
   &lt;citrus:jms-reply-message-sender id=&quot;getOrderReplySender&quot;
-                                      reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;
+                      reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;
         </programlisting>
         
         <para>In first sight the synchronous message receiver has no difference to a normal receiver, but the difference comes in

@@ -12,16 +12,16 @@
         
         <programlisting>
   &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-         xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
-         xsi:schemaLocation=&quot;
-         http://www.springframework.org/schema/beans 
-         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-         http://www.citrusframework.org/schema/config 
-         http://www.citrusframework.org/schema/config/citrus-config.xsd
-         http://www.citrusframework.org/schema/http/config 
-         http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;&gt;
+     xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+     xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+     xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
+     xsi:schemaLocation=&quot;
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     http://www.citrusframework.org/schema/config 
+     http://www.citrusframework.org/schema/config/citrus-config.xsd
+     http://www.citrusframework.org/schema/http/config 
+     http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;&gt;
          
       [...]
       
@@ -62,14 +62,14 @@
         
         <programlisting>
   &lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
-                         port=&quot;8090&quot; 
-                         uri=&quot;/test&quot; 
-                         deamon=&quot;false&quot; 
-                         message-handler=&quot;emptyResponseProducingMessageHandler&quot;
-                         auto-start=&quot;true&quot;/&gt;
+                 port=&quot;8090&quot; 
+                 uri=&quot;/test&quot; 
+                 deamon=&quot;false&quot; 
+                 message-handler=&quot;emptyResponseProducingMessageHandler&quot;
+                 auto-start=&quot;true&quot;/&gt;
                          
   &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-           class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+   class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
         </programlisting>
         
         <para>The Http server implementation in the example will automatically startup on application loading and will listen on
@@ -87,7 +87,7 @@
             
             <programlisting>
   &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-           class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+   class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
             </programlisting>
         </section>
         
@@ -97,11 +97,13 @@
             <para>The next more complex message handler will always return a static response message</para>
             
             <programlisting>
-  &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+  &lt;bean 
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
       &lt;property name=&quot;messagePayload&quot;&gt;
           &lt;value&gt;
           &lt;![CDATA[
-              &lt;ns0:Response xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+              &lt;ns0:Response 
+                  xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
                   &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
                   &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
                   &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
@@ -110,12 +112,12 @@
           &lt;/value&gt;
       &lt;/property&gt;
       &lt;property name=&quot;messageHeader&quot;&gt;
-          &lt;map&gt;
-              &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Operation&quot; 
-                        value=&quot;sayHelloResponse&quot;/&gt;
-              &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sample.xsd}ns0:Request&quot; 
-                        value=&quot;HelloRequest&quot;/&gt;
-          &lt;/map&gt;
+        &lt;map&gt;
+          &lt;entry key=&quot;{http://www.consol.de/schemas/samples}ns0:Operation&quot; 
+                    value=&quot;sayHelloResponse&quot;/&gt;
+          &lt;entry key=&quot;{http://www.consol.de/schemas/samples}ns0:Request&quot; 
+                    value=&quot;HelloRequest&quot;/&gt;
+        &lt;/map&gt;
       &lt;/property&gt;
   &lt;/bean&gt;
             </programlisting>
@@ -133,7 +135,8 @@
             configuration context. The separate context is loaded in advance.</para>
             
             <programlisting>
-  &lt;bean id=&quot;xpathDispatchingHandler&quot; class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
+  &lt;bean id=&quot;xpathDispatchingHandler&quot; 
+    class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
       &lt;property name=&quot;xpathMappingExpression&quot; 
                    value=&quot;//MessageBody/Operation&quot;/&gt;
       &lt;property name=&quot;messageHandlerContext&quot; 

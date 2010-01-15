@@ -20,7 +20,8 @@
     
     <programlisting>
   Execution of test: failTest failed! Nested exception is: 
-  com.consol.citrus.exceptions.TestSuiteException: Test will fail with custom message
+  com.consol.citrus.exceptions.TestSuiteException: 
+  Test will fail with custom message
   
   [...]
   

@@ -60,10 +60,10 @@
         
         <programlisting>
   &lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
-                         port=&quot;8091&quot; 
-                         auto-start=&quot;true&quot;
-                         context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
-                         resource-base=&quot;src/citrus/resources&quot;/&gt;
+                     port=&quot;8091&quot; 
+                     auto-start=&quot;true&quot;
+                     context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
+                     resource-base=&quot;src/citrus/resources&quot;/&gt;
         </programlisting>
         
         <para>The Jetty server is able to startup automatically during application startup. In the example above the Server is
@@ -77,59 +77,64 @@
          http://www.springframework.org/schema/beans 
          http://www.springframework.org/schema/beans/spring-beans-2.5.xsd&quot;&gt;
       
-      &lt;bean id=&quot;loggingInterceptor&quot; 
-               class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
-          &lt;description&gt;
-              This interceptor logs the message payload.
-          &lt;/description&gt;
-      &lt;/bean&gt;
+    &lt;bean id=&quot;loggingInterceptor&quot; 
+    class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
+        &lt;description&gt;
+            This interceptor logs the message payload.
+        &lt;/description&gt;
+    &lt;/bean&gt;
       
-      &lt;bean id=&quot;helloServicePayloadMapping&quot; 
-               class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
-          &lt;property name=&quot;mappings&quot;&gt;
-              &lt;props&gt;
-                  &lt;prop key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest&quot;&gt;
-                      helloServiceEndpoint
-                  &lt;/prop&gt;
-              &lt;/props&gt;
-          &lt;/property&gt;
-          &lt;property name=&quot;interceptors&quot;&gt;
-              &lt;list&gt;
-                  &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
-              &lt;/list&gt;
-          &lt;/property&gt;
-      &lt;/bean&gt;
+    &lt;bean id=&quot;helloServicePayloadMapping&quot; 
+    class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
+        &lt;property name=&quot;mappings&quot;&gt;
+            &lt;props&gt;
+                &lt;prop 
+                    key=&quot;{http://www.consol.de/schemas/sayHello}HelloStandaloneRequest&quot;&gt;
+                    helloServiceEndpoint
+                &lt;/prop&gt;
+            &lt;/props&gt;
+        &lt;/property&gt;
+        &lt;property name=&quot;interceptors&quot;&gt;
+            &lt;list&gt;
+                &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
       
-      &lt;bean id=&quot;helloServiceEndpoint&quot; 
-               class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
-          &lt;property name=&quot;messageHandler&quot;&gt;
-            &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
-                &lt;property name=&quot;messagePayload&quot;&gt;
-                    &lt;value&gt;
-                    &lt;![CDATA[
-                        &lt;ns0:HelloStandaloneResponse 
-                            xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
-                            &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
-                            &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
-                            &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
-                            &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
-                        &lt;/ns0:HelloStandaloneResponse&gt;
-                    ]]&gt;
-                    &lt;/value&gt;
-                &lt;/property&gt;
-                &lt;property name=&quot;messageHeader&quot;&gt;
-                    &lt;map&gt;
-                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation&quot; 
-                                  value=&quot;sayHelloResponse&quot;/&gt;
-                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request&quot; 
-                                  value=&quot;HelloRequest&quot;/&gt;
-                        &lt;entry key=&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:SOAPAction&quot; 
-                                  value=&quot;sayHello&quot;/&gt;
-                    &lt;/map&gt;
-                &lt;/property&gt;
-            &lt;/bean&gt;
-          &lt;/property&gt;
-      &lt;/bean&gt;
+    &lt;bean id=&quot;helloServiceEndpoint&quot; 
+         class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+        &lt;property name=&quot;messageHandler&quot;&gt;
+          &lt;bean 
+          class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+              &lt;property name=&quot;messagePayload&quot;&gt;
+                  &lt;value&gt;
+                  &lt;![CDATA[
+                      &lt;ns0:HelloStandaloneResponse 
+                          xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+                          &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                          &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                          &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
+                          &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+                      &lt;/ns0:HelloStandaloneResponse&gt;
+                  ]]&gt;
+                  &lt;/value&gt;
+              &lt;/property&gt;
+              &lt;property name=&quot;messageHeader&quot;&gt;
+                  &lt;map&gt;
+                      &lt;entry 
+                          key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Operation&quot; 
+                          value=&quot;sayHelloResponse&quot;/&gt;
+                      &lt;entry 
+                          key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Request&quot; 
+                          value=&quot;HelloRequest&quot;/&gt;
+                      &lt;entry 
+                          key=&quot;{http://www.consol.de/schemas/sayHello}ns0:SOAPAction&quot; 
+                          value=&quot;sayHello&quot;/&gt;
+                  &lt;/map&gt;
+              &lt;/property&gt;
+          &lt;/bean&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
   &lt;/beans&gt;
         </programlisting>
         

@@ -22,11 +22,11 @@
           &lt;list&gt;
               &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
                   &lt;property name=&quot;xsd&quot; 
-                               value=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
+                       value=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
               &lt;/bean&gt;
               &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
                   &lt;property name=&quot;xsd&quot; 
-                               value=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
+                       value=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
               &lt;/bean&gt;
           &lt;/list&gt;
       &lt;/property&gt;
@@ -52,9 +52,9 @@
   &lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
       &lt;message schema-validation=&quot;false&quot;&gt;
           &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
-                       value=&quot;${requestTag}&quot;/&gt;
+               value=&quot;${requestTag}&quot;/&gt;
           &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
-                       value=&quot;${correlationId}&quot;/&gt;
+               value=&quot;${correlationId}&quot;/&gt;
           &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
       &lt;/message&gt;
       &lt;header&gt;

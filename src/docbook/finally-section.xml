@@ -41,7 +41,9 @@
       &lt;/actions&gt;
       &lt;finally&gt;
           &lt;sql datasource=&quot;testDataSource&quot;&gt;
-              &lt;statement&gt;DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'&lt;/statement&gt;
+              &lt;statement&gt;
+                DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
+              &lt;/statement&gt;
           &lt;/sql&gt;
       &lt;/finally&gt;
   &lt;/testcase&gt;

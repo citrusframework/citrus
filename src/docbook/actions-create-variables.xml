@@ -27,7 +27,9 @@
           &lt;/echo&gt;
       
           &lt;echo&gt;
-              &lt;message&gt;New variable 'newVariable' has the value: ${newVariable} &lt;/message&gt;
+              &lt;message&gt;
+                New variable 'newVariable' has the value: ${newVariable}
+              &lt;/message&gt;
           &lt;/echo&gt;
       &lt;/actions&gt;
   &lt;/testcase&gt;

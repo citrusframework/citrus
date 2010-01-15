@@ -45,7 +45,11 @@
   &lt;repeat-onerror-until-true auto-sleep=&quot;1&quot; condition=&quot;i = 5&quot; index=&quot;i&quot;&gt;
       &lt;echo&gt;
           &lt;sql datasource=&quot;testDataSource&quot;&gt;
-              &lt;statement&gt;select COUNT(1) AS CNT_ORDERS from ORDERS where CUSTOMER_ID='${customerId}'&lt;/statement&gt;
+              &lt;statement&gt;
+                SELECT COUNT(1) AS CNT_ORDERS 
+                FROM ORDERS 
+                WHERE CUSTOMER_ID='${customerId}'
+              &lt;/statement&gt;
               &lt;validate column=&quot;CNT_ORDERS&quot; value=&quot;1&quot;/&gt;
           &lt;/sql&gt;
       &lt;/echo&gt;
