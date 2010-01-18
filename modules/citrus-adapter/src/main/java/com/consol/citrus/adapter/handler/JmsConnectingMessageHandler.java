@@ -27,7 +27,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
-import org.springframework.integration.message.MessageBuilder;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.converter.MessageConverter;
@@ -56,6 +55,8 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     private long replyTimeout = 5000L;
     
     private JmsMessageCallback messageCallback;
+    
+    private MessageHandler fallbackMessageHandlerDelegate = null;
     
     /**
      * Logger
@@ -117,12 +118,18 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             
             if(jmsReplyMessage != null) {
                 replyMessage = (Message<?>)getMessageConverter().fromMessage(jmsReplyMessage);
+            } else if(fallbackMessageHandlerDelegate != null) {
+                log.info("Did not receive reply message from destination '"
+                        + getReplyDestination(session, request)
+                        + "' - delegating to fallback message handler for response generation");
+                
+                replyMessage = fallbackMessageHandlerDelegate.handleMessage(request);
             } else {
                 log.info("Did not receive reply message from destination '"
                         + getReplyDestination(session, request)
-                        + "' - generating empty response");
+                        + "' - no response is simulated");
                 
-                replyMessage = MessageBuilder.withPayload("").build();
+                replyMessage = null;
             }
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);
@@ -320,5 +327,12 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      */
     public void setMessageCallback(JmsMessageCallback messageCallback) {
         this.messageCallback = messageCallback;
+    }
+
+    /**
+     * @param fallbackMessageHandlerDelegate the fallbackMessageHandlerDelegate to set
+     */
+    public void setFallbackMessageHandlerDelegate(MessageHandler fallbackMessageHandlerDelegate) {
+        this.fallbackMessageHandlerDelegate = fallbackMessageHandlerDelegate;
     }
 }

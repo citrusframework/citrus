@@ -152,6 +152,9 @@
                 <property name="brokerURL" value="${jms.server.url}" />
             </bean>
         </property>
+        <property name="fallbackMessageHandlerDelegate">
+            <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
+        </property>
         <property name="replyTimeout" value="2000"/>
     </bean>
         

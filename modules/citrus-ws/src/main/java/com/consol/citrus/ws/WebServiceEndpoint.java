@@ -133,7 +133,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 responseSource = (Source) replyPayload;
             } else if (replyPayload instanceof Document) {
                 responseSource = new DOMSource((Document) replyPayload);
-            } else if (replyPayload instanceof String) {
+            } else if (replyPayload instanceof String && StringUtils.hasText(replyPayload.toString())) {
                 responseSource = new StringSource((String) replyPayload);
             } else {
                 throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
@@ -145,7 +145,9 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             SoapMessage response = (SoapMessage)messageContext.getResponse();
             
-            transformer.transform(responseSource, response.getPayloadResult());
+            if(response != null) {
+                transformer.transform(responseSource, response.getPayloadResult());
+            }
             
             for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
                 
@@ -176,7 +178,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 
             }
         } else {
-            log.error("Did not receive any reply from message handler '" + messageHandler + "'");
+            log.warn("Did not receive any reply from message handler '" + messageHandler + "'");
         }
     }
 
