@@ -52,7 +52,7 @@
     </section>
     
     <section id="soap-server">
-        <title>Receiving SOAP messages</title>
+        <title>SOAP message receiver</title>
         
         <para>Receiving SOAP messages requires a web server instance listening on a port. Citrus is using an embedded Jetty 
         server instance in combination with the Spring WebService project in order to accept SOAP request calls. See how the 
@@ -156,5 +156,78 @@
         
         <para>That's it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and 
         Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handlers.</para>
+    </section>
+    
+    <section id="soap-fault-validation">
+        <title>SOAP fault validation</title>
+        
+        <para>In case you receive SOAP messages from a WebService endpoint you may also want to validate special SOAP faults 
+        in error situations. Citrus can validate SOAP faults with SOAP fault code and fault string values.</para>
+        
+        <para>By default the sending action in Citrus may throw a specific exception when the SOAP response contains a SOAP fault element
+        (SoapFaultClientException). A tester can assert this kind of exception in a test case in order to expect the SOAP error.</para>
+        
+        <programlisting>
+    &lt;assert class=&quot;org.springframework.ws.soap.client.SoapFaultClientException&quot;&gt;
+        &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                    &lt;![CDATA[
+                        &lt;ns0:SoapFaultForcingRequest 
+                        xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                            &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
+                        &lt;/ns0:SoapFaultForcingRequest&gt;
+                    ]]&gt;
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/assert&gt;
+        </programlisting>
+        
+        <para>The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the 
+        SoapFaultClientException. This means that the test expects the exception to be thrown during the communication. 
+        Otherwise the test is failing.</para>
+        
+        <para>This exception assertion can not offer direct SOAP fault code and fault string validation, because we do not have access
+        to the SOAP fault elements. But we can use a special assert implementation for this.</para>
+        
+        <programlisting>
+    &lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+               fault-string=&quot;Invalid request&quot;&gt;
+        &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                    &lt;![CDATA[
+                        &lt;ns0:SoapFaultForcingRequest 
+                        xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                            &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
+                        &lt;/ns0:SoapFaultForcingRequest&gt;
+                    ]]&gt;
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/ws:assert&gt;
+        </programlisting>
+        
+        <para>The special assert action offers two attributes <emphasis>"fault-code"</emphasis> and <emphasis>"fault-string"</emphasis>, where 
+        <emphasis>fault-code</emphasis> is defined as a QName string and is mandatory for the validation. The fault assertion also supports test
+        variable replacement as usual (e.g. fault-code=&quot;{http://www.citrusframework.org/faults}${myFaultCode}&quot;).</para>
+        
+        <important>Notice that the ws:assert action uses a different XML namespace than all other Citrus test actions. Therefore you
+        also need to define the additional namespace in your test case. Usually in the root <emphasis>&lt;spring:beans&gt;</emphasis> element you
+        simply need to declare the citrus-ws specific namespace.
+        
+        <programlisting>
+  &lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot; 
+      xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+      xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot; 
+      xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+      http://www.citrusframework.org/schema/testcase 
+      http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+      http://www.citrusframework.org/schema/ws/testcase 
+      http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd&quot;&gt;
+        </programlisting>
+        </important>
     </section>    
 </chapter>
