@@ -43,7 +43,7 @@
                 <queue name="TestSuite.Queue.Dummy.Three.Out"/>
             </purge-jms-queues>
             
-            <purge-jms-queues connection-factory="connectionFactory">
+            <purge-jms-queues connection-factory="connectionFactory" receive-timeout="150">
                 <queue name="TestSuite.Queue.Dummy"/>
                 <queue name="TestSuite.Queue.Dummy.One.In"/>
                 <queue name="TestSuite.Queue.Dummy.One.Out"/>

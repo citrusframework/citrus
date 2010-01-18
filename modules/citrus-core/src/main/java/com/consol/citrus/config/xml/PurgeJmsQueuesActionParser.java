@@ -55,6 +55,10 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
         
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
         
+        if(element.hasAttribute("receive-timeout")) {
+            beanDefinition.addPropertyValue("receiveTimeout", element.getAttribute("receive-timeout"));
+        }
+        
         List<String> queueNames = new ArrayList<String>();
         ManagedList queueRefs = new ManagedList();
         

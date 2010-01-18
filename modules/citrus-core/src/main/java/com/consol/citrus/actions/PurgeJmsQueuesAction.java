@@ -188,4 +188,11 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 		this.queues = queues;
 	}
 
+    /**
+     * @param receiveTimeout the receiveTimeout to set
+     */
+    public void setReceiveTimeout(long receiveTimeout) {
+        this.receiveTimeout = receiveTimeout;
+    }
+
 }
