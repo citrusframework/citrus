@@ -34,7 +34,16 @@ import org.springframework.util.Assert;
 
 import com.consol.citrus.message.*;
 
-
+/**
+ * This JMS message sender is quite similar to Spring's AbstractJmsTemplateBasedAdapter that is 
+ * already used in out asynchronous JMS senders and receivers. But AbstractJmsTemplateBasedAdapter is
+ * working with static default destinations.
+ * 
+ * In this class we rather operate with dynamic destinations. Therefore this adapter implementation has 
+ * slight differences.
+ * 
+ * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ */
 public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     private JmsReplyDestinationHolder replyDestinationHolder;
 
