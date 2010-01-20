@@ -48,7 +48,7 @@ SAMPLES
 
 LICENSING
   
-  Copyright (C) 2006-2009 ConSol* Software GmbH.
+  Copyright (C) 2006-2010 ConSol* Software GmbH.
 
   Citrus is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ LICENSING
   GNU General Public License for more details.
  
   You should have received a copy of the GNU General Public License
-  along with Citrus.  If not, see <http://www.gnu.org/licenses/>.
+  along with Citrus. If not, see <http://www.gnu.org/licenses/>.
   
 PROFESSIONAL SERVICES
 
