@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
- Copyright 2006-2009 ConSol* Software GmbH.
+ Copyright 2006-2010 ConSol* Software GmbH.
  
  This file is part of Citrus.
  
