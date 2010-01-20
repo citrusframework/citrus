@@ -4,6 +4,18 @@
  
 News
 
+* Jan. 20, 2010 <<Featured Citrus article on JAXenter.de>>
+ 
+ We wrote an article on the german Java portal site {{{http://it-republik.de/jaxenter/}JAXenter.de}}. 
+ The article gives a detailed introduction to the framework and describes how Citrus can ease the trouble of integration 
+ testing in SOA projects. Have a look {{{http://it-republik.de/jaxenter/artikel/Automatisierte-Integrationstests-mit-Citrus-2826.html}here}}.
+ 
+* Jan. 10, 2010 <<Citrus article in german Java magazine>>
+ 
+ The german JavaMagazin ({{{http://www.javamagazin.de/}http://www.javamagazin.de}})
+ gives a short introduction to the Citrus test framework in its latest issue 
+ {{{http://it-republik.de/jaxenter/java-magazin-ausgaben/Cloud-Computing-000338.html}02/2010}}. 
+
 * Dec. 17, 2009 <<Last snapshot version 1.1-SNAPSHOT before final release>>
  
  Shortly before the holidays we update the snapshot version 1.1-SNAPSHOT on more time. The latest changes are related to extended
