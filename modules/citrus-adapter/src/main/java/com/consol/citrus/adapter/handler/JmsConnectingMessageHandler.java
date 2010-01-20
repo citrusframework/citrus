@@ -23,6 +23,7 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
@@ -36,7 +37,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
-public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean {
+public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean, DisposableBean {
 
     private Destination destination;
     
@@ -104,7 +105,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
                 messageCallback.doWithMessage(jmsRequest, request);
             }
             
-            connection.start();
             messageProducer.send(jmsRequest);
             if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyDestination);
@@ -249,7 +249,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     /**
      * Destroy method closing JMS session and connection
      */
-    public void destroy() {
+    public void destroy() throws Exception {
         JmsUtils.closeSession(session);
         
         if(connection != null) {
@@ -268,8 +268,14 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         return hmmc;
     }
     
+    /**
+     * @throws Exception
+     */
     public void afterPropertiesSet() throws Exception {
         createConnection();
+        createSession(connection);
+        
+        connection.start();
     }
 
     /**
