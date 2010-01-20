@@ -23,7 +23,7 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.HeaderMappingMessageConverter;
@@ -37,9 +37,13 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
-public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
+public class JmsSyncMessageSender implements MessageSender, BeanNameAware, InitializingBean, DisposableBean {
 
     private ConnectionFactory connectionFactory;
+    
+    private Connection connection = null;
+    
+    private Session session = null;
     
     private Destination destination;
     
@@ -78,21 +82,25 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
             log.debug(message.toString());
         }
 
-        Connection connection = null;
-        Session session = null;
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
         Destination replyDestination = null;
         
         try {
-            connection = createConnection();
-            session = createSession(connection);
+            if(connection == null) { 
+                connection = createConnection();
+            }
+            
+            if(session == null) {
+                session = createSession(connection);
+            }
+            
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(message, session);
             messageProducer = session.createProducer(getDestination(session));
 
             replyDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyDestination);
-            connection.start();
+
             if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyDestination);
             } else if(replyDestination instanceof Queue) {
@@ -122,11 +130,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);
-            JmsUtils.closeSession(session);
             deleteTemporaryDestination(replyDestination);
-            if(connection != null) {
-                ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
-            }
         }
     }
     
@@ -199,16 +203,20 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
      * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
-        if (!pubSubDomain && connectionFactory instanceof QueueConnectionFactory) {
-            return ((QueueConnectionFactory) connectionFactory).createQueueConnection();
-        } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
-            return ((TopicConnectionFactory) connectionFactory).createTopicConnection();
-        } else {
-            log.warn("Not able to create a connection with connection factory '" + connectionFactory + "'" +
-                    " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
+        if(connection == null) {
+            if (!pubSubDomain && connectionFactory instanceof QueueConnectionFactory) {
+                connection = ((QueueConnectionFactory) connectionFactory).createQueueConnection();
+            } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
+                connection = ((TopicConnectionFactory) connectionFactory).createTopicConnection();
+            } else {
+                log.warn("Not able to create a connection with connection factory '" + connectionFactory + "'" +
+                        " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
+                
+                connection = connectionFactory.createConnection();
+            }
         }
         
-        return connectionFactory.createConnection();
+        return connection;
     }
     
     /**
@@ -218,17 +226,42 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware {
      * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
-        if (!pubSubDomain && connection instanceof QueueConnection) {
-            return ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-        } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
-            connection.setClientID(name);
-            return ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-        } else {
-            log.warn("Not able to create a session with connection factory '" + connectionFactory + "'" +
-                    " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
+        if(session == null) {
+            if (!pubSubDomain && connection instanceof QueueConnection) {
+                session = ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+            } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
+                connection.setClientID(name);
+                session = ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+            } else {
+                log.warn("Not able to create a session with connection factory '" + connectionFactory + "'" +
+                        " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
+                
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            }
         }
         
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        return session;
+    }
+    
+    /**
+     * @throws Exception
+     */
+    public void afterPropertiesSet() throws Exception {
+        createConnection();
+        createSession(connection);
+        
+        connection.start();
+    }
+    
+    /**
+     * Destroy method closing JMS session and connection
+     */
+    public void destroy() throws Exception {
+        JmsUtils.closeSession(session);
+        
+        if(connection != null) {
+            ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
+        }
     }
     
     /**
