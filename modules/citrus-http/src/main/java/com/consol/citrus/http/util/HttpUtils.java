@@ -41,18 +41,18 @@ public class HttpUtils {
         sBuf.append(" ").append(request.getHeaders().get("HTTPUri"));
         sBuf.append(" ").append(request.getHeaders().get("HTTPVersion")).append(HttpConstants.LINE_BREAK);
 
-        if (request.getHeaders().containsKey("host") == false) {
+        if (!request.getHeaders().containsKey("host")) {
             sBuf.append("host: ").append(
                     request.getHeaders().get("HTTPHost") + ":"
                             + request.getHeaders().get("HTTPPort"))
                     .append(HttpConstants.LINE_BREAK);
         }
 
-        if (request.getHeaders().containsKey("connection") == false) {
+        if (!request.getHeaders().containsKey("connection")) {
             sBuf.append("connection: close").append(HttpConstants.LINE_BREAK);
         }
 
-        if (request.getPayload() != null && request.getPayload().toString().length() > 0 && request.getHeaders().containsKey("content-length") == false) {
+        if (request.getPayload() != null && request.getPayload().toString().length() > 0 && !request.getHeaders().containsKey("content-length")) {
             sBuf.append("content-length: ").append(
                     Integer.toString(request.getPayload().toString().length()))
                     .append(HttpConstants.LINE_BREAK);
@@ -60,7 +60,7 @@ public class HttpUtils {
 
         // output headers
         for (Entry<String, Object> headerEntry : request.getHeaders().entrySet()) {
-            if (headerEntry.getKey().startsWith("HTTP") == false && MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey()) == false) {
+            if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey())) {
                 sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
             }
         }
@@ -102,7 +102,7 @@ public class HttpUtils {
         // output headers
         if (response.getHeaders() != null) {
             for (Entry<String, Object> headerEntry : response.getHeaders().entrySet()) {
-                if (headerEntry.getKey().startsWith("HTTP") == false && MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey()) == false) {
+                if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey())) {
                     sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
                 }
             }

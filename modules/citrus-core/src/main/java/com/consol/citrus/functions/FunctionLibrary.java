@@ -44,7 +44,7 @@ public class FunctionLibrary {
     public boolean knowsFunction(String functionName) {
         String functionPrefix = functionName.substring(0, functionName.indexOf(':') + 1);
 
-        if (functionPrefix.equals(prefix) == false) {
+        if (!functionPrefix.equals(prefix)) {
             return false;
         }
 

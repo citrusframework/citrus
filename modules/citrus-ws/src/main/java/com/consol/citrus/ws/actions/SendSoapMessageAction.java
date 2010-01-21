@@ -47,7 +47,7 @@ public class SendSoapMessageAction extends SendMessageAction {
         
         context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
         
-        if(messageSender instanceof WebServiceMessageSender == false) {
+        if(!(messageSender instanceof WebServiceMessageSender)) {
             throw new CitrusRuntimeException("Sending SOAP messages requires a " +
             		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + message.getClass().getName() + "'");
         }

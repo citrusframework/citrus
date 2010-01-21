@@ -39,7 +39,7 @@ public class BookingSplitter {
     public Object splitMessage(Message<?> message) {
         List<Message<FlightBookingRequestMessage>> flightRequests = new ArrayList<Message<FlightBookingRequestMessage>>();
         
-        if(message.getPayload() instanceof TravelBookingRequestMessage == false) {
+        if(!(message.getPayload() instanceof TravelBookingRequestMessage)) {
             throw new IllegalStateException("Unsupported message type: " + message.getPayload().getClass());
         }
         

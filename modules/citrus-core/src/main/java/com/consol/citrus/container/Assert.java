@@ -65,7 +65,7 @@ public class Assert extends AbstractTestAction {
             log.info("Validating caught exception ...");
             if (exception.isAssignableFrom(e.getClass())) {
                 
-                if(message != null && message.equals(e.getLocalizedMessage()) == false) {
+                if(message != null && !message.equals(e.getLocalizedMessage())) {
                     throw new ValidationException("Caught exception message does not fit - expected: '" + message + "' but was: '" + e.getLocalizedMessage() + "'");
                 }
                 

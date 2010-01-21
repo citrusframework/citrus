@@ -112,7 +112,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
 
                 receivedMessage = messageReceiver.receiveSelected(context.replaceDynamicContentInString(messageSelectorString));
-            } else if (CollectionUtils.isEmpty(messageSelector) == false) {
+            } else if (!CollectionUtils.isEmpty(messageSelector)) {
                 if(receiveTimeout > 0) {
                     receivedMessage = messageReceiver
                             .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(

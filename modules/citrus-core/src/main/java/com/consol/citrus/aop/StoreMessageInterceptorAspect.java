@@ -69,7 +69,7 @@ public class StoreMessageInterceptorAspect {
         Writer output = null;
         
         try {
-            if(debugDirectory.exists() == false) {
+            if(!debugDirectory.exists()) {
                 debugDirectory.getFile().mkdirs();
             }
             

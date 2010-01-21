@@ -100,7 +100,7 @@ public class TestCaseCreator {
         
         try {
             File file = new File(CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java");
-            if(file.getParentFile().exists() == false) {
+            if(!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
                 
@@ -145,7 +145,7 @@ public class TestCaseCreator {
         
         try {
             File file = new File(CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml");
-            if(file.getParentFile().exists() == false) {
+            if(!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
                 

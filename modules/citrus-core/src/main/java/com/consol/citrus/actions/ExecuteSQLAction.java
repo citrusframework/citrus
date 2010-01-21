@@ -72,7 +72,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
                 while (reader.ready()) {
                     line = reader.readLine();
 
-                    if (line != null && line.trim() != null && line.trim().startsWith(SQL_COMMENT) == false && line.trim().length() > 0) {
+                    if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
                         if (line.trim().endsWith(";")) {
                             buffer.append(line);
                             stmt = buffer.toString();

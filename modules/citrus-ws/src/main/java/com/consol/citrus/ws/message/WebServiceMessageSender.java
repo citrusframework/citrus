@@ -71,7 +71,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
             log.debug(message.toString());
         }
         
-        if(message.getPayload() instanceof String == false) {
+        if(!(message.getPayload() instanceof String)) {
         	throw new CitrusRuntimeException("Unsupported payload type '" + message.getPayload().getClass() +
     				"' Currently only 'java.lang.String' is supported as payload type.");
         }

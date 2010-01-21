@@ -68,7 +68,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     private XsdSchemaRepository schemaRepository;
     
     public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
-        if(validationContext instanceof XmlValidationContext == false) {
+        if(!(validationContext instanceof XmlValidationContext)) {
             throw new IllegalArgumentException("DefaultXmlMessageValidator must have an instance of XmlValidationContext, " +
                     "but was " + validationContext.getClass());
         }
@@ -260,7 +260,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
-            if(StringUtils.hasText(doc.getFirstChild().getNamespaceURI()) == false) {
+            if(!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
                 return;
             }
              
@@ -304,7 +304,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             String url = entry.getValue();
 
             if (foundNamespaces.containsKey(namespace)) {
-                if (foundNamespaces.get(namespace).equals(url) == false) {
+                if (!foundNamespaces.get(namespace).equals(url)) {
                     throw new ValidationException("Namespace '" + namespace + "' values not equal: found '" + foundNamespaces.get(namespace) + "' expected '" + url + "' in reference node " + XMLUtils.getNodesPathName(received.getFirstChild()));
                 } else {
                     log.info("Validating namespace " + namespace + " value as expected " + url + " - value OK");

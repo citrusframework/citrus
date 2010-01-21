@@ -66,11 +66,11 @@ public class CreateTestCaseMojo extends AbstractMojo {
     
     public void execute() throws MojoExecutionException {
         try {
-        	while(interactiveMode && StringUtils.hasText(name) == false) {
+        	while(interactiveMode && !StringUtils.hasText(name)) {
         		name = prompter.prompt("Enter test name");
         	}
         	
-        	if(StringUtils.hasText(name) == false) {
+        	if(!StringUtils.hasText(name)) {
         		throw new CitrusRuntimeException("Test must have a name!");
         	}
         	

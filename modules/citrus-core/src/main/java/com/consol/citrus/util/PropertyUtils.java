@@ -82,7 +82,7 @@ public class PropertyUtils {
                 ++curIndex;
             }
             
-            if(properties.containsKey(variableNameBuf.toString()) == false) {
+            if(!properties.containsKey(variableNameBuf.toString())) {
                 throw new CitrusRuntimeException("No such property '"
                         + propertyMarker + variableNameBuf.toString()
                         + propertyMarker + "'");

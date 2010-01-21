@@ -93,7 +93,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
         }
         
-        if(testCase.getMetaInfo().getStatus().equals(Status.DISABLED) == false ) {
+        if(!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
             testListener.onTestStart(testCase);
             
             try {

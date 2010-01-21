@@ -66,7 +66,7 @@ public class Citrus {
             
             String testDirectory = cmd.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
             
-            if(testDirectory.endsWith("/") == false) {
+            if(!testDirectory.endsWith("/")) {
                 testDirectory = testDirectory + "/";
             }
             

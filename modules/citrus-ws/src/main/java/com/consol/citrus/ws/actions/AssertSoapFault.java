@@ -77,7 +77,7 @@ public class AssertSoapFault extends AbstractTestAction {
                 SoapFaultClientException soapFaultException = (SoapFaultClientException)e;
                 
                 try {
-					if(faultString != null && context.replaceDynamicContentInString(faultString).equals(soapFaultException.getFaultStringOrReason()) == false) {
+					if(faultString != null && !context.replaceDynamicContentInString(faultString).equals(soapFaultException.getFaultStringOrReason())) {
 					    throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + faultString + "' but was: '" + soapFaultException.getFaultStringOrReason() + "'");
 					}
 					

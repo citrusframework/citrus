@@ -65,7 +65,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
             templateReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("test_template.groovy")));
             String line;
             while ((line = templateReader.readLine()) != null) {
-                if (line.trim().equalsIgnoreCase("\"+++++ BODY +++++\"") == false) {
+                if (!line.trim().equalsIgnoreCase("\"+++++ BODY +++++\"")) {
                     script.append(line + "\n");
                 } else {
                     String bodyLine;                

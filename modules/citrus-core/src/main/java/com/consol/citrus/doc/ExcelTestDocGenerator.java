@@ -93,7 +93,7 @@ public class ExcelTestDocGenerator {
             BufferedReader reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().equalsIgnoreCase(BODY_PLACEHOLDER) == false) {
+                if (!line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
                     buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
                 } else {
                     break;

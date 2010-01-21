@@ -215,7 +215,7 @@ public class HttpServer extends AbstractServer {
             InetAddress addr = InetAddress.getByName(host);
             this.serverSocket = new ServerSocket(port, 0, addr);
 
-            if(deamon == false) {
+            if(!deamon) {
                 new ServerShutdownThread(this);
             }
         } catch (IOException e) {
@@ -289,7 +289,7 @@ public class HttpServer extends AbstractServer {
                 log.error("Error during startup", e);
             }
             
-            if(server.isDeamon() == false) {
+            if(!server.isDeamon()) {
                 server.join();
             }
         }

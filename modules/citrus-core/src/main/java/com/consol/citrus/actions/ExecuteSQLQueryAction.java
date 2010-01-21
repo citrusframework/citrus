@@ -118,7 +118,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                         resultMap.putAll((Map) list.get(0));
                     }
 
-                    if (validate(validationElements, resultMap, context) == false) {
+                    if (!validate(validationElements, resultMap, context)) {
                         throw new CitrusRuntimeException("Database validation failed");
                     }
 
@@ -218,7 +218,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @param stmt The statement which is to be validated.
      */
     private void validateSqlStatement(String stmt) {
-        if (stmt.toLowerCase().startsWith("select") == false) {
+        if (!stmt.toLowerCase().startsWith("select")) {
             throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
         }
 

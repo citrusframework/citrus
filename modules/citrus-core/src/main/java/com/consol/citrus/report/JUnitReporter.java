@@ -101,7 +101,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                         serializer.getDomConfig().setParameter("format-pretty-print", true);
                     }
 
-                    if(outputFile.exists() == false) {
+                    if(!outputFile.exists()) {
                         outputFile.getFile().getParentFile().mkdirs();
                         outputFile.createRelative("");
                     }
