@@ -27,9 +27,21 @@ import org.springframework.context.support.GenericApplicationContext;
 
 import com.consol.citrus.TestAction;
 
+/**
+ * Build test action object from groovy script.
+ * 
+ * @author Christoph Deppisch
+ */
 public class GroovyTestActionBuilder {
+    /** Application context */
     private GenericApplicationContext applicationContext;
     
+    /**
+     * Build the test action object.
+     * @param name
+     * @param properties
+     * @return
+     */
     public TestAction build(String name, Map<String, Object> properties) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.childBeanDefinition(name);
         
@@ -57,6 +69,7 @@ public class GroovyTestActionBuilder {
     }
 
     /**
+     * Set the application context.
      * @param applicationContext the applicationContext to set
      */
     public void setApplicationContext(GenericApplicationContext applicationContext) {

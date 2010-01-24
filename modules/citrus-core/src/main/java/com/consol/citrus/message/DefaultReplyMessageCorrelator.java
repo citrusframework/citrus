@@ -23,14 +23,23 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageHeaders;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * Default message correlator implementation using the Spring integration message id
+ * as correlation key.
+ * 
+ * @author Christoph Deppisch
  */
 public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
 
+    /**
+     * @see com.consol.citrus.message.ReplyMessageCorrelator#getCorrelationKey(org.springframework.integration.core.Message)
+     */
     public String getCorrelationKey(Message<?> request) {
         return MessageHeaders.ID + " = '" + request.getHeaders().getId().toString() + "'";
     }
 
+    /**
+     * @see com.consol.citrus.message.ReplyMessageCorrelator#getCorrelationKey(java.lang.String)
+     */
     public String getCorrelationKey(String id) {
         return MessageHeaders.ID + " = '" + id + "'";
     }

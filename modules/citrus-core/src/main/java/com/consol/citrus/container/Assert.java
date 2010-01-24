@@ -29,17 +29,19 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 
 /**
+ * Assert exception to happen in nested test action.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2009
+ * @author Christoph Deppisch
+ * @since 2009
  */
 public class Assert extends AbstractTestAction {
-    /** TestAction to be executed */
+    /** Nested test action */
     private TestAction action;
 
     /** Asserted exception */
     private Class<? extends Throwable> exception = CitrusRuntimeException.class;
 
-    /** localized exception message */
+    /** Localized exception message for control */
     private String message = null;
     
     /**
@@ -49,7 +51,6 @@ public class Assert extends AbstractTestAction {
 
     /**
      * @see com.consol.citrus.TestAction#execute()
-     * @throws CitrusRuntimeException
      */
     @Override
     public void execute(TestContext context) {
@@ -81,6 +82,7 @@ public class Assert extends AbstractTestAction {
     }
 
     /**
+     * Set the exception.
      * @param exception the exception to set
      */
     public void setException(Class<Throwable> exception) {
@@ -88,6 +90,7 @@ public class Assert extends AbstractTestAction {
     }
 
     /**
+     * Set the nested test action.
      * @param action the action to set
      */
     public void setAction(TestAction action) {
@@ -95,6 +98,7 @@ public class Assert extends AbstractTestAction {
     }
 
     /**
+     * Set the message to send.
      * @param message the message to set
      */
     public void setMessage(String message) {
@@ -102,6 +106,7 @@ public class Assert extends AbstractTestAction {
     }
 
     /**
+     * Get the message to send.
      * @return the message
      */
     public String getMessage() {

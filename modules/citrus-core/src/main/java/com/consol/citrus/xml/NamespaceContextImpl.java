@@ -24,18 +24,34 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
 
+/**
+ * Namespace context implementation.
+ * 
+ * @author Christoph Deppisch
+ */
 public class NamespaceContextImpl implements NamespaceContext {
 
+    /** Map holding namespace elements */
     private Map<String, String> namespaces;
     
+    /**
+     * Default constructor
+     */
     public NamespaceContextImpl() {
         namespaces = new HashMap<String, String>();
     }
     
+    /**
+     * Default constructor using fields.
+     * @param namespaces
+     */
     public NamespaceContextImpl(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
+    /**
+     * @see javax.xml.namespace.NamespaceContext#getNamespaceURI(java.lang.String)
+     */
     public String getNamespaceURI(String prefix) {
         if(prefix != null && prefix.length() == 0 && namespaces.containsKey("xmlns")) {
             return namespaces.get("xmlns");
@@ -46,6 +62,9 @@ public class NamespaceContextImpl implements NamespaceContext {
         }
     }
 
+    /**
+     * @see javax.xml.namespace.NamespaceContext#getPrefix(java.lang.String)
+     */
     public String getPrefix(String namespaceURI) {
         if(namespaces.containsValue(namespaceURI)) {
             for (Entry<String, String> entry : namespaces.entrySet()) {
@@ -58,6 +77,9 @@ public class NamespaceContextImpl implements NamespaceContext {
         return null;
     }
 
+    /**
+     * @see javax.xml.namespace.NamespaceContext#getPrefixes(java.lang.String)
+     */
 	public Iterator<String> getPrefixes(String namespaceURI) {
         List<String> prefixes = new ArrayList<String>();
         
@@ -73,6 +95,7 @@ public class NamespaceContextImpl implements NamespaceContext {
     }
 
     /**
+     * Set the namespaces.
      * @param namespaces the namespaces to set
      */
     public void setNamespaces(Map<String, String> namespaces) {
@@ -80,6 +103,7 @@ public class NamespaceContextImpl implements NamespaceContext {
     }
 
     /**
+     * Get the namespaces.
      * @return the namespaces
      */
     public Map<String, String> getNamespaces() {

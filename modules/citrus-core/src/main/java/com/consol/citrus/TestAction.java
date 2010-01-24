@@ -22,8 +22,10 @@ package com.consol.citrus;
 import com.consol.citrus.context.TestContext;
 
 /**
- * Interface for all test action beans
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * Interface for all test actions.
+ * 
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public interface TestAction {
     /**

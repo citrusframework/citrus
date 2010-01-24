@@ -36,9 +36,10 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * Test case representation executing a list of TestActions in sequential order.
+ * Test case executing a list of {@link TestAction} in sequence.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class TestCase implements BeanNameAware {
 
@@ -71,8 +72,7 @@ public class TestCase implements BeanNameAware {
     private static final Logger log = LoggerFactory.getLogger(TestCase.class);
 
     /**
-     * Method executes a test case.
-     * @return boolean flag to mark success
+     * Method executes the test case and all its actions.
      */
     public void execute() {
         if (log.isDebugEnabled()) {
@@ -116,8 +116,7 @@ public class TestCase implements BeanNameAware {
 
     /**
      * Method that will be executed in any case of test case result (success, error)
-     * Usually used to clean up the database in any case
-     * @return boolean flag to mark success
+     * Usually used for clean up tasks.
      */
     public void finish() {
         if (!finallyChain.isEmpty()) {
@@ -136,14 +135,14 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Spring property setter.
+     * Setter for test action chain.
      * @param testChain
      */
     public void setTestChain(List<TestAction> testChain) {
         this.testChain = testChain;
     }
     /**
-     * Spring property setter.
+     * Setter for variables.
      * @param variableDefinitions
      */
     public void setVariableDefinitions(Map<String, String> variableDefinitions) {
@@ -151,7 +150,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Get Actions count in this test case
+     * Get actions count in this test case.
      * @return count actions
      */
     public int getCountActions() {
@@ -159,7 +158,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Setter for finally chain
+     * Setter for finally chain.
      * @param finallyChain
      */
     public void setFinallyChain(List<TestAction> finallyChain) {
@@ -191,7 +190,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Adding element to testChain.
+     * Adding element to test action chain.
      * @param testAction
      */
     public void addTestChainAction(TestAction testAction) {
@@ -199,7 +198,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Adding element to finallyChain.
+     * Adding element to finally action chain.
      * @param testAction
      */
     public void addFinallyChainAction(TestAction testAction) {
@@ -207,6 +206,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Get the test case meta information.
      * @return the metaInfo
      */
     public TestCaseMetaInfo getMetaInfo() {
@@ -214,6 +214,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Set the test case meta information.
      * @param metaInfo the metaInfo to set
      */
     public void setMetaInfo(TestCaseMetaInfo metaInfo) {
@@ -221,6 +222,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Get the test case name.
      * @return the name
      */
     public String getName() {
@@ -228,6 +230,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Set the test case name.
      * @param name the name to set
      */
     public void setName(String name) {
@@ -235,6 +238,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Get all actions in the finally chain.
      * @return the finallyChain
      */
     public List<TestAction> getFinallyChain() {
@@ -242,6 +246,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Set all actions in the finally chain.
      * @return the testChain
      */
     public List<TestAction> getTestChain() {
@@ -249,7 +254,6 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * (non-Javadoc)
      * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
      */
     public void setBeanName(String name) {
@@ -259,6 +263,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Get the test case description.
      * @return the description
      */
     public String getDescription() {
@@ -266,6 +271,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Set the test case description.
      * @param description the description to set
      */
     public void setDescription(String description) {
@@ -273,6 +279,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Get the test context.
      * @return the variables
      */
     public TestContext getTestContext() {
@@ -280,6 +287,7 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
+     * Set the test context.
      * @param context the context to set
      */
     public void setTestContext(TestContext context) {

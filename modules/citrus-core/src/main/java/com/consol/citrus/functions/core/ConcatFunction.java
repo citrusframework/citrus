@@ -24,8 +24,18 @@ import java.util.List;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Function concatenating multiple tokens to a single string. Tokens can be either
+ * static string values or dynamic variables or functions.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ConcatFunction implements Function {
 
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws InvalidFunctionUsageException
+     */
     public String execute(List<String> parameterList) {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");

@@ -21,17 +21,47 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestSuite;
 
+/**
+ * Listener for events regarding a test suite (start, finish, failure, success)
+ * @author Christoph Deppisch
+ */
 public interface TestSuiteListener {
 
+    /**
+     * Invoked on test suite start.
+     * @param testsuite
+     */
     public void onStart(TestSuite testsuite);
 
+    /**
+     * Invoked after successful test suite start.
+     * @param testsuite
+     */
     public void onStartSuccess(TestSuite testsuite);
 
+    /**
+     * Invoked after failed test suite start.
+     * @param testsuite
+     * @param cause
+     */
     public void onStartFailure(TestSuite testsuite, Throwable cause);
 
+    /**
+     * Invoked on test suite finish.
+     * @param testsuite
+     */
     public void onFinish(TestSuite testsuite);
 
+    /**
+     * Invoked after successful test suite finish.
+     * @param testsuite
+     */
     public void onFinishSuccess(TestSuite testsuite);
 
+    /**
+     * Invoked after failed test suite finish.
+     * @param testsuite
+     * @param cause
+     */
     public void onFinishFailure(TestSuite testsuite, Throwable cause);
 }

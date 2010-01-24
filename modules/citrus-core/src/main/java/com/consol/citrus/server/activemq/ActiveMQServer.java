@@ -24,17 +24,27 @@ import org.apache.activemq.broker.BrokerService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
 
+/**
+ * Server implementation starting a ActiveMQ JMS broker instance.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ActiveMQServer extends AbstractServer {
 
+    /** Broker url */
     private String brokerURL = "tcp://localhost:61616";
     
+    /** Is broker persistent */
     private boolean persistent = false;
     
+    /** BrokerService instance */
     private BrokerService broker;
     
+    /** Working directory */
     private String workingDirectory = "target/activemq-data";
 
     /**
+     * Starting the broker.
      * @throws CitrusRuntimeException
      */
     public void run() {
@@ -47,6 +57,7 @@ public class ActiveMQServer extends AbstractServer {
     }
     
     /**
+     * Startup method for server.
      * @see com.consol.citrus.server.AbstractServer#startup()
      */
     @Override
@@ -61,6 +72,7 @@ public class ActiveMQServer extends AbstractServer {
     }
 
     /**
+     * Shutdown method for server.
      * @see com.consol.citrus.server.AbstractServer#shutdown()
      */
     @Override
@@ -75,6 +87,7 @@ public class ActiveMQServer extends AbstractServer {
     }
     
     /**
+     * Setter for persistent mode.
      * @param persistent the persistent to set
      */
     public void setPersistent(boolean persistent) {
@@ -82,6 +95,7 @@ public class ActiveMQServer extends AbstractServer {
     }
 
     /**
+     * Is broker persistent.
      * @return the persistent
      */
     public boolean isPersistent() {
@@ -89,6 +103,7 @@ public class ActiveMQServer extends AbstractServer {
     }
 
     /**
+     * Get the broker url.
      * @return the brokerURL
      */
     public String getBrokerURL() {
@@ -96,6 +111,7 @@ public class ActiveMQServer extends AbstractServer {
     }
 
     /**
+     * Set the broker url.
      * @param brokerURL the brokerURL to set
      */
     public void setBrokerURL(String brokerURL) {
@@ -103,6 +119,7 @@ public class ActiveMQServer extends AbstractServer {
     }
 
     /**
+     * Set the working directory.
      * @param workingDirectory the workingDirectory to set
      */
     public void setWorkingDirectory(String workingDirectory) {

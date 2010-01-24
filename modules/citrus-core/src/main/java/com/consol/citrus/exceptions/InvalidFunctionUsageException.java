@@ -21,23 +21,41 @@ package com.consol.citrus.exceptions;
 
 /**
  * Use this exception in case a function is called with invalid parameters.
+ * 
+ * @author Christoph Deppisch
  */
 public class InvalidFunctionUsageException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public InvalidFunctionUsageException() {
         super();
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public InvalidFunctionUsageException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public InvalidFunctionUsageException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public InvalidFunctionUsageException(String message, Throwable cause) {
         super(message, cause);
     }

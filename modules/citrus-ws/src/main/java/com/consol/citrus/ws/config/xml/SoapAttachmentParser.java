@@ -28,7 +28,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class SoapAttachmentParser {
     private SoapAttachmentParser() {

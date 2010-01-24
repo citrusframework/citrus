@@ -34,11 +34,16 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Loads properties from an external property file and creates global test variables.
+ * 
+ * @author Christoph Deppisch
+ */
 public class GlobalVariablesPropertyLoader implements InitializingBean {
     @Autowired
     private GlobalVariables globalVariables;
     
-    /** list of property files to be loaded as global variables */
+    /** List of property files loaded as global variables */
     private List<String> propertyFiles = new ArrayList<String>();
     
     /**
@@ -47,6 +52,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
     
     /**
+     * Load the properties as variables.
      * @throws CitrusRuntimeException
      */
     public void loadPropertiesAsVariables() {
@@ -83,6 +89,9 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
         }
     }
     
+    /**
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     public void afterPropertiesSet() {
         loadPropertiesAsVariables();
     }
@@ -96,6 +105,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     }
     
     /**
+     * Get the property files.
      * @return the propertyFiles
      */
     public List<String> getPropertyFiles() {
@@ -103,6 +113,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     }
 
     /**
+     * Get global variables.
      * @return the globalVariables
      */
     public GlobalVariables getGlobalVariables() {
@@ -110,6 +121,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     }
 
     /**
+     * Set global variables.
      * @param globalVariables the globalVariables to set
      */
     public void setGlobalVariables(GlobalVariables globalVariables) {

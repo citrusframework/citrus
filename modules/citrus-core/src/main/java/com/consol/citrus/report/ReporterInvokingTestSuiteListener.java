@@ -26,21 +26,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestSuite;
 
+/**
+ * Test suite listener invoking several test reporter on start and end of execution.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ReporterInvokingTestSuiteListener extends BasicTestSuiteListener {
+    /** Track number of startet test suites */
     private int testSuitesStarted = 0;
+    /** Track number of finished test suites */
     private int testSuitesFinished = 0;
     
+    /** List of test suites */
     private ArrayList<TestSuite> suites = new ArrayList<TestSuite>();
     
     /** List of testsuite reporter **/
     @Autowired
     private List<TestReporter> reporterList = new ArrayList<TestReporter>();
     
+    /**
+     * @see com.consol.citrus.report.BasicTestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     */
     @Override
     public void onStart(TestSuite testsuite) {
         testSuitesStarted++;
     }
-    
+
+    /**
+     * @see com.consol.citrus.report.BasicTestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     */
     @Override
     public void onFinish(TestSuite testsuite) {
         suites.add(testsuite);

@@ -25,9 +25,19 @@ import java.util.Random;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Function returning a random numeric value. Argument specifies the number of digits and
+ * padding boolean flag.
+ * 
+ * @author Christoph Deppisch
+ */
 public class RandomNumberFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());
 
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws InvalidFunctionUsageException
+     */
     public String execute(List<String> parameterList) {
         int numberLength;
         boolean paddingOn = true;

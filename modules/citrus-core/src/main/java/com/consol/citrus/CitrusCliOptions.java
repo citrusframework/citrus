@@ -23,10 +23,18 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
+/**
+ * Citrus CLI options.
+ * 
+ * @author Christoph Deppisch
+ */
 public class CitrusCliOptions extends Options {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     @SuppressWarnings("static-access")
     public CitrusCliOptions() {
         

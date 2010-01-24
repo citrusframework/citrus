@@ -26,7 +26,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  * @since 08.10.2009
  */
 public class AssertSoapFaultTest extends AbstractTestNGCitrusTest {

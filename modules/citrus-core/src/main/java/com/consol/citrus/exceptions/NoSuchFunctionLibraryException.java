@@ -21,24 +21,41 @@ package com.consol.citrus.exceptions;
 
 /**
  * In case no function library exists for a given prefix this exception is thrown.
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * 
+ * @author Christoph Deppisch
  */
 public class NoSuchFunctionLibraryException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public NoSuchFunctionLibraryException() {
         super();
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public NoSuchFunctionLibraryException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public NoSuchFunctionLibraryException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public NoSuchFunctionLibraryException(String message, Throwable cause) {
         super(message, cause);
     }

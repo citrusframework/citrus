@@ -25,6 +25,12 @@ import java.util.Random;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Function generating a random string containing alphabetic characters. Arguments specify
+ * upper and lower case mode.
+ * 
+ * @author Christoph Deppisch
+ */
 public class RandomStringFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());
 
@@ -42,12 +48,19 @@ public class RandomStringFunction implements Function {
         'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
         'u', 'v', 'w', 'x', 'y', 'z' };
 
+    /** Mode upper case */
     private static final String UPPERCASE = "UPPERCASE";
 
+    /** Mode lower case */
     private static final String LOWERCASE = "LOWERCASE";
 
+    /** Mode mixed (upper and lower case characters) */
     private static final String MIXED = "MIXED";
 
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws InvalidFunctionUsageException
+     */
     public String execute(List<String> parameterList) {
         int numberOfLetters;
         String notationMethod;

@@ -20,26 +20,43 @@
 package com.consol.citrus.exceptions;
 
 /**
+ * Variable value evaluates to null.
  * 
+ * @author Christoph Deppisch
  */
 public class VariableNullValueException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public VariableNullValueException() {
         super();
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public VariableNullValueException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public VariableNullValueException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public VariableNullValueException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

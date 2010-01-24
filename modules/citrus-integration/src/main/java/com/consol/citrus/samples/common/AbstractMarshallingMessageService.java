@@ -27,7 +27,7 @@ import org.springframework.integration.xml.transformer.XmlPayloadMarshallingTran
 import org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public abstract class AbstractMarshallingMessageService<T, K> {
     @Autowired

@@ -38,6 +38,12 @@ import org.springframework.integration.core.Message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Aspect can store received messages to the file system in order to track 
+ * the message flow.
+ * 
+ * @author Christoph Deppisch
+ */
 @Aspect
 public class StoreMessageInterceptorAspect {
     /**
@@ -45,8 +51,10 @@ public class StoreMessageInterceptorAspect {
      */
     private static final Logger log = LoggerFactory.getLogger(StoreMessageInterceptorAspect.class);
     
+    /** Target directory */
     private Resource debugDirectory = new FileSystemResource("logs/debug/messages/");
     
+    /** Count messages */
     private static final AtomicInteger count = new AtomicInteger(1);
     
     @Pointcut("execution(org.springframework.integration.core.Message com.consol.citrus.message.MessageReceiver.receive*(..))")
@@ -62,6 +70,7 @@ public class StoreMessageInterceptorAspect {
     }
     
     /**
+     * Save message to the file system.
      * @param receivedMessage
      * @throws CitrusRuntimeException
      */
@@ -106,11 +115,15 @@ public class StoreMessageInterceptorAspect {
         }
     }
     
+    /**
+     * Resets the file counter.
+     */
     public static final void resetFileCounter() {
         count.set(1);
     }
 
     /**
+     * Sets the target directory on the file system.
      * @param debugDirectory the debugDirectory to set
      */
     public void setDebugDirectory(Resource debugDirectory) {

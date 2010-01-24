@@ -38,9 +38,21 @@ import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * Template to perform a block of other actions in sequence
+ * Class represents a previously defined block of test actions. Test cases can call
+ * templates and reuse its functionality.
+ * 
+ * Templates operate on test variables. While calling the template caller can set these
+ * variables as parameters.
+ * 
+ * Nested test actions are executes in sequence.
+ * 
+ * The template execution may affect existing variable values in the calling test case. So
+ * variables may have different values in the test case after template execution. Therefore
+ * user can create a local test context by setting globalContext to false. Template then will 
+ * have no affect on the variables used in the test case.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class Template extends AbstractTestAction {
 
@@ -50,11 +62,13 @@ public class Template extends AbstractTestAction {
     /** List of actions to be executed */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** List of parameters to set before execution */
     private Map<String, String> parameter = new LinkedHashMap<String, String>();
     
     @Autowired
     private FunctionRegistry functionRegistry;
     
+    /** Should variables effect the global variables scope? */
     private boolean globalContext = true;
 
     /**
@@ -62,6 +76,9 @@ public class Template extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Template.class);
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     */
     @Override
     public void execute(TestContext context) {
         log.info("Executing action template '" + name + "' - containing " + actions.size() + " actions");
@@ -109,6 +126,7 @@ public class Template extends AbstractTestAction {
     }
 
     /**
+     * Set nested test actions.
      * @param actions
      */
     public void setActions(List<TestAction> actions) {
@@ -116,6 +134,7 @@ public class Template extends AbstractTestAction {
     }
 
     /**
+     * Sets the template name. Test cases can call templates by their name.
      * @param name
      */
     @Override
@@ -124,6 +143,7 @@ public class Template extends AbstractTestAction {
     }
 
     /**
+     * Set parameter before execution.
      * @param parameter the parameter to set
      */
     public void setParameter(Map<String, String> parameter) {
@@ -131,6 +151,8 @@ public class Template extends AbstractTestAction {
     }
 
     /**
+     * Boolean flag marking the template variables should also affect
+     * variables in test case.
      * @param globalContext the globalContext to set
      */
     public void setGlobalContext(boolean globalContext) {

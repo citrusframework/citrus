@@ -30,20 +30,28 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * CLI creating a new test case from template.
+ * CLI creating a new test case from a template.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 21.04.2009
+ * @author Christoph Deppisch
+ * @since 2009
  */
 public class TestCaseCreator {
+    /** Test name */
     private String name;
     
+    /** Test author */
     private String author;
     
+    /** Test description */
     private String description;
     
+    /** Target package of test case */
     private String targetPackage;
     
+    /**
+     * Main CLI method.
+     * @param args
+     */
     public static void main(String[] args) {
         Options options = new TestCaseCreatorCliOptions();
         CommandLineParser cliParser = new GnuParser();
@@ -72,6 +80,9 @@ public class TestCaseCreator {
         }
     }
     
+    /**
+     * Create the test case.
+     */
     public void createTestCase() {
         if(Character.isLowerCase(name.charAt(0))) {
             throw new CitrusRuntimeException("Test name must start with an uppercase letter");
@@ -94,6 +105,10 @@ public class TestCaseCreator {
         createJavaFile(properties);
     }
     
+    /**
+     * Create the java test case file.
+     * @param properties
+     */
     private void createJavaFile(Properties properties) {
         BufferedReader reader = null;
         OutputStream buffered = null;
@@ -139,6 +154,10 @@ public class TestCaseCreator {
         }
     }
     
+    /**
+     * Create the XML test case description file.
+     * @param properties
+     */
     private void createXMLFile(Properties properties) {
         BufferedReader reader = null;
         OutputStream buffered = null;
@@ -184,30 +203,57 @@ public class TestCaseCreator {
         }
     }
     
+    /**
+     * Builder method for this creator.
+     * @return
+     */
     public static TestCaseCreator build() {
         return new TestCaseCreator();
     }
     
+    /**
+     * Set name via builder method.
+     * @param name
+     * @return
+     */
     public TestCaseCreator withName(String name) {
         this.name = name;
         return this;
     }
     
+    /**
+     * Set author via builder method.
+     * @param author
+     * @return
+     */
     public TestCaseCreator withAuthor(String author) {
         this.author = author;
         return this;
     }
     
+    /**
+     * Set description via builder method.
+     * @param description
+     * @return
+     */
     public TestCaseCreator withDescription(String description) {
         this.description = description;
         return this;
     }
     
+    /**
+     * Set package via builder method.
+     * @param targetPackage
+     * @return
+     */
     public TestCaseCreator usePackage(String targetPackage) {
         this.targetPackage = targetPackage;
         return this;
     }
     
+    /**
+     * CLI options for test creation
+     */
     private static class TestCaseCreatorCliOptions extends Options {
 
         private static final long serialVersionUID = 1L;
@@ -243,6 +289,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Set the test name.
      * @param name the name to set
      */
     public void setName(String name) {
@@ -250,6 +297,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Get the test name.
      * @return the name
      */
     public String getName() {
@@ -257,6 +305,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Set the test author.
      * @param author the author to set
      */
     public void setAuthor(String author) {
@@ -264,6 +313,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Get the test author.
      * @return the author
      */
     public String getAuthor() {
@@ -271,6 +321,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Set the test description.
      * @param description the description to set
      */
     public void setDescription(String description) {
@@ -278,6 +329,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Get the test description.
      * @return the description
      */
     public String getDescription() {
@@ -285,6 +337,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Set the test package.
      * @param targetPackage the targetPackage to set
      */
     public void setPackage(String targetPackage) {
@@ -292,6 +345,7 @@ public class TestCaseCreator {
     }
 
     /**
+     * Get the test package.
      * @return the targetPackage
      */
     public String getPackage() {

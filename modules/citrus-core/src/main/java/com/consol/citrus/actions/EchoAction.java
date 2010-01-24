@@ -29,12 +29,14 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Prints messages to the console/logger
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * Prints messages to the console/logger during test execution.
+ * 
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class EchoAction extends AbstractTestAction {
 
-    /** Text to be printed */
+    /** Log message */
     private String message;
 
     /**

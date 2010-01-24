@@ -31,6 +31,15 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Test action prompts user data from standard input stream. The input data is then stored as new
+ * test variable. Test workflow stops until user input is complete.
+ * 
+ * Action can declare a set of valid answers, so user will be prompted until a valid 
+ * answer was returned.
+ * 
+ * @author Christoph Deppisch
+ */
 public class InputAction extends AbstractTestAction {
 
     /**
@@ -38,10 +47,13 @@ public class InputAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(InputAction.class);
 
+    /** Prompted message displayed to the user before input */
     private String message = "Press return key to continue...";
-
+    
+    /** Destination variable name */
     private String variable = "userinput";
 
+    /** Valid answers, tokenized by '/' character */
     private String validAnswers;
 
     /**
@@ -82,6 +94,11 @@ public class InputAction extends AbstractTestAction {
         context.setVariable(variable, input.trim());
     }
 
+    /**
+     * Validate given input according to valid answer tokens.
+     * @param input
+     * @return
+     */
     private boolean checkAnswer(String input) {
         StringTokenizer tok = new StringTokenizer(validAnswers, "/");
 

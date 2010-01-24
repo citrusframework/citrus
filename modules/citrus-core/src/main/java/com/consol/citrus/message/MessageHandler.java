@@ -23,10 +23,17 @@ import org.springframework.integration.core.Message;
 
 
 /**
- * MessageHandler getting a request message that will be ransformed into a response message.
+ * MessageHandler processing a request message and 
+ * returning a proper response message.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public interface MessageHandler {
+    /**
+     * Handles a request message and returning a proper response.
+     * @param message the request message.
+     * @return the response message.
+     */
     Message<?> handleMessage(Message<?> message);
 }

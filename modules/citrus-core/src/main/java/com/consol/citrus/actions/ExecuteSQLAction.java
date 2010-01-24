@@ -30,10 +30,14 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Executes SQL statements that are embedded in the test or given by a file resource.
+ * Test action execute SQL statements. Use this action when executing
+ * database altering statements like UPDATE, INSERT, ALTER, DELETE. Statements are either
+ * embedded inline in the test case description or given by an external file resource.
  * 
- * @author deppisch Christoph Deppisch, js Jan Szczepanski Consol*GmbH 2006
- *
+ * When executing SQL query statements (SELECT) see {@link ExecuteSQLQueryAction}.
+ * 
+ * @author Christoph Deppisch, Jan Szczepanski
+ * @since 2006
  */
 public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
@@ -131,7 +135,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * Spring property setter.
+     * List of statements to execute. Declared inline in the test case. 
      * @param statements
      */
     public void setStatements(List<String> statements) {
@@ -139,7 +143,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     }
     
     /**
-     * Spring property setter.
+     * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
      */
     public void setSqlResource(Resource sqlResource) {
@@ -147,7 +151,8 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * @param ignoreErrors the ignoreErrors to set
+     * Ignore errors during execution.
+     * @param ignoreErrors boolean flag to set
      */
     public void setIgnoreErrors(boolean ignoreErrors) {
         this.ignoreErrors = ignoreErrors;

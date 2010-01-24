@@ -26,23 +26,32 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.variable.VariableUtils;
 
+/**
+ * Utility class for functions.
+ * 
+ * @author Christoph Deppisch
+ */
 public class FunctionUtils {
 
+    /**
+     * Prevent class instantiation.
+     */
     private FunctionUtils() {}
     
     /**
-     *
-     * @param str
-     * @return
+     * Search for functions in string and replace with respective function result. 
+     * @param string to parse
+     * @return parsed string result
      */
     public static String replaceFunctionsInString(String str, TestContext context) {
         return replaceFunctionsInString(str, context, false);
     }
    
     /**
-     * @param str
-     * @param enableQuoting
-     * @return
+     * Search for functions in string and replace with respective function result.
+     * @param string to parse.
+     * @param enableQuoting enables quoting of function results.
+     * @return parsed string result.
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
         String newString = stringValue;
@@ -112,10 +121,10 @@ public class FunctionUtils {
     }
     
     /**
-     * This method resolves a custom function
-     * @param functionString
+     * This method resolves a custom function to its respective result.
+     * @param functionString to evaluate.
      * @throws CitrusRuntimeException
-     * @return
+     * @return evaluated result
      */
     public static String resolveFunction(String functionString, TestContext context) {
         functionString = VariableUtils.cutOffVariablesPrefix(functionString);

@@ -22,19 +22,26 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 
 /**
- * Action stopping server instances during test
+ * Action stopping {@link Server} instances.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class StopServerAction extends AbstractTestAction {
+    /** List of servers to stop */
     private List<Server> serverList = new ArrayList<Server>();
 
+    /** Single server isntance to stop */
     private Server server;
 
+    /**
+     * @see TestAction#execute(TestContext)
+     */
     @Override
     public void execute(TestContext context) {
         for (Server actServer : serverList) {

@@ -30,8 +30,15 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Function returning the actual date as formatted string value. User specifies format string
+ * as argument. Function also supports additional date offset in order to manipulate result date value. 
+ * 
+ * @author Christoph Deppisch
+ */
 public class CurrentDateFunction implements Function {
 
+    /** Date formatter */
     private SimpleDateFormat dateFormat;
 
     /**
@@ -74,6 +81,13 @@ public class CurrentDateFunction implements Function {
         return result;
     }
 
+    /**
+     * Parse offset string and add or subtract date offset value.
+     * 
+     * @param offsetString
+     * @param c
+     * @return
+     */
     private int getDateValueOffset(String offsetString, char c) {
         int index = 0;
         ArrayList<Character> charList = new ArrayList<Character>();

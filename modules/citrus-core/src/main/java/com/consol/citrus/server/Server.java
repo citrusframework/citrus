@@ -21,18 +21,33 @@ package com.consol.citrus.server;
 
 
 /**
- *
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 06.03.2007
+ * Server interface in Citrus.
+ *  
+ * @author Christoph Deppisch
+ * @since 2007
  *
  */
 public interface Server extends Runnable {
 
+    /**
+     * Start the server
+     */
     public void start();
 
+    /**
+     * Stop the server.
+     */
     public void stop();
 
+    /**
+     * Is server running.
+     * @return
+     */
     public boolean isRunning();
 
+    /**
+     * Get server name.
+     * @return
+     */
     public String getName();
 }

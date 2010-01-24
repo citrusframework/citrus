@@ -24,6 +24,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 
+/**
+ * Abstract base class for {@link Server} implementations.
+ * 
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractServer implements Server, InitializingBean, BeanNameAware {
     /** Name of this server (will be injected through Spring) */
     private String name = "";
@@ -37,6 +42,7 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
     /** Thread running the server */
     private Thread thread;
     
+    /**  Monitor for startup and running lifecycle */
     private Object runningLock = new Object();
     
     /**
@@ -44,6 +50,9 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
      */
     private static final Logger log = LoggerFactory.getLogger(Server.class);
     
+    /**
+     * @see com.consol.citrus.server.Server#start()
+     */
     public void start() {
         startup();
         
@@ -62,7 +71,10 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
 			log.error("Failed to wait for server to startup", e);
 		}
     }
-    
+
+    /**
+     * @see com.consol.citrus.server.Server#stop()
+     */
     public void stop() {
         shutdown();
         
@@ -72,17 +84,29 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         
         thread = null;
     }
-    
+
+    /**
+     * Subclasses must implement this method called on server startup.
+     */
     protected abstract void startup();
     
+    /**
+     * Subclasses must implement this method called on server shutdown.
+     */
     protected abstract void shutdown();
     
+    /**
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     public void afterPropertiesSet() throws Exception {
         if(autoStart) {
             start();
         }
     }
-    
+
+    /**
+     * Join server thread.
+     */
     public void join() {
         try {
             thread.join();
@@ -91,21 +115,31 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         }
     }
 
+    /**
+     * @see com.consol.citrus.server.Server#getName()
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @see com.consol.citrus.server.Server#isRunning()
+     */
     public boolean isRunning() {
         synchronized (runningLock) {
             return running;
         }
     }
-    
+
+    /**
+     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
+     */
     public void setBeanName(String name) {
         this.name = name;
     }
     
     /**
+     * Enable/disable server auto start
      * @param autoStart the autoStart to set
      */
     public void setAutoStart(boolean autoStart) {

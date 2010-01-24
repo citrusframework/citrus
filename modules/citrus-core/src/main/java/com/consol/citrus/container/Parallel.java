@@ -31,12 +31,21 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Test action will execute nested actions in parallel. Each action is executed in a
+ * separate thread. Container joins all threads and waiting for them to end successfully.
+ * 
+ * @author Christoph Deppisch
+ */
 public class Parallel extends AbstractTestAction {
 
+    /** List of nested actions */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** Store created threads in stack */
     private Stack<Thread> threads = new Stack<Thread>();
 
+    /** Collect exceptions in stack */
     private Stack<Exception> exceptions = new Stack<Exception>();
     
     /**
@@ -44,6 +53,9 @@ public class Parallel extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Parallel.class);
 
+    /**
+     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
+     */
     @Override
     public void execute(TestContext context) {
         log.info("Executing action parallel - containing " + actions.size() + " actions");
@@ -78,9 +90,14 @@ public class Parallel extends AbstractTestAction {
         }
     }
 
+    /**
+     * Runnable wrapper for executing an action in separate Thread.
+     */
     private abstract static class ActionRunner implements Runnable {
+        /** Test action to execute */
         private TestAction action;
         
+        /** Test context */
         private TestContext context;
         
         public ActionRunner(TestAction action, TestContext context) {
@@ -88,6 +105,9 @@ public class Parallel extends AbstractTestAction {
             this.context = context;
         }
 
+        /**
+         * Run the test action
+         */
         public void run() {
             try {
                 action.execute(context);
@@ -97,10 +117,15 @@ public class Parallel extends AbstractTestAction {
             }
         }
         
+        /**
+         * Callback for exception tracking.
+         * @param exception
+         */
         public abstract void exceptionCallback(Exception e);
     }
 
     /**
+     * Set the nested test actions.
      * @param actions the actions to set
      */
     public void setActions(List<TestAction> actions) {

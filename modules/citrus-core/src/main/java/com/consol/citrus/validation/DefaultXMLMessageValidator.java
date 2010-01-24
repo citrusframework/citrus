@@ -50,10 +50,11 @@ import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
 /**
- * Default message validator implementation. Working on XML message payload
- * providing 
+ * Default message validator implementation. Working on XML messages
+ * providing message payload, header and namespace validation.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class DefaultXMLMessageValidator implements MessageValidator {
     /**
@@ -67,6 +68,9 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     @Autowired
     private XsdSchemaRepository schemaRepository;
     
+    /**
+     * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.ValidationContext)
+     */
     public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
         if(!(validationContext instanceof XmlValidationContext)) {
             throw new IllegalArgumentException("DefaultXmlMessageValidator must have an instance of XmlValidationContext, " +
@@ -109,6 +113,14 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
 
+    /**
+     * Validates the message header comparing a control set of header 
+     * elements with the actual message header.
+     * 
+     * @param expectedHeaderValues
+     * @param receivedHeaderValues
+     * @param context
+     */
     public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
         if (CollectionUtils.isEmpty(expectedHeaderValues)) {return;}
         
@@ -170,7 +182,16 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         
         log.info("Validation of message headers finished successfully: All properties OK");
     }
-    
+
+    /**
+     * Validate message payload XML elements.
+     * 
+     * @param validateElements
+     * @param receivedMessage
+     * @param nsContext
+     * @param ignoreMessageElements
+     * @param context
+     */
     public void validateMessageElements(Map<String, String> validateElements, 
             Message<?> receivedMessage, 
             NamespaceContext nsContext,
@@ -252,10 +273,21 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         log.info("Validation of XML elements finished successfully: All elements OK");
     }
 
+    /**
+     * Validate message with a DTD.
+     * 
+     * @param dtdResource
+     * @param receivedMessage
+     */
     public void validateDTD(Resource dtdResource, Message<?> receivedMessage) {
         //TODO implement this
     }
 
+    /**
+     * Validate message with a XML schema.
+     * 
+     * @param receivedMessage
+     */
     public void validateXMLSchema(Message<?> receivedMessage) {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
@@ -286,6 +318,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
 
+    /**
+     * Validate namespaces in message.
+     * 
+     * @param expectedNamespaces
+     * @param receivedMessage
+     */
     public void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
         if (CollectionUtils.isEmpty(expectedNamespaces)) {return;}
 
@@ -317,6 +355,13 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         log.info("XML namespace validation finished successfully: All values OK");
     }
     
+    /**
+     * Validate message payloads by comparing to a control message.
+     * 
+     * @param receivedMessage
+     * @param controlMessage
+     * @param ignoreMessageElements
+     */
     private void validateXmlPayload(Message<?> receivedMessage, Message<?> controlMessage, Set<String> ignoreMessageElements) {
         if(controlMessage == null || controlMessage.getPayload() == null) {return;}
         
@@ -338,6 +383,13 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         validateXmlTree(received, source, ignoreMessageElements);
     }
 
+    /**
+     * Walk the XML tree and validate all nodes.
+     * 
+     * @param received
+     * @param source
+     * @param ignoreMessageElements
+     */
     private void validateXmlTree(Node received, Node source, Set<String> ignoreMessageElements) {
         switch(received.getNodeType()) {
             case Node.DOCUMENT_NODE:
@@ -363,6 +415,13 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
     
+    /**
+     * Handle element node.
+     * 
+     * @param received
+     * @param source
+     * @param ignoreMessageElements
+     */
     private void doElement(Node received, Node source, Set<String> ignoreMessageElements) {
         //validate element name
         if(log.isDebugEnabled()) {
@@ -442,6 +501,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
     
+    /**
+     * Handle text node during validation.
+     * 
+     * @param received
+     * @param source
+     */
     private void doText(Node received, Node source) {
         if(log.isDebugEnabled()) {
             log.debug("Validating node value for element: " + received.getParentNode());
@@ -472,6 +537,14 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
 
+    /**
+     * Handle attribute node during validation.
+     * 
+     * @param element
+     * @param received
+     * @param sourceAttributes
+     * @param ignoreMessageElements
+     */
     private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, Set<String> ignoreMessageElements) {
         if(received.getNodeName().startsWith("xmlns")) { return; }
         
@@ -509,18 +582,30 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
     }
 
+    /**
+     * Handle comment node during validation.
+     * 
+     * @param received
+     * @param source
+     */
     private void doComment(Node received, Node source) {
         log.info("Ignored comment node (" + received.getNodeValue() + ")");
     }
 
+    /**
+     * Handle processing instruction during validation.
+     * 
+     * @param received
+     * @param source
+     */
     private void doPI(Node received, Node source) {
         log.info("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");
     }
 
     /**
-     * Counts the attributes, xmlns left out
+     * Counts the attributenode for an element (xmlns attributes ignored)
      * @param attributesR attributesMap
-     * @return count of attributes
+     * @return number of attributes
      */
     private int countAttributes(NamedNodeMap attributesR) {
         int cntAttributes = 0;
@@ -535,9 +620,11 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     }
 
     /**
-     * Checks wheather the current attribute is in ignoreValues map.
-     * @param node the attribute node.
-     * @return boolean flag to mark ignore
+     * Checks whether the current attribute is ignored.
+     * @param elementNode
+     * @param attributeNode
+     * @param ignoreMessageElements
+     * @return
      */
     private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set<String> ignoreMessageElements) {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
@@ -585,19 +672,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     }
 
     /**
-     * Tests whether a node is within the <tt>ignoreValues</tt> set.
-     * The <tt>ignoreValues</tt> can be the short path name like only:
-     * <tt>AreaCode</tt> instead of: <tt>Numbers.NumberItem.AreaCode</tt>
-     * <p>If there are more nodes with the same short name,
-     * the first one will match, eg. if there are:
-     * <pre><blockquote>Numbers1.NumberItem.AreaCode
-     *Numbers2.NumberItem.AreaCode</blockquote></pre>
-     * And <tt>ignoreValues</tt> contains just: <tt>AreaCode</tt>
-     * <p>only the first Node: <tt>Numbers1.NumberItem.AreaCode</tt>
-     * will be ignored.
-     *
-     * @param node The node the test.
-     * @return true if <tt>node</tt> has to be ignored.
+     * Checks whether the node is ignored.
+     * @param node
+     * @param ignoreMessageElements
+     * @return
      */
     private boolean isNodeIgnored(final Node node, Set<String> ignoreMessageElements) {
         if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
@@ -644,6 +722,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     }
 
     /**
+     * Set the schema repository holding all known schema definition files.
      * @param schemaRepository the schemaRepository to set
      */
     public void setSchemaRepository(XsdSchemaRepository schemaRepository) {

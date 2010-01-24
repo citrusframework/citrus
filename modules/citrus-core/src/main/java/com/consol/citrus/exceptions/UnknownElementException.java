@@ -20,24 +20,42 @@
 package com.consol.citrus.exceptions;
 
 /**
- * Thrown in case an element is not found. Usually used in validation procedures.
+ * Thrown in case an element is not found. Usually used in during validation.
+ * 
+ * @author Christoph Deppisch
  */
 public class UnknownElementException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public UnknownElementException() {
         super();
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public UnknownElementException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public UnknownElementException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public UnknownElementException(String message, Throwable cause) {
         super(message, cause);
     }

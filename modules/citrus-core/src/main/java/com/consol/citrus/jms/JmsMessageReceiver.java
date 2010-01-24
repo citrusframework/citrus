@@ -33,8 +33,14 @@ import org.springframework.jms.support.converter.MessageConverter;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
 
+/**
+ * {@link MessageReceiver} implementation consumes messages from aJMS destination. Destination
+ * is given by injected instance or destination name.
+ *  
+ * @author Christoph Deppisch
+ */
 public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageReceiver {
-    
+    /** Receive timeout */
     private long receiveTimeout = 5000L;
     
     /**
@@ -42,6 +48,10 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      */
     private static final Logger log = LoggerFactory.getLogger(JmsMessageReceiver.class);
     
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receive(long)
+     * @throws ActionTimeoutException
+     */
     public Message<?> receive(long timeout) {
         log.info("Receiving message from: " + getDestinationName());
         
@@ -67,6 +77,10 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         return receivedMessage;
     }
 
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
+     * @throws ActionTimeoutException
+     */
     public Message<?> receiveSelected(String selector, long timeout) {
         log.info("Receiving message from: " + getDestinationName() + "(" + selector + ")");
         
@@ -93,6 +107,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     }
 
     /**
+     * Retrieves the destination name (either a queue name or a topic name).
      * @return the destinationName
      */
     protected String getDestinationName() {
@@ -114,14 +129,23 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         }
     }
     
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receive()
+     */
     public Message<?> receive() {
         return receive(receiveTimeout);
     }
 
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
+     */
     public Message<?> receiveSelected(String selector) {
         return receiveSelected(selector, receiveTimeout);
     }
 
+    /**
+     * @see org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter#configureMessageConverter(org.springframework.jms.core.JmsTemplate, org.springframework.integration.jms.JmsHeaderMapper)
+     */
     @Override
     protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
         MessageConverter converter = jmsTemplate.getMessageConverter();
@@ -133,6 +157,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     }
 
     /**
+     * Sets the receive timeout.
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {

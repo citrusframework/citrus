@@ -29,13 +29,14 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Action that prints out variable values. Action requires a list of variable
- * names that are printed to the console with its according value.
+ * Action that prints variable values to the console/logger. Action requires a list of variable
+ * names. Tries to find the variables in the test context and print its values.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class TraceVariablesAction extends AbstractTestAction {
-    /** Values to be validated */
+    /** List of variable names */
     private List<String> variableNames;
 
     /**

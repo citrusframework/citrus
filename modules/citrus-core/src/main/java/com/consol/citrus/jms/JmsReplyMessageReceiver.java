@@ -20,7 +20,15 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.message.AbstractReplyMessageReceiver;
+import com.consol.citrus.message.MessageSender;
 
+/**
+ * Receiver handles reply messages in synchronous JMS communication. A synchronous 
+ * {@link MessageSender} implementation sends and receives JMS messages. The reply message receiver
+ * is invoked with the respective reply message.
+ *  
+ * @author Christoph Deppisch
+ */
 public class JmsReplyMessageReceiver extends AbstractReplyMessageReceiver {
 
 }

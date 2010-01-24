@@ -21,22 +21,40 @@ package com.consol.citrus.exceptions;
 
 /**
  * Basic custom runtime exception for all errors in Citrus
+ * 
+ * @author Christoph Deppisch
  */
 public class CitrusRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public CitrusRuntimeException() {
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public CitrusRuntimeException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public CitrusRuntimeException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public CitrusRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }

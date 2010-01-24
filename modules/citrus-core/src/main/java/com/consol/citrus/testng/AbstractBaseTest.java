@@ -28,18 +28,30 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 
+/**
+ * Abstract base testng test implementation for Citrus unit testing. Provides access to 
+ * a test context and injected function registry as well as global variables.
+ * 
+ * @author Christoph Deppisch
+ */
 @ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml",
                                    "classpath:citrus-context.xml", 
                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
 public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests {
+    /** Test context */
     protected TestContext context;
     
+    /** Function registry */
     @Autowired
     FunctionRegistry functionRegistry;
     
+    /** Global variables */
     @Autowired
     GlobalVariables globalVariables;
     
+    /**
+     * Setup test execution.
+     */
     @BeforeMethod
     public void setup() {
         context = new TestContext();
@@ -48,6 +60,10 @@ public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests 
         context.setGlobalVariables(globalVariables);
     }
     
+    /**
+     * Creates the test context with global variables and function registry.
+     * @return
+     */
     protected TestContext createTestContext() {
         TestContext newContext = new TestContext();
         

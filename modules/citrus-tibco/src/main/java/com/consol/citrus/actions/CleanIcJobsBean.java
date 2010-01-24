@@ -35,7 +35,7 @@ import com.tibco.workflow.api.util.*;
  * This bean is used to clean up all currently run jobs in Business Works Collaborator.
  * The bean uses the icjava API to access the InConcert Server in order to manage the jobs and tasks.
  *
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  * @since 16.01.2007
  *
  */

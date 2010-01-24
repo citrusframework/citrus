@@ -28,6 +28,11 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestAction;
 
+/**
+ * Aspect prints test action name and description before execution.
+ * 
+ * @author Christoph Deppisch
+ */
 @Aspect
 public class TestActionExecutionAspect {
 

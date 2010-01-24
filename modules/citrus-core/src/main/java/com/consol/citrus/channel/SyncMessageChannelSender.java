@@ -29,7 +29,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * Synchronous message channel sender. After sending message action will listen for reply message. A
+ * {@link ReplyMessageHandler} may ask for this reply message and continue with message validation.
+ * 
+ * @author Christoph Deppisch
  */
 public class SyncMessageChannelSender implements MessageSender {
 
@@ -38,16 +41,25 @@ public class SyncMessageChannelSender implements MessageSender {
      */
     private static final Logger log = LoggerFactory.getLogger(SyncMessageChannelSender.class);
     
+    /** Message channel */
     private MessageChannel channel;
     
+    /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
     
+    /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
     
+    /** Time to wait for reply message to arrive */
     private long replyTimeout = 5000L;
     
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /**
+     * @see MessageSender#send(Message)
+     * @throws CitrusRuntimeException
+     */
     public void send(Message<?> message) {
         log.info("Sending message to: " + channel.getName());
 
@@ -74,6 +86,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Set the reply message handler
      * @param replyMessageHandler the replyMessageHandler to set
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
@@ -81,6 +94,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Get the reply message handler.
      * @return the replyMessageHandler
      */
     public ReplyMessageHandler getReplyMessageHandler() {
@@ -88,6 +102,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Set the reply timeout.
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
@@ -95,6 +110,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Get the reply timeout.
      * @return the replyTimeout
      */
     public long getReplyTimeout() {
@@ -102,6 +118,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Set the reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
@@ -109,6 +126,7 @@ public class SyncMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Get the reply message correlator.
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {

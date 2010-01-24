@@ -21,23 +21,42 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
 
+/**
+ * Abstract base class for message receiver implementations.
+ * 
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractMessageReceiver implements MessageReceiver {
 
+    /** Receive timeout in ms */
     private long receiveTimeout = 5000L;
     
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receive()
+     */
     public Message<?> receive() {
         return receive(receiveTimeout);
     }
 
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receive(long)
+     */
     public abstract Message<?> receive(long timeout);
 
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
+     */
     public Message<?> receiveSelected(String selector) {
         return receiveSelected(selector, receiveTimeout);
     }
 
+    /**
+     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
+     */
     public abstract Message<?> receiveSelected(String selector, long timeout);
 
     /**
+     * Setter for receive timeout.
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {

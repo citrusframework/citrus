@@ -32,14 +32,26 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
+/**
+ * Typical implementation of repeat iteration loop. Nested test actions are executed until
+ * aborting condition evaluates to true.
+ * 
+ * Index is incremented each iteration and stored as test variable accessible in the nested test actions
+ * as normal variable. Index starts with 1 by default.
+ * 
+ * @author Christoph Deppisch
+ */
 public class RepeatUntilTrue extends AbstractTestAction {
     /** List of actions to be executed */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** Aborting condition */
     private String condition;
 
+    /** Name of index variable */
     private String indexName;
 
+    /** Iteration index */
     private int index = 1;
 
     /**
@@ -67,6 +79,10 @@ public class RepeatUntilTrue extends AbstractTestAction {
         } while (!checkCondition());
     }
 
+    /**
+     * Executes the nested test actions.
+     * @param context
+     */
     private void executeActions(TestContext context) {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
@@ -81,6 +97,10 @@ public class RepeatUntilTrue extends AbstractTestAction {
         }
     }
 
+    /**
+     * Check the aborting condition.
+     * @return
+     */
     private boolean checkCondition() {
         String conditionString = condition;
 
@@ -91,14 +111,26 @@ public class RepeatUntilTrue extends AbstractTestAction {
         return BooleanExpressionParser.evaluate(conditionString);
     }
 
+    /**
+     * List of nested test actions.
+     * @param actions
+     */
     public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 
+    /**
+     * Iteration aborting condition.
+     * @param condition
+     */
     public void setCondition(String condition) {
         this.condition = condition;
     }
 
+    /**
+     * Index variable name.
+     * @param indexName
+     */
     public void setIndexName(String indexName) {
         this.indexName = indexName;
     }

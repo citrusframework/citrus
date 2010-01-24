@@ -19,27 +19,42 @@
 
 package com.consol.citrus.actions;
 
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
+ * access to a {@link DataSource}.
+ * 
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction {
+    /** Text describing the test action */
     private String description;
 
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
 
     /**
-     * @throws CitrusRuntimeException
+     * (non-Javadoc)
+     * @see com.consol.citrus.TestAction#execute(com.consol.citrus.context.TestContext)
      */
     public abstract void execute(TestContext context);
 
+    /**
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @param description the description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }

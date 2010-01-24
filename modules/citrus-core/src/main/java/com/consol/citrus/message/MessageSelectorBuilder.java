@@ -23,18 +23,38 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Constructs message selectors either from string value or from key value maps.
+ * 
+ * @author Christoph Deppisch
+ */
 public class MessageSelectorBuilder {
     
+    /** Selector string */
     private String selectorString = "";
     
+    /**
+     * Constructor using fields.
+     * @param selectorString
+     */
     public MessageSelectorBuilder(String selectorString) {
         this.selectorString = selectorString;
     }
     
+    /**
+     * Static builder method using a selector string.
+     * @param selectorString
+     * @return
+     */
     public static MessageSelectorBuilder withString(String selectorString) {
         return new MessageSelectorBuilder(selectorString);
     }
     
+    /**
+     * Static builder method using a key value map.
+     * @param valueMap
+     * @return
+     */
     public static MessageSelectorBuilder fromKeyValueMap(Map<String, Object> valueMap) {
         StringBuffer buf = new StringBuffer();
 
@@ -59,6 +79,10 @@ public class MessageSelectorBuilder {
         return new MessageSelectorBuilder(buf.toString());
     }
     
+    /**
+     * Builds the message selector.
+     * @return
+     */
     public String build() {
         return selectorString;
     }

@@ -23,6 +23,17 @@ import java.util.List;
 
 import org.springframework.xml.xsd.XsdSchema;
 
+/**
+ * Interface for namespace to schema mapping strategies.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface XsdSchemaMappingStrategy {
+    /**
+     * Get the schema for given namespace.
+     * @param schemas list of available schemas.
+     * @param namespace
+     * @return
+     */
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace);
 }

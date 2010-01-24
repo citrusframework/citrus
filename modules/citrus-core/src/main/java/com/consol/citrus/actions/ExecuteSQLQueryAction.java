@@ -36,31 +36,39 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * New implementation of sql queries validation. Class enables user to query data sets from
- * database and validate its results.
- * It is possible to retry the queries plus validation a certain number of times with
- * configurable pause between the retries. This is especially handy if the system under
- * test has delayed updates to the database. Default values are 0 retries and 1000ms pause.
+ * Action executes SQL queries and offers result set validation. 
+ * 
+ * The class enables you to query data result sets from a
+ * database. Validation will happen on column basis inside the result set.
+ * 
+ * It is possible to retry the action automatically. Test action will try to validate the
+ * data a given number of times with configurable pause between the retries. 
+ * 
+ * This is especially helpful in case the system under test takes some time to save data 
+ * to the database. Tests action may fail simply because of runtime conditions. With automatic retries
+ * the test results are of stable nature.  
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2008
+ * @author Christoph Deppisch
+ * @since 2008
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
-    /** Map holding all expected values to be validated */
+    /** Map holding all column values to be validated, keys represent the column names */
     protected Map<String, String> validationElements = new HashMap<String, String>();
 
-    /** SQL file resource */
+    /** SQL file resource holding several query statements */
     private Resource sqlResource;
 
-    /** List of SQL statements */
+    /** List of SQL statements given inline inside the test case */
     private List<String> statements = new ArrayList<String>();
 
-    /** Number of retries when validation fails. */
+    /** Number of retries when validation fails */
     private int maxRetries = 0;
 
     /** Pause between retries (in milliseconds). */
     private int retryPauseInMs = 1000;
     
-    /** Use this map in order to save db values to variables */
+    /** Map saving db values to test variables, keys represent the column names, 
+     * values the variable names */
     private Map<String, String> extractToVariablesMap = new HashMap<String, String>();
 
     /**
@@ -181,9 +189,10 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
 
     /**
-     * Checks on the size of the result list:
+     * Checks on the size of the result set:
      * if no rows were returned a CitrusRuntimeException is thrown, if more than one row
-     * is returned some logging entries are made.
+     * is returned some logging entries are made, because we can only validate/save a single row.
+     * 
      * @param stmt The SQL statement (just needed for logging).
      * @param resultList The list which is checked.
      */
@@ -230,10 +239,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     *
-     * @param expectedValues
-     * @param resultValues
-     * @return
+     * Validates the database result set. User can expect column names and respective values to be
+     * present in the result set.
+     * 
+     * @param expectedValues user specified control result set
+     * @param resultValues actual result set coming from the database
+     * @return success flag
      * @throws UnknownElementException
      * @throws ValidationException
      */
@@ -289,7 +300,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Spring property setter.
+     * Setter for inline SQL statements.
      * @param statements
      */
     public void setStatements(List<String> statements) {
@@ -297,7 +308,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Spring property setter.
+     * Setter for external file resource holding the SQL statements.
      * @param sqlResource
      */
     public void setSqlResource(Resource sqlResource) {
@@ -305,7 +316,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Spring property setter.
+     * Set expected control result set. Keys represent the column names, values
+     * the expected values.
+     * 
      * @param validateDBValues
      */
     public void setValidationElements(Map<String, String> validationElements) {
@@ -313,7 +326,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Spring property setter.
+     * Setter for maximum number of retries.
      * @param maxRetries
      */
     public void setMaxRetries(int maxRetries) {
@@ -321,7 +334,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Spring property setter.
+     * Retry interval.
      * @param retryPauseInMs
      */
     public void setRetryPauseInMs(int retryPauseInMs) {
@@ -330,6 +343,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
 
     /**
+     * User can extract column values to test variables. Map holds column names (keys) and
+     * respective target variable names (values).
+     * 
      * @param extractToVariables the extractToVariables to set
      */
     public void setExtractToVariablesMap(Map<String, String> extractToVariablesMap) {

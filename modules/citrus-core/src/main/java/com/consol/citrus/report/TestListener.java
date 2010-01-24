@@ -21,6 +21,11 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestCase;
 
+/**
+ * Test listener interface. Listeners invoked on test start, finish, failure, skip, success.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface TestListener {
     /**
      * Invoked when test gets started

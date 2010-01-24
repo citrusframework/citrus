@@ -24,8 +24,13 @@ import java.text.ParseException;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Action fails the test explicitly. User can specify a cause message.
+ * 
+ * @author Christoph Deppisch
+ */
 public class FailAction extends AbstractTestAction {
-
+    /** User defined cause message to explain the error */
     private String message = "Generated error to interrupt test execution";
 
     /**
@@ -40,7 +45,11 @@ public class FailAction extends AbstractTestAction {
             throw new CitrusRuntimeException(e);
         }
     }
-
+    
+    /**
+     * Setter for user defined cause message.
+     * @param message
+     */
     public void setMessage(String message) {
         this.message = message;
     }

@@ -32,16 +32,33 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
+/**
+ * Class executes nested test actions in loops. Iteration continues as long
+ * as looping condition evaluates to true.
+ * 
+ * See {@link BooleanExpressionParser} for supported boolean expressions that define
+ * the conditioning.
+ * 
+ * Each loop an index variable is incremented. The index variable is accessible inside the nested
+ * test actions as normal test variable. Iteration starts with index=1 and increments with a 
+ * default step=1.
+ * 
+ * @author Christoph Deppisch
+ */
 public class Iterate extends AbstractTestAction {
     /** List of actions to be executed */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** Boolean expression string */
     private String condition;
 
+    /** Name of index variable */
     private String indexName;
 
+    /** Looping index */
     private int index = 1;
 
+    /** Index increment step */
     private int step = 1;
 
     /**
@@ -70,6 +87,10 @@ public class Iterate extends AbstractTestAction {
         }
     }
 
+    /**
+     * Executes the nested test actions.
+     * @param context
+     */
     private void executeActions(TestContext context) {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
@@ -84,6 +105,10 @@ public class Iterate extends AbstractTestAction {
         }
     }
 
+    /** 
+     * Check aborting condition.
+     * @return
+     */
     private boolean checkCondition() {
         String conditionString = condition;
 
@@ -94,19 +119,32 @@ public class Iterate extends AbstractTestAction {
         return BooleanExpressionParser.evaluate(conditionString);
     }
 
+    /**
+     * Nested test actions to execute.
+     * @param actions
+     */
     public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 
+    /**
+     * Aborting condition.
+     * @param condition
+     */
     public void setCondition(String condition) {
         this.condition = condition;
     }
 
+    /**
+     * Name of index variable.
+     * @param indexName
+     */
     public void setIndexName(String indexName) {
         this.indexName = indexName;
     }
 
     /**
+     * Step o increment.
      * @param step the step to set
      */
     public void setStep(int step) {
@@ -114,6 +152,7 @@ public class Iterate extends AbstractTestAction {
     }
 
     /**
+     * Setter for looping index.
      * @param index the index to set
      */
     public void setIndex(int index) {

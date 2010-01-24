@@ -42,6 +42,12 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
+/**
+ * Class holding and managing test variables. The test context also provides utility methods
+ * for replacing dynamic content(variables and functions) in message payloads and headers.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestContext {
     /**
      * Logger
@@ -54,6 +60,7 @@ public class TestContext {
     /** Global variables */
     private GlobalVariables globalVariables;
     
+    /** Function registry holding all available functions */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
     
     /**
@@ -64,8 +71,8 @@ public class TestContext {
     }
     
     /**
-     * Try to get the value for the variable expression.
-     * Expression can be a constant, function or simple variable name.
+     * Get the value for the given variable expression.
+     * Expression can be a function or a simple variable name.
      * @param variableExpression expression to be parsed
      * @throws CitrusRuntimeException
      * @return value of variable as String
@@ -108,7 +115,7 @@ public class TestContext {
     }
     
     /**
-     * All variables in map will be added to global variables.
+     * Add all variables in map to local variables.
      * Existing variables will be overwritten.
      * @param context
      */
@@ -123,11 +130,12 @@ public class TestContext {
     }
     
     /**
-     * Read all entries in messageElements map and try to create new variables.
-     * The valueSet will be the variable names, while the keys will be xpath expressions
-     * to the respective value in the W3C XML document.
-     * @param messageElements map holding variable names and xpath expressions.
-     * @param doc W3C XML document, holding the variable values.
+     * Creates new variables from message payload.
+     * The messageElements map holds XPath expressions (keys) and variable names (values). XPath expressions
+     * are evaluated against the message's payload XML.
+     * 
+     * @param messageElements map holding variable names and XPath expressions.
+     * @param message
      * @throws UnknownElementException
      */
     public void createVariablesFromMessageValues(final Map<String, String> messageElements, Message<?> message) throws UnknownElementException {
@@ -172,9 +180,7 @@ public class TestContext {
     }
     
     /**
-     * If the values of the map are containing variable names,
-     * the values are replaced by the variables current value.
-     *
+     * Replaces variables in given map with respective variable values.
      * @param map
      */
     public Map<String, Object> replaceVariablesInMap(final Map<String, ?> map) {
@@ -199,7 +205,7 @@ public class TestContext {
     }
     
     /**
-     * Replace variables in list with respective values
+     * Replaces variables in list with respective variable values
      * @param list
      */
     public List<String> replaceVariablesInList(List<String> list) {
@@ -221,10 +227,11 @@ public class TestContext {
     }
     
     /**
-     * This method will search for header elements to be extracted as variables.
+     * Create new variables from message headers.
      *
-     * @param extractHeaderValues map containing elements to be extracted from message header
-     * @param receivedHeaderValues header elements from received message
+     * @param extractHeaderValues map containing name value pairs 
+     * where the keys represent header entry names and the value set variable names. 
+     * @param receivedHeaderValues message header entries
      */
     public void createVariablesFromHeaderValues(final Map<String, String> extractHeaderValues, final Map<String, ?> receivedHeaderValues) throws UnknownElementException {
         if (extractHeaderValues== null || extractHeaderValues.isEmpty()) {return;}
@@ -242,14 +249,13 @@ public class TestContext {
     }
     
     /**
-     * Sets all XML elements values of a XML message for each
-     * entry in the messageElements map.
-     * Each key of the map has to be an XML element path expression.
-     * Each value of the map can either be a variable name or a static value.
-     * The element value in the XML document is replaced by the respective value expression.
+     * Overwrite message elements in given message payload string.
+     * 
+     * Each key of the messageElements map represents a XPath expression.
+     * Each value set entry represents the new value to set.
      *
      * @param messageElements map holding the elements to be overwritten
-     * @param doc XML document
+     * @param messagePayload
      * @throws CitrusRuntimeException
      * @throws UnknownElementException
      */
@@ -304,13 +310,16 @@ public class TestContext {
         return XMLUtils.serialize(doc);
     }
     
+    /**
+     * Clear local variables.
+     */
     public void clear() {
         variables.clear();
         variables.putAll(globalVariables.getVariables());
     }
     
     /**
-     * Checks if variables are defined yet
+     * Checks if variables are present right now.
      * @return boolean flag to mark existence
      */
     public boolean hasVariables() {
@@ -318,7 +327,7 @@ public class TestContext {
     }
     
     /**
-     * Spring property setter.
+     * Setter for local variables.
      * @param variables
      */
     public void setVariables(Map<String, String> variables) {
@@ -326,13 +335,17 @@ public class TestContext {
     }
 
     /**
-     * Getter for global variables
+     * Getter for local variables.
      * @return global variables
      */
     public Map<String, String> getVariables() {
         return variables;
     }
 
+    /**
+     * Get global variables.
+     * @param globalVariables
+     */
 	public void setGlobalVariables(GlobalVariables globalVariables) {
 		this.globalVariables = globalVariables;
 		
@@ -340,6 +353,7 @@ public class TestContext {
 	}
 
     /**
+     * Set global variables.
      * @return the globalVariables
      */
     public Map<String, String> getGlobalVariables() {
@@ -347,7 +361,7 @@ public class TestContext {
     }
     
     /**
-     * Method replacing variable declarations in a String
+     * Method replacing variable declarations and functions in a string
      * @param str
      * @return
      * @throws ParseException
@@ -359,7 +373,8 @@ public class TestContext {
     }
 
     /**
-     * Method replacing variable declarations and functions in a String
+     * Method replacing variable declarations and functions in a string, but adds quotes
+     * to the replaced variable values.
      * @param str
      * @param enableQuoting
      * @return
@@ -372,6 +387,7 @@ public class TestContext {
     }
 
     /**
+     * Get the current function registry.
      * @return the functionRegistry
      */
     public FunctionRegistry getFunctionRegistry() {
@@ -379,6 +395,7 @@ public class TestContext {
     }
 
     /**
+     * Set the function registry.
      * @param functionRegistry the functionRegistry to set
      */
     public void setFunctionRegistry(FunctionRegistry functionRegistry) {

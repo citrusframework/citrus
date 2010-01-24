@@ -30,19 +30,20 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 
 /**
- * Action expecting a timeout on a message destination
+ * Action expecting a timeout on a message destination, this means that no message 
+ * should arrive on the destination.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class ReceiveTimeoutAction extends AbstractTestAction {
     /** Time to wait until timeout */
     private long timeout = 1000L;
 
+    /** MessageReceiver instance */
     private MessageReceiver messageReceiver;
 
-    /**
-     * Select messages to receive
-     */
+    /** Message selector string */
     private String messageSelector;
 
     /**
@@ -78,18 +79,23 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for timeout
+     * Setter for receive timeout.
      * @param timeout
      */
     public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * Set message selector string.
+     * @param messageSelector
+     */
     public void setMessageSelector(String messageSelector) {
         this.messageSelector = messageSelector;
     }
     
     /**
+     * Set the message receiver instance.
      * @param messageReceiver the messageReceiver to set
      */
     public void setMessageReceiver(MessageReceiver messageReceiver) {

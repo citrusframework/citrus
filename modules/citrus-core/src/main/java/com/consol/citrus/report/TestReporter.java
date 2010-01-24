@@ -21,7 +21,15 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestSuite;
 
-
+/**
+ * Interface for test reporters.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface TestReporter {
+    /**
+     * Test reporter generates a report for several test suite instances.
+     * @param suites
+     */
     public void generateTestResults(TestSuite[] suites);
 }

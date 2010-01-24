@@ -21,24 +21,35 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Abstract base class for test acions. Class provides a default name and description.
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractTestAction implements TestAction {
 
-    private String description;
+    /** Describing the test action */
+    protected String description;
 
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
 
     /**
-     * @throws CitrusRuntimeException
+     * (non-Javadoc)
+     * @see com.consol.citrus.TestAction#execute(com.consol.citrus.context.TestContext)
      */
     public abstract void execute(TestContext context);
 
+    /**
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @param description the description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }

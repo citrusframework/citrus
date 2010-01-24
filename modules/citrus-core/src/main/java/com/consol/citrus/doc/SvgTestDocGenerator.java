@@ -37,12 +37,14 @@ import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.util.FileUtils;
 
 /**
- * Class to automatically generate a list of all available tests.
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 02.03.2007
+ * Class to automatically generate a visual representation of a {@link TestCase} in SVG.
+ * 
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class SvgTestDocGenerator {
     private final static String DEFAULT_XSLT_SOURCE = "generate-svg-doc.xslt";

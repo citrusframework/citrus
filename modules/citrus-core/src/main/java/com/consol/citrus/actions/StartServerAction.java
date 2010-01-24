@@ -29,14 +29,16 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 
 /**
- * Action starting a server instance during test
+ * Action starting a {@link Server} instance.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class StartServerAction extends AbstractTestAction {
-    /** List of beans to start */
+    /** List of servers to start */
     private List<Server> serverList = new ArrayList<Server>();
 
+    /** Single server instance to start */
     private Server server;
 
     /**

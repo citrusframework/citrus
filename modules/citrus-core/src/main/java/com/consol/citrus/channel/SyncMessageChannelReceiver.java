@@ -25,17 +25,26 @@ import java.util.Map;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 
+import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * Synchronous message channel receiver. Receives a message on a {@link MessageChannel} destination and
+ * saves the reply channel. A {@link ReplyMessageChannelSender} may ask for the reply channel in order to
+ * provide synchronous reply.
+ * 
+ * @author Christoph Deppisch
  */
 public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
-
+    /** Reply channel store */
     private Map<String, MessageChannel> replyChannels = new HashMap<String, MessageChannel>();
     
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /**
+     * @see MessageReceiver#receive(long)
+     */
     @Override
     public Message<?> receive(long timeout) {
         Message<?> receivedMessage = super.receive(timeout);
@@ -45,6 +54,9 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
         return receivedMessage;
     }
 
+    /**
+     * @see MessageReceiver#receiveSelected(String, long)
+     */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         Message<?> receivedMessage = super.receiveSelected(selector, timeout);
@@ -55,6 +67,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     }
     
     /**
+     * Store reply message channel.
      * @param receivedMessage
      */
     private void saveReplyMessageChannel(Message<?> receivedMessage) {
@@ -65,15 +78,22 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
         }
     }
 
+    /**
+     * Get the reply message channel with given corelation key.
+     */
     public MessageChannel getReplyMessageChannel(String correlationKey) {
         return replyChannels.remove(correlationKey);
     }
 
+    /**
+     * Get the reply message channel.
+     */
     public MessageChannel getReplyMessageChannel() {
         return replyChannels.remove("");
     }
 
     /**
+     * Set the reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

@@ -20,23 +20,42 @@
 package com.consol.citrus.exceptions;
 
 /**
- * This exception is thrown when a message receiving action does not specify any content that is expected.
+ * This exception is thrown when a message receiving action 
+ * does not specify any expected content.
+ * 
+ * @author Christoph Deppisch
  */
 public class MissingExpectedMessageException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public MissingExpectedMessageException() {
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public MissingExpectedMessageException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public MissingExpectedMessageException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public MissingExpectedMessageException(String message, Throwable cause) {
         super(message, cause);
     }

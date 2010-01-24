@@ -22,10 +22,13 @@ package com.consol.citrus.jms;
 import org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * Basic JMS connecting class using also Spring's {@link AbstractJmsTemplateBasedAdapter}.
+ * 
+ * @author Christoph Deppisch
  */
 public abstract class AbstractJmsAdapter extends AbstractJmsTemplateBasedAdapter {
 
+    /** Use topics instead of queues */
     private boolean pubSubDomain = false;
     
     @Override
@@ -36,6 +39,7 @@ public abstract class AbstractJmsAdapter extends AbstractJmsTemplateBasedAdapter
     }
 
     /**
+     * Does domain use topics instead of queues.
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
@@ -43,6 +47,7 @@ public abstract class AbstractJmsAdapter extends AbstractJmsTemplateBasedAdapter
     }
 
     /**
+     * Sets if domain uses topics instead of queues.
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {

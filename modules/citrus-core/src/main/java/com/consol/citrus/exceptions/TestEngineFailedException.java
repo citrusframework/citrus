@@ -22,24 +22,41 @@ package com.consol.citrus.exceptions;
 /**
  * Custom RuntimeException thrown if test run failed, because some tests were not successful.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch
+ * @since 2007
  *
  */
 public class TestEngineFailedException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public TestEngineFailedException() {
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public TestEngineFailedException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public TestEngineFailedException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public TestEngineFailedException(String message, Throwable cause) {
         super(message, cause);
     }

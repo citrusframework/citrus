@@ -37,30 +37,50 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
+/**
+ * Synchronous message sender implementation for JMS. Sender publishes messages to a JMS destination and
+ * sets the reply destination in the request message. Sender consumes the reply destination right away and
+ * invokes a reply message handler implementation with this reply message.
+ * 
+ * Class can either define a static reply destination or a temporary reply destination.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsSyncMessageSender implements MessageSender, BeanNameAware, InitializingBean, DisposableBean {
-
+    /** JMS connection factory */
     private ConnectionFactory connectionFactory;
     
+    /** JMS connection */
     private Connection connection = null;
     
+    /** JMS session */
     private Session session = null;
     
+    /** Destiantion instance */
     private Destination destination;
     
+    /** Destiantion name */
     private String destinationName;
     
+    /** Reply destiantion */
     private Destination replyDestination;
     
+    /** Reply destiantion name */
     private String replyDestinationName;
     
+    /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
     
+    /** Time to synchronously wait for reply */
     private long replyTimeout = 5000L;
     
+    /** Reply message corelator */
     private ReplyMessageCorrelator correlator = null;
     
+    /** Use JMS topics instead of queues */
     private boolean pubSubDomain = false;
     
+    /** Message sender name */
     private String name;
     
     /**
@@ -134,6 +154,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         }
     }
     
+    /**
+     * Delete temporary destinations.
+     * @param destination
+     */
     private void deleteTemporaryDestination(Destination destination) {
         try {
             if (destination instanceof TemporaryQueue) { 
@@ -146,6 +170,15 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         }
     }
 
+    /**
+     * Retrieve the reply destiantion either by injected instance, destination name or
+     * by creating a new temporary destiantion.
+     * 
+     * @param session current JMS session
+     * @param message holding possible reply destiantion in header.
+     * @return the reply destination.
+     * @throws JMSException
+     */
     private Destination getReplyDestination(Session session, Message<?> message) throws JMSException {
         if(message.getHeaders().getReplyChannel() != null) {
             if(message.getHeaders().getReplyChannel() instanceof Destination) {
@@ -168,6 +201,14 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         }
     }
 
+    /**
+     * Get send destination either from injected destination instance or by resolving
+     * a destination name.
+     *  
+     * @param session current JMS session
+     * @return the destination.
+     * @throws JMSException
+     */
     private Destination getDestination(Session session) throws JMSException {
         if (destination != null) {
             return destination;
@@ -177,6 +218,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
     
     /**
+     * Get the destination name (either queue name or topic name).
      * @return the destinationName
      */
     protected String getDestinationName() {
@@ -199,7 +241,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
     
     /**
-     * @return
+     * Create new JMS connection.
+     * @return connection
      * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
@@ -220,9 +263,9 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
     
     /**
-     * 
-     * @param connection
-     * @return
+     * Create new JMS session.
+     * @param connection to use for session creation.
+     * @return session.
      * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
@@ -244,7 +287,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
     
     /**
-     * @throws Exception
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
         createConnection();
@@ -265,7 +308,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
     
     /**
-     * 
+     * Get the message converter converting messages from internal format to JMS.
      * @return
      */
     protected MessageConverter getMessageConverter() {
@@ -276,6 +319,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the connection factory.
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
@@ -283,6 +327,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the reply message handler.
      * @param replyMessageHandler the replyMessageHandler to set
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
@@ -290,6 +335,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Get the reply message handler.
      * @return the replyMessageHandler
      */
     public ReplyMessageHandler getReplyMessageHandler() {
@@ -297,6 +343,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the send destination.
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
@@ -304,6 +351,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the send destination name.
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
@@ -311,6 +359,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the reply destination.
      * @param replyDestination the replyDestination to set
      */
     public void setReplyDestination(Destination replyDestination) {
@@ -318,6 +367,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the reply destiantion name.
      * @param replyDestinationName the replyDestinationName to set
      */
     public void setReplyDestinationName(String replyDestinationName) {
@@ -325,6 +375,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the reply message timeout.
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
@@ -332,6 +383,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set the reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
@@ -339,6 +391,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Set whether to use JMS topics instead of JMS queues.
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {
@@ -346,12 +399,16 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
+     * Is this sender using JMS topics instead of JMS queues.
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
         return pubSubDomain;
     }
 
+    /**
+     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
+     */
     public void setBeanName(String name) {
         this.name = name;
     }

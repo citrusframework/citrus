@@ -38,6 +38,12 @@ import com.consol.citrus.TestSuite;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.report.TestListeners;
 
+/**
+ * Abstract base test implementation for testng test cases. Providing test listener support and
+ * loading basic application context files for Citrus.
+ * 
+ * @author Christoph Deppisch
+ */
 @ContextConfiguration(locations = {"/com/consol/citrus/spring/root-application-ctx.xml", 
                                    "/citrus-context.xml", 
                                    "/com/consol/citrus/functions/citrus-function-ctx.xml"})
@@ -47,9 +53,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     private static final Logger log = LoggerFactory.getLogger(AbstractTestNGCitrusTest.class);
     
+    /** Test listeners */
     @Autowired
     private TestListeners testListener;
     
+    /**
+     * Run tasks before test suite.
+     * @param testContext
+     * @throws Exception
+     */
     @BeforeSuite(alwaysRun = true)
     public void beforeSuite(ITestContext testContext) throws Exception {
         /*
@@ -68,6 +80,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
     }
     
+    /**
+     * Run tasks before tests.
+     * @param testContext
+     */
     @BeforeClass
     public void beforeTest(ITestContext testContext) {
         TestSuite suite= getTestSuite(testContext.getSuite().getName());
@@ -75,6 +91,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         suite.beforeTest();
     }
     
+    /**
+     * Execute the test case.
+     * @param testContext
+     */
     protected void executeTest(ITestContext testContext) {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
                 new String[] {
@@ -113,6 +133,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
     }
     
+    /**
+     * Run tasks after test suite.
+     * @param testContext
+     */
     @AfterSuite(alwaysRun = true)
     public void afterSuite(ITestContext testContext) {
         TestSuite suite= getTestSuite(testContext.getSuite().getName());
@@ -122,6 +146,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
     }
     
+    /**
+     * Get the test suite instance by its name from 
+     * application context.
+     * @param name
+     * @return
+     */
     private TestSuite getTestSuite(String name) {
         if(name.endsWith(" by packages")) {
             name = name.substring(0, name.length() - " by packages".length());

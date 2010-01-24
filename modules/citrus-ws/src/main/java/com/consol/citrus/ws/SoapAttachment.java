@@ -29,7 +29,7 @@ import org.springframework.ws.mime.Attachment;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class SoapAttachment implements Attachment {
     private String content;

@@ -21,7 +21,7 @@ package com.consol.citrus.ws;
 
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public abstract class SoapAttachmentHeaders {
     public static final String PREFIX = "citrus_soapattachment_";

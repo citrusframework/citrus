@@ -36,7 +36,7 @@ import com.consol.citrus.ws.SoapAttachmentHeaders;
  * and content as String value. Validator will create a com.consol.citrus.ws.SoapAttachment and automatically handle contentId and 
  * contentType validation. Content validation is delegated to subclass.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentValidator {
     /**

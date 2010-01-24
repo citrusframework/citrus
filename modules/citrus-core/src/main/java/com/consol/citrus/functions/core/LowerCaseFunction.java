@@ -24,8 +24,17 @@ import java.util.List;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Function returns given string argument in lower case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class LowerCaseFunction implements Function {
 
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws InvalidFunctionUsageException
+     */
     public String execute(List<String> parameterList) {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");

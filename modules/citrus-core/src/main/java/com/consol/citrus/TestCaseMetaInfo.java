@@ -21,6 +21,11 @@ package com.consol.citrus;
 
 import java.util.Date;
 
+/**
+ * Test case meta information.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestCaseMetaInfo {
     /** Author of testcase */
     private String author = "";
@@ -40,6 +45,7 @@ public class TestCaseMetaInfo {
     private Date lastUpdatedOn;
 
     /**
+     * Get the test author.
      * @return the author
      */
     public String getAuthor() {
@@ -47,6 +53,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Set the test author.
      * @param author the author to set
      */
     public void setAuthor(String author) {
@@ -54,6 +61,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Get the creation date.
      * @return the creationDate
      */
     public Date getCreationDate() {
@@ -61,6 +69,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Set the creation date.
      * @param creationDate the creationDate to set
      */
     public void setCreationDate(Date creationDate) {
@@ -68,6 +77,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Get the author that recently updated this test case.
      * @return the lastUpdatedBy
      */
     public String getLastUpdatedBy() {
@@ -75,6 +85,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Set the author that recently updated this test case.
      * @param lastUpdatedBy the lastUpdatedBy to set
      */
     public void setLastUpdatedBy(String lastUpdatedBy) {
@@ -82,6 +93,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Get last updating date.
      * @return the lastUpdatedOn
      */
     public Date getLastUpdatedOn() {
@@ -89,6 +101,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Set last updating date.
      * @param lastUpdatedOn the lastUpdatedOn to set
      */
     public void setLastUpdatedOn(Date lastUpdatedOn) {
@@ -96,6 +109,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Set the status the this test case.
      * @param status the status to set
      */
     public void setStatus(Status status) {
@@ -103,6 +117,7 @@ public class TestCaseMetaInfo {
     }
 
     /**
+     * Get the status of this test case.
      * @return the status
      */
     public Status getStatus() {

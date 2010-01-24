@@ -31,10 +31,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Executes PLSQL statements given inline or given by a file.
+ * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
+ * external file resource.
  *
- * @author deppisch Christoph Deppisch Consol*GmbH 2008
- *
+ * @author Christoph Deppisch
+ * @since 2008
  */
 public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
@@ -145,15 +146,15 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * Spring property setter.
-     * @param statements
+     * Setter for inline script.
+     * @param script
      */
     public void setScript(String script) {
         this.script = script;
     }
 
     /**
-     * Spring property setter.
+     * Setterfor external file resource containing PLSLQ statements.
      * @param sqlResource
      */
     public void setSqlResource(Resource sqlResource) {
@@ -161,7 +162,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * @param ignoreErrors the ignoreErrors to set
+     * Ignore errors during execution.
+     * @param ignoreErrors boolean flag to set
      */
     public void setIgnoreErrors(boolean ignoreErrors) {
         this.ignoreErrors = ignoreErrors;

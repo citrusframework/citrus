@@ -36,27 +36,34 @@ import com.consol.citrus.message.*;
 
 /**
  * This JMS message sender is quite similar to Spring's AbstractJmsTemplateBasedAdapter that is 
- * already used in out asynchronous JMS senders and receivers. But AbstractJmsTemplateBasedAdapter is
+ * already used in asynchronous JMS senders and receivers. But AbstractJmsTemplateBasedAdapter is
  * working with static default destinations.
  * 
  * In this class we rather operate with dynamic destinations. Therefore this adapter implementation has 
  * slight differences.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class JmsReplyMessageSender implements MessageSender, InitializingBean {
+    /** Reply destination holder */
     private JmsReplyDestinationHolder replyDestinationHolder;
 
+    /** JMS connection factory */
     private ConnectionFactory connectionFactory;
 
+    /** JMS template */
     private JmsTemplate jmsTemplate;
 
+    /** JMS header mapper */
     private JmsHeaderMapper headerMapper;
 
+    /** Initialized flag */
     private boolean initialized;
 
+    /** Monitor initialization */
     private final Object initializationMonitor = new Object();
     
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
     /**
@@ -64,13 +71,23 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
      */
     private static final Logger log = LoggerFactory.getLogger(JmsReplyMessageSender.class);
 
+    /**
+     * Constructor using custom {@link JmsTemplate}.
+     * @param jmsTemplate
+     */
     public JmsReplyMessageSender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
+    /**
+     * Default constructor.
+     */
     public JmsReplyMessageSender() {
     }
 
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
         
@@ -100,19 +117,32 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
         getJmsTemplate().convertAndSend(replyDestination, message);
     }
     
+    /**
+     * Set the JMS connection factory.
+     * @param connectionFactory
+     */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
+    /**
+     * Set the JMS template.
+     * @param jmsTemplate
+     */
     public void setJmsTemplate(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
+    /**
+     * Set the JMS header mapper.
+     * @param headerMapper
+     */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
         this.headerMapper = headerMapper;
     }
     
     /**
+     * Set the reply destination.
      * @param replyDestinationHolder the replyDestinationHolder to set
      */
     public void setReplyDestinationHolder(
@@ -120,6 +150,10 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
         this.replyDestinationHolder = replyDestinationHolder;
     }
 
+    /**
+     * Get JMS template.
+     * @return
+     */
     protected JmsTemplate getJmsTemplate() {
         if (this.jmsTemplate == null) {
             this.afterPropertiesSet();
@@ -128,6 +162,7 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     }
     
     /**
+     * Get the destination name (either a queue name or a topic name).
      * @return the destinationName
      */
     protected String getDestinationName(Destination destination) {
@@ -149,6 +184,9 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
         }
     }
 
+    /**
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     public void afterPropertiesSet() {
         synchronized (this.initializationMonitor) {
             if (this.initialized) {
@@ -168,6 +206,11 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
         }
     }
     
+    /**
+     * Configures the message converter.
+     * @param jmsTemplate
+     * @param headerMapper
+     */
     protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
         MessageConverter converter = jmsTemplate.getMessageConverter();
         if (converter == null || !(converter instanceof HeaderMappingMessageConverter)) {
@@ -178,6 +221,7 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     }
 
     /**
+     * Set the message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

@@ -38,15 +38,24 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
-
+/**
+ * {@link TestReporter} implementation that generates the famous JUnit XML reports. JUnit can
+ * use these XML reports to generate HTML reports.
+ *  
+ * @author Christoph Deppisch
+ */
 public class JUnitReporter implements TestSuiteListener, TestListener, TestReporter {
     
+    /** Collect all test results */
     private TestResults testResults = new TestResults();
     
+    /** Result XML document */
     private Document doc;
 
+    /** Result element for testsuite */
     private Element testSuiteElement;
 
+    /** Target output file */
     private Resource outputFile = new FileSystemResource("target/test-output/test-results.xml");
 
     /**
@@ -54,7 +63,10 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
      */
     private static final Logger log = LoggerFactory.getLogger(JUnitReporter.class);
 
+    /** Track test execution time */
     private Map<String, Long> testExecutionTime = new HashMap<String, Long>();
+    
+    /** Track testsuite execution time */
     private Map<String, Long> testSuiteExecutionTime = new HashMap<String, Long>();
 
     /** Common decimal format for percentage calculation in report **/
@@ -66,6 +78,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         decFormat.setDecimalFormatSymbols(symbol);
     }
 
+    /**
+     * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
+     */
     public void generateTestResults(TestSuite[] suites) {
         try {
             log.info("Generating JUnit results");
@@ -142,6 +157,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         }
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
+     */
     public void onTestFailure(TestCase test, Throwable cause) {
         Element testCaseElement = doc.createElement("testcase");
 
@@ -179,10 +197,16 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         }
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestFinish(com.consol.citrus.TestCase)
+     */
     public void onTestFinish(TestCase test) {
         removeTestExecutionTime(test.getName());
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
+     */
     public void onTestSkipped(TestCase test) {
         //		Element testCaseElement = doc.createElement("testcase");
         //
@@ -195,10 +219,16 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestStart(com.consol.citrus.TestCase)
+     */
     public void onTestStart(TestCase test) {
         startTestExecution(test.getName());
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestSuccess(com.consol.citrus.TestCase)
+     */
     public void onTestSuccess(TestCase test) {
         Element testCaseElement = doc.createElement("testcase");
 
@@ -211,6 +241,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     */
     public void onFinish(TestSuite testsuite) {
         testSuiteElement.setAttribute("errors", "" + testResults.getFailed());
         testSuiteElement.setAttribute("failures", "0");
@@ -218,12 +251,21 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testSuiteElement.setAttribute("time", getTestSuiteExecutionTime(testsuite.getName()));
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onFinishFailure(TestSuite testsuite, Throwable cause) {
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     */
     public void onFinishSuccess(TestSuite testsuite) {
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     */
     public void onStart(TestSuite testsuite) {
         startTestSuiteExecutionTime(testsuite.getName());
 
@@ -244,33 +286,62 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         }
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onStartFailure(TestSuite testsuite, Throwable cause) {
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     */
     public void onStartSuccess(TestSuite testsuite) {
     }
 
+    /**
+     * Track time for test suite execution.
+     * @param testSuiteName
+     */
     private void startTestSuiteExecutionTime(String testSuiteName) {
         testSuiteExecutionTime.put(testSuiteName, System.currentTimeMillis());
     }
 
+    /**
+     * Get current execution time of test suite.
+     * @param testSuiteName
+     * @return
+     */
     private String getTestSuiteExecutionTime(String testSuiteName) {
         return decFormat.format(((double)(System.currentTimeMillis() - testSuiteExecutionTime.get(testSuiteName)))/1000);
     }
 
+    /**
+     * Track test execution time.
+     * @param testName
+     */
     private void startTestExecution(String testName) {
         testExecutionTime.put(testName, System.currentTimeMillis());
     }
 
+    /**
+     * Get current test execution time.
+     * @param testName
+     * @return
+     */
     private String getTestExecutionTime(String testName) {
         return decFormat.format(((double)(System.currentTimeMillis() - testExecutionTime.get(testName)))/1000);
     }
 
+    /**
+     * Remove test execution time for test name.
+     * @param testName
+     */
     private void removeTestExecutionTime(String testName) {
         testExecutionTime.remove(testName);
     }
 
     /**
+     * Set the target output time.
      * @param outputFile the outputFile to set
      */
     public void setOutputFile(Resource outputFile) {

@@ -21,6 +21,15 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
 
+/**
+ * Message sender interface.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface MessageSender {
+    /**
+     * Send message.
+     * @param message
+     */
     void send(Message<?> message);
 }

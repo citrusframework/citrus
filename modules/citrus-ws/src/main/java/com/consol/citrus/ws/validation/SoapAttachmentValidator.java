@@ -33,7 +33,7 @@ import com.consol.citrus.ws.SoapAttachment;
  * org.springframework.ws.mime.Attachment implementations to the Spring integration message header. The header name will be the
  * attachment's contentId. The header value is the org.springframework.ws.mime.Attachment object.
  *  
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public interface SoapAttachmentValidator {
 

@@ -21,8 +21,22 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.core.Message;
 
+/**
+ * Message handler is invoked when a reply message is received.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface ReplyMessageHandler {
+    /**
+     * Handle reply message.
+     * @param replyMessage
+     */
     void onReplyMessage(Message<?> replyMessage);
     
+    /**
+     * Handle reply message with given correlation key.
+     * @param replyMessage
+     * @param correlationKey
+     */
     void onReplyMessage(Message<?> replyMessage, String correlationKey);
 }

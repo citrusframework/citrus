@@ -22,7 +22,9 @@ package com.consol.citrus.channel;
 import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * Channel receiver for consuming reply messages.
+ *  
+ * @author Christoph Deppisch
  */
 public class ReplyMessageChannelReceiver extends AbstractReplyMessageReceiver {
 

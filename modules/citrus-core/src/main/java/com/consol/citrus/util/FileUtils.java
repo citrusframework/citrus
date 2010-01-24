@@ -25,23 +25,37 @@ import java.util.*;
 import org.springframework.core.io.Resource;
 
 /**
- * Class to provide general file utilities, such as listing all XML files in a directory. Or finding certain
- * tests in a directory.
+ * Class to provide general file utilities, such as listing all XML files in a directory, 
+ * or finding certain tests in a directory.
  *
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 26.01.2007
- *
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class FileUtils {
-    
+
+    /**
+     * Prevent instantiation.
+     */
     private FileUtils() {
         //prevent instantiation
     }
     
+    /**
+     * Read file resource to string value.
+     * @param resource
+     * @return
+     * @throws IOException
+     */
     public static String readToString(Resource resource) throws IOException {
         return readToString(resource.getInputStream());
     }
     
+    /**
+     * Read file input stream to string value.
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
     public static String readToString(InputStream inputStream) throws IOException {
         BufferedInputStream reader = new BufferedInputStream(inputStream);
         StringBuilder builder = new StringBuilder();
@@ -57,7 +71,7 @@ public class FileUtils {
     
     /**
      * Method to retrieve all test defining XML files in given directory.
-     * Subfolders are supported.
+     * Hierarchy of folders is supported.
      *
      * @param startDir the directory to hold the files
      * @return list of test files as filename paths

@@ -26,7 +26,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  * @since 31.10.2008
  */
 public class SyncJmsCommunicationTest extends AbstractTestNGCitrusTest {

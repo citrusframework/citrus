@@ -26,16 +26,32 @@ import java.util.List;
 import org.springframework.xml.xsd.XsdSchema;
 import org.xml.sax.SAXException;
 
+/**
+ * Schema repository holding a set of XML schema resources known in the test scope.
+ * 
+ * @author Christoph Deppisch
+ */
 public class XsdSchemaRepository {
+    /** List of schema resources */
     private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
     
+    /** Mapping strategy */
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
     
+    /**
+     * Retrieve the schema for a given namespace.
+     * 
+     * @param namespace
+     * @return
+     * @throws IOException
+     * @throws SAXException
+     */
     public XsdSchema getSchemaByNamespace(String namespace) throws IOException, SAXException {
         return schemaMappingStrategy.getSchema(schemas, namespace);
     }
 
     /**
+     * Get the list of known schemas.
      * @return the schemaSources
      */
     public List<XsdSchema> getSchemas() {
@@ -43,6 +59,7 @@ public class XsdSchemaRepository {
     }
 
     /**
+     * Set the list of known schemas.
      * @param schemas the schemas to set
      */
     public void setSchemas(List<XsdSchema> schemas) {
@@ -50,11 +67,10 @@ public class XsdSchemaRepository {
     }
 
     /**
+     * Set the schema mapping strategy.
      * @param schemaMappingStrategy the schemaMappingStrategy to set
      */
     public void setSchemaMappingStrategy(XsdSchemaMappingStrategy schemaMappingStrategy) {
         this.schemaMappingStrategy = schemaMappingStrategy;
     }
-    
-    
 }

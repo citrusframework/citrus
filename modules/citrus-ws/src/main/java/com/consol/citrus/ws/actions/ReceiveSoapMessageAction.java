@@ -34,7 +34,7 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private String attachmentData;

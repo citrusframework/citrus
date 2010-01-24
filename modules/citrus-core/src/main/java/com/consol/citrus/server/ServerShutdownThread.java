@@ -28,9 +28,10 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Class representing shutdown hook thread
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 22.02.2007
+ * Class representing shutdown hook thread for server implementations to stop on JVM shutdown.
+ * 
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class ServerShutdownThread extends Thread
 {
@@ -42,6 +43,7 @@ public class ServerShutdownThread extends Thread
     /** List of servers to be shut down */
     private List<Server> servers = new ArrayList<Server>();
 
+    /** Marks if thread was already executed before */
     private boolean done = false;
     
     @Override

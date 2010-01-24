@@ -23,6 +23,17 @@ import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 
+/**
+ * Message validator interface.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface MessageValidator {
+    /**
+     * Validates a message.
+     * @param receivedMessage
+     * @param context
+     * @param validationContext
+     */
     public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext);
 }

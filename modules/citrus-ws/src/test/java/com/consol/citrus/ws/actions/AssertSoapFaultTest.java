@@ -37,7 +37,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class AssertSoapFaultTest extends AbstractBaseTest {
     

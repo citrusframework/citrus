@@ -34,10 +34,16 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Action to purge JMS queue destinations by simply consuming all available messages.
+ * Action to purge JMS queue destinations by simply consuming 
+ * all available messages. As queue purging is a broker implementation specific feature in
+ * many cases this action clears all messages from a destination regardless of
+ * JMS broker vendor implementations.
  *
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 24.01.2007
+ * Receiver will continue to receive messages until message receive timeout is reached, 
+ * so no messages are left.
+ *  
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class PurgeJmsQueuesAction extends AbstractTestAction {
 
@@ -95,17 +101,33 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
         log.info("JMS queues purged successfully");
     }
 
-    /** Purges a queue identified by its name. */
+    /**
+     * Purges a queue destination identified by its name.
+     * @param queueName
+     * @param session
+     * @throws JMSException
+     */
     private void purgeQueue(String queueName, Session session) throws JMSException {
         purgeDestination(getDestination(session, queueName), session, queueName);
     }
 
-    /** Purges a queue identified by its instance. */
+    /**
+     * Purges a queue destination. 
+     * @param queue
+     * @param session
+     * @throws JMSException
+     */
     private void purgeQueue(Queue queue, Session session) throws JMSException {
         purgeDestination(queue, session, queue.getQueueName());
     }
 
-
+    /**
+     * Purge destination by receiving all available messages.
+     * @param destination
+     * @param session
+     * @param destinationName
+     * @throws JMSException
+     */
     private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
         if (log.isDebugEnabled()) {
             log.debug("Try to purge queue " + destinationName);
@@ -131,12 +153,19 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
         }
     }
     
-    
+    /**
+     * Resolves destination by given name.
+     * @param session
+     * @param queueName
+     * @return
+     * @throws JMSException
+     */
     private Destination getDestination(Session session, String queueName) throws JMSException {
     	return new DynamicDestinationResolver().resolveDestinationName(session, queueName, false);
 	}
 
 	/**
+	 * Create queue connection.
      * @return
      * @throws JMSException
      */
@@ -148,7 +177,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
     
     /**
-     * 
+     * Create queue session.
      * @param connection
      * @return
      * @throws JMSException
@@ -161,6 +190,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
+     * List of queue names to purge. 
      * @param queueNames the queueNames to set
      */
     public void setQueueNames(List<String> queueNames) {
@@ -168,6 +198,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
+     * Connection factory.
      * @param queueConnectionFactory the queueConnectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
@@ -182,6 +213,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
+     * List of queues.
      * @param queues The queues which are to be purged.
      */
     public void setQueues(List<Queue> queues) {
@@ -189,6 +221,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 	}
 
     /**
+     * Receive timeout for reading message from a destination.
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {

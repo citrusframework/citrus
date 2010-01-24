@@ -24,22 +24,57 @@ import java.util.List;
 import org.springframework.integration.core.Message;
 
 /**
- * Message processor having 0-n message handlers that will take care of incoming messages.
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * Message processor having 0-n message handlers. According to a dispatching message element
+ * processor tries to delegate message processing to a message handler, that will take care 
+ * of incoming message.
+ * 
+ * In case no proper message handler is found a default message handler takes care of message.
+ * 
+ * @author Christoph Deppisch
+ * @since 2007
  *
  */
 public interface MessageProcessor {
+    /**
+     * Process the request message.
+     * @param message
+     * @return
+     */
     Message<?> processMessage(Message<?> message);
 
+    /**
+     * List of message handlers.
+     * @return
+     */
     List<MessageHandler> getMessageHandler();
 
+    /**
+     * Sets the message handler list.
+     * @param messageHandler
+     */
     void setMessageHandler(List<MessageHandler> messageHandler);
 
+    /**
+     * Get the default message handler.
+     * @return
+     */
     MessageHandler getDefaultMessageHandler();
 
+    /**
+     * Sets the default message handler.
+     * @param messageHandler
+     */
     void setDefaultMessageHandler(MessageHandler messageHandler);
 
+    /**
+     * Get dispatching element.
+     * @return
+     */
     String getMatchElement();
 
+    /**
+     * Sets the dispathing message element.
+     * @param xpath
+     */
     void setMatchElement(String xpath);
 }

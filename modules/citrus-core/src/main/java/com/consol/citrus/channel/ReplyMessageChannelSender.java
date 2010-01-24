@@ -30,14 +30,19 @@ import org.springframework.util.Assert;
 import com.consol.citrus.message.*;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * Send reply messages to channel destinations.
+ * 
+ * @author Christoph Deppisch
  */
 public class ReplyMessageChannelSender implements MessageSender {
     
+    /** Holding dynamic reply channel  */
     private ReplyMessageChannelHolder replyMessageChannelHolder;
 
+    /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
 
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
     /**
@@ -45,6 +50,9 @@ public class ReplyMessageChannelSender implements MessageSender {
      */
     private static final Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
     
+    /**
+     * @see MessageSender#send(Message)
+     */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
         
@@ -75,6 +83,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     }
     
     /**
+     * Set the reply message holder.
      * @param replyMessageChannelHolder the replyMessageChannelHolder to set
      */
     public void setReplyMessageChannelHolder(ReplyMessageChannelHolder replyMessageChannelHolder) {
@@ -82,6 +91,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Get the reply message holder.
      * @return the replyMessageChannelHolder
      */
     public ReplyMessageChannelHolder getReplyMessageChannelHolder() {
@@ -89,6 +99,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     }
 
     /**
+     * Set the message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

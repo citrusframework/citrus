@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Test class only used to explain the usage of java reflection in test examples
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch 2006
  */
 public class InvocationDummy {
 

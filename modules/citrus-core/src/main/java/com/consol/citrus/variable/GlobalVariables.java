@@ -22,10 +22,17 @@ package com.consol.citrus.variable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Global variables valid in each test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class GlobalVariables {
-	private Map<String, String> variables = new LinkedHashMap<String, String>();
+	/** Variables name value pair map */
+    private Map<String, String> variables = new LinkedHashMap<String, String>();
 	
 	/**
+	 * Set the global variables.
 	 * @param variables the variables to set
 	 */
 	public void setVariables(Map<String, String> variables) {
@@ -33,6 +40,7 @@ public class GlobalVariables {
 	}
 
 	/**
+	 * Get the global variables.
 	 * @return the variables
 	 */
 	public Map<String, String> getVariables() {

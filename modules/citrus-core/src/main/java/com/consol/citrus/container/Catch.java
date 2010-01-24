@@ -30,11 +30,16 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Action catches possible exceptions in nested test actions.
+ * 
+ * @author Christoph Deppisch
+ */
 public class Catch extends AbstractTestAction {
-    /** List of actions to be executed */
+    /** List of nested actions */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
-    /** Exception type to be caught */
+    /** Exception type caught */
     private String exception = CitrusRuntimeException.class.getName();
 
     /**
@@ -44,7 +49,6 @@ public class Catch extends AbstractTestAction {
 
     /**
      * @see com.consol.citrus.TestAction#execute()
-     * @throws CitrusRuntimeException
      */
     @Override
     public void execute(TestContext context) {
@@ -70,6 +74,7 @@ public class Catch extends AbstractTestAction {
     }
 
     /**
+     * Set the nested actions.
      * @param actions
      */
     public void setActions(List<TestAction> actions) {
@@ -77,6 +82,7 @@ public class Catch extends AbstractTestAction {
     }
 
     /**
+     * Set the exception that is caught.
      * @param exception the exception to set
      */
     public void setException(String exception) {

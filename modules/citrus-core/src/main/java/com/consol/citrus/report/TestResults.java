@@ -24,18 +24,31 @@ import java.util.Collection;
 
 import com.consol.citrus.report.TestResult.RESULT;
 
+/**
+ * Multiple {@link TestResult} instances combined to a {@link TestResults}.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestResults extends ArrayList<TestResult> {
 
     private static final long serialVersionUID = 1L;
 
+    /** Is result cahed right now */
     private boolean cached = false;
     
+    /** Success, failure and skipped counter */
     private int cntSuccess = 0;
     private int cntFailed = 0;
     private int cntSkipped = 0;
     
+    /** Monitor for caching logic */
     private final Object cacheLock = new Object();
     
+    /**
+     * Adds a test result to the result list.
+     * @param result
+     * @return
+     */
     public boolean addResult(TestResult result) {
         synchronized (cacheLock) {
             cached = false;
@@ -62,6 +75,10 @@ public class TestResults extends ArrayList<TestResult> {
         }
     }
 
+    /**
+     * Get number of tests in success.
+     * @return
+     */
     public int getSuccess() {
         synchronized (cacheLock) {
             if(!cached) {
@@ -72,6 +89,10 @@ public class TestResults extends ArrayList<TestResult> {
         }
     }
     
+    /**
+     * Get number of tests failed.
+     * @return
+     */
     public int getFailed() {
         synchronized (cacheLock) {
             if(!cached) {
@@ -82,6 +103,10 @@ public class TestResults extends ArrayList<TestResult> {
         }
     }
     
+    /**
+     * Get number of skipped tests.
+     * @return
+     */
     public int getSkipped() {
         synchronized (cacheLock) {
             if(!cached) {
@@ -92,6 +117,11 @@ public class TestResults extends ArrayList<TestResult> {
         }
     }
     
+    /**
+     * Get number of tests matching a {@link RESULT}.
+     * @param result
+     * @return
+     */
     private int getCountForResult(RESULT result) {
         int count = 0;
         

@@ -34,21 +34,20 @@ import com.consol.citrus.report.TestSuiteListeners;
 /**
  * This class represents a test suite instance.
  * The test suite is started with a given list of initializing tasks,
- * to be executed before test case execution. Similar to that the test suite is
- * followed by a given list of destroying tasks at the end.
+ * to be executed before. Similar to that the test suite is
+ * followed by a list of tasks at the end.
  *
  * Usually these initializing/destroying tasks are
- * injected to the TestSuite via spring configuration.
+ * injected via spring IoC container.
  *
- * After the initializing tasks the test suite loads and runs a given set of test cases,
- * that are specified by their unique name. Therefore the test suite needs a
- * spring application context containing the test beans. The context usually
- * should be handed over in init method.
+ * After initialization the test suite loads and runs a given set of test cases via Spring
+ * application context. The context usually is handed over in init method.
  *
  * Successful and failed test operations are counted in private members and
  * should be reported at the end of the test suite.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  *
  */
 public class TestSuite implements BeanNameAware {
@@ -57,6 +56,7 @@ public class TestSuite implements BeanNameAware {
     private List<TestAction> tasksBetween = new ArrayList<TestAction>();
     private List<TestAction> tasksAfter = new ArrayList<TestAction>();
 
+    /** Test suite name */
     private String name = "";
 
     @Autowired
@@ -71,7 +71,7 @@ public class TestSuite implements BeanNameAware {
     private static final Logger log = LoggerFactory.getLogger(TestSuite.class);
 
     /**
-     * Excecute tasks before the start of test suite
+     * Execute tasks before the start of test suite
      * @param ctx ApplicationContext containing test and service beans
      * @return success flag
      */
@@ -105,7 +105,7 @@ public class TestSuite implements BeanNameAware {
     }
 
     /**
-     * Execute tasks after test suite work, e.g. shutdown of db connection
+     * Execute tasks after test suite
      * @throws CitrusRuntimeException
      * @return boolean flag marking success
      */
@@ -142,6 +142,9 @@ public class TestSuite implements BeanNameAware {
         return success;
     }
 
+    /**
+     * Method running tasks before a test case.
+     */
     public void beforeTest() {
         if (tasksBetween == null || tasksBetween.isEmpty()) {
             return;
@@ -161,8 +164,7 @@ public class TestSuite implements BeanNameAware {
     }
 
     /**
-     * Spring property setter.
-     * Injects the tasks after
+     * Injected tasks after.
      * @param tasksAfter
      */
     public void setTasksAfter(List<TestAction> tasksAfter) {
@@ -170,8 +172,7 @@ public class TestSuite implements BeanNameAware {
     }
 
     /**
-     * Spring property setter.
-     * Injects the tasks before
+     * Injected tasks before
      * @param tasksBefore
      */
     public void setTasksBefore(List<TestAction> tasksBefore) {
@@ -179,23 +180,30 @@ public class TestSuite implements BeanNameAware {
     }
 
     /**
-     * Spring property setter.
-     * Injects the tasks between
+     * Injected tasks before test.
      * @param tasksBetween
      */
     public void setTasksBetween(List<TestAction> tasksBetween) {
         this.tasksBetween = tasksBetween;
     }
 
+    /**
+     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
+     */
     public void setBeanName(String beanName) {
         this.name = beanName;
     }
 
+    /**
+     * Get the test suite name.
+     * @return
+     */
     public String getName() {
         return name;
     }
 
     /**
+     * Set the test suite listeners.
      * @param reporter the reporter to set
      */
     public void setTestSuiteListeners(TestSuiteListeners listeners) {

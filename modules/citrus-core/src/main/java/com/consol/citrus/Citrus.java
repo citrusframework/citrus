@@ -32,10 +32,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestEngineFailedException;
 
 /**
- * Command line application.
+ * Citrus command line application.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH
- * @since 04.11.2008
+ * @author Christoph Deppisch
+ * @since 2008
  */
 public class Citrus {
     /**
@@ -43,8 +43,15 @@ public class Citrus {
      */
     private static final Logger log = LoggerFactory.getLogger(Citrus.class);
 
+    /**
+     * Prevent instanciation.
+     */
     private Citrus() {}
     
+    /**
+     * Main CLI method.
+     * @param args
+     */
     public static void main(String[] args) {
         log.info("CITRUS TESTFRAMEWORK ");
         log.info("");
@@ -127,8 +134,8 @@ public class Citrus {
     }
     
     /**
-     * Method to retrieve the full class name for the test name searched for.
-     * Subfolders are supported.
+     * Method to retrieve the full class name for a test.
+     * Hierarchy of folders is supported, too.
      *
      * @param startDir directory where to start the search
      * @param testName test name to search for

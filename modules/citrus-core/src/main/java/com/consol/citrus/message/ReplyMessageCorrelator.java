@@ -22,10 +22,23 @@ package com.consol.citrus.message;
 import org.springframework.integration.core.Message;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * Message correlator interface for synchronous reply messages. Correlator uses
+ * a specific header entry in messages in order to construct a unique message correlation key.
+ * 
+ * @author Christoph Deppisch
  */
 public interface ReplyMessageCorrelator {
+    /**
+     * Constructs the correlation key from the message header.
+     * @param request
+     * @return
+     */
     public String getCorrelationKey(Message<?> request);
     
+    /**
+     * Get the correlation header name.
+     * @param id
+     * @return
+     */
     public String getCorrelationKey(String id);
 }

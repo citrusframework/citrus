@@ -36,9 +36,10 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
 
 /**
- * Class to automatically generate a list of all available tests.
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 02.03.2007
+ * Class to automatically generate a list of all available tests in HTML.
+ * 
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class HtmlTestDocGenerator {
     private final static String BODY_PLACEHOLDER = "+++++ BODY +++++";

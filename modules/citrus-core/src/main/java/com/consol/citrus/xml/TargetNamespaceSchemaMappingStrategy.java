@@ -23,8 +23,16 @@ import java.util.List;
 
 import org.springframework.xml.xsd.XsdSchema;
 
+/**
+ * Class defining how to map schemas to namespace values.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TargetNamespaceSchemaMappingStrategy implements XsdSchemaMappingStrategy {
 
+    /**
+     * @see com.consol.citrus.xml.XsdSchemaMappingStrategy#getSchema(java.util.List, java.lang.String)
+     */
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace) {
         for (XsdSchema schema : schemas) {
             if(schema.getTargetNamespace().equals(namespace)) {

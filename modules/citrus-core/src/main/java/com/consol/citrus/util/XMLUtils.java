@@ -37,42 +37,35 @@ import com.consol.citrus.xml.LSResolverImpl;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
- * Several utillity methods for XML processing.
+ * Class providing several utility methods for XML processing.
  *
- * @author js Jan Szczepanski, deppisch Christoph Deppisch Consol*GmbH 2006
+ * @author Jan Szczepanski, Christoph Deppisch
+ * @since 2006
  *
  */
 public class XMLUtils {
+    /** DOM implementation */
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;
 
     /**
-     * Searches for a <tt>Node</tt> within a DOM document with the given path name.
-     * Elements have to be seperated by <tt>'.'</tt>
-     * <br>Example: XML looks like this ('<' and '>' replaced by '[' and ']'):
-     * <blockquote><pre>
-     * [Foo]
-     *   [Bar]
-     *     [Poo]text[/Poo]
-     *   [/Bar]
-     * [/Foo]</pre></blockquote>
-     * If you want the <tt>Poo</tt>-Node, the corresponding <tt>sourcePathName</tt>
-     * has to be: <tt>Foo.Bar.Poo</tt><p>
-     * @see #getNodesPathName(Node)
+     * Searches for a node within a DOM document with a given node path expression.
+     * Elements are separated by '.' characters.
+     * Example: Foo.Bar.Poo
      * @param doc DOM Document to search for a node.
-     * @param sourcePathName Name of the node with complete path name seperated by <tt>'.'</tt> eg: <tt>Foo.Bar.Poo</tt>
-     * @return <tt>Node</tt> - if node was found within <tt>doc</tt>, otherwise <tt>null</tt>.
+     * @param pathExpression dot separated path expression
+     * @return Node element found in the DOM document.
      */
-    public static Node findNodeByName(Document doc, String sourcePathName) {
-        final StringTokenizer tok = new StringTokenizer(sourcePathName, ".");
+    public static Node findNodeByName(Document doc, String pathExpression) {
+        final StringTokenizer tok = new StringTokenizer(pathExpression, ".");
         final int numToks = tok.countTokens();
         NodeList elements;
         if (numToks == 1) {
-            elements = doc.getElementsByTagNameNS("*", sourcePathName);
+            elements = doc.getElementsByTagNameNS("*", pathExpression);
             return elements.item(0);
         }
 
-        String element = sourcePathName.substring(sourcePathName.lastIndexOf('.')+1);
+        String element = pathExpression.substring(pathExpression.lastIndexOf('.')+1);
         elements = doc.getElementsByTagNameNS("*", element);
 
         String attributeName = null;
@@ -81,8 +74,8 @@ public class XMLUtils {
             attributeName = element;
 
             //cut off attributeName and set element to next token and continue
-            sourcePathName = sourcePathName.substring(0, sourcePathName.length()-attributeName.length()-1);
-            Node found = findNodeByName(doc, sourcePathName);
+            pathExpression = pathExpression.substring(0, pathExpression.length()-attributeName.length()-1);
+            Node found = findNodeByName(doc, pathExpression);
 
             if (found != null) {
                 return found.getAttributes().getNamedItem(attributeName);
@@ -105,22 +98,28 @@ public class XMLUtils {
                     parent = parent.getParentNode();
                 }
             } while (parent != null && --cnt > 0);
-            if (pathName.toString().equals(sourcePathName)) {return elements.item(j);}
+            if (pathName.toString().equals(pathExpression)) {return elements.item(j);}
         }
 
         return null;
     }
     
+    /**
+     * Find node element by XPath expression.
+     * @param node in DOM document.
+     * @param expressionStr XPath expression string.
+     * @return
+     */
     public static Node findNodeByXPath(Node node, String expressionStr) {
         return findNodeByXPath(node, expressionStr, null);
     }
 
     /**
-     * Finds a node in the dom tree using XPath
-     * @param node the xml node
+     * Finds a node in the DOM tree using XPath expressions.
+     * @param node the XML node
      * @param xpath the XPath expression
      * @throws CitrusRuntimeException
-     * @return the node searched for
+     * @return the node element found in the DOM tree.
      */
     public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) {
         try {
@@ -146,6 +145,11 @@ public class XMLUtils {
         }
     }
     
+    /**
+     * Build a namespace context from a node element.
+     * @param node holding namespace declarations.
+     * @return the namespace context.
+     */
     private static NamespaceContext buildNamespaceContext(Node node) {
         NamespaceContextImpl nsContext = new NamespaceContextImpl();
         
@@ -158,15 +162,21 @@ public class XMLUtils {
         return nsContext;
     }
 
+    /**
+     * Evaluates a XPath expression towards a node element.
+     * @param node element in a DOM tree.
+     * @param expressionStr XPath expression string.
+     * @return value of the found element.
+     */
     public static String evaluateXPathExpression(Node node, String expressionStr) {
         return evaluateXPathExpression(node, expressionStr, null);
     }
 
     /**
-     * Evaluates the XPath expression to return the respective value
-     * @param node
+     * Evaluates the XPath expression to return the respective value.
+     * @param node element in a DOM tree.
      * @throws CitrusRuntimeException
-     * @return
+     * @return the evaluated node value.
      */
     public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext)  {
         try {
@@ -195,19 +205,19 @@ public class XMLUtils {
     }
 
     /**
-     * Method to find out wheather an expression is XPath or custom
-     * @param expression the expression to validate
-     * @return boolean the result
+     * Method to find out whether an expression is of XPath nature or custom dot notation syntax.
+     * @param expression the expression string to check.
+     * @return boolean the result.
      */
     public static boolean isXPathExpression(String expression) {
         return expression.indexOf("/") != (-1) || expression.indexOf("(") != (-1);
     }
 
     /**
-     * Removes <tt>TEXT_NODE</tt>s that are only containing whitspace
-     * from a given node and from all of its child nodes.
+     * Removes text nodes that are only containing whitespace characters
+     * inside a DOM tree.
      *
-     * @param element The <tt>Node</tt> to normalize.
+     * @param element the root node to normalize.
      */
     public static void stripWhitespaceNodes(Node element) {
         Node node, child;
@@ -222,18 +232,12 @@ public class XMLUtils {
     }
 
     /**
-     * Returns the path name for a given <tt>Node</tt>.
-     * <br> Path name looks like: <tt>Foo.Bar.Poo</tt>
-     * for the <tt>Poo</tt>-Node in the example XML:
-     * <blockquote><pre>
-     * [Foo]
-     *   [Bar]
-     *     [Poo]text[/Poo]
-     *   [/Bar]
-     * [/Foo]</pre></blockquote>
-     *
-     * @param node <tt>Node</tt>
-     * @return <tt>String</tt> - The path name representation of the node.
+     * Returns the path expression for a given node.
+     * Path expressions look like: Foo.Bar.Poo where elements are
+     * separated with a dot character.
+     * 
+     * @param node in DOM tree.
+     * @return the path expression representing the node in DOM tree.
      */
     public static String getNodesPathName(Node node) {
         final StringBuffer buffer = new StringBuffer();
@@ -242,10 +246,9 @@ public class XMLUtils {
     }
 
     /**
-     * Builds the node name for {@link #getNodesPathName(Node)}
-     *
-     * @param node
-     * @param buffer
+     * Builds the node path expression for a node in the DOM tree.
+     * @param node in a DOM tree.
+     * @param buffer string buffer.
      */
     private static void buildNodeName(Node node, StringBuffer buffer) {
         if (node.getParentNode() == null) {
@@ -266,7 +269,7 @@ public class XMLUtils {
      * Serializes a DOM document
      * @param doc
      * @throws CitrusRuntimeException
-     * @return serialized xml string
+     * @return serialized XML string
      */
     public static String serialize(Document doc) {
         LSSerializer serializer = null;
@@ -288,10 +291,10 @@ public class XMLUtils {
     }
 
     /**
-     * Serializes a DOM document
+     * Pretty prints a XML string.
      * @param doc
      * @throws CitrusRuntimeException
-     * @return serialized xml string
+     * @return pretty printed XML string
      */
     public static String prettyPrint(String xml) {
         LSParser parser = null;
@@ -344,9 +347,10 @@ public class XMLUtils {
     }
     
     /**
+     * Parse message payload with DOM implementation.
      * @param messagePayload
      * @throws CitrusRuntimeException
-     * @return
+     * @return DOM document.
      */
     public static Document parseMessagePayload(String messagePayload) {
         try {

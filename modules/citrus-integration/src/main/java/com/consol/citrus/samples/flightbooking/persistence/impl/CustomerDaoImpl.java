@@ -29,7 +29,7 @@ import com.consol.citrus.samples.flightbooking.model.Customer;
 import com.consol.citrus.samples.flightbooking.persistence.CustomerDao;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 @Repository
 public class CustomerDaoImpl implements CustomerDao {

@@ -24,8 +24,18 @@ import java.util.List;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
+/**
+ * Returns the largest (closest to positive infinity) double value according to numeric argument
+ * value.
+ * 
+ * @author Christoph Deppisch
+ */
 public class FloorFunction implements Function {
 
+    /**
+     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @throws InvalidFunctionUsageException
+     */
     public String execute(List<String> parameterList) {
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");

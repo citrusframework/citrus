@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * @author deppisch Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  * @since 03.01.2010
  */
 public class CitrusSamplesDemo {

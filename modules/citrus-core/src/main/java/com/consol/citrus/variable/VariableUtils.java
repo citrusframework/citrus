@@ -25,6 +25,11 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchVariableException;
 
+/**
+ * Utility class manipulating test variables.
+ * 
+ * @author Christoph Deppisch
+ */
 public class VariableUtils {
     /**
      * Cut off variables prefix
@@ -57,8 +62,10 @@ public class VariableUtils {
     }
     
    /**
-    *
+    * Replace all variable expression in a string with 
+    * its respective values.
     * @param str
+    * @param context
     * @return
     * @throws ParseException
     */
@@ -67,8 +74,12 @@ public class VariableUtils {
    }
 
    /**
-    *
+    * Replace all variable expression in a string with
+    * its respective value. Variable values are enclosed with quotes
+    * if enabled.
+    * 
     * @param str
+    * @param context
     * @param enableQuoting
     * @return
     * @throws ParseException

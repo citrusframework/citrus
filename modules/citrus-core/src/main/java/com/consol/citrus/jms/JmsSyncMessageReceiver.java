@@ -29,13 +29,28 @@ import org.springframework.integration.jms.JmsHeaders;
 
 import com.consol.citrus.message.ReplyMessageCorrelator;
 
-
+/**
+ * Synchronous message receiver implementation for JMS. Class receives messages on a JMS destiantion
+ * and saves the reply destination. As class implements the {@link JmsReplyDestinationHolder} interface
+ * synchronous reply message sender implementations may ask for the reply destination later in 
+ * the test execution.
+ * 
+ * In case a reply message correlator is set in this class the reply destiantions are stored with a given
+ * correlation key. A synchronous reply message sender must ask with this specific correlation key in 
+ * order to get the proper reply destiantion.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsReplyDestinationHolder {
-    
+    /** Map of reply destinations */
     private Map<String, Destination> replyDestinations = new HashMap<String, Destination>();
     
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /**
+     * @see com.consol.citrus.jms.JmsMessageReceiver#receive(long)
+     */
     @Override
     public Message<?> receive(long timeout) {
         Message<?> receivedMessage = super.receive(timeout);
@@ -45,6 +60,9 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
         return receivedMessage;
     }
     
+    /**
+     * @see com.consol.citrus.jms.JmsMessageReceiver#receiveSelected(java.lang.String, long)
+     */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         Message<?> receivedMessage = super.receiveSelected(selector, timeout);
@@ -55,6 +73,9 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
     }
 
     /**
+     * Store the reply destination either straight forward or with a given
+     * message correlation key.
+     * 
      * @param receivedMessage
      */
     private void saveReplyDestination(Message<?> receivedMessage) {
@@ -65,15 +86,22 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
         }
     }
 
+    /**
+     * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination(java.lang.String)
+     */
     public Destination getReplyDestination(String correlationKey) {
         return replyDestinations.remove(correlationKey);
     }
 
+    /**
+     * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination()
+     */
     public Destination getReplyDestination() {
         return replyDestinations.remove("");
     }
 
     /**
+     * Set the reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

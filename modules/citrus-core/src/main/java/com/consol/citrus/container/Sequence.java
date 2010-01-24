@@ -30,9 +30,10 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 
 /**
- * Sequence to perform a block of other actions in sequence
+ * Sequence container executing a set of nested test actions in simple sequence. 
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class Sequence extends AbstractTestAction {
 
@@ -44,9 +45,8 @@ public class Sequence extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Sequence.class);
 
-    /*
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute()
+    /**
+     * @see com.consol.citrus.TestAction#execute(TestContext)
      */
     @Override
     public void execute(TestContext context) {
@@ -65,6 +65,7 @@ public class Sequence extends AbstractTestAction {
     }
 
     /**
+     * Set the list of actions to execute.
      * @param actions
      */
     public void setActions(List<TestAction> actions) {

@@ -29,7 +29,7 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.SoapAttachmentHeaders;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class SimpleSoapAttachmentValidatorTest {
     

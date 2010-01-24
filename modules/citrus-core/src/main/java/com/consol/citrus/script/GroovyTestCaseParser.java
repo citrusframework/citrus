@@ -34,12 +34,13 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH
- * @since 06.03.2009
+ * Class parsing a groovy script to create a test case instance.
+ * @author Christoph Deppisch
+ * @since 2009
  */
 public class GroovyTestCaseParser implements ApplicationContextAware {
-    
+   
+    /** Application context */
     private ApplicationContext applicationContext;
 
     /** Builds a test case using the application context and test context */
@@ -48,6 +49,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
     }
     
     /**
+     * Parse the groovy script.
      * @param groovyScript
      * @throws CitrusRuntimeException
      * @return
@@ -109,6 +111,9 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
         }
     }
 
+    /**
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
     public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException {
         this.applicationContext = applicationContext;

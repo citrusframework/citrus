@@ -20,25 +20,42 @@
 package com.consol.citrus.exceptions;
 
 /**
- * If validation fails throw this exception
+ * If message validation fails this exception is thrown.
+ * 
+ * @author Christoph Deppisch
  */
 public class ValidationException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public ValidationException() {
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public ValidationException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public ValidationException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public ValidationException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

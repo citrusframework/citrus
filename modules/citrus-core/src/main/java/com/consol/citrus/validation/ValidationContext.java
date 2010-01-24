@@ -23,16 +23,18 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageHeaders;
 
 /**
- * Very basic context holding validation specific objects like expected message payload 
- * and expected message headers.
+ * Validation context used during message validation. Contexts holds validation specific 
+ * information.
  * 
  * Context is not aware of ignored message elements or XML specific XPath validation.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class ValidationContext {
+    /** Control message */
     private Message<?> expectedMessage;
     
+    /** Control message headers */
     private MessageHeaders expectedMessageHeaders;
     
     /**
@@ -43,6 +45,7 @@ public class ValidationContext {
     }
 
     /**
+     * Get the control message.
      * @return the expectedMessage
      */
     public Message<?> getExpectedMessage() {
@@ -50,6 +53,7 @@ public class ValidationContext {
     }
 
     /**
+     * Get control message headers.
      * @return the expectedMessageHeaders
      */
     public MessageHeaders getExpectedMessageHeaders() {
@@ -63,10 +67,10 @@ public class ValidationContext {
     }
 
     /**
+     * Set control message headers.
      * @param expectedMessageHeaders the expectedMessageHeaders to set
      */
     public void setExpectedMessageHeaders(MessageHeaders expectedMessageHeaders) {
         this.expectedMessageHeaders = expectedMessageHeaders;
     }
-
 }

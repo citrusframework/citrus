@@ -31,9 +31,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Action used for time measurement during test
+ * Action used for time measurement during test. User can define a time line that is followed
+ * during the test case. Action can print out the watched time to the console/logger.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class StopTimeAction extends AbstractTestAction {
 
@@ -43,11 +45,8 @@ public class StopTimeAction extends AbstractTestAction {
     /** Default time stamp id */
     public static String DEFAULT_TIMELINE_ID = "CITRUS_TIMELINE";
 
-    /** Id of the time measurement */
+    /** Current time line id */
     private String id = DEFAULT_TIMELINE_ID;
-
-    /** Description of time line */
-    private String description;
 
     /**
      * Logger
@@ -82,7 +81,7 @@ public class StopTimeAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for id
+     * Setter for timeline id.
      * @param period
      */
     public void setId(String period) {
@@ -90,15 +89,7 @@ public class StopTimeAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for description
-     * @param description
-     */
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
+     * Get the current time stamps.
      * @return the timeStamps
      */
     public static Map<String, Long> getTimeStamps() {

@@ -32,16 +32,31 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
+/**
+ * Looping test container iterating the nested test actions in case an error occurred in one
+ * of them. Iteration continues until a aborting condition evaluates to true.
+ * 
+ * Number of iterations is kept in a index variable. The nested test actions can access this variable
+ * as normal test variable.
+ * 
+ * Between the iterations container can sleep automatically a given amount of time.
+ * 
+ * @author Christoph Deppisch
+ */
 public class RepeatOnErrorUntilTrue extends AbstractTestAction {
     /** List of actions to be executed */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** Iteration aborting condition */
     private String condition;
 
+    /** Variable name holding the actual iteration index */
     private String indexName;
 
+    /** Auto sleep in seconds */
     private int autoSleep = 1;
 
+    /** Current iteration index */
     private int index = 1;
 
     /**
@@ -81,6 +96,10 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
         } while (!checkCondition());
     }
 
+    /**
+     * Executes the nested test actions.
+     * @param context
+     */
     private void executeActions(TestContext context) {
         context.setVariable(indexName, Integer.valueOf(index).toString());
 
@@ -107,6 +126,10 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
         }
     }
 
+    /**
+     * Check aborting condition.
+     * @return
+     */
     private boolean checkCondition() {
         String conditionString = condition;
 
@@ -117,18 +140,34 @@ public class RepeatOnErrorUntilTrue extends AbstractTestAction {
         return BooleanExpressionParser.evaluate(conditionString);
     }
 
+    /**
+     * List of nested test actions.
+     * @param actions
+     */
     public void setActions(List<TestAction> actions) {
         this.actions = actions;
     }
 
+    /**
+     * Sets the aborting condition.
+     * @param condition
+     */
     public void setCondition(String condition) {
         this.condition = condition;
     }
 
+    /**
+     * Sets the name of index variable.
+     * @param indexName
+     */
     public void setIndexName(String indexName) {
         this.indexName = indexName;
     }
 
+    /**
+     * Setter for auto sleep time (in seconds).
+     * @param autoSleep
+     */
     public void setAutoSleep(int autoSleep) {
         this.autoSleep = autoSleep;
     }

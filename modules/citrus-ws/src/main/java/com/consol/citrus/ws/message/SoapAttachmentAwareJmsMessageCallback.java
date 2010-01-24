@@ -36,7 +36,7 @@ import com.consol.citrus.ws.SoapAttachmentHeaders;
  * Message callback able to decorate the generated jms message before sending.
  * The callback will try to set soap attachment specific jms header values if available.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback {
 

@@ -32,6 +32,11 @@ import org.springframework.util.Assert;
 
 import com.consol.citrus.message.MessageSender;
 
+/**
+ * {@link MessageSender} implementation publishes message to a JMS destination.
+ *  
+ * @author Christoph Deppisch
+ */
 public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
 
     /**
@@ -39,6 +44,9 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
      */
     private static final Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
     
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
         
@@ -53,6 +61,7 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
     }
     
     /**
+     * Retrieve the destination name (either a queue name or a topic name).
      * @return the destinationName
      */
     protected String getDestinationName() {
@@ -74,6 +83,9 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
         }
     }
     
+    /**
+     * @see org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter#configureMessageConverter(org.springframework.jms.core.JmsTemplate, org.springframework.integration.jms.JmsHeaderMapper)
+     */
     @Override
     protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
         MessageConverter converter = jmsTemplate.getMessageConverter();

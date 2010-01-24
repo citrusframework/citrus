@@ -29,7 +29,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * Publish message to a {@link MessageChannel}.
+ * 
+ * @author Christoph Christoph
  */
 public class MessageChannelSender implements MessageSender {
 
@@ -38,10 +40,16 @@ public class MessageChannelSender implements MessageSender {
      */
     private static final Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
     
+    /** Destination channel */
     private MessageChannel channel;
     
+    /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
     
+    /**
+     * @see MessageSender#send(Message)
+     * @throws CitrusRuntimeException
+     */
     public void send(Message<?> message) {
         log.info("Sending message to: " + channel.getName());
 
@@ -56,6 +64,7 @@ public class MessageChannelSender implements MessageSender {
     }
 
     /**
+     * Set the message channel.
      * @param channel the channel to set
      */
     public void setChannel(MessageChannel channel) {
@@ -63,6 +72,7 @@ public class MessageChannelSender implements MessageSender {
     }
 
     /**
+     * Sets the message channel template.
      * @param messageChannelTemplate the messageChannelTemplate to set
      */
     public void setMessageChannelTemplate(

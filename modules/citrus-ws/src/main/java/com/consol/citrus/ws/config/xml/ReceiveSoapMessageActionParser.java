@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 

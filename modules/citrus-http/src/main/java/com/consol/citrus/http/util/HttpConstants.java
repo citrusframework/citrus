@@ -21,7 +21,7 @@ package com.consol.citrus.http.util;
 
 /**
  * Constant values used for Http communication
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch 2007
  */
 public class HttpConstants {
     public static final String HTTP_VERSION = "HTTP/1.1";

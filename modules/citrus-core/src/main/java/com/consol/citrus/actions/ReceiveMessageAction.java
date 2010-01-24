@@ -42,10 +42,14 @@ import com.consol.citrus.validation.XmlValidationContext;
 import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
- * This bean receives messages from a service destination. The received message is validated
- * through a validator in its body and header.
+ * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
+ * to receive the message, this means that action is independent from any message transport.
+ * 
+ * The received message is validated using a {@link MessageValidator} supporting expected 
+ * control message payload and header templates.
  *
- * @author deppisch Christoph Deppisch Consol*GmbH 2008
+ * @author Christoph Deppisch
+ * @since 2008
  */
 public class ReceiveMessageAction extends AbstractTestAction {
     /** Map extracting message elements to variables */
@@ -54,33 +58,35 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** Map extracting header values to variables */
     private Map<String, String> extractHeaderValues = new HashMap<String, String>();
 
-    /** Select messages to receive */
+    /** Build message selector with name value pairs */
     private Map<String, String> messageSelector = new HashMap<String, String>();
 
-    /** Select messages to receive by string configuration */
+    /** Select messages via message selector string */
     private String messageSelectorString;
 
-    /** The service to be used for receiving the message */
+    /** Message receiver */
     private MessageReceiver messageReceiver;
     
+    /** Receive timeout */
     private long receiveTimeout = 0L;
 
-    /** Message ressource as a file */
+    /** Control message payload defined in external file resource */
     private Resource messageResource;
 
-    /** Inline message resource definition as string */
+    /** Inline control message payload */
     private String messageData;
     
-    /** Map holding message elements to be overwritten before sending */
+    /** Overwrites message elements before sending (via XPath expressions) */
     private Map<String, String> messageElements = new HashMap<String, String>();
 
-    /** Validator doing all message validation tasks */
+    /** MessageValidator responsible for message validation */
     private MessageValidator validator;
     
-    /** validation context holding information like expected message payload, ignored elements and so on */
+    /** Validation context holding information like expected message payload, 
+     * ignored elements and so on */
     private XmlValidationContext validationContext = new XmlValidationContext();
     
-    /** XML namespace declaration used for xpath expression evaluation*/
+    /** XML namespace declaration used for XPath expression evaluation*/
     private Map<String, String> namespaces = new HashMap<String, String>();
 
     /**
@@ -89,23 +95,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private static final Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
-     * Following actions will be executed:
-     * 1. The message is received
-     * 2. Validation of the received header values
-     * 3. XML schema validation
-     * 4. Expected XML resource is parsed and prepared for comparison
-     * 5. The received message is validated against the source message
-     * 6. Explicit validation of message values
-     * 7. Extract message elements and header values to variables
+     * Method receives a message via {@link MessageReceiver} instance
+     * constructs a validation context and starts the message validation
+     * via {@link MessageValidator}.
      * 
      * @throws CitrusRuntimeException
-     * @return boolean success flag
      */
     @Override
     public void execute(TestContext context) {
         Message<?> receivedMessage;
         
         try {
+            //receive message either selected or plain with message receiver
             if (StringUtils.hasText(messageSelectorString)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Setting JMS message selector to value " + messageSelectorString);
@@ -132,6 +133,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 throw new CitrusRuntimeException("Received message is null!");
             }
 
+            //save variables from header values
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
 
             if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
@@ -143,6 +145,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             }
 
+            //construct control message payload
             String expectedMessagePayload = "";
             if (messageResource != null) {
                 expectedMessagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
@@ -162,11 +165,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 validationContext.setNamespaceContext(new NamespaceContextImpl(namespaces));
             }
             
+            //validate message
             validateMessage(receivedMessage, context);
 
-            /** 6. The received message element values for each key within
-             * getMessageValues are read into the corresponding variables.
-             */
+            //save variables from message payload
             context.createVariablesFromMessageValues(extractMessageElements, receivedMessage);
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
@@ -184,15 +186,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Spring property setter.
-     * @param setMessageValues
+     * Setter for validating elements.
+     * @param messageElements
      */
     public void setValidateMessageElements(Map<String, String> messageElements) {
         validationContext.setExpectedMessageElements(messageElements);
     }
 
     /**
-     * Spring property setter.
+     * Setter for ignored message elements.
      * @param ignoreMessageElements
      */
     public void setIgnoreMessageElements(Set<String> ignoredMessageElements) {
@@ -200,6 +202,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Setter for expected namespaces.
      * @param expectedNamespaces the expectedNamespaces to set
      */
     public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
@@ -207,6 +210,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Extract variables from header.
      * @param getHeaderValues the getHeaderValues to set
      */
     public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
@@ -214,6 +218,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Extract variables from message payload.
      * @param extractMessageElements the extractMessageElements to set
      */
     public void setExtractMessageElements(Map<String, String> extractMessageElements) {
@@ -221,6 +226,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set expected control header values.
      * @param headerValues the headerValues to set
      */
     public void setHeaderValues(Map<String, Object> headerValues) {
@@ -229,6 +235,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set message payload data.
      * @param messageData the messageData to set
      */
     public void setMessageData(String messageData) {
@@ -236,6 +243,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Message payload as external file resource.
      * @param messageResource the messageResource to set
      */
     public void setMessageResource(Resource messageResource) {
@@ -243,7 +251,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Check if header values for extraction are present
+     * Check if header values for extraction are present.
      * @return boolean flag to mark existence
      */
     public boolean hasExtractHeaderValues() {
@@ -251,7 +259,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for messageSelector
+     * Setter for messageSelector.
      * @param messageSelector
      */
     public void setMessageSelector(Map<String, String> messageSelector) {
@@ -259,6 +267,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set message selector string.
      * @param messageSelectorString
      */
     public void setMessageSelectorString(String messageSelectorString) {
@@ -266,6 +275,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set validator instance.
      * @param validator the validator to set
      */
     public void setValidator(MessageValidator validator) {
@@ -273,6 +283,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * List of expected namespaces.
      * @param namespaces the namespaces to set
      */
     public void setNamespaces(Map<String, String> namespaces) {
@@ -280,6 +291,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Get expected namespaces.
      * @return the namespaces
      */
     public Map<String, String> getNamespaces() {
@@ -287,6 +299,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set message receiver instance.
      * @param messageReceiver the messageReceiver to set
      */
     public void setMessageReceiver(MessageReceiver messageReceiver) {
@@ -294,6 +307,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Get the message receiver.
      * @return the messageReceiver
      */
     public MessageReceiver getMessageReceiver() {
@@ -301,6 +315,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Enable schema validation.
      * @param enableSchemaValidation the schemaValidation to set
      */
     public void setSchemaValidation(boolean enableSchemaValidation) {
@@ -308,6 +323,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set the receive timeout.
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {
@@ -315,6 +331,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set message elements to overwrite before validation.
      * @param messageElements the messageElements to set
      */
     public void setMessageElements(Map<String, String> messageElements) {

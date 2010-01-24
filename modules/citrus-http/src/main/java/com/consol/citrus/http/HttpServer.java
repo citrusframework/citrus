@@ -45,7 +45,7 @@ import com.consol.citrus.server.ServerShutdownThread;
  * received messages are published to a configurable JMS queue, so the messages
  * can be consumed by any validating resource.
  *
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch 2007
  */
 public class HttpServer extends AbstractServer {
     /**

@@ -23,9 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * Helper class parsing a parameter string and converting the tokens to a parameter list.
+ * 
+ * @author Christoph Deppisch
+ */
 public class FunctionParameterHelper {
+    
+    /**
+     * Prevent class instantiation.
+     */
     private FunctionParameterHelper() {}
     
+    /**
+     * Convert a parameter string to a list of parameters.
+     * 
+     * @param parameterString comma separated parameter string.
+     * @return list of parameters.
+     */
     public static List<String> getParameterList(String parameterString) {
         List<String> parameterList = new ArrayList<String>();
 

@@ -29,7 +29,7 @@ import com.consol.citrus.samples.flightbooking.model.Flight;
 import com.consol.citrus.samples.flightbooking.persistence.FlightDao;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 @Repository
 public class FlightDaoImpl implements FlightDao {

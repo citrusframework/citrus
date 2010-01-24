@@ -25,8 +25,15 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
+/**
+ * Simple implementation of a XML message handler. Handler receives and constructs simple
+ * response messages with XML payload data.
+ * 
+ * @author Christoph Deppisch
+ */
 public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
 
+    /** Message payload data */
     private String xmlData;
     
     /**
@@ -34,8 +41,12 @@ public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
      */
     private static final Logger log = LoggerFactory.getLogger(SimpleXMLMessageHandler.class);
 
+    /** Name of the handler */
     private String handlerName;
 
+    /**
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     */
     public Message<?> handleMessage(Message<?> message) {
         log.info("MessageHandler " + handlerName  + " handling message " + message.getPayload());
 
@@ -50,10 +61,17 @@ public class SimpleXMLMessageHandler implements BeanNameAware, MessageHandler {
         return response;
     }
 
+    /**
+     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
+     */
     public void setBeanName(String name) {
         this.handlerName = name;
     }
 
+    /**
+     * Set the XML payload data.
+     * @param xmlData
+     */
     public void setXmlData(String xmlData) {
         this.xmlData = xmlData;
     }

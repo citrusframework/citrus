@@ -25,7 +25,7 @@ import org.testng.annotations.*;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * @author deppisch Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  * @since 03.01.2010
  */
 public class FlightBookingTest extends AbstractTestNGCitrusTest {

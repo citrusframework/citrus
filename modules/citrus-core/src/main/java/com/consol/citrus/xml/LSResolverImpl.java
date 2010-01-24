@@ -26,13 +26,26 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
+/**
+ * Very basic LSResolver implementation for resolving dtd resources by their systemId.
+ * 
+ * @author Christoph Deppisch
+ */
 public class LSResolverImpl implements LSResourceResolver {
+    /** DOM implementation */
     private DOMImplementationLS domImpl;
     
+    /**
+     * Constructor
+     * @param domImpl
+     */
     public LSResolverImpl(DOMImplementationLS domImpl) {
         this.domImpl = domImpl;
     }
     
+    /**
+     * @see org.w3c.dom.ls.LSResourceResolver#resolveResource(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
     public LSInput resolveResource(String type, String namespaceURI,
             String publicId, String systemId, String baseURI) {
         LSInput input = domImpl.createLSInput();
@@ -44,5 +57,4 @@ public class LSResolverImpl implements LSResourceResolver {
         
         return input;
     }
-
 }

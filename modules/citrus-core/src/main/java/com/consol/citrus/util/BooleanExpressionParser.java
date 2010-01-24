@@ -26,8 +26,16 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Parses boolean expression strings and evaluates to boolean result.
+ * 
+ * @author Christoph Deppisch
+ */
 public class BooleanExpressionParser {
+    /** List of operators */
     private static Stack<String> operators = new Stack<String>();
+    
+    /** List of values */
     private static Stack<String> values = new Stack<String>();
 
     /**
@@ -36,6 +44,7 @@ public class BooleanExpressionParser {
     private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
     /**
+     * Perform evaluation of boolean expression string.
      * @param expression
      * @throws CitrusRuntimeException
      * @return

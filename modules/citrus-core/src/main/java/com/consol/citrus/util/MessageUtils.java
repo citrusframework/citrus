@@ -21,7 +21,17 @@ package com.consol.citrus.util;
 
 import org.springframework.integration.core.MessageHeaders;
 
+/**
+ * Message utility class.
+ * 
+ * @author Christoph Deppisch
+ */
 public class MessageUtils {
+    /**
+     * Check if given header is Spring integration internal header.
+     * @param key
+     * @return
+     */
     public static boolean isSpringIntegrationHeaderEntry(String key) {
         return key.startsWith(MessageHeaders.PREFIX);
     }

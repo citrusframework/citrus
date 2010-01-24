@@ -21,8 +21,23 @@ package com.consol.citrus.channel;
 
 import org.springframework.integration.core.MessageChannel;
 
+/**
+ * Interface defines methods for reply message holders to return message
+ * channels for synchronous communication.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface ReplyMessageChannelHolder {
+    /**
+     * Get reply message channel with given correlation key.
+     * @param correlationKey
+     * @return
+     */
     MessageChannel getReplyMessageChannel(String correlationKey);
     
+    /**
+     * Get reply message channel.
+     * @return
+     */
     MessageChannel getReplyMessageChannel();
 }

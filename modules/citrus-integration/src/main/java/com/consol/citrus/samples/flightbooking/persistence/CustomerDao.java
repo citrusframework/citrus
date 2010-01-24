@@ -24,7 +24,7 @@ import java.util.List;
 import com.consol.citrus.samples.flightbooking.model.Customer;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public interface CustomerDao {
 

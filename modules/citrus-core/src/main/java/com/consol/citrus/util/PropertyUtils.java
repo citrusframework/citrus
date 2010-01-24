@@ -27,16 +27,24 @@ import org.springframework.core.io.Resource;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Util class supporting properties replacement in template files. For usage see doc generators and
- * test case creator.
+ * Utility class supporting property replacement in template files. 
+ * For usage see doc generators and test case creator.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 22.04.2009
+ * @author Christoph Deppisch
+ * @since 2009
  */
 public class PropertyUtils {
 
+    /** Constant marking a property in template files */
     private static final char propertyMarker = '@';
     
+    /**
+     * Replaces properties in string.
+     * 
+     * @param line
+     * @param propertyResource
+     * @return
+     */
     public static String replacePropertiesInString(String line, Resource propertyResource) {
         Properties properties = new Properties();
         try {
@@ -48,6 +56,13 @@ public class PropertyUtils {
         return replacePropertiesInString(line, properties);
     }
     
+    /**
+     * Replaces properties in string.
+     * 
+     * @param line
+     * @param properties
+     * @return
+     */
     public static String replacePropertiesInString(String line, Properties properties) {
         StringBuffer newStr = new StringBuffer();
 

@@ -27,7 +27,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 /**
  * Registers BeanDefinitionParser for action in test case.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2007
+ * @author Christoph Deppisch 2007
  */
 public class TestActionRegistry {
     private static Map<String, BeanDefinitionParser> parser = new HashMap<String, BeanDefinitionParser>();

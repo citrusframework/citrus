@@ -20,28 +20,44 @@
 package com.consol.citrus.exceptions;
 
 /**
- * Throw this exception in case a unknown variable is read from test context.
+ * Throw this exception in case an unknown variable is read from test context.
  * 
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
- * @since 10.08.2009
+ * @author Christoph Deppisch
+ * @since 2009
  *
  */
 public class NoSuchVariableException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor.
+     */
     public NoSuchVariableException() {
         super();
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     */
     public NoSuchVariableException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor using fields.
+     * @param cause
+     */
     public NoSuchVariableException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Constructor using fields.
+     * @param message
+     * @param cause
+     */
     public NoSuchVariableException(String message, Throwable cause) {
         super(message, cause);
     }

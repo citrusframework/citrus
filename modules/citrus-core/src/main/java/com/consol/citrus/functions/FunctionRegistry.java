@@ -26,6 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 
+/**
+ * Function registry holding all available function libraries.
+ * 
+ * @author Christoph Deppisch
+ */
 public class FunctionRegistry {
     /** list of libraries providing custom functions */
     @Autowired

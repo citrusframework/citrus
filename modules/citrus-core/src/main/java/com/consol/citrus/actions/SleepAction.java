@@ -28,11 +28,13 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * Lets the whole test execution sleep for an amount of time
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * Stop the test execution for a given amount of time.
+ * 
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class SleepAction extends AbstractTestAction {
-    /** Amount of time in seconds */
+    /** Delay time in seconds */
     private String delay;
 
     /**

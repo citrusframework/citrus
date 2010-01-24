@@ -20,12 +20,19 @@
 package com.consol.citrus.message;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * Citrus specific message headers.
+ * 
+ * @author Christoph Deppisch
  */
 public class CitrusMessageHeaders {
+    /**
+     * Prevent instantiation.
+     */
     private CitrusMessageHeaders() {}
     
+    /** Common header name prefix */
     public static final String PREFIX = "citrus_";
     
+    /** Synchronous message correlation */
     public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";
 }

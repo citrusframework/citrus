@@ -27,6 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 
+/**
+ * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestContextFactoryBean implements FactoryBean {
     
     @Autowired
@@ -40,6 +45,9 @@ public class TestContextFactoryBean implements FactoryBean {
      */
     private static final Logger log = LoggerFactory.getLogger(TestContextFactoryBean.class);
     
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObject()
+     */
     public Object getObject() throws Exception {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
@@ -54,11 +62,17 @@ public class TestContextFactoryBean implements FactoryBean {
         return context;
     }
 
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+     */
 	@SuppressWarnings("unchecked")
     public Class getObjectType() {
         return TestContext.class;
     }
 
+	/**
+	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+	 */
     public boolean isSingleton() {
         return false;
     }

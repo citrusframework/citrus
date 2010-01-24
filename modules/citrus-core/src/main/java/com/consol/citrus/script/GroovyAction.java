@@ -33,9 +33,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Action executing groovy scripts either specified inline or from external file resource.
+ * Action executes groovy scripts either specified inline or from external file resource.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class GroovyAction extends AbstractTestAction {
 
@@ -99,6 +100,7 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
+     * Set the groovy script code.
      * @param script the script to set
      */
     public void setScript(String script) {
@@ -106,6 +108,7 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
+     * Get the groovy script.
      * @return the script
      */
     public String getScript() {
@@ -113,6 +116,7 @@ public class GroovyAction extends AbstractTestAction {
     }
     
     /**
+     * Get the file resource.
      * @return the fileResource
      */
     public Resource getFileResource() {
@@ -120,6 +124,7 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
+     * Set file resource.
      * @param fileResource the fileResource to set
      */
     public void setFileResource(Resource fileResource) {

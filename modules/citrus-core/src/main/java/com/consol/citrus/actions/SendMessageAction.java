@@ -35,42 +35,36 @@ import com.consol.citrus.util.FileUtils;
 
 
 /**
- * This bean sends messages to a specified service destination.
+ * This action sends a messages to a specified service destination endpoint. Action uses
+ * a {@link MessageSender} so action is independent from message transport.
  *
- * @author deppisch Christoph Deppisch Consol*GmbH 2008
+ * @author Christoph Deppisch 
+ * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction {
-    /** Map holding elements that will overwrite message body elements before message gets sent.
-     * Keys in the map specify the element paths inside the message body. Value set will contain
-     * static values or variables
-     * */
+    /** Overwrite message payload elements before sending */
     private Map<String, String> messageElements = new HashMap<String, String>();
 
-    /** Map containing header values to be set in message header before sending.
-     * Key set describes the header names. Value set will hold static values or variables
-     */
+    /** Message header entries */
     private Map<String, Object> headerValues = new HashMap<String, Object>();
 
-    /** The service with which the message is being sent or received */
+    /** The message sender */
     protected MessageSender messageSender;
 
-    /** The message resource as a file resource */
+    /** The message payload as a file resource */
     private Resource messageResource;
 
-    /** The message resource as a inline definition within the spring application context */
+    /** The message payload as inline data */
     private String messageData;
     
-    /** Save dynamic messages headers to variables */
+    /** Extract message headers to variables */
     protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
 
     /**
-     * Following actions will be executed:
-     * 1. The message resource is parsed and message elements get overwritten
-     * 2. The message header properties are set
-     * 3. The message is sent via respective service.
+     * Message is constructed with payload and header entries and sent via
+     * {@link MessageSender} instance.
      * 
      * @throws CitrusRuntimeException
-     * @return boolean success flag
      */
     @Override
     public void execute(TestContext context) {
@@ -80,7 +74,12 @@ public class SendMessageAction extends AbstractTestAction {
         
         messageSender.send(message);
     }
-    
+
+    /**
+     * Create message to be sent.
+     * @param context
+     * @return
+     */
     protected Message<?> createMessage(TestContext context) {
         try {
             String messagePayload = null;
@@ -109,6 +108,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set the message payload as inline data.
      * @param messageData the messageData to set
      */
     public void setMessageData(String messageData) {
@@ -116,6 +116,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set the message payload from external file resource.
      * @param messageResource the messageResource to set
      */
     public void setMessageResource(Resource messageResource) {
@@ -123,6 +124,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set header entries.
      * @param headerValues the headerValues to set
      */
     public void setHeaderValues(Map<String, Object> headerValues) {
@@ -130,6 +132,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set message elements to overwrite before sending.
      * @param messageElements the messageElements to set
      */
     public void setMessageElements(Map<String, String> setMessageElements) {
@@ -137,6 +140,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Get the header values.
      * @return the headerValues
      */
     public Map<String, Object> getHeaderValues() {
@@ -165,6 +169,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
     
     /**
+     * Set the message sender instance.
      * @param messageSender the messageSender to set
      */
     public void setMessageSender(MessageSender messageSender) {
@@ -172,6 +177,7 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Set values to extract as variables.
      * @param extractHeaderValues the extractHeaderValues to set
      */
     public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {

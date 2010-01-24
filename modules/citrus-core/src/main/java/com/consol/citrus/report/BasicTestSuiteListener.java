@@ -21,17 +21,41 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestSuite;
 
+/**
+ * {@link TestSuiteListener} implementation all methods so subclasses may only 
+ * overwrite some methods.
+ *  
+ * @author Christoph Deppisch
+ */
 public class BasicTestSuiteListener implements TestSuiteListener {
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     */
     public void onFinish(TestSuite testsuite) {}
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onFinishFailure(TestSuite testsuite, Throwable cause) {}
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     */
     public void onFinishSuccess(TestSuite testsuite) {}
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     */
     public void onStart(TestSuite testsuite) {}
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onStartFailure(TestSuite testsuite, Throwable cause) {}
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     */
     public void onStartSuccess(TestSuite testsuite) {}
 }

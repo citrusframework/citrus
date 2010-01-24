@@ -31,13 +31,15 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
- * Action creating variables during test workflow.
+ * Action creating new test variables during a test. Existing test variables are overwritten
+ * by new values.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2006
+ * @author Christoph Deppisch
+ * @since 2006
  */
 public class CreateVariablesAction extends AbstractTestAction {
 
-    /** Variables to set */
+    /** New variables to set */
     private Map<String, String> newVariables = new LinkedHashMap<String, String>();
 
     /**

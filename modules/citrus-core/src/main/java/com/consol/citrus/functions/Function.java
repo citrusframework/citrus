@@ -21,11 +21,18 @@ package com.consol.citrus.functions;
 
 import java.util.List;
 
+/**
+ * General function interface.
+ * 
+ * @author Christoph Deppisch
+ */
 public interface Function {
 
     /**
-     * @param parameterList
-     * @return
+     * Method called on execution.
+     * 
+     * @param parameterList list of function arguments.
+     * @return function result as string.
      */
     public String execute(List<String> parameterList);
 }

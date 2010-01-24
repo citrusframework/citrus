@@ -34,8 +34,15 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Action reads property files and creates test variables for every property entry. File
+ * resource path can define a {@link ClassPathResource} or a {@link FileSystemResource}.
+ * 
+ * @author Christoph Deppisch
+ */
 public class LoadPropertiesAction extends AbstractTestAction {
 
+    /** File resource path */
     private String file = null;
 
     /**
@@ -80,6 +87,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
     }
 
     /**
+     * File path setter.
      * @param file the file to set
      */
     public void setFile(String file) {

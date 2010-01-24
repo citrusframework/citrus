@@ -40,7 +40,8 @@ import com.consol.citrus.exceptions.ValidationException;
  * In case SOAP fault is caught, tester can validate SOAP fault code and fault string to
  * match expected behavior.
  * 
- * @author deppisch Christoph Deppisch Consol* Software GmbH 2009
+ * @author Christoph Deppisch 
+ * @since 2009
  */
 public class AssertSoapFault extends AbstractTestAction {
     /** TestAction to be executed */

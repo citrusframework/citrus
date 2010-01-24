@@ -24,12 +24,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.channel.PollableChannel;
 import org.springframework.integration.core.Message;
+import org.springframework.integration.core.MessageChannel;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.AbstractMessageReceiver;
+import com.consol.citrus.message.MessageReceiver;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * Receive messages from {@link MessageChannel} instance.
+ * @author Christoph Christoph
  */
 public class MessageChannelReceiver extends AbstractMessageReceiver {
 
@@ -38,10 +41,16 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
      */
     private static final Logger log = LoggerFactory.getLogger(MessageChannelReceiver.class);
     
+    /** Pollable channel */
     private PollableChannel channel;
     
+    /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
     
+    /**
+     * @see MessageReceiver#receive(long)
+     * @throws ActionTimeoutException
+     */
     @Override
     public Message<?> receive(long timeout) {
         log.info("Receiving message from: " + channel.getName());
@@ -57,6 +66,9 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
         return received;
     }
 
+    /**
+     * @see MessageReceiver#receiveSelected(String, long)
+     */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         throw new UnsupportedOperationException("MessageChannelTemplate " +
@@ -64,6 +76,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
     }
 
     /**
+     * Set the target channel to receive message from.
      * @param channel the channel to set
      */
     public void setChannel(PollableChannel channel) {
@@ -71,6 +84,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
     }
 
     /**
+     * Set the message channel template.
      * @param messageChannelTemplate the messageChannelTemplate to set
      */
     public void setMessageChannelTemplate(

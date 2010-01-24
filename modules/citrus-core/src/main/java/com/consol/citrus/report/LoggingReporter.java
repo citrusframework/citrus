@@ -29,9 +29,14 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
-
+/**
+ * Simple logging reporter printing test start and ending to the console/logger.
+ * 
+ * @author Christoph Deppisch
+ */
 public class LoggingReporter implements TestSuiteListener, TestListener, TestReporter {
     
+    /** Collect test results for overall result overview at the very end of test execution */
     private TestResults testResults = new TestResults();
     
     /** Common decimal format for percentage calculation in report **/
@@ -48,6 +53,9 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         decFormat.setDecimalFormatSymbols(symbol);
     }
 
+    /**
+     * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
+     */
     public void generateTestResults(TestSuite[] suites) {
         if (log.isInfoEnabled()) {
             log.info("________________________________________________________________________");
@@ -74,6 +82,9 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.info("________________________________________________________________________");
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
+     */
     public void onTestFailure(TestCase test, Throwable cause) {
         if (cause != null) {
             testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
@@ -84,6 +95,9 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.error("Execution of test: " + test.getName() + " failed! Nested exception is: ", cause);
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
+     */
     public void onTestSkipped(TestCase test) {
         if (log.isDebugEnabled()) {
             log.debug(seperator());
@@ -95,26 +109,41 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestStart(com.consol.citrus.TestCase)
+     */
     public void onTestStart(TestCase test) {
         log.info(seperator());
         log.info("STARTING TEST: " + test.getName());
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestFinish(com.consol.citrus.TestCase)
+     */
     public void onTestFinish(TestCase test) {
         log.info("");
         log.info("TEST FINISHED: " + test.getName());
         log.info(seperator());
     }
 
+    /**
+     * @see com.consol.citrus.report.TestListener#onTestSuccess(com.consol.citrus.TestCase)
+     */
     public void onTestSuccess(TestCase test) {
         testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     */
     public void onFinish(TestSuite testsuite) {
         log.info("FINISH TESTSUITE " + testsuite.getName());
         log.info(seperator());
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     */
     public void onStart(TestSuite testsuite) {
         log.info("________________________________________________________________________");
         log.info("RUNNING TESTSUITE " + testsuite.getName());
@@ -125,24 +154,36 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.info("");
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onFinishFailure(TestSuite testsuite, Throwable cause) {
         log.info(seperator());
         log.info("FINISH failed");
         log.info("");
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     */
     public void onFinishSuccess(TestSuite testsuite) {
         log.info(seperator());
         log.info("FINISH successfully");
         log.info("");
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     */
     public void onStartFailure(TestSuite testsuite, Throwable cause) {
         log.info(seperator());
         log.info("INIT failed");
         log.info("");
     }
 
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     */
     public void onStartSuccess(TestSuite testsuite) {
         log.info(seperator());
         log.info("INIT successfully");
@@ -150,7 +191,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     }
 
     /**
-     * Helper method to build consistent seperators
+     * Helper method to build consistent separators
      * @return
      */
     private String seperator() {

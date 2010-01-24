@@ -29,7 +29,7 @@ import com.consol.citrus.ws.SoapAttachment;
  * Simple implementation of SOAP attachment validator. Validating only String attachment contents by simple
  * equals assertion.
  *  
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 

@@ -26,7 +26,10 @@ import javax.xml.namespace.NamespaceContext;
 import org.springframework.core.io.Resource;
 
 /**
- * @author deppisch Christoph Deppisch ConSol* Software GmbH
+ * XML validation context holding validation specific information needed for XML 
+ * message validation.
+ * 
+ * @author Christoph Deppisch
  */
 public class XmlValidationContext extends ValidationContext {
     /** Map holding xpath expressions as key and expected values as values */
@@ -48,6 +51,8 @@ public class XmlValidationContext extends ValidationContext {
     private boolean schemaValidation = true;
     
     /**
+     * Get the control message elements that have to be present in
+     * the received message. Message element values are compared as well.
      * @return the expectedMessageElements
      */
     public Map<String, String> getExpectedMessageElements() {
@@ -55,6 +60,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Set the control message elements explicitly validated during message validation.
      * @param expectedMessageElements the expectedMessageElements to set
      */
     public void setExpectedMessageElements(Map<String, String> expectedMessageElements) {
@@ -62,6 +68,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Get ignored message elements.
      * @return the ignoreMessageElements
      */
     public Set<String> getIgnoreMessageElements() {
@@ -69,6 +76,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Set ignored message elements.
      * @param ignoreMessageElements the ignoreMessageElements to set
      */
     public void setIgnoreMessageElements(Set<String> ignoreMessageElements) {
@@ -76,6 +84,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Get the namespace context.
      * @return the namespaceContext
      */
     public NamespaceContext getNamespaceContext() {
@@ -83,6 +92,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Set the namespace context.
      * @param namespaceContext the namespaceContext to set
      */
     public void setNamespaceContext(NamespaceContext namespaceContext) {
@@ -90,6 +100,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Get the dtd resource.
      * @return the dtdResource
      */
     public Resource getDTDResource() {
@@ -97,6 +108,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Set dtd resource.
      * @param dtdResource the dtdResource to set
      */
     public void setDTDResource(Resource dtdResource) {
@@ -104,6 +116,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Get control namespace elements.
      * @return the expectedNamespaces
      */
     public Map<String, String> getExpectedNamespaces() {
@@ -111,6 +124,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Set the control namespace elements.
      * @param expectedNamespaces the expectedNamespaces to set
      */
     public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
@@ -118,6 +132,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Is schema validation enabled.
      * @return the schemaValidation
      */
     public boolean isSchemaValidation() {
@@ -125,6 +140,7 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
+     * Enable/disable schema validation.
      * @param schemaValidation the schemaValidation to set
      */
     public void setSchemaValidation(boolean schemaValidation) {
