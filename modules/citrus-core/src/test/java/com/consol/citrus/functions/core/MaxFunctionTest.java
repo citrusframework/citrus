@@ -30,6 +30,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.MaxFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class MaxFunctionTest extends AbstractBaseTest {
     MaxFunction function = new MaxFunction();
     

@@ -30,6 +30,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.MinFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class MinFunctionTest extends AbstractBaseTest {
     MinFunction function = new MinFunction();
     

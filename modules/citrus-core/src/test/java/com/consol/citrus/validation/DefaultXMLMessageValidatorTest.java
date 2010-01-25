@@ -37,6 +37,9 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {

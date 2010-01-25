@@ -32,6 +32,9 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class DTDValidationTest extends AbstractBaseTest {
     @Autowired
     MessageValidator validator;

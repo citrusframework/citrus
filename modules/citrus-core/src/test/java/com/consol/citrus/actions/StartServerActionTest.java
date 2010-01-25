@@ -29,6 +29,9 @@ import org.testng.annotations.Test;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class StartServerActionTest extends AbstractBaseTest {
     
     @Test

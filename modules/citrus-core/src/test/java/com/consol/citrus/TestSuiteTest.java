@@ -33,6 +33,9 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class TestSuiteTest extends AbstractBaseTest {
     @Autowired
     TestSuiteListeners testSuiteListeners;

@@ -34,7 +34,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class TemplateTest extends AbstractBaseTest {
     

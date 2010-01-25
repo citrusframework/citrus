@@ -25,7 +25,6 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
- * 
  * @author Christoph Deppisch
  */
 public class EasyMockFactoryBean implements FactoryBean {

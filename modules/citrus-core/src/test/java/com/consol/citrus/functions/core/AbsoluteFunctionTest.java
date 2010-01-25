@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.AbsoluteFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class AbsoluteFunctionTest extends AbstractBaseTest {
     AbsoluteFunction function = new AbsoluteFunction();
     

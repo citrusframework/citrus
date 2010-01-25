@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.LowerCaseFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class LowerCaseFunctionTest extends AbstractBaseTest {
     LowerCaseFunction function = new LowerCaseFunction();
     

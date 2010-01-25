@@ -29,6 +29,9 @@ import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FunctionUtilsTest extends AbstractBaseTest {
     @Test
     public void testResolveFunction() {

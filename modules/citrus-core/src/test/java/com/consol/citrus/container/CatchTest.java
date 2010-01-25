@@ -31,9 +31,8 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
-
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class CatchTest extends AbstractBaseTest {
 

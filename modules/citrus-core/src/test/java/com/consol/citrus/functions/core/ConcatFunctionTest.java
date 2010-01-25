@@ -30,6 +30,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.ConcatFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class ConcatFunctionTest extends AbstractBaseTest {
     ConcatFunction function = new ConcatFunction();
     

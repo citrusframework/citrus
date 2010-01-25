@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.CeilingFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class CeilingFunctionTest extends AbstractBaseTest {
     CeilingFunction function = new CeilingFunction();
     

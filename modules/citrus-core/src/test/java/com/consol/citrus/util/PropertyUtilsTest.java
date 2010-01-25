@@ -28,6 +28,9 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class PropertyUtilsTest extends AbstractBaseTest {
     @Test
     public void testPropertyReplacementSingleProperty() {

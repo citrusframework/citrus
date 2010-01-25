@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.RoundFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class RoundFunctionTest extends AbstractBaseTest {
     RoundFunction function = new RoundFunction();
     

@@ -34,6 +34,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	
     private ExecuteSQLQueryAction executeSQLQueryAction;

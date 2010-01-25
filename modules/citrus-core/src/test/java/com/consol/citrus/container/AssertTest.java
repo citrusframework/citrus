@@ -27,7 +27,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class AssertTest extends AbstractBaseTest {
 

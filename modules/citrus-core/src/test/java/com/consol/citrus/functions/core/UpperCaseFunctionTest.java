@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.UpperCaseFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class UpperCaseFunctionTest extends AbstractBaseTest {
     UpperCaseFunction function = new UpperCaseFunction();
     

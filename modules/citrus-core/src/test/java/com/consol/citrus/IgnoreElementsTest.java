@@ -35,6 +35,9 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class IgnoreElementsTest extends AbstractBaseTest {
     @Autowired
     MessageValidator validator;

@@ -30,6 +30,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.SubstringAfterFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class SubstringAfterFunctionTest extends AbstractBaseTest {
     SubstringAfterFunction function = new SubstringAfterFunction();
     

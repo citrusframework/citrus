@@ -29,6 +29,9 @@ import com.consol.citrus.testng.AbstractBaseTest;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class JavaActionTest extends AbstractBaseTest {
 
 	@Test

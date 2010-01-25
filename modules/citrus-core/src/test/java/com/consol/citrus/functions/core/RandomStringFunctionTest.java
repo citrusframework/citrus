@@ -30,6 +30,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.RandomStringFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class RandomStringFunctionTest extends AbstractBaseTest {
     RandomStringFunction function = new RandomStringFunction();
     

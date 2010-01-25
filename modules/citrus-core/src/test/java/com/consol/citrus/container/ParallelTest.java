@@ -32,9 +32,8 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
-
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class ParallelTest extends AbstractBaseTest {
 

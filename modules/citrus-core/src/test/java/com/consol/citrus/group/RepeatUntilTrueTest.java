@@ -32,7 +32,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
- * @author Christoph Christoph Deppisch Consol* Software GmbH
+ * @author Christoph Deppisch
  */
 public class RepeatUntilTrueTest extends AbstractBaseTest {
     @Test

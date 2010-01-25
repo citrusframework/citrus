@@ -29,6 +29,9 @@ import com.consol.citrus.functions.FunctionParameterHelper;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class CurrentDateFunctionTest extends AbstractBaseTest {
     CurrentDateFunction function = new CurrentDateFunction();
     

@@ -29,6 +29,9 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     @Autowired
     StoreMessageInterceptorAspect storageAspect;

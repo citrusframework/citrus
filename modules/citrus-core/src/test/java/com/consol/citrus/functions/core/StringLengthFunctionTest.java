@@ -28,6 +28,9 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.StringLengthFunction;
 import com.consol.citrus.testng.AbstractBaseTest;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class StringLengthFunctionTest extends AbstractBaseTest {
     StringLengthFunction function = new StringLengthFunction();
     
