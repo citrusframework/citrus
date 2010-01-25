@@ -29,7 +29,8 @@ import com.consol.citrus.doc.ExcelTestDocGenerator;
 
 /**
  * Goal which creates a test documentation in excel.
- *
+ * 
+ * @author Christoph Deppisch
  * @goal create-excel-doc
  */
 public class CreateExcelDocMojo extends AbstractMojo {
@@ -61,6 +62,9 @@ public class CreateExcelDocMojo extends AbstractMojo {
      *  @required */
     private Prompter prompter;
     
+    /**
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
     public void execute() throws MojoExecutionException {
     	try {
 			if(interactiveMode) {

@@ -30,6 +30,7 @@ import com.consol.citrus.doc.HtmlTestDocGenerator;
 /**
  * Goal which creates a test documentation in html.
  *
+ * @author Christoph Deppisch 
  * @goal create-html-doc
  */
 public class CreateHtmlDocMojo extends AbstractMojo {
@@ -61,6 +62,9 @@ public class CreateHtmlDocMojo extends AbstractMojo {
      *  @required */
     private Prompter prompter;
     
+    /**
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
     public void execute() throws MojoExecutionException {
     	try {
 			if(interactiveMode) {

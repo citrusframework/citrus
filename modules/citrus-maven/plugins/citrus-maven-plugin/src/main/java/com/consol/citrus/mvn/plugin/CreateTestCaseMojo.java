@@ -32,6 +32,7 @@ import com.consol.citrus.util.TestCaseCreator;
 /**
  * Goal which creates a new test case using test case creator.
  *
+ * @author Christoph Deppisch
  * @goal create-test
  */
 public class CreateTestCaseMojo extends AbstractMojo {
@@ -64,6 +65,9 @@ public class CreateTestCaseMojo extends AbstractMojo {
      *  @required */
     private Prompter prompter;
     
+    /**
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
     public void execute() throws MojoExecutionException {
         try {
         	while(interactiveMode && !StringUtils.hasText(name)) {
