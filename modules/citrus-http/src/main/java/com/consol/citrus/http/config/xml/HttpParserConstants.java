@@ -19,6 +19,11 @@
 
 package com.consol.citrus.http.config.xml;
 
+/**
+ * Http parser constants.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpParserConstants {
     static final String DEAMON_ATTRIBUTE = "deamon";
     

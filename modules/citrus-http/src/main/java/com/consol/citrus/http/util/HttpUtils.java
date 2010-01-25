@@ -26,10 +26,15 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.util.MessageUtils;
 
+/**
+ * Utility methods for Http communication.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpUtils {
 
     /**
-     *
+     * Generates a new Http request from message.
      * @param request
      * @return
      */
@@ -77,6 +82,11 @@ public class HttpUtils {
         return sBuf.toString();
     }
 
+    /**
+     * Generates a new Http response from message.
+     * @param response
+     * @return
+     */
     public static String generateResponse(Message<?> response) {
         String httpVersion = HttpConstants.HTTP_VERSION;
         String httpStatusCode = HttpConstants.HTTP_CODE_200;

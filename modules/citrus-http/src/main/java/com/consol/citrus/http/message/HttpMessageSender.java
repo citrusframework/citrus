@@ -39,6 +39,14 @@ import com.consol.citrus.http.util.HttpUtils;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.MessageUtils;
 
+/**
+ * Message sender implementation sending messages over Http.
+ * 
+ * Note: Message sender is only using POST request method to publish
+ * messages to the service endpoint.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpMessageSender implements MessageSender {
     /** Http url as service destination */
     private String requestUrl;
@@ -49,8 +57,10 @@ public class HttpMessageSender implements MessageSender {
     /** Http socket */
     private Socket socket;
     
+    /** The reply message handler */
     private ReplyMessageHandler replyMessageHandler;
     
+    /** The reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
     /**
@@ -151,6 +161,10 @@ public class HttpMessageSender implements MessageSender {
         }
     }
 
+    /**
+     * Get the port of the destination endpoint.
+     * @return
+     */
     private String getPort() {
         Assert.isTrue(StringUtils.hasText(requestUrl),
                         "You must specify a requestUrl (e.g. http://localhost:8080/test");
@@ -170,6 +184,10 @@ public class HttpMessageSender implements MessageSender {
         }
     }
 
+    /**
+     * Get the host of the destination endpoint.
+     * @return
+     */
     private String getHost() {
         Assert.isTrue(StringUtils.hasText(requestUrl),
                         "You must specify a requestUrl (e.g. http://localhost:8080/test");
@@ -184,6 +202,10 @@ public class HttpMessageSender implements MessageSender {
         return host;
     }
 
+    /**
+     * Get the request URI.
+     * @return
+     */
     private String getUri() {
         Assert.isTrue(StringUtils.hasText(requestUrl),
                         "You must specify a requestUrl (e.g. http://localhost:8080/test");
@@ -199,6 +221,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Get the complete request URL.
      * @return the urlPath
      */
     public String getRequestUrl() {
@@ -206,6 +229,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Set the complete request URL.
      * @param url the url to set
      */
     public void setRequestUrl(String url) {
@@ -213,6 +237,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Get the socket.
      * @return the socket
      */
     public Socket getSocket() {
@@ -220,6 +245,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Set the socket.
      * @param socket the socket to set
      */
     public void setSocket(Socket socket) {
@@ -227,6 +253,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Set the request method.
      * @param requestMethod the requestMethod to set
      */
     public void setRequestMethod(String requestMethod) {
@@ -234,6 +261,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Set the reply message handler.
      * @param replyMessageHandler the replyMessageHandler to set
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
@@ -241,6 +269,7 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
+     * Set the reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

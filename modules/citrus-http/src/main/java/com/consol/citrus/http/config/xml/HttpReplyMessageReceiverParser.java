@@ -25,6 +25,11 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+/**
+ * Parser for Http reply message receiver implementation in Citrus http namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
 
     @Override

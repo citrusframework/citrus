@@ -41,11 +41,15 @@ import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.server.ServerShutdownThread;
 
 /**
- * Simple http server accepting client connections on a server uri and port. The
+ * Simple Http server accepting client connections on a server URI and port. The
  * received messages are published to a configurable JMS queue, so the messages
  * can be consumed by any validating resource.
+ * 
+ * Server waits for reply message to arrive on a JMS reply destination. Response is sent
+ * back as Http response to the calling client.
  *
- * @author Christoph Deppisch 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class HttpServer extends AbstractServer {
     /**
@@ -53,10 +57,10 @@ public class HttpServer extends AbstractServer {
      */
     private static final Logger log = LoggerFactory.getLogger(HttpServer.class);
 
-    /** command to shutdown the server */
+    /** Command to shutdown the server */
     private static final String SHUTDOWN_COMMAND = "quit";
 
-    /** server socket accepting client conections */
+    /** Server socket accepting client conections */
     private ServerSocket serverSocket;
 
     /** Host */
@@ -68,12 +72,15 @@ public class HttpServer extends AbstractServer {
     /** URI to listen on */
     private String uri;
 
-    /** MessageHandler handling incoming requests and providing proper responses */
+    /** Message handler for incoming requests, providing proper responses */
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
     
     /** Should server start in deamon mode */
     private boolean deamon = false;
     
+    /**
+     * @see java.lang.Runnable#run()
+     */
     public void run() {
         log.info("[HttpServer] Listening for client connections on "
                 + serverSocket.getInetAddress().getHostName() + ":" + port + uri);
@@ -295,15 +302,24 @@ public class HttpServer extends AbstractServer {
         }
     }
 
+    /**
+     * Set server in deamon mode.
+     * @param deamon
+     */
     public void setDeamon(boolean deamon) {
         this.deamon = deamon;
     }
 
+    /**
+     * Is server in deamon mode.
+     * @return
+     */
     public boolean isDeamon() {
         return deamon;
     }
 
     /**
+     * Stop the server instance.
      * @throws CitrusRuntimeException
      */
     public void quit() {
@@ -344,19 +360,32 @@ public class HttpServer extends AbstractServer {
         }
     }
     
+    /**
+     * Set the Http port.
+     * @param port
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * Set the Http URI.
+     * @param uri
+     */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    /**
+     * Set the message handler.
+     * @param messageHandler
+     */
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
 
     /**
+     * Set the host.
      * @param host the host to set
      */
     public void setHost(String host) {

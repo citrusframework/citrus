@@ -20,24 +20,32 @@
 package com.consol.citrus.http.util;
 
 /**
- * Constant values used for Http communication
+ * Constant values used for Http communication.
+ * 
  * @author Christoph Deppisch 2007
  */
 public class HttpConstants {
+    /** Http version */
     public static final String HTTP_VERSION = "HTTP/1.1";
 
+    /** Basic line break characters */
     public static final String LINE_BREAK = "\r\n";
 
+    /** Http status */
     public static final String HTTP_STATUS_OK = "OK";
 
+    /** Http status codes */
     public static final String HTTP_CODE_200 = "200";
     public static final String HTTP_CODE_500 = "500";
     public static final String HTTP_CODE_404 = "404";
 
+    /** Http request methods */
     public static final String HTTP_POST = "POST";
     public static final String HTTP_GET = "GET";
 
+    /** Local host */
     public static final String LOCAL_HOST = "localhost";
 
+    /** Default Http port */
     public static final int LOCAL_PORT = 8080;
 }

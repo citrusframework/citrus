@@ -26,6 +26,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Parser for Http server implementation in Citrus http namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpServerParser extends AbstractBeanDefinitionParser {
 
     @Override

@@ -35,6 +35,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
+/**
+ * Message receiver handling Http reply responses.
+ * 
+ * @author Christoph Deppisch
+ */
 public class HttpReplyMessageReceiver extends AbstractReplyMessageReceiver {
     
     /**
@@ -51,11 +56,19 @@ public class HttpReplyMessageReceiver extends AbstractReplyMessageReceiver {
         return buildMessage(super.receive());
     }
     
+    /**
+     * @see com.consol.citrus.message.AbstractReplyMessageReceiver#receiveSelected(java.lang.String)
+     */
     @Override
     public Message<?> receiveSelected(String selector) {
         return buildMessage(super.receiveSelected(selector));
     }
 
+    /**
+     * Build the response message.
+     * @param receivedMessage
+     * @return
+     */
     private Message<?> buildMessage(Message<?> receivedMessage) {
         Message<?> httpResponse;
         try {
