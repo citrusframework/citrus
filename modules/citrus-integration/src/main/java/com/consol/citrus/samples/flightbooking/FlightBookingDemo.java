@@ -21,6 +21,9 @@ package com.consol.citrus.samples.flightbooking;
 
 import com.consol.citrus.samples.CitrusSamplesDemo;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightBookingDemo extends CitrusSamplesDemo {
     
     @Override

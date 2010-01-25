@@ -30,6 +30,9 @@ import com.consol.citrus.samples.flightbooking.model.*;
 import com.consol.citrus.samples.flightbooking.persistence.CustomerDao;
 import com.consol.citrus.samples.flightbooking.persistence.FlightDao;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class BookingSplitter {
     private CustomerDao customerDao;
     

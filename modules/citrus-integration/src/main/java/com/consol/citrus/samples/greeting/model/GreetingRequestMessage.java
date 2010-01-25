@@ -19,6 +19,9 @@
 
 package com.consol.citrus.samples.greeting.model;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class GreetingRequestMessage {
     private String operation;
     private String correlationId;

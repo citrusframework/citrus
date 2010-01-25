@@ -21,6 +21,9 @@ package com.consol.citrus.samples.flightbooking;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightBookingDemo {
     
     public static void main(String[] args) {

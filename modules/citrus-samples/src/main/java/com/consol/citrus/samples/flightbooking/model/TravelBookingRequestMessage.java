@@ -22,6 +22,9 @@ package com.consol.citrus.samples.flightbooking.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class TravelBookingRequestMessage {
     private String correlationId;
     

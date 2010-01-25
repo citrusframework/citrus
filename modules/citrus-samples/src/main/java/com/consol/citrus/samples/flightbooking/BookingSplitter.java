@@ -28,6 +28,9 @@ import org.springframework.integration.splitter.AbstractMessageSplitter;
 
 import com.consol.citrus.samples.flightbooking.model.*;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class BookingSplitter extends AbstractMessageSplitter {
     
     @Override

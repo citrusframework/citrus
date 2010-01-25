@@ -26,6 +26,9 @@ import com.consol.citrus.samples.common.AbstractMarshallingMessageService;
 import com.consol.citrus.samples.greeting.model.GreetingRequestMessage;
 import com.consol.citrus.samples.greeting.model.GreetingResponseMessage;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class GreetingService extends AbstractMarshallingMessageService<GreetingRequestMessage, GreetingResponseMessage> {
 
     @Override

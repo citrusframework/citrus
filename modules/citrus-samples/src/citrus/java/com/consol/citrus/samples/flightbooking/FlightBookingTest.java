@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * TODO: Description
  *
  * @author Christoph Deppisch
- * @since 2009-08-12
+ * @since 2009
  */
 public class FlightBookingTest extends AbstractTestNGCitrusTest {
     @Test

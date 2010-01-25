@@ -29,6 +29,9 @@ import org.springframework.integration.core.MessageChannel;
 
 import com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightRouter {
     
     private ChannelResolver channelResolver;

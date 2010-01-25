@@ -19,7 +19,9 @@
 
 package com.consol.citrus.samples.flightbooking.model;
 
-
+/**
+ * @author Christoph Deppisch
+ */
 public class Flight {
     private String flightId;
     

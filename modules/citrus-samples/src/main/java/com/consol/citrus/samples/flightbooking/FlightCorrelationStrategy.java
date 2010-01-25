@@ -21,6 +21,9 @@ package com.consol.citrus.samples.flightbooking;
 
 import com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightCorrelationStrategy {
     
     public Object getCorrelationKey(FlightBookingConfirmationMessage message) {

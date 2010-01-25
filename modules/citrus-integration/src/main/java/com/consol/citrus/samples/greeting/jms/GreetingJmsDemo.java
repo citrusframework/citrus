@@ -21,6 +21,9 @@ package com.consol.citrus.samples.greeting.jms;
 
 import com.consol.citrus.samples.CitrusSamplesDemo;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class GreetingJmsDemo extends CitrusSamplesDemo {
     
     @Override

@@ -25,6 +25,9 @@ import org.springframework.integration.channel.interceptor.ChannelInterceptorAda
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class LoggingInterceptor extends ChannelInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
     

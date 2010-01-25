@@ -25,7 +25,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author Christoph Deppisch
- * @since 03.01.2010
+ * @since 2010
  */
 public class CitrusSamplesDemo {
 

@@ -23,6 +23,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+/**
+ * @author Christoph Deppisch
+ */
 @Entity
 @Table(name = "FBS_CUSTOMER")
 public class Customer implements Serializable {

@@ -21,6 +21,9 @@ package com.consol.citrus.samples.flightbooking.model;
 
 import javax.persistence.*;
 
+/**
+ * @author Christoph Deppisch
+ */
 @Entity
 @Table(name = "FBS_FLIGHT")
 public class Flight {

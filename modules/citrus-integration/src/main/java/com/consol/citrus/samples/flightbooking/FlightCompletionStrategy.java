@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.samples.flightbooking.model.FlightBookingConfirmationMessage;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightCompletionStrategy {
     
     private static final Logger log = LoggerFactory.getLogger(FlightCompletionStrategy.class);

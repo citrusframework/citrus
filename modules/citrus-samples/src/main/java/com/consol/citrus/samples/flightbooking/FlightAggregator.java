@@ -27,6 +27,9 @@ import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.samples.flightbooking.model.*;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class FlightAggregator {
 
     public Message<TravelBookingResponseMessage> processFlights(List<FlightBookingConfirmationMessage> messages) {

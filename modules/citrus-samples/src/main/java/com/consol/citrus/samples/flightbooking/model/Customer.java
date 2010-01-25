@@ -19,6 +19,9 @@
 
 package com.consol.citrus.samples.flightbooking.model;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class Customer {
     private String id;
     
