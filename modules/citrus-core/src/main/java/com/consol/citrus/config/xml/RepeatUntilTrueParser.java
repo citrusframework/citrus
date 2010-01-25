@@ -31,8 +31,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.group.RepeatUntilTrue;
 
+/**
+ * Bean definition parser for repeat-until-true container in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class RepeatUntilTrueParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @SuppressWarnings("unchecked")
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);

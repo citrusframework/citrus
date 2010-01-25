@@ -19,6 +19,12 @@
 
 package com.consol.citrus.config.xml;
 
+/**
+ * Parser constants used in Citrus configuration and test action 
+ * bean definition parsers.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsParserConstants {
     
     static final String REPLY_DESTINATION_ATTRIBUTE = "reply-destination";

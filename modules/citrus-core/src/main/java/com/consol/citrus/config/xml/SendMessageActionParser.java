@@ -32,8 +32,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for send action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class SendMessageActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String messageSenderReference = element.getAttribute("with");
         
@@ -104,6 +112,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
     }
 
     /**
+     * Parse component returning generic bean definition.
      * @param element
      * @param parserContext
      * @return

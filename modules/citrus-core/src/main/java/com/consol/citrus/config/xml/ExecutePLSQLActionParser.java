@@ -30,8 +30,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
 
+/**
+ * Bean definition parser for plsql action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String dataSource = element.getAttribute("datasource");
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);

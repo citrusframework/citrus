@@ -25,11 +25,13 @@ import java.util.Map;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
 /**
- * Registers BeanDefinitionParser for action in test case.
+ * Registers bean definition parser for actions in test case.
  * 
- * @author Christoph Deppisch 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class TestActionRegistry {
+    /** Parser registry as map */
     private static Map<String, BeanDefinitionParser> parser = new HashMap<String, BeanDefinitionParser>();
 
     /**

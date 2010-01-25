@@ -23,7 +23,17 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for description elements of test actions.
+ * 
+ * @author Christoph Deppisch
+ */
 public class DescriptionElementParser {
+    /**
+     * Static parse method taking care of test action description.
+     * @param element
+     * @param builder
+     */
     public static void doParse(Element element, BeanDefinitionBuilder builder) {
         Element descriptionElement = DomUtils.getChildElementByTagName(element, "description");
         if (descriptionElement != null) {

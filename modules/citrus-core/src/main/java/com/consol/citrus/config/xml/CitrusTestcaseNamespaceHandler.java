@@ -22,15 +22,15 @@ package com.consol.citrus.config.xml;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * NamespaceHandler registers all BeanDefinitionParser
- * for the top-level elements in custom Spring 2.0 schema.
+ * Namespace handler registers bean definition parser
+ * for Citrus testcase schema elements.
  *
- * @author Christoph Deppisch 2007
+ * @author Christoph Deppisch
+ * @since 2007
  */
 public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {

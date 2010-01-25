@@ -25,6 +25,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Parser is aware of JMS template if present in element.
+ * 
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractJmsTemplateAwareParser extends AbstractJmsConfigParser {
 
     @Override
@@ -47,5 +52,12 @@ public abstract class AbstractJmsTemplateAwareParser extends AbstractJmsConfigPa
         return builder;
     }
     
+    /**
+     * Subclasses must implement this method in order to provide detailed
+     * bean definition parsing.
+     * @param element
+     * @param parserContext
+     * @return
+     */
     protected abstract BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext);
 }

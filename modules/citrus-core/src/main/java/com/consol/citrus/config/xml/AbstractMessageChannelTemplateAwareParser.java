@@ -27,6 +27,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Abstract bean definition parser is aware of message channel attribute.
+ * 
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractMessageChannelTemplateAwareParser extends AbstractBeanDefinitionParser {
 
     @Override
@@ -46,5 +51,12 @@ public abstract class AbstractMessageChannelTemplateAwareParser extends Abstract
         return builder.getBeanDefinition();
     }
     
+    /**
+     * Subclasses must implement this method in order to provide
+     * detailed bean definition parsing.
+     * @param element
+     * @param parserContext
+     * @return
+     */
     protected abstract BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext);
 }

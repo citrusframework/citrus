@@ -26,8 +26,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for generic test action element.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String beanName = element.getAttribute("reference");
 

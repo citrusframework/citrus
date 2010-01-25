@@ -26,12 +26,23 @@ import org.springframework.beans.factory.FactoryBean;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 
-
+/**
+ * Test case factory bean constructs test cases with action chain and finally block.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestCaseFactory implements FactoryBean {
+    /** Result test case object */
     private TestCase testCase;
+
+    /** Test action chain */
     private List<TestAction> testChain;
+    /** Test actions in finally block */
     private List<TestAction> finallyChain;
 
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObject()
+     */
     public Object getObject() throws Exception {
         if (this.testChain != null && this.testChain.size() > 0) {
             for (int i = 0; i < testChain.size(); i++) {
@@ -50,23 +61,41 @@ public class TestCaseFactory implements FactoryBean {
         return this.testCase;
     }
 
+    /**
+     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+     */
 	@SuppressWarnings("unchecked")
     public Class getObjectType() {
         return TestCase.class;
     }
 
+	/**
+	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+	 */
     public boolean isSingleton() {
         return true;
     }
 
+    /**
+     * Setter for finally chain.
+     * @param finallyChain
+     */
     public void setFinallyChain(List<TestAction> finallyChain) {
         this.finallyChain = finallyChain;
     }
 
+    /**
+     * Set the test case object.
+     * @param testCase
+     */
     public void setTestCase(TestCase testCase) {
         this.testCase = testCase;
     }
 
+    /**
+     * Set the test action chain.
+     * @param testChain
+     */
     public void setTestChain(List<TestAction> testChain) {
         this.testChain = testChain;
     }

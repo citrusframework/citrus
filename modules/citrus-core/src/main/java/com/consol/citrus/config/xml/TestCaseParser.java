@@ -39,9 +39,14 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 
-
+/**
+ * Bean definition parser for test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TestCaseParser implements BeanDefinitionParser {
 
+    /** Name of the test */
     private String testCaseName = "";
 
     /**

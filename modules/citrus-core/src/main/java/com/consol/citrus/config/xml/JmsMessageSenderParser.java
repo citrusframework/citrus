@@ -23,8 +23,16 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for jms-message-sender configuration.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsMessageSenderParser extends AbstractJmsTemplateAwareParser {
 
+    /**
+     * @see com.consol.citrus.config.xml.AbstractJmsTemplateAwareParser#doParseComponent(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @Override
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder

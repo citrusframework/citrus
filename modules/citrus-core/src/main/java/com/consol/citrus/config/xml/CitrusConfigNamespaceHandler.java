@@ -21,8 +21,16 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
+/**
+ * Namespace handler for components in Citrus configuration.
+ * 
+ * @author Christoph Deppisch
+ */
 public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
+    /**
+     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
+     */
     public void init() {
         registerBeanDefinitionParser("jms-message-sender", new JmsMessageSenderParser());
         registerBeanDefinitionParser("jms-message-receiver", new JmsMessageReceiverParser());

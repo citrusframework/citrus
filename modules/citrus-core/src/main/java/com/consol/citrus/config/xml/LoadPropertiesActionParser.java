@@ -28,8 +28,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.LoadPropertiesAction;
 
+/**
+ * Bean definition parser for load-properties action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class LoadPropertiesActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(LoadPropertiesAction.class);
 

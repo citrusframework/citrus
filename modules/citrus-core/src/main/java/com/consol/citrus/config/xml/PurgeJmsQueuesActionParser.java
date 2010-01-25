@@ -33,8 +33,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.PurgeJmsQueuesAction;
 
+/**
+ * Bean definition parser for purge-jms-queues action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @SuppressWarnings("unchecked")
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);

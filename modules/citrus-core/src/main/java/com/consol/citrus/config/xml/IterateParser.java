@@ -32,8 +32,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.group.Iterate;
 
+/**
+ * Bean definition parser for assert action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class IterateParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @SuppressWarnings("unchecked")
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Iterate.class);

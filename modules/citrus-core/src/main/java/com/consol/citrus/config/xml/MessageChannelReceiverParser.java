@@ -24,8 +24,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for message-channel-receiver configuration.
+ * 
+ * @author Christoph Deppisch
+ */
 public class MessageChannelReceiverParser extends AbstractMessageChannelTemplateAwareParser {
 
+    /**
+     * @see com.consol.citrus.config.xml.AbstractMessageChannelTemplateAwareParser#doParseComponent(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @Override
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder

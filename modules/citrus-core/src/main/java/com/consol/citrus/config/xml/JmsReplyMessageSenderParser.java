@@ -27,8 +27,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Bean definition parser for jms-reply-message-sender configuration.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.AbstractBeanDefinitionParser#parseInternal(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder

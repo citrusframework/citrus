@@ -33,8 +33,16 @@ import org.w3c.dom.Element;
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 
+/**
+ * Bean definition parser for sql action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class SQLActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String dataSource = element.getAttribute("datasource");
         

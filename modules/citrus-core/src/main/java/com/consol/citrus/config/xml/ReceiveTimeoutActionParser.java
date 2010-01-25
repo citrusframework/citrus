@@ -30,8 +30,16 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 
+/**
+ * Bean definition parser for receive-timeout action in test case.
+ * 
+ * @author Christoph Deppisch
+ */
 public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
 
+    /**
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
     	String messageReceiver = element.getAttribute("message-receiver");
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);

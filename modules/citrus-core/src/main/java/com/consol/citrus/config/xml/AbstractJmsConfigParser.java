@@ -27,7 +27,12 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-
+/**
+ * Abstract base class for JMS related configuration. Sender and receiver bean definitions use
+ * this base parser to configure attributes like connection factory or JMS template.
+ *  
+ * @author Christoph Deppisch
+ */
 public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionParser {
 
     @Override
@@ -71,5 +76,12 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
         return builder.getBeanDefinition();
     }
     
+    /**
+     * Subclasses must implement this parsing method in order to
+     * provide detailed bean definition building.
+     * @param element
+     * @param parserContext
+     * @return
+     */
     protected abstract BeanDefinitionBuilder doParse(Element element, ParserContext parserContext);
 }
