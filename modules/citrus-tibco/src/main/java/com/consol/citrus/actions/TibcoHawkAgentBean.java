@@ -30,23 +30,42 @@ import COM.TIBCO.hawk.talon.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * Test action connecting to the TIBCO Hawk agent for manipulating the TIBCO runtime environment.
+ * 
+ * @author Christoph Deppisch
+ */
 public class TibcoHawkAgentBean extends AbstractTestAction implements InitializingBean {
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(TibcoHawkAgentBean.class);
 
+    /** Hawk console */
     private TIBHawkConsole hawkConsole;
+    
+    /** Hawk agent manager */
     private AgentManager agentManager;
 
+    /** TIBCO Hawk domain */
     private String hawkDomain;
+    
+    /** Rendezvous service */
     private String rvService;
+    
+    /** Rendezvous network */
     private String rvNetwork;
+    
+    /** Rendezvous deamon */
     private String rvDaemon;
 
+    /** Hawk agent method name */
     private String methodName;
+    
+    /** Hawk micro agent name */
     private String microAgent;
 
+    /** Method parameters */
     private DataElement[] methodParameters;
 
     /**
@@ -158,8 +177,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
@@ -175,6 +193,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the Hawk micro agent.
      * @param microAgent the agent to set
      */
     public void setMicroAgent(String microAgent) {
@@ -182,6 +201,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the Hawk domain.
      * @param hawkDomain the hawkDomain to set
      */
     public void setHawkDomain(String hawkDomain) {
@@ -189,6 +209,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the method name.
      * @param methodName the methodName to set
      */
     public void setMethodName(String methodName) {
@@ -196,6 +217,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the method parameters.
      * @param methodParameters the methodParameters to set
      */
     public void setMethodParameters(DataElement[] methodParameters) {
@@ -209,6 +231,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the rendezvous deamon.
      * @param rvDaemon the rvDaemon to set
      */
     public void setRvDaemon(String rvDaemon) {
@@ -216,6 +239,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the rendezvous network.
      * @param rvNetwork the rvNetwork to set
      */
     public void setRvNetwork(String rvNetwork) {
@@ -223,6 +247,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     }
 
     /**
+     * Set the rendezvous service.
      * @param rvService the rvService to set
      */
     public void setRvService(String rvService) {

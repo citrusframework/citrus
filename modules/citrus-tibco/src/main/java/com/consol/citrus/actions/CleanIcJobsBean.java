@@ -32,22 +32,34 @@ import com.tibco.workflow.api.WfSession;
 import com.tibco.workflow.api.util.*;
 
 /**
- * This bean is used to clean up all currently run jobs in Business Works Collaborator.
- * The bean uses the icjava API to access the InConcert Server in order to manage the jobs and tasks.
+ * This bean is used to clean up all currently running jobs in TIBCO Business Works Collaborator.
+ * The bean uses the icjava API to access the InConcert Server. API is able to manage the jobs and tasks.
  *
  * @author Christoph Deppisch
- * @since 16.01.2007
+ * @since 2007
  *
  */
 public class CleanIcJobsBean extends AbstractTestAction {
+    /** User credentials */
     private String userName;
     private String password;
+    
+    /** InConcert server name */
     private String serverName;
 
+    /** Collaborator service */
     private String service;
+    
+    /** Collaborator network */
     private String network;
+    
+    /** Collaborator deamon */
     private String daemon;
+    
+    /** Queue count */
     private int queueCount;
+    
+    /** Time to wait for connection to set up */
     private int serverDiscoveryTimeout;
 
     /**
@@ -119,6 +131,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the server name.
      * @param icServerName the icServerName to set
      */
     public void setServerName(String serverName) {
@@ -126,6 +139,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the user password.
      * @param password the password to set
      */
     public void setPassword(String password) {
@@ -133,6 +147,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the user name.
      * @param userName the userName to set
      */
     public void setUserName(String userName) {
@@ -140,6 +155,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the server demaon.
      * @param deamon the deamon to set
      */
     public void setDaemon(String daemon) {
@@ -147,6 +163,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the server network.
      * @param network the network to set
      */
     public void setNetwork(String network) {
@@ -154,6 +171,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the queue count.
      * @param queueCount the queueCount to set
      */
     public void setQueueCount(int queueCount) {
@@ -161,6 +179,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the server discovery timeout.
      * @param serverDiscoveryTimeout the serverDiscoveryTimeout to set
      */
     public void setServerDiscoveryTimeout(int serverDiscoveryTimeout) {
@@ -168,6 +187,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     }
 
     /**
+     * Set the server service.
      * @param service the service to set
      */
     public void setService(String service) {
