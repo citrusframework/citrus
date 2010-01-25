@@ -69,47 +69,6 @@
         </tip>
     </section>
     
-    <section id="testsuite-include-exclude">
-        <title>Include and exclude tests</title>
-        
-        <para>While using the test framework you will find out that the duration of tests differ according to the purpose of
-        the test. Especially timeout tests take a long time. In some cases the tester might not want to execute
-        those tests, because it would take too long. Another situation would be that the tester intends to test a
-        certain group of tests explicitly and all other tests should not be executed.</para>
-        
-        <para>In these situations the test suite is very helpful because here you can easily declare include or exclude test cases from a test 
-        run.</para>
-        
-        <para>The following example tries to explain this functionality in detail:</para>
-        
-        <programlisting>
-  &lt;bean name=&quot;testSuite&quot; 
-           class=&quot;com.consol.citrus.TestSuite&quot;&gt;
-      &lt;property name=&quot;excludeTests&quot;&gt;
-          &lt;list&gt;
-              &lt;value&gt;*timeout*&lt;/value&gt;
-              &lt;value&gt;someTestName&lt;/value&gt;
-              &lt;value&gt;startsWith*&lt;/value&gt;
-              &lt;value&gt;*endsWith&lt;/value&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-      
-      &lt;property name=&quot;includeTests&quot;&gt;
-          &lt;list&gt;
-              &lt;value&gt;*timeout*&lt;/value&gt;
-              &lt;value&gt;someTestName&lt;/value&gt;
-              &lt;value&gt;startsWith*&lt;/value&gt;
-              &lt;value&gt;*endsWith&lt;/value&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-        </programlisting>
-        
-        <para>Both properties support name patterns. This means that you can use the wildcard &quot;*&quot; to define name
-        patterns as shown in the examples. Be careful to use both including and excluding patterns at the same
-        time, because they might overrule each other.</para>
-    </section>
-    
     <section id="testsuite-multiple">
         <title>Multiple testsuites</title>
         

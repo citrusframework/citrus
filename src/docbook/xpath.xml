@@ -29,20 +29,16 @@
     
     <programlisting>
   &lt;message&gt;
-      &lt;validate path=&quot;//element/elementA&quot; 
-                   value=&quot;text&quot;&gt;&lt;/validate&gt;
-      &lt;validate path=&quot;//element/elementA[@attr='A']&quot; 
-                   value=&quot;text&quot;&gt;&lt;/validate&gt;
-      &lt;validate path =&quot;//element/elementB&quot; 
-                   value=&quot;%elementValue&quot;&gt;&lt;/validate&gt;
-      &lt;validate path =&quot;//element/elementB/@attribute&quot; 
-                   value=&quot;%attributeValue&quot;&gt;&lt;/validate&gt;
-      &lt;validate path =&quot;/root/element&quot; 
-                   value=&quot;namespace&quot;&gt;&lt;/validate&gt;
-      &lt;validate path =&quot;/root/element&quot; 
-                   value=&quot;namespace&quot;&gt;&lt;/validate&gt;
+      &lt;validate path=&quot;//User/Name&quot; 
+                   value=&quot;John&quot;&gt;&lt;/validate&gt;
+      &lt;validate path=&quot;//User/Address[@type='office']/Street&quot; 
+                   value=&quot;Companystreet 21&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;//User/Name&quot; 
+                   value=&quot;${userName}&quot;&gt;&lt;/validate&gt;
+      &lt;validate path =&quot;//User/@isAdmin&quot; 
+                   value=&quot;${isAdmin}&quot;&gt;&lt;/validate&gt;
       &lt;validate path =&quot;//*[.='search-for']&quot; 
-                   value=&quot;search-for&quot;&gt;&lt;/validate&gt;
+                   value=&quot;searched-for&quot;&gt;&lt;/validate&gt;
   &lt;/message&gt;
     </programlisting>
     
