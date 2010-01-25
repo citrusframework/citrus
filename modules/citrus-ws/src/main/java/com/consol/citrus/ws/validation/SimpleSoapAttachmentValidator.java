@@ -26,8 +26,9 @@ import org.springframework.util.Assert;
 import com.consol.citrus.ws.SoapAttachment;
 
 /**
- * Simple implementation of SOAP attachment validator. Validating only String attachment contents by simple
- * equals assertion.
+ * Simple implementation of a {@link AbstractSoapAttachmentValidator}. 
+ * 
+ * Attachment content body is validated through simple string equals assertion.
  *  
  * @author Christoph Deppisch
  */

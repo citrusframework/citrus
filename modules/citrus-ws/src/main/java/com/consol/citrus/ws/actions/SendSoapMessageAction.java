@@ -33,14 +33,28 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
+/**
+ * Message sender implementation sending SOAP messages.
+ * 
+ *  This special implementation adds SOAP attachment support to normal
+ *  message sender.
+ *  
+ * @author Christoph Deppisch
+ */
 public class SendSoapMessageAction extends SendMessageAction {
 
+    /** SOAP attachment data */
     private String attachmentData;
     
+    /** SOAP attachment data as external file resource */
     private Resource attachmentResource;
     
+    /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
     
+    /**
+     * @see com.consol.citrus.actions.SendMessageAction#execute(com.consol.citrus.context.TestContext)
+     */
     @Override
     public void execute(final TestContext context) {
         Message<?> message = createMessage(context);
@@ -74,6 +88,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
     
     /**
+     * Set the Attachment data file resource.
      * @param attachment the attachment to set
      */
     public void setAttachmentResource(Resource attachment) {
@@ -81,6 +96,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
+     * Set the content type, delegates to soap attachment.
      * @param contentType the contentType to set
      */
     public void setContentType(String contentType) {
@@ -88,6 +104,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
+     * Set the content id, delegates to soap attachment.
      * @param contentId the contentId to set
      */
     public void setContentId(String contentId) {
@@ -95,6 +112,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
     
     /**
+     * Set the charset name, delegates to soap attachment.
      * @param charsetName the charsetName to set
      */
     public void setCharsetName(String charsetName) {
@@ -102,6 +120,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
+     * Set the attachment data as string value.
      * @param attachmentData the attachmentData to set
      */
     public void setAttachmentData(String attachmentData) {

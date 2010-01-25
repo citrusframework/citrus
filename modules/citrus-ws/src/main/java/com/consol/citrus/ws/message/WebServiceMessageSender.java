@@ -45,11 +45,18 @@ import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
-
+/**
+ * Message sender connection as client to a WebService endpoint. The sender supports
+ * SOAP attachments in contrary to the normal message senders.
+ * 
+ * @author Christoph Deppisch
+ */
 public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, FaultMessageResolver {
 
+    /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
     
+    /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
     /**
@@ -57,10 +64,18 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      */
     private static final Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
     
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
     public void send(Message<?> message) {
         send(message, null);
     }
-    
+
+    /**
+     * Send message with SOAP attachment.
+     * @param message
+     * @param attachment
+     */
     public void send(final Message<?> message, final Attachment attachment) {
         Assert.notNull(message, "Can not send empty message");
         
@@ -130,12 +145,16 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     }
 
     /**
+     * Set the reply message handler.
      * @param replyMessageHandler the replyMessageHandler to set
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
     }
     
+    /**
+     * @see org.springframework.ws.client.core.FaultMessageResolver#resolveFault(org.springframework.ws.WebServiceMessage)
+     */
 	public void resolveFault(WebServiceMessage message) throws IOException {
 		if(message instanceof SoapMessage) {
 			new SoapFaultMessageResolver().resolveFault(message);
@@ -145,6 +164,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 	}
 
     /**
+     * Set reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {

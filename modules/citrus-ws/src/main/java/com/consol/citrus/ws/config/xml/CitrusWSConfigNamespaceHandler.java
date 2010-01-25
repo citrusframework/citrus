@@ -21,6 +21,11 @@ package com.consol.citrus.ws.config.xml;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
+/**
+ * Namespace handler for configuration components in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class CitrusWSConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {

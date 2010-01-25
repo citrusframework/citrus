@@ -35,9 +35,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 
 /**
- * Asserting SOAP fault exception to occur in embedded test actions.
+ * Asserting SOAP fault exception in embedded test action.
  * 
- * In case SOAP fault is caught, tester can validate SOAP fault code and fault string to
+ * Tester can validate SOAP fault code and fault string to
  * match expected behavior.
  * 
  * @author Christoph Deppisch 
@@ -103,6 +103,7 @@ public class AssertSoapFault extends AbstractTestAction {
     }
 
     /**
+     * Set the nested test action.
      * @param action the action to set
      */
     public void setAction(TestAction action) {
@@ -110,6 +111,7 @@ public class AssertSoapFault extends AbstractTestAction {
     }
 
 	/**
+	 * Set the fault code.
 	 * @param faultCode the faultCode to set
 	 */
 	public void setFaultCode(String faultCode) {
@@ -117,6 +119,7 @@ public class AssertSoapFault extends AbstractTestAction {
 	}
 
 	/**
+	 * Set the fault string.
 	 * @param faultString the faultString to set
 	 */
 	public void setFaultString(String faultString) {

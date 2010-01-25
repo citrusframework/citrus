@@ -32,9 +32,11 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.SoapAttachmentHeaders;
 
 /**
- * Abstract validator tries to find attachment in received message through its attachment contentId, contentType
- * and content as String value. Validator will create a com.consol.citrus.ws.SoapAttachment and automatically handle contentId and 
- * contentType validation. Content validation is delegated to subclass.
+ * Abstract SOAP attachment validator tries to find attachment within received message and compares
+ * its attachment contentId, contentType and content body to a control attachment definition. 
+ * 
+ * Validator will create a {@link SoapAttachment} and automatically handle contentId and 
+ * contentType validation. Content body validation is delegated to subclasses.
  * 
  * @author Christoph Deppisch
  */
@@ -45,6 +47,8 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     private static final Logger log = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
     
     /**
+     * Validate contentId and contentType of attachment to meet control attachment.
+     * 
      * @param receivedMessage
      * @param controlAttachment
      */
@@ -94,6 +98,11 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
         }
     }
     
+    /**
+     * Validating SOAP attachment content id.
+     * @param receivedAttachment
+     * @param controlAttachment
+     */
     protected void validateAttachmentContentId(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         //in case contentId was not set in test case, skip validation 
         if(!StringUtils.hasText(controlAttachment.getContentId())) { return; }
@@ -121,6 +130,11 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
         }
     }
     
+    /**
+     * Validating SOAP attachment content type.
+     * @param receivedAttachment
+     * @param controlAttachment
+     */
     protected void validateAttachmentContentType(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         //in case contentType was not set in test case, skip validation
         if(!StringUtils.hasText(controlAttachment.getContentType())) { return; }
@@ -149,6 +163,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     }
 
     /**
+     * Delegate content body validation to subclasses.
      * @param attachment
      * @param controlAttachment
      */

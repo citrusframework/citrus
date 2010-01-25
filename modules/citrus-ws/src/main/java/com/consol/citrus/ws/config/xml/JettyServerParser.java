@@ -26,6 +26,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Parser for jetty-server component in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JettyServerParser extends AbstractBeanDefinitionParser {
 
     @Override

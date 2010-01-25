@@ -21,16 +21,23 @@ package com.consol.citrus.ws;
 
 
 /**
+ * Special SOAP attachment header names used as internal message headers.
+ * 
  * @author Christoph Deppisch
  */
 public abstract class SoapAttachmentHeaders {
+    /** Citrus specific header prefix */
     public static final String PREFIX = "citrus_soapattachment_";
     
+    /** Content id header name*/
     public static final String CONTENT_ID = PREFIX + "contentId";
     
+    /** Content type header name*/
     public static final String CONTENT_TYPE = PREFIX + "contentType";
     
+    /** Content body header name*/
     public static final String CONTENT = PREFIX + "content";
     
+    /** Charset header name*/
     public static final String CHARSET_NAME = PREFIX + "charset";
 }

@@ -33,13 +33,16 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachmentHeaders;
 
 /**
- * Message callback able to decorate the generated jms message before sending.
- * The callback will try to set soap attachment specific jms header values if available.
+ * Message callback able to decorate the generated JMS message before sending.
+ * The callback will try to set SOAP attachment specific JMS header values if available.
  * 
  * @author Christoph Deppisch
  */
 public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback {
 
+    /**
+     * @see com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback#doWithMessage(javax.jms.Message, org.springframework.integration.core.Message)
+     */
     public void doWithMessage(javax.jms.Message jmsMessage, Message<?> request) throws JMSException {
         try {
             //explicitly take care of soap attachments in message header

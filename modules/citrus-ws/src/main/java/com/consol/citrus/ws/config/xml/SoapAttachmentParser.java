@@ -28,13 +28,24 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
+ * Parser for SOAP attachment element in Citrus ws namespace.
+ * 
  * @author Christoph Deppisch
  */
 public class SoapAttachmentParser {
+    /**
+     * Prevent instantiation
+     */
     private SoapAttachmentParser() {
         //prevent instantiation
     }
     
+    /**
+     * Parse the attachment element with all children and attributes.
+     * @param builder
+     * @param element
+     * @param parserContext
+     */
     public static void parseAttachment(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
         if(attachmentElement == null) {

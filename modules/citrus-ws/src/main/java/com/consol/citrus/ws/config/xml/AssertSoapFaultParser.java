@@ -33,6 +33,11 @@ import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.TestActionRegistry;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
+/**
+ * Parser for assert action in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class AssertSoapFaultParser implements BeanDefinitionParser {
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {

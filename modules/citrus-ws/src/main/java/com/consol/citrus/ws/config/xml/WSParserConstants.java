@@ -19,6 +19,11 @@
 
 package com.consol.citrus.ws.config.xml;
 
+/**
+ * Parser constants used in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class WSParserConstants {
     
     static final String AUTOSTART_ATTRIBUTE = "auto-start";

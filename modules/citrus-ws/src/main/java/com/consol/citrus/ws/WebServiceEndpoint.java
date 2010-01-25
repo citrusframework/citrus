@@ -47,6 +47,12 @@ import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
+/**
+ * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
+ * a {@link MessageHandler} implementation.
+ * 
+ * @author Christoph Deppisch
+ */
 public class WebServiceEndpoint implements MessageEndpoint {
 
     /** MessageHandler handling incoming requests and providing proper responses */
@@ -183,6 +189,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Get the default QName from local part.
      * @param key
      * @return
      */
@@ -196,6 +203,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Set the message handler.
      * @param messageHandler the messageHandler to set
      */
     public void setMessageHandler(MessageHandler messageHandler) {
@@ -203,6 +211,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Set the default namespace used in SOAP response headers.
      * @param defaultNamespaceUri the defaultNamespaceUri to set
      */
     public void setDefaultNamespaceUri(String defaultNamespaceUri) {
@@ -210,6 +219,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Set the default namespace prefix used in SOAP response headers.
      * @param defaultPrefix the defaultPrefix to set
      */
     public void setDefaultPrefix(String defaultPrefix) {

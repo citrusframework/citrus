@@ -28,6 +28,8 @@ import org.w3c.dom.Element;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 
 /**
+ * Parser for SOAP message receiver component in Citrus ws namespace.
+ * 
  * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {

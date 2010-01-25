@@ -27,6 +27,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Parser for ws message sender in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser {
 
     @Override

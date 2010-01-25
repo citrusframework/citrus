@@ -34,17 +34,29 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
 /**
+ * Message receiver for SOAP messaging.
+ * 
+ * This special implementation offers SOAP attatchment valdation in addition to
+ * the normal message receiver.
+ * 
  * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageAction extends ReceiveMessageAction {
+    /** Attachment body content data */
     private String attachmentData;
     
+    /** Attachment body content in external file resource */
     private Resource attachmentResource;
     
+    /** Control attachment */
     private SoapAttachment controlAttachment = new SoapAttachment();
     
+    /** SOAP attachment validator */
     private SoapAttachmentValidator attachmentValidator;
     
+    /**
+     * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext)
+     */
     @Override
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {
         super.validateMessage(receivedMessage, context);
@@ -65,6 +77,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the attachment data as string value.
      * @param attachmentData the attachmentData to set
      */
     public void setAttachmentData(String attachmentData) {
@@ -72,6 +85,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the attachment data from external file resource. 
      * @param attachmentResource the attachmentResource to set
      */
     public void setAttachmentResource(Resource attachmentResource) {
@@ -79,6 +93,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the content type, delegates to control attachment.
      * @param contentType the contentType to set
      */
     public void setContentType(String contentType) {
@@ -86,6 +101,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the content id, delegates to control attachment.
      * @param contentId the contentId to set
      */
     public void setContentId(String contentId) {
@@ -93,6 +109,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the charset name, delegates to control attachment.
      * @param charsetName the charsetName to set
      */
     public void setCharsetName(String charsetName) {
@@ -100,6 +117,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
+     * Set the attachment validator.
      * @param attachmentValidator the attachmentValidator to set
      */
     public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {

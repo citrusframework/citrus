@@ -21,6 +21,11 @@ package com.consol.citrus.ws.message;
 
 import com.consol.citrus.message.AbstractReplyMessageReceiver;
 
+/**
+ * Message receiver implementation for receiving WebService messages.
+ * 
+ * @author Christoph Deppisch
+ */
 public class WebServiceReplyMessageReceiver extends AbstractReplyMessageReceiver {
 
 }

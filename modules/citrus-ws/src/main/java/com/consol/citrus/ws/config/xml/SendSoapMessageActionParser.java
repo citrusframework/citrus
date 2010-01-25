@@ -25,6 +25,11 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.SendMessageActionParser;
 
+/**
+ * Parser for SOAP message sender component in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
 public class SendSoapMessageActionParser extends SendMessageActionParser {
 
     @Override

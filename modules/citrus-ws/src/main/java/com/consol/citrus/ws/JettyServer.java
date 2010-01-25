@@ -27,14 +27,24 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
 
+/**
+ * Jetty server implementation wrapping a {@link Server} with Citrus server behaviour, so
+ * server can be started/stopped by Citrus.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JettyServer extends AbstractServer {
 
+    /** Server port */
     private int port = 8080;
     
+    /** Server resource base */
     private String resourceBase = "src/main/resources";
     
+    /** Application context location for payload mappings etc. */
     private String contextConfigLocation = "classpath:citrus-ws-servlet.xml";
     
+    /** Server instance to be wrapped */
     private Server jettyServer;
     
     @Override
@@ -86,6 +96,9 @@ public class JettyServer extends AbstractServer {
         jettyServer.setHandler(handlers);
     }
 
+    /**
+     * @see java.lang.Runnable#run()
+     */
     public void run() {
         try {
             jettyServer.start();
@@ -95,6 +108,7 @@ public class JettyServer extends AbstractServer {
     }
 
     /**
+     * Get the server port.
      * @return the port
      */
     public int getPort() {
@@ -102,6 +116,7 @@ public class JettyServer extends AbstractServer {
     }
 
     /**
+     * Set the server port.
      * @param port the port to set
      */
     public void setPort(int port) {
@@ -109,6 +124,7 @@ public class JettyServer extends AbstractServer {
     }
     
     /**
+     * Set the server resource base.
      * @param resourceBase the resourceBase to set
      */
     public void setResourceBase(String resourceBase) {
@@ -116,10 +132,10 @@ public class JettyServer extends AbstractServer {
     }
 
     /**
+     * Set the context config location.
      * @param contextConfigLocation the contextConfigLocation to set
      */
     public void setContextConfigLocation(String contextConfigLocation) {
         this.contextConfigLocation = contextConfigLocation;
     }
-    
 }

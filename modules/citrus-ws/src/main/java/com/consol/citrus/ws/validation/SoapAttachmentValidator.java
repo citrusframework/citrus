@@ -22,21 +22,29 @@ package com.consol.citrus.ws.validation;
 import java.io.IOException;
 
 import org.springframework.integration.core.Message;
+import org.springframework.ws.mime.Attachment;
 
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.WebServiceEndpoint;
 
 
 /**
- * Validate SOAP attachments. 
+ * Interface for SOAP attachment validators. 
  * 
- * The Citrus com.consol.citrus.ws.WebServiceEndpoint implementation adds the received SOAP attachments as 
- * org.springframework.ws.mime.Attachment implementations to the Spring integration message header. The header name will be the
- * attachment's contentId. The header value is the org.springframework.ws.mime.Attachment object.
+ * The Citrus {@link WebServiceEndpoint} implementation adds the received SOAP attachments as 
+ * {@link Attachment} implementations to the Spring integration message header. The header name will be the
+ * attachment's contentId. The header value is the {@link Attachment} object.
  *  
  * @author Christoph Deppisch
  */
 public interface SoapAttachmentValidator {
 
-    /** validate the received attachment */
+    /**
+     * Validate the attachment with a given control attachment.
+     * 
+     * @param receivedMessage
+     * @param controlAttachment
+     * @throws IOException
+     */
     public void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException;
 }
