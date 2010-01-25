@@ -28,6 +28,9 @@ import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
 
     /**

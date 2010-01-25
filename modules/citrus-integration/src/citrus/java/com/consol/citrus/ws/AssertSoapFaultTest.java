@@ -25,9 +25,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * 
  * @author Christoph Deppisch
- * @since 08.10.2009
+ * @since 2009
  */
 public class AssertSoapFaultTest extends AbstractTestNGCitrusTest {
     @Test

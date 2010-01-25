@@ -19,6 +19,9 @@
 
 package com.consol.citrus.demo;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class HelloRequestMessage {
     private String messageId;
     private String correlationId;

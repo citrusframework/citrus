@@ -24,6 +24,9 @@ import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class SoapFaultGeneratingEndpoint implements MessageEndpoint {
 
 	public void invoke(MessageContext messageContext) throws Exception {

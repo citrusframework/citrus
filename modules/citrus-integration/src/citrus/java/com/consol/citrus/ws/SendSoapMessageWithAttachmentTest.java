@@ -25,9 +25,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * 
  * @author Christoph Deppisch
- * @since 13.10.2009
+ * @since 2009
  */
 public class SendSoapMessageWithAttachmentTest extends AbstractTestNGCitrusTest {
     @Test

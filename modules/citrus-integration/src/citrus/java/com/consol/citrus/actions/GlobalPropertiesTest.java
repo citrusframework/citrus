@@ -25,9 +25,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * 
  * @author Christoph Deppisch
- * @since 31.10.2008
+ * @since 2008
  */
 public class GlobalPropertiesTest extends AbstractTestNGCitrusTest {
     @Test

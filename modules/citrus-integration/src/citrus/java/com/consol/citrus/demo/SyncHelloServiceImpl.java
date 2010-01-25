@@ -28,6 +28,9 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class SyncHelloServiceImpl implements SyncHelloService  {
     
     @Autowired

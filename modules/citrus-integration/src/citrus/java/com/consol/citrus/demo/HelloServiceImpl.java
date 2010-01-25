@@ -22,6 +22,9 @@ package com.consol.citrus.demo;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class HelloServiceImpl implements HelloService {
 
     public Message<HelloResponseMessage> sayHello(Message<HelloRequestMessage> request) {
