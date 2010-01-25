@@ -24,10 +24,17 @@ import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.message.MessageHandler;
 
+/**
+ * Message handler implementation generating empty response messages.
+ * 
+ * @author Christoph Deppisch
+ */
 public class EmptyResponseProducingMessageHandler implements MessageHandler {
 
+    /**
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     */
     public Message<?> handleMessage(Message<?> message) {
         return MessageBuilder.withPayload("").build();
     }
-
 }

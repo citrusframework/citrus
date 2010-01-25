@@ -37,26 +37,50 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 
+/**
+ * Message handler implementation forwarding incoming request to a JMS destination. The handler is
+ * waiting for a reply message either on a static response destination or temporary queue destination.
+ * 
+ * The forwarding destination as well as the reply destination can be declared either as injected instance 
+ * or by destination name.
+ * 
+ * A {@link JmsMessageCallback} implementation can manipulate the forwarded JMS request message before sending.
+ * 
+ * In case handler receives timeout and get no reply message on JMS destinations a fallback message handler
+ * can provide a fallback response message.
+ * 
+ * @author Christoph Deppisch
+ */
 public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean, DisposableBean {
 
+    /** Forwarding destination */
     private Destination destination;
     
+    /** Forwarding destination name */
     private String destinationName;
 
+    /** Reply destination */
     private Destination replyDestination;
     
+    /** Reply destination name */
     private String replyDestinationName;
     
+    /** JMS connection factory */
     private ConnectionFactory connectionFactory;
     
+    /** JMS connection */
     private Connection connection = null;
     
+    /** JMS Session */
     private Session session = null;
     
+    /** Time to wait for reply message */
     private long replyTimeout = 5000L;
     
+    /** Message callback manipulating JMS request message */
     private JmsMessageCallback messageCallback;
     
+    /** Fallback message handler in case no reply message was received */
     private MessageHandler fallbackMessageHandlerDelegate = null;
     
     /**
@@ -64,6 +88,9 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      */
     private static final Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
 
+    /**
+     * Message callback interface for manipulating JMS request messages before sending. 
+     */
     public static interface JmsMessageCallback {
         /** Opportunity to decorate generated jms message before forwarding */
         void doWithMessage(javax.jms.Message message, Message<?> request) throws JMSException;
@@ -142,6 +169,10 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         return replyMessage;
     }
     
+    /**
+     * Deletes a temporary destination if present.
+     * @param destination
+     */
     private void deleteTemporaryDestination(Destination destination) {
         try {
             if (destination instanceof TemporaryQueue) { 
@@ -154,6 +185,15 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         }
     }
 
+    /**
+     * Get the reply destination either as injected instance or from destination name
+     * resolver or as temporary reply queue.
+     * 
+     * @param session
+     * @param message
+     * @return
+     * @throws JMSException
+     */
     private Destination getReplyDestination(Session session, Message<?> message) throws JMSException {
         if(message.getHeaders().getReplyChannel() != null) {
             if(message.getHeaders().getReplyChannel() instanceof Destination) {
@@ -172,6 +212,12 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         return session.createTemporaryQueue();
     }
 
+    /**
+     * Get the destination to forward incoming requests to.
+     * @param session
+     * @return
+     * @throws JMSException
+     */
     private Destination getDestination(Session session) throws JMSException {
         if (destination != null) {
             return destination;
@@ -181,6 +227,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
     
     /**
+     * Get the forwarding destination name.
      * @return the destinationName
      */
     protected String getDestinationName() {
@@ -203,6 +250,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
     
     /**
+     * Creates a new JMS connection.
      * @return
      * @throws JMSException
      */
@@ -223,7 +271,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
     
     /**
-     * 
+     * Creates a new JMS session.
      * @param connection
      * @return
      * @throws JMSException
@@ -258,7 +306,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
     
     /**
-     * 
+     * Get the JMS message converter.
      * @return
      */
     protected MessageConverter getMessageConverter() {
@@ -269,6 +317,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
     
     /**
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      * @throws Exception
      */
     public void afterPropertiesSet() throws Exception {
@@ -279,21 +328,31 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the JMS connection factory.
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
+    /**
+     * Set the reply destination.
+     * @param replyDestination
+     */
     public void setReplyDestination(String replyDestination) {
         this.replyDestinationName = replyDestination;
     }
 
+    /**
+     * Set the forwarding send destination name.
+     * @param sendDestination
+     */
     public void setSendDestination(String sendDestination) {
         this.destinationName = sendDestination;
     }
     
     /**
+     * Set the forwarding destination.
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
@@ -301,6 +360,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Get the destination name.
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
@@ -308,6 +368,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the reply destination.
      * @param replyDestination the replyDestination to set
      */
     public void setReplyDestination(Destination replyDestination) {
@@ -315,6 +376,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the reply destination name.
      * @param replyDestinationName the replyDestinationName to set
      */
     public void setReplyDestinationName(String replyDestinationName) {
@@ -322,6 +384,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the reply timeout.
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
@@ -329,6 +392,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the message callback.
      * @param messageCallback the messageCallback to set
      */
     public void setMessageCallback(JmsMessageCallback messageCallback) {
@@ -336,6 +400,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
+     * Set the fallback message handler.
      * @param fallbackMessageHandlerDelegate the fallbackMessageHandlerDelegate to set
      */
     public void setFallbackMessageHandlerDelegate(MessageHandler fallbackMessageHandlerDelegate) {

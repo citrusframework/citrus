@@ -37,9 +37,23 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.XMLUtils;
 
+/**
+ * This message handler implementation dispatches incoming request to other message handlers
+ * according to a XPath expression evaluated on the message payload of the incoming request.
+ * 
+ * The XPath expression's result value will determine the message handler delegate. You can think of
+ * having a message handler for each root element name, meaning the message type.
+ * 
+ * All available message handlers are hosted in a separate Spring application context. The message handler
+ * will search for a appropriate bean instance in this context according to the mapping expression.
+ * 
+ * @author Christoph Deppisch
+ */
 public class XpathDispatchingMessageHandler implements MessageHandler {
+    /** Dispatching XPath expression */
     private String xpathMappingExpression;
 
+    /** Application context holding available message handlers */
     private String messageHandlerContext;
     
     /**
@@ -83,10 +97,18 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
         }
     }
     
+    /**
+     * Set the XPath mapping expression.
+     * @param mappingExpression
+     */
     public void setXpathMappingExpression(String mappingExpression) {
         this.xpathMappingExpression = mappingExpression;
     }
 
+    /**
+     * Set the message handler context.
+     * @param messageHandlerContext
+     */
     public void setMessageHandlerContext(String messageHandlerContext) {
         this.messageHandlerContext = messageHandlerContext;
     }

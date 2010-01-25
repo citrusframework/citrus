@@ -27,17 +27,28 @@ import org.springframework.integration.message.MessageBuilder;
 
 import com.consol.citrus.message.MessageHandler;
 
+/**
+ * Message handler will always return a static response message.
+ * 
+ * @author Christoph Deppisch
+ */
 public class StaticResponseProducingMessageHandler implements MessageHandler {
     
+    /** Response message payload */
     private String messagePayload = "";
     
+    /** Response message header */
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
     
+    /**
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     */
     public Message<?> handleMessage(Message<?> message) {
         return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();
     }
 
     /**
+     * Set the response message payload.
      * @param messagePayload the messagePayload to set
      */
     public void setMessagePayload(String messagePayload) {
@@ -45,10 +56,10 @@ public class StaticResponseProducingMessageHandler implements MessageHandler {
     }
 
     /**
+     * Set the response message header.
      * @param messageHeader the messageHeader to set
      */
     public void setMessageHeader(Map<String, Object> messageHeader) {
         this.messageHeader = messageHeader;
     }
-
 }
