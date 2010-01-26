@@ -21,9 +21,13 @@ package com.consol.citrus.adapter.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
@@ -38,7 +42,7 @@ import com.consol.citrus.message.MessageHandler;
  * 
  * @author Christoph Deppisch
  */
-public class MessageChannelConnectingMessageHandler implements MessageHandler {
+public class MessageChannelConnectingMessageHandler implements MessageHandler, BeanFactoryAware {
 
     /** Forwarding message channel */
     private MessageChannel channel;
@@ -54,6 +58,9 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler {
     
     /** Fallback message handler */
     private MessageHandler fallbackMessageHandlerDelegate = null;
+    
+    /** Channel resolver */
+    private BeanFactoryChannelResolver channelResolver = new BeanFactoryChannelResolver();
     
     /**
      * Logger
@@ -74,7 +81,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler {
         Message<?> replyMessage = null;
         
         messageChannelTemplate.setReceiveTimeout(replyTimeout);
-        replyMessage = messageChannelTemplate.sendAndReceive(request);
+        replyMessage = messageChannelTemplate.sendAndReceive(request, getChannel());
         
         if((replyMessage == null || replyMessage.getPayload() == null)) {
             if(fallbackMessageHandlerDelegate != null) {
@@ -99,6 +106,21 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler {
             return channel.getName();
         } else {
             return channelName;
+        }
+    }
+    
+    /**
+     * Get the message channel to forward incoming requests to.
+     * @return
+     */
+    private MessageChannel getChannel() {
+        if(channel != null) {
+            return channel;
+        } else if(StringUtils.hasText(channelName)) {
+            return channelResolver.resolveChannelName(channelName);
+        } else {
+            throw new CitrusRuntimeException("Neither 'channel' nor 'channelName' property " +
+            		"is set for message handler.");
         }
     }
     
@@ -140,5 +162,12 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler {
      */
     public void setMessageChannelTemplate(MessageChannelTemplate messageChannelTemplate) {
         this.messageChannelTemplate = messageChannelTemplate;
+    }
+
+    /**
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        channelResolver.setBeanFactory(beanFactory);
     }
 }
