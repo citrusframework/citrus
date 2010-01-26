@@ -185,9 +185,9 @@
           &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
       &lt;/header&gt;
       &lt;extract&gt;
-          &lt;header name=&quot;Operation&quot; variable=&quot;%operation&quot;/&gt;
-          &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
-                      variable=&quot;%customerId&quot;/&gt;
+          &lt;header name=&quot;Operation&quot; variable=&quot;${operation}&quot;/&gt;
+          &lt;message path=&quot;//MessageBody/Customer/Id&quot; 
+                      variable=&quot;${customerId}&quot;/&gt;
       &lt;/extract&gt;
   &lt;/receive&gt;
     </programlisting>
