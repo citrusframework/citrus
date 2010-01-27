@@ -85,7 +85,7 @@ public class TestContext {
         }
 
         if (value == null) {
-            throw new CitrusRuntimeException("Unknown variable " + variableExpression);
+            throw new CitrusRuntimeException("Unknown variable '" + variableExpression + "'");
         }
 
         return value;

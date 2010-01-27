@@ -728,4 +728,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     public void setSchemaRepository(XsdSchemaRepository schemaRepository) {
         this.schemaRepository = schemaRepository;
     }
+
+    /**
+     * Set the function registry for this validator.
+     * @param functionRegistry the functionRegistry to set
+     */
+    public void setFunctionRegistry(FunctionRegistry functionRegistry) {
+        this.functionRegistry = functionRegistry;
+    }
 }
