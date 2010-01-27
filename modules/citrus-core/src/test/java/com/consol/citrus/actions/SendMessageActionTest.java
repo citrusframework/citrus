@@ -490,4 +490,89 @@ public class SendMessageActionTest extends AbstractBaseTest {
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
     }
+    
+    @Test
+    public void testSendMessageWithUnknownVariableInMessagePayloadData() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
+        
+        reset(messageSender);
+        replay(messageSender);
+        
+        try {
+            sendAction.execute(context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
+            return;
+        }
+        
+        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithExtractHeaderValues() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        final Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        controlHeaders.put("Operation", "sayHello");
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(controlHeaders)
+                                .build();
+
+        final Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("Operation", "sayHello");
+        sendAction.setHeaderValues(headers);
+        
+        Map<String, String> extractVars = new HashMap<String, String>();
+        extractVars.put("Operation", "myOperation");
+        extractVars.put("springintegration_id", "correlationId");
+        sendAction.setExtractHeaderValues(extractVars);
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                validationContext.setExpectedMessageHeaders(new MessageHeaders(controlHeaders));
+                validator.setFunctionRegistry(context.getFunctionRegistry());
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("myOperation"));
+        Assert.assertNotNull(context.getVariable("correlationId"));
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    public void testMissingMessagePayload() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        
+        reset(messageSender);
+        replay(messageSender);
+        
+        try {
+            sendAction.execute(context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Could not find message data. Either message-data or message-resource must be specified");
+            return;
+        }
+        
+        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+    }
 }
