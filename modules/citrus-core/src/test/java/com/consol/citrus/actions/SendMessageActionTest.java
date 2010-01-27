@@ -461,7 +461,6 @@ public class SendMessageActionTest extends AbstractBaseTest {
         try {
             sendAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            e.printStackTrace();
             Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
             return;
         }
