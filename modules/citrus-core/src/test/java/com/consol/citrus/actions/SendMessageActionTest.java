@@ -44,7 +44,7 @@ import com.consol.citrus.validation.XmlValidationContext;
  */
 public class SendMessageActionTest extends AbstractBaseTest {
 	
-    MessageSender messageSender = EasyMock.createMock(MessageSender.class);
+    private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
     @Test
     @SuppressWarnings("unchecked")
@@ -217,7 +217,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithMessagePayloadDataOverwriteMessageElementsXPath() {
+    public void testSendMessageOverwriteMessageElementsXPath() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
@@ -254,7 +254,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithMessagePayloadDataOverwriteMessageElementsDotNotation() {
+    public void testSendMessageOverwriteMessageElementsDotNotation() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
@@ -291,7 +291,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithMessagePayloadDataOverwriteMessageElementsXPathNamespace() {
+    public void testSendMessageOverwriteMessageElementsXPathWithNamespace() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -330,7 +330,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithMessagePayloadDataOverwriteMessageElementsXPathDefaultNamespace() {
+    public void testSendMessageOverwriteMessageElementsXPathWithDefaultNamespace() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -369,7 +369,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithHeaderValues() {
+    public void testSendMessageWithMessageHeaders() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -492,25 +492,6 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    public void testSendMessageWithUnknownVariableInMessagePayloadData() {
-        SendMessageAction sendAction = new SendMessageAction();
-        sendAction.setMessageSender(messageSender);
-        sendAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
-        
-        reset(messageSender);
-        replay(messageSender);
-        
-        try {
-            sendAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'myText'");
-            return;
-        }
-        
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
-    }
-    
-    @Test
     @SuppressWarnings("unchecked")
     public void testSendMessageWithExtractHeaderValues() {
         SendMessageAction sendAction = new SendMessageAction();
@@ -573,6 +554,6 @@ public class SendMessageActionTest extends AbstractBaseTest {
             return;
         }
         
-        Assert.fail("Missing " + CitrusRuntimeException.class + " with unknown variable error message");
+        Assert.fail("Missing " + CitrusRuntimeException.class + " missing message payload");
     }
 }
