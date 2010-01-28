@@ -109,21 +109,31 @@ public class ReceiveMessageAction extends AbstractTestAction {
             //receive message either selected or plain with message receiver
             if (StringUtils.hasText(messageSelectorString)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Setting JMS message selector to value " + messageSelectorString);
+                    log.debug("Setting message selector: '" + messageSelectorString + "'");
                 }
-
-                receivedMessage = messageReceiver.receiveSelected(context.replaceDynamicContentInString(messageSelectorString));
+                
+                if(receiveTimeout > 0) {
+                    receivedMessage = messageReceiver.receiveSelected(
+                            context.replaceDynamicContentInString(messageSelectorString), 
+                            receiveTimeout);
+                } else {
+                    receivedMessage = messageReceiver.receiveSelected(
+                            context.replaceDynamicContentInString(messageSelectorString));
+                }
             } else if (!CollectionUtils.isEmpty(messageSelector)) {
+                String constructedMessageSelector = MessageSelectorBuilder.fromKeyValueMap(
+                        context.replaceVariablesInMap(messageSelector)).build();
+                        
+                if (log.isDebugEnabled()) {
+                    log.debug("Setting message selector: '" + constructedMessageSelector + "'");
+                }
+                
                 if(receiveTimeout > 0) {
                     receivedMessage = messageReceiver
-                            .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
-                                    context.replaceVariablesInMap(messageSelector))
-                                    .build(), receiveTimeout);
+                            .receiveSelected(constructedMessageSelector, receiveTimeout);
                 } else {
                     receivedMessage = messageReceiver
-                            .receiveSelected(MessageSelectorBuilder.fromKeyValueMap(
-                                    context.replaceVariablesInMap(messageSelector))
-                                    .build());
+                            .receiveSelected(constructedMessageSelector);
                 }
             } else {
                 receivedMessage = receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();

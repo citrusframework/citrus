@@ -19,10 +19,7 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -423,5 +420,211 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
         
         verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithTimeout() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        receiveAction.setReceiveTimeout(5000L);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive(5000L)).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveSelectedWithMessageSelectorString() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        String messageSelectorString = "Operation = 'sayHello'";
+        receiveAction.setMessageSelectorString(messageSelectorString);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("Operation", "sayHello");
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receiveSelected(messageSelectorString)).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveSelectedWithMessageSelectorStringAndTimeout() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        receiveAction.setReceiveTimeout(5000L);
+        
+        String messageSelectorString = "Operation = 'sayHello'";
+        receiveAction.setMessageSelectorString(messageSelectorString);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("Operation", "sayHello");
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receiveSelected(messageSelectorString, 5000L)).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveSelectedWithMessageSelectorMap() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, String> messageSelector = new HashMap<String, String>();
+        messageSelector.put("Operation", "sayHello");
+        receiveAction.setMessageSelector(messageSelector);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("Operation", "sayHello");
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receiveSelected("Operation = 'sayHello'")).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        receiveAction.setReceiveTimeout(5000L);
+        
+        Map<String, String> messageSelector = new HashMap<String, String>();
+        messageSelector.put("Operation", "sayHello");
+        receiveAction.setMessageSelector(messageSelector);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("Operation", "sayHello");
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    public void testMessageTimeout() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(null).once();
+        replay(messageReceiver);
+        
+        try {
+            receiveAction.execute(context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Received message is null!");
+            verify(messageReceiver);
+            return;
+        }
+        
+        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving no message");
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveEmptyMessagePayloadAsExpected() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveEmptyMessagePayloadUnexpected() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        try {
+            receiveAction.execute(context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Validation error: Received message body is empty");
+            verify(messageReceiver);
+            return;
+        }
+        
+        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
     }
 }
