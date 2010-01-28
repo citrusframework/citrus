@@ -19,16 +19,13 @@
 
 package com.consol.citrus.util;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
@@ -287,7 +284,15 @@ public class XMLUtils {
         serializer.getDomConfig().setParameter("split-cdata-sections", false);
         serializer.getDomConfig().setParameter("format-pretty-print", true);
 
-        return serializer.writeToString(doc);
+        LSOutput output = domImpl.createLSOutput();
+        output.setEncoding(doc.getInputEncoding());
+        
+        StringWriter writer = new StringWriter();
+        output.setCharacterStream(writer);
+        
+        serializer.write(doc, output);
+        
+        return writer.toString();
     }
 
     /**
@@ -313,7 +318,7 @@ public class XMLUtils {
         parser.getDomConfig().setParameter("split-cdata-sections", false);
 
         LSInput input = domImpl.createLSInput();
-        input.setStringData(xml);
+        input.setByteStream(new ByteArrayInputStream(xml.getBytes()));
 
         Document doc;
         try {
@@ -369,7 +374,7 @@ public class XMLUtils {
             parser.getDomConfig().setParameter("element-content-whitespace", false);
             
             LSInput receivedInput = domImpl.createLSInput();
-            receivedInput.setStringData(messagePayload);
+            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.getBytes()));
             
             return parser.parse(receivedInput);
         } catch (ClassNotFoundException e) {
