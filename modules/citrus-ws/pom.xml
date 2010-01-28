@@ -51,5 +51,17 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
     </dependency>
+    
+    <!-- Test scoped dependencies -->
+    <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymockclassextension</artifactId>
+        <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
