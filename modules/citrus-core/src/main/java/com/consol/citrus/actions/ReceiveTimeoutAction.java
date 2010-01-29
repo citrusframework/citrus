@@ -71,10 +71,10 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
                     log.debug("Received message: " + receivedMessage.getPayload());
                 }
                 
-                throw new CitrusRuntimeException("JMS timeout validation failed, because test suite received message on destination");
+                throw new CitrusRuntimeException("Message timeout validation failed! Received message while waiting for timeout on destiantion");
             }
         } catch (ActionTimeoutException e) {
-            log.info("Received timeout as expected. JMS timeout validation OK!");
+            log.info("No messages received on destiantion. Message timeout validation OK!");
         }
     }
 
