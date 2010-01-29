@@ -71,6 +71,9 @@
 <!--###################################################
                           Misc
     ################################################### -->
+    
+    <xsl:param name="draft.mode">no</xsl:param>
+    
     <!-- Placement of titles -->
     <xsl:param name="formal.title.placement">
         figure after
