@@ -136,7 +136,8 @@ public class ExecuteSQLActionTest extends AbstractBaseTest {
         verify(jdbcTemplate);
     }
 	
-	@Test
+    @Test
+    @SuppressWarnings("serial")
     public void testSQLExecutionIgnoreErrors() {
         List<String> stmts = new ArrayList<String>();
         stmts.add("DELETE * FROM ERRORS WHERE STATUS='resolved'");
@@ -160,7 +161,8 @@ public class ExecuteSQLActionTest extends AbstractBaseTest {
         verify(jdbcTemplate);
     }
 	
-	@Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @SuppressWarnings("serial")
     public void testSQLExecutionErrorForwarding() {
         List<String> stmts = new ArrayList<String>();
         stmts.add("DELETE * FROM ERRORS WHERE STATUS='resolved'");
