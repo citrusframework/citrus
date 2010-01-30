@@ -44,7 +44,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSoapMessageWithAttachmentDataTest() throws Exception {
+    public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -75,7 +75,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSoapMessageWithAttachmentData2Test() throws Exception {
+    public void testSoapMessageWithAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
