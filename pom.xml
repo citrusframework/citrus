@@ -60,7 +60,7 @@
   </developers>
   
   <prerequisites>
-    <maven>2.0.9</maven>
+    <maven>2.2.1</maven>
   </prerequisites>
   
   <scm>
@@ -276,11 +276,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.5</version>
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.0-beta-7-SNAPSHOT</version>
+          <version>2.0-beta-9</version>
           <configuration>
             <!-- We need to allow time-stamped snapshots (i.e. when as dep
                  is declared with a concrete timestamp and not -SNAPSHOT) because
@@ -292,23 +292,29 @@
             <preparationGoals>clean install</preparationGoals>
             <!-- All sub modules have the same version for now-->
             <autoVersionSubmodules>true</autoVersionSubmodules>
+            <!-- Workaround for http://jira.codehaus.org/browse/SCM-406 -->
+            <remoteTagging>true</remoteTagging>
           </configuration>
         </plugin>
         <plugin>
           <!-- http://maven.apache.org/plugins/maven-compile-plugin/plugin-info.html -->
           <artifactId>maven-compiler-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
-          <version>2.0.2</version>
+          <version>2.1</version>
           <configuration>
             <source>1.5</source>
             <target>1.5</target>
           </configuration>
         </plugin>
         <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        <plugin>
           <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
           <artifactId>maven-surefire-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
-          <version>2.4.3</version>
+          <version>2.5</version>
           <configuration>
             <systemProperties>
               <property>
@@ -334,7 +340,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.2</version>
+          <version>2.3</version>
           <configuration>
             <archive>
               <addMavenDescriptor>true</addMavenDescriptor>
@@ -343,7 +349,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1-alpha-2</version>
+          <version>2.1-beta-1</version>
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
@@ -351,7 +357,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-ear-plugin</artifactId>
-          <version>2.3.1</version>
+          <version>2.4</version>
         </plugin>
         <plugin>
           <artifactId>maven-help-plugin</artifactId>
@@ -359,7 +365,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.2</version>
+          <version>2.4</version>
         </plugin>
         <!-- IDE plugins -->
         <plugin>
@@ -383,7 +389,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1</version>
+          <version>2.1.1</version>
           <executions>
             <execution>
               <id>generate-sources-jar</id>
@@ -398,6 +404,24 @@
     </pluginManagement>
   </build>
 
+  <repositories>
+    <repository>
+      <id>jboss</id>
+      <url>http://repository.jboss.com/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    <repository>
+        <id>codehaus</id>
+        <name>Codehaus Maven repository</name>
+        <url>http://repository.codehaus.org/</url>
+    </repository>
+  </repositories>
+      
   <profiles>
     <!-- Distribution Management -->
     <profile>
@@ -442,115 +466,6 @@
       </distributionManagement>
     </profile>
       
-    <profile>
-      <!-- Profile containing all settings if ConSol environment is not available -->
-      <id>repository-home</id>
-      <repositories>
-        <repository>
-          <id>jboss</id>
-          <url>http://repository.jboss.com/maven2</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-        <repository>
-            <id>codehaus</id>
-            <name>Codehaus Maven repository</name>
-            <url>http://repository.codehaus.org/</url>
-        </repository>
-      </repositories>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>PROJECT_ENV</name>
-          <value>home</value>
-        </property>
-      </activation>
-    </profile>
-    
-    <profile>
-      <!-- Profile containing all settings specific to ConSol  -->
-      <id>repository-consol</id>
-      <repositories>
-        <repository>
-          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-        <repository>
-          <id>release</id>
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-        <repository>
-          <id>snapshots</id>
-          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-        </repository>
-      </repositories>
-
-      <pluginRepositories>
-        <pluginRepository>
-          <id>central</id> <!-- Required, since configured in overall maven parent POM -->
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>release</id>
-          <url>http://build.int.consol.de/repository/maven2/release</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>snapshots</id>
-          <url>http://build.int.consol.de/repository/maven2/snapshot</url>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
-
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>PROJECT_ENV</name>
-          <value>consol</value>
-        </property>
-      </activation>
-    </profile>
-    
     <profile>
         <id>site-build</id>
         <distributionManagement>
@@ -631,7 +546,7 @@
     <profile>
       <id>site</id>
       <properties>
-        <clover.plugin.version>2.4.1</clover.plugin.version>
+        <clover.plugin.version>2.4.2</clover.plugin.version>
         <clover.plugin.licenseLocation>${CLOVER_LICENSE}</clover.plugin.licenseLocation>
       </properties>
       <dependencies>
@@ -665,26 +580,20 @@
                 <historyDir>${PROJECT_HOME}/tools/clover</historyDir>
                 <generatePdf>false</generatePdf>
                 <generateXml>true</generateXml>
-
                 <contextFilters>@deprecated</contextFilters>
-                <!-- works only with excludes, as clover fails if nothing is found for eg cmhelp module -->
-                <excludes>
-                  <exclude>org/apache/**/*</exclude>
-                </excludes>
                 <flushPolicy>threaded</flushPolicy>
                 <flushInterval>100</flushInterval>
                 <targetPercentage>0%</targetPercentage>
-                <jdk>1.5</jdk>
                 <useSurefireTestResults>true</useSurefireTestResults>
               </configuration>
             </plugin>
             <plugin>
               <artifactId>maven-site-plugin</artifactId>
-              <version>2.0</version>
+              <version>2.0.1</version>
             </plugin>
             <plugin>
               <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.5</version>
+              <version>2.6.1</version>
             </plugin>
           </plugins>
         </pluginManagement>
@@ -695,7 +604,7 @@
             <groupId>com.atlassian.maven.plugins</groupId>
             <executions>
               <execution>
-                <id>main</id>
+                <id>verify</id>
                 <phase>verify</phase>
                 <goals>
                   <goal>instrument</goal>
@@ -849,14 +758,16 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
-            <version>2.0</version>
+            <version>2.3</version>
             <configuration>
               <smtpHost>mail.consol.de</smtpHost>
               <smtpPort implementation="java.lang.Integer">25</smtpPort>
               <toAddresses>
                 <toAddress implementation="java.lang.String">deppisch@consol.de</toAddress>
               </toAddresses>
-              <issueLinkTemplate>%URL%/cmhelp/action/call-edit?call-id=%ISSUE%</issueLinkTemplate>
+              <issueLinkTemplatePerSystem>
+                <default>%URL%/ticket/name/%ISSUE%</default>
+              </issueLinkTemplatePerSystem>
             </configuration>
             <reportSets>
               <reportSet>
@@ -881,7 +792,7 @@
           </plugin>
           <plugin>
             <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>2.4.3</version>
+            <version>2.5</version>
             <configuration>
               <linkXRef>true</linkXRef>
               <aggregate>true</aggregate>
@@ -889,7 +800,7 @@
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.5</version>
+            <version>2.6.1</version>
           </plugin>
           <plugin>
             <!--  This report includes a cross-reference of the project's sources. Each source entry is also linked with its corresponding Javadoc (if Javadoc was generated). -->
@@ -919,7 +830,7 @@
             <version>2.4</version>
             <configuration>
               <format>html</format>
-              <linkXref>true</linkXref>
+              <linkXRef>true</linkXRef>
               <!-- <xrefLocation>xref</xrefLocation> -->
               <sourceEncoding>utf-8</sourceEncoding>
               <minimumTokens>100</minimumTokens>
@@ -929,16 +840,22 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
-            <version>1.2</version>
+            <version>2.3.1</version>
             <configuration>
               <threshold>Normal</threshold>
               <effort>Max</effort>
+              <excludeFilterFile>${PROJECT_HOME}/tools/findbugs-excludes.xml</excludeFilterFile>
+              <findbugsXmlOutput>true</findbugsXmlOutput>
+              <xmlOutput>true</xmlOutput>
             </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.1</version>
+            <version>2.1.2</version>
+            <configuration>
+              <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+            </configuration>
             <reportSets>
               <reportSet>
                 <reports>
@@ -957,7 +874,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.2</version>
+            <version>2.4</version>
             <configuration>
               <configLocation>${PROJECT_HOME}/tools/checkstyle.xml</configLocation>
               <enableRulesSummary>false</enableRulesSummary>
@@ -966,6 +883,7 @@
         </plugins>
       </reporting>
     </profile>
+    
     <profile>
         <id>assembly</id>
         <build>

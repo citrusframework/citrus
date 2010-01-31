@@ -1,0 +1,10 @@
+<FindBugsFilter>
+  <!-- Add any rule matcher which should be ignored by findbugs -->
+  <Match>
+    <!-- Ignore the spring autowire related
+         "Non-transient non-serializable instance field in serializable class" warning.
+         http://findbugs.sourceforge.net/bugDescriptions.html#SE_BAD_FIELD
+    -->
+    <Bug code="Se,UR,UMAC,EI,EI2"/>
+  </Match>
+</FindBugsFilter>

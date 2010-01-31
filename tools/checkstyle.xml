@@ -13,6 +13,12 @@
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation"/>
 
+  <!-- See http://checkstyle.sf.net/config_sizes.html -->
+  <module name="FileLength">
+    <property name="max" value="1500"/>
+  </module>
+  <module name="FileTabCharacter"/>
+  
   <module name="TreeWalker">
     <!-- Javadoc -->
     <module name="JavadocMethod">
@@ -69,12 +75,8 @@
     <module name="UnusedImports"/>
 
     <!-- Checks for Size Violations.                    -->
-    <!-- See http://checkstyle.sf.net/config_sizes.html -->
-    <module name="FileLength">
-      <property name="max" value="1500"/>
-    </module>
     <module name="LineLength">
-      <property name="max" value="100"/>
+      <property name="max" value="120"/>
       <property name="ignorePattern" value="^\s*\*\s*\S"/>
     </module>
     <module name="MethodLength">
@@ -95,7 +97,6 @@
     <module name="ParenPad"/>
 
     <module name="TypecastParenPad"/>
-    <module name="TabCharacter"/>
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround">
       <property name="allowEmptyConstructors" value="true"/>
@@ -151,7 +152,7 @@
     <module name="SimplifyBooleanReturn"/>
     <module name="StringLiteralEquality"/>
     <module name="IllegalCatch">
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
     <module name="JUnitTestCase"/>
     <module name="ParameterAssignment"/>
@@ -174,18 +175,6 @@
     <module name="ArrayTypeStyle"/>
     <!-- <module name="FinalParameters"/> -->
 
-    <module name="GenericIllegalRegexp">
-      <property name="format" value="printStacktrace"/>
-      <property name="message" value="Don't dump stacktraces with printStacktrace(). Use logging instead"/>
-    </module>
-    <module name="GenericIllegalRegexp">
-      <property name="format" value="System\.(out|err)\.print"/>
-      <property name="message" value="System.out.println and System.err.println are not allowed. Use logging instead."/>
-    </module>
-    <module name="GenericIllegalRegexp">
-      <property name="format" value="\s+$"/>
-      <property name="message" value="Avoid trailing spaces in a line"/>
-    </module>
     <module name="TodoComment">
         <property name="severity" value="info"/>
     </module>
@@ -198,6 +187,23 @@
     <module name="FileContentsHolder"/>
   </module>
 
+  <module name="RegexpSingleline">
+    <property name="format" value="printStacktrace"/>
+    <property name="message"
+              value="Don't dump stacktraces with printStacktrace(). Use logging instead"/>
+  </module>
+  
+  <module name="RegexpSingleline">
+    <property name="format" value="System\.(out|err)\.print"/>
+    <property name="message"
+              value="System.out.println and System.err.println are not allowed. Use logging instead."/>
+  </module>
+  
+  <module name="RegexpSingleline">
+    <property name="format" value="\s+$"/>
+    <property name="message" value="Avoid trailing spaces in a line"/>
+  </module>
+  
   <!-- Filter for supressing checkstyle comments-->
   <module name="SuppressionCommentFilter">
     <property name="offCommentFormat" value="CS\:OFF"/>
