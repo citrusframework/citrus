@@ -21,6 +21,7 @@ package com.consol.citrus.actions;
 
 import static org.easymock.EasyMock.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -555,5 +556,156 @@ public class SendMessageActionTest extends AbstractBaseTest {
         }
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " missing message payload");
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithXmlDeclaration() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithUTF16Encoding() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithISOEncoding() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithUnsupportedEncoding() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<?xml version=\"1.0\" encoding=\"MyUnsupportedEncoding\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        reset(messageSender);
+        replay(messageSender);
+        
+        try {
+            sendAction.execute(context);
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getCause() instanceof UnsupportedEncodingException);
+        }
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithMessagePayloadResourceISOEncoding() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageResource(new ClassPathResource("test-request-iso-encoding.xml", SendMessageActionTest.class));
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
     }
 }

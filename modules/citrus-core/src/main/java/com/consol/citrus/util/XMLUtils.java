@@ -19,13 +19,20 @@
 
 package com.consol.citrus.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.*;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
@@ -318,7 +325,11 @@ public class XMLUtils {
         parser.getDomConfig().setParameter("split-cdata-sections", false);
 
         LSInput input = domImpl.createLSInput();
-        input.setByteStream(new ByteArrayInputStream(xml.getBytes()));
+        try {
+            input.setByteStream(new ByteArrayInputStream(xml.trim().getBytes(getTargetCharsetName(xml))));
+        } catch(UnsupportedEncodingException e) {
+            throw new CitrusRuntimeException(e);
+        }
 
         Document doc;
         try {
@@ -374,7 +385,11 @@ public class XMLUtils {
             parser.getDomConfig().setParameter("element-content-whitespace", false);
             
             LSInput receivedInput = domImpl.createLSInput();
-            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.getBytes()));
+            try {
+                receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
+            } catch(UnsupportedEncodingException e) {
+                throw new CitrusRuntimeException(e);
+            }
             
             return parser.parse(receivedInput);
         } catch (ClassNotFoundException e) {
@@ -383,6 +398,28 @@ public class XMLUtils {
             throw new CitrusRuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
+        }
+    }
+
+    /**
+     * Try to find target encoding in XML declaration.
+     * 
+     * @param messagePayload XML message payload.
+     * @return charsetName if supported.
+     */
+    private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
+        if(messagePayload.trim().startsWith("<?xml") && messagePayload.contains("encoding")) {
+            String encoding = messagePayload.substring(messagePayload.indexOf("encoding") + 8);
+            encoding = encoding.substring(encoding.indexOf("\"")+1);
+            encoding = encoding.substring(0, encoding.indexOf("\""));
+            
+            if(Charset.availableCharsets().containsKey(encoding)) {
+                return encoding;
+            } else {
+                throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");
+            }
+        } else {
+            return "UTF-8";
         }
     }
 }
