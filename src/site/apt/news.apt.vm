@@ -4,6 +4,10 @@
  
 News
 
+* Feb. 01, 2010 <<Next snapshot version 1.1-SNAPSHOT>>
+ 
+ Next snapshot version 1.1-SNAPSHOT now available for download. See the {{{changes-report.html}changes report}} for details.
+ 
 * Jan. 20, 2010 <<Featured Citrus article on JAXenter.de>>
  
  We wrote an article on the German Java portal site {{{http://it-republik.de/jaxenter/}JAXenter.de}}. 
@@ -16,11 +20,11 @@ News
  gives a short introduction to the Citrus test framework in its latest issue 
  {{{http://it-republik.de/jaxenter/java-magazin-ausgaben/Cloud-Computing-000338.html}02/2010}}. 
 
-* Dec. 17, 2009 <<Last snapshot version 1.1-SNAPSHOT before final release>>
+* Dec. 17, 2009 <<Last snapshot version 1.1-SNAPSHOT in 2009>>
  
  Shortly before the holidays we update the snapshot version 1.1-SNAPSHOT on more time. The latest changes are related to extended
- SOAP attachment support and bugfixing. This snapshot version will be the last one before the final 1.1 release in January. Again 
- have a look at the {{{changes-report.html}changes report}} to see the latest changes and new features in 1.1-SNAPSHOT.
+ SOAP attachment support and bugfixing. Again have a look at the {{{changes-report.html}changes report}} to see the latest changes 
+ and new features in 1.1-SNAPSHOT.
  
 * Nov. 09, 2009 <<Improved JMS Topic support in version 1.1-SNAPSHOT>>
  

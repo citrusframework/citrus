@@ -15,7 +15,19 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="18.01.2010" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="01.02.2010" description="1.1 snapshot release">
+        <action dev="deppisch" type="fix">
+          #273 XML processing instruction in inline XML data
+        </action>
+        <action dev="deppisch" type="fix">
+          #271 citrus-ant-tasks Unix file path translation
+        </action>
+        <action dev="deppisch" type="fix">
+          #270 Automatic UTF-8 to UTF-16 conversion when sending messages
+        </action>
+        <action dev="deppisch" type="fix">
+          #269 Receive timeout ignored when using message selector string
+        </action>
         <action dev="deppisch" type="fix">
           #244 Purge Jms queues - adjust receive timeout
         </action>
