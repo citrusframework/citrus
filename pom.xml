@@ -404,25 +404,34 @@
     </pluginManagement>
   </build>
 
-  <repositories>
-    <repository>
-      <id>jboss</id>
-      <url>http://repository.jboss.com/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-        <id>codehaus</id>
-        <name>Codehaus Maven repository</name>
-        <url>http://repository.codehaus.org/</url>
-    </repository>
-  </repositories>
-      
   <profiles>
+    <!-- Repositories which should be active by default -->
+    <profile>
+      <id>repository</id>
+      <repositories>
+        <repository>
+          <id>jboss</id>
+          <url>http://repository.jboss.com/maven2</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+        </repository>
+        <repository>
+            <id>codehaus</id>
+            <name>Codehaus Maven repository</name>
+            <url>http://repository.codehaus.org/</url>
+        </repository>
+      </repositories>
+      <activation>
+        <file>
+          <missing>AFileWhichReallyNeverOccurs.WeNeedThisProfileAlways</missing>
+        </file>
+      </activation>
+    </profile>
+    
     <!-- Distribution Management -->
     <profile>
       <id>release</id>
