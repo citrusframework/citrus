@@ -177,7 +177,12 @@ public class Citrus {
                     if ((testName + ".xml").equalsIgnoreCase(found[i].getName())) {
                         String fileName = found[i].getPath();
                         fileName = fileName.substring(0, (fileName.length()-".xml".length()));
+                        
+                        //replace windows path separator
                         fileName = fileName.substring(startDir.length()).replace('\\', '.');
+                        
+                        //replace unix path separator
+                        fileName = fileName.substring(startDir.length()).replace('/', '.');
                         
                         if (log.isDebugEnabled()) {
                             log.debug("Found test '" + fileName + "'");
