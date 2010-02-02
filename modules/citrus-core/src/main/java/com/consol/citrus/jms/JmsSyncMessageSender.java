@@ -56,16 +56,16 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     /** JMS session */
     private Session session = null;
     
-    /** Destiantion instance */
+    /** Destination instance */
     private Destination destination;
     
-    /** Destiantion name */
+    /** Destination name */
     private String destinationName;
     
-    /** Reply destiantion */
+    /** Reply destination */
     private Destination replyDestination;
     
-    /** Reply destiantion name */
+    /** Reply destination name */
     private String replyDestinationName;
     
     /** Reply message handler */
@@ -171,11 +171,11 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
-     * Retrieve the reply destiantion either by injected instance, destination name or
-     * by creating a new temporary destiantion.
+     * Retrieve the reply destination either by injected instance, destination name or
+     * by creating a new temporary destination.
      * 
      * @param session current JMS session
-     * @param message holding possible reply destiantion in header.
+     * @param message holding possible reply destination in header.
      * @return the reply destination.
      * @throws JMSException
      */
@@ -367,7 +367,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     }
 
     /**
-     * Set the reply destiantion name.
+     * Set the reply destination name.
      * @param replyDestinationName the replyDestinationName to set
      */
     public void setReplyDestinationName(String replyDestinationName) {

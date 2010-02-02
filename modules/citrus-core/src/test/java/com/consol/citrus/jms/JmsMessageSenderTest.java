@@ -80,7 +80,7 @@ public class JmsMessageSenderTest {
     }
     
     @Test
-    public void testSendMessageWithDestiantion() throws JMSException {
+    public void testSendMessageWithDestination() throws JMSException {
         JmsMessageSender sender = new JmsMessageSender();
         sender.setConnectionFactory(connectionFactory);
         
@@ -111,7 +111,7 @@ public class JmsMessageSenderTest {
     }
     
     @Test
-    public void testSendMessageWithDestiantionName() throws JMSException {
+    public void testSendMessageWithDestinationName() throws JMSException {
         JmsMessageSender sender = new JmsMessageSender();
         sender.setConnectionFactory(connectionFactory);
         

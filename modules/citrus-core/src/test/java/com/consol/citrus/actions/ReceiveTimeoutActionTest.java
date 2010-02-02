@@ -83,7 +83,7 @@ public class ReceiveTimeoutActionTest extends AbstractBaseTest {
         try {
             receiveTimeout.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Message timeout validation failed! Received message while waiting for timeout on destiantion");
+            Assert.assertEquals(e.getMessage(), "Message timeout validation failed! Received message while waiting for timeout on destination");
             return;
         }
         

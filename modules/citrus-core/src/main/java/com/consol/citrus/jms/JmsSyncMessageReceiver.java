@@ -30,14 +30,14 @@ import org.springframework.integration.jms.JmsHeaders;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
- * Synchronous message receiver implementation for JMS. Class receives messages on a JMS destiantion
+ * Synchronous message receiver implementation for JMS. Class receives messages on a JMS destination
  * and saves the reply destination. As class implements the {@link JmsReplyDestinationHolder} interface
  * synchronous reply message sender implementations may ask for the reply destination later in 
  * the test execution.
  * 
- * In case a reply message correlator is set in this class the reply destiantions are stored with a given
+ * In case a reply message correlator is set in this class the reply destinations are stored with a given
  * correlation key. A synchronous reply message sender must ask with this specific correlation key in 
- * order to get the proper reply destiantion.
+ * order to get the proper reply destination.
  * 
  * @author Christoph Deppisch
  */
