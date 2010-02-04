@@ -48,7 +48,7 @@
   
   <developers>
     <developer>
-      <id>deppisch</id>
+      <id>christophd</id>
       <name>Christoph Deppisch</name>
       <email>christoph.deppisch@consol.de</email>
       <organization>ConSol* Software GmbH</organization>
@@ -64,9 +64,9 @@
   </prerequisites>
   
   <scm>
-    <connection>scm:svn:https://svn.consol.de/svn/citrus/trunk</connection>
-    <developerConnection>scm:svn:https://svn.consol.de/svn/citrus/trunk</developerConnection>
-    <url>https://svn.consol.de/svn/citrus/trunk</url>
+    <connection>git@github.com:christophd/citrus.git</connection>
+    <developerConnection>git://github.com/christophd/citrus.git</developerConnection>
+    <url>http://github.com/christophd/citrus.git</url>
   </scm>
   
   <organization>
@@ -461,20 +461,6 @@
       </distributionManagement>
     </profile>
     
-    <profile>
-      <id>release-local</id>
-      <distributionManagement>
-        <repository>
-          <id>local-release</id>
-          <url>file://d:/daten/temp/citrus-release</url>
-        </repository>
-        <snapshotRepository>
-          <id>local-snapshots</id>
-          <url>file://d:/daten/temp/citrus-snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
-      
     <profile>
         <id>site-build</id>
         <distributionManagement>
