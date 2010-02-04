@@ -1,139 +1,98 @@
  ------
- 30 Minutes Quickstart
+ Development Quickstart
  ------
 
-30 Minutes Quickstart
+Development Quickstart
 
-  This quickstart gets the Citrus project sources running in less than 30 minutes,
-  starting with initial source code checkout and ending with a deployed application ready for coding.
+  This quickstart gets the Citrus project sources running in a few minutes,
+  starting with initial git repository clone and ending with a built 
+  Citrus project ready for coding.
 
 * Preconditions
 
-  * Subversion Client <<{{{http://subversion.tigris.org/}download}}>> 
+  * Git Client <<{{{http://git-scm.com/}http://git-scm.com/}}>> 
   
     This can be either a command line client or some graphical UI. For
-    simplicity, we assume you have the command line client <<<svn>>>
-    installed.
+    simplicity, we assume you have the command line client installed.
 
-    Note: Make sure your SVN client version is working with version 1.5 or higher!
-
-  * JDK 1.5 (or higher version) 
+  * Java 1.5 (or higher version) 
   
-    The installation directory is referred in the following as <<<JAVA_HOME>>>. 
-    You can verify your installation via your command line with
+    You can verify the Java installation via command line with
   
 ---
 > java -version
-java version "1.5.0_13"
-Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_13-b05-237)
-Java HotSpot(TM) Client VM (build 1.5.0_13-119, mixed mode, sharing)
+java version "1.6.0_17"
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.6.0_17)
+Java HotSpot(TM) Client VM (build 1.6.0_17, mixed mode, sharing)
 ---
 
-    Note the correct version (1.5.x)!
-    
-  * Maven 2.0.9 (or higher version)
+  * Maven 2.2.1 (or higher version)
   
-    Installed on your local machine. You can download {{{http://maven.apache.org}maven}} 
-    and put it somewhere on your machine. Please verify correct version and <<<MAVEN_HOME>>> using following command
+    Download {{{http://maven.apache.org}maven}} and install Maven on your machine. 
+    Please verify correct version and <<<MAVEN_HOME>>> setup using following command
 
 ---
 > mvn -version
-Maven version: 2.0.9
-Java version: 1.5.0_16
+Maven version: 2.2.1
+Java version: 1.6.0_17
 Default locale: en_US, platform encoding: MacRoman
-OS name: "mac os x" version: "10.5.5" arch: "i386" family: "unix"
+OS name: "mac os x" version: "10.6.2" arch: "x86_64" Family: "mac"
 ---
 
-  * in case you want to connect to TIBCO EMS or in case you intend to connect with TIBCO Collaborator 
-    you will need a TIBCO Installation on your local machine. For more information about TIBCO@ConSol use the {{{https://wiki.consol.de/wiki/Tibco}TIBCO Wiki pages}}.
+  * In case you want to use the Citrus TIBCO module in order to connect to TIBCO EMS or 
+    TIBCO Collaborator you will need a TIBCO Active Matrix BusinessWorks installation 
+    on your local machine. For more information about TIBCO see {{{http://www.tibco.com/}official website}}.
     
-* Initial checkout
+* Initial git clone
 
-  You need to checkout the Citrus sources from the subversion repository
-  <<<svn.consol.de>>>. Using the command line this is done by
+  You need to checkout the Citrus sources from our repository on GitHub ({{{http://www.github.com/}http://www.github.com/}}). 
+  You can use the following command to do this
 
 ---
-svn co http://svn.consol.de/svn/citrus/trunk citrus-trunk
+git clone git://github.com/christophd/citrus.git
 ---
 
-  This will checkout the main trunk of the Citrus repository in the
-  directory <<<citrus-trunk>>>.  In the following the
-  freshly created directory "citrus-trunk" is referenced to as
-  <<<$PROJECT_HOME>>>. For detailed instructions about subversion, please
-  consult the subversion
-  {{{http://svnbook.red-bean.com/}documentation}}.
+  This will clone the git repository to the local directory
+  <<<citrus>>>. In the following this project directory is referenced as
+  <<<PROJECT_HOME>>>. For detailed instructions about git, please
+  consult the official git website {{{http://git-scm.com/}http://git-scm.com/}}.
   
-  After the checkout, you have to create a file <<<profiles.xml>>>. A template
-  <<<profiles.xml.template>>> is provided which can be used as a starting
-  point. Copy it over to <<<profiles.xml>>> and replace <<<[[PROJECT_HOME]]>>> within
-  the file with the top level directory <<<$PROJECT_HOME>>>. If you are the happy
-  users of a Unix or OS X system, you can call
+  Now we have to create a <<<profiles.xml>>> file in <<<PROJECT_HOME>>>. This file holds some
+  project environment settings as properties. A template <<<profiles.xml.template>>> is provided as a starting
+  point for creating the file. Unix or OS X users are lucky to simply call
 
 ---
-  sh setup.sh
+  ./setup.sh
 ---
 
-  (or './setup.sh' or even '. ./setup.sh') to do this for you. You have to
-  call <<<setup.sh>>> only once for the <<<profiles.xml>>> generation.
-
-  There are more configuration files to be created after checkout. Naming this is the citrus.properties configuration file located in the 
-  directory src/main/resources
+  which is doing the whole work for you. Note that you need to call <<<setup.sh>>> only once for 
+  the <<<profiles.xml>>> generation.
   
-* Create Citrus artifacts
+* Build the Citrus artifacts
 
-  Now, when everything has been setup properly, you use the Maven2 CLI
-  command <<<mvn>>> for all the rest. Call
+  Now everything is setup properly and you can use Maven2 for all the rest. Call
 
 ---
 mvn install
 ---
 
-  This creates all artefacts, especially the Citrus JAR files. The <<install>> goal will also run all unit and integration tests included.
+  This runs the full build lifecycle creating all artifacts, especially the Citrus JAR files. 
+  The <<install>> goal will also run all unit and integration tests included.
 
 * Create IDE project files
 
-  You can easily create the project files for your favourite IDE. For
-  IntelliJ IDEA, in <<<$PROJECT_HOME>>> call
+  You can easily create the project files for your favorite IDE. For
+  IntelliJ IDEA, in <<<PROJECT_HOME>>> call
 
 ---
 mvn idea:idea
 ---
 
-   for eclipse, call
+   for Eclipse, call
 
 ---
 mvn eclipse:eclipse
 ---
 
-  This is the preferred way for creating IDE project files. It will
-  also install the sources for most libraries and can be called
-  each time when dependencies changes.
-
-  Note: You can also try out m2eclipse - check out the {{{http://www.theserverside.com/tt/articles/article.tss?l=Introductiontom2eclipse}introductory article}}.
-
-* Create project site
-
-  You can create the project generated site with
-
----
-mvn site -Psite
----
-
-  The special profile <site> activates the report plugins such as clover.
-
-  Note: Usually you only want to create the top level project documentation, so you could skip
-  the sub modules site generation with
-
----
-mvn site -Psite -N
----
-
-  To completely preview the site documentation, you can stage the generated site of all modules with
-
----
-mvn site -Psite -DstagingDirectory=/tmp/stage
----
-
-* Fin
-
-  What's next?
+  You are now ready for Citrus project import in your IDE. This is the preferred way for creating IDE project files. 
+  Do not create IDE projects manually.
