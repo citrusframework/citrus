@@ -3,3 +3,5 @@ profiles.xml
 .project
 .classpath
 .settings
+test.history
+test-output
