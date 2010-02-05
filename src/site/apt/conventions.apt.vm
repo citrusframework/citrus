@@ -1,40 +1,127 @@
  ------
- Citrus Conventions
+ Coding Conventions
  ------
 
-Citrus Conventions
+Coding Conventions
 
-* TestAction development
-
-  <<AbstractTestAction>>
-  The framework offers a AbstractTestAction class which should be used when developing new test actions.
-  The abstract class forces the actions to contribute name and description for the action. 
+ We think style matters. Not for beauty but for speaking a common 
+ language when talking about code and getting familiar with foreign code very fast. 
+ So please read this guide carefully when contributing extensions and patches.
+ 
+ If you don't like a rule, open a discussion - we can always talk about changes.
 
 * Naming conventions
 
-  * <<TODO>> 
+  * Getters and setters
+  
+    Name your access and setting method according to the Java
+    Bean scheme. For instance use <getApple()> and <setApple(Apple a)> <<not>>
+    <fetchApple()> and <storeApple(Apple a)> if you merely want to set an object's attribute.
+    Name the accessors/setter method after the object it is going to get/set if possible 
+    (e.g. <getStatus()> <<not>> <getMyStatus()>).
 
+  * Class, method and member variable names
+  
+    <<Classes>>, <<Methods>> and <<Member variables>> are given names in mixed case. 
+    There are never to capital letters adjacent. Remember, even acronyms like 'ID' or 'JTAPI' 
+    in class or method names must follow this rule. Class names always start with an upper case,
+    method names and member variables always start with lower case.
+              
 ---
   ToDo.java  // Good
   TODO.java  // BAD, use camel back writing
   todo.java  // BAD, as reserved
+  
+  getTestId() //Good
+  getTestID() //BAD
+  
+  class JtapiProvider //Good
+  class JTAPIProvider //BAD
+---
+
+  * Interfaces and implementations
+  
+    The name of standard implementations of interfaces end with <Impl> and live
+    in a subpackage <impl>. Example: <com.consol.citrus.core.service.ActionService>
+    and <com.consol.citrus.core.service.impl.ActionServiceImpl>.
+  
+  * Test classes
+  
+    Unit test classes have to end with <<Test>> and should live in a subpackage 
+    called <test> (minus <impl>). 
+    Example: <com.consol.citrus.core.service.impl.ActionServiceImpl> and
+    <com.consol.citrus.core.service.test.ActionServiceImplTest>.
+
+* Formatting
+
+  The following rules are verified daily by <a href="http://checkstyle.sourceforge.net/">Checkstyle</a>. 
+  So the first and most important rule is to look regularly to our checkstyle reports. Here are the
+  most important rules:
+  
+  * Indentation
+  
+    No <<tabs>>. Indentation must be 4 blanks for Java and 2 blanks for XML.
+  
+  * Braces
+  
+    Curly braces start <<on the same line as the statement>>
+            
+---
+if (foo == 12) {
+    doSomething();
+} else {
+    doSomethingOther();
+}
+
+NOT
+
+if (foo == 12)
+{
+    doSomething();
+}
+else
+{
+    doSomethingOther();
+}
+---
+
+  Each block must be surrounded by curly braces even if it is only one line. 
+  The code is more readable and more error proof, e.g. think about an extra 
+  line to the block. Chances a high, that you forget to insert the now 
+  necessary braces. This means that the following code shouldn't be used:
+
+---
+if ( a &gt; 0 ) {
+    b = 1;
+}
+
+NOT
+
+if ( a &gt; 0 )
+    b = 1;
 ---
 
 * Dependencies
 
-   Dependencies are managed with various POM files:
+   Dependencies are managed with Maven in various POM files:
 
-  * <<PROJECT_HOME>></pom.xml> \
-    Contains all available dependencies (jars) for the framework including
+  * <<PROJECT_HOME>></pom.xml>
+  
+    Contains all available dependencies (jars) for the Citrus including
     version numbers.
    
-  * <<PROJECT_HOME>></modules/citrus-tibco/pom.xml> \
-    Contains very specific TIBCO dependencies only used by this module. TIBCO dependencies go in here.
+  * <<PROJECT_HOME>></modules/citrus-tibco/pom.xml>
+  
+    Contains very specific TIBCO dependencies only used by this module. 
+    TIBCO dependencies go in here.
 
-  * The same applies to other modules. In case a dependency is very specific to a module the dependency goes into the 
-    modules POM. If you need a library specific for a module, add it there.
+  * The same applies to other modules. In case a dependency is very specific 
+    to a module the dependency goes into the modules POM. If you need a library 
+    specific for a module, add it there.
 
-    Note: If a new library in turn needs another new library the preferred way is to let Maven resolve this dependency. I.e. you need not declare this dependency explicitly.
+    Note: If a new library in turn needs another new library the preferred way 
+    is to let Maven resolve this dependency. I.e. you need not declare this 
+    dependency explicitly.
 
     A general rule for dependencies: add a dependency if
 

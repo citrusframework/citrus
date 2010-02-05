@@ -16,9 +16,8 @@
     <links>
       <item name="ConSol* Labs" href="http://labs.consol.de/"/>
       <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
-      <!-- item name="Wiki" href="https://wiki.consol.de/wiki/Projekte/consol/Citrus"/-->
-      <!-- item name="Subversion" href="http://fisheye.consol.de/browse/citrus"/-->
-      <!-- item name="Build" href="http://build2.int.consol.de/bamboo/browse/CITRUS"/-->
+      <item name="GitHub" href="http://github.com/christophd/citrus"/>
+      <item name="Build" href="http://build2.int.consol.de/bamboo/browse/CITRUS"/>
     </links>
 
     <menu name="Citrus">
@@ -42,21 +41,20 @@
     
     <menu name="Documentation">
       <item name="Reference" href="${site.url}/reference-doc.html"/>
-      <!-- item name="FAQ" href="${site.url}/faq.html"/-->
       <item name="License" href="${site.url}/license.html"/>
+      <!-- item name="FAQ" href="${site.url}/faq.html"/-->
     </menu>
     
     <menu name="Community">
       <item name="News" href="${site.url}/news.html"/>
-      <!-- item name="Mailing List" href="${site.url}/mail-lists.html"/-->
+      <item name="Mailing List" href="${site.url}/mail-lists.html"/>
       <item name="Contact" href="${site.url}/contact.html"/>
       <item name="Reporting bugs" href="${site.url}/reporting-bugs.html"/>
     </menu>
 
     <menu name="Development">
-      <!-- item name="Quickstart" href="${site.url}/dev-quickstart.html"/-->
-      <!-- item name="Coding Style" href="${site.url}/coding-style.html"/-->
-      <!-- item name="Coding Conventions" href="${site.url}/conventions.html"/-->
+      <item name="Quickstart" href="${site.url}/quickstart.html"/>
+      <!--item name="Coding Conventions" href="${site.url}/conventions.html"/-->
       <item name="Contributing" href="${site.url}/contributing.html"/>
       <item name="Modules" href="${site.url}/modules-introduction.html">
         <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
