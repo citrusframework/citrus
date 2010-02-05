@@ -35,7 +35,7 @@
   </section>
   
   <section id="setup-prerequisits">
-    <title>Prerequisits</title>
+    <title>Preconditions</title>
     
     <para>You need following software on your computer, in order to use the Citrus framework:</para>
 
@@ -47,14 +47,16 @@
         </listitem>
         <listitem>
             <para>Java IDE (optional)</para>
-            <para>A Java IDE will help you manage your Citrus project and create and execute test cases. 
-            Use the Java IDE you like best (e.g. Eclipse or IntelliJ IDEA).</para>
+            <para>A Java IDE will help you to manage your Citrus project (e.g. creating 
+            and executing test cases). You can use the Java IDE that you like best 
+            like Eclipse or IntelliJ IDEA.</para>
         </listitem>
         <listitem>
-            <para>Maven 2.0.9 or higher (optional)</para>
-            <para>Maven will ease up your life when it comes to managing project dependencies and project builds. Maven
-            can support you while using Citrus. In case you have a Maven built project it is very easy to include Citrus tests into
-            your existing build lifecycle.</para>
+            <para>Maven 2.2.1 or higher (optional)</para>
+            <para>Maven will ease up your life when it comes to managing project dependencies and project builds. 
+            Citrus projects will fit best with Maven2 <ulink url="http://maven.apache.org/">http://maven.apache.org/</ulink>. 
+            However it is not required to use Maven2. You can also run tests using 
+            ANT (http://ant.apache.org/) for instance.</para>
         </listitem>
     </itemizedlist>
       
@@ -63,11 +65,23 @@
   <section id="setup-installation">
     <title>Installation</title>
 
-    <para>Once you have downloaded the latest Citrus archive you need to unzip the archive into a suitable 
-    location on your local storage.</para>
-    
-    <para>You are now able to run the built-in testing samples, which also should give you an idea how to use Citrus with
-    ANT.</para>
+    <itemizedlist>
+        <listitem>
+            <para>Get the latest Citrus release archive from our 
+            <ulink url="http://citrusframework.org/download.html">download section</ulink></para>
+        </listitem>
+        <listitem>
+            <para>Extract the archive into an appropriate location on your local storage</para>
+        </listitem>
+        <listitem>
+            <para>Use the ANT tutorial in our tutorials section to find out how to run 
+            tests using ANT.</para>
+        </listitem>
+        <listitem>
+            <para>Read the Maven2 tutorial to find out how to integrate the Citrus tests 
+            into the Maven2 build lifecycle</para>
+        </listitem>
+    </itemizedlist>
   </section>
   
   <section id="setup-using-maven">

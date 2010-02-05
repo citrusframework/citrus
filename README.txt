@@ -5,14 +5,19 @@ WELCOME TO CITRUS
 
   http://www.citrusframework.org
 
-  Within 'docs/reference' you can find the reference documentation. 
-  Visit our official Citrus homepage at 'http://www.citrusframework.org' 
-  in order to gain more information and detailed documentation.
+  Citrus is a test framework written in Java that is able to create 
+  fully automated end-to-end use case tests for enterprise SOA 
+  applications. Citrus simulates surrounding interface partners 
+  supporting a huge set of different transports and protocols like 
+  SOAP WebServices, Http and JMS.
+  
+  Visit the official website on 'http://www.citrusframework.org' 
+  in order to find more information and detailed documentation.
 
-PREREQUISITS
+PRECONDITIONS
 
-  You need following software on your computer in order to use the 
-  Citrus Framework:
+  You need following software on your machine in order to use the 
+  Citrus framework:
  
   * Java 5.0 or higher
     Installed JDK 5.0 or higher plus JAVA_HOME environment variable set 
@@ -20,14 +25,13 @@ PREREQUISITS
    
   * Java IDE (optional)
     A Java IDE will help you to manage your Citrus project (e.g. creating 
-    and executing test cases). Use the Java IDE that you like best like 
-    Eclipse or IntelliJ IDEA.
+    and executing test cases). You can use the Java IDE that you like best 
+    like Eclipse or IntelliJ IDEA.
  
-  * Maven 2.0.10 or higher (optional)
-    Citrus projects will fit best with Maven (http://maven.apache.org). 
-    However it is not required to use Maven in order to use Citrus. 
-    You can also run tests using ANT (http://ant.apache.org/) for 
-    instance.
+  * Maven 2.2.1 or higher (optional)
+    Citrus projects will fit best with Maven2 (http://maven.apache.org). 
+    However it is not required to use Maven2. You can also run tests using 
+    ANT (http://ant.apache.org/) for instance.
    
 INSTALLATION
 
@@ -38,13 +42,27 @@ INSTALLATION
   * Use the ANT tutorial in our tutorials section to find out how to run 
     tests using ANT.
  
-  * Read the Maven tutorial to find out how to integrate the Citrus tests 
-    into the Maven build lifecycle
+  * Read the Maven2 tutorial to find out how to integrate the Citrus tests 
+    into the Maven2 build lifecycle
+
+RESOURCES
+
+  * Citrus's source repository is hosted on github.com. You can clone the
+    repository with git://github.com/christophd/citrus.git as URL
+
+  * Find our blog and more interesting articles around Citrus on 
+    http://labs.consol.de and checkout the various post categories for
+    selecting a specific topic.
+
+  * http://www.citrusframework.org offers tutorials and more information about
+    Citrus framework.
 
 SAMPLES
 
-  To build and run the sample applications go to the 'samples' directory 
-  and run 'build.xml' script with ANT.
+  Our sample section is still growing. Nevertheless you can find a sample 
+  project called 'FlightBookingService' in our distribution. To build and 
+  run the sample applications go to the 'samples' directory and run 'build.xml' 
+  script with ANT (ant -p).
 
 LICENSING
   
@@ -73,6 +91,7 @@ PROFESSIONAL SERVICES
 BUGS 
 
   Please report any bugs and/or feature requests to dev@citrusframework.org
+  or directly to http://github.com/christophd/citrus/issues
   
 AUTHORS/TEAM
 
