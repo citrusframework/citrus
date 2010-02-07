@@ -658,7 +658,6 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSendMessageWithUnsupportedEncoding() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);

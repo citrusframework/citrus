@@ -79,7 +79,7 @@ public class JmsMessageReceiverTest {
     }
     
     @Test
-    public void testReceiverMessageWithDestination() throws JMSException {
+    public void testWithDestination() throws JMSException {
         JmsMessageReceiver receiver = new JmsMessageReceiver();
         receiver.setConnectionFactory(connectionFactory);
         
@@ -186,7 +186,7 @@ public class JmsMessageReceiverTest {
     }
     
     @Test
-    public void testReceiverMessageWithCustomTimeout() throws JMSException {
+    public void testWithCustomTimeout() throws JMSException {
         JmsMessageReceiver receiver = new JmsMessageReceiver();
         receiver.setConnectionFactory(connectionFactory);
         
@@ -223,7 +223,7 @@ public class JmsMessageReceiverTest {
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }
     
-    public void testReceiverMessageWithMessageHeaders() throws JMSException {
+    public void testWithMessageHeaders() throws JMSException {
         JmsMessageReceiver receiver = new JmsMessageReceiver();
         receiver.setConnectionFactory(connectionFactory);
         
@@ -258,6 +258,79 @@ public class JmsMessageReceiverTest {
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertTrue(receivedMessage.getHeaders().containsKey("Operation"));
         Assert.assertTrue(receivedMessage.getHeaders().get("Operation").equals("sayHello"));
+        
+        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+    }
+    
+    @Test
+    public void testWithMessageSelector() throws JMSException {
+        JmsMessageReceiver receiver = new JmsMessageReceiver();
+        receiver.setConnectionFactory(connectionFactory);
+        
+        receiver.setDestination(destination);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(controlHeaders)
+                                .build();
+        
+        Map<String, String> headers = new HashMap<String, String>();
+        
+        reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        expect(session.getTransacted()).andReturn(false).once();
+        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        
+        expect(session.createConsumer(destination, "Operation = 'sayHello'")).andReturn(messageConsumer).once();
+        
+        connection.start();
+        expectLastCall().once();
+        
+        expect(messageConsumer.receive(5000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
+        
+        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        
+        Message<?> receivedMessage = receiver.receiveSelected("Operation = 'sayHello'");
+        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+        
+        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+    }
+    
+    @Test
+    public void testWithMessageSelectorAndCustomTimeout() throws JMSException {
+        JmsMessageReceiver receiver = new JmsMessageReceiver();
+        receiver.setConnectionFactory(connectionFactory);
+        
+        receiver.setDestination(destination);
+        receiver.setReceiveTimeout(10000L);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(controlHeaders)
+                                .build();
+        
+        Map<String, String> headers = new HashMap<String, String>();
+        
+        reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        expect(session.getTransacted()).andReturn(false).once();
+        expect(session.getAcknowledgeMode()).andReturn(Session.AUTO_ACKNOWLEDGE).once();
+        
+        expect(session.createConsumer(destination, "Operation = 'sayHello'")).andReturn(messageConsumer).once();
+        
+        connection.start();
+        expectLastCall().once();
+        
+        expect(messageConsumer.receive(10000L)).andReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers)).once();
+        
+        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        
+        Message<?> receivedMessage = receiver.receiveSelected("Operation = 'sayHello'");
+        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }

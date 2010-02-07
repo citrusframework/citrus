@@ -60,18 +60,18 @@ public class JmsMessageSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, destination);
+        reset(jmsTemplate, connectionFactory, destination, messageProducer);
 
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
         
         jmsTemplate.convertAndSend(message);
         expectLastCall().once();
         
-        replay(jmsTemplate, connectionFactory, destination);
+        replay(jmsTemplate, connectionFactory, destination, messageProducer);
         
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, destination);
+        verify(jmsTemplate, connectionFactory, destination, messageProducer);
     }
     
     @Test
@@ -86,23 +86,25 @@ public class JmsMessageSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, destination, connection, session);
+        reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createProducer(destination)).andReturn(messageProducer).once();
-
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+        
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
                 new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
         
         expect(session.getTransacted()).andReturn(false).once();
         
-        replay(jmsTemplate, connectionFactory, destination, connection, session);
+        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
         
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, destination, connection, session);
+        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
     
     @Test
@@ -117,12 +119,14 @@ public class JmsMessageSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, destination, connection, session);
+        reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createProducer(destinationQueue)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
 
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
                 new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
@@ -131,11 +135,11 @@ public class JmsMessageSenderTest {
         
         expect(session.createQueue("myDestination")).andReturn(destinationQueue).once();
         
-        replay(jmsTemplate, connectionFactory, destination, connection, session);
+        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
         
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, destination, connection, session);
+        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
     
     @Test

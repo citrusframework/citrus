@@ -29,6 +29,8 @@ import javax.jms.*;
 public class TextMessageImpl implements TextMessage {
     private String payload = "";
     
+    private Destination replyDestination = null;
+    
     private Map<String, String> headers = new HashMap<String, String>();
     
     public TextMessageImpl(String payload, Map<String, String> headers) {
@@ -42,7 +44,7 @@ public class TextMessageImpl implements TextMessage {
     public void setLongProperty(String name, long value) throws JMSException {}
     public void setJMSType(String type) throws JMSException {}
     public void setJMSTimestamp(long timestamp) throws JMSException {}
-    public void setJMSReplyTo(Destination replyTo) throws JMSException {}
+    public void setJMSReplyTo(Destination replyTo) throws JMSException {this.replyDestination=replyTo;}
     public void setJMSRedelivered(boolean redelivered) throws JMSException {}
     public void setJMSPriority(int priority) throws JMSException {}
     public void setJMSMessageID(String id) throws JMSException {}
@@ -65,7 +67,7 @@ public class TextMessageImpl implements TextMessage {
     public long getLongProperty(String name) throws JMSException {return 0;}
     public String getJMSType() throws JMSException {return null;}
     public long getJMSTimestamp() throws JMSException {return 0;}
-    public Destination getJMSReplyTo() throws JMSException {return null;}
+    public Destination getJMSReplyTo() throws JMSException {return replyDestination;}
     public boolean getJMSRedelivered() throws JMSException {return false;}
     public int getJMSPriority() throws JMSException {return 0;}
     public String getJMSMessageID() throws JMSException {return "123456789";}
