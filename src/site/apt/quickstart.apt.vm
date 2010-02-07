@@ -45,21 +45,20 @@ OS name: "mac os x" version: "10.6.2" arch: "x86_64" Family: "mac"
     
 * Initial git clone
 
-  You need to checkout the Citrus sources from our repository on GitHub ({{{http://www.github.com/}http://www.github.com/}}). 
+  First of all we get the Citrus sources from the repository on GitHub ({{{http://www.github.com/}http://www.github.com/}}). 
   You can use the following command to do this
 
 ---
 git clone git://github.com/christophd/citrus.git
 ---
 
-  This will clone the git repository to the local directory
-  <<<citrus>>>. In the following this project directory is referenced as
-  <<<PROJECT_HOME>>>. For detailed instructions about git, please
-  consult the official git website {{{http://git-scm.com/}http://git-scm.com/}}.
+  This will clone the Citrus project to the target directory <<<citrus>>>. In the following this project 
+  directory is referred to as <<<PROJECT_HOME>>>. For detailed instructions about the version control system git, 
+  please consult the official website {{{http://git-scm.com/}http://git-scm.com/}}.
   
-  Now we have to create a <<<profiles.xml>>> file in <<<PROJECT_HOME>>>. This file holds some
-  project environment settings as properties. A template <<<profiles.xml.template>>> is provided as a starting
-  point for creating the file. Unix or OS X users are lucky to simply call
+  Now we have to tell Citrus our environment settings. Therefore create a <<<profiles.xml>>> file in <<<PROJECT_HOME>>>. 
+  A template <<<profiles.xml.template>>> is provided as a starting point for creating the file. Unix and OS X users are 
+  lucky to simply call
 
 ---
   ./setup.sh
@@ -70,14 +69,24 @@ git clone git://github.com/christophd/citrus.git
   
 * Build the Citrus artifacts
 
-  Now everything is setup properly and you can use Maven2 for all the rest. Call
+  Now everything is setup properly and you can use Maven for all the rest. Call
 
 ---
 mvn install
 ---
 
-  This runs the full build lifecycle creating all artifacts, especially the Citrus JAR files. 
-  The <<install>> goal will also run all unit and integration tests included.
+  This command runs the full Maven build lifecycle with compilation, testing, packaging and installation of all artifacts. 
+  You will find the freshly built Citrus JAR files in your local Maven repository. Using this new own Citrus version is quite simple.
+  Just add the SNAPSHot dependency to your projects POM like this
+  
++---
+  <dependency>
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-core</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <scope>test</scope>
+  </dependency>
++---
 
 * Create IDE project files
 
@@ -94,5 +103,24 @@ mvn idea:idea
 mvn eclipse:eclipse
 ---
 
-  You are now ready for Citrus project import in your IDE. This is the preferred way for creating IDE project files. 
-  Do not create IDE projects manually.
+   for Netbeans call
+   
+---
+mvn netbeans:netbeans
+---
+
+  The project files are now ready for import in your IDE. This is the preferred way for creating IDE project files in Maven. 
+  Please do not create IDE projects manually. Maven takes care of the whole project classpath construction.
+  
+  Make sure that you have set the M2_REPO classpath variable set in Eclipse (or Netbeans). The variable value points to 
+  your local Maven repository (typically found in <C:\Documents and Settings\username\.m2\repo> or <~/.m2/repo>).
+
+  Maven ofers a suitable command to do this automatically:
+
+---
+mvn -Declipse.workspace=<path-to-eclipse-workspace> eclipse:add-maven-repo 
+---
+
+* What's next? 
+  
+  Have fun with Citrus!  
