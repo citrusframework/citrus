@@ -56,7 +56,7 @@
                     <map>
                         <entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHelloResponse"/>
                         <entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
-                        <entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:SOAPAction" value="sayHello"/>
+                        <entry key="citrus_soap_action" value="sayHello"/>
                     </map>
                 </property>
             </bean>

@@ -106,7 +106,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                                 continue;
                             }
                             
-                            if(headerEntry.getKey().toLowerCase().endsWith("soapaction")) {
+                            if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                                 soapRequest.setSoapAction(headerEntry.getValue().toString());
                             } else {
                                 SoapHeaderElement headerElement;

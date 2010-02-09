@@ -30,7 +30,6 @@ import org.springframework.ws.mime.Attachment;
 import com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.SoapAttachmentHeaders;
 
 /**
  * Message callback able to decorate the generated JMS message before sending.
@@ -56,10 +55,10 @@ public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback
                     if(contentId.startsWith("<")) {contentId = contentId.substring(1);}
                     if(contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
                     
-                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT_ID, contentId);
-                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT_TYPE, attachment.getContentType());
-                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
-                    jmsMessage.setStringProperty(SoapAttachmentHeaders.CHARSET_NAME, "UTF-8");
+                    jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
+                    jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
+                    jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
+                    jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8");
                 }
             }
         } catch(IOException e) {

@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.SoapAttachmentHeaders;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 
 /**
  * Abstract SOAP attachment validator tries to find attachment within received message and compares
@@ -55,21 +55,21 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     public void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException {
         log.info("Validating SOAP attachments ...");
         
-        if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT_ID)) {
+        if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_ID)) {
             if(log.isDebugEnabled()) {
-                log.debug("Found attachment with contentId '" + receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_ID) + "'");
+                log.debug("Found attachment with contentId '" + receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID) + "'");
             }
             
             SoapAttachment attachment = new SoapAttachment();
             
-            attachment.setContentId(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_ID).toString());
+            attachment.setContentId(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID).toString());
             
-            if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT_TYPE)) {
-                attachment.setContentType(receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT_TYPE).toString());
+            if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_TYPE)) {
+                attachment.setContentType(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_TYPE).toString());
             }
             
-            if(receivedMessage.getHeaders().containsKey(SoapAttachmentHeaders.CONTENT)) {
-                Object contentObject = receivedMessage.getHeaders().get(SoapAttachmentHeaders.CONTENT);
+            if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT)) {
+                Object contentObject = receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT);
                 
                 if(contentObject instanceof byte[]) {
                     String content = new String((byte[])contentObject, controlAttachment.getCharsetName());

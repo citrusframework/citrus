@@ -128,7 +128,7 @@
                           key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Request&quot; 
                           value=&quot;HelloRequest&quot;/&gt;
                       &lt;entry 
-                          key=&quot;{http://www.consol.de/schemas/sayHello}ns0:SOAPAction&quot; 
+                          key=&quot;citrus_soap_action&quot; 
                           value=&quot;sayHello&quot;/&gt;
                   &lt;/map&gt;
               &lt;/property&gt;
