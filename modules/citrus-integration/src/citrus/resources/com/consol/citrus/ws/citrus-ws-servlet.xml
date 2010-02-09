@@ -27,7 +27,6 @@
     </bean>
     
     <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
-        <property name="defaultFault" value="{http://www.citrusframework.org/faults}CITRUS:TEC-1000,Internal server error"/>
         <property name="exceptionMappings">
             <value>
                 com.consol.citrus.exceptions.CitrusRuntimeException={http://www.citrusframework.org/faults}CITRUS:TEC-1001,Invalid request
