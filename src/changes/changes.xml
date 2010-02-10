@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="01.02.2010" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="10.02.2010" description="1.1 snapshot release">
+        <action dev="deppisch" type="add">
+          #274 Added SOAP fault support for sending SOAP responses
+        </action>
         <action dev="deppisch" type="fix">
           #273 XML processing instruction in inline XML data
         </action>
