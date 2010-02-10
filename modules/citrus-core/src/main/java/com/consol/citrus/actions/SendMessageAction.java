@@ -27,6 +27,7 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -92,8 +93,10 @@ public class SendMessageAction extends AbstractTestAction {
                 throw new CitrusRuntimeException("Could not find message data. Either message-data or message-resource must be specified");
             }
     
-            /* explicitly overwrite message elements */
-            messagePayload = context.replaceMessageValues(messageElements, messagePayload);
+            if(StringUtils.hasText(messagePayload)) {
+                /* explicitly overwrite message elements */
+                messagePayload = context.replaceMessageValues(messageElements, messagePayload);
+            }
     
             /* Set message header */
             Map<String, Object> headerValuesCopy = context.replaceVariablesInMap(headerValues);

@@ -51,6 +51,44 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="send-fault">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="core:description" minOccurs="0"/>
+                <xs:element name="fault">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="fault-code" type="xs:string"/>
+                            <xs:element name="fault-string" type="xs:string" minOccurs="0"/>                            
+                            <xs:element name="fault-detail" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="file" type="xs:string"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="header" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="element" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="with" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="receive">
         <xs:complexType>
             <xs:complexContent>

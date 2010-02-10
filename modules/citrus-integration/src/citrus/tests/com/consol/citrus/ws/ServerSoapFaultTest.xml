@@ -60,9 +60,11 @@
                     </extract>
                   </receive>
                   
-                  <send with="webServiceResponseSender">
-                  	<message>
-                  		<data>
+                  <ws:send-fault with="webServiceResponseSender">
+                  	<ws:fault>
+                        <ws:fault-code>{http://www.citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
+                        <ws:fault-string>Invalid request</ws:fault-string>
+                  		<ws:fault-detail>
                   			<![CDATA[
       							<ns0:FaultDetail xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
       								<ns0:MessageId>${messageId}</ns0:MessageId>
@@ -71,13 +73,12 @@
       								<ns0:Text>Invalid request</ns0:Text>
       							</ns0:FaultDetail>
                   			]]>
-                  		</data>
-                  	</message>
-                    <header>
-                        <element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
-                        <element name="citrus_soap_fault" value="{http://www.citrusframework.org/faults}citrus:TEC-1000,Invalid request"/>
-                    </header>
-                  </send>
+                  		</ws:fault-detail>
+                  	</ws:fault>
+                    <ws:header>
+                        <ws:element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                    </ws:header>
+                  </ws:send-fault>
               </sequential>
             </parallel>
     	</actions>
