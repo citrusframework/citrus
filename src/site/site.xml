@@ -54,7 +54,7 @@
 
     <menu name="Development">
       <item name="Quickstart" href="${site.url}/quickstart.html"/>
-      <item name="Coding Conventions" href="${site.url}/conventions.html"/>
+      <item name="Conventions" href="${site.url}/conventions.html"/>
       <item name="Contributing" href="${site.url}/contributing.html"/>
       <item name="Modules" href="${site.url}/modules-introduction.html">
         <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
