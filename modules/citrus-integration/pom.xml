@@ -50,11 +50,6 @@
   </build>
   <dependencies>
     <dependency>
-        <groupId>javax.persistence</groupId>
-        <artifactId>persistence-api</artifactId>
-        <version>1.0</version>
-    </dependency>
-    <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <scope>test</scope>
@@ -83,11 +78,6 @@
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
         <version>3.6</version>
-    </dependency>
-    <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-entitymanager</artifactId>
-        <version>3.4.0.GA</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.integration</groupId>

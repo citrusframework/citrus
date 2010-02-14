@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config-1.1.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config-1.1.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+	
+    <!-- Common settings -->
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/flightbooking/schema/FlightBookingSchema.xsd"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <context:property-placeholder location="classpath:citrus.properties"/>
+	
+    <amq:broker useJmx="false" persistent="false">
+        <amq:transportConnectors>
+            <amq:transportConnector uri="tcp://localhost:61616" />
+        </amq:transportConnectors>
+    </amq:broker>
+    
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+    
+    <bean class="com.consol.citrus.variable.GlobalVariables">
+        <property name="variables">
+            <map>
+                <entry key="project.name" value="Citrus FlightBooking sample"/>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
+
+    <!-- FlightBookingService Sample -->
+    <citrus-http:server id="royalAirlineHttpServer" 
+                        port="8088" uri="/test" 
+                        message-handler="fbsForwardingMessageHandler"/>
+            
+    <bean id="fbsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
+        <property name="destinationName" value="${royal.airline.request.queue}"/>
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="replyTimeout" value="2000"/>
+    </bean>        
+                        
+    <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
+                                 destination-name="${royal.airline.request.queue}"/>
+                                   
+    <citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
+                                reply-destination-holder="royalAirlineBookingRequestReceiver"/>
+        
+    <citrus:jms-message-sender id="travelAgencyBookingRequestSender" destination-name="${travel.agency.request.queue}"/>
+    
+    <citrus:jms-message-receiver id="travelAgencyBookingResponseReceiver" 
+                                 destination-name="${travel.agency.response.queue}"/>
+    
+    <citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
+                                 destination-name="${smart.airline.request.queue}"/>
+    
+    <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
+    
+    <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>${jdbc.driver}</value>
+        </property>
+        <property name="url">
+            <value>${jdbc.url}</value>
+        </property>
+        <property name="username">
+            <value>${db.user}</value>
+        </property>
+        <property name="password">
+            <value>${db.password}</value>
+        </property>
+        <property name="initialSize">
+            <value>1</value>
+        </property>
+        <property name="maxActive">
+            <value>5</value>
+        </property>
+        <property name="maxIdle">
+            <value>2</value>
+        </property>
+    </bean>
+    
+    <!-- Utility beans -->
+    <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="queueNames">
+            <list>
+                <!-- FlightBookingService -->
+                <value>${travel.agency.request.queue}</value>
+                <value>${travel.agency.response.queue}</value>
+                <value>${smart.airline.request.queue}</value>
+                <value>${smart.airline.response.queue}</value>
+                <value>${royal.airline.request.queue}</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- TestSuite definition -->
+    <bean name="citrus-samples-flightbooking" class="com.consol.citrus.TestSuite">
+        <property name="tasksBefore">
+            <list>
+                <bean id="initDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
+                    <property name="statements">
+                        <list>
+                            <value>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG char(250), CONVERSATION_ID  char(250), CREATION_DATE  char(250), DESCRIPTION char(250)) </value>
+                            <value>CREATE TABLE CUSTOMERS (CUSTOMER_ID integer, NAME char(250), DESCRIPTION char(250))</value>
+                            <value>CREATE TABLE ERRORS (ERROR_ID integer, DESCRIPTION char(250))</value>
+                        </list>
+                    </property>
+                </bean>
+                
+                <bean class="com.consol.citrus.actions.StartServerAction">
+                    <property name="server" ref="royalAirlineHttpServer"/>
+                </bean>
+            </list>
+        </property>
+        <property name="tasksBetween">
+            <list>
+                <ref bean="purgeJmsQueues"/>
+            </list>
+        </property>
+        <property name="tasksAfter">
+            <list>
+                <bean id="destroyDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
+                    <property name="dataSource" ref="testDataSource"/>
+                    <property name="ignoreErrors" value="true"/>
+                    <property name="statements">
+                        <list>
+                            <value>DROP TABLE ORDERS</value>
+                            <value>DROP TABLE CUSTOMERS</value>
+                            <value>DROP TABLE ERRORS</value>
+                        </list>
+                    </property>
+                </bean>
+                
+                <bean class="com.consol.citrus.actions.StopServerAction">
+                    <property name="server" ref="royalAirlineHttpServer"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>

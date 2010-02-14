@@ -9,9 +9,18 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-samples</artifactId>
   <name>citrus-samples</name>
+  <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
+  
+  <modules>
+    <module>modules/citrus-samples-common</module>
+    <module>modules/citrus-samples-flightbooking</module>
+    <module>modules/citrus-samples-greeting</module>
+  </modules>
+  
   <build>
-    <plugins>
+    <pluginManagement>
+      <plugins>
         <plugin>
             <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
@@ -21,24 +30,29 @@
                 <targetPackage>com.consol.citrus.samples.flightbooking</targetPackage>
             </configuration>
         </plugin>
-        <plugin>
-            <groupId>org.apache.activemq.tooling</groupId>
-            <artifactId>maven-activemq-plugin</artifactId>
-            <version>5.2.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-        </plugin>
+      </plugins>
+    </pluginManagement>
+    
+    <plugins>
         <plugin>
           <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
           <artifactId>maven-surefire-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
           <version>2.4.3</version>
           <configuration>
-            <skip>true</skip>
+            <properties>
+                <property>
+                    <name>suitename</name>
+                    <value>citrus-samples</value>
+                </property>
+            </properties>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+        </plugin>
     </plugins>
+    
     <testSourceDirectory>src/citrus/java</testSourceDirectory>
     <testResources>
         <testResource>
@@ -53,8 +67,11 @@
         <testResource>
             <directory>src/citrus/resources</directory>
             <includes>
-                <include>**/*</include>
+                <include>**</include>
             </includes>
+            <excludes>
+                <exclude>*.java</exclude>
+            </excludes>
         </testResource>
         <testResource>
             <directory>src/citrus/tests</directory>
@@ -64,75 +81,69 @@
         </testResource>
     </testResources>
   </build>
-  <repositories>
-    <repository>
-      <id>consol-labs-release</id>
-      <url>http://labs.consol.de/maven/repository/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>consol-labs-snapshots</id>
-      <url>http://labs.consol.de/maven/snapshots-repository/</url>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
-  <dependencies>
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-core</artifactId>
-        <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-http</artifactId>
-        <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-core</artifactId>
-    </dependency> 
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-jms</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-xml</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-stream</artifactId>
-    </dependency>  
-    <dependency>
-        <groupId>org.springframework.ws</groupId>
-        <artifactId>spring-oxm</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream</artifactId>
-        <version>1.3.1</version>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.6</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <groupId>hsqldb</groupId>
-        <artifactId>hsqldb</artifactId>
-        <scope>runtime</scope>
-    </dependency>
-  </dependencies>
+  
+  <dependencyManagement>
+      <dependencies>
+        <!-- Citrus -->
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-core</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-adapter</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-ws</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-http</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        
+        <!-- Spring framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.4.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.castor</groupId>
+            <artifactId>castor-xml</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+      </dependencies>
+  </dependencyManagement>
 </project>

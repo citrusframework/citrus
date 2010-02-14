@@ -16,7 +16,6 @@
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	 
 	<import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
-    <import resource="com/consol/citrus/samples/greeting/channel/greeting-channel.xml"/>
 	
     <!-- Common settings -->
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
@@ -24,12 +23,6 @@
             <list>
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
                     <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
-                </bean>
-                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/samples/greeting/schema/greeting.xsd"/>
-                </bean>
-                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/samples/flightbooking/schema/FlightBookingSchema.xsd"/>
                 </bean>
             </list>
         </property>
@@ -65,50 +58,6 @@
     
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
 
-    <!-- Greeting Sample -->
-    <!-- Message channel adapter -->
-    <citrus:message-channel-sender id="greetingChannelRequestSender" 
-                                   channel="greetings"/>
-    
-    <citrus:message-channel-receiver id="greetingChannelResponseReceiver" 
-                                     channel="greetings"
-                                     receive-timeout="5000"/>
-    
-    <!-- Jms adapter -->
-    <citrus:jms-message-sender id="greetingJmsRequestSender" 
-                               destination-name="Citrus.Samples.Greeting.Request.Queue"/>
-    
-    <citrus:jms-message-receiver id="greetingJmsResponseReceiver" 
-                                 destination-name="Citrus.Samples.Greeting.Response.Queue"
-                                 receive-timeout="5000"/>
-                                                                  
-    <!-- FlightBookingService Sample -->
-    <citrus-http:server id="royalAirlineHttpServer" 
-                        port="8088" uri="/test" 
-                        message-handler="fbsForwardingMessageHandler"/>
-            
-    <bean id="fbsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-        <property name="destinationName" value="${royal.airline.request.queue}"/>
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="replyTimeout" value="2000"/>
-    </bean>        
-                        
-    <citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
-                                 destination-name="${royal.airline.request.queue}"/>
-                                   
-    <citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
-                                reply-destination-holder="royalAirlineBookingRequestReceiver"/>
-        
-    <citrus:jms-message-sender id="travelAgencyBookingRequestSender" destination-name="${travel.agency.request.queue}"/>
-    
-    <citrus:jms-message-receiver id="travelAgencyBookingResponseReceiver" 
-                                 destination-name="${travel.agency.response.queue}"/>
-    
-    <citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
-                                 destination-name="${smart.airline.request.queue}"/>
-    
-    <citrus:jms-message-sender id="smartAirlineBookingResponseSender" destination-name="${smart.airline.response.queue}"/>
-    
     <!-- SOAP WebService settings -->
     <citrus-ws:jetty-server id="jettyServer" port="8081"
                                              auto-start="true"
@@ -285,13 +234,6 @@
                 <value>${jms.queue.hello.response}</value>
                 <value>${jms.queue.hello.sync.request}</value>
                 <value>${jms.queue.date.sync.request}</value>
-                
-                <!-- FlightBookingService -->
-                <value>${travel.agency.request.queue}</value>
-                <value>${travel.agency.response.queue}</value>
-                <value>${smart.airline.request.queue}</value>
-                <value>${smart.airline.response.queue}</value>
-                <value>${royal.airline.request.queue}</value>
             </list>
         </property>
         <property name="queues">
@@ -321,10 +263,6 @@
                         </list>
                     </property>
                 </bean>
-                
-                <bean class="com.consol.citrus.actions.StartServerAction">
-                    <property name="server" ref="royalAirlineHttpServer"/>
-                </bean>
             </list>
         </property>
         <property name="tasksBetween">
@@ -344,10 +282,6 @@
                             <value>DROP TABLE ERRORS</value>
                         </list>
                     </property>
-                </bean>
-                
-                <bean class="com.consol.citrus.actions.StopServerAction">
-                    <property name="server" ref="royalAirlineHttpServer"/>
                 </bean>
             </list>
         </property>
