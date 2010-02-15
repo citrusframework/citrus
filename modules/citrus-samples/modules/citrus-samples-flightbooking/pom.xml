@@ -13,6 +13,33 @@
   <version>1.1-SNAPSHOT</version>
   <name>citrus-samples-flightbooking</name>
   
+  <build>
+      <plugins>
+        <plugin>
+            <groupId>com.consol.citrus.mvn</groupId>
+            <artifactId>citrus-maven-plugin</artifactId>
+            <configuration>
+                <author>Christoph Deppisch</author>
+                <targetPackage>com.consol.citrus.samples.flightbooking</targetPackage>
+            </configuration>
+        </plugin>
+        <plugin>
+          <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
+          <artifactId>maven-surefire-plugin</artifactId>
+          <!-- Version is required as mvn has currently a problem updating. -->
+          <version>2.4.3</version>
+          <configuration>
+            <properties>
+                <property>
+                    <name>suitename</name>
+                    <value>citrus-samples-flightbooking</value>
+                </property>
+            </properties>
+          </configuration>
+        </plugin>
+      </plugins>
+  </build>
+    
   <dependencies>
     <!-- Citrus -->
     <dependency>
