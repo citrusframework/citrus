@@ -35,4 +35,13 @@ public class FlightBookingDemo extends CitrusSamplesDemo {
     protected Class<? extends CitrusSamplesDemo> getDemoClass() {
         return FlightBookingDemo.class;
     }
+    
+    /**
+     * Main CLI method for running sample demo.
+     * @param args, cli arguments
+     */
+    public static void main(String[] args) {
+        FlightBookingDemo demo = new FlightBookingDemo();
+        demo.start();
+    }
 }

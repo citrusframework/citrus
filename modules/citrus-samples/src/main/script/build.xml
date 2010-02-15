@@ -4,10 +4,10 @@
 	
     <path id="citrus-classpath">
         <pathelement path="src/citrus/java"/>
-        <fileset dir="../dist">
+        <fileset dir="../../dist">
             <include name="*.jar"/>
         </fileset>
-		<fileset dir="../lib">
+		<fileset dir="../../lib">
             <include name="*.jar"/>
         </fileset>
     	<fileset dir="lib">
@@ -15,7 +15,7 @@
         </fileset>
     </path>
     
-	<typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.0.jar"/>
+	<typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.1-SNAPSHOT.jar"/>
 	
 	<target name="compile.tests">
 	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>

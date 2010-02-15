@@ -3,6 +3,7 @@
   <formats>
     <format>tar.gz</format>
     <format>zip</format>
+    <format>dir</format>
   </formats>
   <includeSiteDirectory>false</includeSiteDirectory>
   <moduleSets>
@@ -37,25 +38,54 @@
     </moduleSet>
     <moduleSet>
       <includes>
-        <include>com.consol.citrus:citrus-samples</include>
+        <include>com.consol.citrus:citrus-samples-flightbooking</include>
       </includes>
       <binaries>
-        <outputDirectory>samples/lib</outputDirectory>
+        <outputDirectory>samples/flightbooking/lib</outputDirectory>
         <unpack>false</unpack>
         <dependencySets>
           <dependencySet>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>samples/lib</outputDirectory>
+            <outputDirectory>samples/flightbooking/lib</outputDirectory>
             <excludes>
                 <exclude>com.consol.citrus:citrus-core</exclude>
                 <exclude>com.consol.citrus:citrus-http</exclude>
                 <exclude>org.slf4j:slf4j-api</exclude>
                 <exclude>org.springframework:spring-core</exclude>
                 <exclude>org.springframework:spring-jms</exclude>
-                <exclude>org.springframework:spring-aop</exclude>
+                <exclude>org.springframework:spring-integration-core</exclude>
+                <exclude>org.springframework:spring-integration-adapter</exclude>
+                <exclude>org.springframework:spring-integration-jms</exclude>
+            </excludes>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+          </dependencySet>
+        </dependencySets>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <includes>
+        <include>com.consol.citrus:citrus-samples-greeting</include>
+      </includes>
+      <binaries>
+        <outputDirectory>samples/greeting/lib</outputDirectory>
+        <unpack>false</unpack>
+        <dependencySets>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>samples/greeting/lib</outputDirectory>
+            <excludes>
+                <exclude>com.consol.citrus:citrus-core</exclude>
+                <exclude>org.slf4j:slf4j-api</exclude>
+                <exclude>org.springframework:spring-core</exclude>
+                <exclude>org.springframework:spring-jms</exclude>
+                <exclude>org.springframework:spring-beans</exclude>
+                <exclude>org.springframework:spring-context</exclude>
                 <exclude>org.springframework:spring-tx</exclude>
-                <exclude>org.springframework.ws:spring-oxm</exclude>
+                <exclude>org.springframework:spring-integration-core</exclude>
+                <exclude>org.springframework:spring-integration-adapter</exclude>
+                <exclude>org.springframework:spring-integration-jms</exclude>
             </excludes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
@@ -64,16 +94,10 @@
     </moduleSet>
   </moduleSets>
   <fileSets>
+    <!-- FlightBooking sample -->
     <fileSet>
-      <directory>modules/citrus-samples</directory>
-      <outputDirectory>samples/lib</outputDirectory>
-      <includes>
-          <include>*.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-samples/src/main/script</directory>
-      <outputDirectory>samples</outputDirectory>
+      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/main/script</directory>
+      <outputDirectory>samples/flightbooking</outputDirectory>
       <includes>
           <include>*.bat</include>
           <include>*.sh</include>
@@ -82,29 +106,67 @@
       <fileMode>0744</fileMode>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/src/citrus/resources</directory>
-      <outputDirectory>samples/src/citrus/resources</outputDirectory>
+      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/citrus/resources</directory>
+      <outputDirectory>samples/flightbooking/src/citrus/resources</outputDirectory>
       <includes>
           <include>**/*</include>
       </includes>
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/target/test-classes</directory>
-      <outputDirectory>samples/src/citrus/java</outputDirectory>
+      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/target/test-classes</directory>
+      <outputDirectory>samples/flightbooking/src/citrus/java</outputDirectory>
       <includes>
           <include>**/*.java</include>
       </includes>
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/src/citrus/tests</directory>
-      <outputDirectory>samples/src/citrus/tests</outputDirectory>
+      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/citrus/tests</directory>
+      <outputDirectory>samples/flightbooking/src/citrus/tests</outputDirectory>
       <includes>
           <include>**/*.xml</include>
       </includes>
       <lineEnding>unix</lineEnding>
     </fileSet>
+    
+    <!-- Greeting sample -->
+    <fileSet>
+      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/main/script</directory>
+      <outputDirectory>samples/greeting</outputDirectory>
+      <includes>
+          <include>*.bat</include>
+          <include>*.sh</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0744</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/citrus/resources</directory>
+      <outputDirectory>samples/greeting/src/citrus/resources</outputDirectory>
+      <includes>
+          <include>**/*</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-samples/modules/citrus-samples-greeting/target/test-classes</directory>
+      <outputDirectory>samples/greeting/src/citrus/java</outputDirectory>
+      <includes>
+          <include>**/*.java</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/citrus/tests</directory>
+      <outputDirectory>samples/greeting/src/citrus/tests</outputDirectory>
+      <includes>
+          <include>**/*.xml</include>
+      </includes>
+      <lineEnding>unix</lineEnding>
+    </fileSet>
+    
+    <!-- Reference documentation -->
     <fileSet>
       <directory>target/doc/html</directory>
       <outputDirectory>docs/reference/html</outputDirectory>
@@ -113,6 +175,8 @@
       <directory>target/doc/html_single</directory>
       <outputDirectory>docs/reference/htmlsingle</outputDirectory>
     </fileSet>
+    
+    <!-- Source archives -->
     <fileSet>
         <directory>modules/citrus-core/target</directory>
         <outputDirectory>src</outputDirectory>
@@ -149,12 +213,21 @@
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples/target</directory>
-        <outputDirectory>src</outputDirectory>
+        <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/target</directory>
+        <outputDirectory>samples/flightbooking/src</outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
     </fileSet>
+    <fileSet>
+        <directory>modules/citrus-samples/modules/citrus-samples-greeting/target</directory>
+        <outputDirectory>samples/greeting/src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    
+    <!-- License, readme, notice -->
     <fileSet>
         <directory>${project.basedir}</directory>
         <outputDirectory></outputDirectory>
@@ -166,17 +239,25 @@
     </fileSet>
   </fileSets>
   <files>
+    <!-- PDF reference documentation -->
     <file>
       <source>target/doc/pdf/citrus-reference.pdf</source>
       <outputDirectory>docs/reference/pdf</outputDirectory>
     </file>
+    <!-- Samples ant build scripts -->
     <file>
       <source>modules/citrus-samples/src/main/script/build.xml</source>
-      <outputDirectory>samples</outputDirectory>
+      <outputDirectory>samples/flightbooking</outputDirectory>
       <lineEnding>unix</lineEnding>
     </file>
     <file>
-      <source>modules/citrus-samples/src/main/resources/README.txt</source>
+      <source>modules/citrus-samples/src/main/script/build.xml</source>
+      <outputDirectory>samples/greeting</outputDirectory>
+      <lineEnding>unix</lineEnding>
+    </file>
+    <!-- Samples overall readme -->
+    <file>
+      <source>modules/citrus-samples/README.txt</source>
       <outputDirectory>samples</outputDirectory>
       <lineEnding>unix</lineEnding>
     </file>

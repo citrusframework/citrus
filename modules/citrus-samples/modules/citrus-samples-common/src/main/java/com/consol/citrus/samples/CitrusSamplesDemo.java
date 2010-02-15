@@ -38,18 +38,30 @@ public class CitrusSamplesDemo {
     
     private ClassPathXmlApplicationContext ctx;
     
+    private static boolean running = false;
+    
+    private static Object startupMonitor = new Object();
+    
     /**
-     * Runs the demo
+     * Runs the demo by creating a Spring application context.
      */
     public void start() {
-        t = new Thread(new Runnable() {
-            public void run() {
-                ctx = new ClassPathXmlApplicationContext(new String[] {getDemoApplicationConfigLocation()}, 
-                        getDemoClass(), new ClassPathXmlApplicationContext("citrus-samples-common.xml", CitrusSamplesDemo.class));
+        synchronized (startupMonitor) {
+            if(!running) {
+                running = true;
+            } else {
+               return;
             }
-        });
-        
-        t.start();
+            
+            t = new Thread(new Runnable() {
+                public void run() {
+                    ctx = new ClassPathXmlApplicationContext(new String[] {getDemoApplicationConfigLocation()}, 
+                            getDemoClass(), new ClassPathXmlApplicationContext("citrus-samples-common.xml", CitrusSamplesDemo.class));
+                }
+            });
+            
+            t.start();
+        }
         
         try {
             Thread.sleep(5000);
@@ -58,6 +70,9 @@ public class CitrusSamplesDemo {
         }
     }
 
+    /**
+     * Stops the demo application context.
+     */
     public void stop() {
         if(ctx != null) {
             ctx.close();
@@ -65,7 +80,7 @@ public class CitrusSamplesDemo {
         
         t = null;
     }
-    
+
     /**
      * Override this method to provide a basis for 
      * the given config location paths

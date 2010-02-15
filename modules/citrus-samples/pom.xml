@@ -105,6 +105,11 @@
             <artifactId>citrus-http</artifactId>
             <version>1.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.consol.citrus.ant</groupId>
+            <artifactId>citrus-ant-tasks</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
         
         <!-- Spring framework -->
         <dependency>
@@ -146,4 +151,12 @@
         </dependency>
       </dependencies>
   </dependencyManagement>
+  
+  <!-- Global sample dependencies -->
+  <dependencies>
+    <dependency>
+        <groupId>com.consol.citrus.ant</groupId>
+        <artifactId>citrus-ant-tasks</artifactId>
+    </dependency>
+  </dependencies>
 </project>

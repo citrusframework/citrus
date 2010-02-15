@@ -35,4 +35,13 @@ public class GreetingJmsDemo extends CitrusSamplesDemo {
     protected Class<? extends CitrusSamplesDemo> getDemoClass() {
         return GreetingJmsDemo.class;
     }
+    
+    /**
+     * Main CLI method for running sample demo.
+     * @param args, cli arguments
+     */
+    public static void main(String[] args) {
+        GreetingJmsDemo demo = new GreetingJmsDemo();
+        demo.start();
+    }
 }

@@ -51,8 +51,15 @@
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples/target</directory>
-        <outputDirectory></outputDirectory>
+        <directory>modules/citrus-samples-flightbooking/target</directory>
+        <outputDirectory>samples</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-samples-greeting/target</directory>
+        <outputDirectory>samples</outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
