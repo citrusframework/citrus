@@ -22,11 +22,15 @@ package com.consol.citrus.ws.config.xml;
 import java.util.Map;
 
 import org.apache.xerces.util.DOMUtil;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.DescriptionElementParser;
@@ -59,10 +63,44 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
+        Element faultDetailElement = DomUtils.getChildElementByTagName(element, "fault-detail");
+        if (faultDetailElement != null) {
+            if(faultDetailElement.hasAttribute("file")) {
+                
+                if(StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
+                    throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
+                            "Please choose one of them.");
+                }
+                
+                String filePath = faultDetailElement.getAttribute("file");
+                
+                if (filePath.startsWith("classpath:")) {
+                    beanDefinition.addPropertyValue("faultDetailResource", new ClassPathResource(filePath.substring("classpath:".length())));
+                } else if (filePath.startsWith("file:")) {
+                    beanDefinition.addPropertyValue("faultDetailResource", new FileSystemResource(filePath.substring("file:".length())));
+                } else {
+                    beanDefinition.addPropertyValue("faultDetailResource", new FileSystemResource(filePath));
+                }
+            } else {
+                String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
+                if(StringUtils.hasText(faultDetailData)) {
+                    beanDefinition.addPropertyValue("faultDetail", faultDetailData);
+                } else {
+                    throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
+                }
+            }
+        }
+        
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
 
-        Element action = DOMUtil.getFirstChildElement(element);
-
+        Element action;
+        
+        if(faultDetailElement == null) {
+            action = DOMUtil.getFirstChildElement(element);
+        } else {
+            action = DOMUtil.getNextSiblingElement(faultDetailElement);
+        }
+        
         if (action != null && action.getTagName().equals("description")) {
             action = DOMUtil.getNextSiblingElement(action);
         }
@@ -78,6 +116,32 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         }
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
+        
+        String validator = "soapFaultValidator"; //default value
+        
+        if(element.hasAttribute("fault-validator")) {
+            validator = element.getAttribute("fault-validator");
+        }
+        
+        if(!StringUtils.hasText(validator)) {
+            parserContext.getReaderContext().error(
+                    "Attribute 'fault-validator' must not be empty for element", element);
+        }
+        
+        beanDefinition.addPropertyReference("validator", validator);
+        
+        String messageFactory = "messageFactory"; //default value
+        
+        if(element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
+            messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
+        }
+        
+        if(!StringUtils.hasText(messageFactory)) {
+            parserContext.getReaderContext().error(
+                    "Attribute '" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "' must not be empty for element", element);
+        }
+        
+        beanDefinition.addPropertyReference(WSParserConstants.MESSAGE_FACTORY_PROPERTY, messageFactory);
 
         return beanDefinition.getBeanDefinition();
     }

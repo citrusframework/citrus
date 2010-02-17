@@ -31,9 +31,22 @@
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="core:actionType">
-                    <xs:group ref="core:actionGroup"/>
+                    <xs:sequence>
+                        <xs:element name="fault-detail" minOccurs="0">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="file" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:group ref="core:actionGroup"/>                    
+                    </xs:sequence>
                     <xs:attribute name="fault-code" type="xs:string" use="required"/>
                     <xs:attribute name="fault-string" type="xs:string"/>
+                    <xs:attribute name="fault-validator" type="xs:string"/>
+                    <xs:attribute name="message-factory" type="xs:string"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>

@@ -22,6 +22,7 @@ package com.consol.citrus.ws.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.ws.SoapAttachment;
 
@@ -43,8 +44,8 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         if(log.isDebugEnabled()) {
             log.debug("Validating SOAP attachment content ...");
-            log.debug("Received attachment content: " + receivedAttachment.getContent().trim());
-            log.debug("Control attachment content: " + controlAttachment.getContent().trim());
+            log.debug("Received attachment content: " + StringUtils.trimWhitespace(receivedAttachment.getContent()));
+            log.debug("Control attachment content: " + StringUtils.trimWhitespace(controlAttachment.getContent()));
         }
         
         if(receivedAttachment.getContent() != null) {

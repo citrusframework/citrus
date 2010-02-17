@@ -19,26 +19,37 @@
 
 package com.consol.citrus.ws.actions;
 
+import java.io.IOException;
 import java.text.ParseException;
+
+import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
+import org.springframework.ws.soap.server.endpoint.SoapFaultDefinitionEditor;
+import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.ws.soap.soap12.Soap12Body;
+import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
  * Asserting SOAP fault exception in embedded test action.
  * 
- * Tester can validate SOAP fault code and fault string to
- * match expected behavior.
+ * Class constructs a control soap fault detail with given expeceted information (faultCode, faultString and faultDetail)
+ * and delegates validation to {@link SoapFaultValidator} instance.
  * 
  * @author Christoph Deppisch 
  * @since 2009
@@ -52,6 +63,18 @@ public class AssertSoapFault extends AbstractTestAction {
     
     /** OName representing fault code */
     private String faultCode = null;
+    
+    /** File resource describing fault detail */
+    private Resource faultDetailResource;
+    
+    /** Fault detail as inline CDATA */
+    private String faultDetail;
+    
+    /** Soap fault validator implementaiton */
+    private SoapFaultValidator validator;
+    
+    /** Message factory creating new soap messages */
+    private SoapMessageFactory messageFactory;
     
     /**
      * Logger
@@ -76,30 +99,89 @@ public class AssertSoapFault extends AbstractTestAction {
             log.info("Validating SOAP fault ...");
             if (SoapFaultClientException.class.isAssignableFrom(e.getClass())) {
                 SoapFaultClientException soapFaultException = (SoapFaultClientException)e;
+
+                SoapFault controlFault = constructControlFault(context);
                 
-                try {
-					if(faultString != null && !context.replaceDynamicContentInString(faultString).equals(soapFaultException.getFaultStringOrReason())) {
-					    throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + faultString + "' but was: '" + soapFaultException.getFaultStringOrReason() + "'");
-					}
-					
-					if(StringUtils.hasText(faultCode)) {
-						Assert.isTrue(QNameUtils.parseQNameString(context.replaceDynamicContentInString(faultCode)).equals(soapFaultException.getFaultCode()), 
-								"SOAP fault validation failed! Fault code does not match - expected: '" +
-								faultCode + "' but was: '" + soapFaultException.getFaultCode() + "'");
-					}
-				} catch (ParseException ex) {
-					throw new CitrusRuntimeException("Error validating SOAP fault" + ex);
-				}
+                validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault);
                 
                 log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
                 log.info("SOAP fault validation successful");
                 return;
             } else {
-                throw new ValidationException("SOAP fault validation failed! Caught exception type does not fit - expected: '" + SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
+                throw new ValidationException("SOAP fault validation failed! Caught exception type does not fit - expected: '" + 
+                        SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
             }
         }
 
         throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
+    }
+
+    /**
+     * Constructs the control soap fault holding all expected fault information
+     * like faultCode, faultString and faultDetail.
+     * 
+     * @return the constructed SoapFault instance.
+     */
+    private SoapFault constructControlFault(TestContext context) {
+        SoapFault controlFault = null;
+        
+        try {
+            SoapFaultDefinitionEditor definitionEditor = new SoapFaultDefinitionEditor();
+        
+            if(StringUtils.hasText(faultString)) {
+                definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode) + "," + context.replaceDynamicContentInString(faultString));
+            } else {
+                definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode));
+            }
+            
+            SoapFaultDefinition definition = (SoapFaultDefinition)definitionEditor.getValue();
+            
+            SoapBody soapBody = ((SoapMessage)messageFactory.createWebServiceMessage()).getSoapBody();
+        
+            if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
+                    SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {
+                controlFault = soapBody.addServerOrReceiverFault(definition.getFaultStringOrReason(), 
+                        definition.getLocale());
+            } else if (SoapFaultDefinition.CLIENT.equals(definition.getFaultCode()) ||
+                    SoapFaultDefinition.SENDER.equals(definition.getFaultCode())) {
+                controlFault = soapBody.addClientOrSenderFault(definition.getFaultStringOrReason(), 
+                        definition.getLocale());
+            } else if (soapBody instanceof Soap11Body) {
+                Soap11Body soap11Body = (Soap11Body) soapBody;
+                controlFault = soap11Body.addFault(definition.getFaultCode(), 
+                        definition.getFaultStringOrReason(), 
+                        definition.getLocale());
+            } else if (soapBody instanceof Soap12Body) {
+                Soap12Body soap12Body = (Soap12Body) soapBody;
+                Soap12Fault soap12Fault =
+                        (Soap12Fault) soap12Body.addServerOrReceiverFault(definition.getFaultStringOrReason(), 
+                                definition.getLocale());
+                soap12Fault.addFaultSubcode(definition.getFaultCode());
+                
+                controlFault = soap12Fault;
+            } else {
+                    throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
+            }
+        
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            
+            if (faultDetailResource != null) {
+                transformer.transform(new StringSource(
+                        context.replaceDynamicContentInString(FileUtils.readToString(faultDetailResource))), controlFault.addFaultDetail().getResult());
+            } else if (faultDetail != null){
+                transformer.transform(new StringSource(
+                        context.replaceDynamicContentInString(faultDetail)), controlFault.addFaultDetail().getResult());
+            }
+        } catch (ParseException ex) {
+            throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
+        } catch (IOException ex) {
+            throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
+        } catch (TransformerException ex) {
+            throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
+        }
+        
+        return controlFault;
     }
 
     /**
@@ -125,4 +207,34 @@ public class AssertSoapFault extends AbstractTestAction {
 	public void setFaultString(String faultString) {
 		this.faultString = faultString;
 	}
+
+    /**
+     * Set the fault detail from external file resource.
+     * @param faultDetailResource the faultDetailResource to set
+     */
+    public void setFaultDetailResource(Resource faultDetailResource) {
+        this.faultDetailResource = faultDetailResource;
+    }
+
+    /**
+     * Set the fault string from inline CDATA.
+     * @param faultDetail the faultDetail to set
+     */
+    public void setFaultDetail(String faultDetail) {
+        this.faultDetail = faultDetail;
+    }
+
+    /**
+     * @param validator the validator to set
+     */
+    public void setValidator(SoapFaultValidator validator) {
+        this.validator = validator;
+    }
+
+    /**
+     * @param messageFactory the messageFactory to set
+     */
+    public void setMessageFactory(SoapMessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
 }

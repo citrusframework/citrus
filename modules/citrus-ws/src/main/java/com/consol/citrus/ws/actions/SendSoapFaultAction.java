@@ -65,6 +65,23 @@ public class SendSoapFaultAction extends SendMessageAction {
     @Override
     protected Message<?> createMessage(TestContext context) {
         try {
+            /* Set message header */
+            Map<String, Object> headers = context.replaceVariablesInMap(getHeaderValues());
+    
+            if(!StringUtils.hasText(faultCode)) {
+                throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
+            }
+            
+            String soapFaultString = context.replaceDynamicContentInString(faultCode);
+            
+            if(StringUtils.hasText(faultString)) {
+                soapFaultString += "," + context.replaceDynamicContentInString(faultString);
+            }
+
+            //put special SOAP fault QName string to message headers. Citrus SOAP ws endpoint will
+            //take read the entry an generate the SOAP fauflt for us
+            headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultString);
+
             String messagePayload = null;
             
             if (faultDetailResource != null) {
@@ -75,19 +92,6 @@ public class SendSoapFaultAction extends SendMessageAction {
                 //no fault detail specified therefore just send empty message body
                 messagePayload = "";
             }
-    
-            /* Set message header */
-            Map<String, Object> headers = context.replaceVariablesInMap(getHeaderValues());
-    
-            String soapFaultString = faultCode;
-            
-            if(StringUtils.hasText(faultString)) {
-                soapFaultString += "," + faultString;
-            }
-
-            //put special SOAP fault QName string to message headers. Citrus SOAP ws endpoint will
-            //take read the entry an generate the SOAP fauflt for us
-            headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultString);
             
             return MessageBuilder.withPayload(messagePayload).copyHeaders(headers).build();
         } catch (IOException e) {

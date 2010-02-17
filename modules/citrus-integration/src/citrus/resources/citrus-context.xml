@@ -64,14 +64,16 @@
                                              context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                                              resource-base="src/citrus/resources"/>
 
-    <bean id="saajMessageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
     
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
+    
+    <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
                                                  
     <citrus-ws:message-sender id="webServiceRequestSender"
                               request-url="http://localhost:8081"
                               reply-handler="webServiceReplyHandler"
-                              message-factory="saajMessageFactory"/>
+                              message-factory="messageFactory"/>
     
     <citrus-ws:reply-message-handler id="webServiceReplyHandler"/>
     
@@ -82,7 +84,7 @@
     <citrus-ws:message-sender id="webServiceHelloRequestSender"
                               request-url="http://localhost:8081/hello"
                               reply-handler="webServiceHelloReplyHandler"
-                              message-factory="saajMessageFactory"/>
+                              message-factory="messageFactory"/>
     
     <citrus-ws:reply-message-handler id="webServiceHelloReplyHandler"/>
     
