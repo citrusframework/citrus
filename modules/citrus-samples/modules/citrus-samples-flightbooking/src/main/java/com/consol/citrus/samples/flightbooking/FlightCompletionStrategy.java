@@ -19,7 +19,7 @@
 
 package com.consol.citrus.samples.flightbooking;
 
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +33,20 @@ public class FlightCompletionStrategy {
     
     private static final Logger log = LoggerFactory.getLogger(FlightCompletionStrategy.class);
     
+    private Map<String, Integer> completionRules = new HashMap<String, Integer>();
+    
     public boolean isComplete(List<FlightBookingConfirmationMessage> messages) {
-        log.info("FlightAggregator (" + messages.get(0).getCorrelationId()
-                + ") complete = " + (messages.size() == 2));
+        if(messages.size() == 0) {return false;}
         
-        return messages.size() == 2;
+        boolean isComplete = messages.size() == completionRules.get(messages.get(0).getCorrelationId());
+        
+        log.info("FlightAggregator (" + messages.get(0).getCorrelationId()
+                + ") complete = " + isComplete);
+        
+        return isComplete;
     }
-
+    
+    public void addCompletionRule(String correlationLKey, Integer completionRuleSize) {
+        completionRules.put(correlationLKey, completionRuleSize);
+    }
 }

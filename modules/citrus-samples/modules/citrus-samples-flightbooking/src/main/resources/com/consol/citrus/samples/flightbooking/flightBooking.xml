@@ -49,6 +49,7 @@
     <bean id="bookingSplitter" class="com.consol.citrus.samples.flightbooking.BookingSplitter">
         <property name="customerDao" ref="customerDao"/>
         <property name="flightDao" ref="flightDao"/>
+        <property name="flightCompletionStrategy" ref="flightCompletionStrategy"/>
     </bean>
 
 	<int:channel id="flights"/>

@@ -38,6 +38,8 @@ public class BookingSplitter {
     
     private FlightDao flightDao;
     
+    private FlightCompletionStrategy flightCompletionStrategy;
+    
     @Splitter
     public Object splitMessage(Message<?> message) {
         List<Message<FlightBookingRequestMessage>> flightRequests = new ArrayList<Message<FlightBookingRequestMessage>>();
@@ -71,6 +73,8 @@ public class BookingSplitter {
             flightRequests.add(messageBuilder.build());
         }
         
+        flightCompletionStrategy.addCompletionRule(request.getCorrelationId(), request.getFlights().size());
+        
         return flightRequests;
     }
 
@@ -86,5 +90,13 @@ public class BookingSplitter {
      */
     public void setFlightDao(FlightDao flightDao) {
         this.flightDao = flightDao;
+    }
+
+    /**
+     * @param flightCompletionStrategy the flightCompletionStrategy to set
+     */
+    public void setFlightCompletionStrategy(
+            FlightCompletionStrategy flightCompletionStrategy) {
+        this.flightCompletionStrategy = flightCompletionStrategy;
     }
 }
