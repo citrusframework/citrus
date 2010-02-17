@@ -19,13 +19,7 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
-import org.apache.xerces.util.DOMUtil;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -36,51 +30,13 @@ import com.consol.citrus.group.RepeatUntilTrue;
  * 
  * @author Christoph Deppisch
  */
-public class RepeatUntilTrueParser implements BeanDefinitionParser {
+public class RepeatUntilTrueParser extends AbstractIterationTestActionParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-    @SuppressWarnings("unchecked")
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);
-
-        DescriptionElementParser.doParse(element, beanDefinition);
-
-        String index = element.getAttribute("index");
-        beanDefinition.addPropertyValue("indexName", index);
-
-        String condition = element.getAttribute("condition");
-        beanDefinition.addPropertyValue("condition", condition);
-
-        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-        ManagedList actions = new ManagedList();
-
-        Element action = DOMUtil.getFirstChildElement(element);
-
-        if (action != null && action.getTagName().equals("description")) {
-            beanDefinition.addPropertyValue("description", action.getNodeValue());
-            action = DOMUtil.getNextSiblingElement(action);
-        }
-
-        if (action != null) {
-            do {
-                BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-
-                if(parser ==  null) {
-                	actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
-                } else {
-                	actions.add(parser.parse(action, parserContext));
-                }
-            } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
-        }
-
-        if (actions.size() > 0) {
-            beanDefinition.addPropertyValue("actions", actions);
-        }
-
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-
-        return beanDefinition.getBeanDefinition();
+    @Override
+	public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);
     }
 }

@@ -26,41 +26,36 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.Template;
-
 /**
- * Bean definition parser for template definition in test case.
+ * Abstract parser implementation for all iterative container actions. Parser takes care of
+ * index name, aborting condition, index start value and description
  * 
  * @author Christoph Deppisch
  */
-public class TemplateParser implements BeanDefinitionParser {
+public abstract class AbstractIterationTestActionParser  implements BeanDefinitionParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Template.class);
-
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
+        
         DescriptionElementParser.doParse(element, builder);
 
-        String name = element.getAttribute("name");
-
-        if (StringUtils.hasText(name)) {
-            builder.addPropertyValue("name", name);
-        } else {
-            builder.addPropertyValue("name", parserContext.getReaderContext().generateBeanName(builder.getBeanDefinition()));
+        String index = element.getAttribute("index");
+        if (StringUtils.hasText(index)) {
+            builder.addPropertyValue("indexName", index);
         }
 
-        String globalContext = element.getAttribute("global-context");
-        if (StringUtils.hasText(globalContext)) {
-            builder.addPropertyValue("globalContext", globalContext);
-        }
-        
-        builder.addPropertyValue("name", element.getLocalName() + "(" + element.getAttribute("name") + ")");
+        String condition = element.getAttribute("condition");
+        builder.addPropertyValue("condition", condition);
+
+        builder.addPropertyValue("name", element.getLocalName());
         
         ActionContainerParser.doParse(element, parserContext, builder);
         
-        parserContext.getRegistry().registerBeanDefinition(name, builder.getBeanDefinition());
-        return parserContext.getRegistry().getBeanDefinition(name);
+        return builder.getBeanDefinition();
     }
+    
+    protected abstract BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext);
 }

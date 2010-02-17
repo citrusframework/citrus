@@ -28,7 +28,8 @@ import org.w3c.dom.Element;
  * 
  * @author Christoph Deppisch
  */
-public class DescriptionElementParser {
+public abstract class DescriptionElementParser {
+    
     /**
      * Static parse method taking care of test action description.
      * @param element
