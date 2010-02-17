@@ -59,7 +59,7 @@ public class MessageChannelSender implements MessageSender {
         }
         
         if(!messageChannelTemplate.send(message, channel)) {
-            throw new CitrusRuntimeException("Failed to send message to channel" + channel.getName());
+            throw new CitrusRuntimeException("Failed to send message to channel '" + channel.getName() + "'");
         }
     }
 
