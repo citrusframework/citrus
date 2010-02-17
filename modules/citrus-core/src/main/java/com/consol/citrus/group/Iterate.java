@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
@@ -47,6 +48,10 @@ public class Iterate extends AbstractIteratingTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Iterate.class);
 
+    /**
+     * @see com.consol.citrus.group.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
     public void executeIteration(TestContext context) {
         log.info("Executing iterate loop - containing " + actions.size() + " actions");

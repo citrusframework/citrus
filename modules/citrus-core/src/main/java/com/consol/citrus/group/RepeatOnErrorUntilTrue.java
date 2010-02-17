@@ -45,6 +45,10 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
+    /**
+     * @see com.consol.citrus.group.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
     public void executeIteration(TestContext context) {
         log.info("Executing repeat-on-error loop - containing " + actions.size() + " actions");

@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
@@ -39,6 +40,10 @@ public class RepeatUntilTrue extends AbstractIteratingTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(RepeatUntilTrue.class);
 
+    /**
+     * @see com.consol.citrus.group.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @throws CitrusRuntimeException
+     */
     @Override
     public void executeIteration(TestContext context) {
         log.info("Executing iterate loop - containing " + actions.size() + " actions");
