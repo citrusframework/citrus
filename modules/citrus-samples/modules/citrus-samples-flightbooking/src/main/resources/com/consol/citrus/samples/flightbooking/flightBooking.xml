@@ -110,7 +110,7 @@
             completion-strategy-method="isComplete"
             correlation-strategy="flightCorrelationStrategy"
             correlation-strategy-method="getCorrelationKey"
-            timeout="60"
+            timeout="2000"
             send-partial-result-on-timeout="true"/>
             
     <bean id="flightAggregator" class="com.consol.citrus.samples.flightbooking.FlightAggregator"/>
