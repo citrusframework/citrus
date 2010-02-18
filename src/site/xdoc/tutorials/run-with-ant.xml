@@ -53,26 +53,29 @@
       
       &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.0.jar&quot;/&gt;
       
+      &lt;target name=&quot;compile.tests&quot;>
+          &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+          &lt;javac srcdir=&quot;src/citrus/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+      &lt;/target>
+    
       &lt;target name=&quot;create.test&quot; description=&quot;Creates a new empty test case&quot;&gt;
           &lt;input message=&quot;Enter test name:&quot; addproperty=&quot;test.name&quot;/&gt;
           &lt;input message=&quot;Enter test description:&quot; addproperty=&quot;test.description&quot;/&gt;
           &lt;input message=&quot;Enter author's name:&quot; addproperty=&quot;test.author&quot; defaultvalue=&quot;${default.test.author}&quot;/&gt;
           &lt;input message=&quot;Enter package:&quot; addproperty=&quot;test.package&quot; defaultvalue=&quot;${default.test.package}&quot;/&gt;
+          &lt;input message=&quot;Enter framework:&quot; addproperty=&quot;test.framework&quot; defaultvalue=&quot;testng&quot;/&gt;
   
           &lt;java classname=&quot;com.consol.citrus.util.TestCaseCreator&quot;&gt;
               &lt;classpath refid=&quot;citrus-classpath&quot;/&gt;
-              &lt;arg value=&quot;${test.name}&quot;/&gt;
-              &lt;arg value=&quot;${test.author}&quot;/&gt;
-              &lt;arg value=&quot;${test.description}&quot;/&gt;
-              &lt;arg value=&quot;${test.package}&quot;/&gt;
+              &lt;arg line=&quot;-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package} -framework ${test.framework}&quot;/&gt;
           &lt;/java&gt;
       &lt;/target&gt;
       
-      &lt;target name=&quot;citrus.run.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
+      &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
           &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
       &lt;/target&gt;
       
-      &lt;target name=&quot;citrus.run.single.test&quot; description=&quot;Runs a single test by name&quot;&gt;
+      &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
           &lt;touch file=&quot;test.history&quot;/&gt;
           &lt;loadproperties srcfile=&quot;test.history&quot;/&gt;
           
@@ -121,6 +124,7 @@
       [input] Enter test description: This is my first Citrus test
       [input] Enter author's name: [Christoph]
       [input] Enter package: [com.consol.citrus.ant.sample]
+      [input] Enter framework: [testng]
   
   BUILD SUCCESSFUL
   Total time: 21 seconds

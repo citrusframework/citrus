@@ -97,7 +97,8 @@ public class TestCaseCreator {
                 .withName(cmd.getOptionValue("name"))
                 .withAuthor(cmd.getOptionValue("author", "Unknown"))
                 .withDescription(cmd.getOptionValue("description", "TODO: Description"))
-                .usePackage(cmd.getOptionValue("package", "com.consol.citrus"));
+                .usePackage(cmd.getOptionValue("package", "com.consol.citrus"))
+                .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
             
             creator.createTestCase();
         } catch (ParseException e) {
@@ -330,6 +331,12 @@ public class TestCaseCreator {
                     .withDescription("the package to use (optional)")
                     .isRequired(false)
                     .create("package"));
+            
+            this.addOption(OptionBuilder.withArgName("framework")
+                    .hasArg()
+                    .withDescription("the framework to use (optional) - choose one of testng, junit4, junit3")
+                    .isRequired(false)
+                    .create("framework"));
         }        
     }
 
@@ -395,5 +402,37 @@ public class TestCaseCreator {
      */
     public String getPackage() {
         return targetPackage;
+    }
+
+    /**
+     * Get the target package.
+     * @return the targetPackage
+     */
+    public String getTargetPackage() {
+        return targetPackage;
+    }
+
+    /**
+     * Set the target package.
+     * @param targetPackage the targetPackage to set
+     */
+    public void setTargetPackage(String targetPackage) {
+        this.targetPackage = targetPackage;
+    }
+
+    /**
+     * Get the unit test framework (usually TestNG or JUnit).
+     * @return the framework
+     */
+    public UnitFramework getFramework() {
+        return framework;
+    }
+
+    /**
+     * Set the unit test framework.
+     * @param framework the framework to set
+     */
+    public void setFramework(UnitFramework framework) {
+        this.framework = framework;
     }
 }

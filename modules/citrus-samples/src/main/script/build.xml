@@ -47,10 +47,11 @@
         <input message="Enter test description:" addproperty="test.description"/>
         <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
         <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
-
+		<input message="Enter framework:" addproperty="test.framework" defaultvalue="testng"/>
+	    
 		<java classname="com.consol.citrus.util.TestCaseCreator">
             <classpath refid="citrus-classpath"/>
-			<arg line="-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package}"/>
+			<arg line="-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package} -framework ${test.framework}"/>
         </java>
     </target>
 	
