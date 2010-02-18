@@ -19,7 +19,6 @@
             <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
             <configuration>
-                <author>Christoph Deppisch</author>
                 <targetPackage>com.consol.citrus.samples.flightbooking</targetPackage>
             </configuration>
         </plugin>
@@ -27,7 +26,7 @@
           <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
           <artifactId>maven-surefire-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
-          <version>2.4.3</version>
+          <version>2.5</version>
           <configuration>
             <properties>
                 <property>
