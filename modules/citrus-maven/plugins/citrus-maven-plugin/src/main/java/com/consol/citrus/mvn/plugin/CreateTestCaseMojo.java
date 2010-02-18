@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
  * Goal which creates a new test case using test case creator.
@@ -60,11 +61,16 @@ public class CreateTestCaseMojo extends AbstractMojo {
      *          expression="${interactiveMode}"
      *          default-value="true" */
     private boolean interactiveMode;
+
+    /** @parameter 
+     *          expression="${framework}"
+     *          default-value="testng" */
+    private String framework;
     
     /** @component
      *  @required */
     private Prompter prompter;
-    
+
     /**
      * @see org.apache.maven.plugin.AbstractMojo#execute()
      */
@@ -82,8 +88,10 @@ public class CreateTestCaseMojo extends AbstractMojo {
         		author = prompter.prompt("Enter test author:", author);
         		description = prompter.prompt("Enter test description:", description);
         		targetPackage = prompter.prompt("Enter test package:", targetPackage);
+        		framework = prompter.prompt("Choose unit test framework", framework);
         		
         		String confirm = prompter.prompt("Confirm test creation:\n" +
+        		        "framework: " + framework + "\n" +
     			        "name: " + name + "\n" +
     					"author: " + author + "\n" +
     					"description: " + description + "\n" +
@@ -95,6 +103,7 @@ public class CreateTestCaseMojo extends AbstractMojo {
         	}
         	
             TestCaseCreator creator = TestCaseCreator.build()
+                .withFramework(UnitFramework.fromString(framework))
                 .withName(name)
                 .withAuthor(author)
                 .withDescription(description)
@@ -103,6 +112,7 @@ public class CreateTestCaseMojo extends AbstractMojo {
             creator.createTestCase();
             
             getLog().info("Successfully created new test case \n" +
+                        "framework: " + framework + "\n" +
             		    "name: " + name + "\n" +
     					"author: " + author + "\n" +
     					"description: " + description + "\n" +

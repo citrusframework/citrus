@@ -1,0 +1,18 @@
+package @test.package@;
+
+import org.junit.Test;
+
+import com.consol.citrus.junit.AbstractJUnitCitrusTest;
+
+/**
+ * @test.description@
+ *
+ * \@author @test.author@
+ * \@since @test.creation.date@
+ */
+public class @test.name@ extends AbstractJUnitCitrusTest {
+    \@Test
+    public void @test.method.name@() {
+        executeTest();
+    }
+}

@@ -48,6 +48,32 @@ public class TestCaseCreator {
     /** Target package of test case */
     private String targetPackage;
     
+    /** Target unit testing framework */
+    private UnitFramework framework;
+    
+    /**
+     * Unit testing framework can be either JUnit or TestNG. Test case creator
+     * will create different Java classes according to the unit test framework.
+     */
+    public static enum UnitFramework {
+        TESTNG, JUNIT3, JUNIT4;
+        
+        public static UnitFramework fromString(String value) {
+            if(value.equalsIgnoreCase("testng")) {
+                return TESTNG;
+            } else if(value.equalsIgnoreCase("junit3")) {
+                return JUNIT3;
+            } else if(value.equalsIgnoreCase("junit4")) {
+                return JUNIT4;
+            } else if(value.equalsIgnoreCase("junit")) {
+                return JUNIT4;
+            } else {
+                throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
+            }
+            
+        }
+    };
+    
     /**
      * Main CLI method.
      * @param args
@@ -102,14 +128,14 @@ public class TestCaseCreator {
         targetPackage = targetPackage.replace('.', '/');
         
         createXMLFile(properties);    
-        createJavaFile(properties);
+        createJavaClass(properties);
     }
     
     /**
      * Create the java test case file.
      * @param properties
      */
-    private void createJavaFile(Properties properties) {
+    private void createJavaClass(Properties properties) {
         BufferedReader reader = null;
         OutputStream buffered = null;
         
@@ -122,7 +148,7 @@ public class TestCaseCreator {
             FileOutputStream fos = new FileOutputStream(file);
             buffered = new BufferedOutputStream(fos);
     
-            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream("java-template.txt")));
+            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(getClassTemplateFile())));
             
             StringWriter sWriter = new StringWriter();
             
@@ -154,6 +180,15 @@ public class TestCaseCreator {
         }
     }
     
+    /**
+     * Get the Java class template file according to the 
+     * used unit testing framework.
+     * @return name of template file.
+     */
+    private String getClassTemplateFile() {
+        return "java-" + framework.toString().toLowerCase() + "-template.txt";
+    }
+
     /**
      * Create the XML test case description file.
      * @param properties
@@ -248,6 +283,16 @@ public class TestCaseCreator {
      */
     public TestCaseCreator usePackage(String targetPackage) {
         this.targetPackage = targetPackage;
+        return this;
+    }
+    
+    /**
+     * Set the unit testing framework to use.
+     * @param framework
+     * @return
+     */
+    public TestCaseCreator withFramework(UnitFramework framework) {
+        this.framework = framework;
         return this;
     }
     
