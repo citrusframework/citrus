@@ -908,7 +908,6 @@
                   <artifactId>maven-assembly-plugin</artifactId>
                   <configuration>
                     <descriptors>
-                      <descriptor>src/main/assembly/dist-project.xml</descriptor>
                       <descriptor>src/main/assembly/dist-sources.xml</descriptor>
                       <descriptor>src/main/assembly/dist-with-dependencies.xml</descriptor>
                     </descriptors>
