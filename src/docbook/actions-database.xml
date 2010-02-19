@@ -102,7 +102,30 @@
       <para>If a single validation happens to fail, the whole action will fail with respective validation errors.</para>
       
       <note>
-        <para>When validating database query result sets Citrus can only handle single </para>
+        <para>When validating database query result sets Citrus can only handle single rows. In case a result set holds 
+        several rows only the first row is evaluated.</para>
       </note>
+    </section>
+    
+    <section id="actions-database-read-values">
+      <title>Read data from database</title>
+        
+      <para>Now the validation of database entries is a very powerful feature but sometimes we simply do not know the
+      persisted content values. The test may want to read database entries into test variables without validation. Citrus
+      is able to do that with the following &lt;extract&gt; expressions:</para>
+      
+      <programlisting>
+  &lt;sql datasource=&quot;testDataSource&quot;&gt;
+      &lt;statement&gt;select ID from CUSTOMERS where NAME='${customerName}'&lt;/statement&gt;
+      &lt;statement&gt;select STATUS from ORDERS where ID='${orderId}'&lt;/statement&gt;
+      
+      &lt;extract column=&quot;ID&quot; variable=&quot;${customerId}&quot;/&gt;
+      &lt;extract column=&quot;STATUS&quot; variable=&quot;${orderStatus}&quot;/&gt;
+  &lt;/sql&gt;
+      </programlisting>
+      
+      <para>We can save the database column values directly to test variables. Of course you can combine the value extraction 
+      with the normal column validation described earlier in this chapter. Please keep in mind that we can not use these operations
+      on result sets with multiple rows. Citrus will always use the first row in a result set.</para>
     </section>
 </section>
