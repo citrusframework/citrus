@@ -19,10 +19,11 @@
 
 package com.consol.citrus.util;
 
-import java.util.Stack;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -31,6 +32,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("unchecked")
 public class BooleanExpressionParser {
     /** List of operators */
     private static Stack<String> operators = new Stack<String>();
@@ -38,6 +40,10 @@ public class BooleanExpressionParser {
     /** List of values */
     private static Stack<String> values = new Stack<String>();
 
+    /** List of known operators for this class */
+    private static List<String> knownOperators = new ArrayList<String>(
+            CollectionUtils.arrayToList(new String[]{"(", "=", "and", "or", "lt", "lt=", "gt", "gt=", ")"}));
+    
     /**
      * Logger
      */
@@ -54,97 +60,100 @@ public class BooleanExpressionParser {
 
         char actChar;
 
-        for (int i = 0; i < expression.length(); i++) {
-            actChar = expression.charAt(i);
-
-            if (actChar == '('){
-                operators.push("(");
-            } else if (actChar == ' ') {
-                continue; //ignore
-            } else if (actChar == ')') {
-                String operator;
-                while ((operator = operators.pop()) != "(") {
-                    String value = values.pop();
-                    String value2 = values.pop();
-                    if (operator.equals("lt")) {
-                        value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
-                    } else if (operator.equals("lt=")) {
-                        value = Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value).intValue()).toString();
-                    } else if (operator.equals("gt")) {
-                        value = Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value).intValue()).toString();
-                    } else if (operator.equals("gt=")) {
-                        value = Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value).intValue()).toString();
-                    } else if (operator.equals("=")) {
-                        value = Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value).intValue()).toString();
-                    } else if (operator.equals("and")) {
-                        value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value).booleanValue()).toString();
-                    } else if (operator.equals("or")) {
-                        value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
-                    } else {
-                        throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+        try {
+            for (int i = 0; i < expression.length(); i++) {
+                actChar = expression.charAt(i);
+    
+                if (actChar == '('){
+                    operators.push("(");
+                } else if (actChar == ' ') {
+                    continue; //ignore
+                } else if (actChar == ')') {
+                    String operator;
+                    while ((operator = operators.pop()) != "(") {
+                        values.push(getBooleanResultAsString(operator, values.pop(), values.pop()));
                     }
-
-                    values.push(value);
+                } else if (!Character.isDigit(actChar)) {
+                    StringBuffer operatorBuffer = new StringBuffer();
+    
+                    int m = i;
+                    do {
+                        operatorBuffer.append(actChar);
+                        m++;
+                    } while (m < expression.length() && !Character.isDigit(actChar = expression.charAt(m)) && !(expression.charAt(m) == ' ') && !(expression.charAt(m) == '('));
+    
+                    i = m - 1;
+    
+                    operators.push(validateOperator(operatorBuffer.toString()));
+                } else if (Character.isDigit(actChar)) {
+                    StringBuffer digitBuffer = new StringBuffer();
+    
+                    int m = i;
+                    do {
+                        digitBuffer.append(actChar);
+                        m++;
+                    } while (m < expression.length() && Character.isDigit(actChar = expression.charAt(m)));
+    
+                    i = m - 1;
+    
+                    values.push(digitBuffer.toString());
                 }
-            } else if (!Character.isDigit(actChar)) {
-                StringBuffer operatorBuffer = new StringBuffer();
-
-                int m = i;
-                do {
-                    operatorBuffer.append(actChar);
-                    m++;
-                } while (m < expression.length() && !Character.isDigit(actChar = expression.charAt(m)) && !(expression.charAt(m) == ' ') && !(expression.charAt(m) == '('));
-
-                i = m - 1;
-
-                operators.push(operatorBuffer.toString());
-            } else if (Character.isDigit(actChar)) {
-                StringBuffer digitBuffer = new StringBuffer();
-
-                int m = i;
-                do {
-                    digitBuffer.append(actChar);
-                    m++;
-                } while (m < expression.length() && Character.isDigit(actChar = expression.charAt(m)));
-
-                i = m - 1;
-
-                values.push(digitBuffer.toString());
             }
-        }
-
-        while (!operators.isEmpty()) {
-            String operator = operators.pop();
+    
+            while (!operators.isEmpty()) {
+                values.push(getBooleanResultAsString(operators.pop(), values.pop(), values.pop()));
+            }
+    
             String value = values.pop();
-            String value2 = values.pop();
-            if (operator.equals("lt")) {
-                value = Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value).intValue()).toString();
-            } else if (operator.equals("lt=")) {
-                value = Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value).intValue()).toString();
-            } else if (operator.equals("gt")) {
-                value = Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value).intValue()).toString();
-            } else if (operator.equals("gt=")) {
-                value = Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value).intValue()).toString();
-            } else if (operator.equals("=")) {
-                value = Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value).intValue()).toString();
-            } else if (operator.equals("and")) {
-                value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value).booleanValue()).toString();
-            } else if (operator.equals("or")) {
-                value = Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value).booleanValue()).toString();
-            } else {
-                throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+            result = Boolean.valueOf(value).booleanValue();
+    
+            if(log.isDebugEnabled()) {
+                log.debug("Boolean expression " + expression + " evaluates to " + value);
             }
-
-            values.push(value);
-        }
-
-        String value = values.pop();
-        result = Boolean.valueOf(value).booleanValue();
-
-        if(log.isDebugEnabled()) {
-            log.debug("Boolean expression " + expression + " evaluates to " + value);
+        } catch(EmptyStackException e) {
+            throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!");
         }
 
         return result;
+    }
+    
+    /**
+     * Check if operator is known to this class.
+     * @param operator to validate
+     * @return the operator itself.
+     * @throws CitrusRuntimeException
+     */
+    private static String validateOperator(String operator) throws CitrusRuntimeException {
+        if(!knownOperators.contains(operator)) {
+            throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+        }
+        return operator;
+    }
+
+    /**
+     * Evaluates a boolean expression to a String representation (true/false).
+     * @param operator
+     * @param value1
+     * @param value2
+     * @return true/false as String
+     */
+    private static String getBooleanResultAsString(String operator, String value1, String value2) {
+        if (operator.equals("lt")) {
+            return Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value1).intValue()).toString();
+        } else if (operator.equals("lt=")) {
+            return Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value1).intValue()).toString();
+        } else if (operator.equals("gt")) {
+            return Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value1).intValue()).toString();
+        } else if (operator.equals("gt=")) {
+            return Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value1).intValue()).toString();
+        } else if (operator.equals("=")) {
+            return Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value1).intValue()).toString();
+        } else if (operator.equals("and")) {
+            return Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value1).booleanValue()).toString();
+        } else if (operator.equals("or")) {
+            return Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value1).booleanValue()).toString();
+        } else {
+            throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+        }
     }
 }
