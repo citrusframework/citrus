@@ -128,20 +128,28 @@ public class TestCaseCreator {
         
         targetPackage = targetPackage.replace('.', '/');
         
-        createXMLFile(properties);    
-        createJavaClass(properties);
+        createFileFromTemplate(properties,
+                CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml",
+                getTemplateFileForXMLTest());
+        
+        createFileFromTemplate(properties, 
+                CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java", 
+                getTemplateFileForJavaClass());
     }
     
     /**
-     * Create the java test case file.
-     * @param properties
+     * Creates test case files from template files replacing
+     * properties in template file.
+     * @param properties to replace placeholders in template file
+     * @param filePath target file path
+     * @param templateFilePath template file path
      */
-    private void createJavaClass(Properties properties) {
+    private void createFileFromTemplate(Properties properties, String filePath, String templateFilePath) {
         BufferedReader reader = null;
         OutputStream buffered = null;
         
         try {
-            File file = new File(CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java");
+            File file = new File(filePath);
             if(!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
@@ -149,7 +157,7 @@ public class TestCaseCreator {
             FileOutputStream fos = new FileOutputStream(file);
             buffered = new BufferedOutputStream(fos);
     
-            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(getClassTemplateFile())));
+            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(templateFilePath)));
             
             StringWriter sWriter = new StringWriter();
             
@@ -184,61 +192,20 @@ public class TestCaseCreator {
     /**
      * Get the Java class template file according to the 
      * used unit testing framework.
-     * @return name of template file.
+     * @return file path of template file.
      */
-    private String getClassTemplateFile() {
+    private String getTemplateFileForJavaClass() {
         return "java-" + framework.toString().toLowerCase() + "-template.txt";
     }
-
+    
     /**
-     * Create the XML test case description file.
-     * @param properties
+     * Get the XML test case file template.
+     * @return file path of template file.
      */
-    private void createXMLFile(Properties properties) {
-        BufferedReader reader = null;
-        OutputStream buffered = null;
-        
-        try {
-            File file = new File(CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml");
-            if(!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-                
-            FileOutputStream fos = new FileOutputStream(file);
-            buffered = new BufferedOutputStream(fos);
-    
-            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream("test-template.xml")));
-            
-            StringWriter sWriter = new StringWriter();
-            
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sWriter.append(PropertyUtils.replacePropertiesInString(line, properties) + "\n");
-            }
-    
-            buffered.write(sWriter.toString().getBytes());
-            buffered.flush();
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(buffered != null) {
-                    buffered.close();
-                }
-                
-                if(reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    private String getTemplateFileForXMLTest() {
+        return "test-template.xml";
     }
-    
+
     /**
      * Builder method for this creator.
      * @return
