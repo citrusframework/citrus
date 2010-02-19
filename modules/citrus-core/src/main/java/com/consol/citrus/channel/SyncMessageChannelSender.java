@@ -72,7 +72,7 @@ public class SyncMessageChannelSender implements MessageSender {
         Message<?> replyMessage = messageChannelTemplate.sendAndReceive(message, channel);
         
         if(replyMessage == null) {
-            throw new CitrusRuntimeException("Failed to send message to channel" + channel.getName());
+            throw new CitrusRuntimeException("Reply timed out after " + replyTimeout + "ms. Did not receive reply message on channel");
         }
         
         if(replyMessageHandler != null) {
@@ -131,5 +131,22 @@ public class SyncMessageChannelSender implements MessageSender {
      */
     public ReplyMessageCorrelator getCorrelator() {
         return correlator;
+    }
+
+    /**
+     * Set the message channel to publish messages on.
+     * @param channel the channel to set
+     */
+    public void setChannel(MessageChannel channel) {
+        this.channel = channel;
+    }
+
+    /**
+     * Set the message channel template.
+     * @param messageChannelTemplate the messageChannelTemplate to set
+     */
+    public void setMessageChannelTemplate(
+            MessageChannelTemplate messageChannelTemplate) {
+        this.messageChannelTemplate = messageChannelTemplate;
     }
 }
