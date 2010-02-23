@@ -227,7 +227,38 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         receiveAction.setMessageElements(overwriteElements);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\"><ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+        		"<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+        
+        receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>");
+        
+        Map<String, String> overwriteElements = new HashMap<String, String>();
+        overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
+        receiveAction.setMessageElements(overwriteElements);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+        		"<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
                                     .copyHeaders(headers)
                                     .build();
         
@@ -418,6 +449,324 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> messageElements = new HashMap<String, String>();
+        messageElements.put("/TestRequest/Message", "Hello World!");
+        receiveAction.setValidateMessageElements(messageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> messageElements = new HashMap<String, String>();
+        messageElements.put("/:TestRequest/:Message", "Hello World!");
+        receiveAction.setValidateMessageElements(messageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
+        		"<Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> messageElements = new HashMap<String, String>();
+        messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
+        receiveAction.setValidateMessageElements(messageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> messageElements = new HashMap<String, String>();
+        messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
+        receiveAction.setValidateMessageElements(messageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> messageElements = new HashMap<String, String>();
+        messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
+        receiveAction.setValidateMessageElements(messageElements);
+        
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("pfx", "http://citrusframework.org/unittest");
+        receiveAction.setNamespaces(namespaces);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("/TestRequest/Message", "messageVar");
+        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("/:TestRequest/:Message", "messageVar");
+        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
+        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
+                "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
+        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setSchemaValidation(false);
+        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
+
+        validator.setFunctionRegistry(context.getFunctionRegistry());
+        
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
+        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("pfx", "http://citrusframework.org/unittest");
+        receiveAction.setNamespaces(namespaces);
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
         
         verify(messageReceiver);
     }

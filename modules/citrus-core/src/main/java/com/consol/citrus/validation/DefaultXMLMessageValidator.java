@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.transform.dom.DOMSource;
 
 import org.slf4j.Logger;
@@ -83,6 +82,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                     "but was " + validationContext.getExpectedMessage().getPayload().getClass());
         }
         
+        if(!XmlValidationContext.class.isAssignableFrom(validationContext.getClass())) {
+            throw new IllegalArgumentException(DefaultXMLMessageValidator.class + " requires a instance of '" + XmlValidationContext.class + "'");
+        }
+        
         XmlValidationContext xmlValidationContext = (XmlValidationContext)validationContext;
         
         try {
@@ -95,10 +98,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             
             validateNamespaces(xmlValidationContext.getExpectedNamespaces(), receivedMessage);
             validateMessageHeader(xmlValidationContext.getExpectedMessageHeaders(), receivedMessage.getHeaders(), context);
-            validateXmlPayload(receivedMessage, xmlValidationContext.getExpectedMessage(), xmlValidationContext.getIgnoreMessageElements());
-            validateMessageElements(xmlValidationContext.getExpectedMessageElements(), 
-                    receivedMessage, xmlValidationContext.getNamespaceContext(), 
-                    xmlValidationContext.getIgnoreMessageElements(), context);
+            validateMessagePayload(receivedMessage, xmlValidationContext, context);
+            validateMessageElements(receivedMessage, xmlValidationContext, context);
             
 
             log.info("XML tree validation finished successfully: All values OK");
@@ -186,22 +187,18 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     /**
      * Validate message payload XML elements.
      * 
-     * @param validateElements
      * @param receivedMessage
-     * @param nsContext
-     * @param ignoreMessageElements
+     * @param validationContext
      * @param context
      */
-    public void validateMessageElements(Map<String, String> validateElements, 
-            Message<?> receivedMessage, 
-            NamespaceContext nsContext,
-            Set<String> ignoreMessageElements,
+    public void validateMessageElements(Message<?> receivedMessage, 
+            XmlValidationContext validationContext,
             TestContext context) {
-        if (CollectionUtils.isEmpty(validateElements)) {return;}
+        if (CollectionUtils.isEmpty(validationContext.getExpectedMessageElements())) {return;}
         
         log.info("Start XML elements validation");
 
-        for (Entry<String, String> entry : validateElements.entrySet()) {
+        for (Entry<String, String> entry : validationContext.getExpectedMessageElements().entrySet()) {
             String elementPathExpression = entry.getKey();
             String expectedValue = entry.getValue();
             String actualValue = null;
@@ -216,7 +213,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             
             Node node;
             if (XMLUtils.isXPathExpression(elementPathExpression)) {
-                node = XMLUtils.findNodeByXPath(received, elementPathExpression, nsContext);
+                node = XMLUtils.findNodeByXPath(received, elementPathExpression, validationContext.getNamespaceContext());
             } else {
                 node = XMLUtils.findNodeByName(received, elementPathExpression);
             }
@@ -225,7 +222,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                 throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
             }
 
-            if(isNodeIgnored(node, ignoreMessageElements)) {
+            if(isNodeIgnored(node, validationContext)) {
                 continue;
             }
             
@@ -333,7 +330,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
         
-        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(received.getFirstChild());
+        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
 
         if (foundNamespaces.size() != expectedNamespaces.size()) {
             throw new ValidationException("Number of namespace declarations not equal for node " + XMLUtils.getNodesPathName(received.getFirstChild()) + " found " + foundNamespaces.size() + " expected " + expectedNamespaces.size());
@@ -361,10 +358,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * Validate message payloads by comparing to a control message.
      * 
      * @param receivedMessage
-     * @param controlMessage
-     * @param ignoreMessageElements
+     * @param validationContext
+     * @param context
      */
-    private void validateXmlPayload(Message<?> receivedMessage, Message<?> controlMessage, Set<String> ignoreMessageElements) {
+    private void validateMessagePayload(Message<?> receivedMessage, XmlValidationContext validationContext, TestContext context) {
+        Message<?> controlMessage = validationContext.getExpectedMessage();
+        
         if(controlMessage == null || controlMessage.getPayload() == null) {return;}
         
         log.info("Start XML tree validation ...");
@@ -382,7 +381,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             log.debug(XMLUtils.serialize(source));
         }
         
-        validateXmlTree(received, source, ignoreMessageElements);
+        validateXmlTree(received, source, validationContext);
     }
 
     /**
@@ -390,15 +389,15 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * 
      * @param received
      * @param source
-     * @param ignoreMessageElements
+     * @param validationContext
      */
-    private void validateXmlTree(Node received, Node source, Set<String> ignoreMessageElements) {
+    private void validateXmlTree(Node received, Node source, XmlValidationContext validationContext) {
         switch(received.getNodeType()) {
             case Node.DOCUMENT_NODE:
-                validateXmlTree(received.getFirstChild(), source.getFirstChild(), ignoreMessageElements);
+                validateXmlTree(received.getFirstChild(), source.getFirstChild(), validationContext);
                 break;
             case Node.ELEMENT_NODE:
-                doElement(received, source, ignoreMessageElements);
+                doElement(received, source, validationContext);
                 break;
             case Node.TEXT_NODE:
                 doText(received, source);
@@ -422,9 +421,9 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * 
      * @param received
      * @param source
-     * @param ignoreMessageElements
+     * @param validationContext
      */
-    private void doElement(Node received, Node source, Set<String> ignoreMessageElements) {
+    private void doElement(Node received, Node source, XmlValidationContext validationContext) {
         //validate element name
         if(log.isDebugEnabled()) {
             log.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
@@ -460,7 +459,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                         + null + "'");
         }
 
-        if (isNodeIgnored(received, ignoreMessageElements)) {
+        if (isNodeIgnored(received, validationContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
@@ -481,7 +480,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                     + countAttributes(receivedAttr));
 
         for(int i = 0; i<receivedAttr.getLength(); i++) {
-            doAttribute(received, receivedAttr.item(i), sourceAttr, ignoreMessageElements);
+            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext);
         }
 
         //work on child nodes
@@ -495,7 +494,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                     + receivedChilds.getLength());
 
         for(int i = 0; i<receivedChilds.getLength(); i++) {
-            this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), ignoreMessageElements);
+            this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), validationContext);
         }
 
         if(log.isDebugEnabled()) {
@@ -545,9 +544,9 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * @param element
      * @param received
      * @param sourceAttributes
-     * @param ignoreMessageElements
+     * @param validationContext
      */
-    private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, Set<String> ignoreMessageElements) {
+    private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, XmlValidationContext validationContext) {
         if(received.getNodeName().startsWith("xmlns")) { return; }
         
         String receivedName = received.getLocalName();
@@ -563,7 +562,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                     + element.getLocalName() + "', unknown attribute "
                     + receivedName + " (" + received.getNamespaceURI() + ")");
 
-        if (isAttributeIgnored(element, received, ignoreMessageElements)) {
+        if (isAttributeIgnored(element, received, validationContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
@@ -625,11 +624,13 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * Checks whether the current attribute is ignored.
      * @param elementNode
      * @param attributeNode
-     * @param ignoreMessageElements
+     * @param validationContextk
      * @return
      */
-    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, Set<String> ignoreMessageElements) {
-        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
+    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, XmlValidationContext validationContext) {
+        Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
+        
+        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
         }
 
@@ -663,7 +664,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          */
         for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
-                Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression, null);
+                Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression, validationContext.getNamespaceContext());
                 if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
                     return true;
                 }
@@ -676,14 +677,16 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     /**
      * Checks whether the node is ignored.
      * @param node
-     * @param ignoreMessageElements
+     * @param validationContext
      * @return
      */
-    private boolean isNodeIgnored(final Node node, Set<String> ignoreMessageElements) {
-        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
+    private boolean isNodeIgnored(final Node node, XmlValidationContext validationContext) {
+        Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
+        
+        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
         }
-
+        
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
          */
@@ -712,7 +715,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          */
         for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
-                Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression, null);
+                Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression, validationContext.getNamespaceContext());
 
                 if (foundNode != null && foundNode.isSameNode(node)) {
                     return true;

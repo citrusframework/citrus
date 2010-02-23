@@ -27,9 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
+import org.springframework.util.CollectionUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -136,10 +140,12 @@ public class TestContext {
      * 
      * @param messageElements map holding variable names and XPath expressions.
      * @param message
+     * @param nsContext
      * @throws UnknownElementException
      */
-    public void createVariablesFromMessageValues(final Map<String, String> messageElements, Message<?> message) throws UnknownElementException {
-        if (messageElements == null || messageElements.isEmpty()) {return;}
+    public void createVariablesFromMessageValues(final Map<String, String> messageElements, 
+            Message<?> message, NamespaceContext nsContext) throws UnknownElementException {
+        if (CollectionUtils.isEmpty(messageElements)) {return;}
 
         if(log.isDebugEnabled()) {
             log.debug("Reading XML elements from document");
@@ -156,7 +162,12 @@ public class TestContext {
             Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
             
             if (XMLUtils.isXPathExpression(pathExpression)) {
-                String value = XMLUtils.evaluateXPathExpression(doc, pathExpression, null);
+                if(nsContext == null) {
+                    nsContext = new SimpleNamespaceContext();
+                    ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
+                }
+                
+                String value = XMLUtils.evaluateXPathExpression(doc, pathExpression, nsContext);
 
                 setVariable(variableName, value);
             } else {
@@ -283,7 +294,9 @@ public class TestContext {
             Node node;
 
             if (XMLUtils.isXPathExpression(pathExpression)) {
-                node = XMLUtils.findNodeByXPath(doc, pathExpression, null);
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                nsContext.setBindings(XMLUtils.lookupNamespaces(messagePayload));
+                node = XMLUtils.findNodeByXPath(doc, pathExpression, nsContext);
             } else {
                 node = XMLUtils.findNodeByName(doc, pathExpression);
             }

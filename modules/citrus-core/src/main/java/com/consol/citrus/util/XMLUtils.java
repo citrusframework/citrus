@@ -138,6 +138,7 @@ public class XMLUtils {
     /**
      * Evaluates the XPath expression to return the respective value.
      * @param node element in a DOM tree.
+     * @param nsContext namespace context holding bindings.
      * @throws CitrusRuntimeException
      * @return the evaluated node value.
      */
@@ -345,6 +346,48 @@ public class XMLUtils {
             }
         }
 
+        return namespaces;
+    }
+    
+    /**
+     * Look up namespace attribute declarations in the XML fragment and
+     * store them in a binding map, where the key is the namespace prefix and the value
+     * is the namespace uri.
+     * 
+     * @param xmlString XML fragment.
+     * @return map containing namespace prefix - namespace uri pairs.
+     */
+    public static Map<String, String> lookupNamespaces(String xml) {
+        Map<String, String> namespaces = new HashMap<String, String>();
+
+        //TODO: handle inner CDATA sections because namespaces they might interfere with real namespaces in xml fragment
+        if(xml.indexOf(XMLConstants.XMLNS_ATTRIBUTE) != -1) {
+            String[] tokens = StringUtils.split(xml, XMLConstants.XMLNS_ATTRIBUTE);
+            
+            do {
+                String token = tokens[1];
+
+                String nsPrefix;
+                if (token.startsWith(":")) {
+                    nsPrefix = token.substring(1, token.indexOf("="));
+                } else { 
+                    nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
+                }
+
+                String nsUri;
+                try {
+                    nsUri = token.substring(token.indexOf("\"")+1, token.indexOf("\"", token.indexOf("\"")+1));
+                } catch (StringIndexOutOfBoundsException e) {
+                    //maybe we have more luck with single "'"
+                    nsUri = token.substring(token.indexOf("'")+1, token.indexOf("'", token.indexOf("'")+1));
+                }
+                
+                namespaces.put(nsPrefix, nsUri);
+                
+                tokens = StringUtils.split(token, XMLConstants.XMLNS_ATTRIBUTE);
+            } while(tokens != null);
+        }
+        
         return namespaces;
     }
     

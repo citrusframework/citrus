@@ -171,10 +171,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 validationContext.setExpectedMessage(expectedMessage);
             }
             
+            SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+            Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
             if(!namespaces.isEmpty()) {
-                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString()).getFirstChild());
-
                 //dynamic binding of namespaces declarations in root element of received message
                 for (Entry<String, String> binding : dynamicBindings.entrySet()) {
                     //only bind namespace that is not present in explicit namespace bindings
@@ -185,14 +184,17 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 
                 //add explicit namespace bindings
                 nsContext.setBindings(namespaces);
-                validationContext.setNamespaceContext(nsContext);
+            } else {
+                nsContext.setBindings(dynamicBindings);
             }
+            
+            validationContext.setNamespaceContext(nsContext);
             
             //validate message
             validateMessage(receivedMessage, context);
 
             //save variables from message payload
-            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage);
+            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {

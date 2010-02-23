@@ -22,13 +22,16 @@ package com.consol.citrus.adapter.handler;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.xerces.parsers.DOMParser;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.core.Message;
-import org.springframework.util.Assert;
+import org.springframework.util.*;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,6 +59,9 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
     /** Application context holding available message handlers */
     private String messageHandlerContext;
     
+    /** Map holding namespace bindings for XPath expression */
+    private Map<String, String> namespaceBindings = new HashMap<String, String>();
+    
     /**
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
@@ -72,7 +78,14 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
             Node matchingElement;
             if (xpathMappingExpression != null) {
-                matchingElement = XMLUtils.findNodeByXPath(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, null);
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                if(!CollectionUtils.isEmpty(namespaceBindings)) {
+                    nsContext.setBindings(namespaceBindings);
+                } else {
+                    nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
+                }
+                
+                matchingElement = XMLUtils.findNodeByXPath(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, nsContext);
             } else {
                 matchingElement = DOMUtil.getFirstChildElement(parser.getDocument());
             }
@@ -111,5 +124,13 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
      */
     public void setMessageHandlerContext(String messageHandlerContext) {
         this.messageHandlerContext = messageHandlerContext;
+    }
+
+    /**
+     * Set the namespace bindings for XPath expression evaluation.
+     * @param namespaceBindings the namespaceBindings to set
+     */
+    public void setNamespaceBindings(Map<String, String> namespaceBindings) {
+        this.namespaceBindings = namespaceBindings;
     }
 }
