@@ -19,7 +19,9 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.HashMap;
 
@@ -84,30 +86,30 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean.execute(context);
     }
     
-    //TODO: fix this test
-//    @Test
-//    public void testValidateEmptyMessageElements() {
-//        reset(messageReceiver);
-//        
-//        Message message = MessageBuilder.withPayload("<root>"
-//                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-//                            + "<sub-elementA attribute='A'></sub-elementA>"
-//                            + "<sub-elementB attribute='B'></sub-elementB>"
-//                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-//                        + "</element>" 
-//                        + "</root>").build();
-//        
-//        expect(messageReceiver.receive()).andReturn(message);
-//        replay(messageReceiver);
-//        
-//        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
-//        validateMessageElements.put("root.element.sub-elementA", "");
-//        validateMessageElements.put("sub-elementB", "");
-//        
-//        receiveMessageBean.setExpectedMessageElements(validateMessageElements);
-//        
-//        receiveMessageBean.execute();
-//    }
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testValidateEmptyMessageElements() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                            + "<sub-elementA attribute='A'></sub-elementA>"
+                            + "<sub-elementB attribute='B'></sub-elementB>"
+                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                        + "</element>" 
+                        + "</root>").build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+        validateMessageElements.put("root.element.sub-elementA", "");
+        validateMessageElements.put("sub-elementB", "");
+        
+        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        
+        receiveMessageBean.execute(context);
+    }
     
     @Test
     @SuppressWarnings("unchecked")
