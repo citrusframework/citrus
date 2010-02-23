@@ -22,6 +22,7 @@ package com.consol.citrus.actions;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -39,7 +41,6 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.XmlValidationContext;
-import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -171,8 +172,20 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
             
             if(!namespaces.isEmpty()) {
-                namespaces.putAll(XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString()).getFirstChild()));
-                validationContext.setNamespaceContext(new NamespaceContextImpl(namespaces));
+                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+                Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString()).getFirstChild());
+
+                //dynamic binding of namespaces declarations in root element of received message
+                for (Entry<String, String> binding : dynamicBindings.entrySet()) {
+                    //only bind namespace that is not present in explicit namespace bindings
+                    if(!namespaces.containsValue(binding.getValue())) {
+                        nsContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                    }
+                }
+                
+                //add explicit namespace bindings
+                nsContext.setBindings(namespaces);
+                validationContext.setNamespaceContext(nsContext);
             }
             
             //validate message

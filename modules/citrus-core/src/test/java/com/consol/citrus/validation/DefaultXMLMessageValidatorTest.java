@@ -95,7 +95,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite");
+        expectedNamespaces.put("", "http://testsuite");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -110,7 +110,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</ns1:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -125,8 +125,8 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -141,9 +141,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -158,7 +158,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/wrong");
+        expectedNamespaces.put("", "http://testsuite/wrong");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -173,7 +173,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</ns1:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1/wrong");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -188,8 +188,8 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default/wrong");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://testsuite/default/wrong");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -204,9 +204,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1/wrong");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
      
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -221,9 +221,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:nswrong", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("nswrong", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -238,9 +238,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</ns0:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -255,9 +255,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns:ns0", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("ns0", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -272,10 +272,10 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
-        expectedNamespaces.put("xmlns:ns4", "http://testsuite/ns4");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("ns4", "http://testsuite/ns4");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -290,9 +290,9 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("xmlns", "http://testsuite/default");
-        expectedNamespaces.put("xmlns:ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("xmlns:ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://testsuite/default");
+        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
         DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);

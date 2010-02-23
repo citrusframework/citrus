@@ -319,13 +319,15 @@ public class DefaultXMLMessageValidator implements MessageValidator {
     }
 
     /**
-     * Validate namespaces in message.
+     * Validate namespaces in message. The method compares namespace declarations in the root
+     * element of the received message to expected namespaces. Prefixes are important too, so
+     * differing namespace prefixes will fail the validation.
      * 
      * @param expectedNamespaces
      * @param receivedMessage
      */
     public void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
-        if (CollectionUtils.isEmpty(expectedNamespaces)) {return;}
+        if (CollectionUtils.isEmpty(expectedNamespaces)) { return; }
 
         log.info("Start XML namespace validation");
 
@@ -661,7 +663,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          */
         for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
-                Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression);
+                Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression, null);
                 if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
                     return true;
                 }
@@ -710,7 +712,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          */
         for (String expression : ignoreMessageElements) {
             if (XMLUtils.isXPathExpression(expression)) {
-                Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression);
+                Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression, null);
 
                 if (foundNode != null && foundNode.isSameNode(node)) {
                     return true;

@@ -72,7 +72,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
             Node matchingElement;
             if (xpathMappingExpression != null) {
-                matchingElement = XMLUtils.findNodeByXPath(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression);
+                matchingElement = XMLUtils.findNodeByXPath(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, null);
             } else {
                 matchingElement = DOMUtil.getFirstChildElement(parser.getDocument());
             }

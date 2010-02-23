@@ -19,26 +19,22 @@
 
 package com.consol.citrus.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.LSResolverImpl;
-import com.consol.citrus.xml.NamespaceContextImpl;
 
 /**
  * Class providing several utility methods for XML processing.
@@ -109,16 +105,6 @@ public class XMLUtils {
     }
     
     /**
-     * Find node element by XPath expression.
-     * @param node in DOM document.
-     * @param expressionStr XPath expression string.
-     * @return
-     */
-    public static Node findNodeByXPath(Node node, String expressionStr) {
-        return findNodeByXPath(node, expressionStr, null);
-    }
-
-    /**
      * Finds a node in the DOM tree using XPath expressions.
      * @param node the XML node
      * @param xpath the XPath expression
@@ -130,11 +116,11 @@ public class XMLUtils {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
             
-            if(nsContext == null) {
-                nsContext = buildNamespaceContext(node);
+            if(nsContext != null) {
+                xpath.setNamespaceContext(nsContext);
+            } else {
+                xpath.setNamespaceContext(buildNamespaceContext(node));
             }
-            
-            xpath.setNamespaceContext(nsContext);
             
             XPathExpression expression = xpath.compile(expressionStr);
             Node found = (Node)expression.evaluate(node, XPathConstants.NODE);
@@ -149,33 +135,6 @@ public class XMLUtils {
         }
     }
     
-    /**
-     * Build a namespace context from a node element.
-     * @param node holding namespace declarations.
-     * @return the namespace context.
-     */
-    private static NamespaceContext buildNamespaceContext(Node node) {
-        NamespaceContextImpl nsContext = new NamespaceContextImpl();
-        
-        if(node.getNodeType() == Node.DOCUMENT_NODE) {
-            nsContext.setNamespaces(lookupNamespaces(node.getFirstChild()));
-        } else {
-            nsContext.setNamespaces(lookupNamespaces(node));
-        }
-        
-        return nsContext;
-    }
-
-    /**
-     * Evaluates a XPath expression towards a node element.
-     * @param node element in a DOM tree.
-     * @param expressionStr XPath expression string.
-     * @return value of the found element.
-     */
-    public static String evaluateXPathExpression(Node node, String expressionStr) {
-        return evaluateXPathExpression(node, expressionStr, null);
-    }
-
     /**
      * Evaluates the XPath expression to return the respective value.
      * @param node element in a DOM tree.
@@ -198,7 +157,7 @@ public class XMLUtils {
 
             //in case value is empty check that DOM node really exists
             //if DOM node can not be found the xpath expression might be invalid
-            if (value == null || value.length() == 0) {
+            if (!StringUtils.hasText(value)) {
                 findNodeByXPath(node, expressionStr, nsContext);
             }
             
@@ -206,6 +165,20 @@ public class XMLUtils {
         } catch (XPathExpressionException e) {
             throw new CitrusRuntimeException(e);
         }
+    }
+    
+    /**
+     * Build a namespace context from a node element. Method searches for all
+     * namespace attributes in the node element and binds them to a namespace context.
+     * 
+     * @param node holding namespace declarations.
+     * @return the namespace context.
+     */
+    private static NamespaceContext buildNamespaceContext(Node node) {
+        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+        nsContext.setBindings(lookupNamespaces(node));
+        
+        return nsContext;
     }
 
     /**
@@ -342,19 +315,32 @@ public class XMLUtils {
     }
 
     /**
-     * Looks up all namespace attribute declarations for the specified node.
+     * Look up namespace attribute declarations in the specified node and
+     * store them in a binding map, where the key is the namespace prefix and the value
+     * is the namespace uri.
+     * 
      * @param referenceNode XML node to search for namespace declarations.
-     * @return Map containing namespace prefix - namespace url pairs.
+     * @return map containing namespace prefix - namespace url pairs.
      */
     public static Map<String, String> lookupNamespaces(Node referenceNode) {
         Map<String, String> namespaces = new HashMap<String, String>();
 
-        if (referenceNode != null && referenceNode.hasAttributes()) {
-            for (int i = 0; i < referenceNode.getAttributes().getLength(); i++) {
-                Node attribute = referenceNode.getAttributes().item(i);
+        Node node;
+        if(referenceNode.getNodeType() == Node.DOCUMENT_NODE) {
+            node = referenceNode.getFirstChild();
+        } else {
+            node = referenceNode;
+        }
+        
+        if (node != null && node.hasAttributes()) {
+            for (int i = 0; i < node.getAttributes().getLength(); i++) {
+                Node attribute = node.getAttributes().item(i);
 
-                if (attribute.getNodeName().startsWith("xmlns")) {
-                    namespaces.put(attribute.getNodeName(), attribute.getNodeValue());
+                if (attribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE + ":")) {
+                    namespaces.put(attribute.getNodeName().substring((XMLConstants.XMLNS_ATTRIBUTE + ":").length()), attribute.getNodeValue());
+                } else if (attribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) { 
+                    //default namespace
+                    namespaces.put(XMLConstants.DEFAULT_NS_PREFIX, attribute.getNodeValue());
                 }
             }
         }

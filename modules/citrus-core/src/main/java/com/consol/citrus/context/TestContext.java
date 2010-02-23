@@ -156,7 +156,7 @@ public class TestContext {
             Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
             
             if (XMLUtils.isXPathExpression(pathExpression)) {
-                String value = XMLUtils.evaluateXPathExpression(doc, pathExpression);
+                String value = XMLUtils.evaluateXPathExpression(doc, pathExpression, null);
 
                 setVariable(variableName, value);
             } else {
@@ -283,7 +283,7 @@ public class TestContext {
             Node node;
 
             if (XMLUtils.isXPathExpression(pathExpression)) {
-                node = XMLUtils.findNodeByXPath(doc, pathExpression);
+                node = XMLUtils.findNodeByXPath(doc, pathExpression, null);
             } else {
                 node = XMLUtils.findNodeByName(doc, pathExpression);
             }
