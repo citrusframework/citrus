@@ -47,6 +47,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
@@ -212,25 +213,33 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
-            Node node;
             if (XPathUtils.isXPathExpression(elementPathExpression)) {
-                node = XPathUtils.evaluateAsNode(received, elementPathExpression, validationContext.getNamespaceContext());
+                XPathExpressionResult resultType = XPathExpressionResult.fromString(elementPathExpression, XPathExpressionResult.NODE);
+                elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
+                
+                //Give ignore elements the chance to prevent the validation in case result type is node
+                if(resultType.equals(XPathExpressionResult.NODE) &&
+                        isNodeIgnored(XPathUtils.evaluateAsNode(received, elementPathExpression, validationContext.getNamespaceContext()), validationContext)) {
+                    continue;
+                }
+                
+                actualValue = XPathUtils.evaluate(received, elementPathExpression, validationContext.getNamespaceContext(), resultType);
             } else {
-                node = XMLUtils.findNodeByName(received, elementPathExpression);
-            }
-
-            if (node == null) {
-                throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
-            }
-
-            if(isNodeIgnored(node, validationContext)) {
-                continue;
-            }
-            
-            if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
-                actualValue = node.getFirstChild().getNodeValue();
-            } else { //if (node.getNodeType() == Node.ATTRIBUTE_NODE)
-                actualValue = node.getNodeValue();
+                Node node = XMLUtils.findNodeByName(received, elementPathExpression);
+                
+                if (node == null) {
+                    throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
+                }
+                
+                if(isNodeIgnored(node, validationContext)) {
+                    continue;
+                }
+                
+                if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
+                    actualValue = node.getFirstChild().getNodeValue();
+                } else {
+                    actualValue = node.getNodeValue();
+                }
             }
 
             if (VariableUtils.isVariableName(expectedValue)) {

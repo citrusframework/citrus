@@ -19,7 +19,9 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -181,5 +184,102 @@ public class XPathTest extends AbstractBaseTest {
         receiveMessageBean.setNamespaces(namespaces);
         
         receiveMessageBean.execute(context);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testValidateMessageElementsUsingXPathWithResultTypes() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+                            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                            + "</element>"
+                            + "<ns1:ns-element>namespace</ns1:ns-element>"
+                            + "<search-element>search-for</search-element>"
+                        + "</ns1:root>")
+                        .build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        HashMap<String, String> validateMessageElements = new HashMap<String, String>();
+        validateMessageElements.put("node://:element/:sub-elementA", "text-value");
+        validateMessageElements.put("node://:element/:sub-elementA[@attribute='A']", "text-value");
+        validateMessageElements.put("node://:element/:sub-elementB", "text-value");
+        validateMessageElements.put("node://:element/:sub-elementB/@attribute", "B");
+        validateMessageElements.put("node://ns1:ns-element", "namespace");
+        validateMessageElements.put("node://*[.='search-for']", "search-for");
+        validateMessageElements.put("number:count(/ns1:root/:element/*)", "3.0");
+        validateMessageElements.put("string:concat(/ns1:root/ns1:ns-element, ' is the value')", "namespace is the value");
+        validateMessageElements.put("string:local-name(/*)", "root");
+        validateMessageElements.put("string:namespace-uri(/*)", "http://testsuite");
+        validateMessageElements.put("boolean:contains(/ns1:root/:search-element, 'search')", "true");
+        validateMessageElements.put("boolean:/ns1:root/:element", "true");
+        validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
+        
+        
+        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        
+        receiveMessageBean.execute(context);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExtractMessageValuesUsingXPathWithResultTypes() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+                            + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                            + "</element>"
+                            + "<ns1:ns-element>namespace</ns1:ns-element>"
+                            + "<search-element>search-for</search-element>"
+                        + "</ns1:root>")
+                        .build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("node://:element/:sub-elementA", "elementA");
+        extractMessageElements.put("node://:element/:sub-elementA/@attribute", "elementAttribute");
+        extractMessageElements.put("node://*[.='search-for']", "search");
+        extractMessageElements.put("number:count(/ns1:root/:element/*)", "count");
+        extractMessageElements.put("string:concat(/ns1:root/ns1:ns-element, ' is the value')", "concat");
+        extractMessageElements.put("string:local-name(/*)", "localName");
+        extractMessageElements.put("string:namespace-uri(/*)", "namespaceUri");
+        extractMessageElements.put("boolean:contains(/ns1:root/:search-element, 'search')", "contains");
+        extractMessageElements.put("boolean:/ns1:root/:element", "exists");
+        extractMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "existsNot");
+        
+        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        
+        receiveMessageBean.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("elementA"));
+        Assert.assertEquals(context.getVariable("elementA"), "text-value");
+        Assert.assertNotNull(context.getVariable("elementAttribute"));
+        Assert.assertEquals(context.getVariable("elementAttribute"), "A");
+        Assert.assertNotNull(context.getVariable("search"));
+        Assert.assertEquals(context.getVariable("search"), "search-for");
+        Assert.assertNotNull(context.getVariable("count"));
+        Assert.assertEquals(context.getVariable("count"), "3.0");
+        Assert.assertNotNull(context.getVariable("concat"));
+        Assert.assertEquals(context.getVariable("concat"), "namespace is the value");
+        Assert.assertNotNull(context.getVariable("localName"));
+        Assert.assertEquals(context.getVariable("localName"), "root");
+        Assert.assertNotNull(context.getVariable("namespaceUri"));
+        Assert.assertEquals(context.getVariable("namespaceUri"), "http://testsuite");
+        Assert.assertNotNull(context.getVariable("contains"));
+        Assert.assertEquals(context.getVariable("contains"), "true");
+        Assert.assertNotNull(context.getVariable("exists"));
+        Assert.assertEquals(context.getVariable("exists"), "true");
+        Assert.assertNotNull(context.getVariable("existsNot"));
+        Assert.assertEquals(context.getVariable("existsNot"), "false");
     }
 }

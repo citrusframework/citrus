@@ -156,6 +156,7 @@
                                                     <xs:enumeration value="node"/>
                                                     <xs:enumeration value="boolean"/>
                                                     <xs:enumeration value="string"/>
+                                                    <xs:enumeration value="number"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:attribute>
@@ -207,6 +208,7 @@
                                                     <xs:enumeration value="node"/>
                                                     <xs:enumeration value="boolean"/>
                                                     <xs:enumeration value="string"/>
+                                                    <xs:enumeration value="number"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:attribute>

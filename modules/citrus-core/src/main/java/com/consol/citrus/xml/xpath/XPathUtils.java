@@ -75,6 +75,8 @@ public abstract class XPathUtils {
             } else {
                 return resultNode.getNodeValue();
             }
+        } else if(resultType.equals(XPathExpressionResult.STRING)){
+            return evaluateAsString(node, xPathExpression, nsContext);
         } else {
             Object result = evaluateAsObject(node, xPathExpression, nsContext, resultType.getAsQName());
             

@@ -20,11 +20,7 @@
 package com.consol.citrus.context;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
@@ -37,14 +33,13 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.VariableNullValueException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
@@ -168,7 +163,10 @@ public class TestContext {
                     ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
                 }
                 
-                String value = XPathUtils.evaluateAsString(doc, pathExpression, nsContext);
+                XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
+                pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
+                
+                String value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
 
                 if(value == null) {
                     throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
@@ -179,7 +177,7 @@ public class TestContext {
                 Node node = XMLUtils.findNodeByName(doc, pathExpression);
 
                 if (node == null) {
-                    throw new UnknownElementException("Element could not be found in DOM tree - using path expression" + pathExpression);
+                    throw new UnknownElementException("No element found for expression" + pathExpression);
                 }
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {

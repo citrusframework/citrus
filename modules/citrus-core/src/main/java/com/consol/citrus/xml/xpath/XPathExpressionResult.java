@@ -23,27 +23,51 @@ import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathConstants;
 
 /**
- * Enumeration representing the possible result types for XPath expression evaluation.
+ * Enumeration representing the possible result types for XPath expression evaluation. In Citrus
+ * XPath expressions a prefix may determine the result type like this:
+ * 
+ * string://MyExpressionString/Value
+ * number://MyExpressionString/Value
+ * boolean://MyExpressionString/Value
+ * 
+ * The result type prefix is supposed to be stripped off before expression evaluation 
+ * and determines the evaluation result.
  * 
  * @author Christoph Deppisch
  */
 public enum XPathExpressionResult {
     NODE, STRING, BOOLEAN, NUMBER;
     
-    public static XPathExpressionResult fromString(String value) {
-        if(value.equals("string:")) {
+    /** Prefix for XPath expressions in Citrus determining the result type */
+    private static final String STRING_PREFIX = "string:";
+    private static final String NUMBER_PREFIX = "number:";
+    private static final String NODE_PREFIX = "node:";
+    private static final String BOOLEAN_PREFIX = "boolean:";
+    
+    /**
+     * Get the enumeration value from an expression string. According to the leading
+     * prefix and a default result type the enumeration value is returned.
+     * @param value
+     * @return
+     */
+    public static XPathExpressionResult fromString(String value, XPathExpressionResult defaultResult) {
+        if(value.startsWith(STRING_PREFIX)) {
             return STRING;  
-        } else if (value.equals("node:")) {
+        } else if (value.startsWith(NODE_PREFIX)) {
             return NODE;
-        } else if(value.equals("boolean:")) {
+        } else if(value.startsWith(BOOLEAN_PREFIX)) {
             return BOOLEAN;
-        } else if(value.equals("number:")) {
+        } else if(value.startsWith(NUMBER_PREFIX)) {
             return NUMBER;
         } else {
-            return NODE;
+            return defaultResult;
         }
     }
     
+    /**
+     * Get a constant QName instance from this enumerations value.
+     * @return
+     */
     public QName getAsQName() {
         if(this.equals(STRING)) {
             return XPathConstants.STRING;
@@ -55,6 +79,25 @@ public enum XPathExpressionResult {
             return XPathConstants.NUMBER;
         } else {
             return XPathConstants.NODE;
+        }
+    }
+    
+    /**
+     * Cut off the leading result type prefix in a XPath expression string.
+     * @param expression
+     * @return
+     */
+    public static String cutOffPrefix(String expression) {
+        if(expression.startsWith(STRING_PREFIX)) {
+            return expression.substring(STRING_PREFIX.length());  
+        } else if (expression.startsWith(NODE_PREFIX)) {
+            return expression.substring(NODE_PREFIX.length());
+        } else if(expression.startsWith(BOOLEAN_PREFIX)) {
+            return expression.substring(BOOLEAN_PREFIX.length());
+        } else if(expression.startsWith(NUMBER_PREFIX)) {
+            return expression.substring(NUMBER_PREFIX.length());
+        } else {
+            return expression;
         }
     }
 }
