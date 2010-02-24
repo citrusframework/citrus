@@ -47,6 +47,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -212,8 +213,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             
             Node node;
-            if (XMLUtils.isXPathExpression(elementPathExpression)) {
-                node = XMLUtils.findNodeByXPath(received, elementPathExpression, validationContext.getNamespaceContext());
+            if (XPathUtils.isXPathExpression(elementPathExpression)) {
+                node = XPathUtils.evaluateAsNode(received, elementPathExpression, validationContext.getNamespaceContext());
             } else {
                 node = XMLUtils.findNodeByName(received, elementPathExpression);
             }
@@ -663,8 +664,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          * ignoreValues to identify nodes to be ignored
          */
         for (String expression : ignoreMessageElements) {
-            if (XMLUtils.isXPathExpression(expression)) {
-                Node foundAttributeNode = XMLUtils.findNodeByXPath(elementNode.getOwnerDocument(), expression, validationContext.getNamespaceContext());
+            if (XPathUtils.isXPathExpression(expression)) {
+                Node foundAttributeNode = XPathUtils.evaluateAsNode(elementNode.getOwnerDocument(), expression, validationContext.getNamespaceContext());
                 if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
                     return true;
                 }
@@ -714,8 +715,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
          * ignoreValues to identify nodes to be ignored
          */
         for (String expression : ignoreMessageElements) {
-            if (XMLUtils.isXPathExpression(expression)) {
-                Node foundNode = XMLUtils.findNodeByXPath(node.getOwnerDocument(), expression, validationContext.getNamespaceContext());
+            if (XPathUtils.isXPathExpression(expression)) {
+                Node foundNode = XPathUtils.evaluateAsNode(node.getOwnerDocument(), expression, validationContext.getNamespaceContext());
 
                 if (foundNode != null && foundNode.isSameNode(node)) {
                     return true;

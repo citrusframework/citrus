@@ -24,11 +24,8 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.*;
 
 import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
@@ -104,93 +101,6 @@ public class XMLUtils {
         return null;
     }
     
-    /**
-     * Finds a node in the DOM tree using XPath expressions.
-     * @param node the XML node
-     * @param xpath the XPath expression
-     * @throws CitrusRuntimeException
-     * @return the node element found in the DOM tree.
-     */
-    public static Node findNodeByXPath(Node node, String expressionStr, NamespaceContext nsContext) {
-        try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-            
-            if(nsContext != null) {
-                xpath.setNamespaceContext(nsContext);
-            } else {
-                xpath.setNamespaceContext(buildNamespaceContext(node));
-            }
-            
-            XPathExpression expression = xpath.compile(expressionStr);
-            Node found = (Node)expression.evaluate(node, XPathConstants.NODE);
-                
-            if (found == null) {
-                throw new CitrusRuntimeException("Could not find node in XML tree for expression: " + expressionStr);
-            }
-
-            return found;
-        } catch (XPathExpressionException e) {
-            throw new CitrusRuntimeException(e);
-        }
-    }
-    
-    /**
-     * Evaluates the XPath expression to return the respective value.
-     * @param node element in a DOM tree.
-     * @param nsContext namespace context holding bindings.
-     * @throws CitrusRuntimeException
-     * @return the evaluated node value.
-     */
-    public static String evaluateXPathExpression(Node node, String expressionStr, NamespaceContext nsContext)  {
-        try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-            
-            if(nsContext != null) {
-                xpath.setNamespaceContext(nsContext);
-            } else {
-                xpath.setNamespaceContext(buildNamespaceContext(node));
-            }
-            
-            XPathExpression expression = xpath.compile(expressionStr);
-            String value = expression.evaluate(node);
-
-            //in case value is empty check that DOM node really exists
-            //if DOM node can not be found the xpath expression might be invalid
-            if (!StringUtils.hasText(value)) {
-                findNodeByXPath(node, expressionStr, nsContext);
-            }
-            
-            return value;
-        } catch (XPathExpressionException e) {
-            throw new CitrusRuntimeException(e);
-        }
-    }
-    
-    /**
-     * Build a namespace context from a node element. Method searches for all
-     * namespace attributes in the node element and binds them to a namespace context.
-     * 
-     * @param node holding namespace declarations.
-     * @return the namespace context.
-     */
-    private static NamespaceContext buildNamespaceContext(Node node) {
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-        nsContext.setBindings(lookupNamespaces(node));
-        
-        return nsContext;
-    }
-
-    /**
-     * Method to find out whether an expression is of XPath nature or custom dot notation syntax.
-     * @param expression the expression string to check.
-     * @return boolean the result.
-     */
-    public static boolean isXPathExpression(String expression) {
-        return expression.indexOf("/") != (-1) || expression.indexOf("(") != (-1);
-    }
-
     /**
      * Removes text nodes that are only containing whitespace characters
      * inside a DOM tree.

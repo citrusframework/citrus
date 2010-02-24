@@ -131,7 +131,14 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             if (validateElements.size() > 0) {
                 for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                     Element validateValue = (Element) iter.next();
-                    validateValues.put(validateValue.getAttribute("path"), validateValue.getAttribute("value"));
+                    String pathExpression = validateValue.getAttribute("path");
+                    
+                    //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+                    if(validateValue.hasAttribute("result-type")) {
+                        pathExpression = validateValue.getAttribute("result-type") + ":" + pathExpression;
+                    }
+                    
+                    validateValues.put(pathExpression, validateValue.getAttribute("value"));
                 }
                 builder.addPropertyValue("validateMessageElements", validateValues);
             }
@@ -172,7 +179,14 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
             for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
-                getMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("variable"));
+                String pathExpression = messageValue.getAttribute("path");
+                
+                //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+                if(messageValue.hasAttribute("result-type")) {
+                    pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
+                }
+                
+                getMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
             }
             builder.addPropertyValue("extractMessageElements", getMessageValues);
         }

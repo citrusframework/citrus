@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * This message handler implementation dispatches incoming request to other message handlers
@@ -85,7 +86,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
                     nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
                 }
                 
-                matchingElement = XMLUtils.findNodeByXPath(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, nsContext);
+                matchingElement = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, nsContext);
             } else {
                 matchingElement = DOMUtil.getFirstChildElement(parser.getDocument());
             }

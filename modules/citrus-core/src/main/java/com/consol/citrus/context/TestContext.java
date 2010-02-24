@@ -45,6 +45,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -161,14 +162,18 @@ public class TestContext {
             
             Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
             
-            if (XMLUtils.isXPathExpression(pathExpression)) {
+            if (XPathUtils.isXPathExpression(pathExpression)) {
                 if(nsContext == null) {
                     nsContext = new SimpleNamespaceContext();
                     ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
                 }
                 
-                String value = XMLUtils.evaluateXPathExpression(doc, pathExpression, nsContext);
+                String value = XPathUtils.evaluateAsString(doc, pathExpression, nsContext);
 
+                if(value == null) {
+                    throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
+                }
+                
                 setVariable(variableName, value);
             } else {
                 Node node = XMLUtils.findNodeByName(doc, pathExpression);
@@ -292,17 +297,16 @@ public class TestContext {
             }
             
             Node node;
-
-            if (XMLUtils.isXPathExpression(pathExpression)) {
+            if (XPathUtils.isXPathExpression(pathExpression)) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
                 nsContext.setBindings(XMLUtils.lookupNamespaces(messagePayload));
-                node = XMLUtils.findNodeByXPath(doc, pathExpression, nsContext);
+                node = XPathUtils.evaluateAsNode(doc, pathExpression, nsContext);
             } else {
                 node = XMLUtils.findNodeByName(doc, pathExpression);
             }
 
             if (node == null) {
-                throw new UnknownElementException("Element could not be found in DOM tree - using path expression" + pathExpression);
+                throw new UnknownElementException("Could not find element for expression" + pathExpression);
             }
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
