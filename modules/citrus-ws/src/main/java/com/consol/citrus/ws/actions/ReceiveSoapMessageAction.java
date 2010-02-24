@@ -66,6 +66,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
             } else if(attachmentResource != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource)));
+            } else {
+                return; //no attachment expected, no validation
             }
             
             attachmentValidator.validateAttachment(receivedMessage, controlAttachment);
