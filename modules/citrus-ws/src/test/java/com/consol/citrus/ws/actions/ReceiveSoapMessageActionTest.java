@@ -146,6 +146,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setValidator(messageValidator);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
+        soapMessageAction.setContentId("myAttachment");
+        soapMessageAction.setAttachmentData("");
+        
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                     .copyHeaders(controlHeaders)
@@ -162,13 +165,41 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
-                Assert.assertNull(soapAttachment.getContent());
-                Assert.assertNull(soapAttachment.getContentId());
+                Assert.assertEquals(soapAttachment.getContent(), "");
+                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
         });
+        
+        replay(messageReceiver, attachmentValidator, messageValidator);
+        
+        soapMessageAction.execute(context);
+        
+        verify(messageReceiver, attachmentValidator, messageValidator);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSoapMessageWithNoAttachmentExpected() throws Exception {
+        ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
+        soapMessageAction.setMessageReceiver(messageReceiver);
+        soapMessageAction.setAttachmentValidator(attachmentValidator);
+        soapMessageAction.setValidator(messageValidator);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(controlHeaders)
+                                    .build();
+        
+        reset(messageReceiver, attachmentValidator, messageValidator);
+        
+        expect(messageReceiver.receive()).andReturn(controlMessage);
+        
+        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
+        expectLastCall().once();
         
         replay(messageReceiver, attachmentValidator, messageValidator);
         

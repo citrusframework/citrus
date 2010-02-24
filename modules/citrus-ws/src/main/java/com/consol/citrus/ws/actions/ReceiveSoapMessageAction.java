@@ -24,7 +24,6 @@ import java.text.ParseException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
@@ -62,7 +61,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
         super.validateMessage(receivedMessage, context);
         
         try {
-            if(StringUtils.hasText(attachmentData)) {
+            if(attachmentData != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
             } else if(attachmentResource != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource)));
