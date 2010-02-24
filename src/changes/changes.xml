@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="10.02.2010" description="1.1 snapshot release">
+        <action dev="deppisch" type="fix">
+          #277 XML namespace context support in XPath expressions
+        </action>
         <action dev="deppisch" type="add">
           #274 Added SOAP fault support for sending SOAP responses
         </action>
