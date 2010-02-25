@@ -44,7 +44,7 @@
 	
 	<target name="create.test" description="Creates a new empty test case">
 		<input message="Enter test name:" addproperty="test.name"/>
-        <input message="Enter test description:" addproperty="test.description"/>
+        <input message="Enter test description:" addproperty="test.description" defaultvalue="TODO: Description"/>
         <input message="Enter author's name:" addproperty="test.author" defaultvalue="${default.test.author}"/>
         <input message="Enter package:" addproperty="test.package" defaultvalue="${default.test.package}"/>
 		<input message="Enter framework:" addproperty="test.framework" defaultvalue="testng"/>
