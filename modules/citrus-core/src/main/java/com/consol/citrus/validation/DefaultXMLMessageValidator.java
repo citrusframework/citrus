@@ -316,6 +316,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             if(results.length == 0) {
                 log.info("Schema of received XML validated OK");
             } else {
+                log.error("Schema validation failed for message:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
                 throw new ValidationException("Schema validation failed!", results[0]);
             }
         } catch (IOException e) {
