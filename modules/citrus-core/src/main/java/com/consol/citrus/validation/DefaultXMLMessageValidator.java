@@ -102,7 +102,6 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             validateMessageHeader(xmlValidationContext.getExpectedMessageHeaders(), receivedMessage.getHeaders(), context);
             validateMessagePayload(receivedMessage, xmlValidationContext, context);
             validateMessageElements(receivedMessage, xmlValidationContext, context);
-            
 
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
