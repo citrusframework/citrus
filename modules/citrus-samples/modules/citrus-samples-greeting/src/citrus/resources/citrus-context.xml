@@ -13,7 +13,6 @@
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	 
-    <import resource="classpath:com/consol/citrus/samples/citrus-samples-common.xml"/> 
     <import resource="com/consol/citrus/samples/greeting/channel/greeting-channel.xml"/>
 	
     <!-- Common settings -->

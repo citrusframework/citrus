@@ -10,6 +10,8 @@
             http://www.springframework.org/schema/integration/jms
             http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
     
+    <import resource="classpath:com/consol/citrus/samples/citrus-samples-common.xml"/>
+    
     <int:channel id="greetings">
         <int:queue/>
         <int:interceptors>
