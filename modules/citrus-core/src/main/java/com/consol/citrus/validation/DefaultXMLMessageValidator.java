@@ -20,6 +20,7 @@
 package com.consol.citrus.validation;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -194,7 +195,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      */
     public void validateMessageElements(Message<?> receivedMessage, 
             XmlValidationContext validationContext,
-            TestContext context) {
+            TestContext context) throws CitrusRuntimeException {
         if (CollectionUtils.isEmpty(validationContext.getExpectedMessageElements())) {return;}
         
         log.info("Start XML elements validation");
@@ -204,10 +205,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             String expectedValue = entry.getValue();
             String actualValue = null;
             
-            if (VariableUtils.isVariableName(elementPathExpression)) {
-                elementPathExpression = context.getVariable(elementPathExpression);
-            } else if(functionRegistry.isFunction(elementPathExpression)) {
-                elementPathExpression = FunctionUtils.resolveFunction(elementPathExpression, context);
+            try {
+                elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
+            } catch (ParseException e) {
+                throw new CitrusRuntimeException(e);
             }
             
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
