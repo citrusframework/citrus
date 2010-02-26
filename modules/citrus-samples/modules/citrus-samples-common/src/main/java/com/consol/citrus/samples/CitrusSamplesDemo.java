@@ -64,7 +64,7 @@ public class CitrusSamplesDemo {
         }
         
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             log.error("Interrupted while waiting for demo to start", e);
         }
