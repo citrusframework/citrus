@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean name="jetty" class="org.mortbay.jetty.Server" init-method="start" destroy-method="stop">
+        <constructor-arg value="8070"/>
+        <property name="handler">
+            <bean id="handlers" class="org.mortbay.jetty.handler.HandlerCollection">
+                <property name="handlers">
+                    <list>
+                        <!-- order is very important here; the contexts should come before anything else -->
+                        <bean id="contexts" class="org.mortbay.jetty.handler.ContextHandlerCollection">
+                            <property name="handlers">
+                                <list>
+                                    <bean class="org.mortbay.jetty.servlet.Context">
+                                        <property name="contextPath" value="/" />
+                                        <property name="resourceBase" value="src/main/resources" />
+                                        <property name="servletHandler">
+                                            <bean class="org.mortbay.jetty.servlet.ServletHandler">
+                                                <property name="servlets">
+                                                    <list>
+                                                        <bean class="org.mortbay.jetty.servlet.ServletHolder">
+                                                            <property name="name" value="spring-ws" />
+                                                            <property name="servlet">
+                                                                <bean class="org.springframework.ws.transport.http.MessageDispatcherServlet" />
+                                                            </property>
+                                                            <property name="initParameters">
+                                                                <map>
+                                                                    <!-- this path assumes that the "resourceBase" property above is set correctly -->
+                                                                    <entry key="contextConfigLocation" value="classpath:com/consol/citrus/samples/bookregistry/bookRegistry.xml" />
+                                                                </map>
+                                                            </property>
+                                                        </bean>
+                                                    </list>
+                                                </property>
+                                                <property name="servletMappings">
+                                                    <list>
+                                                        <bean class="org.mortbay.jetty.servlet.ServletMapping">
+                                                            <property name="servletName" value="spring-ws" />
+                                                            <property name="pathSpec" value="/*" />
+                                                        </bean>
+                                                    </list>
+                                                </property>
+                                            </bean>
+                                        </property>
+                                    </bean>
+                                </list>
+                            </property>
+                        </bean>
+                        <bean id="defaultHandler" class="org.mortbay.jetty.handler.DefaultHandler" />
+                        <bean id="requestLog" class="org.mortbay.jetty.handler.RequestLogHandler" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>

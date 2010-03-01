@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" 
+                         "http://castor.org/mapping.dtd">
+                         
+<mapping>
+    <description>FlightBooking mappings</description>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.Book">
+        <map-to xml="Book" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="id">
+            <bind-xml name="id" node="element"/>
+        </field>
+                
+        <field name="title">
+            <bind-xml name="title" node="element"/>
+        </field>
+        
+        <field name="author">
+            <bind-xml name="author" node="element"/>
+        </field>
+        
+        <field name="isbn">
+            <bind-xml name="isbn" node="element"/>
+        </field>
+        
+        <field name="year">
+            <bind-xml name="year" node="element"/>
+        </field>
+        
+        <field name="registrationDate" type="java.util.Date">
+            <bind-xml name="registration-date" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.AddBookRequestMessage">
+        <map-to xml="AddBookRequestMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="book" type="com.consol.citrus.samples.bookregistry.model.Book">
+            <bind-xml name="book" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.AddBookResponseMessage">
+        <map-to xml="AddBookResponseMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="success" type="java.lang.Boolean">
+            <bind-xml name="success" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.GetBookDetailsRequestMessage">
+        <map-to xml="GetBookDetailsRequestMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="isbn">
+            <bind-xml name="isbn" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.GetBookDetailsResponseMessage">
+        <map-to xml="GetBookDetailsResponseMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="book" type="com.consol.citrus.samples.bookregistry.model.Book">
+            <bind-xml name="book" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.ListBooksRequestMessage">
+        <map-to xml="ListBooksRequestMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.ListBooksResponseMessage">
+        <map-to xml="ListBooksResponseMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="books" collection="arraylist" type="com.consol.citrus.samples.bookregistry.model.Book">
+            <bind-xml name="book" node="element" location="books"/>
+        </field>
+    </class>
+</mapping>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config-1.1.xsd">
+	
+    <!-- Common settings -->
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/bookregistry/schema/BookRegistrySchema.xsd"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <context:property-placeholder location="classpath:citrus.properties"/>
+	
+    <bean class="com.consol.citrus.variable.GlobalVariables">
+        <property name="variables">
+            <map>
+                <entry key="project.name" value="Citrus BookRegistry sample"/>
+            </map>
+        </property>
+    </bean>
+    
+    <!-- Message Sender/Receiver -->
+    <citrus-ws:message-sender id="bookRegistryRequestMessageSender" 
+                              request-url="http://localhost:8070/bookregistry"
+                              reply-handler="bookRegistryResponseMessageHandler"/>
+                              
+    <citrus-ws:reply-message-handler id="bookRegistryResponseMessageHandler"/>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
+        
+    <!-- TestSuite definition -->
+    <bean name="citrus-samples-bookregistry" class="com.consol.citrus.TestSuite"/>
+</beans>

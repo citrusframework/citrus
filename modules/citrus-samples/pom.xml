@@ -16,6 +16,7 @@
     <module>modules/citrus-samples-common</module>
     <module>modules/citrus-samples-flightbooking</module>
     <module>modules/citrus-samples-greeting</module>
+    <module>modules/citrus-samples-bookregistry</module>
   </modules>
   
   <build>

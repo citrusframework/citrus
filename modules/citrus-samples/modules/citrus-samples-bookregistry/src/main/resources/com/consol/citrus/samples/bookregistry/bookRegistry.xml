@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:ws="http://www.springframework.org/schema/integration/ws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/ws
+            http://www.springframework.org/schema/integration/ws/spring-integration-ws-1.0.xsd">
+    
+    <import resource="classpath:com/consol/citrus/samples/citrus-samples-common.xml"/>
+    
+    <!-- SOAP WebService servlet mapping -->
+    <bean id="defaultPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.consol.com/schemas/bookregistry}AddBookRequestMessage">bookRegistryInboundGateway</prop>
+                <prop key="{http://www.consol.com/schemas/bookregistry}GetBookDetailsRequestMessage">bookRegistryInboundGateway</prop>
+                <prop key="{http://www.consol.com/schemas/bookregistry}ListBooksRequestMessage">bookRegistryInboundGateway</prop>
+            </props>
+        </property>
+        <property name="defaultEndpoint" ref="bookRegistryInboundGateway"/>
+        <property name="interceptors">
+            <list>
+                <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <property name="defaultFault" value="{http://www.consol.com/citrus/samples/errorcodes}CITRUS:1000" />
+        <property name="exceptionMappings">
+            <value>
+                com.consol.citrus.samples.common.exceptions.XmlSchemaValidationException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:999,Client sent invalid request!
+                com.consol.citrus.samples.bookregistry.exceptions.DuplicateIsbnException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:1001
+                com.consol.citrus.samples.bookregistry.exceptions.UnknownBookException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:1002
+            </value>
+        </property>
+    </bean>
+    
+    <ws:inbound-gateway id="bookRegistryInboundGateway" 
+        request-channel="inboundChannel"
+        reply-channel="outboundChannel"/>
+        
+    <int:channel id="inboundChannel">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+            <bean class="com.consol.citrus.samples.common.xml.validation.XmlSchemaValidatingChannelInterceptor">
+                <constructor-arg value="classpath:com/consol/citrus/samples/bookregistry/schema/BookRegistrySchema.xsd" />
+            </bean>
+            <bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+                <constructor-arg ref="unmarshallingTransformer"/>
+            </bean>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:channel id="outboundChannel">
+        <int:interceptors>
+            <bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+                <constructor-arg ref="marshallingTransformer"/>
+            </bean>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:payload-type-router input-channel="inboundChannel" resolution-required="true">
+        <int:mapping type="com.consol.citrus.samples.bookregistry.model.AddBookRequestMessage" channel="addChannel" />
+        <int:mapping type="com.consol.citrus.samples.bookregistry.model.GetBookDetailsRequestMessage" channel="detailChannel" />
+        <int:mapping type="com.consol.citrus.samples.bookregistry.model.ListBooksRequestMessage" channel="listChannel"/>
+    </int:payload-type-router>
+    
+    <int:service-activator ref="bookRegistry" method="addBook" input-channel="addChannel" output-channel="outboundChannel"/>
+    <int:service-activator ref="bookRegistry" method="getBookDetails" input-channel="detailChannel" output-channel="outboundChannel"/>
+    <int:service-activator ref="bookRegistry" method="listBooks" input-channel="listChannel" output-channel="outboundChannel"/>
+    
+    <bean id="bookRegistry" class="com.consol.citrus.samples.bookregistry.BookRegistry"/>
+    
+    <!-- XML marshalling/unmarshalling -->
+    <bean id="marshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="book">http://www.consol.com/schemas/bookregistry</prop>
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/samples/bookregistry/castor/bookregistry-mapping.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+        <constructor-arg>
+            <ref bean="marshaller"/>
+        </constructor-arg>
+    </bean>    
+    
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+        <constructor-arg>
+            <ref bean="marshaller"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </constructor-arg>
+    </bean>
+</beans>

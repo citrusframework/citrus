@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>citrus-samples</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>1.1-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-samples-bookregistry</artifactId>
+  <packaging>jar</packaging>
+  <version>1.1-SNAPSHOT</version>
+  <name>citrus-samples-bookregistry</name>
+  
+  <build>
+      <plugins>
+        <plugin>
+            <groupId>com.consol.citrus.mvn</groupId>
+            <artifactId>citrus-maven-plugin</artifactId>
+            <configuration>
+                <targetPackage>com.consol.citrus.samples.bookregistry</targetPackage>
+            </configuration>
+        </plugin>
+        <plugin>
+          <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
+          <artifactId>maven-surefire-plugin</artifactId>
+          <!-- Version is required as mvn has currently a problem updating. -->
+          <version>2.5</version>
+          <configuration>
+            <properties>
+                <property>
+                    <name>suitename</name>
+                    <value>citrus-samples-bookregistry</value>
+                </property>
+            </properties>
+          </configuration>
+        </plugin>
+      </plugins>
+  </build>
+  
+  <dependencies>
+    <!-- Citrus -->
+    <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ws</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-samples-common</artifactId>
+        <version>1.1-SNAPSHOT</version>
+    </dependency>
+    
+    <!-- Spring framework -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-xml</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-ws</artifactId>
+    </dependency>
+
+    <!--  Spring related dependencies -->
+    <dependency>
+        <groupId>org.apache.xbean</groupId>
+        <artifactId>xbean-spring</artifactId>
+    </dependency>
+    
+    <!-- Sample related dependencies -->    
+    <dependency>
+        <groupId>org.codehaus.castor</groupId>
+        <artifactId>castor-xml</artifactId>
+    </dependency>    
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+  </dependencies>
+</project>
