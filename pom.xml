@@ -112,43 +112,37 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.5.6</version>
         </dependency> 
-                
 	    <dependency>
 	        <groupId>jdom</groupId>
 	        <artifactId>jdom</artifactId>
 	        <version>1.0</version>
 	    </dependency>
-	    
 	    <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.8.1</version>
         </dependency>
-        
         <dependency>
 	        <groupId>xalan</groupId>
 	        <artifactId>xalan</artifactId>
 	        <version>2.7.1</version>
 	    </dependency>
-	    
 	    <dependency>
 	        <groupId>javax.jms</groupId>
 	        <artifactId>jms</artifactId>
 	        <version>1.1</version>
 	    </dependency>
-      
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1</version>
         </dependency>
-        
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
             <version>1.3</version>
         </dependency>
-    
+
         <!-- Spring Framework -->
 	    <dependency>
 	        <groupId>org.springframework</groupId>
@@ -186,6 +180,11 @@
             <version>${spring.ws.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-xml</artifactId>
+            <version>${spring.ws.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
             <version>${spring.integration.version}</version>
@@ -216,6 +215,18 @@
             <artifactId>testng</artifactId>
             <version>5.10</version>
             <classifier>jdk15</classifier>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Test scoped dependencies -->

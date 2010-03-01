@@ -1,4 +1,4 @@
 #!/bin/sh
-JARS=`find lib ../../dist ../../lib -name *.jar`
+JARS=`find lib ../lib ../../lib ../../dist -name *.jar`
 CP=`echo $JARS | sed 's/ /:/g'`
 java -cp $CP:src/citrus/resources com.consol.citrus.samples.greeting.jms.GreetingJmsDemo $*

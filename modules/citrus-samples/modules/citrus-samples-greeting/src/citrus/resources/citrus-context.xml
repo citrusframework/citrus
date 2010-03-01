@@ -6,12 +6,10 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
-       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd
-       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config-1.1.xsd">
 	 
     <import resource="com/consol/citrus/samples/greeting/channel/greeting-channel.xml"/>
 	
@@ -28,14 +26,8 @@
     
     <context:property-placeholder location="classpath:citrus.properties"/>
 	
-    <amq:broker useJmx="false" persistent="false">
-        <amq:transportConnectors>
-            <amq:transportConnector uri="tcp://localhost:61616" />
-        </amq:transportConnectors>
-    </amq:broker>
-    
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="brokerURL" value="${jms.server.url}" />
     </bean>
     
     <bean class="com.consol.citrus.variable.GlobalVariables">
@@ -59,10 +51,10 @@
     
     <!-- Jms adapter -->
     <citrus:jms-message-sender id="greetingJmsRequestSender" 
-                               destination-name="Citrus.Samples.Greeting.Request.Queue"/>
+                               destination-name="${greeting.request.queue}"/>
     
     <citrus:jms-message-receiver id="greetingJmsResponseReceiver" 
-                                 destination-name="Citrus.Samples.Greeting.Response.Queue"
+                                 destination-name="${greeting.response.queue}"
                                  receive-timeout="5000"/>
                                                                   
     <!-- Utility beans -->
@@ -70,8 +62,8 @@
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="queueNames">
             <list>
-                <value>Citrus.Samples.Greeting.Request.Queue</value>
-                <value>Citrus.Samples.Greeting.Response.Queue</value>
+                <value>${greeting.request.queue}</value>
+                <value>${greeting.response.queue}</value>
             </list>
         </property>
     </bean>

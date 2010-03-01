@@ -47,17 +47,41 @@
           <dependencySet>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>samples/flightbooking/lib</outputDirectory>
+            <outputDirectory>samples/lib</outputDirectory>
             <excludes>
                 <exclude>com.consol.citrus:citrus-core</exclude>
+                <exclude>com.consol.citrus:citrus-adapter</exclude>
                 <exclude>com.consol.citrus:citrus-http</exclude>
-                <exclude>org.slf4j:slf4j-api</exclude>
                 <exclude>org.springframework:spring-core</exclude>
-                <exclude>org.springframework:spring-jms</exclude>
-                <exclude>org.springframework:spring-integration-core</exclude>
-                <exclude>org.springframework:spring-integration-adapter</exclude>
-                <exclude>org.springframework:spring-integration-jms</exclude>
+                <exclude>org.springframework:spring-beans</exclude>
+                <exclude>org.springframework:spring-context</exclude>
+                <exclude>org.springframework:spring-aop</exclude>
+                <exclude>org.springframework:spring-tx</exclude>
+                <exclude>org.springframework:spring-oxm</exclude>
+                <exclude>org.springframework.integration:spring-integration-core</exclude>
+                <exclude>aopalliance:aopalliance</exclude>
+                <exclude>org.slf4j:slf4j-api</exclude>
+                <exclude>org.apache.ant:ant</exclude>
+                <exclude>org.apache.ant:ant-launcher</exclude>
+                <!-- sample specific already in subfolder lib -->
+                <exclude>org.springframework:spring-orm</exclude>
+                <exclude>org.hibernate:hibernate-entitymanager</exclude>
+                <exclude>javax.persistence:persistence-api</exclude>
             </excludes>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+          </dependencySet>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>samples/flightbooking/lib</outputDirectory>
+            <excludes>
+                <exclude>org.springframework:spring-tx</exclude>
+            </excludes>
+            <includes>
+                <include>org.hibernate:hibernate-entitymanager</include>
+                <include>javax.persistence:persistence-api</include>
+                <include>org.springframework:spring-orm</include>
+            </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
         </dependencySets>
@@ -74,18 +98,22 @@
           <dependencySet>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>samples/greeting/lib</outputDirectory>
+            <outputDirectory>samples/lib</outputDirectory>
             <excludes>
                 <exclude>com.consol.citrus:citrus-core</exclude>
-                <exclude>org.slf4j:slf4j-api</exclude>
+                <exclude>aopalliance:aopalliance</exclude>
                 <exclude>org.springframework:spring-core</exclude>
-                <exclude>org.springframework:spring-jms</exclude>
                 <exclude>org.springframework:spring-beans</exclude>
                 <exclude>org.springframework:spring-context</exclude>
+                <exclude>org.springframework:spring-aop</exclude>
                 <exclude>org.springframework:spring-tx</exclude>
-                <exclude>org.springframework:spring-integration-core</exclude>
-                <exclude>org.springframework:spring-integration-adapter</exclude>
-                <exclude>org.springframework:spring-integration-jms</exclude>
+                <exclude>org.springframework:spring-oxm</exclude>
+                <exclude>org.springframework.integration:spring-integration-core</exclude>
+                <exclude>org.springframework.integration:spring-integration-jms</exclude>
+                <exclude>org.slf4j:slf4j-api</exclude>
+                <exclude>org.apache.ant:ant</exclude>
+                <exclude>org.apache.ant:ant-launcher</exclude>
+                <exclude>commons-logging:commons-logging</exclude>
             </excludes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>

@@ -31,19 +31,23 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 public class FlightBookingTest extends AbstractTestNGCitrusTest {
     
     FlightBookingDemo demo = new FlightBookingDemo();
-    
-    @BeforeTest
-    public void init() {
+
+    @BeforeSuite(alwaysRun = true)
+    public void beforeSuite(ITestContext testContext) throws Exception {
         demo.start();
+        
+        super.beforeSuite(testContext);
     }
     
     @Test
     public void flightBookingTest(ITestContext testContext) {
         executeTest(testContext);
     }
-    
-    @AfterTest
-    public void destroy() {
+
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite(ITestContext testContext) {
+        super.afterSuite(testContext);
+        
         demo.stop();
     }
 }

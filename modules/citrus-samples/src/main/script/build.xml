@@ -10,12 +10,15 @@
 		<fileset dir="../../lib">
             <include name="*.jar"/>
         </fileset>
+    	<fileset dir="../lib">
+            <include name="*.jar"/>
+        </fileset>
     	<fileset dir="lib">
             <include name="*.jar"/>
         </fileset>
     </path>
     
-	<typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.1-SNAPSHOT.jar"/>
+	<typedef resource="citrustasks" classpath="../lib/citrus-ant-tasks-1.1-SNAPSHOT.jar"/>
 	
 	<target name="compile.tests">
 	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>
@@ -23,7 +26,7 @@
 	</target>
 	
 	<target name="citrus.run.tests" depends="compile.tests" description="Runs all Citrus tests">
-		<citrus suitename="citrus-samples" package="com.consol.citrus.*"/>
+		<citrus suitename="${testsuite.name}" package="com.consol.citrus.samples.*"/>
 	</target>
 	
 	<target name="citrus.run.single.test" depends="compile.tests" description="Runs a single test by name">
