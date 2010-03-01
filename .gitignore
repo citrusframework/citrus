@@ -5,3 +5,4 @@ profiles.xml
 .settings
 test.history
 test-output
+.DS_Store
