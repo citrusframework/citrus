@@ -39,7 +39,6 @@
     <module>modules/citrus-adapter</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-ws</module>
-    <module>modules/citrus-tibco</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-ant-tasks</module>
@@ -443,9 +442,20 @@
       </activation>
     </profile>
     
+    <!-- TIBCO specific module, only built when activated -->
+    <profile>
+        <id>citrus-tibco</id>
+        <modules>
+            <module>modules/citrus-tibco</module>
+        </modules>
+        <activation>
+            <activeByDefault>false</activeByDefault>
+        </activation>
+    </profile>
+    
     <!-- Distribution Management -->
     <profile>
-      <id>release</id>
+      <id>release-inhouse</id>
       <distributionManagement>
         <repository>
           <id>repository-consol-releases</id>
