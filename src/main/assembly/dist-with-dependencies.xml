@@ -40,6 +40,10 @@
                 <include>org.mortbay.jetty:jetty-util</include>
                 <include>org.springframework.ws:spring-ws-core</include>
             </includes>
+            <excludes>
+                <exclude>org.springframework:spring-beans</exclude>
+                <exclude>org.springframework:spring-aop</exclude>
+            </excludes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
         </dependencySets>
@@ -130,6 +134,9 @@
                 <include>org.springframework.integration:spring-integration-ws</include>
                 <include>com.sun.xml.messaging.saaj:saaj-impl</include>
             </includes>
+            <excludes>
+                <exclude>org.springframework.integration:spring-integration-adapter</exclude>
+            </excludes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
         </dependencySets>
