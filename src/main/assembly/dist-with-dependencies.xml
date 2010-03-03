@@ -26,6 +26,27 @@
     <moduleSet>
       <includes>
         <include>com.consol.citrus:citrus-ws</include>
+      </includes>
+      <binaries>
+        <outputDirectory>dist</outputDirectory>
+        <unpack>false</unpack>
+        <dependencySets>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>org.mortbay.jetty:jetty</include>
+                <include>org.mortbay.jetty:jetty-util</include>
+                <include>org.springframework.ws:spring-ws-core</include>
+            </includes>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+          </dependencySet>
+        </dependencySets>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <includes>
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-tibco</include>
         <include>com.consol.citrus:citrus-adapter</include>
@@ -107,6 +128,7 @@
             <outputDirectory>samples/bookregistry/lib</outputDirectory>
             <includes>
                 <include>org.springframework.integration:spring-integration-ws</include>
+                <include>com.sun.xml.messaging.saaj:saaj-impl</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
