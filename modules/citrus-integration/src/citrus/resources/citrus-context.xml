@@ -245,6 +245,7 @@
                 <ref bean="testQueue3"/>
             </list>
         </property>
+        <property name="receiveTimeout" value="10"/>
     </bean>
     
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
