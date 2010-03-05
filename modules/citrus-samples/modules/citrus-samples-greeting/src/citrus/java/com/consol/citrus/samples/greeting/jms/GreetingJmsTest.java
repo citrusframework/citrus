@@ -20,34 +20,26 @@
 package com.consol.citrus.samples.greeting.jms;
 
 import org.testng.ITestContext;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.samples.CitrusSamplesDemo;
+import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTest;
 
 /**
  * @author Christoph Deppisch
  * @since 2010
  */
-public class GreetingJmsTest extends AbstractTestNGCitrusTest {
+public class GreetingJmsTest extends DemoAwareTestNGCitrusTest {
     
     GreetingJmsDemo demo = new GreetingJmsDemo();
-    
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
-        demo.start();
-        
-        super.beforeSuite(testContext);
-    }
     
     @Test
     public void greetingJmsTest(ITestContext testContext) {
         executeTest(testContext);
     }
-    
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        super.afterSuite(testContext);
-        
-        demo.stop();
+
+    @Override
+    public CitrusSamplesDemo getDemo() {
+        return demo;
     }
 }

@@ -1,9 +1,10 @@
 package com.consol.citrus.samples.bookregistry;
 
 import org.testng.ITestContext;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.samples.CitrusSamplesDemo;
+import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTest;
 
 /**
  * TODO: Description
@@ -11,26 +12,17 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author Christoph Deppisch
  * @since 2010-02-24
  */
-public class SchemaValidation_Error_1_Test extends AbstractTestNGCitrusTest {
+public class SchemaValidation_Error_1_Test extends DemoAwareTestNGCitrusTest {
     
     BookRegistryDemo demo = new BookRegistryDemo();
-    
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
-        demo.start();
-        
-        super.beforeSuite(testContext);
-    }
     
     @Test
     public void schemaValidation_Error_1_Test(ITestContext testContext) {
         executeTest(testContext);
     }
     
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        super.afterSuite(testContext);
-        
-        demo.stop();
+    @Override
+    public CitrusSamplesDemo getDemo() {
+        return demo;
     }
 }
