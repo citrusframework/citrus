@@ -30,7 +30,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class ParallelTest extends AbstractTestNGCitrusTest {
     @Test
-    public void iterateTest(ITestContext testContext) {
+    public void parallelTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
