@@ -28,14 +28,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
 import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
-import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestSuite;
+import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
 /**
@@ -124,7 +121,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
                 
-                org.testng.Assert.fail("Test failed with errors", e);
+                throw new TestCaseFailedException(e);
             } finally {
                 testListener.onTestFinish(testCase);
             }

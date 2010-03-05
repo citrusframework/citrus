@@ -67,14 +67,14 @@ public class Assert extends AbstractTestAction {
             if (exception.isAssignableFrom(e.getClass())) {
                 
                 if(message != null && !message.equals(e.getLocalizedMessage())) {
-                    throw new ValidationException("Caught exception message does not fit - expected: '" + message + "' but was: '" + e.getLocalizedMessage() + "'");
+                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + message + "' but was: '" + e.getLocalizedMessage() + "'");
                 }
                 
                 log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
                 log.info("Exception validation successful");
                 return;
             } else {
-                throw new ValidationException("Caught exception type does not fit - expected: '" + exception + "' but was: '" + e.getClass().getName() + "'");
+                throw new ValidationException("Validation failed for asserted exception type - expected: '" + exception + "' but was: '" + e.getClass().getName() + "'");
             }
         }
 

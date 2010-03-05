@@ -34,6 +34,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
 /**
@@ -98,7 +99,7 @@ public abstract class AbstractJUnitCitrusTest extends AbstractJUnit4SpringContex
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
                 
-                org.testng.Assert.fail("Test failed with errors", e);
+                throw new TestCaseFailedException(e);
             } finally {
                 testListener.onTestFinish(testCase);
             }

@@ -20,29 +20,19 @@
 package com.consol.citrus.exceptions;
 
 /**
- * This exception marks errors during validation in Citrus. Basically this exception is thrown
- * during message validation, exception assertion, SOAP fault and attachment validation and so on.
+ * Base exception marking failure of test case. Used to force failure of TestNG and JUnit 
+ * test case.
  * 
  * @author Christoph Deppisch
  */
-public class ValidationException extends CitrusRuntimeException {
+public class TestCaseFailedException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor using fields.
-     * @param message
+     * Default constructor.
      */
-    public ValidationException(String message) {
-        super(message);
-    }
-
-    /**
-     * Constructor using fields.
-     * @param message
-     * @param cause
-     */
-    public ValidationException(String message, Throwable cause) {
-        super(message + " " +  cause.getLocalizedMessage(), cause);
+    public TestCaseFailedException(Throwable cause) {
+        super("Test failed", cause);
     }
 }

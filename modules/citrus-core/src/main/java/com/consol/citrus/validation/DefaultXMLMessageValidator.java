@@ -112,7 +112,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         } catch (LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("Validation failed!", e);
+            throw new ValidationException("Validation failed:", e);
         }
     }
 
@@ -317,7 +317,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                 log.info("Schema of received XML validated OK");
             } else {
                 log.error("Schema validation failed for message:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
-                throw new ValidationException("Schema validation failed!", results[0]);
+                throw new ValidationException("Schema validation failed:", results[0]);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);

@@ -21,6 +21,7 @@ package com.consol.citrus.report;
 
 import org.springframework.util.StringUtils;
 
+
 /**
  * Class representing test results (failed, successful, skipped)
  * 
@@ -66,38 +67,34 @@ public class TestResult {
     public String toString() {
         StringBuffer buf = new StringBuffer();
 
-        buf.append("  " + testName);
+        buf.append(" " + testName + " ");
 
-        int spaces = 50 - testName.length();
+        int spaces = 62 - testName.length();
         for (int i = 0; i < spaces; i++) {
-            buf.append(" ");
+            buf.append(".");
         }
         
         switch (result) {
             case SUCCESS:
-                buf.append(": successful");
+                buf.append(" SUCCESS");
                 break;
             case SKIP:
-                buf.append(": skipped - because excluded from test run");
+                buf.append(" SKIPPED");
                 break;
             case FAILURE:
-                if(cause != null && StringUtils.hasText(cause.getLocalizedMessage())) {
-                    buf.append(": failed - with exception: " + cause.getLocalizedMessage());
+                buf.append(" FAILED");
+                
+                if(cause!= null && StringUtils.hasText(cause.getLocalizedMessage())) {
+                    buf.append("\n FAILED! Caused by: \n " + cause.getClass().getName() + ": " +  cause.getLocalizedMessage() + "\n");
                 } else {
-                    buf.append(": failed - No exception available");
+                    buf.append("\n FAILED! Caused by: Unknown error \n");
                 }
                 break;
             default:
                 break;
         }
 
-        String resultString = buf.toString();
-        
-        if (resultString.length() > 100) {
-            return resultString.substring(0, 100) + " ...";
-        } else {
-            return resultString;
-        }
+        return buf.toString();
     }
 
     /**

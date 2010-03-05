@@ -19,9 +19,7 @@
 
 package com.consol.citrus.container;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +28,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ParallelContainerException;
 
 /**
  * Test action will execute nested actions in parallel. Each action is executed in a
@@ -45,8 +44,8 @@ public class Parallel extends AbstractTestAction {
     /** Store created threads in stack */
     private Stack<Thread> threads = new Stack<Thread>();
 
-    /** Collect exceptions in stack */
-    private Stack<Exception> exceptions = new Stack<Exception>();
+    /** Collect exceptions in list */
+    private List<CitrusRuntimeException> exceptions = new ArrayList<CitrusRuntimeException>();
     
     /**
      * Logger
@@ -63,8 +62,8 @@ public class Parallel extends AbstractTestAction {
         for (TestAction action : actions) {
             Thread t = new Thread(new ActionRunner(action, context) {
                 @Override
-                public void exceptionCallback(Exception e) {
-                    exceptions.push(e);
+                public void exceptionCallback(CitrusRuntimeException e) {
+                    exceptions.add(e);
                 }
             });
 
@@ -82,10 +81,9 @@ public class Parallel extends AbstractTestAction {
         
         if(!exceptions.isEmpty()) {
             if(exceptions.size() == 1) {
-                Exception exception = exceptions.pop();
-                throw new  CitrusRuntimeException("Parallel container failed with exception: " + exception, exception);
+                throw exceptions.get(0);
             } else {
-                throw new  CitrusRuntimeException("Parallel container failed! Caused by several errors in embedded test actions");
+                throw new ParallelContainerException(exceptions);
             }
         }
     }
@@ -113,7 +111,11 @@ public class Parallel extends AbstractTestAction {
                 action.execute(context);
             } catch (Exception e) {
                 log.error("Parallel test action raised error", e);
-                exceptionCallback(e);
+                if(e instanceof CitrusRuntimeException) {
+                    exceptionCallback((CitrusRuntimeException)e);
+                } else {
+                    exceptionCallback(new CitrusRuntimeException(e));
+                }
             }
         }
         
@@ -121,7 +123,7 @@ public class Parallel extends AbstractTestAction {
          * Callback for exception tracking.
          * @param exception
          */
-        public abstract void exceptionCallback(Exception e);
+        public abstract void exceptionCallback(CitrusRuntimeException e);
     }
 
     /**

@@ -73,11 +73,10 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         }
         
         log.info("");
-        log.info("Found " + testResults.size() + " test cases to execute");
-        log.info("Skipped " + testResults.getSkipped() + " test cases" + " (" + decFormat.format((double)testResults.getSkipped() / (testResults.size())*100) + "%)");
-        log.info("Executed " + (testResults.getFailed() + testResults.getSuccess()) + " test cases");
-        log.info("Tests failed: \t\t" + testResults.getFailed() + " (" + decFormat.format((double)testResults.getFailed() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
-        log.info("Tests successfully: \t" + testResults.getSuccess() + " (" + decFormat.format((double)testResults.getSuccess() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
+        log.info("Total number of tests: " + (testResults.getFailed() + testResults.getSuccess()));
+        log.info("Skipped:\t" + testResults.getSkipped() + " (" + decFormat.format((double)testResults.getSkipped() / (testResults.size())*100) + "%)");
+        log.info("Failed:\t" + testResults.getFailed() + " (" + decFormat.format((double)testResults.getFailed() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
+        log.info("Success:\t" + testResults.getSuccess() + " (" + decFormat.format((double)testResults.getSuccess() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
 
         log.info("________________________________________________________________________");
     }
