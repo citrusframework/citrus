@@ -17,12 +17,11 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import java.text.ParseException;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;

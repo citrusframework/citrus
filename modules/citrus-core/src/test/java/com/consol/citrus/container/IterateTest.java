@@ -17,9 +17,11 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.ArrayList;
 import java.util.List;

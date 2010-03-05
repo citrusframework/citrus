@@ -17,7 +17,7 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import static org.easymock.EasyMock.*;
 
@@ -29,6 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**

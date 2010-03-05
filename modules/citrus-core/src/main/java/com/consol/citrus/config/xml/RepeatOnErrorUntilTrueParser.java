@@ -24,7 +24,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 
 /**
  * Bean definition parser for repeat-on-error-until-true container in test case.

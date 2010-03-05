@@ -26,7 +26,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.Template;
+import com.consol.citrus.container.Template;
 
 /**
  * Bean definition parser for template definition in test case.

@@ -24,7 +24,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.Iterate;
+import com.consol.citrus.container.Iterate;
 
 /**
  * Bean definition parser for assert action in test case.

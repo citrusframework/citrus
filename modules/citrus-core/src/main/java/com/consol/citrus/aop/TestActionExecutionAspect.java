@@ -43,7 +43,7 @@ public class TestActionExecutionAspect {
      */
     private static final Logger log = LoggerFactory.getLogger(TestActionExecutionAspect.class);
 
-    @Pointcut("(within(com.consol.citrus.actions.*) || within(com.consol.citrus.group.*) || within(com.consol.citrus.container.*)) && execution(* com.consol.citrus.TestAction.execute(com.consol.citrus.context.TestContext))")
+    @Pointcut("(within(com.consol.citrus.actions.*) || within(com.consol.citrus.container.*)) && execution(* com.consol.citrus.TestAction.execute(com.consol.citrus.context.TestContext))")
     public void inTestActionExecution() {}
 
     @Around("com.consol.citrus.aop.TestActionExecutionAspect.inTestActionExecution()")

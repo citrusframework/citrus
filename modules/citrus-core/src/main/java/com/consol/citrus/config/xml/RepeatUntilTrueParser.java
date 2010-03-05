@@ -23,7 +23,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.RepeatUntilTrue;
+import com.consol.citrus.container.RepeatUntilTrue;
 
 /**
  * Bean definition parser for repeat-until-true container in test case.

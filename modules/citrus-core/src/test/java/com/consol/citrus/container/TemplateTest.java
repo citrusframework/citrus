@@ -17,7 +17,7 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import static org.easymock.EasyMock.*;
 
@@ -28,17 +28,20 @@ import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.Template;
 import com.consol.citrus.testng.AbstractBaseTest;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class RepeatOnErrorUntilTrueTest extends AbstractBaseTest {
+public class TemplateTest extends AbstractBaseTest {
+    
     @Test
-    public void testSuccessOnFirstIteration() {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
+    public void testTemplate() {
+        Template template = new Template();
         
         List<TestAction> actions = new ArrayList<TestAction>();
         TestAction action = EasyMock.createMock(TestAction.class);
@@ -51,38 +54,26 @@ public class RepeatOnErrorUntilTrueTest extends AbstractBaseTest {
         replay(action);
         
         actions.add(action);
+        template.setActions(actions);
         
-        repeat.setActions(actions);
-        
-        repeat.setIndexName("i");
-        repeat.setCondition("i = 5");
-        
-        repeat.execute(context);
+        template.equals(context);
     }
     
-    @Test(expectedExceptions=CitrusRuntimeException.class)
-    public void testRepeatOnErrorNoSuccess() {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testParams() {
+        Template template = new Template();
+        
+        context.setVariable("text", "Hello Citrus!");
         
         List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
-
-        reset(action);
+        EchoAction echo = new EchoAction();
+        echo.setMessage("${myText}");
         
-        action.execute(context);
-        expectLastCall().times(4);
+        actions.add(echo);
+        template.setActions(actions);
         
-        replay(action);
-        
-        actions.add(action);
-        actions.add(new FailAction());
-        
-        repeat.setActions(actions);
-        
-        repeat.setIndexName("i");
-        repeat.setCondition("i = 5");
-        repeat.setAutoSleep(0);
-        
-        repeat.execute(context);
+        template.setParameter(Collections.singletonMap("myText", "${text}"));
+        template.equals(context);
     }
 }

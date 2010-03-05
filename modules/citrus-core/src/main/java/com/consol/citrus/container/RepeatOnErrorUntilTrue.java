@@ -17,7 +17,7 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     private static final Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
     /**
-     * @see com.consol.citrus.group.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
     @Override

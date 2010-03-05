@@ -17,30 +17,47 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
- * Typical implementation of repeat iteration loop. Nested test actions are executed until
- * aborting condition evaluates to true.
+ * Class executes nested test actions in loops. Iteration continues as long
+ * as looping condition evaluates to true.
  * 
- * Index is incremented each iteration and stored as test variable accessible in the nested test actions
- * as normal variable. Index starts with 1 by default.
+ * See {@link BooleanExpressionParser} for supported boolean expressions that define
+ * the conditioning.
+ * 
+ * Each loop an index variable is incremented. The index variable is accessible inside the nested
+ * test actions as normal test variable. Iteration starts with index=1 and increments with a 
+ * default step=1.
  * 
  * @author Christoph Deppisch
  */
-public class RepeatUntilTrue extends AbstractIteratingTestAction {
+public class Iterate extends AbstractIteratingTestAction {
+    /** Index increment step */
+    private int step = 1;
+
     /**
-     * @see com.consol.citrus.group.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
     @Override
     public void executeIteration(TestContext context) {
-        do {
+        while (checkCondition()) {
             executeActions(context);
-            index++;
-        } while (!checkCondition());
+
+            index = index + step ;
+        }
+    }
+
+    /**
+     * Step o increment.
+     * @param step the step to set
+     */
+    public void setStep(int step) {
+        this.step = step;
     }
 }

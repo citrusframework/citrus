@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.group.Template;
+import com.consol.citrus.container.Template;
 
 /**
  * Bean definition parser for call template action in test case.

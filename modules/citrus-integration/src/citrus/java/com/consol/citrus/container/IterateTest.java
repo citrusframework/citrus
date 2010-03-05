@@ -17,7 +17,7 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.group;
+package com.consol.citrus.container;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -28,9 +28,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class RepeatOnErrorTest extends AbstractTestNGCitrusTest {
+public class IterateTest extends AbstractTestNGCitrusTest {
     @Test
-    public void repeatOnErrorTest(ITestContext testContext) {
+    public void iterateTest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
