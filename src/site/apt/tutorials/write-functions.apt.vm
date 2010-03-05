@@ -76,6 +76,7 @@ Writing simple functions
                     <bean class="com.mycompany.citrus.extension.functions.IdGeneratingFunction"/>
                 </entry>
             </map>
+        </property>
     </bean>
 +---
 
