@@ -19,10 +19,7 @@
 
 package com.consol.citrus.group;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -81,7 +78,7 @@ public class Template extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        log.info("Executing action template '" + name + "' - containing " + actions.size() + " actions");
+        log.info("Executing template '" + name + "' with " + actions.size() + " embedded actions");
 
         TestContext innerContext;
         
@@ -112,13 +109,7 @@ public class Template extends AbstractTestAction {
             innerContext.setVariable(param, paramValue);
         }
 
-        for (int i = 0; i < actions.size(); i++) {
-            TestAction action = actions.get(i);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Executing action " + action.getClass().getName());
-            }
-
+        for (TestAction action: actions) {
             action.execute(innerContext);
         }
 

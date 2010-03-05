@@ -25,8 +25,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.container.TestActionContainer;
 
 /**
  * Aspect prints test action name and description before execution.
@@ -41,26 +43,34 @@ public class TestActionExecutionAspect {
      */
     private static final Logger log = LoggerFactory.getLogger(TestActionExecutionAspect.class);
 
-    @Pointcut("within(com.consol.citrus.actions.*) && execution(* com.consol.citrus.TestAction.execute())")
+    @Pointcut("(within(com.consol.citrus.actions.*) || within(com.consol.citrus.group.*) || within(com.consol.citrus.container.*)) && execution(* com.consol.citrus.TestAction.execute(com.consol.citrus.context.TestContext))")
     public void inTestActionExecution() {}
 
     @Around("com.consol.citrus.aop.TestActionExecutionAspect.inTestActionExecution()")
     public Object doTestActionExecution(ProceedingJoinPoint pjp) throws Throwable {
-
-        if (((TestAction)pjp.getThis()).getName() != null) {
-            log.info("Executing action [" + ((TestAction)pjp.getThis()).getName() + "]");
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("Executing: <");
+        TestAction action = (TestAction)pjp.getThis();
+        
+        if (action.getName() != null) {
+            builder.append(action.getName());
+            
+            if(log.isDebugEnabled() && StringUtils.hasText(action.getDescription())) {
+                builder.append("(" + action.getDescription() + ")");
+            }
         } else {
-            log.info("Executing action [" + pjp.getTarget().getClass().getName() + "]");
+            builder.append(pjp.getTarget().getClass().getName());
         }
 
-        if(log.isDebugEnabled()) {
-            log.debug("TestAction class is " + pjp.getTarget().getClass().getName());
+        builder.append(">");
+        
+        if(action instanceof TestActionContainer) {
+            builder.append(" container with " + ((TestActionContainer)action).getActionCount() + " embedded actions");
         }
-
-        if (((TestAction)pjp.getThis()).getDescription() != null) {
-            log.info(((TestAction)pjp.getThis()).getDescription());
-        }
-
+        
+        log.info(builder.toString());
+        
         return pjp.proceed();
     }
 }

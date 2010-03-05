@@ -19,34 +19,27 @@
 
 package com.consol.citrus.container;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.context.TestContext;
 
 /**
- * Sequence container executing a set of nested test actions in simple sequence. 
- *
+ * Container interface describing all test action containers that hold several embedded test actions
+ * to execute.
+ * 
  * @author Christoph Deppisch
- * @since 2007
  */
-public class Sequence extends AbstractActionContainer {
+public interface TestActionContainer {
 
     /**
-     * Logger
+     * Sets the embedded test actions to execute within this container.
+     * @param actions
      */
-    private static final Logger log = LoggerFactory.getLogger(Sequence.class);
-
+    public void setActions(List<TestAction> actions);
+    
     /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
+     * Get the number of embedded actions in this container.
+     * @return
      */
-    @Override
-    public void execute(TestContext context) {
-        for (TestAction action: actions) {
-            action.execute(context);
-        }
-
-        log.info("Action sequence finished successfully");
-    }
+    public long getActionCount();
 }

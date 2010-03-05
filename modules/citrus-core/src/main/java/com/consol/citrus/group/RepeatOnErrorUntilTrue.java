@@ -51,8 +51,6 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
      */
     @Override
     public void executeIteration(TestContext context) {
-        log.info("Executing repeat-on-error loop - containing " + actions.size() + " actions");
-
         do {
             try {
                 executeActions(context);

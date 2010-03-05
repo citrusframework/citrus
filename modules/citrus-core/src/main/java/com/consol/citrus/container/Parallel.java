@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ParallelContainerException;
@@ -36,10 +35,7 @@ import com.consol.citrus.exceptions.ParallelContainerException;
  * 
  * @author Christoph Deppisch
  */
-public class Parallel extends AbstractTestAction {
-
-    /** List of nested actions */
-    private List<TestAction> actions = new ArrayList<TestAction>();
+public class Parallel extends AbstractActionContainer {
 
     /** Store created threads in stack */
     private Stack<Thread> threads = new Stack<Thread>();
@@ -57,8 +53,6 @@ public class Parallel extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        log.info("Executing action parallel - containing " + actions.size() + " actions");
-
         for (TestAction action : actions) {
             Thread t = new Thread(new ActionRunner(action, context) {
                 @Override
@@ -124,13 +118,5 @@ public class Parallel extends AbstractTestAction {
          * @param exception
          */
         public abstract void exceptionCallback(CitrusRuntimeException e);
-    }
-
-    /**
-     * Set the nested test actions.
-     * @param actions the actions to set
-     */
-    public void setActions(List<TestAction> actions) {
-        this.actions = actions;
     }
 }

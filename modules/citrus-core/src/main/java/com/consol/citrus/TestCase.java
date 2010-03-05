@@ -107,7 +107,7 @@ public class TestCase implements BeanNameAware {
             final TestAction action = testChain.get(i);
 
             log.info("");
-            log.info((i+1) + ". action in test chain");
+            log.info("TESTACTION " + (i+1) + "/" + testChain.size());
 
             /* execute the test action and validate its success */
             action.execute(context);
@@ -125,10 +125,6 @@ public class TestCase implements BeanNameAware {
 
         /* walk through the finally chain and execute the actions in there */
         for (TestAction action : finallyChain) {
-            if (log.isDebugEnabled()) {
-                log.debug("Executing action " + action.getClass().getName());
-            }
-
             /* execute the test action and validate its success */
             action.execute(context);
         }

@@ -57,10 +57,6 @@ public class Assert extends AbstractTestAction {
         log.info("Assert container asserting exceptions of type " + exception);
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Executing action " + action.getClass().getName());
-            }
-
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating caught exception ...");

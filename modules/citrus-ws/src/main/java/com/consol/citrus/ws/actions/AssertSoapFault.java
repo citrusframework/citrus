@@ -90,10 +90,6 @@ public class AssertSoapFault extends AbstractTestAction {
         log.info("Asserting SOAP fault ...");
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Executing action " + action.getClass().getName());
-            }
-
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating SOAP fault ...");

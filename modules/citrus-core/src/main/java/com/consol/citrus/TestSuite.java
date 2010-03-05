@@ -80,15 +80,13 @@ public class TestSuite implements BeanNameAware {
 
         log.info("Found " + tasksBefore.size() + " tasks in init phase");
 
-        for(int i=0; i<tasksBefore.size();i++)  {
-            final TestAction testAction = tasksBefore.get(i);
-
+        for(TestAction action: tasksBefore)  {
             try {
                 /* Executing test action and validate its success */
-                testAction.execute(context);
+                action.execute(context);
             } catch (Exception e) {
                 log.error("Task failed "
-                        + testAction.getClass().getName()
+                        + action.getName()
                         + "Nested exception is: ", e);
 
                 testSuiteListener.onStartFailure(this, e);
@@ -118,15 +116,13 @@ public class TestSuite implements BeanNameAware {
             log.info("Found " + tasksAfter.size() + " tasks after");
         }
 
-        for(int i=0; i<tasksAfter.size();i++)  {
-            final TestAction testAction = tasksAfter.get(i);
-
+        for(TestAction action: tasksAfter)  {
             try {
                 /* Executing test action and validate its success */
-                testAction.execute(context);
+                action.execute(context);
             } catch (Exception e) {
                 log.error("Task failed "
-                        + testAction.getClass().getName()
+                        + action.getName()
                         + "Nested exception is: ", e);
                 log.error("Continue finishing TestSuite");
                 success = false;
@@ -155,11 +151,8 @@ public class TestSuite implements BeanNameAware {
             log.debug("Found " + tasksBetween.size() + " tasks between tests");
         }
 
-        for(int j=0; j<tasksBetween.size();j++)  {
-            final TestAction testAction = tasksBetween.get(j);
-
-            /* Executing test action */
-            testAction.execute(context);
+        for(TestAction action: tasksBetween)  {
+            action.execute(context);
         }
     }
 

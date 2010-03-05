@@ -19,14 +19,10 @@
 
 package com.consol.citrus.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -35,10 +31,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * 
  * @author Christoph Deppisch
  */
-public class Catch extends AbstractTestAction {
-    /** List of nested actions */
-    private List<TestAction> actions = new ArrayList<TestAction>();
-
+public class Catch extends AbstractActionContainer {
     /** Exception type caught */
     private String exception = CitrusRuntimeException.class.getName();
 
@@ -54,14 +47,8 @@ public class Catch extends AbstractTestAction {
     public void execute(TestContext context) {
         log.debug("Catch container catching exceptions of type " + exception);
 
-        for (int i = 0; i < actions.size(); i++) {
+        for (TestAction action: actions) {
             try {
-                TestAction action = actions.get(i);
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Executing action " + action.getClass().getName());
-                }
-
                 action.execute(context);
             } catch (Exception e) {
                 if (exception != null && exception.equals(e.getClass().getName())) {
@@ -71,14 +58,6 @@ public class Catch extends AbstractTestAction {
                 throw new CitrusRuntimeException(e);
             }
         }
-    }
-
-    /**
-     * Set the nested actions.
-     * @param actions
-     */
-    public void setActions(List<TestAction> actions) {
-        this.actions = actions;
     }
 
     /**
