@@ -19,11 +19,8 @@
 
 package com.consol.citrus.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Stack;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.slf4j.Logger;
@@ -87,7 +84,8 @@ public abstract class TestUtils {
                         if(stackFinder.isFailureStackElement(qName)) {
                             failureStack.push("at " + testFilePath + "(" + qName + ":" + locator.getLineNumber() + ")");
                             
-                            if(stackFinder.getNestedActionContainer() != null) {
+                            if(stackFinder.getNestedActionContainer() != null && 
+                                    stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
                                 //continue with nested action container, in order to find out which action caused the failure
                                 stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
                             } else {
@@ -107,14 +105,8 @@ public abstract class TestUtils {
             });
             
             reader.parse(new InputSource(testFileResource.getInputStream()));
-        } catch (FileNotFoundException e) {
-            log.warn("Unable to locate line numbers in test case", e);
-        } catch (IOException e) {
-            log.warn("Unable to locate line numbers in test case", e);
-        } catch (SAXException e) {
-            log.warn("Unable to locate line numbers in test case", e);
-        } catch (ParserConfigurationException e) {
-            log.warn("Unable to locate line numbers in test case", e);
+        } catch (Exception e) {
+            log.warn("Unable to locate line numbers in test case for failure cause stack trace", e);
         }
         
         return failureStack;
