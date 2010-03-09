@@ -22,12 +22,12 @@ package com.consol.citrus.report;
 import com.consol.citrus.TestSuite;
 
 /**
- * {@link TestSuiteListener} implementation all methods so subclasses may only 
- * overwrite some methods.
+ * Basic implementation of {@link TestSuiteListener} interface so that subclasses must not implement
+ * all methods but only overwrite some listener methods.
  *  
  * @author Christoph Deppisch
  */
-public class BasicTestSuiteListener implements TestSuiteListener {
+public abstract class AbstractTestSuiteListener implements TestSuiteListener {
 
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
