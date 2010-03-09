@@ -33,7 +33,7 @@ public class TestResults extends ArrayList<TestResult> {
 
     private static final long serialVersionUID = 1L;
 
-    /** Is result cahed right now */
+    /** Is result cached right now */
     private boolean cached = false;
     
     /** Success, failure and skipped counter */

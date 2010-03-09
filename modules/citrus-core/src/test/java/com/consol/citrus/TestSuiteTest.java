@@ -56,7 +56,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase.setMetaInfo(metaInfo);
         
         TestAction echoAction = new EchoAction();
-        testcase.setTestChain(Collections.singletonList(echoAction));
+        testcase.setActions(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -79,7 +79,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase.setMetaInfo(metaInfo);
         
         TestAction echoAction = new EchoAction();
-        testcase.setTestChain(Collections.singletonList(echoAction));
+        testcase.setActions(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -102,7 +102,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase.setMetaInfo(metaInfo);
         
         TestAction echoAction = new EchoAction();
-        testcase.setTestChain(Collections.singletonList(echoAction));
+        testcase.setActions(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -125,7 +125,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase.setMetaInfo(metaInfo);
         
         TestAction echoAction = new EchoAction();
-        testcase.setTestChain(Collections.singletonList(echoAction));
+        testcase.setActions(Collections.singletonList(echoAction));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -148,7 +148,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setMetaInfo(metaInfo1);
         
         TestAction echoAction = new EchoAction();
-        testcase1.setTestChain(Collections.singletonList(echoAction));
+        testcase1.setActions(Collections.singletonList(echoAction));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -159,7 +159,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase2.setMetaInfo(metaInfo2);
         
         TestAction echoAction2 = new EchoAction();
-        testcase2.setTestChain(Collections.singletonList(echoAction2));
+        testcase2.setActions(Collections.singletonList(echoAction2));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         
@@ -182,7 +182,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase1.setMetaInfo(metaInfo1);
         
         TestAction echoAction = new EchoAction();
-        testcase1.setTestChain(Collections.singletonList(echoAction));
+        testcase1.setActions(Collections.singletonList(echoAction));
         
         TestCase testcase2 = new TestCase();
         testcase2.setTestContext(createTestContext());
@@ -193,7 +193,7 @@ public class TestSuiteTest extends AbstractBaseTest {
         testcase2.setMetaInfo(metaInfo2);
         
         TestAction echoAction2 = new EchoAction();
-        testcase2.setTestChain(Collections.singletonList(echoAction2));
+        testcase2.setActions(Collections.singletonList(echoAction2));
         
         testsuite.setTestSuiteListeners(testSuiteListeners);
         

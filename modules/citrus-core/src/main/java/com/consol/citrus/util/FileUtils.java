@@ -31,15 +31,8 @@ import org.springframework.core.io.Resource;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class FileUtils {
+public abstract class FileUtils {
 
-    /**
-     * Prevent instantiation.
-     */
-    private FileUtils() {
-        //prevent instantiation
-    }
-    
     /**
      * Read file resource to string value.
      * @param resource

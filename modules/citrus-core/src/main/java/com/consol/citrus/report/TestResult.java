@@ -65,36 +65,39 @@ public class TestResult {
 
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
 
-        buf.append(" " + testName + " ");
+        builder.append(" " + testName + " ");
 
         int spaces = 62 - testName.length();
         for (int i = 0; i < spaces; i++) {
-            buf.append(".");
+            builder.append(".");
         }
         
         switch (result) {
             case SUCCESS:
-                buf.append(" SUCCESS");
+                builder.append(" SUCCESS");
                 break;
             case SKIP:
-                buf.append(" SKIPPED");
+                builder.append(" SKIPPED");
                 break;
             case FAILURE:
-                buf.append(" FAILED");
+                builder.append(" FAILED");
                 
                 if(cause!= null && StringUtils.hasText(cause.getLocalizedMessage())) {
-                    buf.append("\n FAILED! Caused by: \n " + cause.getClass().getName() + ": " +  cause.getLocalizedMessage() + "\n");
+                    builder.append("\n FAILED! Caused by: \n " + cause.getClass().getName() + ": " +  cause.getLocalizedMessage());
                 } else {
-                    buf.append("\n FAILED! Caused by: Unknown error \n");
+                    builder.append("\n FAILED! Caused by: Unknown error");
                 }
+                
+                builder.append("\n");
+                
                 break;
             default:
                 break;
         }
 
-        return buf.toString();
+        return builder.toString();
     }
 
     /**

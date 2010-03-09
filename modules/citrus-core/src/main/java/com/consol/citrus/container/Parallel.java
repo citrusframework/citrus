@@ -53,10 +53,14 @@ public class Parallel extends AbstractActionContainer {
      */
     @Override
     public void execute(TestContext context) {
-        for (TestAction action : actions) {
+        for (final TestAction action : actions) {
             Thread t = new Thread(new ActionRunner(action, context) {
                 @Override
                 public void exceptionCallback(CitrusRuntimeException e) {
+                    if(exceptions.isEmpty()) {
+                        setLastExecutedAction(action);
+                    }
+                    
                     exceptions.add(e);
                 }
             });

@@ -17,37 +17,23 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.report;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.consol.citrus.TestAction;
-import com.consol.citrus.context.TestContext;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.TestUtils;
 
 /**
- * Sequence container executing a set of nested test actions in simple sequence. 
- *
  * @author Christoph Deppisch
- * @since 2007
  */
-public class Sequence extends AbstractActionContainer {
+public class FailureStackTestListener extends AbstractTestListener {
 
     /**
-     * Logger
+     * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
      */
-    private static final Logger log = LoggerFactory.getLogger(Sequence.class);
-
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     */
-    @Override
-    public void execute(TestContext context) {
-        for (TestAction action: actions) {
-            setLastExecutedAction(action);
-            action.execute(context);
-        }
-
-        log.info("Action sequence finished successfully");
+    public void onTestFailure(TestCase test, Throwable cause) {
+       if(cause instanceof CitrusRuntimeException) {
+           ((CitrusRuntimeException)cause).setFailureStack(TestUtils.getFailureStack(test));
+       }
     }
 }

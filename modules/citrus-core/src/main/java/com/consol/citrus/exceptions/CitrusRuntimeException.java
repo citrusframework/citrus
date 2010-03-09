@@ -19,6 +19,8 @@
 
 package com.consol.citrus.exceptions;
 
+import java.util.Stack;
+
 /**
  * Basic custom runtime exception for all errors in Citrus
  * 
@@ -28,6 +30,8 @@ public class CitrusRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    private Stack<String> failureStack = new Stack<String>();
+    
     /**
      * Default constructor.
      */
@@ -57,6 +61,41 @@ public class CitrusRuntimeException extends RuntimeException {
      */
     public CitrusRuntimeException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage() + getFailureStackAsString();
+    }
+
+    /**
+     * Get formatted string representation of failure stack information.
+     * @return
+     */
+    public String getFailureStackAsString() {
+        StringBuilder builder = new StringBuilder();
+        
+        for (String failureStackElement : getFailureStack()) {
+            builder.append("\n\t" + failureStackElement);
+        }
+        
+        return builder.toString();
+    }
+
+    /**
+     * Sets the custom failure stack holding line number information inside test case.
+     * @param failureStack
+     */
+    public void setFailureStack(Stack<String> failureStack) {
+        this.failureStack = failureStack;
+    }
+
+    /**
+     * Gets the custom failure stack with line number information where the testcase failed.
+     * @return the failureStack
+     */
+    public Stack<String> getFailureStack() {
+        return failureStack;
     }
 
 }

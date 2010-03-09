@@ -39,6 +39,8 @@
     
     <bean class="com.consol.citrus.report.ReporterInvokingTestSuiteListener"/>
     
+    <bean class="com.consol.citrus.report.FailureStackTestListener"/>
+    
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
     <bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>

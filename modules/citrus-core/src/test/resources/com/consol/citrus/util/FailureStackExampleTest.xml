@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="MultipleActionsTest">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-03-07</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-03-07T00:00:00</last-updated-on>
+        </meta-info>
+        
+        <actions>
+            <sleep/>
+            <parallel>
+                <sleep/>
+                <fail/>
+                <sequential>
+                    <sleep/>
+                    <echo>
+                        <message>Another success</message>
+                    </echo>
+                </sequential>
+            </parallel>
+            <sleep/>
+            <sequential>
+                <echo>
+                    <message>Success</message>
+                </echo>
+                <sleep/>
+                <iterate condition="i = 5" start="6" step="1">
+                    <sleep/>
+                </iterate>
+            </sequential>
+            <fail/>
+            <echo>
+                <message>This one is failing</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>

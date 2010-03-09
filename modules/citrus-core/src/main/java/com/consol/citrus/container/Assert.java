@@ -19,11 +19,14 @@
 
 package com.consol.citrus.container;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -34,7 +37,7 @@ import com.consol.citrus.exceptions.ValidationException;
  * @author Christoph Deppisch
  * @since 2009
  */
-public class Assert extends AbstractTestAction {
+public class Assert extends AbstractActionContainer {
     /** Nested test action */
     private TestAction action;
 
@@ -57,6 +60,7 @@ public class Assert extends AbstractTestAction {
         log.info("Assert container asserting exceptions of type " + exception);
 
         try {
+            setLastExecutedAction(action);
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating caught exception ...");
@@ -107,5 +111,53 @@ public class Assert extends AbstractTestAction {
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#addTestAction(com.consol.citrus.TestAction)
+     */
+    public void addTestAction(TestAction action) {
+        this.action = action;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActionCount()
+     */
+    public long getActionCount() {
+        return 1;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActionIndex(com.consol.citrus.TestAction)
+     */
+    public int getActionIndex(TestAction action) {
+        return 0;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActions()
+     */
+    public List<TestAction> getActions() {
+        return Collections.singletonList(action);
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
+     */
+    public TestAction getTestAction(int index) {
+        if(index == 0) {
+            return action;
+        } else {
+            throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
+        }
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
+     */
+    public void setActions(List<TestAction> actions) {
+        if(!CollectionUtils.isEmpty(actions)) {
+            action = actions.get(0); 
+        }
     }
 }

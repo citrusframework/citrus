@@ -34,6 +34,9 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     /** List of nested actions */
     protected List<TestAction> actions = new ArrayList<TestAction>();
 
+    /** Last executed action for error reporting reasons */
+    private TestAction lastExecutedAction;
+    
     /**
      * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
      */
@@ -42,9 +45,51 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     }
     
     /**
+     * @see com.consol.citrus.container.TestActionContainer#getActions()
+     */
+    public List<TestAction> getActions() {
+        return actions;
+    }
+    
+    /**
      * @see com.consol.citrus.container.TestActionContainer#getActionCount()
      */
     public long getActionCount() {
         return actions.size();
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#addTestAction(com.consol.citrus.TestAction)
+     */
+    public void addTestAction(TestAction action) {
+        actions.add(action);
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActionIndex(com.consol.citrus.TestAction)
+     */
+    public int getActionIndex(TestAction action) {
+        return actions.indexOf(action);
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getLastExecutedAction()
+     */
+    public TestAction getLastExecutedAction() {
+        return lastExecutedAction;
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#setLastExecutedAction(com.consol.citrus.TestAction)
+     */
+    public void setLastExecutedAction(TestAction action) {
+        this.lastExecutedAction = action;
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
+     */
+    public TestAction getTestAction(int index) {
+        return actions.get(index);
     }
 }

@@ -31,7 +31,7 @@ import com.consol.citrus.TestSuite;
  * 
  * @author Christoph Deppisch
  */
-public class ReporterInvokingTestSuiteListener extends BasicTestSuiteListener {
+public class ReporterInvokingTestSuiteListener extends AbstractTestSuiteListener {
     /** Track number of startet test suites */
     private int testSuitesStarted = 0;
     /** Track number of finished test suites */
@@ -45,7 +45,7 @@ public class ReporterInvokingTestSuiteListener extends BasicTestSuiteListener {
     private List<TestReporter> reporterList = new ArrayList<TestReporter>();
     
     /**
-     * @see com.consol.citrus.report.BasicTestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.AbstractTestSuiteListener#onStart(com.consol.citrus.TestSuite)
      */
     @Override
     public void onStart(TestSuite testsuite) {
@@ -53,7 +53,7 @@ public class ReporterInvokingTestSuiteListener extends BasicTestSuiteListener {
     }
 
     /**
-     * @see com.consol.citrus.report.BasicTestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.AbstractTestSuiteListener#onFinish(com.consol.citrus.TestSuite)
      */
     @Override
     public void onFinish(TestSuite testsuite) {

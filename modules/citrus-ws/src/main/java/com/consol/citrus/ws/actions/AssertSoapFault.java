@@ -21,12 +21,15 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -38,7 +41,7 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -54,7 +57,7 @@ import com.consol.citrus.ws.validation.SoapFaultValidator;
  * @author Christoph Deppisch 
  * @since 2009
  */
-public class AssertSoapFault extends AbstractTestAction {
+public class AssertSoapFault extends AbstractActionContainer {
     /** TestAction to be executed */
     private TestAction action;
 
@@ -232,5 +235,53 @@ public class AssertSoapFault extends AbstractTestAction {
      */
     public void setMessageFactory(SoapMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
+    }
+    
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#addTestAction(com.consol.citrus.TestAction)
+     */
+    public void addTestAction(TestAction action) {
+        this.action = action;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActionCount()
+     */
+    public long getActionCount() {
+        return 1;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActionIndex(com.consol.citrus.TestAction)
+     */
+    public int getActionIndex(TestAction action) {
+        return 0;
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getActions()
+     */
+    public List<TestAction> getActions() {
+        return Collections.singletonList(action);
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
+     */
+    public TestAction getTestAction(int index) {
+        if(index == 0) {
+            return action;
+        } else {
+            throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
+        }
+    }
+
+    /**
+     * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
+     */
+    public void setActions(List<TestAction> actions) {
+        if(!CollectionUtils.isEmpty(actions)) {
+            action = actions.get(0); 
+        }
     }
 }

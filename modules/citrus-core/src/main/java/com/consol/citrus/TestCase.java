@@ -19,18 +19,14 @@
 
 package com.consol.citrus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
@@ -41,10 +37,7 @@ import com.consol.citrus.variable.VariableUtils;
  * @author Christoph Deppisch
  * @since 2006
  */
-public class TestCase implements BeanNameAware {
-
-    /** Test chain containing test actions to be executed */
-    private List<TestAction> testChain = new ArrayList<TestAction>();
+public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Further chain of test actions to be executed in any case (Success, error)
      * Usually used to clean up database in any case of test result */
@@ -53,19 +46,15 @@ public class TestCase implements BeanNameAware {
     /** Tests variables */
     private Map<String, String> variableDefinitions = new HashMap<String, String>();
 
-    /** Variables valid for this test **/
-    @Autowired
+    /** Test context */
     private TestContext context;
-
-    /** Name of testcase */
-    private String name = TestCase.class.getSimpleName();
 
     /** Meta-Info */
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
     
-    /** TestCase description */
-    private String description;
-
+    /** Test package name */
+    private String packageName;
+    
     /**
      * Logger
      */
@@ -74,10 +63,12 @@ public class TestCase implements BeanNameAware {
     /**
      * Method executes the test case and all its actions.
      */
-    public void execute() {
+    public void execute(TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing TestCase");
         }
+        
+        this.context = context;
 
         /* build up the global test variables in TestContext by
          * getting the names and the current values of all variables */
@@ -103,12 +94,12 @@ public class TestCase implements BeanNameAware {
         }
 
         /* execute the test actions */
-        for (int i = 0; i < testChain.size(); i++) {
-            final TestAction action = testChain.get(i);
-
+        for (TestAction action: actions) {
             log.info("");
-            log.info("TESTACTION " + (i+1) + "/" + testChain.size());
+            log.info("TESTACTION " + (getActionIndex(action)+1) + "/" + getActionCount());
 
+            setLastExecutedAction(action);
+            
             /* execute the test action and validate its success */
             action.execute(context);
         }
@@ -131,26 +122,11 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Setter for test action chain.
-     * @param testChain
-     */
-    public void setTestChain(List<TestAction> testChain) {
-        this.testChain = testChain;
-    }
-    /**
      * Setter for variables.
      * @param variableDefinitions
      */
     public void setVariableDefinitions(Map<String, String> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
-    }
-
-    /**
-     * Get actions count in this test case.
-     * @return count actions
-     */
-    public int getCountActions() {
-        return testChain.size() + finallyChain.size();
     }
 
     /**
@@ -175,9 +151,8 @@ public class TestCase implements BeanNameAware {
 
         buf.append("[testChain:");
 
-        for (Iterator<TestAction> iter = testChain.iterator(); iter.hasNext();) {
-            String className = iter.next().getClass().getName();
-            buf.append(className + ";");
+        for (TestAction action: actions) {
+            buf.append(action.getClass().getName() + ";");
         }
 
         buf.append("] ");
@@ -186,21 +161,13 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Adding element to test action chain.
-     * @param testAction
-     */
-    public void addTestChainAction(TestAction testAction) {
-        this.testChain.add(testAction);
-    }
-
-    /**
-     * Adding element to finally action chain.
+     * Adds action to finally action chain.
      * @param testAction
      */
     public void addFinallyChainAction(TestAction testAction) {
         this.finallyChain.add(testAction);
     }
-
+    
     /**
      * Get the test case meta information.
      * @return the metaInfo
@@ -218,22 +185,6 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Get the test case name.
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Set the test case name.
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * Get all actions in the finally chain.
      * @return the finallyChain
      */
@@ -242,36 +193,12 @@ public class TestCase implements BeanNameAware {
     }
 
     /**
-     * Set all actions in the finally chain.
-     * @return the testChain
-     */
-    public List<TestAction> getTestChain() {
-        return testChain;
-    }
-
-    /**
      * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
      */
     public void setBeanName(String name) {
-        if (this.name == null) {
-            this.name = name;
+        if (getName() == null) {
+            setName(name);
         }
-    }
-
-    /**
-     * Get the test case description.
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Set the test case description.
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     /**
@@ -288,5 +215,21 @@ public class TestCase implements BeanNameAware {
      */
     public void setTestContext(TestContext context) {
         this.context = context;
+    }
+
+    /**
+     * Set the package name
+     * @param packageName the packageName to set
+     */
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    /**
+     * Get the package name
+     * @return the packageName
+     */
+    public String getPackageName() {
+        return packageName;
     }
 }

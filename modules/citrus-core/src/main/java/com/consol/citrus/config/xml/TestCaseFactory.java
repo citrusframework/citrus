@@ -47,7 +47,7 @@ public class TestCaseFactory implements FactoryBean {
         if (this.testChain != null && this.testChain.size() > 0) {
             for (int i = 0; i < testChain.size(); i++) {
                 TestAction action = testChain.get(i);
-                testCase.addTestChainAction(action);
+                testCase.addTestAction(action);
             }
         }
 

@@ -32,6 +32,8 @@ import org.testng.annotations.*;
 
 import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
@@ -53,6 +55,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /** Test listeners */
     @Autowired
     private TestListeners testListener;
+    
+    @Autowired
+    private TestContextFactoryBean testContextFactory;
     
     /**
      * Run tasks before test suite.
@@ -100,12 +105,13 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                                 + "/"
                                 + this.getClass().getSimpleName()
                                 + ".xml",
-                        "com/consol/citrus/spring/internal-helper-ctx.xml" },
+                                "com/consol/citrus/spring/internal-helper-ctx.xml"},
                 true, applicationContext);
         
         TestCase testCase = null;
         try {
             testCase = (TestCase)ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
+            testCase.setPackageName(this.getClass().getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
             org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
         }
@@ -114,9 +120,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             testListener.onTestStart(testCase);
             
             try {
-                testCase.execute();
-                testCase.finish();
-                
+                testCase.execute((TestContext)testContextFactory.getObject());
                 testListener.onTestSuccess(testCase);
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
@@ -124,6 +128,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 throw new TestCaseFailedException(e);
             } finally {
                 testListener.onTestFinish(testCase);
+                testCase.finish();
             }
         } else {
             testListener.onTestSkipped(testCase);
