@@ -182,7 +182,7 @@ public class JmsReplyMessageSenderTest {
     }
     
     @Test
-    public void testNorReplyDestinationFound() throws JMSException {
+    public void testNoReplyDestinationFound() throws JMSException {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setConnectionFactory(connectionFactory);
         
@@ -227,6 +227,6 @@ public class JmsReplyMessageSenderTest {
             return;
         }
         
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
+        Assert.fail("Missing " + IllegalArgumentException.class + " because of sending empty message");
     }
 }

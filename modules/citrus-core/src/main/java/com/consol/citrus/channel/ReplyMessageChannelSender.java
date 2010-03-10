@@ -27,6 +27,7 @@ import org.springframework.integration.core.MessageChannel;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
 /**
@@ -79,7 +80,9 @@ public class ReplyMessageChannelSender implements MessageSender {
             log.debug(message.toString());
         }
         
-        messageChannelTemplate.send(message, replyChannel);
+        if(!messageChannelTemplate.send(message, replyChannel)) {
+            throw new CitrusRuntimeException("Failed to send message to channel '" + replyChannel.getName() + "'");
+        }
     }
     
     /**
@@ -104,5 +107,14 @@ public class ReplyMessageChannelSender implements MessageSender {
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
+    }
+
+    /**
+     * Set the message channel template.
+     * @param messageChannelTemplate the messageChannelTemplate to set
+     */
+    public void setMessageChannelTemplate(
+            MessageChannelTemplate messageChannelTemplate) {
+        this.messageChannelTemplate = messageChannelTemplate;
     }
 }
