@@ -35,6 +35,7 @@
 <!ENTITY jms                SYSTEM "jms.xml">
 <!ENTITY http               SYSTEM "http.xml">
 <!ENTITY soap-webservices   SYSTEM "soap-webservices.xml">
+<!ENTITY message-channel    SYSTEM "message-channel.xml">
 <!ENTITY functions          SYSTEM "functions.xml">
 <!ENTITY testsuite          SYSTEM "testsuite.xml">
 <!ENTITY tibco              SYSTEM "tibco.xml">
@@ -78,7 +79,8 @@
     &xpath;
     &jms;
     &http;
-    &soap-webservices;    
+    &soap-webservices;   
+    &message-channel; 
     &functions;
     &testsuite;
     &tibco;
