@@ -19,7 +19,6 @@
 
 package com.consol.citrus.config.xml;
 
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -41,10 +40,6 @@ public abstract class AbstractMessageChannelTemplateAwareParser extends Abstract
         String msgChannelTemplate = element.getAttribute("message-channel-template");
         
         if (StringUtils.hasText(msgChannelTemplate)) {
-            if (element.hasAttribute("channel")) {
-                throw new BeanCreationException("When providing a 'message-channel-template' reference, no " +
-                        "'channel' should be provided.");
-            }
             builder.addPropertyReference("messageChannelTemplate", msgChannelTemplate);
         }
         
