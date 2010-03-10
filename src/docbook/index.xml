@@ -39,6 +39,7 @@
 <!ENTITY testsuite          SYSTEM "testsuite.xml">
 <!ENTITY tibco              SYSTEM "tibco.xml">
 <!ENTITY schema-validation  SYSTEM "schema-validation.xml">
+<!ENTITY meta-info          SYSTEM "meta-info.xml">
 <!ENTITY debug-messages     SYSTEM "debug-messages.xml">
 <!ENTITY reporting          SYSTEM "reporting.xml">
 <!ENTITY samples-flightbooking     SYSTEM "samples-flightbooking.xml">
@@ -82,6 +83,7 @@
     &testsuite;
     &tibco;
     &schema-validation;
+    &meta-info;
     &debug-messages;
     &reporting;
     
