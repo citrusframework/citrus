@@ -36,7 +36,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 
 /**
