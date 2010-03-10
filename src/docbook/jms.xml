@@ -172,4 +172,41 @@
         reference to a reply-destination-holder, which is our jms-sync-message-receiver.</para>
     </section>
     
+    <section id="jms-topics">
+        <title>JMS Topics</title>
+        
+        <para>Up to now we dealt with JMS queue destinations in this chapter. Citrus is also able to connect to JMS topic destinations.
+        In contrary to JMS queues which uses a point-to-point communication JMS topics use publish-subscribe mechanism in order to 
+        spread messages over JMS. A JMS topic sender publishes messages to the topic, while the topic accepts multiple message subscriptions and 
+        delivers the message to all subscribers.</para>
+        
+        <para>The Citrus JMS components (sender/receiver) offer the attribute <emphasis>'pub-sub-domain'</emphasis>. Once this attribute
+        is set to <emphasis>true</emphasis> Citrus will use JMS topics instead of queue destinations. See the following example where the
+        publish-subscribe attribute is set to true in JMS message sender and receiver components.</para>
+        
+        <programlisting>
+  &lt;citrus:jms-message-sender id=&quot;helloTopicRequestSender&quot; 
+                               destination-name=&quot;Citrus.JMS.Topic.Hello.Request&quot;
+                               pub-sub-domain=&quot;true&quot;/&gt;
+  
+  &lt;citrus:jms-message-receiver id=&quot;helloTopicRequestReceiver&quot;
+                               receive-timeout=&quot;5000&quot; 
+                               destination-name=&quot;Citrus.JMS.Topic.Hello.Request&quot;
+                               pub-sub-domain=&quot;true&quot;/&gt;
+        </programlisting>
+        
+        <para>When using JMS topics you will be able to subscribe several test actions to the topic destiantion and receive a message
+        multiple times as all subscribers will receive the message.</para>
+        
+        <important>
+            <para>It is very important to keep in mind that Citrus does not deal with durable subscribers, yet. This means that message that were
+            sent in advance to the message subscription are not delivered to the message receiver. So racing conditions may cause problems when using
+            JMS topic consumers in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent. Otherwise you may loose some messages
+            that were sent in advance to the subscription.</para>
+        </important>
+        
+        <para>The <emphasis>'pub-sub-domain'</emphasis> attribute is also available for synchronous communication sender and receiver 
+        components in Citrus. Just add this attribute in order to switch to JMS topics in a publish-subscribe domain.</para>
+    </section>
+    
 </chapter>
