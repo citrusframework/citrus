@@ -106,6 +106,45 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="sync-message-channel-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="messageChannelAdapterType">
+                    <xs:attribute name="channel" type="xs:string"/>
+                    <xs:attribute name="reply-timeout" type="xs:string"/>
+                    <xs:attribute name="reply-handler" type="xs:string"/>
+                    <xs:attribute name="reply-message-correlator" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="sync-message-channel-receiver">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="messageChannelAdapterType">
+                    <xs:attribute name="receive-timeout" type="xs:string"/>
+                    <xs:attribute name="reply-message-correlator" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="message-channel-reply-handler">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="message-channel-reply-sender">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="reply-channel-holder" type="xs:string"/>
+            <xs:attribute name="reply-message-correlator" type="xs:string"/>
+            <xs:attribute name="message-channel-template" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:complexType name="messageChannelAdapterType">
         <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="message-channel-template" type="xs:string"/>
