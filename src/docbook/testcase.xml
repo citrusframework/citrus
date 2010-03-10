@@ -108,6 +108,46 @@
         error codes in test cases).</para>
     </section>
     
+    <section id="testcase-global-variables">
+        <title>Global variables</title>
+        
+        <para>The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every 
+        test case defines local variables which are valid inside the test you can also define global variables. The global variables are valid in all 
+        tests by default. This is a good opportunity to declare constant values for all tests in global variables. See the following ways
+        to add global variables to Citrus:</para>
+        
+        <programlisting>
+  &lt;bean class=&quot;com.consol.citrus.variable.GlobalVariables&quot;&gt;
+      &lt;property name=&quot;variables&quot;&gt;
+          &lt;map&gt;
+              &lt;entry key=&quot;projectName&quot; value=&quot;Citrus Integration Testing&quot;/&gt;
+              &lt;entry key=&quot;userName&quot; value=&quot;TestUser&quot;/&gt;
+          &lt;/map&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+        </programlisting>
+        
+        <para>Add this Spring bean to the <emphasis>'citrus-context.xml'</emphasis> application context file in order to have the global 
+        variables available in all tests. The bean just receives a map of key-value-pairs where the keys represent the variable names and 
+        the values the respective values, of course.</para>
+        
+        <para>Another possibility to set global variables is to load those from external property files. This may give you more powerful
+        global variables with user specific properties and so on. See how to load properties as global variables in this example:</para>
+        
+        <programlisting>
+  &lt;bean class=&quot;com.consol.citrus.variable.GlobalVariablesPropertyLoader&quot;&gt;
+      &lt;property name=&quot;propertyFiles&quot;&gt;
+          &lt;list&gt;
+              &lt;value&gt;classpath:global-variable.properties&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+        </programlisting>
+        
+        <para>Again we just place a Spring bean in the application context and everything is done. Citrus loads the properties as name-value-pairs
+        which represent the global variables.</para>
+    </section>
+    
     <section id="testcase-actions">
         <title>Actions</title>
         

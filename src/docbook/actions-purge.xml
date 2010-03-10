@@ -40,9 +40,7 @@
     <programlisting>
   &lt;bean id=&quot;purgeJmsQueues&quot;
       class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
-      &lt;property name=&quot;connectionFactory&quot;&gt;
-          &lt;ref bean=&quot;tibcoQueueConnectionFactory&quot;/&gt;
-      &lt;/property&gt;
+      &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
       &lt;property name=&quot;queueNames&quot;&gt;
           &lt;list&gt;
               &lt;value&gt;${jms.queue.hello.request.in}&lt;/value&gt;
@@ -55,4 +53,37 @@
   &lt;/bean&gt;
     </programlisting>
     
+    <para>So now we are able to purge JMS destinations with given destination names. But sometimes we do not want to rely on queue or topic names as 
+    we retrieve destinations over JNDI for instance. We can deal with destinations coming from JNDI lookup like follows:</para>
+    
+    <programlisting>
+  &lt;jee:jndi-lookup id=&quot;jmsQueueHelloRequestIn&quot; jndi-name=&quot;jms/jmsQueueHelloRequestIn&quot;/&gt;
+  &lt;jee:jndi-lookup id=&quot;jmsQueueHelloResponseOut&quot; jndi-name=&quot;jms/jmsQueueHelloResponseOut&quot;/&gt;
+  
+  &lt;bean id=&quot;purgeJmsQueues&quot;
+      class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
+      &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
+      &lt;property name=&quot;queues&quot;&gt;
+          &lt;list&gt;
+              &lt;ref bean=&quot;jmsQueueHelloRequestIn&quot;/&gt;
+              &lt;ref bean=&quot;jmsQueueHelloResponseOut&quot;/&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+    </programlisting>
+    
+    <para>We just use the property <emphasis>'queues'</emphasis> instead of <emphasis>'queueNames'</emphasis> and Citrus will be able to receive 
+    bean references that resolve to JMS destinations. We can purge these destination references in a test case, too. Just use the <emphasis>'ref'</emphasis>
+    attribute instead of already known <emphasis>'name'</emphasis> attribute:</para>
+    
+    <programlisting>
+  &lt;testcase name=&quot;purgeTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;purge-jms-queues&gt;
+            &lt;queue ref=&quot;jmsQueueHelloRequestIn&quot;/&gt;
+            &lt;queue ref=&quot;jmsQueueHelloResponseOut&quot;/&gt;
+        &lt;/purge-jms-queues&gt;
+    &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </programlisting>
 </section>

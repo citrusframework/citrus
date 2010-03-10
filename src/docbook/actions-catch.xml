@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-catch">
+    <title>Catch exceptions</title>
+
+    <para>In the previous chapter we learned how to expect failures in Citrus with assert action. Now the assert action is designed for one single
+    action to be monitored for failures. The <emphasis>'catch'</emphasis> action in contrary will hold several nested test actions and catch 
+    possible errors. The nested actions are error proof for the chosen exception type, but only for the chosen exception type other exception 
+    types may cause the test to fail.</para>
+    
+    <programlisting>
+  &lt;testcase name=&quot;catchExceptionTest&quot;&gt;
+      &lt;actions&gt;
+          &lt;catch exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;Current date is: ${date}&lt;/message&gt;
+              &lt;/echo&gt;
+          &lt;/catch&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </programlisting>
+    
+    <important>
+        <para>Note that there is no validation available in a catch block. So catching exceptions is just to make a test more stable towards
+        errors that can occur. The caught exception does not cause any failure in the test. The test case may continue with execution as if there was not failure.
+        Also notice that the catch action is also happy when no exception at all is caught. In contrary to the assert action which requires the failure the catch
+        block is not failing in positive processing.</para>
+    </important>
+    
+    <para>Catching exceptions like this may only fit to very error prone action blocks where failures do not harm the test case success. Otherwise a failure 
+    in a test action should always reflect to the whole test case to fail with errors.</para>
+</section>

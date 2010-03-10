@@ -19,6 +19,8 @@
   &actions-input;
   &actions-load;
   &actions-purge;
+  &actions-assert;
+  &actions-catch;
   &actions-generic-action;
   
 </chapter>
