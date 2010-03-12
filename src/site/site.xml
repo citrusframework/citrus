@@ -45,6 +45,11 @@
       <!-- item name="FAQ" href="${site.url}/faq.html"/-->
     </menu>
     
+    <menu name="Tools">
+        <item name="Ant tasks" href="${site.url}/ant-tasks.html"/>
+        <item name="Maven plugin" href="${site.url}/modules/citrus-maven/plugins/citrus-maven-plugin/plugin-info.html"/>
+    </menu>
+    
     <menu name="Community">
       <item name="News" href="${site.url}/news.html"/>
       <item name="Mailing List" href="${site.url}/mail-lists.html"/>
@@ -59,7 +64,7 @@
       <item name="Modules" href="${site.url}/modules-introduction.html">
         <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
         <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
-        <item name="WebService" href="${site.url}/modules/citrus-ws/project-reports.html"/>
+        <item name="SOAP" href="${site.url}/modules/citrus-ws/project-reports.html"/>
         <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
       </item>
     </menu>
