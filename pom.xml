@@ -922,6 +922,11 @@
               <enableRulesSummary>false</enableRulesSummary>
             </configuration>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-plugin-plugin</artifactId>
+            <version>2.5.1</version>
+          </plugin>
         </plugins>
       </reporting>
     </profile>
