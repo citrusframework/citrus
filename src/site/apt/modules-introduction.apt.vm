@@ -4,53 +4,68 @@
 
 Modules
 
-[${site_url}/images/modules.png] Modules
+[images/modules-overview.png] Modules
 
 * citrus (POM)
 
-  This is the main parent project and contains the general configuration, such as for
+  This is the main parent project containing general configurations, such as
 
   * site generation
 
-  * all project dependencies in a dependency management section
+  * dependency management
+  
+  * plugin management
 
-  * overall project information, such as mailing lists etc.
+  * overall project information, such as mailing lists, tem-members, scm, bug-tracking, ...
 
   * sub modules
 
 * citrus-core (JAR)
 
-  The <<citrus-core>> module builds the core functionality of the framework such as
+  The <<citrus-core>> module builds the core functionality such as
   
   * domain model (TestCase, TestSuite, CitrusApplication, ...)
   
-  * test actions (send, receive, sleep, databaseQuery, ...)
+  * test actions (send, receive, sleep, sql, ...)
   
   * validation implementation (XML tree validation, XPath element validation)
   
-  * utils
+  * utility
+  
+  The module also includes basic JMS and Spring integration message channel support in these two sections:
+  
+  * citrus-jms (JMS sender and receiver implementations)
+  
+  * citrus-channel (message channel sender and receiver implementations)
 
 * citrus-adapter (JAR)
 
-  This module contains common utility classes for Citrus adapters like citrus-http or citrus-ws.
+  Citrus talks to the world over messaging adapters. This adapter module contains common utility classes for adapter implementations 
+  like citrus-http or citrus-ws.
   
 * citrus-http (JAR)
 
-  This module contains special HTTP implementation classes used as adapter when sending and receiving messages over HTTP.
+  This module contains special HTTP client/server implementation. With this adapter Citrus is able to send and receive messages over HTTP.
 
 * citrus-ws (WAR)
 
-  SOAP WebService adapter used to send and receive messages via SOAP/HTTP.
+  Special adapter implementation for SOAP WebServices. Module contains classes for SOAP client and server connections over SOAP/HTTP.
 
 * citrus-tibco (JAR)
 
-  This module holds TIBCO specific test actions in order to connect with TIBCO Hawk and Collaborator.
+  This module holds TIBCO specific test actions in order to connect with TIBCO Hawk and Collaborator. The module requires special TIBCO libraries 
+  and a running TIBCO installation on the machine.
 
 * citrus-integration (JAR)
 
-  The <<citrus-integration>> module contains integration tests that will be executed during the build lifecycle. The
-  tests are separated in an extra module, because ActiveMQ Broker, HTTP stub and WS-Stub are started and stopped automatically.
+  Internal integration tests executed during the Citrus build lifecycle. The tests help to ensure the integration test quality of Citrus.
   
 * citrus-samples (JAR)
 
-  Samples module holding several runnable sample applications that are tested with Citrus.
+  Samples module holding several self runnable sample applications that are tested with Citrus. Currently this module knows following sample applications:
+  
+  * citrus-samples-flightbooking
+  
+  * citrus-samples-greeting
+  
+  * citrus-samples-bookregistry
