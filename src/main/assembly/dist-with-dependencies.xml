@@ -54,6 +54,8 @@
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-tibco</include>
         <include>com.consol.citrus:citrus-adapter</include>
+        <include>com.consol.citrus.ant:citrus-ant-tasks</include>
+        <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
       </includes>
       <binaries>
         <outputDirectory>dist</outputDirectory>

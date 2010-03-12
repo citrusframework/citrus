@@ -7,13 +7,25 @@ Citrus ANT tasks
   You can execute Citrus tests with ANT. The Citrus ANT tasks simplify the test execution so you just include predefined tasks 
   into your project's 'build.xml'.
   
+  <<Latest snapshot release>>: ${project.version}
+  
+  * citrus-ant-tasks-${project.version}.jar ({{{dist/citrus-ant-tasks-${project.version}.jar}download}})
+  
+  []
+  
+  <<Latest stable release>>: 1.0
+  
+  * citrus-ant-tasks-1.0.jar ({{{dist/citrus-ant-tasks-1.0.jar}download}})
+  
+  []
+  
   The ANT tasks can execute Citrus test cases in several modes. You can either run one single test by its name or all tests in a
   test package. In addition to that you can also use TestNG XML test suite files to execute your tests.
   
   Here is a simple usage example:
   
 +---
-  <typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.0.jar"/>
+  <typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.1-SNAPSHOT.jar"/>
   
   <target name="citrus.run.tests" description="Runs all Citrus tests">
       <citrus suitename="citrus-samples" package="com.consol.citrus.*"/>
