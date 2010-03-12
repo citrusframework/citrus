@@ -28,34 +28,55 @@ import org.springframework.util.CollectionUtils;
 import com.consol.citrus.doc.ExcelTestDocGenerator;
 
 /**
- * Goal which creates a test documentation in excel.
+ * Creates test documentation in MS Excel listing all available tests with 
+ * meta information (name, author, description, date, ...) . 
  * 
  * @author Christoph Deppisch
  * @goal create-excel-doc
  */
 public class CreateExcelDocMojo extends AbstractMojo {
-    /** @parameter default-value="Unknown" */
+    /** 
+     * Name of company that goes into Excel meta information.
+     * @parameter 
+     *      default-value="Unknown" */
     private String company;
     
-    /** @parameter default-value="Citrus Testframework" */
+    /** 
+     * Author name that goes into Excel meta information.
+     * @parameter 
+     *      default-value="Citrus Testframework" */
     private String author;
     
-    /** @parameter expression="${outputFile}" 
-     *             default-value="CitrusTests" */
+    /**
+     * Name of output file (.xsl file extension is added automatically and can be left out). Defaults to "CitrusTests".
+     * @parameter 
+     *      expression="${outputFile}" 
+     *      default-value="CitrusTests" */
     private String outputFile;
     
-    /** @parameter default-value="Citrus Test Documentation" */
+    /**
+     * Page title displayed on top of the sheet. 
+     * @parameter 
+     *      default-value="Citrus Test Documentation" */
     private String pageTitle;
     
-    /** @parameter default-value="src/citrus/tests" */
+    /** 
+     * Mojo looks in this directory for test files that are included in this report. Defaults to "src/citrus/tests"
+     * @parameter 
+     *      default-value="src/citrus/tests" */
     private String testDirectory;
     
-    /** @parameter default-value="" */
+    /** 
+     * Customized column headers as comma separated value string (e.g. "Nr;Name;Author;Status;TestCase;Date").
+     * @parameter 
+     *      default-value="" */
     private String customHeaders;
     
-    /** @parameter 
-     *          expression="${interactiveMode}"
-     *          default-value="true" */
+    /** 
+     * Whether to use interactive mode where user is prompted for parameter input during execution.
+     * @parameter 
+     *      expression="${interactiveMode}"
+     *      default-value="true" */
     private boolean interactiveMode;
     
     /** @component

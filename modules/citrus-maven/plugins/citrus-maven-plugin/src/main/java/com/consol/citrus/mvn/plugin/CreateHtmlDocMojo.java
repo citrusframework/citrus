@@ -28,34 +28,55 @@ import org.springframework.util.CollectionUtils;
 import com.consol.citrus.doc.HtmlTestDocGenerator;
 
 /**
- * Goal which creates a test documentation in html.
+ * Creates test overview documentation in HTML. The web page contains a list of
+ * all available tests with meta information.
  *
  * @author Christoph Deppisch 
  * @goal create-html-doc
  */
 public class CreateHtmlDocMojo extends AbstractMojo {
-    /** @parameter default-value="Overview" */
+    /**
+     * The overview title displayed at the top of the test overview
+     * @parameter 
+     *      default-value="Overview" */
     private String overviewTitle;
     
-    /** @parameter default-value="1" */
+    /** 
+     * Number of columns in test overview table
+     * @parameter 
+     *      default-value="1" */
     private String columns;
     
-    /** @parameter expression="${outputFile}" 
-     *             default-value="CitrusTests" */
+    /** 
+     * Name of output file (.html file extension is added automatically and can be left out). Defaults to "CitrusTests"
+     * @parameter 
+     *      expression="${outputFile}" 
+     *      default-value="CitrusTests" */
     private String outputFile;
     
-    /** @parameter default-value="Citrus Test Documentation" */
+    /**
+     * Page title displayed at the top of the page 
+     * @parameter 
+     *      default-value="Citrus Test Documentation" */
     private String pageTitle;
     
-    /** @parameter default-value="src/citrus/tests" */
+    /** 
+     * All test files in this directory are included into the report. Defaults to "src/citrus/tests"
+     * @parameter 
+     *      default-value="src/citrus/tests" */
     private String testDirectory;
     
-    /** @parameter default-value="logo.png" */
+    /**
+     * Company or project logo displayed on top of page. Defaults to "logo.png" 
+     * @parameter 
+     *      default-value="logo.png" */
     private String logo;
     
-    /** @parameter 
-     *          expression="${interactiveMode}"
-     *          default-value="true" */
+    /** 
+     * Whether to use interactive mode where user is prompted for parameter input during execution.
+     * @parameter 
+     *      expression="${interactiveMode}"
+     *      default-value="true" */
     private boolean interactiveMode;
     
     /** @component

@@ -31,38 +31,53 @@ import com.consol.citrus.util.TestCaseCreator;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
- * Goal which creates a new test case using test case creator.
+ * Creates new Citrus test cases with empty XML test file and executable Java class.
+ * 
+ * Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In
+ * non-interactive mode the parameters are given as command line arguments.
  *
  * @author Christoph Deppisch
  * @goal create-test
  */
 public class CreateTestCaseMojo extends AbstractMojo {
-    /** @parameter 
+    /**
+     * The name of the test case (must start with upper case letter). 
+     * @parameter 
      *          expression="${name}" 
      *          default-value="" */
     private String name;
     
-    /** @parameter
+    /**
+     * The test author
+     * @parameter
      *          expression="${author}" 
      *          default-value="Unknown" */
     private String author;
 
-    /** @parameter
+    /**
+     * Describes the test case and its actions
+     * @parameter
      *          expression="${description}" 
      *          default-value="TODO: Description" */
     private String description;
     
-    /** @parameter 
+    /** 
+     * Which package (folder structure) is assigned to this test. Defaults to "com.consol.citrus"
+     * @parameter 
      *          expression="${targetPackage}"
      *          default-value="com.consol.citrus" */
     private String targetPackage;
     
-    /** @parameter 
+    /** 
+     * Whether to run this command in interactive mode. Defaults to "true".
+     * @parameter 
      *          expression="${interactiveMode}"
      *          default-value="true" */
     private boolean interactiveMode;
 
-    /** @parameter 
+    /**
+     * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
+     * @parameter 
      *          expression="${framework}"
      *          default-value="testng" */
     private String framework;
@@ -118,10 +133,10 @@ public class CreateTestCaseMojo extends AbstractMojo {
     					"description: " + description + "\n" +
     					"package: " + targetPackage);
         } catch (ArrayIndexOutOfBoundsException e) {
-            getLog().info("Wrong usage exception!");
-            getLog().info("Use parameters in the following way: [test.name] [test.author] [test.description] [test.package]");
+            getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test).");
         } catch (PrompterException e) {
 			getLog().info(e);
+			getLog().info("Failed to create test! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test).");
 		}
     }
 }
