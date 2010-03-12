@@ -30,6 +30,9 @@
                           ]]>
                       </data>
                   </message>
+                  <header>
+                    <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
+                  </header>
               </send>
               
                   <sequential>
@@ -46,6 +49,9 @@
                       			]]>
                       		</data>
                       	</message>
+                        <header>
+                          <element name="Operation" value="sayHello"/>
+                        </header>
                         <extract>
                             <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
                         </extract>
