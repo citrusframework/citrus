@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="04.03.2010" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="18.03.2010" description="1.1 snapshot release">
+        <action dev="deppisch" type="fix">
+          #285 Finally block not executed in failure state
+        </action>
         <action dev="deppisch" type="add">
           #284 Provide line numbers in failure messages
         </action>
