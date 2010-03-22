@@ -16,6 +16,13 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="18.03.2010" description="1.1 snapshot release">
+        <action dev="mm" type="add">
+          Fixed Spring wiring bug in AbstractTestNGCitrusTest.
+          beforeTest method depends on springTestContextPrepareTestInstance.
+        </action>
+        <action dev="mm" type="add">
+          Support setting variables in TestNG tests.
+        </action>
         <action dev="deppisch" type="fix">
           #285 Finally block not executed in failure state
         </action>
