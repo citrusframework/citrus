@@ -117,6 +117,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             log.error("Invalid message received:");
             log.error(XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
             throw e;
+        } catch(CitrusRuntimeException e) {
+            log.error("Citrus runtime error while processing message:");
+            log.error(XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            throw e;
         }
     }
 
