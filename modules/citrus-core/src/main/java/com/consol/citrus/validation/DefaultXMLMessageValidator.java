@@ -1,8 +1,8 @@
 /*
  * Copyright 2006-2010 ConSol* Software GmbH.
- * 
+ *
  * This file is part of Citrus.
- * 
+ *
  * Citrus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -63,13 +63,13 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(DefaultXMLMessageValidator.class);
-    
+
     @Autowired
     private FunctionRegistry functionRegistry;
-    
+
     @Autowired
     private XsdSchemaRepository schemaRepository;
-    
+
     /**
      * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.ValidationContext)
      */
@@ -78,27 +78,27 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             throw new IllegalArgumentException("DefaultXmlMessageValidator must have an instance of XmlValidationContext, " +
                     "but was " + validationContext.getClass());
         }
-        
-        if(validationContext.getExpectedMessage() != null && 
+
+        if(validationContext.getExpectedMessage() != null &&
                 !(validationContext.getExpectedMessage().getPayload() instanceof String)) {
             throw new IllegalArgumentException("DefaultXmlMessageValidator does only support message payload of type String, " +
                     "but was " + validationContext.getExpectedMessage().getPayload().getClass());
         }
-        
+
         if(!XmlValidationContext.class.isAssignableFrom(validationContext.getClass())) {
             throw new IllegalArgumentException(DefaultXMLMessageValidator.class + " requires a instance of '" + XmlValidationContext.class + "'");
         }
-        
+
         XmlValidationContext xmlValidationContext = (XmlValidationContext)validationContext;
-        
+
         try {
             log.info("Start message validation");
-            
+
             if(xmlValidationContext.isSchemaValidation()) {
                 validateXMLSchema(receivedMessage);
                 validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
             }
-            
+
             validateNamespaces(xmlValidationContext.getExpectedNamespaces(), receivedMessage);
             validateMessageHeader(xmlValidationContext.getExpectedMessageHeaders(), receivedMessage.getHeaders(), context);
             validateMessagePayload(receivedMessage, xmlValidationContext, context);
@@ -113,35 +113,39 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Validation failed:", e);
+        } catch (ValidationException e) {
+            log.error("Invalid message received:");
+            log.error(XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            throw e;
         }
     }
 
     /**
-     * Validates the message header comparing a control set of header 
+     * Validates the message header comparing a control set of header
      * elements with the actual message header.
-     * 
+     *
      * @param expectedHeaderValues
      * @param receivedHeaderValues
      * @param context
      */
     public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
         if (CollectionUtils.isEmpty(expectedHeaderValues)) {return;}
-        
+
         log.info("Start message header validation");
 
         for (Entry<String, Object> entry : expectedHeaderValues.entrySet()) {
             String headerName = entry.getKey();
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
-            
+
             if(headerName.startsWith(MessageHeaders.PREFIX)) {continue;}
-            
+
             if (VariableUtils.isVariableName(headerName)) {
                 headerName = context.getVariable(headerName);
             } else if(functionRegistry.isFunction(headerName)) {
                 headerName = FunctionUtils.resolveFunction(headerName, context);
-            } 
-            
+            }
+
             if (receivedHeaderValues.containsKey(headerName) && receivedHeaderValues.get(headerName) != null) {
                 actualValue = receivedHeaderValues.get(headerName).toString();
             } else {
@@ -152,23 +156,23 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                 expectedValue = context.getVariable(expectedValue);
             } else if(functionRegistry.isFunction(expectedValue)) {
                 expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
-            } 
+            }
 
             try {
                 if(actualValue != null) {
-                    Assert.isTrue(expectedValue != null, 
+                    Assert.isTrue(expectedValue != null,
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
                                 + null + "' but was '"
                                 + actualValue + "'");
-    
+
                     Assert.isTrue(actualValue.equals(expectedValue),
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
                                 + expectedValue + "' but was '"
                                 + actualValue + "'");
                 } else {
-                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0, 
+                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
                                 + expectedValue + "' but was '"
@@ -177,64 +181,64 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             } catch (IllegalArgumentException e) {
                 throw new ValidationException("Validation failed:", e);
             }
-            
+
             if(log.isDebugEnabled()) {
                 log.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
             }
         }
-        
+
         log.info("Validation of message headers finished successfully: All properties OK");
     }
 
     /**
      * Validate message payload XML elements.
-     * 
+     *
      * @param receivedMessage
      * @param validationContext
      * @param context
      */
-    public void validateMessageElements(Message<?> receivedMessage, 
+    public void validateMessageElements(Message<?> receivedMessage,
             XmlValidationContext validationContext,
             TestContext context) throws CitrusRuntimeException {
         if (CollectionUtils.isEmpty(validationContext.getExpectedMessageElements())) {return;}
-        
+
         log.info("Start XML elements validation");
 
         for (Entry<String, String> entry : validationContext.getExpectedMessageElements().entrySet()) {
             String elementPathExpression = entry.getKey();
             String expectedValue = entry.getValue();
             String actualValue = null;
-            
+
             try {
                 elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
             } catch (ParseException e) {
                 throw new CitrusRuntimeException(e);
             }
-            
+
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-            
+
             if (XPathUtils.isXPathExpression(elementPathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(elementPathExpression, XPathExpressionResult.NODE);
                 elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
-                
+
                 //Give ignore elements the chance to prevent the validation in case result type is node
                 if(resultType.equals(XPathExpressionResult.NODE) &&
                         isNodeIgnored(XPathUtils.evaluateAsNode(received, elementPathExpression, validationContext.getNamespaceContext()), validationContext)) {
                     continue;
                 }
-                
+
                 actualValue = XPathUtils.evaluate(received, elementPathExpression, validationContext.getNamespaceContext(), resultType);
             } else {
                 Node node = XMLUtils.findNodeByName(received, elementPathExpression);
-                
+
                 if (node == null) {
                     throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
                 }
-                
+
                 if(isNodeIgnored(node, validationContext)) {
                     continue;
                 }
-                
+
                 if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
                     actualValue = node.getFirstChild().getNodeValue();
                 } else {
@@ -247,22 +251,22 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             } else if(functionRegistry.isFunction(expectedValue)) {
                 expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
             }
-            
+
             try {
                 if(actualValue != null) {
-                    Assert.isTrue(expectedValue != null, 
+                    Assert.isTrue(expectedValue != null,
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
                                 + null + "' but was '"
                                 + actualValue + "'");
-    
+
                     Assert.isTrue(actualValue.equals(expectedValue),
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
                                 + expectedValue + "' but was '"
                                 + actualValue + "'");
                 } else {
-                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0, 
+                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
                                 + expectedValue + "' but was '"
@@ -271,18 +275,18 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             } catch (IllegalArgumentException e) {
                 throw new ValidationException("Validation failed:", e);
             }
-            
+
             if(log.isDebugEnabled()) {
                 log.debug("Validating element: " + elementPathExpression + "='" + expectedValue + "': OK.");
             }
         }
-        
+
         log.info("Validation of XML elements finished successfully: All elements OK");
     }
 
     /**
      * Validate message with a DTD.
-     * 
+     *
      * @param dtdResource
      * @param receivedMessage
      */
@@ -292,27 +296,27 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
     /**
      * Validate message with a XML schema.
-     * 
+     *
      * @param receivedMessage
      */
     public void validateXMLSchema(Message<?> receivedMessage) {
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-            
+
             if(!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
                 return;
             }
-             
+
             log.info("Starting XML schema validation ...");
-            
+
             XsdSchema schema = schemaRepository.getSchemaByNamespace(doc.getFirstChild().getNamespaceURI());
 
             Assert.notNull(schema, "No schema found in schemaRepository for namespace '" + doc.getFirstChild().getNamespaceURI() + "'");
-            
+
             XmlValidator validator = schema.createValidator();
-            
+
             SAXParseException[] results = validator.validate(new DOMSource(doc));
-            
+
             if(results.length == 0) {
                 log.info("Schema of received XML validated OK");
             } else {
@@ -330,7 +334,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * Validate namespaces in message. The method compares namespace declarations in the root
      * element of the received message to expected namespaces. Prefixes are important too, so
      * differing namespace prefixes will fail the validation.
-     * 
+     *
      * @param expectedNamespaces
      * @param receivedMessage
      */
@@ -340,7 +344,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         log.info("Start XML namespace validation");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-        
+
         Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
 
         if (foundNamespaces.size() != expectedNamespaces.size()) {
@@ -364,40 +368,40 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
         log.info("XML namespace validation finished successfully: All values OK");
     }
-    
+
     /**
      * Validate message payloads by comparing to a control message.
-     * 
+     *
      * @param receivedMessage
      * @param validationContext
      * @param context
      */
     private void validateMessagePayload(Message<?> receivedMessage, XmlValidationContext validationContext, TestContext context) {
         Message<?> controlMessage = validationContext.getExpectedMessage();
-        
+
         if(controlMessage == null || controlMessage.getPayload() == null) {return;}
-        
+
         log.info("Start XML tree validation ...");
-        
+
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
         Document source = XMLUtils.parseMessagePayload(controlMessage.getPayload().toString());
-        
+
         XMLUtils.stripWhitespaceNodes(received);
         XMLUtils.stripWhitespaceNodes(source);
-        
+
         if (log.isDebugEnabled()) {
             log.debug("Received message:");
             log.debug(XMLUtils.serialize(received));
             log.debug("Control message:");
             log.debug(XMLUtils.serialize(source));
         }
-        
+
         validateXmlTree(received, source, validationContext);
     }
 
     /**
      * Walk the XML tree and validate all nodes.
-     * 
+     *
      * @param received
      * @param source
      * @param validationContext
@@ -426,10 +430,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                 break;
         }
     }
-    
+
     /**
      * Handle element node.
-     * 
+     *
      * @param received
      * @param source
      * @param validationContext
@@ -439,7 +443,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         if(log.isDebugEnabled()) {
             log.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
         }
-        
+
         Assert.isTrue(received.getLocalName().equals(source.getLocalName()),
                 "Element names not equal , expected '"
                     + source.getLocalName() + "' but was '"
@@ -451,7 +455,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         }
 
         if(received.getNamespaceURI() != null) {
-            Assert.isTrue(source.getNamespaceURI() != null, 
+            Assert.isTrue(source.getNamespaceURI() != null,
                     "Element namespace not equal for element '"
                         + received.getLocalName() + "', expected '"
                         + null + "' but was '"
@@ -463,7 +467,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                         + source.getNamespaceURI() + "' but was '"
                         + received.getNamespaceURI() + "'");
         } else {
-            Assert.isTrue(source.getNamespaceURI() == null, 
+            Assert.isTrue(source.getNamespaceURI() == null,
                     "Element namespace not equal for element '"
                         + received.getLocalName() + "', expected '"
                         + source.getNamespaceURI() + "' but was '"
@@ -512,10 +516,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             log.debug("Validation successful for element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
         }
     }
-    
+
     /**
      * Handle text node during validation.
-     * 
+     *
      * @param received
      * @param source
      */
@@ -523,27 +527,27 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         if(log.isDebugEnabled()) {
             log.debug("Validating node value for element: " + received.getParentNode());
         }
-        
+
         if (received.getNodeValue() != null) {
-            Assert.isTrue(source.getNodeValue() != null, 
+            Assert.isTrue(source.getNodeValue() != null,
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
                             + null + "' but was '"
                             + received.getNodeValue().trim() + "'");
-            
+
             Assert.isTrue(received.getNodeValue().trim().equals(source.getNodeValue().trim()),
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
                             + source.getNodeValue().trim() + "' but was '"
                             + received.getNodeValue().trim() + "'");
         } else {
-            Assert.isTrue(source.getNodeValue() == null, 
+            Assert.isTrue(source.getNodeValue() == null,
                     "Node value not equal for element '"
                             + received.getParentNode().getLocalName() + "', expected '"
                             + source.getNodeValue().trim() + "' but was '"
                             + null + "'");
         }
-        
+
         if(log.isDebugEnabled()) {
             log.debug("Node value '" + received.getNodeValue().trim() + "': OK");
         }
@@ -551,7 +555,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
     /**
      * Handle attribute node during validation.
-     * 
+     *
      * @param element
      * @param received
      * @param sourceAttributes
@@ -559,15 +563,15 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      */
     private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, XmlValidationContext validationContext) {
         if(received.getNodeName().startsWith("xmlns")) { return; }
-        
+
         String receivedName = received.getLocalName();
-        
+
         if(log.isDebugEnabled()) {
             log.debug("Validating attribute: " + receivedName + " (" + received.getNamespaceURI() + ")");
         }
 
         Node source = sourceAttributes.getNamedItemNS(received.getNamespaceURI(), receivedName);
-        
+
         Assert.isTrue(source != null,
                 "Attribute validation failed for element '"
                     + element.getLocalName() + "', unknown attribute "
@@ -596,7 +600,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
     /**
      * Handle comment node during validation.
-     * 
+     *
      * @param received
      * @param source
      */
@@ -606,7 +610,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
     /**
      * Handle processing instruction during validation.
-     * 
+     *
      * @param received
      * @param source
      */
@@ -635,12 +639,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      * Checks whether the current attribute is ignored.
      * @param elementNode
      * @param attributeNode
-     * @param validationContextk
+     * @param validationContext
      * @return
      */
     private boolean isAttributeIgnored(Node elementNode, Node attributeNode, XmlValidationContext validationContext) {
         Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
-        
+
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
         }
@@ -693,11 +697,11 @@ public class DefaultXMLMessageValidator implements MessageValidator {
      */
     private boolean isNodeIgnored(final Node node, XmlValidationContext validationContext) {
         Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
-        
+
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
         }
-        
+
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
          */
