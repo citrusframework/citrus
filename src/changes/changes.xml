@@ -17,6 +17,9 @@
   <body>
     <release version="1.1-SNAPSHOT" date="18.03.2010" description="1.1 snapshot release">
         <action dev="mm" type="add">
+          Provide full XPath expression in error message if expression is invalid.
+        </action>
+        <action dev="mm" type="add">
           Fixed Spring wiring bug in AbstractTestNGCitrusTest.
           beforeTest method depends on springTestContextPrepareTestInstance.
         </action>
