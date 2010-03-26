@@ -41,6 +41,7 @@ import org.w3c.dom.ls.LSException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
@@ -470,9 +471,17 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                         + null + "'");
         }
 
+        //check if element is ignored either by xpath or by ignore placeholder in source message
         if (isNodeIgnored(received, validationContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
+            }
+            return;
+        } else if(source.getFirstChild() != null &&
+                    StringUtils.hasText(source.getFirstChild().getNodeValue()) && 
+                    source.getFirstChild().getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if(log.isDebugEnabled()) {
+                log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
             }
             return;
         }
@@ -573,7 +582,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                     + element.getLocalName() + "', unknown attribute "
                     + receivedName + " (" + received.getNamespaceURI() + ")");
 
-        if (isAttributeIgnored(element, received, validationContext)) {
+        if ((StringUtils.hasText(source.getNodeValue()) && source.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) 
+                || isAttributeIgnored(element, received, validationContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
@@ -644,7 +654,7 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
         }
-
+        
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
          */

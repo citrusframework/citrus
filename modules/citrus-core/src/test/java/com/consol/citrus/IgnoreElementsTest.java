@@ -200,4 +200,39 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         
         receiveMessageBean.execute(context);
     }
+    
+    @Test
+    public void testIgnoreElementsByPlaceholder() {
+        receiveMessageBean.setMessageData("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>@ignore@</sub-elementA>"
+                + "<sub-elementB attribute='B'> @ignore@ </sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>" 
+            + "</root>");
+        
+        receiveMessageBean.execute(context);
+    }
+    
+    @Test
+    public void testIgnoreSubElementsByPlaceholder() {
+        receiveMessageBean.setMessageData("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >@ignore@</element>" 
+            + "</root>");
+        
+        receiveMessageBean.execute(context);
+    }
+    
+    @Test
+    public void testIgnoreAttributesByPlaceholder() {
+        receiveMessageBean.setMessageData("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='@ignore@'>text-value</sub-elementA>"
+                + "<sub-elementB attribute=' @ignore@ '>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+            + "</element>" 
+            + "</root>");
+        
+        receiveMessageBean.execute(context);
+    }
 }
