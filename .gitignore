@@ -6,3 +6,6 @@ profiles.xml
 test.history
 test-output
 .DS_Store
+*.iml
+*.ipr
+*.iws
