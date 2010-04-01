@@ -15,19 +15,15 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="18.03.2010" description="1.1 snapshot release">
-        <action dev="mm" type="add">
-          Log received message if invalid.
+    <release version="1.1-SNAPSHOT" date="01.04.2010" description="1.1 snapshot release">
+        <action dev="deppisch" type="add">
+          #286 Ignore placeholder
+        </action>
+        <action dev="mm" type="fix">
+          #289 Fixed Spring wiring bug in AbstractTestNGCitrusTest in test set up methods
         </action>
         <action dev="mm" type="add">
-          Provide full XPath expression in error message if expression is invalid.
-        </action>
-        <action dev="mm" type="add">
-          Fixed Spring wiring bug in AbstractTestNGCitrusTest.
-          beforeTest method depends on springTestContextPrepareTestInstance.
-        </action>
-        <action dev="mm" type="add">
-          Support setting variables in TestNG tests.
+          #288 Support setting variables in TestNG tests
         </action>
         <action dev="deppisch" type="fix">
           #285 Finally block not executed in failure state
