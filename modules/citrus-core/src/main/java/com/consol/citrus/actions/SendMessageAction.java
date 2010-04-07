@@ -49,6 +49,12 @@ public class SendMessageAction extends AbstractTestAction {
     /** Message header entries */
     private Map<String, Object> headerValues = new HashMap<String, Object>();
 
+    /** The message header as a file resource */
+    private Resource headerResource;
+
+    /** The message header as inline data */
+    private String headerData;
+    
     /** The message sender */
     protected MessageSender messageSender;
 
@@ -125,6 +131,22 @@ public class SendMessageAction extends AbstractTestAction {
     public void setMessageResource(Resource messageResource) {
         this.messageResource = messageResource;
     }
+    
+    /**
+     * Set the message header as inline data.
+     * @param headerData the headerData to set
+     */
+    public void setHeaderData(String headerData) {
+        this.headerData = headerData;
+    }
+
+    /**
+     * Set the header payload from external file resource.
+     * @param headerResource the headerResource to set
+     */
+    public void setHeaderResource(Resource headerResource) {
+        this.headerResource = headerResource;
+    }
 
     /**
      * Set header entries.
@@ -169,6 +191,20 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public Resource getMessageResource() {
         return messageResource;
+    }
+    
+    /**
+     * @return the headerData
+     */
+    public String getHeaderData() {
+        return headerData;
+    }
+
+    /**
+     * @return the headerResource
+     */
+    public Resource getHeaderResource() {
+        return headerResource;
     }
     
     /**

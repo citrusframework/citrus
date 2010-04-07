@@ -21,7 +21,9 @@ package com.consol.citrus.ws.actions;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.reset;
+import static org.easymock.classextension.EasyMock.verify;
 
 import org.easymock.IAnswer;
 import org.easymock.classextension.EasyMock;
@@ -31,8 +33,12 @@ import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jms.JmsMessageSender;
+import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
 /**
@@ -221,5 +227,149 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.execute(context);
         
         verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSoapMessageWithHeaderContentTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        soapMessageAction.setHeaderData("<TestHeader><operation>soapOperation</operation></TestHeader>");
+
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
+
+                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT), 
+                        "<TestHeader><operation>soapOperation</operation></TestHeader>");
+                
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        soapMessageAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSoapMessageWithHeaderResourceTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        soapMessageAction.setHeaderResource(new ClassPathResource("test-header-resource.xml", SendSoapMessageActionTest.class));
+
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
+
+                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT), 
+                        "<TestHeader><operation>soapOperation</operation></TestHeader>");
+                
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        soapMessageAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        context.setVariable("operation", "soapOperation");
+        soapMessageAction.setHeaderData("<TestHeader><operation>${operation}</operation></TestHeader>");
+
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
+
+                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT), 
+                        "<TestHeader><operation>soapOperation</operation></TestHeader>");
+                
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        soapMessageAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        context.setVariable("operation", "soapOperation");
+        soapMessageAction.setHeaderResource(new ClassPathResource("test-header-resource-with-variables.xml", SendSoapMessageActionTest.class));
+
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
+
+                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT), 
+                        "<TestHeader><operation>soapOperation</operation></TestHeader>");
+                
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        soapMessageAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    public void testWrongMessageSenderImplementationTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        MessageSender jmsMessageSender = new JmsMessageSender();
+        soapMessageAction.setMessageSender(jmsMessageSender);
+        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        try {
+            soapMessageAction.execute(context);
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Sending SOAP messages requires a " +
+                    "'com.consol.citrus.ws.message.WebServiceMessageSender' but was 'com.consol.citrus.jms.JmsMessageSender'");
+            return;
+        }
+        
+        Assert.fail("Missing exception because of unsupported MessageSender implementation");
     }
 }

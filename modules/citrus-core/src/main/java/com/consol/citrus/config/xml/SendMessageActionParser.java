@@ -95,6 +95,23 @@ public class SendMessageActionParser implements BeanDefinitionParser {
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
             builder.addPropertyValue("headerValues", setHeaderValues);
+            
+            Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");
+            if (headerDataElement != null) {
+                builder.addPropertyValue("headerData", DomUtils.getTextValue(headerDataElement));
+            }
+
+            Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
+            if (headerResourceElement != null) {
+                String filePath = headerResourceElement.getAttribute("file");
+                if (filePath.startsWith("classpath:")) {
+                    builder.addPropertyValue("headerResource", new ClassPathResource(filePath.substring("classpath:".length())));
+                } else if (filePath.startsWith("file:")) {
+                    builder.addPropertyValue("headerResource", new FileSystemResource(filePath.substring("file:".length())));
+                } else {
+                    builder.addPropertyValue("headerResource", new FileSystemResource(filePath));
+                }
+            }
         }
         
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");

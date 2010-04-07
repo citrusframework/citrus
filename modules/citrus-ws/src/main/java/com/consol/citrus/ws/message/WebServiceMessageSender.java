@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +108,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                             
                             if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                                 soapRequest.setSoapAction(headerEntry.getValue().toString());
+                            } else if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT)) {
+                                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                                Transformer transformer = transformerFactory.newTransformer();
+                                
+                                transformer.transform(new StringSource(headerEntry.getValue().toString()), 
+                                        soapRequest.getSoapHeader().getResult());
                             } else {
                                 SoapHeaderElement headerElement;
                                 if(QNameUtils.validateQName(headerEntry.getKey())) {
@@ -131,6 +137,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                                 }
                             }, attachment.getContentType());
                         }
+                        
                     }
         }, result);
 
