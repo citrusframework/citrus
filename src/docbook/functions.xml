@@ -287,7 +287,49 @@
         <para><emphasis>4tkhi7uz</emphasis></para>
         <para><emphasis>Vt567JkA32</emphasis></para>
     </section>
-    
+    <section id="functions-random-enum-value">
+        <title>citrus:randomEnumValue</title>
+        <para>
+              This function returns pseudo-randomly one of its supplied arguments. Furthermore, the implementing class can be used to specify a custom function
+              with a preconfigured list of values (the enumeration) and then be called without arguments. This promotes code reuse and facilitates refactoring.
+        </para>
+        <para>
+              The following code sets the httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
+        </para>
+        <programlisting>
+  &lt;variable name="httpStatusCode" value="citrus:randomEnumValue('200', '401', '500')" /&gt;
+        </programlisting>
+        <para>
+            To use the implementing class to define a custom function you first need to define the function itself and specify the values property like this:
+        </para>
+        <programlisting>
+ &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
+  &lt;property name="name" value="myCustomFunctionLibrary" /&gt;
+  &lt;property name="prefix" value="custom:" /&gt;
+  &lt;property name="members"&gt;
+    &lt;map&gt;
+      &lt;entry key="randomHttpStatusCode"&gt;
+        &lt;bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"&gt;
+          &lt;property name="values"&gt;
+            &lt;list&gt;
+              &lt;value&gt;200&lt;/value&gt;
+              &lt;value&gt;500&lt;/value&gt;
+              &lt;value&gt;401&lt;/value&gt;
+            &lt;/list&gt;
+          &lt;/property&gt;
+        &lt;/bean&gt;
+      &lt;/entry&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
+ &lt;/bean&gt;
+        </programlisting>
+        <para>
+            This function can then be used to randomly choose an HTTP status code without providing each of the possible codes each time like this:
+        </para>
+        <programlisting>
+&lt;variable name="httpStatusCode" value="custom:randomHttpStatusCode()" /&gt;
+        </programlisting>
+    </section> 
     <section id="functions-current-date">
         <title>citrus:currentDate()</title>
         
@@ -435,4 +477,43 @@
         
         <para>abs = <emphasis>3.0</emphasis></para>
     </section>
+    <section id="functions-map-value">
+        <title>Mapping keys to values using a hash map</title>
+        <para>
+              Using the function implementation provided with the citrus-framework one can define custom functions which 
+              map string keys to string values. This can be very helpful when the used key is a randomly chosen value
+              which is computed at runtime so its corresponding value can not really be defined during the test's design time.
+        </para>
+        <para>
+              The following code defines a custom function which maps HTTP status codes to the corresponding messages:
+        </para>
+        <programlisting>
+ &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
+  &lt;property name="name" value="myCustomFunctionLibrary" /&gt;
+  &lt;property name="prefix" value="custom:" /&gt;
+  &lt;property name="members"&gt;
+    &lt;map&gt;
+      &lt;entry key="mapHttpStatusCodeToMessage"&gt;
+        &lt;bean class="com.consol.citrus.functions.core.MapValueFunction"&gt;
+          &lt;property name="values"&gt;
+            &lt;map&gt;
+              &lt;entry key="200" value="OK" /&gt;
+              &lt;entry key="401" value="Unauthorized" /&gt;
+              &lt;entry key="500" value="Internal Server Error" /&gt;
+            &lt;/map&gt;
+          &lt;/property&gt;
+        &lt;/bean&gt;
+      &lt;/entry&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
+ &lt;/bean&gt;
+        </programlisting>
+        <para>
+            This function can then be used to map an HTTP status code to its value as in the 
+            following example which sets the variable httpStatusMessage to the 'Internal Server Error' string
+        </para>
+        <programlisting>
+&lt;variable name="httpStatusCodeMessage" value="custom:mapHttpStatusCodeToMessage('500')" /&gt;
+        </programlisting>
+    </section> 
 </chapter>
