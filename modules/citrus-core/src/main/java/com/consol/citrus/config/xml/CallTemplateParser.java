@@ -65,8 +65,22 @@ public class CallTemplateParser implements BeanDefinitionParser {
             Map<String, String> parameters = new LinkedHashMap<String, String>();
 
             for (Iterator<?> iter = parameterElements.iterator(); iter.hasNext();) {
-                Element variableDefinition = (Element) iter.next();
-                parameters.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
+                Element parameterElement = (Element) iter.next();
+                final String name = parameterElement.getAttribute("name");
+                String value = null;
+                if (parameterElement.hasAttribute("value")) {
+                	value = parameterElement.getAttribute("value");
+                } else {
+                	Element valueElement = DomUtils.getChildElementByTagName(parameterElement, "value");
+                	if (valueElement != null) {
+                		value = valueElement.getTextContent(); 
+                	}
+                }
+                if (value != null) {
+                	parameters.put(name, value);
+                } else {
+                	throw new IllegalArgumentException("Please supply either a value attribute or a value child node");
+                }
             }
 
             beanDefinition.addPropertyValue("parameter", parameters);

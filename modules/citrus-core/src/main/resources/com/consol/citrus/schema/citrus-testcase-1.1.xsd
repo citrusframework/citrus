@@ -601,8 +601,11 @@
                 <xs:element ref="description" minOccurs="0"/>
                 <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
+                    	<xs:sequence>
+                    		<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    	</xs:sequence>
                         <xs:attribute name="name" type="xs:string" use="required"/>
-                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="optional"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

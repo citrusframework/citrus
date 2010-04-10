@@ -34,7 +34,7 @@
                 </call-template>
                 <call-template name="print">
                     <parameter name="param1" value="2"/>
-                    <parameter name="param2" value="Hello South"/>
+                    <parameter name="param2"><value>Hello South ${var}</value></parameter>
                 </call-template>
                 <call-template name="print">
                     <parameter name="param1" value="3"/>

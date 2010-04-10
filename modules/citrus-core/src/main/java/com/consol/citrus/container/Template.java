@@ -19,7 +19,11 @@
 
 package com.consol.citrus.container;
 
-import java.util.*;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -29,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.GlobalVariables;
@@ -98,9 +103,12 @@ public class Template extends AbstractTestAction {
             String param = entry.getKey();
             String paramValue = entry.getValue();
 
-            if (VariableUtils.isVariableName(paramValue)) {
-                paramValue = context.getVariable(paramValue);
-            } else if(functionRegistry.isFunction(paramValue)) {
+            try {
+				paramValue = VariableUtils.replaceVariablesInString(paramValue, innerContext);
+			} catch (ParseException e) {
+				throw new CitrusRuntimeException(e);
+			}
+            if(functionRegistry.isFunction(paramValue)) {
                 paramValue = FunctionUtils.resolveFunction(paramValue, context);
             } 
 
