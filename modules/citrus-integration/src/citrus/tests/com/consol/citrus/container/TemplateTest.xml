@@ -34,7 +34,13 @@
                 </call-template>
                 <call-template name="print">
                     <parameter name="param1" value="2"/>
-                    <parameter name="param2"><value>Hello South ${var}</value></parameter>
+                    <parameter name="param2">
+                    	<value><![CDATA[
+	                        <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+	                           <Text>Hello South ${var}</Text>
+	                        </HelloRequest>
+                        ]]></value>
+                   	</parameter>
                 </call-template>
                 <call-template name="print">
                     <parameter name="param1" value="3"/>
