@@ -287,20 +287,22 @@
         <para><emphasis>4tkhi7uz</emphasis></para>
         <para><emphasis>Vt567JkA32</emphasis></para>
     </section>
+    
     <section id="functions-random-enum-value">
-        <title>citrus:randomEnumValue</title>
+        <title>citrus:randomEnumValue()</title>
         <para>
-              This function returns pseudo-randomly one of its supplied arguments. Furthermore, the implementing class can be used to specify a custom function
-              with a preconfigured list of values (the enumeration) and then be called without arguments. This promotes code reuse and facilitates refactoring.
+              This function returns one of its supplied arguments. Furthermore you can specify a custom function
+              with a preconfigured list of values (the enumeration). The funciton will randomly return an entry when called without arguments. 
+              This promotes code reuse and facilitates refactoring.
         </para>
         <para>
-              The following code sets the httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
+              In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
         </para>
         <programlisting>
   &lt;variable name="httpStatusCode" value="citrus:randomEnumValue('200', '401', '500')" /&gt;
         </programlisting>
         <para>
-            To use the implementing class to define a custom function you first need to define the function itself and specify the values property like this:
+            As mentioned before you can define a custom function for your very specific needs in order to easily manage a list of predefined values like this:
         </para>
         <programlisting>
  &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
@@ -324,12 +326,14 @@
  &lt;/bean&gt;
         </programlisting>
         <para>
-            This function can then be used to randomly choose an HTTP status code without providing each of the possible codes each time like this:
+            We have added a custom function library with a custom function definition. The custom function "randomHttpStatusCode" randomly 
+            chooses an HTTP status code each time it is called. Inside the test you can use the function like this:
         </para>
         <programlisting>
 &lt;variable name="httpStatusCode" value="custom:randomHttpStatusCode()" /&gt;
         </programlisting>
     </section> 
+    
     <section id="functions-current-date">
         <title>citrus:currentDate()</title>
         
@@ -477,15 +481,15 @@
         
         <para>abs = <emphasis>3.0</emphasis></para>
     </section>
+    
     <section id="functions-map-value">
-        <title>Mapping keys to values using a hash map</title>
+        <title>citrus:mapValue()</title>
         <para>
-              Using the function implementation provided with the citrus-framework one can define custom functions which 
-              map string keys to string values. This can be very helpful when the used key is a randomly chosen value
-              which is computed at runtime so its corresponding value can not really be defined during the test's design time.
+              This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen
+              at runtime and the corresponding value ist not defined during the design time.
         </para>
         <para>
-              The following code defines a custom function which maps HTTP status codes to the corresponding messages:
+              The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:
         </para>
         <programlisting>
  &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
@@ -493,7 +497,7 @@
   &lt;property name="prefix" value="custom:" /&gt;
   &lt;property name="members"&gt;
     &lt;map&gt;
-      &lt;entry key="mapHttpStatusCodeToMessage"&gt;
+      &lt;entry key="getHttpStatusMessage"&gt;
         &lt;bean class="com.consol.citrus.functions.core.MapValueFunction"&gt;
           &lt;property name="values"&gt;
             &lt;map&gt;
@@ -509,11 +513,11 @@
  &lt;/bean&gt;
         </programlisting>
         <para>
-            This function can then be used to map an HTTP status code to its value as in the 
-            following example which sets the variable httpStatusMessage to the 'Internal Server Error' string
+            In this example the function sets the variable httpStatusMessage to the 'Internal Server Error' string dynamically at runtime.
+            The test only knows the HTTP status code and does not care about spelling and message locales.
         </para>
         <programlisting>
-&lt;variable name="httpStatusCodeMessage" value="custom:mapHttpStatusCodeToMessage('500')" /&gt;
+&lt;variable name="httpStatusCodeMessage" value="custom:getHttpStatusMessage('500')" /&gt;
         </programlisting>
     </section> 
 </chapter>
