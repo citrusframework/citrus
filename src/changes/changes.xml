@@ -16,6 +16,18 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="01.04.2010" description="1.1 snapshot release">
+        <action dev="dimovelev" type="fix">
+          #294 Template parameter variable support
+        </action>
+        <action dev="dimovelev" type="add">
+          #293 Template parameter as CDATA
+        </action>
+        <action dev="dimovelev" type="add">
+          #292 MapValueFunction
+        </action>
+        <action dev="dimovelev" type="add">
+          #291 RandomEnumValueFunction
+        </action>
         <action dev="deppisch" type="add">
           #286 Ignore placeholder
         </action>
