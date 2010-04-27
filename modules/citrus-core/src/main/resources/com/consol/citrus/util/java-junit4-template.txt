@@ -2,7 +2,7 @@ package @test.package@;
 
 import org.junit.Test;
 
-import com.consol.citrus.junit.AbstractJUnitCitrusTest;
+import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 
 /**
  * @test.description@
@@ -10,7 +10,7 @@ import com.consol.citrus.junit.AbstractJUnitCitrusTest;
  * \@author @test.author@
  * \@since @test.creation.date@
  */
-public class @test.name@ extends AbstractJUnitCitrusTest {
+public class @test.name@ extends AbstractJUnit4CitrusTest {
     \@Test
     public void @test.method.name@() {
         executeTest();

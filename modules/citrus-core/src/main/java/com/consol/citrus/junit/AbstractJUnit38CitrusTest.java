@@ -1,8 +1,8 @@
 /*
  * Copyright 2006-2010 ConSol* Software GmbH.
- *
+ * 
  * This file is part of Citrus.
- *
+ * 
  * Citrus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +17,10 @@
  * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.consol.citrus.testng;
+package com.consol.citrus.junit;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +28,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
-import org.testng.ITestContext;
-import org.testng.annotations.*;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit38.AbstractJUnit38SpringContextTests;
 
 import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
@@ -38,83 +39,52 @@ import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
 /**
- * Abstract base test implementation for testng test cases. Providing test listener support and
- * loading basic application context files for Citrus.
- *
+ * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
+ * test listener support and loads the root application context files for Citrus.
+ * 
  * @author Christoph Deppisch
  */
-@ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml",
-                                   "classpath:citrus-context.xml",
+@TestExecutionListeners({TestSuiteAwareExecutionListener.class})
+@ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml", 
+                                   "classpath:citrus-context.xml", 
                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
-public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringContextTests {
     /**
      * Logger
      */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
+    private static final Logger log = LoggerFactory.getLogger(AbstractJUnit38CitrusTest.class);
+    
     /** Test listeners */
     @Autowired
     private TestListeners testListener;
-
+    
     @Autowired
     private TestContextFactoryBean testContextFactory;
-
+    
     /**
-     * Runs tasks before test suite.
-     * @param testContext the test context.
-     * @throws Exception on error.
+     * Run tasks before each test case.
      */
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
-        /*
-         * Fix for problem with Spring's TestNG support.
-         * In order to have access to applicationContext in BeforeSuite annotated methods.
-         * Fixed with version 3.1.RC1
-         */
-        springTestContextPrepareTestInstance();
-
-        Assert.notNull(applicationContext);
-
-        TestSuite suite= getTestSuite(testContext.getSuite().getName());
-
-        if(!suite.beforeSuite()) {
-            org.testng.Assert.fail("Before suite failed with errors");
-        }
-    }
-
-    /**
-     * Runs tasks before tests.
-     * @param testContext the test context.
-     */
-    @BeforeClass(dependsOnMethods = "springTestContextPrepareTestInstance")
-    public void beforeTest(ITestContext testContext) {
-        TestSuite suite = getTestSuite(testContext.getSuite().getName());
+    protected void setUp() {
+        TestSuite suite= getTestSuite();
+        
         suite.beforeTest();
     }
-
+    
     /**
-     * Executes the test case.
+     * Execute the test case.
      */
     protected void executeTest() {
-        executeTest(null);
-    }
-
-    /**
-     * Executes the test case.
-     * @param testContext the test context.
-     */
-    protected void executeTest(ITestContext testContext) {
         TestCase testCase = getTestCase();
-
+        
         if(!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
             testListener.onTestStart(testCase);
-
+            
             try {
                 testCase.execute(prepareTestContext(createTestContext()));
                 testListener.onTestSuccess(testCase);
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
-
+                
                 throw new TestCaseFailedException(e);
             } finally {
                 testListener.onTestFinish(testCase);
@@ -124,7 +94,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             testListener.onTestSkipped(testCase);
         }
     }
-
+    
     /**
      * Prepares the test context.
      *
@@ -145,7 +115,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     protected TestContext createTestContext() throws Exception {
         return (TestContext)testContextFactory.getObject();
     }
-
+    
     /**
      * Gets the test case from application context.
      * @return the new test case.
@@ -177,39 +147,31 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                                 "com/consol/citrus/spring/internal-helper-ctx.xml"},
                 true, applicationContext);
     }
-
+    
     /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
+     * Get the test suite instance by its type from 
+     * application context. If none is found default test suite
+     * is used instead.
+     * 
+     * @return the test suite
      */
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        TestSuite suite= getTestSuite(testContext.getSuite().getName());
+    private TestSuite getTestSuite() {
+        TestSuite suite = null;
+        
+        Map<?, ?> suites = applicationContext.getBeansOfType(TestSuite.class);
 
-        if(!suite.afterSuite()) {
-            org.testng.Assert.fail("After suite failed with errors");
-        }
-    }
-
-    /**
-     * Gets the test suite instance by its name from application context.
-     * @param name the name.
-     * @return the test suite.
-     */
-    private TestSuite getTestSuite(String name) {
-        if(name.endsWith(" by packages")) {
-            name = name.substring(0, name.length() - " by packages".length());
-        }
-
-        TestSuite suite;
-        try {
-            suite = (TestSuite)applicationContext.getBean(name, TestSuite.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            log.warn("Could not find test suite with name '" + name + "' using default test suite");
-
+        if(suites.keySet().size() > 1) {
+            for (Entry<?, ?> entry : suites.entrySet()) {
+                if(!entry.getKey().toString().equals(CitrusConstants.DEFAULT_SUITE_NAME)) {
+                    suite = (TestSuite)entry.getValue();
+                }
+            }
+        } else {
+            log.warn("Could not find custom test suite - using default test suite");
+            
             suite = (TestSuite)applicationContext.getBean(CitrusConstants.DEFAULT_SUITE_NAME, TestSuite.class);
         }
-
+        
         return suite;
     }
 }

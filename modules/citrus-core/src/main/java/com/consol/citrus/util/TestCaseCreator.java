@@ -66,7 +66,7 @@ public class TestCaseCreator {
             } else if(value.equalsIgnoreCase("junit4")) {
                 return JUNIT4;
             } else if(value.equalsIgnoreCase("junit")) {
-                return JUNIT4;
+                return JUNIT3;
             } else {
                 throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
             }
