@@ -49,11 +49,11 @@ import com.consol.citrus.report.TestListeners;
 @ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml", 
                                    "classpath:citrus-context.xml", 
                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
-public abstract class AbstractJUnitCitrusTest extends AbstractJUnit4SpringContextTests {
+public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(AbstractJUnitCitrusTest.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractJUnit4CitrusTest.class);
     
     /** Test listeners */
     @Autowired
@@ -76,29 +76,13 @@ public abstract class AbstractJUnitCitrusTest extends AbstractJUnit4SpringContex
      * Execute the test case.
      */
     protected void executeTest() {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                new String[] {
-                        this.getClass().getPackage().getName()
-                                .replace('.', '/')
-                                + "/"
-                                + this.getClass().getSimpleName()
-                                + ".xml",
-                        "com/consol/citrus/spring/internal-helper-ctx.xml"},
-                true, applicationContext);
-        
-        TestCase testCase = null;
-        try {
-            testCase = (TestCase)ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
-            testCase.setPackageName(this.getClass().getPackage().getName());
-        } catch (NoSuchBeanDefinitionException e) {
-            org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
-        }
+        TestCase testCase = getTestCase();
         
         if(!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
             testListener.onTestStart(testCase);
             
             try {
-                testCase.execute((TestContext)testContextFactory.getObject());
+                testCase.execute(prepareTestContext(createTestContext()));
                 testListener.onTestSuccess(testCase);
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
@@ -114,11 +98,64 @@ public abstract class AbstractJUnitCitrusTest extends AbstractJUnit4SpringContex
     }
     
     /**
+     * Prepares the test context.
+     *
+     * Provides a hook for test context modifications before the test gets executed.
+     *
+     * @param testContext the test context.
+     * @return the (prepared) test context.
+     */
+    protected TestContext prepareTestContext(final TestContext testContext) {
+        return testContext;
+    }
+
+    /**
+     * Creates a new test context.
+     * @return the new citrus test context.
+     * @throws Exception on error.
+     */
+    protected TestContext createTestContext() throws Exception {
+        return (TestContext)testContextFactory.getObject();
+    }
+    
+    /**
+     * Gets the test case from application context.
+     * @return the new test case.
+     */
+    protected TestCase getTestCase() {
+        ClassPathXmlApplicationContext ctx = createApplicationContext();
+        TestCase testCase = null;
+        try {
+            testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
+            testCase.setPackageName(this.getClass().getPackage().getName());
+        } catch (NoSuchBeanDefinitionException e) {
+            org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+        }
+        return testCase;
+    }
+
+    /**
+     * Creates the Spring application context.
+     * @return
+     */
+    protected ClassPathXmlApplicationContext createApplicationContext() {
+        return new ClassPathXmlApplicationContext(
+                new String[] {
+                        this.getClass().getPackage().getName()
+                                .replace('.', '/')
+                                + "/"
+                                + getClass().getSimpleName()
+                                + ".xml",
+                                "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                true, applicationContext);
+    }
+    
+    /**
      * Get the test suite instance by its type from 
      * application context. If none is found default test suite
      * is used instead.
      * 
-     * @return
+     * @return the test suite
      */
     private TestSuite getTestSuite() {
         TestSuite suite = null;
