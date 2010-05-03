@@ -2,28 +2,28 @@
 <preface id="preface">
   <title>Preface</title>
 
-  <para>Integration testing can be very hard, especially when there are no sufficient tools that support you. Regarding Java 
-  unit testing very good tools and APIs exists (JUnit, TestNG, EasyMock, and many more). The testing tools support you and 
-  try to ease up your life as a tester who is in charge of testing a software in various ways.
+  <para>Integration testing can be very hard, especially when there is no sufficient tool support. Unit testing 
+  is flavored with fantastic tools and APIs like JUnit, TestNG, and EasyMock which support you in writing automated tests. 
+  A tester who is in charge of integration testing may lack of tool support for automated integration testing.
    
-  When speaking of integration testing in a service-oriented architecture (SOA) things are getting evil. Besides unit testing efforts
-  especially those Enterprise Application Integration (EAI) projects need to be tested regarding their integration into the existing application 
-  environment on the customer side. Without sufficient tool support the integration testing is exhausting and sometimes barely possible.</para> 
+  In a typical Service-oriented Architecture (SOA) with enterprise applications the test team has to deal with different
+  interfaces and various transport protocols. Without sufficient tool support the automated integration testing of message-based 
+  interactions between interface partners is exhausting and sometimes barely possible.</para> 
   
-  <para>Testing can then be a hard task, because the tester may be forced to simulate several external interface applications. 
-  The simulation of interface partners cause severe problems regarding maintainability and interoperability. It is not unusual, 
-  that a tester has to simulate several applications manually during a test, because of lacking tool support. This manual test approach is 
-  very time consuming and error prone. Every time a tester has to manually validate the success of at test case it is difficult to
-  repeat those tests every time a change was made in the source code of the application. Regression testing and continuous testing is very important
-  but not possible the time testers are forced to manually test the applications. Fully automated integration testing of whole use cases in an end-to-end
-  point of view is very difficult using this manual testing approach.</para>
+  <para>The tester is forced to simulate several interface partners trying to simulate a chain of actions and messages. Simulating
+  the behavior of interface partners in a automated test causes severe problems regarding maintainability and interoperability. 
+  It is not unusual that a tester simulates external applications manually during the test, because of lacking tool support. The 
+  manual test approach is very time consuming and error prone, because the process is not repeatable and the tester manually validates 
+  the success.</para>
   
-  <para>The Citrus test framework aims to fill in this gap. The tool helps you to perform complex integration testing in a message based 
-  EAI environment. Citrus is designed to completely test whole use case scenarios in an automated way, where interface partners are
-  simulated in their behavior and message contents are automatically validated, so the correct processing is always ensured.</para>
+  <para>The Citrus framework gives a complete test automation tool for integration testing of enterprise applications in a 
+  Service.oriented Architecture. Every time a change was made in the application all automated Citrus tests ensure the stability of 
+  interfaces and message communication. Regression testing and continuous integration testing is very easy. Citrus is designed to
+  provide fully automated integration testing of whole end-to-end use cases with effective simulation of interface partners across
+  various messaging transports and automated validation and functionality checks.</para>
   
-  <para>This document provides a reference guide to all features of the Citrus test framework and it gives a detailed picture 
-  of how to set up an automated integration testing environment. Since this document is considered to be under construction, 
-  please do not hesitate to give any comments or requests to us using our user or support mailing lists.</para>
+  <para>This documentation provides a reference guide to all features of the Citrus test framework. It gives a detailed picture 
+  of effective integration testing with automated integration test environments. Since this document is considered to be under 
+  construction, please do not hesitate to give any comments or requests to us using our user or support mailing lists.</para>
   
 </preface>

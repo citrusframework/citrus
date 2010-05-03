@@ -2,44 +2,72 @@
 <chapter id="introduction">
   <title>Introduction</title>
 
-  <para>Enterprise Application Integration (EAI) projects usually communicate with different 
-  interface partners using a loosely coupled message-based communication. The success of a use case is defined by 
-  the cooperation of several applications exchanging information with each other. Therefore it is essential to test 
-  this cooperation/communication between the applications in several integration tests.</para>
+  <para>Enterprise applications in a Service-oriented Architecture usually communicate with different 
+  interface partners over loosely coupled message-based communication. The interaction of
+  several interface partners needs to be tested in integration testing.</para>
   
-  <para>In software development integration testing aims to test the interaction of software components that 
-  depend on each other. In EAI projects these components are loosely coupled software systems communicating with each other
-  over various transports exchanging messages and information. The interaction of these components is essential to 
-  successfully process a use case scenario.</para>
-  
-  <para>How can somebody test use case scenarios that include several interface partners interacting with each other? How can 
-  somebody ensure that the software component he/she is in charge of is working correctly with the other software systems.
+  <para>In integration tests we need to simulate the communication over various transports. How can we 
+  test use case scenarios that include several interface partners interacting with each other? How can 
+  somebody ensure that the software component is working correctly with the other software systems.
   How can somebody run positive and negative integration test cases in an automated reproducible way? 
-  Citrus tries to answer these questions by offering fully automated integration testing always looking at the whole picture of several
-  systems interacting with each other.</para>
+  Citrus tries to answer these questions offering automated integration testing of message-based software 
+  components.</para>
 
   <section id="introduction-overview">
     <title>Overview</title>
 
-    <para>Citrus aims to strongly support you in simulating your interface partners. You can easily subscribe and publish 
-    to a wide range of protocols like HTTP, JMS, TCP/IP and SOAP in order to test your message based applications. 
-    The framework will send/receive messages in order to create a communication as it would be in real production environment. 
-    In each step the framework is able to validate the message contents by comparing them to expected contents. In addition to that 
-    the framework offers a wide range of functionalities to take control of the process flow during a test (e.g. iterations, 
-    system availability checks, database validation, parallelism, delaying, error simulation, and many more).</para>
+    <para>Citrus aims to strongly support you in simulating interface partners across different messaging transports. 
+    You can easily subscribe and publish to a wide range of protocols like HTTP, JMS, TCP/IP and SOAP. 
+    The framework can send and receive messages in order to create a communication chain that simulates a whole use case scenario. 
+    In each communication step Citrus is able to validate message contents. In addition to that the framework offers a 
+    wide range of actions to take control of the process flow during a test (e.g. iterations, 
+    system availability checks, database validation, parallelism, delaying, error simulation, scripting, and many more).</para>
     
-    <para>The basic goal is to test a whole use case scenario including all interface partners. With easy
-    definition of test cases via XML the framework will simulate the message flow step by step and
-    ensure the correct end-to-end processing.</para>
+    <para>The basic goal in Citrus test cases is to describe a whole use case scenario including several interface partners 
+    that exchange messages with each other. You can set up complex message and data flows with several test steps as a pure XML file.
+    The test description can be executed multiple times as automated integration test where Citrus simulated all surrounding 
+    interface partners that are not present in the test environment. With easy definition of expected message contents via XML 
+    Citrus is able to validate the data flow and the end-to-end use case processing.</para>
   </section>
 
   <section id="introduction-usage">
     <title>Usage scenarios</title>
 
-    <para>When should someone use the Citrus test framework? If you are in charge of an EAI application and need to test 
-    its integration into the existing software landscape. In case your project interacts with a lot of other software systems and
-    you need to simulate those in order to test your end-to-end processing. In case you need to increase the stability of an existing EAI 
-    projects dealing with change requests, bugfixes or regression testing. Or if you simply need to increase your test coverage, in order to feel 
-    comfortable regarding the next software release.</para>
+    <para>If you are in charge of an enterprise application in a service-oriented Architecture with message interfaces to other software 
+    components you should use Citrus. In case your project interacts with other software systems over different messaging transports and 
+    you need to simulate your interface partners for extended end-to-end testing you should use Citrus. In case you need to increase the 
+    software stability dealing with change requests, bugfixing or regression testing you should use Citrus. In case you simply want to 
+    increase your test coverage with automated integration tests, in order to feel comfortable regarding the next software release you 
+    should definitely use Citrus.</para>
+    
+    <para>The following test set up is typical for Citrus use cases:</para>
+    
+    <para>
+      <mediaobject>
+        <imageobject role="fo">
+          <imagedata align="center" display="block" fileref="images/usage_sample.png" format="PNG" />
+        </imageobject>
+        
+        <imageobject role="html">
+          <imagedata align="center" display="block" fileref="images/usage_sample.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </para>
+    
+    <para>In a typical Citrus test scenario the system under test (SUT) is invoked by a client application. The SUT then talks to several 
+    other backend applications over various messaging transports (here SOAP, JMS, and Http) where interim message notifications and final 
+    responses are sent back to the client application. In the automated integration test Citrus needs to send and receive several messages 
+    over different transports. Citrus simulates all surrounding interface partners (ClientApp, SystemA, SystemB, SystemC) and sends proper 
+    response messages to keep the message flow alive.</para>
+    
+    <para>Each communication step comes with message validation and XML tree comparison towards an expected message template. Besides 
+    messaging actions Citrus is also able to perform plenty of other test actions. You could have a look at the database in order to check 
+    the persistence layer for instance.</para>
+    
+    <para>The Citrus test case runs fully automated as Java application. Step by step the whole use case scenario is performed like in a 
+    real production environment. The Java test is repeatable and is included into the software building process (e.g. using Maven) like a 
+    normal unit test case would do. This gives you the automated integration testing to ensure your interface stability to external partners.</para>
+    
+    <para>The following reference guide walks through all Citrus functionalities and shows how to set up a great integration test with Citrus.</para>
   </section>
 </chapter>
