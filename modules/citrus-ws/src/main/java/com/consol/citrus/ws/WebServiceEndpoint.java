@@ -157,7 +157,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response
      * @param replyMessage
      */
-    private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) {
+    private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) throws TransformerException {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX) || 
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
@@ -166,6 +166,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
+            } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                
+                transformer.transform(new StringSource(headerEntry.getValue().toString()), 
+                        response.getSoapHeader().getResult());
             } else if(headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
                 continue; //leave out Citrus internal header entries
             } else {
@@ -222,7 +228,11 @@ public class WebServiceEndpoint implements MessageEndpoint {
             }
             
             if(StringUtils.hasText(soapMessage.getSoapAction())) {
-                requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
+                if(soapMessage.getSoapAction().equals("\"\"")) {
+                    requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
+                } else {
+                    requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
+                }
             }
             
             Iterator<?> attachments = soapMessage.getAttachments();

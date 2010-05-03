@@ -24,7 +24,6 @@ import java.text.ParseException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.actions.SendMessageAction;
@@ -32,7 +31,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
 /**
@@ -68,22 +66,8 @@ public class SendSoapMessageAction extends SendMessageAction {
             		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + messageSender.getClass().getName() + "'");
         }
         
-        String soapHeaderContent = null;
         String attachmentContent = null;
         try {
-            if (getHeaderResource() != null) {
-                soapHeaderContent = context.replaceDynamicContentInString(FileUtils.readToString(getHeaderResource()));
-            } else if (getHeaderData() != null){
-                soapHeaderContent = context.replaceDynamicContentInString(getHeaderData());
-            }
-            
-            if(StringUtils.hasText(soapHeaderContent)) {
-                getHeaderValues().put(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT, soapHeaderContent);
-                message = MessageBuilder.fromMessage(message)
-                                        .setHeader(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT, soapHeaderContent)
-                                        .build();
-            }
-            
             if(StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
             } else if(attachmentResource != null) {

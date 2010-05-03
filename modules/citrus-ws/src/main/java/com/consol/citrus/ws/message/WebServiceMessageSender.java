@@ -108,7 +108,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                             
                             if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                                 soapRequest.setSoapAction(headerEntry.getValue().toString());
-                            } else if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_HEADER_CONTENT)) {
+                            } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                                 Transformer transformer = transformerFactory.newTransformer();
                                 

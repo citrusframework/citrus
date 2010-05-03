@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.util.FileUtils;
 
@@ -106,7 +107,18 @@ public class SendMessageAction extends AbstractTestAction {
     
             /* Set message header */
             Map<String, Object> headerValuesCopy = context.replaceVariablesInMap(headerValues);
-    
+
+            String headerContent = null;
+            if (headerResource != null) {
+                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(headerResource).trim());
+            } else if (headerData != null){
+                headerContent = context.replaceDynamicContentInString(headerData.trim());
+            }
+            
+            if(StringUtils.hasText(headerContent)) {
+                headerValuesCopy.put(CitrusMessageHeaders.HEADER_CONTENT, headerContent);
+            }
+            
             /* store header values map to context - service will read the map */
             return MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
         } catch (IOException e) {

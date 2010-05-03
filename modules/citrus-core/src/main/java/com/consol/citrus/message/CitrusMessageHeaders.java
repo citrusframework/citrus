@@ -35,4 +35,7 @@ public class CitrusMessageHeaders {
     
     /** Synchronous message correlation */
     public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";
+    
+    /** Header content data */
+    public static final String HEADER_CONTENT = PREFIX + "header_content";
 }
