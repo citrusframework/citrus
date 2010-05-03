@@ -38,6 +38,21 @@
                 </send>
             </ws:assert>
             
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
+                       fault-string="@ignore@">
+                <send with="webServiceHelloRequestSender">
+                    <message>
+                        <data>
+                            <![CDATA[
+                                <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                                    <ns0:Message>This is invalid</ns0:Message>
+                                </ns0:SoapFaultForcingRequest>
+                            ]]>
+                        </data>
+                    </message>
+                </send>
+            </ws:assert>
+            
             <ws:assert fault-code="{http://www.citrusframework.org/faults}${soapFaultCode}" 
                        fault-string="${soapFaultString}">
                 <send with="webServiceHelloRequestSender">

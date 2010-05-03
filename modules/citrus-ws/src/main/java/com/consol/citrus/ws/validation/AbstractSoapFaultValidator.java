@@ -19,11 +19,14 @@
 
 package com.consol.citrus.ws.validation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.ValidationException;
 
 /**
@@ -33,7 +36,12 @@ import com.consol.citrus.exceptions.ValidationException;
  * @author Christoph Deppisch
  */
 public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
-
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(AbstractSoapFaultValidator.class);
+    
     /**
      * @see com.consol.citrus.ws.validation.SoapFaultValidator#validateSoapFault(org.springframework.ws.soap.SoapFault, org.springframework.ws.soap.SoapFault, com.consol.citrus.context.TestContext)
      */
@@ -41,8 +49,12 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
             throws ValidationException {
         if(controlFault.getFaultStringOrReason() != null && 
                 !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
-            throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
-                    controlFault.getFaultStringOrReason() + "' but was: '" + receivedFault.getFaultStringOrReason() + "'");
+            if(controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+                log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
+            } else {
+                throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
+                        controlFault.getFaultStringOrReason() + "' but was: '" + receivedFault.getFaultStringOrReason() + "'");
+            }
         }
         
         if(StringUtils.hasText(controlFault.getFaultCode().getLocalPart())) {
