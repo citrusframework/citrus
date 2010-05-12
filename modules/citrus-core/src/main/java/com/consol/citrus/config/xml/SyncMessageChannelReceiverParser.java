@@ -39,6 +39,12 @@ public class SyncMessageChannelReceiverParser extends AbstractMessageChannelTemp
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.channel.SyncMessageChannelReceiver");
         
+        String channel = element.getAttribute("channel");
+        
+        if (StringUtils.hasText(channel)) {
+            builder.addPropertyReference("channel", channel);
+        }
+        
         String replyTimeout = element.getAttribute("receive-timeout");
         
         if (StringUtils.hasText(replyTimeout)) {
