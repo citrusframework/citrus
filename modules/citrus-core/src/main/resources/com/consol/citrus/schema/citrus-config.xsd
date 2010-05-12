@@ -123,6 +123,7 @@
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="messageChannelAdapterType">
+                    <xs:attribute name="channel" type="xs:string"/>
                     <xs:attribute name="receive-timeout" type="xs:string"/>
                     <xs:attribute name="reply-message-correlator" type="xs:string"/>
                 </xs:extension>
