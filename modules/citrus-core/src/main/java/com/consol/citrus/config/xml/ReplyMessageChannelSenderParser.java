@@ -40,10 +40,10 @@ public class ReplyMessageChannelSenderParser extends AbstractMessageChannelTempl
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.channel.ReplyMessageChannelSender");
         
-        String destinationHolder = element.getAttribute("reply-channel-holder");
+        String channelHolder = element.getAttribute("reply-channel-holder");
         
-        if (StringUtils.hasText(destinationHolder)) {
-            builder.addPropertyReference("replyChannelHolder", destinationHolder);
+        if (StringUtils.hasText(channelHolder)) {
+            builder.addPropertyReference("replyMessageChannelHolder", channelHolder);
         } else {
             throw new BeanCreationException("Element must define 'reply-channel-holder' attribute");
         }
