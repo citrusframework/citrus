@@ -63,6 +63,9 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     /** Application context used as delegate for parent WebApplicationContext in Jetty */
     private ApplicationContext applicationContext;
     
+    /** Use root application context as parent to build WebApplicationContext */
+    private boolean useRootContextAsParent = false;
+    
     @Override
     protected void shutdown() {
         if(jettyServer != null) {
@@ -86,118 +89,11 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         context.setContextPath("/");
         context.setResourceBase(resourceBase);
         
-        context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, new WebApplicationContext() {
-            public Resource getResource(String location) {
-                return applicationContext.getResource(location);
-            }
-            public ClassLoader getClassLoader() {
-                return applicationContext.getClassLoader();
-            }
-            public Resource[] getResources(String locationPattern) throws IOException {
-                return applicationContext.getResources(locationPattern);
-            }
-            public void publishEvent(ApplicationEvent event) {
-                applicationContext.publishEvent(event);
-            }
-            public String getMessage(String code, Object[] args, String defaultMessage,
-                    Locale locale) {
-                return applicationContext.getMessage(code, args, defaultMessage, locale);
-            }
-            public String getMessage(String code, Object[] args, Locale locale)
-                    throws NoSuchMessageException {
-                return applicationContext.getMessage(code, args, locale);
-            }
-            public String getMessage(MessageSourceResolvable resolvable, Locale locale)
-                    throws NoSuchMessageException {
-                return applicationContext.getMessage(resolvable, locale);
-            }
-            public BeanFactory getParentBeanFactory() {
-                return applicationContext.getParentBeanFactory();
-            }
-            public boolean containsLocalBean(String name) {
-                return applicationContext.containsBean(name);
-            }
-            @SuppressWarnings("unchecked")
-            public boolean isTypeMatch(String name, Class targetType)
-                    throws NoSuchBeanDefinitionException {
-                return applicationContext.isTypeMatch(name, targetType);
-            }
-            public boolean isSingleton(String name)
-                    throws NoSuchBeanDefinitionException {
-                return applicationContext.isSingleton(name);
-            }
-            public boolean isPrototype(String name)
-                    throws NoSuchBeanDefinitionException {
-                return applicationContext.isPrototype(name);
-            }
-            @SuppressWarnings("unchecked")
-            public Class getType(String name) throws NoSuchBeanDefinitionException {
-                return applicationContext.getType(name);
-            }
-            public Object getBean(String name, Object[] args) throws BeansException {
-                return applicationContext.getBean(name, args);
-            }
-            @SuppressWarnings("unchecked")
-            public Object getBean(String name, Class requiredType)
-                    throws BeansException {
-                return applicationContext.getBean(name, requiredType);
-            }
-            public Object getBean(String name) throws BeansException {
-                return applicationContext.getBean(name);
-            }
-            public String[] getAliases(String name) {
-                return applicationContext.getAliases(name);
-            }
-            public boolean containsBean(String name) {
-                return applicationContext.containsBean(name);
-            }
-            @SuppressWarnings("unchecked")
-            public Map getBeansOfType(Class type, boolean includeNonSingletons,
-                    boolean allowEagerInit) throws BeansException {
-                return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
-            }
-            @SuppressWarnings("unchecked")
-            public Map getBeansOfType(Class type) throws BeansException {
-                return applicationContext.getBeansOfType(type);
-            }
-            @SuppressWarnings("unchecked")
-            public String[] getBeanNamesForType(Class type,
-                    boolean includeNonSingletons, boolean allowEagerInit) {
-                return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-            }
-            @SuppressWarnings("unchecked")
-            public String[] getBeanNamesForType(Class type) {
-                return applicationContext.getBeanNamesForType(type);
-            }
-            public String[] getBeanDefinitionNames() {
-                return applicationContext.getBeanDefinitionNames();
-            }
-            public int getBeanDefinitionCount() {
-                return applicationContext.getBeanDefinitionCount();
-            }
-            public boolean containsBeanDefinition(String beanName) {
-                return applicationContext.containsBeanDefinition(beanName);
-            }
-            public long getStartupDate() {
-                return applicationContext.getStartupDate();
-            }
-            public ApplicationContext getParent() {
-                return applicationContext.getParent();
-            }
-            public String getId() {
-                return applicationContext.getId();
-            }
-            public String getDisplayName() {
-                return applicationContext.getDisplayName();
-            }
-            public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
-                    throws IllegalStateException {
-                return applicationContext.getAutowireCapableBeanFactory();
-            }
-            public ServletContext getServletContext() {
-                return null;
-            }
-        });
+        //add the root application context as parent to the constructed WebApplicationContext
+        if(useRootContextAsParent) {
+            context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                    new SimpleDelegatingWebApplicationContext());
+        }
         
         ServletHandler servletHandler = new ServletHandler();
         
@@ -275,4 +171,128 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         throws BeansException {
         this.applicationContext = applicationContext;
     }
+    
+    /**
+     * @param useRootContextAsParent the useRootContextAsParent to set
+     */
+    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
+        this.useRootContextAsParent = useRootContextAsParent;
+    }
+    
+    /**
+     * WebApplicationContext implementation that delegates method calls to parent ApplicationContext.
+     */
+    private final class SimpleDelegatingWebApplicationContext implements WebApplicationContext {
+        public Resource getResource(String location) {
+            return applicationContext.getResource(location);
+        }
+        public ClassLoader getClassLoader() {
+            return applicationContext.getClassLoader();
+        }
+        public Resource[] getResources(String locationPattern) throws IOException {
+            return applicationContext.getResources(locationPattern);
+        }
+        public void publishEvent(ApplicationEvent event) {
+            applicationContext.publishEvent(event);
+        }
+        public String getMessage(String code, Object[] args, String defaultMessage,
+                Locale locale) {
+            return applicationContext.getMessage(code, args, defaultMessage, locale);
+        }
+        public String getMessage(String code, Object[] args, Locale locale)
+                throws NoSuchMessageException {
+            return applicationContext.getMessage(code, args, locale);
+        }
+        public String getMessage(MessageSourceResolvable resolvable, Locale locale)
+                throws NoSuchMessageException {
+            return applicationContext.getMessage(resolvable, locale);
+        }
+        public BeanFactory getParentBeanFactory() {
+            return applicationContext.getParentBeanFactory();
+        }
+        public boolean containsLocalBean(String name) {
+            return applicationContext.containsBean(name);
+        }
+        @SuppressWarnings("unchecked")
+        public boolean isTypeMatch(String name, Class targetType)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.isTypeMatch(name, targetType);
+        }
+        public boolean isSingleton(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.isSingleton(name);
+        }
+        public boolean isPrototype(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.isPrototype(name);
+        }
+        @SuppressWarnings("unchecked")
+        public Class getType(String name) throws NoSuchBeanDefinitionException {
+            return applicationContext.getType(name);
+        }
+        public Object getBean(String name, Object[] args) throws BeansException {
+            return applicationContext.getBean(name, args);
+        }
+        @SuppressWarnings("unchecked")
+        public Object getBean(String name, Class requiredType)
+                throws BeansException {
+            return applicationContext.getBean(name, requiredType);
+        }
+        public Object getBean(String name) throws BeansException {
+            return applicationContext.getBean(name);
+        }
+        public String[] getAliases(String name) {
+            return applicationContext.getAliases(name);
+        }
+        public boolean containsBean(String name) {
+            return applicationContext.containsBean(name);
+        }
+        @SuppressWarnings("unchecked")
+        public Map getBeansOfType(Class type, boolean includeNonSingletons,
+                boolean allowEagerInit) throws BeansException {
+            return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
+        }
+        @SuppressWarnings("unchecked")
+        public Map getBeansOfType(Class type) throws BeansException {
+            return applicationContext.getBeansOfType(type);
+        }
+        @SuppressWarnings("unchecked")
+        public String[] getBeanNamesForType(Class type,
+                boolean includeNonSingletons, boolean allowEagerInit) {
+            return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+        }
+        @SuppressWarnings("unchecked")
+        public String[] getBeanNamesForType(Class type) {
+            return applicationContext.getBeanNamesForType(type);
+        }
+        public String[] getBeanDefinitionNames() {
+            return applicationContext.getBeanDefinitionNames();
+        }
+        public int getBeanDefinitionCount() {
+            return applicationContext.getBeanDefinitionCount();
+        }
+        public boolean containsBeanDefinition(String beanName) {
+            return applicationContext.containsBeanDefinition(beanName);
+        }
+        public long getStartupDate() {
+            return applicationContext.getStartupDate();
+        }
+        public ApplicationContext getParent() {
+            return applicationContext.getParent();
+        }
+        public String getId() {
+            return applicationContext.getId();
+        }
+        public String getDisplayName() {
+            return applicationContext.getDisplayName();
+        }
+        public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
+                throws IllegalStateException {
+            return applicationContext.getAutowireCapableBeanFactory();
+        }
+        public ServletContext getServletContext() {
+            return null;
+        }
+    }
+
 }

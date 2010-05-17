@@ -63,6 +63,12 @@ public class JettyServerParser extends AbstractBeanDefinitionParser {
             builder.addPropertyValue(WSParserConstants.CONTEXT_CONFIC_LOCATION_PROPERTY, contextConfigLocation);
         }
         
+        String useRootContext = element.getAttribute(WSParserConstants.USE_ROOT_CONTEXT_ATTRIBUTE);
+        
+        if (StringUtils.hasText(useRootContext)) {
+            builder.addPropertyValue(WSParserConstants.USE_ROOT_CONTEXT_PROPERTY, Boolean.valueOf(useRootContext));
+        }
+        
         return builder.getBeanDefinition();
     }
 }

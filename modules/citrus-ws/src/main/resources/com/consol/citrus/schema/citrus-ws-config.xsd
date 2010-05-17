@@ -29,6 +29,7 @@
             <xs:attribute name="auto-start" type="xs:boolean"/>
             <xs:attribute name="context-config-location" type="xs:string"/>
             <xs:attribute name="resource-base" type="xs:string"/>
+            <xs:attribute name="root-parent-context" type="xs:boolean"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="message-sender">
