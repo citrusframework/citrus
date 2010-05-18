@@ -84,58 +84,53 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
 
     @Override
     protected void startup() {
-        jettyServer = new Server(port);
-        
-        HandlerCollection handlers = new HandlerCollection();
-        
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        
-        Context context = new Context();
-        context.setContextPath("/");
-        context.setResourceBase(resourceBase);
-        
-        //add the root application context as parent to the constructed WebApplicationContext
-        if(useRootContextAsParent) {
-            context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
-                    new SimpleDelegatingWebApplicationContext());
-        }
-        
-        ServletHandler servletHandler = new ServletHandler();
-        
-        ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
-        servletHolder.setName("spring-ws");
-        servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
-        
-        servletHandler.addServlet(servletHolder);
-        
-        ServletMapping servletMapping = new ServletMapping();
-        servletMapping.setServletName("spring-ws");
-        servletMapping.setPathSpec("/*");
-        
-        servletHandler.addServletMapping(servletMapping);
-        
-        context.setServletHandler(servletHandler);
-        
-        contexts.addHandler(context);
-        
-        handlers.addHandler(contexts);
-        
-        handlers.addHandler(new DefaultHandler());
-        handlers.addHandler(new RequestLogHandler());
-        
-        jettyServer.setHandler(handlers);
-    }
-
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run() {
-        try {
-            synchronized (serverLock) {
-                jettyServer.start();
+        synchronized (serverLock) {
+            jettyServer = new Server(port);
+            
+            HandlerCollection handlers = new HandlerCollection();
+            
+            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            
+            Context context = new Context();
+            context.setContextPath("/");
+            context.setResourceBase(resourceBase);
+            
+            //add the root application context as parent to the constructed WebApplicationContext
+            if(useRootContextAsParent) {
+                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                        new SimpleDelegatingWebApplicationContext());
             }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
+            
+            ServletHandler servletHandler = new ServletHandler();
+            
+            ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
+            servletHolder.setName("spring-ws");
+            servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+            
+            servletHandler.addServlet(servletHolder);
+            
+            ServletMapping servletMapping = new ServletMapping();
+            servletMapping.setServletName("spring-ws");
+            servletMapping.setPathSpec("/*");
+            
+            servletHandler.addServletMapping(servletMapping);
+            
+            context.setServletHandler(servletHandler);
+            
+            contexts.addHandler(context);
+            
+            handlers.addHandler(contexts);
+            
+            handlers.addHandler(new DefaultHandler());
+            handlers.addHandler(new RequestLogHandler());
+            
+            jettyServer.setHandler(handlers);
+            
+            try {
+                jettyServer.start();
+            } catch (Exception e) {
+                throw new CitrusRuntimeException(e);
+            }
         }
     }
 

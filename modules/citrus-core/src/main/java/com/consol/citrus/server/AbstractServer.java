@@ -54,6 +54,8 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
      * @see com.consol.citrus.server.Server#start()
      */
     public void start() {
+        log.info("Starting server: " + name + " ...");
+            
         startup();
         
         synchronized (runningLock) {
@@ -63,12 +65,16 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         thread = new Thread(this);
         thread.setDaemon(false);
         thread.start();
+        
+        log.info("Started server: " + name);
     }
 
     /**
      * @see com.consol.citrus.server.Server#stop()
      */
     public void stop() {
+        log.info("Stopping server: " + name + " ...");
+        
         shutdown();
         
         synchronized (runningLock) {
@@ -76,7 +82,14 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         }
         
         thread = null;
+        
+        log.info("Stopped server: " + name);
     }
+    
+    /** 
+     * Subclasses may overwrite this method in order to add special execution logic.
+     */
+    public void run() {}
 
     /**
      * Subclasses must implement this method called on server startup.

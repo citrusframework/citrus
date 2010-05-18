@@ -44,19 +44,6 @@ public class ActiveMQServer extends AbstractServer {
     private String workingDirectory = "target/activemq-data";
 
     /**
-     * Starting the broker.
-     * @throws CitrusRuntimeException
-     */
-    public void run() {
-        try {
-            broker.addConnector(brokerURL);
-            broker.start();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-    }
-    
-    /**
      * Startup method for server.
      * @see com.consol.citrus.server.AbstractServer#startup()
      */
@@ -69,6 +56,13 @@ public class ActiveMQServer extends AbstractServer {
         broker.setPersistent(persistent);
         broker.setDeleteAllMessagesOnStartup(true);
         broker.setDataDirectory(workingDirectory);
+        
+        try {
+            broker.addConnector(brokerURL);
+            broker.start();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException(e);
+        }
     }
 
     /**
