@@ -66,11 +66,16 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     /** Use root application context as parent to build WebApplicationContext */
     private boolean useRootContextAsParent = false;
     
+    /** Do only start one instance after another so we need a static lock object */
+    private static Object serverLock = new Object();
+    
     @Override
     protected void shutdown() {
         if(jettyServer != null) {
             try {
-                jettyServer.stop();
+                synchronized (serverLock) {
+                    jettyServer.stop();
+                }
             } catch (Exception e) {
                 throw new CitrusRuntimeException(e);
             }
@@ -126,7 +131,9 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
      */
     public void run() {
         try {
-            jettyServer.start();
+            synchronized (serverLock) {
+                jettyServer.start();
+            }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
         }
