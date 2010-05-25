@@ -53,21 +53,44 @@
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-core</artifactId>
         <version>1.1-SNAPSHOT</version>
-        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-http</artifactId>
         <version>1.1-SNAPSHOT</version>
-        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ws</artifactId>
         <version>1.1-SNAPSHOT</version>
-        <scope>test</scope>
     </dependency>
-    
+
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-jms</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-xml</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ws</groupId>
+        <artifactId>spring-ws-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ws</groupId>
+        <artifactId>spring-oxm</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.codehaus.castor</groupId>
+        <artifactId>castor-xml</artifactId>
+        <version>1.3.1</version>
+    </dependency>
+                
     <!-- Test scoped dependencies -->
     <dependency>
         <groupId>commons-dbcp</groupId>
@@ -89,32 +112,6 @@
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
         <version>3.6</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-core</artifactId>
-        <scope>test</scope>
-    </dependency> 
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-jms</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-xml</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.ws</groupId>
-        <artifactId>spring-oxm</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.codehaus.castor</groupId>
-        <artifactId>castor-xml</artifactId>
-        <version>1.3.1</version>
         <scope>test</scope>
     </dependency>
   </dependencies>

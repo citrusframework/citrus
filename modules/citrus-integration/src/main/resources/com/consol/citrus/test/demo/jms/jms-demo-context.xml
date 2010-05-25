@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/jms
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
+
+    <import resource="classpath:com/consol/citrus/test/demo/common/hello-demo-context.xml"/>
+    
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+    
+    <jms:message-driven-channel-adapter id="helloRequestsIn" 
+                    destination-name="Citrus.Hello.Request.Queue" 
+                    channel="helloRequests"/>
+
+    <jms:outbound-channel-adapter id="helloResponsesOut" 
+                    channel="helloResponses" 
+                    destination-name="Citrus.Hello.Response.Queue"/>
+                        
+    <jms:inbound-gateway id="syncHelloRequestsIn"
+                         request-destination-name="Citrus.Hello.Sync.Request.Queue"
+                         request-channel="helloSyncRequests"/>
+                      
+    <int:channel id="helloRequests"/>
+    <int:service-activator input-channel="helloRequests" 
+                           output-channel="helloResponses"
+                           ref="helloService"/>
+                       
+    <int:channel id="helloSyncRequests"/>
+    <int:service-activator input-channel="helloSyncRequests" 
+                           ref="helloService"/>                   
+                       
+    <int:channel id="helloResponses">
+        <int:interceptors>
+            <int:wire-tap channel="logger" />
+        </int:interceptors>
+    </int:channel>    
+</beans>

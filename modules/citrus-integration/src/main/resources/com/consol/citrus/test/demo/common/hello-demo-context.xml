@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+              http://www.springframework.org/schema/context 
+              http://www.springframework.org/schema/context/spring-context-2.5.xsd
+              http://www.springframework.org/schema/integration
+              http://www.springframework.org/schema/integration/spring-integration-1.0.xsd">
+
+    <context:annotation-config />
+    
+    <int:poller id="poller" default="true">
+        <int:interval-trigger interval="100"/>
+    </int:poller>
+    
+    <int:logging-channel-adapter id="logger" level="DEBUG"/>
+    
+    <bean id="helloService" class="com.consol.citrus.test.demo.service.HelloServiceDefault"/>
+    
+    <bean id="helloMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="ns0">http://www.consol.de/schemas/samples/sayHello.xsd</prop>
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/test/demo/castor/hello-mapping.xml</value>
+            </list>
+        </property>
+    </bean>
+       
+    <int:channel id="errorChannel">
+        <int:interceptors>
+            <int:wire-tap channel="logger" />
+        </int:interceptors>
+    </int:channel>     
+</beans>

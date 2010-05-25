@@ -160,6 +160,20 @@
         </property>
     </bean>
     
+    <!-- JMS MessageSender/MessageReceiver -->
+    <citrus:jms-message-sender id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
+  
+    <citrus:jms-message-receiver id="helloResponseJmsMessageReceiver"
+                                 receive-timeout="1000" 
+                                 destination-name="Citrus.Hello.Response.Queue"/>
+    
+    <citrus:jms-sync-message-sender id="helloRequestJmsSyncMessageSender" 
+                                    destination-name="Citrus.Hello.Sync.Request.Queue"
+                                    reply-handler="helloResponseReplyMessageHandler"
+                                    reply-timeout="1000"/>
+    
+    <citrus:jms-reply-message-handler id="helloResponseReplyMessageHandler"/>
+                                      
     <!-- Message sender/receiver -->
     <citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
