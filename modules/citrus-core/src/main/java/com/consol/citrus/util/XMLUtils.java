@@ -280,8 +280,12 @@ public class XMLUtils {
                 String nsPrefix;
                 if (token.startsWith(":")) {
                     nsPrefix = token.substring(1, token.indexOf("="));
-                } else { 
+                } else if(token.startsWith("=")) { 
                     nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
+                } else {
+                    //we have found a "xmlns" phrase that is no namespace attribute - ignore and continue
+                    tokens = StringUtils.split(token, XMLConstants.XMLNS_ATTRIBUTE);
+                    continue;
                 }
 
                 String nsUri;
