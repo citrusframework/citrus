@@ -151,6 +151,20 @@ public class XMLUtilsTest {
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
         Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/xmlns/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/xmlns/test\" xmlns:ns2=\"http://www.consol.de/xmlns/test2\"></ns1:testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/xmlns/test2");
     }
     
     @Test
@@ -174,11 +188,41 @@ public class XMLUtilsTest {
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
         Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/xmlns/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1='http://www.consol.de/test' xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1='http://www.consol.de/xmlns/test' xmlns:ns2='http://www.consol.de/xmlns/test2'></ns1:testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/xmlns/test2");
     }
     
     @Test
     public void testLookupNamespacesInXMLFragmentWithAtributes() {
-        Map<String, String> namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" id=\"123456789\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
+        Map<String, String> namespaces;
+        
+        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" id=\"123456789\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
+        Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" id=\"123456789\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>"));
         
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
@@ -206,6 +250,32 @@ public class XMLUtilsTest {
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
         
         namespaces = XMLUtils.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/xmlns/test-default\" xmlns:ns1=\"http://www.consol.de/xmlns/test\"></testRequest>");
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/xmlns/test-default");
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://www.consol.de/test-default\"></testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 1);
+        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<testRequest xmlns='http://www.consol.de/test-default'></testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 1);
+        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://www.consol.de/test-default\" xmlns:ns1=\"http://www.consol.de/test\"></testRequest>"));
+        
+        Assert.assertEquals(namespaces.size(), 2);
+        Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
+        Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
+        
+        namespaces = XMLUtils.lookupNamespaces(
+                XMLUtils.parseMessagePayload("<testRequest xmlns=\"http://www.consol.de/xmlns/test-default\" xmlns:ns1=\"http://www.consol.de/xmlns/test\"></testRequest>"));
         
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/xmlns/test-default");
