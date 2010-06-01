@@ -15,7 +15,13 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="01.04.2010" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="01.06.2010" description="1.1 snapshot release">
+        <action dev="christophd" type="add">
+          #287 SOAP header XML support
+        </action>   
+        <action dev="christophd" type="add">
+          #246 MessageChannelConnecting MessageHandler
+        </action>
         <action dev="dimovelev" type="fix">
           #294 Template parameter variable support
         </action>
@@ -28,7 +34,7 @@
         <action dev="dimovelev" type="add">
           #291 RandomEnumValueFunction
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #286 Ignore placeholder
         </action>
         <action dev="mm" type="fix">
@@ -37,184 +43,184 @@
         <action dev="mm" type="add">
           #288 Support setting variables in TestNG tests
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #285 Finally block not executed in failure state
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #284 Provide line numbers in failure messages
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #283 Improve exception tracing in parallel container
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #191 TestExecutionAspect not working
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #268 NPE in ws:receive without attachment data
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #281 XPath result type support (boolean, string, number, node)
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #277 XML namespace context support in XPath expressions
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #274 Added SOAP fault support for sending SOAP responses
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #273 XML processing instruction in inline XML data
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #271 citrus-ant-tasks Unix file path translation
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #270 Automatic UTF-8 to UTF-16 conversion when sending messages
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #269 Receive timeout ignored when using message selector string
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #244 Purge Jms queues - adjust receive timeout
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #243 Premature EOF in Citrus WS endpoint
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #226 SOAP header to JMS header conversion using WebLogic JMS Server
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #240 Read database values to variables without validation
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #237 Variable replacement in file resource
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #236 Handle large SOAP attachments
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #235 Inline attachment data setter in ws:send
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #222 Template parameter in parallel container
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #227 Overwrite message validator instance in test case
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #225 Validate SOAP attachment with unknown content-id
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #224 Set SOAP attachment validator in test case
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #196 Add documentation for auto-sleep in repeat-on-error-until-true 
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #194 Add documentation for Groovy support 
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #221 JMS to SOAP header conversion
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #220 Purge JMS queue destinations (JNDI support)
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #219 Validating SOAP attachments
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #216 Improved JMS Topic support in sender/receiver
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #217 Fixed sender/receiver configuration when using JMS topics
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #215 Parallel container failing meaningful when handling single exception
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #212 JMSTemplate interference with default destination setting
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #210 Creating new test cases with ant
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #211 SOAP header mapping for WSEndpoint implementation
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #205 Receive timeout configuration not compliant with PropertyPlaceholderConfigurer
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #207 Sync reply destination holder not threadsafe
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #206 Sync reply message handler not threadsafe
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #208 JMS receiver ignoring timeout setting when adding JMS selector
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #203 Sending SOAP attachments as a client
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #189 SOAP Fault validation
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #187 Extended exception validation
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #204 Generate test documentation in Excel
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #202 Extend test case meta-info with custom elements
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #201 Write custom actions / extend test case with custom actions
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #213 Interactive test creation in Maven plugin
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #214 Interactive Excel doc generation in Maven plugin
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #186 XML validation - fixed assert error messages
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #184 Avoid lower case test names
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #183 Set targetPackage for test creation in Maven plugin
         </action>
-        <action dev="deppisch" type="fix">
+        <action dev="christophd" type="fix">
           #185 Parallel container not failing correctly
         </action>
     </release>
     
     <release version="1.0" date="25.09.2009" description="1.0 open source release">
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #000 Switch to Maven build system
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #000 Code refactoring
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #000 Documentation update
         </action>
-        <action dev="deppisch" type="update">
+        <action dev="christophd" type="update">
           #000 Installation process
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #000 Maven plugin for test case creation
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #000 Citrus ANT tasks
         </action>
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #000 Custom Spring 2.x XML configuration schema
         </action>
     </release>
     
     <release version="0.1 - 0.9" date="25.09.2006 - 26.08.2008" description="Older versions for internal use">
-        <action dev="deppisch" type="add">
+        <action dev="christophd" type="add">
           #000 Older versions of Citrus for internal use
         </action>
     </release>
