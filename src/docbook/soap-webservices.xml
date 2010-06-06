@@ -177,6 +177,59 @@
         Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handlers.</para>
     </section>
 
+    <section id="soap-header">
+        <title>SOAP headers</title>
+        
+        <para>SOAP defines several header variations that we discuss in this section. First of all we deal with the special 
+        <emphasis>SOAPAction</emphasis> header. If we want to set this SOAPAction header when sending WebService messages we simply need to use 
+        the special header key called <literal>citrus_soap_action</literal> in our test. This is because in general the sending test action in Citrus 
+        is generic for all transport types, but the SOAP action header is specific for the SOAP transport. The special header key in combination with a 
+        underlying WebService message sender constructs the SOAPAction in the SOAP message as intended.</para>
+        
+        <programlisting>
+  &lt;header&gt;
+      &lt;element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
+  &lt;/header&gt;        
+        </programlisting>
+        
+        <para>Secondly a SOAP message is able to contain customized SOAP headers. These are key-value pairs where the key is a 
+        qualified name (QName) and the value a normal String value.</para>
+        
+        <programlisting>
+  &lt;header&gt;
+      &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Operation&quot; 
+                  value=&quot;sayHello&quot;/&gt;
+      &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Request&quot; 
+                  value=&quot;HelloRequest&quot;/&gt;
+  &lt;/header&gt;
+        </programlisting>
+        
+        <para>Last not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML
+        framgents as SOAP header:</para>
+        
+        <programlisting>
+  &lt;header&gt;
+      &lt;data&quot; 
+        &lt;![CDATA[
+            &lt;ns0:User 
+                xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+                &lt;ns0:UserId&gt;123456789&lt;/ns0:UserId&gt;
+                &lt;ns0:Handshake&gt;S123456789&lt;/ns0:Handshake&gt;
+            &lt;/ns0:User&gt;
+        ]]&gt;          
+      &lt;/data&gt;
+  &lt;/header&gt;
+        </programlisting>
+        
+        <para>You can also use external file resources to set this SOAP header XML fragment as shown in this last example code:</para>
+        
+        <programlisting>
+  &lt;header&gt;
+      &lt;resource file=&quot;classpath:request-soap-header.xml&quot;/&gt;
+  &lt;/header&gt;
+        </programlisting>
+    </section>
+    
     <section id="soap-faults">
         <title>SOAP faults</title>
         
