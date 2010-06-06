@@ -52,28 +52,48 @@
     </programlisting>
     
     <para>There is an open question when dealing with templates that are defined somewhere else outside the test case.
-    How to handle variables? A templates may use different variable names then the test and vice versa. But all
-    variables must be present with respective values as soon as the template gets called. Otherwise the variables 
-    are unknown to the template and the test will raise errors.</para>
+    How to handle variables? A templates may use different variable names then the test and vice versa. No doubt the 
+    template will fail as soon as special variables with respective values are not present. Unknown variables 
+    cause the template and the whole test to fail with errors.</para>
     
     <para>So a first approach would be to harmonize variable usage across templates and test cases, so that templates
-    and test cases do use the same variable naming. But this approach might lead to high calibration effort. On the 
-    other hand a template can handle parameters to solve this problem. When a template is called the calling actor has
-    to set some parameters. Lets discuss an example for this issue.</para>
+    and test cases do use the same variable naming. But this approach might lead to high calibration effort. Therefore 
+    templates support parameters to solve this problem. When a template is called the calling actor is able to set some 
+    parameters. Let us discuss an example for this issue.</para>
     
-    <para>The &quot;doTraceVariables&quot; template uses the variable ${time}. The test case must therefore have a variable
-    called time too or declare the variable ${time} as a parameter when calling the template:</para>
+    <para>The template &quot;doDateCoversion&quot; in the next sample uses the variable ${date}. The calling test case 
+    can set this variable as a parameter without actually declaring the variable in the test itself:</para>
     
     <programlisting>
-  &lt;call-template name=&quot;doTraceVariables&quot;&gt;
-      &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
+  &lt;call-template name=&quot;doDateCoversion&quot;&gt;
+      &lt;parameter name=&quot;date&quot; value=&quot;${sampleDate}&quot;&gt;
   &lt;/call-template&gt;
     </programlisting>
     
-    <para>The variable <emphasis>myTime</emphasis> is translated - if you would call it like this - into the 
-    desired <emphasis>time</emphasis> parameter. So the template works fine referencing the time variable. This means
-    that you always have to check the used variables inside a template when calling it. There might be a variable that
-    is not declared yet inside your test. So you need to define this value as a parameter.</para>
+    <para>The variable <emphasis>sampleDate</emphasis> is already present in the test case and gets translated into the 
+    <emphasis>date</emphasis> parameter. Following from that the template works fine although test and template do work on 
+    different variable namings.</para>
+    
+    <para>With template parameters you are able to solve the calibration effort when working with templates and variables. 
+    It is always a good idea to check the used variables/parameters inside a template when calling it. There might be a 
+    variable that is not declared yet inside your test. So you need to define this value as a parameter.</para>
+    
+    <para>Template parameters may contain more complex values like XML fragments. The call-template action offers following 
+    CDATA variation for defining complex parameter values:</para>
+    
+    <programlisting>
+  &lt;call-template name=&quot;printXMLPayload&quot;&gt;
+      &lt;parameter name=&quot;payload&quot;&gt;
+        &lt;value&gt;
+          &lt;![CDATA[
+            &lt;HelloRequest xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+              &lt;Text&gt;Hello South ${var}&lt;/Text&gt;
+            &lt;/HelloRequest&gt;
+          ]]&gt;
+        &lt;/value&gt;
+      &lt;/parameter&gt;
+  &lt;/call-template&gt;
+    </programlisting>
     
     <important>
         <para>When a template works on variable values and parameters changes to these variables will automatically affect the variables 
