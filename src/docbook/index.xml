@@ -5,6 +5,7 @@
 <!ENTITY introduction       SYSTEM "introduction.xml">
 <!ENTITY setup              SYSTEM "setup.xml">
 <!ENTITY testcase           SYSTEM "testcase.xml">
+<!ENTITY run-config         SYSTEM "run-config.xml">
 <!ENTITY messaging          SYSTEM "messaging.xml">
 <!ENTITY actions            SYSTEM "actions.xml">
 <!ENTITY actions-database         SYSTEM "actions-database.xml">
@@ -71,6 +72,7 @@
     &setup;
     
     &testcase;
+    &run-config;
     &messaging;
     &actions;
     &templates;

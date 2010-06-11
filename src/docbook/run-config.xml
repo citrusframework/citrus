@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="run-config">
+    <title>Running tests</title>
+
+    <para>Citrus test cases consist of two parts. On the one hand the XML part where you define what should happen
+    in the test case. On the other hand the Java part which is responsible for test execution. In the following sections 
+    we concentrate on the Java part and the test execution mechanism.</para>
+    
+    <para>So if you create new test cases in Citrus - for instance via Maven plugin or ANT build script - Citrus 
+    generates both parts in your test directory. Let's have an example: If you create a new test named 
+    <emphasis>MyFirstCitrusTest</emphasis> you will find those two files as a result:</para>
+    
+    <para><literal>src/citrus/tests/com/consol/citrus/MyFirstCitrusTest.xml</literal></para>
+    <para><literal>src/citrus/java/com/consol/citrus/MyFirstCitrusTest.java</literal></para>
+
+    <para>With this test creation we already have made a very important decision. During creation wizard Citrus asks 
+    you which execution framework should be used for this test. There are basically three options available: 
+    <literal>testng</literal>, <literal>junit3</literal> and <literal>junit4</literal>.</para>
+    
+    <para>So why is Citrus related to Unit tests although it is intended to be a framework for integration testing? 
+    The answer to this question is quite simple: This is because Citrus wants to benefit from both JUnit and TestNG for 
+    Java test execution. Both JUnit and TestNG Java APIs offer various ways of execution and both are widely supported 
+    by other tools and frameworks.</para>
+    
+    <para>Plus users might already know one of these frameworks and the chances are good that you are familiar with them. 
+    Everything you can do with JUnit and TestNG test cases you can do with Citrus tests. Include them into your Maven build 
+    lifecycle. Execute tests from your IDE (Eclipse, IDEA or NetBeans). Include them into a continuous build tool (e.g. 
+    Bamboo or Hudson). Generate test execution reports and test coverage reports. The possibilities with JUnit and TestNG are 
+    amazing.</para>
+
+    <para>So let us have a closer look at the Citrus TestNG and JUnit integration.</para>
+    
+    <section id="run-config-testng">
+        <title>Run with TestNG</title>
+        
+        <para>TestNG stands for next generation testing and has had a great influence in adding Java annotations to the unit
+        test community. Citrus is able to generate TestNG Java classes that are executable as test cases. See the following standard
+        template that Citrus will generate when having new test cases:</para>
+        
+        <programlisting language="java">
+  package com.consol.citrus.samples;
+
+  import org.testng.ITestContext;
+  import org.testng.annotations.Test;
+  
+  import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+    
+  /**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-05
+   */
+  public class TestNGSampleTest extends AbstractTestNGCitrusTest {
+      @Test
+      public void sampleTest(ITestContext testContext) {
+          executeTest(testContext);
+      }
+  }
+        </programlisting>
+        
+        <para>If you are familiar with TestNG you will see that the Citrus generated Java class is nothing but a normal TestNG test class.
+        The good news is that we can still use the fantastic TestNG features in our test. You can think of parallel test execution, test groups, 
+        setup and tear down operations and many more. Just to give an example we can simply add a test group to our test like this:</para>
+        
+        <para><literal>@Test(groups = {"long-running"})</literal></para>
+        
+        <para>For more information on TestNG please visit the official homepage where you also find a reference documentation on all features.</para>
+    </section> 
+    
+    <section id="run-config-junit">
+        <title>Run with JUnit</title>
+        
+        <para>JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools and frameworks. 
+        Citrus offers complete JUnit support for both major versions 3.x and 4.x. If you choose <emphasis>junit3</emphasis> as execution framework 
+        Citrus generates a Java file that looks like this:</para>
+        
+        <programlisting language="java">
+  package com.vodafone.uc.il.itest.service;
+
+  import com.consol.citrus.junit.AbstractJUnit38CitrusTest;
+  
+  /**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-05
+   */
+  public class JUnit3SampleTest extends AbstractJUnit38CitrusTest {
+      public void testSampleTest() {
+          executeTest();
+      }
+  }      
+        </programlisting>
+        
+        <para>For <emphasis>junit4</emphasis> the respective file looks like this:</para>
+        
+        <programlisting language="java">
+  package com.vodafone.uc.il.itest.service;
+
+  import org.junit.Test;
+  import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
+  
+  /**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-10
+   */
+  public class SampleTest extends AbstractJUnit4CitrusTest {
+      @Test
+      public void sampleTest() {
+          executeTest();
+      }
+  }
+        </programlisting>
+        
+        <para>The different JUnit versions reveal slight differences, but the idea is the same. We are still
+        able to extend the generated Java files with JUnit features. These Java files are responsible for 
+        executing the Citrus test cases. For detailed information about JUnit and the fantastic ways to include
+        those tests into your project please visit the official JUnit homepage.</para>
+        
+        <tip>
+            <para>So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose?
+            To be honest, there is no easy answer to this question. The basic features are equal to each other, 
+            where TestNG offers better possibilities for designing more complex test setup with test groups and 
+            tasks before and after a group of tests. This is why TestNG is the default option in Citrus. But at 
+            the end you have to decide on your own which framework fits best for your project.</para>
+        </tip>
+    </section>
+</chapter>
