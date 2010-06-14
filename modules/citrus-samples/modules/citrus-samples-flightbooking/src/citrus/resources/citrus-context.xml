@@ -51,7 +51,7 @@
 
     <!-- FlightBookingService Sample -->
     <citrus-http:server id="royalAirlineHttpServer" 
-                        port="8088" uri="/test" 
+                        port="8074" uri="/test" 
                         message-handler="fbsForwardingMessageHandler"
                         auto-start="true"/>
             

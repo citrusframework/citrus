@@ -5,7 +5,7 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
     
   <bean name="jetty" class="org.mortbay.jetty.Server" init-method="start" destroy-method="stop">
-    <constructor-arg value="8080" />
+    <constructor-arg value="8075" />
     <property name="handler">
       <bean id="handlers" class="org.mortbay.jetty.handler.HandlerCollection">
         <property name="handlers">

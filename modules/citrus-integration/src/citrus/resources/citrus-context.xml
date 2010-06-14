@@ -59,7 +59,7 @@
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
 
     <!-- SOAP WebService settings -->
-    <citrus-ws:jetty-server id="jettyServer" port="8081"
+    <citrus-ws:jetty-server id="jettyServer" port="8071"
                                              auto-start="true"
                                              context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                                              resource-base="src/citrus/resources"/>
@@ -71,7 +71,7 @@
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
                                                  
     <citrus-ws:message-sender id="webServiceRequestSender"
-                              request-url="http://localhost:8081"
+                              request-url="http://localhost:8071"
                               reply-handler="webServiceReplyHandler"
                               message-factory="messageFactory"/>
     
@@ -82,7 +82,7 @@
     <citrus:jms-message-sender id="webServiceResponseSender" destination-name="${jms.ws.stub.response}"/>
     
     <citrus-ws:message-sender id="webServiceHelloRequestSender"
-                              request-url="http://localhost:8081/hello"
+                              request-url="http://localhost:8071/hello"
                               reply-handler="webServiceHelloReplyHandler"
                               message-factory="messageFactory"/>
     
@@ -90,7 +90,7 @@
     
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer" 
-                        port="8090" uri="/test" 
+                        port="8072" uri="/test" 
                         deamon="false" 
                         message-handler="jmsForwardingMessageHandler"
                         auto-start="true"/>
@@ -110,7 +110,7 @@
     </bean>
         
     <citrus-http:server id="httpStandaloneServer" 
-                        port="8091" uri="/test" 
+                        port="8073" uri="/test" 
                         deamon="false" 
                         message-handler="xpathDispatchingHandler"
                         auto-start="true"/>
@@ -120,12 +120,12 @@
     </bean>
         
     <citrus-http:message-sender id="httpMessageSender" 
-                                request-url="http://localhost:8090/test" 
+                                request-url="http://localhost:8072/test" 
                                 request-method="POST"
                                 reply-handler="httpResponseReceiver"/>
   
     <citrus-http:message-sender id="httpMessageSenderStandalone" 
-                                request-url="http://localhost:8091/test" 
+                                request-url="http://localhost:8073/test" 
                                 request-method="POST"
                                 reply-handler="httpResponseReceiver"/>
   
