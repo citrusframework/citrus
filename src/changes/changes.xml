@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="01.06.2010" description="1.1 snapshot release">
+    <release version="1.1-SNAPSHOT" date="21.06.2010" description="1.1 snapshot release">
+        <action dev="christophd" type="fix">
+          #295 Support for namespace uri containing "xmlns" phrase
+        </action>
         <action dev="christophd" type="add">
           #287 SOAP header XML support
         </action>   
