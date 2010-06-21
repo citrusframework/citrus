@@ -209,7 +209,7 @@
         
         <programlisting>
   &lt;header&gt;
-      &lt;data&quot; 
+      &lt;data&gt; 
         &lt;![CDATA[
             &lt;ns0:User 
                 xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
