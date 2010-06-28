@@ -2,11 +2,26 @@
 <chapter id="testcase">
   <title>Test case</title>
 
-  <para>Now let us start writing test cases! The following guide will introduce all possible actions inside a test case 
-  and explain how to connect to other systems by sending and receiving messages over various transports.</para>
+  <para>Now let us start writing test cases! A test case describes the steps for a certain use case. The test case holds
+  a sequence of different test actions that are executed during the test. Typically in message-based applications sending 
+  and receiving messages will be the main actions inside a test. But you will learn that Citrus is able to add much more 
+  logic in a test case in order to accomplish very complex use case tests. Step by step we will introduce all possible actions 
+  inside a test case and explain how to connect to other systems by sending and receiving messages over various transports.</para>
+
+  <para>For simple understanding see the following figure that describes a typical test action sequence in Citrus:</para>
   
-  <para>Citrus specifies test cases through simple XML files. The whole test case description will take place in one single
-  XML file. This chapter will introduce the custom XML schema language that defines a test cases.</para>
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata align="center" display="block" fileref="images/figure_004.png" format="PNG" />
+    </imageobject>
+    
+    <imageobject role="html">
+      <imagedata align="center" display="block" fileref="images/figure_004.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
+    
+  <para>So how do we define those test logic? Citrus specifies test cases through simple XML files. The whole test case description 
+  will take place in one single XML file. This chapter will introduce the custom XML schema language that defines a test cases.</para>
 
   <section id="testcase-defining">
     <title>Defining a test case</title>

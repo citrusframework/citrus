@@ -114,6 +114,18 @@
         <para>When using synchronous message senders Citrus will define a reply-to-queue destination in the message header and wait 
         synchronously for the response on this destination.</para>
         
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_006.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_006.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+        
+        <para>In the Spring XML configuration the synchronous message senders are quite similar to the asynchronous brothers.</para>
+        
         <programlisting>
   &lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
                               destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
@@ -126,6 +138,45 @@
         <para>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
         in the Spring configuration. The sender sends the message and waits for the response synchronously. Once the reply has arrived the 
         reply handler is invoked with the respective reply message. The second possibility would be a timeout while receiving the reply.</para>
+        
+        <para>See the following figure which tries to explain the handshake between synchronous sender component and synchronous reply handler.
+        The synchronous sender receives the reply message and provides it to the reply handler. Once the reply handler has received the reply message 
+        it can be handed over to a validator component as usual for extended message validation.</para>
+        
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_007.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_007.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+        
+        <para>The respective test case makes use of both synchronous message sender and reply handler in order to complete the synchronous 
+        communication steps.</para>
+        
+        <programlisting>
+  &lt;testcase name=&quot;syncMessagingTest&quot;&gt;
+      &lt;actions&gt;
+          &lt;send with=&quot;mySyncMessageSender&quot;&gt;
+              &lt;message&gt;
+                  &lt;data&gt;
+                      [...]
+                  &lt;/data&gt;
+              &lt;/message&gt;
+          &lt;/send&gt;
+          
+          &lt;receive with=&quot;myReplyMessageHandler&quot;&gt;
+              &lt;message&gt;
+                  &lt;data&gt;
+                      [...]
+                  &lt;/data&gt;
+              &lt;/message&gt;
+          &lt;/receive&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+        </programlisting>
         
         <note>
             <para>The message sender creates a temporary JMS reply destination by default in order to receive the reply. The temporary 
@@ -158,6 +209,16 @@
         header in order to receive the synchronous answer on this dynamic destination. So Citrus has to send the reply to the 
         temporary destination, which is dynamic of course. You can handle this with the synchronous message receiver in combination 
         with a reply sender.</para>
+        
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_008.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_008.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
         
         <programlisting>
   &lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 

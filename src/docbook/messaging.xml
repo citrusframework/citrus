@@ -7,8 +7,55 @@
   Each test action is executed in sequential order. Citrus offers several built-in test actions that the user can choose from to construct a complex
   test workflow. The available test actions are discussed in the next sections.</para>
   
-  <para>As sending and receiving messages is essential in integration testing of message-based architectures we will handle these actions in first place.</para>
+  <para>As sending and receiving messages is essential in integration testing of message-based architectures we will handle these actions in first place.
+  But first of all lets have a look at the common message interface in Citrus:</para>
+  
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata align="center" display="block" fileref="images/figure_001.png" format="PNG" />
+    </imageobject>
+    
+    <imageobject role="html">
+      <imagedata align="center" display="block" fileref="images/figure_001.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
+  
+  <para>A message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how 
+  a test constructs several messages with payload and header values. But first of all let's concentrate on sending and receiving 
+  messages to/from various transports. MesageSender and MessageReceiver components play a significant role in this respect. The next figure shows a 
+  typical MessageSender component in Citrus:</para>
+  
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata align="center" display="block" fileref="images/figure_002.png" format="PNG" />
+    </imageobject>
+    
+    <imageobject role="html">
+      <imagedata align="center" display="block" fileref="images/figure_002.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
 
+  <para>The MessageSender publishes messages to a destination. This destination can be a JMS queue/topic, a SOAP WebService endpoint, a Http URL 
+  and many more. The MessageSender just takes a previously defined message and sends it to the message destination.</para>
+  
+  <para>Similar to that Citrus defines the MessageReceiver component to consume messages from destinations. This can be a simple subscription
+  on message channels and queues/topics. In case of SOAP WebServices and Http GET/POST things are more complicated as we have to provide a 
+  server component in combination with a MessageReceiver. We will handle this server related communication later in this document. For now
+  a MessageReceiver component is defined like this:</para>
+  
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata align="center" display="block" fileref="images/figure_003.png" format="PNG" />
+    </imageobject>
+    
+    <imageobject role="html">
+      <imagedata align="center" display="block" fileref="images/figure_003.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
+  
+  <para>In the next sections you learn how a test case uses those MessageSenders and MessageReceivers for publishing and consuming 
+  messages.</para>
+  
   <section id="message-sending">
     <title>Sending messages</title>
 
@@ -202,10 +249,26 @@
     <para>Once the message has arrived, the content can be validated in various ways. On the one hand you
     can specify a whole XML message template that you expect. In this case the received XML structure will
     be compared to the expected XML message element by element. On the other hand you can use explicit element validation where only a 
-    small subset of mesage is included into validation.</para>
+    small subset of message elements is included into validation.</para>
     
-    <para>Besides this message payload validation the framework can also validate the message header values. Variable usage is supported as usual. 
-    But let us have a closer look at the validation options and the features regarding message receiving step by step.</para>
+    <para>Besides this message payload validation the framework can also validate the message header values where variable usage is 
+    supported as usual during the whole validation process.</para>
+    
+    <para>In general the validation component (validator) in Citrus works hand in hand with a message reveiving component as the following
+    figure shows:</para>
+    
+    <mediaobject>
+      <imageobject role="fo">
+        <imagedata align="center" display="block" fileref="images/figure_005.png" format="PNG" />
+      </imageobject>
+      
+      <imageobject role="html">
+        <imagedata align="center" display="block" fileref="images/figure_005.png" format="PNG" />
+      </imageobject>
+    </mediaobject>
+   
+    <para>The message receiving component passes the message to the validator where the validation steps take place. Let us have a closer 
+    look at the validation options and features step by step.</para>
     
     <section id="message-payload-validation">
         <title>Validate message content</title>
