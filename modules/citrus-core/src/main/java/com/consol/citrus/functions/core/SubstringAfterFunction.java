@@ -44,7 +44,7 @@ public class SubstringAfterFunction implements Function {
 
         if (parameterList.size()>1) {
             String searchString = parameterList.get(1);
-            resultString = resultString.substring(resultString.indexOf(searchString)+1);
+            resultString = resultString.substring(resultString.indexOf(searchString) + searchString.length());
         }
 
         return resultString;
