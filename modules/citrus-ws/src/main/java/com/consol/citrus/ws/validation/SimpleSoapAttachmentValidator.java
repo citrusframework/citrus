@@ -35,6 +35,8 @@ import com.consol.citrus.ws.SoapAttachment;
  */
 public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 
+	private boolean ignoreAllWhitespaces = false;
+	
     /**
      * Logger
      */
@@ -55,7 +57,18 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
                         + null + "' but was '"
                         + receivedAttachment.getContent().trim() + "'");
 
-            Assert.isTrue(receivedAttachment.getContent().trim().equals(controlAttachment.getContent().trim()),
+        	String trimmedControlAttachment;
+        	String trimmedReceivedAttachment;
+            
+            if (ignoreAllWhitespaces) {
+            	trimmedControlAttachment = StringUtils.trimAllWhitespace(controlAttachment.getContent());
+            	trimmedReceivedAttachment = StringUtils.trimAllWhitespace(receivedAttachment.getContent());
+            } else {
+            	trimmedControlAttachment = StringUtils.trimWhitespace(controlAttachment.getContent());
+            	trimmedReceivedAttachment = StringUtils.trimWhitespace(receivedAttachment.getContent());
+            }
+            
+            Assert.isTrue(trimmedReceivedAttachment.equals(trimmedControlAttachment),
                     "Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
                         + controlAttachment.getContent().trim() + "' but was '"
@@ -72,4 +85,12 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
             log.debug("Validating attachment content: OK");
         }
     }
+
+	public boolean isIgnoreAllWhitespaces() {
+		return ignoreAllWhitespaces;
+	}
+
+	public void setIgnoreAllWhitespaces(boolean ignoreAllWhitespaces) {
+		this.ignoreAllWhitespaces = ignoreAllWhitespaces;
+	}
 }

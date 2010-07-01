@@ -190,11 +190,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
             
             validationContext.setNamespaceContext(nsContext);
             
-            //validate message
-            validateMessage(receivedMessage, context);
-
             //save variables from message payload
             context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
+            
+            //validate message
+            validateMessage(receivedMessage, context);
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {

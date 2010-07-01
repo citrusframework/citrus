@@ -30,6 +30,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.validation.AbstractSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
 /**
@@ -59,7 +61,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     @Override
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {
         super.validateMessage(receivedMessage, context);
-        
+
         try {
             if(attachmentData != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
@@ -67,6 +69,9 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
                 controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource)));
             } else {
                 return; //no attachment expected, no validation
+            }
+            if (controlAttachment.getContentId() != null) {
+            	controlAttachment.setContentId(context.replaceDynamicContentInString(controlAttachment.getContentId()));
             }
             
             attachmentValidator.validateAttachment(receivedMessage, controlAttachment);
