@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.1-SNAPSHOT" date="01.07.2010" description="1.1 snapshot release">
+        <action dev="mm" type="add">
+          #313 Log message when validation fails
+        </action>
         <action dev="cwied" type="fix">
           #297 SubstringAfterFunction
         </action>

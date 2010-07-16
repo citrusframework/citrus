@@ -92,9 +92,9 @@ public class DefaultXMLMessageValidator implements MessageValidator {
 
         XmlValidationContext xmlValidationContext = (XmlValidationContext)validationContext;
 
-        try {
-            log.info("Start message validation");
+        log.info("Start message validation");
 
+        try {
             if(xmlValidationContext.isSchemaValidation()) {
                 validateXMLSchema(receivedMessage);
                 validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
@@ -113,7 +113,11 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         } catch (LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
+            log.error("Failed to validate:\n"+XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
             throw new ValidationException("Validation failed:", e);
+        } catch (ValidationException ex) {
+            log.error("Failed to validate:\n"+XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            throw ex;
         }
     }
 
