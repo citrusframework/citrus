@@ -29,7 +29,6 @@ import javax.xml.transform.dom.DOMSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -52,6 +51,7 @@ import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 
 /**
@@ -159,7 +159,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) throws TransformerException {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
-            if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX) || 
+            if(MessageUtils.isSpringInternalHeader(headerEntry.getKey()) || 
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                 continue;
             }

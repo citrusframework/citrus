@@ -65,7 +65,7 @@ public class HttpUtils {
 
         // output headers
         for (Entry<String, Object> headerEntry : request.getHeaders().entrySet()) {
-            if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey())) {
+            if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
             }
         }
@@ -112,7 +112,7 @@ public class HttpUtils {
         // output headers
         if (response.getHeaders() != null) {
             for (Entry<String, Object> headerEntry : response.getHeaders().entrySet()) {
-                if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringIntegrationHeaderEntry(headerEntry.getKey())) {
+                if (!headerEntry.getKey().startsWith("HTTP") && !MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
                     sBuf.append(headerEntry.getKey()).append(": ").append(headerEntry.getValue()).append(HttpConstants.LINE_BREAK);
                 }
             }

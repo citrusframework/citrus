@@ -96,7 +96,7 @@ public class HttpMessageSender implements MessageSender {
             for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
                 final String key = headerEntry.getKey();
                 
-                if(MessageUtils.isSpringIntegrationHeaderEntry(key)) {
+                if(MessageUtils.isSpringInternalHeader(key)) {
                     continue;
                 }
                 

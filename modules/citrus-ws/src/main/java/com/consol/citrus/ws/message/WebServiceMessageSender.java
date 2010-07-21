@@ -56,6 +56,7 @@ import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.MessageUtils;
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
@@ -171,7 +172,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 		    
 	        // Copy headers into soap-header:
 		    for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-		        if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
+		        if(MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
 		            continue;
 		        }
 		        

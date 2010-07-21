@@ -46,6 +46,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
@@ -139,7 +140,9 @@ public class DefaultXMLMessageValidator implements MessageValidator {
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
-            if(headerName.startsWith(MessageHeaders.PREFIX)) {continue;}
+            if(MessageUtils.isSpringInternalHeader(headerName)) {
+                continue;
+            }
 
             if (VariableUtils.isVariableName(headerName)) {
                 headerName = context.getVariable(headerName);
