@@ -54,11 +54,12 @@
       </mediaobject>
     </para>
     
-    <para>In a typical Citrus test scenario the system under test (SUT) is invoked by a client application. The SUT then talks to several 
-    other backend applications over various messaging transports (here SOAP, JMS, and Http) where interim message notifications and final 
-    responses are sent back to the client application. In the automated integration test Citrus needs to send and receive several messages 
-    over different transports. Citrus simulates all surrounding interface partners (ClientApp, SystemA, SystemB, SystemC) and sends proper 
-    response messages to keep the message flow alive.</para>
+    <para>In a typical Citrus test scenario we have a system under test (SUT) with several message interfaces to other applications. A 
+    client application invokes services on the SUT which is linked to several backend applications over various messaging transports 
+    (here SOAP, JMS, and Http) where interim message notifications and final responses are sent back to the client application. In the 
+    automated integration test Citrus needs to send and receive several messages over different transports. Citrus takes care of all 
+    surrounding interface partners (ClientApplication, Backend1, Backend2, Backend3) and simulates their behavior by sending proper 
+    response messages in order to keep the message flow alive.</para>
     
     <para>Each communication step comes with message validation and XML tree comparison towards an expected message template. Besides 
     messaging actions Citrus is also able to perform plenty of other test actions. You could have a look at the database in order to check 
