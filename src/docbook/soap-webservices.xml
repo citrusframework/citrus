@@ -159,17 +159,42 @@
         
         <para>The program listing above describes a normal request mapping. The mapping is responsible to forward incoming requests to
         an endpoint which will handle the request and provide a response. First of all Spring's logging interceptor is added to the 
-        context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming 
-        <literal>'HelloStandaloneRequest'</literal> SOAP messages to the <literal>'helloServiceEndpoint'</literal>. The enpoint definition
-        follows at the very end of the program listing. Inside the endpoint configuration we can see the well known message handler that 
-        is responsible for providing a proper response message for the client. The various message handlers in Citrus were already 
-        described in <xref linkend="http"/>.</para>
+        context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <literal>'HelloStandaloneRequest'</literal> 
+        SOAP messages to the <literal>'helloServiceEndpoint'</literal>. Endpoints are of essential nature in Citrus SOAP WebServices implementation.
+        They are responsible for processing a request in order to provide a proper response message that is sent back to the calling client. 
+        Citrus uses the endpoint in combination with a message handler implementation.</para>
+        
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_010.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_010.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+  
+        <para>The enpoint works together with a message handler that is responsible for providing a response message for the client. The various 
+        message handler implementations in Citrus were already discussed in <xref linkend="http"/>.</para>
         
         <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'StaticResponseProducingMessageHandler'</literal>
-        which is always returning a static response message. The endpoint transforms the static response into a 
-        proper SOAP message that is sent back to the calling client as SOAP response. You can add as many request mappings and endpoints
-        as you want to the server context configuration. So you are able to handle different request types with one single Jetty server
-        instance.</para>
+        which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to
+        respond more dynamically. Following from that forwarding to a JMS message destination might fit your needs for more powerful response
+        generation out of a test case. The setup looks like this:</para>
+        
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_011.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_011.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+        
+        <para>Regardless of which message handler setup you are using in your test case the endpoint transforms the response into a proper SOAP 
+        message. You can add as many request mappings and endpoints as you want to the server context configuration. So you are able to handle 
+        different request types with one single Jetty server instance.</para>
         
         <para>Have a look at the <xref linkend="http"/> in order to find out how the other available message handler work.</para>
         

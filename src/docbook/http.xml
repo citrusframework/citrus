@@ -76,6 +76,16 @@
         the URL <literal>'http://localhost:8090/test'</literal> for requests. What also is very important is the message handler definition.
         Once a client request was accepted the message handler is responsible for generating a proper response to the client.</para>
         
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="images/figure_009.png" format="PNG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="images/figure_009.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+        
         <para>Citrus provides several message handler implementations. Let's have a look at them in the following sections.</para>
         
         <section id="http-message-handler-empty">
