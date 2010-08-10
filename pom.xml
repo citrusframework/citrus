@@ -13,14 +13,12 @@
 
   <licenses>
     <license>
-      <name>GPL Version 3</name>
+      <name>Apache License, Version 2.0</name>
       <url>LICENSE.txt</url>
       <distribution>manual</distribution>
-      <comments>Citrus is published free of charge under GNU GPL. You are allowed to use Citrus to test any kind of software 
+      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software 
       (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references 
-      list. You may also use our "Tested using Citrus" logo in your online or printed documentation. You are not allowed to incorporate 
-      Citrus or parts of it into your own software (as long as it is not GPL software itself). 
-      If you plan to do this, please contact ConSol* Software GmbH for an appropriate license.</comments>
+      list. You may also use our "Tested using Citrus" logo in your online or printed documentation.</comments>
     </license>
   </licenses>
 
@@ -51,6 +49,26 @@
       <id>christophd</id>
       <name>Christoph Deppisch</name>
       <email>christoph.deppisch@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>cwied</id>
+      <name>Christian Wied</name>
+      <email>christian.wied@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mm</id>
+      <name>Marcel May</name>
+      <email>marcel.may@consol.de</email>
       <organization>ConSol* Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
@@ -435,6 +453,11 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.7</version>
         </plugin>
       </plugins>
     </pluginManagement>
