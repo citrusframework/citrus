@@ -117,7 +117,6 @@
   </mailingLists>
   
   <properties>
-    <!-- If you want to override these properties, use your local profiles.xml! -->
     <spring.version>2.5.6</spring.version>
     <spring.ws.version>1.5.9</spring.ws.version>
     <spring.integration.version>1.0.4.RELEASE</spring.integration.version>
@@ -372,10 +371,6 @@
           <configuration>
             <systemProperties>
               <property>
-                <name>log4j.configuration</name>
-                <value>file://${PROJECT_HOME}/tools/log4j-test.xml</value>
-              </property>
-              <property>
                 <name>javax.xml.parsers.SAXParserFactory</name>
                 <value>org.apache.xerces.jaxp.SAXParserFactoryImpl</value>
               </property>
@@ -609,48 +604,9 @@
     
     <profile>
       <id>site</id>
-      <properties>
-        <clover.plugin.version>2.4.2</clover.plugin.version>
-        <clover.plugin.licenseLocation>${CLOVER_LICENSE}</clover.plugin.licenseLocation>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.cenqua.clover</groupId>
-          <artifactId>clover</artifactId>
-          <version>${clover.plugin.version}</version>
-        </dependency>
-      </dependencies>
       <build>
         <pluginManagement>
           <plugins>
-            <plugin>
-              <groupId>com.atlassian.maven.plugins</groupId>
-              <artifactId>maven-clover2-plugin</artifactId>
-              <version>${clover.plugin.version}</version>
-              <configuration>
-                <jdk>1.5</jdk>
-                <!--
-                This is a server license for nightly builds on build2.int.consol.de!
-
-                Quote: A Server Edition license entitles the Licensee to execute one
-                       instance of Clover Server Edition on one (1) machine for the
-                       purposes of instrumententing source code and generating reports.
-                       There are no limitations on the use of the instrumented source code
-                       or generated reports produced by Server Edition.
-                       -->
-                <licenseLocation>${clover.plugin.licenseLocation}</licenseLocation>
-                <cloverMergeDatabase>${PROJECT_HOME}/target/cloverMerge.db</cloverMergeDatabase>
-                <!-- <generateHistorical>true</generateHistorical> -->
-                <historyDir>${PROJECT_HOME}/tools/clover</historyDir>
-                <generatePdf>false</generatePdf>
-                <generateXml>true</generateXml>
-                <contextFilters>@deprecated</contextFilters>
-                <flushPolicy>threaded</flushPolicy>
-                <flushInterval>100</flushInterval>
-                <targetPercentage>0%</targetPercentage>
-                <useSurefireTestResults>true</useSurefireTestResults>
-              </configuration>
-            </plugin>
             <plugin>
               <artifactId>maven-site-plugin</artifactId>
               <version>2.0.1</version>
@@ -662,29 +618,6 @@
           </plugins>
         </pluginManagement>
         <plugins>
-          <plugin>
-            <!-- Aggregates clover reports for main project. -->
-            <artifactId>maven-clover2-plugin</artifactId>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <executions>
-              <execution>
-                <id>verify</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>instrument</goal>
-                  <goal>aggregate</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>site</id>
-                <phase>pre-site</phase>
-                <goals>
-                  <goal>instrument</goal>
-                  <goal>aggregate</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
@@ -806,20 +739,6 @@
       <reporting>
         <plugins>
           <plugin>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <artifactId>maven-clover2-plugin</artifactId>
-            <version>${clover.plugin.version}</version>
-            <configuration>
-              <licenseLocation>${clover.plugin.licenseLocation}</licenseLocation>
-              <cloverMergeDatabase>${PROJECT_HOME}/target/cloverMerge.db</cloverMergeDatabase>
-              <historyDir>${PROJECT_HOME}/tools/clover</historyDir>
-              <flushPolicy>threaded</flushPolicy>
-              <flushInterval>100</flushInterval>
-              <jdk>1.5</jdk>
-              <generateXml>true</generateXml>
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
             <version>2.3</version>
@@ -908,7 +827,7 @@
             <configuration>
               <threshold>Normal</threshold>
               <effort>Max</effort>
-              <excludeFilterFile>${PROJECT_HOME}/tools/findbugs-excludes.xml</excludeFilterFile>
+              <excludeFilterFile>${basedir}/tools/findbugs-excludes.xml</excludeFilterFile>
               <findbugsXmlOutput>true</findbugsXmlOutput>
               <xmlOutput>true</xmlOutput>
             </configuration>
@@ -940,7 +859,7 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>2.5</version>
             <configuration>
-              <configLocation>${PROJECT_HOME}/tools/checkstyle.xml</configLocation>
+              <configLocation>${basedir}/tools/checkstyle.xml</configLocation>
               <enableRulesSummary>false</enableRulesSummary>
             </configuration>
           </plugin>
