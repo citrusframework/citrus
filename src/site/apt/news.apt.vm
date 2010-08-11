@@ -4,6 +4,49 @@
  
 News
 
+* Aug. 11, 2010 <<Citrus version 1.1 released>>
+ 
+ We are proud to present you the next release version of Citrus. The most important news are a license change to Apache License Version 2.0 and 
+ a bunch of new features and bugfixes. Here is a short list of new features and changes in this release:
+ 
+ * Apache License 2.0
+ 
+   We decided to switch from GPLv3 to Apache License Version 2.0 within 1.1 release. This is mainly done to give you more flexibility in using 
+   Citrus.
+ 
+ * JUnit support
+ 
+   You can now execute Citrus tests with JUnit. This is in addition to the existing TestNG support, so you can choose the framework you like best.
+ 
+ * Extended SOAP with attachments support
+  
+   Send and receive SOAP messages with attachments - very nice feature. When receiving attachments you are able to validate the attachment in
+   contentId, contentType and contentData.
+
+ * SOAP fault validation possible
+ 
+   In case a web service responds to Citrus client with SOAP faults, we are now able to handle and validate those. The validation includes fault codes, 
+   fault reasons as well as fault details.
+  
+ * Spring Integration MessageChannel support
+ 
+   The Spring Integration MessageChannel support adds great possibilities regarding Citrus messaging. You can send and receive messages directly to/from message 
+   channels. This means that we can now use the excellent Spring Integration adapters, in order to extend Citrus with new message transports like file adapter 
+   and mail adapter.
+    
+ * Improved error messages and failure cause handling
+ 
+   In case of test failure the exact failure cause and line position inside the test is presented to the tester which simplifies the error analysis.
+   
+ * JMS topic support
+ 
+   With this release Citrus is able to publish/subscribe to JMS topics. 
+ 
+ []
+ 
+ This is only a short list of new features and changes. Please see the complete {{{changes-report.html}changes report}} for details. We hope you enjoy the next 
+ step in Citrus growing as much as we do. 
+ 
 * Jun. 21, 2010 <<Citrus forum launch>>
  
  The official Citrus forum is now available at Nabble: {{{http://citrus.895196.n3.nabble.com/}http://citrus.895196.n3.nabble.com/}}. 
