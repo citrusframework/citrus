@@ -23,8 +23,8 @@
   </licenses>
 
   <ciManagement>
-    <system>Bamboo</system>
-    <url>http://build2.int.consol.de/bamboo/browse/CITRUS</url>
+    <system>Hudson</system>
+    <url>http://labs.consol.de/hudson/job/Citrus/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
