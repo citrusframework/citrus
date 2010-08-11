@@ -35,8 +35,6 @@
         enables integration tests in an automated way with easy simulation of various message transports and powerful
         message validation.</p>
         
-        <a href="images/architecture.png" alt="Citrus architecture" target="blank"><img src="images/architecture.png"/></a>
-        
         <p>This site gives you detailed information about how to use Citrus. Visit the following pages and find out how Citrus 
         helps you to accomplish fully automated integration tests of message-based enterprise applications.</p>
         
