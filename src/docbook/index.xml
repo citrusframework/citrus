@@ -92,7 +92,7 @@
     &reporting;
     
     <appendix id="samples">
-        <title>Citrus samples</title>
+        <title>Citrus Samples</title>
         
         <para>This part will show you some sample applications that are tested using Citrus integration tests. 
         See below a list of all samples.</para>

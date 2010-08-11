@@ -116,7 +116,7 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" display="block" fileref="images/figure_006.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="images/figure_006.png" format="PNG" />
           </imageobject>
           
           <imageobject role="html">
@@ -145,7 +145,7 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" display="block" fileref="images/figure_007.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="images/figure_007.png" format="PNG" />
           </imageobject>
           
           <imageobject role="html">
@@ -212,7 +212,7 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" display="block" fileref="images/figure_008.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="images/figure_008.png" format="PNG" />
           </imageobject>
           
           <imageobject role="html">

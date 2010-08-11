@@ -8,11 +8,9 @@
   logic in a test case in order to accomplish very complex use case tests. Step by step we will introduce all possible actions 
   inside a test case and explain how to connect to other systems by sending and receiving messages over various transports.</para>
 
-  <para>For simple understanding see the following figure that describes a typical test action sequence in Citrus:</para>
-  
   <mediaobject>
     <imageobject role="fo">
-      <imagedata align="center" display="block" fileref="images/figure_004.png" format="PNG" />
+      <imagedata align="center" width="450px" scale="100" fileref="images/figure_004.png" format="PNG" />
     </imageobject>
     
     <imageobject role="html">
@@ -20,8 +18,10 @@
     </imageobject>
   </mediaobject>
     
-  <para>So how do we define those test logic? Citrus specifies test cases through simple XML files. The whole test case description 
-  will take place in one single XML file. This chapter will introduce the custom XML schema language that defines a test cases.</para>
+  <para>The figure above describes a typical test action sequence in Citrus. A list of test actions that send and receive messages 
+  with various MessageSender and MessageReceiver components. So how do we define those test logic? Citrus specifies test cases 
+  through simple XML files. The whole test case description will take place in one single XML file. This chapter will introduce 
+  the custom XML schema language that defines a test cases.</para>
 
   <section id="testcase-defining">
     <title>Defining a test case</title>
