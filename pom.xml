@@ -499,7 +499,7 @@
     
     <!-- Distribution Management -->
     <profile>
-      <id>release-inhouse</id>
+      <id>release-build</id>
       <distributionManagement>
         <repository>
           <id>repository-consol-releases</id>
@@ -524,6 +524,19 @@
           <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
       </distributionManagement>
+    </profile>
+    
+    <profile>
+      <id>site-local</id>
+      <distributionManagement>
+        <site>
+          <id>site-citrus</id>
+          <url>file:///stage/citrus-site</url>
+        </site>
+      </distributionManagement>
+      <properties>
+        <site.url></site.url>
+      </properties>
     </profile>
     
     <profile>
@@ -806,19 +819,6 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>jdepend-maven-plugin</artifactId>
             <version>2.0-beta-2</version>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>2.5</version>
-            <configuration>
-              <format>html</format>
-              <linkXRef>true</linkXRef>
-              <!-- <xrefLocation>xref</xrefLocation> -->
-              <sourceEncoding>utf-8</sourceEncoding>
-              <minimumTokens>100</minimumTokens>
-              <targetJdk>1.5</targetJdk>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
