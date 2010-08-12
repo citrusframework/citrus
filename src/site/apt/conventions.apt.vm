@@ -47,7 +47,9 @@ Coding Conventions
 
   Code formatting is important. The rules are based on and verified by 
   <a href="http://checkstyle.sourceforge.net/">Checkstyle</a>. Please keep an eye on the 
-  checkstyle rules, for instance by generating the checkstyle report with the Mven site lifecycle. 
+  checkstyle rules, for instance by monitoring the Sonar checkstyle reports generated with 
+  the continuous build or with local Maven checkstyle reports.
+   
   Here are the most important rules:
   
   * Indentation

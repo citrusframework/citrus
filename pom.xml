@@ -821,18 +821,6 @@
             </configuration>
           </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>2.3.1</version>
-            <configuration>
-              <threshold>Normal</threshold>
-              <effort>Max</effort>
-              <excludeFilterFile>${basedir}/tools/findbugs-excludes.xml</excludeFilterFile>
-              <findbugsXmlOutput>true</findbugsXmlOutput>
-              <xmlOutput>true</xmlOutput>
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
             <version>2.1.2</version>
@@ -853,15 +841,6 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.5</version>
-            <configuration>
-              <configLocation>${basedir}/tools/checkstyle.xml</configLocation>
-              <enableRulesSummary>false</enableRulesSummary>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
