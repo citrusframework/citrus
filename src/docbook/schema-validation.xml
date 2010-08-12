@@ -15,23 +15,21 @@
         actions have to know the respective XML schema (*.xsd) file resources to do so. This is done through a central schema repository
         which holds all available XML schema files for a project.</para>
         
-        <programlisting>
-  &lt;bean id=&quot;schemaRepository&quot; 
-           class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-      &lt;property name=&quot;schemas&quot;&gt;
-          &lt;list&gt;
-              &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                  &lt;property name=&quot;xsd&quot; 
-                       value=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
-              &lt;/bean&gt;
-              &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                  &lt;property name=&quot;xsd&quot; 
-                       value=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-        </programlisting>
+        <programlisting>&lt;bean id=&quot;schemaRepository&quot; 
+         class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
+    &lt;property name=&quot;schemas&quot;&gt;
+        &lt;list&gt;
+            &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+                &lt;property name=&quot;xsd&quot; 
+                     value=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
+            &lt;/bean&gt;
+            &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+                &lt;property name=&quot;xsd&quot; 
+                     value=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
         
         <para>By convention the schema repository instance is defined in the Citrus Spring configuration with the id "schemaRepository".
         Spring is then able to inject this schema repository instance into every message receiving action. The receiving action receives 
@@ -48,21 +46,19 @@
             repository. So if you explicitly do not want to validate the XML schema for some reason you have to disable the validation
             explicitly in your test.</para>
             
-            <programlisting>
-  &lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
-      &lt;message schema-validation=&quot;false&quot;&gt;
-          &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
-               value=&quot;${requestTag}&quot;/&gt;
-          &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
-               value=&quot;${correlationId}&quot;/&gt;
-          &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-          &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/receive&gt;
-            </programlisting>
+            <programlisting>&lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
+    &lt;message schema-validation=&quot;false&quot;&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
+             value=&quot;${requestTag}&quot;/&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
+             value=&quot;${correlationId}&quot;/&gt;
+        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
+        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
             
             <para>This way might sound annoying for you but in our opinion it is very important to validate the structure of the received 
             XML messages, so disabling the schema validation should not be the standard for all tests. Disabling automatic schema validation
@@ -80,48 +76,44 @@
         
         <para>First thing you can do about DTD validation is to specify an inline DTD in your expected message template.</para>
         
-        <programlisting>
-  &lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
-      &lt;message schema-validation=&quot;false&quot;&gt;
-          &lt;data&gt;
-          &lt;![CDATA[
-              &lt;!DOCTYPE root [
-                  &lt;!ELEMENT root (message)&gt;
-                  &lt;!ELEMENT message (text)&gt;
-                  &lt;!ELEMENT text (#PCDATA)&gt;
-                  ]&gt;
-              &lt;root&gt;
-                  &lt;message&gt;
-                      &lt;text&gt;Hello TestFramework!&lt;/text&gt;
-                  &lt;/message&gt;
-              &lt;/root&gt;
-          ]&gt;
-          &lt;data/&gt;
-      &lt;/message&gt;
-  &lt;/receive&gt;
-        </programlisting>
+        <programlisting>&lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
+    &lt;message schema-validation=&quot;false&quot;&gt;
+        &lt;data&gt;
+        &lt;![CDATA[
+            &lt;!DOCTYPE root [
+                &lt;!ELEMENT root (message)&gt;
+                &lt;!ELEMENT message (text)&gt;
+                &lt;!ELEMENT text (#PCDATA)&gt;
+                ]&gt;
+            &lt;root&gt;
+                &lt;message&gt;
+                    &lt;text&gt;Hello TestFramework!&lt;/text&gt;
+                &lt;/message&gt;
+            &lt;/root&gt;
+        ]]&gt;
+        &lt;data/&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
         
         <para>The system under test may also send the message with a inline DTD definition. So validation will succeed.</para>
         
         <para>In most cases the DTD is referenced as external .dtd file resource. You can do this in your expected message 
         template as well.</para>
         
-        <programlisting>
-  &lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
-      &lt;message schema-validation=&quot;false&quot;&gt;
-          &lt;data&gt;
-          &lt;![CDATA[
-              &lt;!DOCTYPE root SYSTEM 
-                           &quot;com/consol/citrus/validation/example.dtd&quot;&gt;
-              &lt;root&gt;
-                  &lt;message&gt;
-                      &lt;text&gt;Hello TestFramework!&lt;/text&gt;
-                  &lt;/message&gt;
-              &lt;/root&gt;
-          ]&gt;
-          &lt;data/&gt;
-      &lt;/message&gt;
-  &lt;/receive&gt;
-        </programlisting>
+        <programlisting>&lt;receive with=&quot;getTestMessageReceiver&quot;&gt;
+    &lt;message schema-validation=&quot;false&quot;&gt;
+        &lt;data&gt;
+        &lt;![CDATA[
+            &lt;!DOCTYPE root SYSTEM 
+                         &quot;com/consol/citrus/validation/example.dtd&quot;&gt;
+            &lt;root&gt;
+                &lt;message&gt;
+                    &lt;text&gt;Hello TestFramework!&lt;/text&gt;
+                &lt;/message&gt;
+            &lt;/root&gt;
+        ]]&gt;
+        &lt;data/&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
     </section>
 </chapter>

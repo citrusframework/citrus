@@ -7,17 +7,15 @@
     possible errors. The nested actions are error proof for the chosen exception type, but only for the chosen exception type other exception 
     types may cause the test to fail.</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;catchExceptionTest&quot;&gt;
-      &lt;actions&gt;
-          &lt;catch exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;&gt;
-              &lt;echo&gt;
-                  &lt;message&gt;Current date is: ${date}&lt;/message&gt;
-              &lt;/echo&gt;
-          &lt;/catch&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;catchExceptionTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;catch exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;&gt;
+            &lt;echo&gt;
+                &lt;message&gt;Current date is: ${date}&lt;/message&gt;
+            &lt;/echo&gt;
+        &lt;/catch&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <important>
         <para>Note that there is no validation available in a catch block. So catching exceptions is just to make a test more stable towards

@@ -23,34 +23,29 @@
         in the respective log4j.xml file in your project. At the end of a test run the combined test results get printed to both console 
         and log file. The overall test results look like following example:</para>
         
-        <programlisting>
-            <literal>
-  TEST RESULTS citrus-default-testsuite
+        <programlisting><literal>
+TEST RESULTS citrus-default-testsuite
+
+  [...]
+  HelloService_Ok_1             : successfull
+  HelloService_Ok_2             : successfull
+  EchoService_Ok_1              : successfull
+  EchoService_Ok_2              : successfull
+  EchoService_TempError_1       : successfull
+  EchoService_AutomacticRetry_1 : successfull
+  [...]
   
-    [...]
-    HelloService_Ok_1             : successfull
-    HelloService_Ok_2             : successfull
-    EchoService_Ok_1              : successfull
-    EchoService_Ok_2              : successfull
-    EchoService_TempError_1       : successfull
-    EchoService_AutomacticRetry_1 : successfull
-    [...]
-    
-    Found 175 test cases to execute
-    Skipped 0 test cases (0.0%)
-    Executed 175 test cases
-    Tests failed:         0 (0.0%)
-    Tests successfully: 175 (100.0%)
-            </literal>
-        </programlisting>
+  Found 175 test cases to execute
+  Skipped 0 test cases (0.0%)
+  Executed 175 test cases
+  Tests failed:         0 (0.0%)
+  Tests successfully: 175 (100.0%)</literal></programlisting>
         
         <para>Failed tests will be marked as failed in the result list. The framework will give a short description
         of the error cause while the detailed stack trace information can be found in the log messages
         that were made during the test run.</para>
         
-        <programlisting>
-  <literal>HelloService_Ok_3 : failed - Exception is Action timed out</literal>
-        </programlisting>
+        <programlisting><literal>HelloService_Ok_3 : failed - Exception is Action timed out</literal></programlisting>
     </section>
     
     <section id="reporting-junit">

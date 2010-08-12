@@ -13,36 +13,34 @@
     
     <para>Lets have an example to show the possible Groovy code interactions in Citrus:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;groovyTest&quot;&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;time&quot; value=&quot;citrus:currentDate()&quot;/&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;groovy&gt;
-              println 'Hello TestSuite'
-          &lt;/groovy&gt;
-          &lt;groovy&gt;
-              println 'The variable is: ${time}'
-          &lt;/groovy&gt;
-          &lt;groovy&gt;
-              &lt;![CDATA[
-                  import com.consol.citrus.*
-                  import com.consol.citrus.variable.*
-                  import com.consol.citrus.context.TestContext
-                  import com.consol.citrus.script.GroovyAction.ScriptExecutor
-                  
-                  public class GScript implements ScriptExecutor {
-                      public void execute(TestContext context) {
-                          println context.getVariable(&quot;time&quot;)
-                      }
-                  }
-              ]]&gt;
-          &lt;/groovy&gt;
-          &lt;groovy resource=&quot;classpath:com/consol/citrus/script/example.groovy&quot;/&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;groovyTest&quot;&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;time&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;groovy&gt;
+            println 'Hello TestSuite'
+        &lt;/groovy&gt;
+        &lt;groovy&gt;
+            println 'The variable is: ${time}'
+        &lt;/groovy&gt;
+        &lt;groovy&gt;
+            &lt;![CDATA[
+                import com.consol.citrus.*
+                import com.consol.citrus.variable.*
+                import com.consol.citrus.context.TestContext
+                import com.consol.citrus.script.GroovyAction.ScriptExecutor
+                
+                public class GScript implements ScriptExecutor {
+                    public void execute(TestContext context) {
+                        println context.getVariable(&quot;time&quot;)
+                    }
+                }
+            ]]&gt;
+        &lt;/groovy&gt;
+        &lt;groovy resource=&quot;classpath:com/consol/citrus/script/example.groovy&quot;/&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>As you can see it is possible to write Groovy code directly into the test case. 
     Citrus will execute the Groovy code and handle variable references automatically. The tester 

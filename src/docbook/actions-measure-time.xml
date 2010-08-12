@@ -8,35 +8,31 @@
     
     <para>Read the next example and you will understand the mix of different time lines:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
-      &lt;actions&gt;
-          &lt;trace-time/&gt;
-          
-          &lt;trace-time id=&quot;time_line_id&quot;/&gt;
-          
-          &lt;sleep time=&quot;3.5&quot;/&gt;
-          
-          &lt;trace-time id=&quot; time_line_id &quot;/&gt;
-          
-          &lt;sleep time=&quot;5.0&quot;/&gt;
-          
-          &lt;trace-time/&gt;
-          
-          &lt;trace-time id=&quot; time_line_id &quot;/&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
+    &lt;actions&gt;
+        &lt;trace-time/&gt;
+        
+        &lt;trace-time id=&quot;time_line_id&quot;/&gt;
+        
+        &lt;sleep time=&quot;3.5&quot;/&gt;
+        
+        &lt;trace-time id=&quot; time_line_id &quot;/&gt;
+        
+        &lt;sleep time=&quot;5.0&quot;/&gt;
+        
+        &lt;trace-time/&gt;
+        
+        &lt;trace-time id=&quot; time_line_id &quot;/&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>The test output looks like follows:</para>
     
-    <programlisting>
-  Starting TimeWatcher:
-  Starting TimeWatcher: time_line_id
-  TimeWatcher time_line_id after 3.5 seconds
-  TimeWatcher after 8.5 seconds
-  TimeWatcher time_line_id after 8.5 seconds
-    </programlisting>
+    <programlisting>Starting TimeWatcher:
+Starting TimeWatcher: time_line_id
+TimeWatcher time_line_id after 3.5 seconds
+TimeWatcher after 8.5 seconds
+TimeWatcher time_line_id after 8.5 seconds</programlisting>
     
     <note>In case no time line id is specified the framework will measure the time for a default time line.</note>
     

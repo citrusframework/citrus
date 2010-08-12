@@ -8,31 +8,27 @@
     <para>The user can specify a custom error message for the exception in order to describe the error cause. Here is a 
     very simple example to clarify the syntax:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;failTest&quot;&gt;
-      &lt;actions&gt;
-          &lt;fail message=&quot;Test will fail with custom message&quot;/&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;failTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;fail message=&quot;Test will fail with custom message&quot;/&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>Test results:</para>
     
-    <programlisting>
-  Execution of test: failTest failed! Nested exception is: 
-  com.consol.citrus.exceptions.TestSuiteException: 
-  Test will fail with custom message
-  
-  [...]
-  
-  TEST RESULTS coreTestSuite
-  
-  failTest          : failed - Exception is: Test will fail with custom message
-  
-  Found 1 test cases to execute
-  Skipped 0 test cases (0.0%)
-  Executed 1 test cases, containing 3 actions
-  Tests failed:        1 (100.0%)
-  Tests successfully:  0 (0.0%) 
-    </programlisting>
+    <programlisting>Execution of test: failTest failed! Nested exception is: 
+com.consol.citrus.exceptions.TestSuiteException: 
+Test will fail with custom message
+
+[...]
+
+TEST RESULTS coreTestSuite
+
+failTest          : failed - Exception is: Test will fail with custom message
+
+Found 1 test cases to execute
+Skipped 0 test cases (0.0%)
+Executed 1 test cases, containing 3 actions
+Tests failed:        1 (100.0%)
+Tests successfully:  0 (0.0%) </programlisting>
 </section>

@@ -17,18 +17,16 @@
       <para>On the one hand you can specify the statements as inline SQL or stored in an external
       SQL resource file as shown in the next two examples.</para>
       
-      <programlisting>
-  &lt;actions&gt;
-      &lt;sql datasource=&quot;someDataSource&quot;&gt;
-          &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
-          &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
-      &lt;/sql&gt;
-      
-      &lt;sql datasource=&quot;myDataSource&quot;&gt;
-          &lt;resource file=&quot;file:tests/unit/resources/script.sql&quot;/&gt;
-      &lt;/sql&gt;
-  &lt;/actions&gt;
-      </programlisting>
+      <programlisting>&lt;actions&gt;
+    &lt;sql datasource=&quot;someDataSource&quot;&gt;
+        &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
+        &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
+    &lt;/sql&gt;
+    
+    &lt;sql datasource=&quot;myDataSource&quot;&gt;
+        &lt;resource file=&quot;file:tests/unit/resources/script.sql&quot;/&gt;
+    &lt;/sql&gt;
+&lt;/actions&gt;</programlisting>
       
       <para>The first action uses inline SQL statements defined directly inside the test case. The next action uses an external 
       SQL resource file instead. The file resource can hold several SQL statements separated by new lines. All statements inside 
@@ -65,19 +63,17 @@
       <para>The &lt;sql&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
       The query results are validated against expected data as shown in the next example.</para>
       
-      <programlisting>
-  &lt;sql datasource=&quot;testDataSource&quot;&gt;
-      &lt;statement&gt;select NAME from CUSTOMERS where ID='${customerId}'&lt;/statement&gt;
-      &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
-      &lt;statement&gt;select ID from ORDERS where DESC LIKE 'Def%'&lt;/statement&gt;
-      &lt;statement&gt;select DESCRIPTION from ORDERS where ID='${id}'&lt;/statement&gt;
-      
-      &lt;validate column=&quot;ID&quot; value=&quot;1&quot;/&gt;
-      &lt;validate column=&quot;NAME&quot; value=&quot;Deppisch&quot;/&gt;
-      &lt;validate column=&quot;COUNT(*)&quot; value=&quot;${rowsCount}&quot;/&gt;
-      &lt;validate column=&quot;DESCRIPTION&quot; value=&quot;null&quot;/&gt;
-  &lt;/sql&gt;
-      </programlisting>
+      <programlisting>&lt;sql datasource=&quot;testDataSource&quot;&gt;
+    &lt;statement&gt;select NAME from CUSTOMERS where ID='${customerId}'&lt;/statement&gt;
+    &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
+    &lt;statement&gt;select ID from ORDERS where DESC LIKE 'Def%'&lt;/statement&gt;
+    &lt;statement&gt;select DESCRIPTION from ORDERS where ID='${id}'&lt;/statement&gt;
+    
+    &lt;validate column=&quot;ID&quot; value=&quot;1&quot;/&gt;
+    &lt;validate column=&quot;NAME&quot; value=&quot;Deppisch&quot;/&gt;
+    &lt;validate column=&quot;COUNT(*)&quot; value=&quot;${rowsCount}&quot;/&gt;
+    &lt;validate column=&quot;DESCRIPTION&quot; value=&quot;null&quot;/&gt;
+&lt;/sql&gt;</programlisting>
       
       <para>The action &lt;sql&gt; offers a wide range of validating functionality for database result sets. First
       of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL
@@ -114,15 +110,13 @@
       persisted content values. The test may want to read database entries into test variables without validation. Citrus
       is able to do that with the following &lt;extract&gt; expressions:</para>
       
-      <programlisting>
-  &lt;sql datasource=&quot;testDataSource&quot;&gt;
-      &lt;statement&gt;select ID from CUSTOMERS where NAME='${customerName}'&lt;/statement&gt;
-      &lt;statement&gt;select STATUS from ORDERS where ID='${orderId}'&lt;/statement&gt;
-      
-      &lt;extract column=&quot;ID&quot; variable=&quot;${customerId}&quot;/&gt;
-      &lt;extract column=&quot;STATUS&quot; variable=&quot;${orderStatus}&quot;/&gt;
-  &lt;/sql&gt;
-      </programlisting>
+      <programlisting>&lt;sql datasource=&quot;testDataSource&quot;&gt;
+    &lt;statement&gt;select ID from CUSTOMERS where NAME='${customerName}'&lt;/statement&gt;
+    &lt;statement&gt;select STATUS from ORDERS where ID='${orderId}'&lt;/statement&gt;
+    
+    &lt;extract column=&quot;ID&quot; variable=&quot;${customerId}&quot;/&gt;
+    &lt;extract column=&quot;STATUS&quot; variable=&quot;${orderStatus}&quot;/&gt;
+&lt;/sql&gt;</programlisting>
       
       <para>We can save the database column values directly to test variables. Of course you can combine the value extraction 
       with the normal column validation described earlier in this chapter. Please keep in mind that we can not use these operations

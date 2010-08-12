@@ -5,18 +5,16 @@
     <para>Citrus test actions fail with Java exceptions and error messages. This gives you the opportunity to expect an action to fail during test
     execution. You can simple assert a Java exception to be thrown during execution. See the example for an assert action definition in a test case:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;assertFailureTest&quot;&gt;
-      &lt;actions&gt;
-          &lt;assert exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;
-                     message=&quot;Unknown variable ${date}&quot;&gt;
-              &lt;echo&gt;
-                  &lt;message&gt;Current date is: ${date}&lt;/message&gt;
-              &lt;/echo&gt;
-          &lt;/assert&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;assertFailureTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;assert exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;
+                   message=&quot;Unknown variable ${date}&quot;&gt;
+            &lt;echo&gt;
+                &lt;message&gt;Current date is: ${date}&lt;/message&gt;
+            &lt;/echo&gt;
+        &lt;/assert&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <note>
         <para>Note that the assert action requires an exception. In case no exception is thrown by the embedded test action the assertion

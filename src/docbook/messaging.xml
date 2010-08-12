@@ -74,46 +74,44 @@
     see the point why you should not use XML unless you deal with legacy interfaces or strongly need to avoid the XML message overhead. Anyway Citrus works best on XML payloads 
     and you will see a lot of example code in this document using XML. Finally let us have a look at a first example how a sending action is defined in the test.</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;sendMessageTest&quot;&gt;
-      &lt;description&gt;
-          Send message example
-      &lt;/description&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;requestTag&quot; value=&quot;Rx123456789&quot;/&gt;
-          &lt;variable name=&quot;correlationId&quot; value=&quot;Cx1x123456789&quot;/&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
-              &lt;message&gt;
-                  &lt;data&gt;
-                      &lt;![CDATA[
-                      &lt;RequestMessage&gt;
-                          &lt;MessageHeader&gt;
-                              &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                              &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                              &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                              &lt;VersionId&gt;2&lt;/VersionId&gt;
-                          &lt;/MessageHeader&gt;
-                          &lt;MessageBody&gt;
-                              &lt;Customer&gt;
-                                  &lt;Id&gt;1&lt;/Id&gt;
-                              &lt;/Customer&gt;
-                          &lt;/MessageBody&gt;
-                      &lt;/RequestMessage&gt;
-                      ]]&gt;
-                  &lt;/data&gt;
-                  &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
-                              value=&quot;${requestTag}&quot;/&gt;
-              &lt;/message&gt;
-              &lt;header&gt;
-                  &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-                  &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-              &lt;/header&gt;
-          &lt;/send&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;sendMessageTest&quot;&gt;
+    &lt;description&gt;
+        Send message example
+    &lt;/description&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;requestTag&quot; value=&quot;Rx123456789&quot;/&gt;
+        &lt;variable name=&quot;correlationId&quot; value=&quot;Cx1x123456789&quot;/&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                    &lt;![CDATA[
+                    &lt;RequestMessage&gt;
+                        &lt;MessageHeader&gt;
+                            &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                            &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                            &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                            &lt;VersionId&gt;2&lt;/VersionId&gt;
+                        &lt;/MessageHeader&gt;
+                        &lt;MessageBody&gt;
+                            &lt;Customer&gt;
+                                &lt;Id&gt;1&lt;/Id&gt;
+                            &lt;/Customer&gt;
+                        &lt;/MessageBody&gt;
+                    &lt;/RequestMessage&gt;
+                    ]]&gt;
+                &lt;/data&gt;
+                &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
+                            value=&quot;${requestTag}&quot;/&gt;
+            &lt;/message&gt;
+            &lt;header&gt;
+                &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
+                &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+            &lt;/header&gt;
+        &lt;/send&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>The test uses two variable definitions (<emphasis>requestTag</emphasis> and <emphasis>correlationId</emphasis>), 
     so first of all let us refresh in mind what variables do. Test variables are defined at the very beginning of the test case and 
@@ -199,43 +197,41 @@
     <para>Now after sending a message with Citrus we would like to receive a message inside the test. 
     Let us again have a look at a simple example showing how it works.</para>
     
-    <programlisting>
-  &lt;receive with=&quot;getCustomerResponseReceiver&quot;&gt;
-      &lt;selector&gt;
-          &lt;value&gt;operation = 'GetCustomer'&lt;/value&gt;
-      &lt;/selector&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-              &lt;RequestMessage&gt;
-                  &lt;MessageHeader&gt;
-                      &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                      &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                      &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                      &lt;VersionId&gt;2&lt;/VersionId&gt;
-                  &lt;/MessageHeader&gt;
-                  &lt;MessageBody&gt;
-                      &lt;Customer&gt;
-                          &lt;Id&gt;1&lt;/Id&gt;
-                      &lt;/Customer&gt;
-                  &lt;/MessageBody&gt;
-              &lt;/RequestMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-          &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
-                      value=&quot;${requestTag}&quot;/&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-          &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-      &lt;/header&gt;
-      &lt;extract&gt;
-          &lt;header name=&quot;Operation&quot; variable=&quot;${operation}&quot;/&gt;
-          &lt;message path=&quot;//MessageBody/Customer/Id&quot; 
-                      variable=&quot;${customerId}&quot;/&gt;
-      &lt;/extract&gt;
-  &lt;/receive&gt;
-    </programlisting>
+    <programlisting>&lt;receive with=&quot;getCustomerResponseReceiver&quot;&gt;
+    &lt;selector&gt;
+        &lt;value&gt;operation = 'GetCustomer'&lt;/value&gt;
+    &lt;/selector&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+            &lt;RequestMessage&gt;
+                &lt;MessageHeader&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                    &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                    &lt;VersionId&gt;2&lt;/VersionId&gt;
+                &lt;/MessageHeader&gt;
+                &lt;MessageBody&gt;
+                    &lt;Customer&gt;
+                        &lt;Id&gt;1&lt;/Id&gt;
+                    &lt;/Customer&gt;
+                &lt;/MessageBody&gt;
+            &lt;/RequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+        &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
+                    value=&quot;${requestTag}&quot;/&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
+        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+    &lt;/header&gt;
+    &lt;extract&gt;
+        &lt;header name=&quot;Operation&quot; variable=&quot;${operation}&quot;/&gt;
+        &lt;message path=&quot;//MessageBody/Customer/Id&quot; 
+                    variable=&quot;${customerId}&quot;/&gt;
+    &lt;/extract&gt;
+&lt;/receive&gt;</programlisting>
     
     <para>Knowing the send action of the previous chapter we can identify some common mechanisms that apply for both 
     sending and receiving actions. This time the test uses a predefined message receiver in order to receive the message 
@@ -303,29 +299,27 @@
         Instead of repeating the ids several times hardcoded in our test we overwrite those elements with variable values. This can be done with XPath or inline variable
         declarations. Lets have a look at a example listing showing both ways to overwrite message tempalte content before validation:</para>
         
-        <programlisting>
-  &lt;message&gt;
-      &lt;data&gt;
-          &lt;![CDATA[
-          &lt;RequestMessage&gt;
-              &lt;MessageHeader&gt;
-                  &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                  &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                  &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                  &lt;VersionId&gt;2&lt;/VersionId&gt;
-              &lt;/MessageHeader&gt;
-              &lt;MessageBody&gt;
-                  &lt;Customer&gt;
-                      &lt;Id&gt;1&lt;/Id&gt;
-                  &lt;/Customer&gt;
-              &lt;/MessageBody&gt;
-          &lt;/RequestMessage&gt;
-          ]]&gt;
-      &lt;/data&gt;
-      &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
-                  value=&quot;${requestTag}&quot;/&gt;
-  &lt;/message&gt;
-        </programlisting>
+        <programlisting>&lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+    &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
+                value=&quot;${requestTag}&quot;/&gt;
+&lt;/message&gt;</programlisting>
         
         <para>The program linsting shows both ways of setting variable values inside a message template. First of all you can
         simply place variable expressions inside the message (see how ${correlationId} is used). Secondly you can also use 
@@ -347,61 +341,55 @@
         <para>Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a 
         message:</para>
         
-        <programlisting>
-  [...]
-      &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-  [...]
-        </programlisting>
+        <programlisting>[...]
+    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+[...]</programlisting>
         
         <para>The timestamp value will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.</para>
         
-        <programlisting>
-   &lt;message&gt;
-      &lt;data&gt;
-          &lt;![CDATA[
-          &lt;RequestMessage&gt;
-              &lt;MessageHeader&gt;
-                  &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                  &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
-                  &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
-                  &lt;VersionId&gt;2&lt;/VersionId&gt;
-              &lt;/MessageHeader&gt;
-              &lt;MessageBody&gt;
-                  &lt;Customer&gt;
-                      &lt;Id&gt;1&lt;/Id&gt;
-                  &lt;/Customer&gt;
-              &lt;/MessageBody&gt;
-          &lt;/RequestMessage&gt;
-          ]]&gt;
-      &lt;/data&gt;
-      &lt;ignore path=&quot;//ResponseMessage/MessageHeader/Timestamp&quot;/&gt;
-  &lt;/message&gt;     
-        </programlisting>
+        <programlisting> &lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+    &lt;ignore path=&quot;//ResponseMessage/MessageHeader/Timestamp&quot;/&gt;
+&lt;/message&gt;</programlisting>
         
         <para>If you do not like XPath you couls also use another possibility to ignore message contents. The next example uses the special <emphasis>@ignore@</emphasis> placeholder
         directly in the message content:</para>
         
-        <programlisting>
-  &lt;message&gt;
-      &lt;data&gt;
-          &lt;![CDATA[
-          &lt;RequestMessage&gt;
-              &lt;MessageHeader&gt;
-                  &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                  &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
-                  &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
-                  &lt;VersionId&gt;2&lt;/VersionId&gt;
-              &lt;/MessageHeader&gt;
-              &lt;MessageBody&gt;
-                  &lt;Customer&gt;
-                      &lt;Id&gt;1&lt;/Id&gt;
-                  &lt;/Customer&gt;
-              &lt;/MessageBody&gt;
-          &lt;/RequestMessage&gt;
-          ]]&gt;
-      &lt;/data&gt;
-  &lt;/message&gt;
-        </programlisting>
+        <programlisting>&lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+&lt;/message&gt;</programlisting>
         
         <para>The ignored message elements are automatically skipped when Citrus compares and validates message contents.</para>
     </section>
@@ -414,16 +402,14 @@
         of control templates in combination with several ignore statements is not appropiate in this case. You would rather want
         to use explicit element validation.</para>
         
-        <programlisting>
-  &lt;message&gt;
-      &lt;validate path=&quot;//MessageHeader/RequestTag&quot; 
-                   value=&quot;${requestTag}&quot;/&gt;
-      &lt;validate path=&quot;//CorrelationId&quot; 
-                   value=&quot;${correlationId}&quot;/&gt;
-      &lt;validate path=&quot;//MessageBody/Number&quot; 
-                   value=&quot;123456789&quot;/&gt;
-  &lt;/message&gt;
-        </programlisting>  
+        <programlisting>&lt;message&gt;
+    &lt;validate path=&quot;//MessageHeader/RequestTag&quot; 
+                 value=&quot;${requestTag}&quot;/&gt;
+    &lt;validate path=&quot;//CorrelationId&quot; 
+                 value=&quot;${correlationId}&quot;/&gt;
+    &lt;validate path=&quot;//MessageBody/Number&quot; 
+                 value=&quot;123456789&quot;/&gt;
+&lt;/message&gt;</programlisting>  
         
         <para>Instead of comparing the whole message some message elements are validated explicitly over XPath. Citrus evaluates the XPAth expression and 
         and compares its value to the control value. The basic message structure as well as other message elements are not included into validation.</para> 
@@ -455,12 +441,10 @@
         <para>Now that we have validated the message payload in various ways in the previous sections we are also interested in validating the message header. Just
         add the following header validation to your receiving action.</para>
         
-        <programlisting>
-  &lt;header&gt;
-      &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-      &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-  &lt;/header&gt;    
-        </programlisting>
+        <programlisting>&lt;header&gt;
+    &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
+    &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+&lt;/header&gt;</programlisting>
         
         <para>Message headers often occur as name-value pairs. So each header element that we specify in validation has to be present in the received message. In addition to that 
         the header value has to fit the control value. If one header is not found or the value does not fit Citrus will raise errors and the test case will fail.</para>
@@ -477,13 +461,11 @@
         the requirements. So Citrus needs to offer a way to save dynamic message content for reuse in later test steps. The solution is simple: 
         we can extract those dynamic values to test variables.</para>
         
-        <programlisting>
-  &lt;extract&gt;
-      &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
-      &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
-                  variable=&quot;customerId&quot;/&gt;
-  &lt;/extract&gt;
-        </programlisting>
+        <programlisting>&lt;extract&gt;
+    &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
+    &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
+                variable=&quot;customerId&quot;/&gt;
+&lt;/extract&gt;</programlisting>
         
         <para>As you can see Citrus is able to store both header and message payload content into test variables. It does not matter if you use new test variables 
         or existing ones as target. The extraction will automatically create a new variable in case it does not exist. Once the variable is announced to the test all following test 
@@ -512,12 +494,10 @@
         
         <para>Let us have a closer look at a message selector inside a receiving action:</para>
         
-        <programlisting>
-  &lt;selector&gt;
-      &lt;element&gt; name="correlationId" value="Lx1x123456789"&lt;/element&gt;
-      &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
-  &lt;/selector&gt;
-        </programlisting>
+        <programlisting>&lt;selector&gt;
+    &lt;element&gt; name="correlationId" value="Lx1x123456789"&lt;/element&gt;
+    &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
+&lt;/selector&gt;</programlisting>
         
         <para>This example shows how selectors work. The selector will only accept messages that meet the correlation id and the operation 
         in the header values. All other messages are ignored. The selector elements are associated to each other using logical AND
@@ -525,13 +505,11 @@
         
         <para>You can also define a selector string yourself that gives you more power in constructing the selection logic.</para>
         
-        <programlisting>
-  &lt;selector&gt;
-      &lt;value&gt;
-          correlationId = 'Cx1x123456789' OR correlationId = 'Cx1x987654321'
-      &lt;/value&gt;
-  &lt;/selector&gt;
-        </programlisting>
+        <programlisting>&lt;selector&gt;
+    &lt;value&gt;
+        correlationId = 'Cx1x123456789' OR correlationId = 'Cx1x987654321'
+    &lt;/value&gt;
+&lt;/selector&gt;</programlisting>
         
         <important>
             <para>In case you want to run tests in parallel you will need to specify message selectors, otherwise the different tests running 
