@@ -86,14 +86,14 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd&quot;&gt;
     
   &lt;bean id=&quot;loggingInterceptor&quot; 
-  class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
+    class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
       &lt;description&gt;
           This interceptor logs the message payload.
       &lt;/description&gt;
   &lt;/bean&gt;
     
   &lt;bean id=&quot;helloServicePayloadMapping&quot; 
-  class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
+    class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
       &lt;property name=&quot;mappings&quot;&gt;
           &lt;props&gt;
               &lt;prop 
@@ -112,8 +112,7 @@
   &lt;bean id=&quot;helloServiceEndpoint&quot; 
        class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
       &lt;property name=&quot;messageHandler&quot;&gt;
-        &lt;bean 
-        class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+        &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
             &lt;property name=&quot;messagePayload&quot;&gt;
                 &lt;value&gt;
                 &lt;![CDATA[
@@ -129,14 +128,11 @@
             &lt;/property&gt;
             &lt;property name=&quot;messageHeader&quot;&gt;
                 &lt;map&gt;
-                    &lt;entry 
-                        key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Operation&quot; 
+                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Operation&quot; 
                         value=&quot;sayHelloResponse&quot;/&gt;
-                    &lt;entry 
-                        key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Request&quot; 
+                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Request&quot; 
                         value=&quot;HelloRequest&quot;/&gt;
-                    &lt;entry 
-                        key=&quot;citrus_soap_action&quot; 
+                    &lt;entry key=&quot;citrus_soap_action&quot; 
                         value=&quot;sayHello&quot;/&gt;
                 &lt;/map&gt;
             &lt;/property&gt;
@@ -207,10 +203,8 @@
         qualified name (QName) and the value a normal String value.</para>
         
         <programlisting>&lt;header&gt;
-    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Operation&quot; 
-                value=&quot;sayHello&quot;/&gt;
-    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Request&quot; 
-                value=&quot;HelloRequest&quot;/&gt;
+    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Operation&quot; value=&quot;sayHello&quot;/&gt;
+    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Request&quot; value=&quot;HelloRequest&quot;/&gt;
 &lt;/header&gt;</programlisting>
         
         <para>Last not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML

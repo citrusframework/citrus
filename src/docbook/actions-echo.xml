@@ -8,8 +8,7 @@
     
     <programlisting>&lt;testcase name=&quot;echoTest&quot;&gt;
     &lt;variables&gt;
-        &lt;variable name=&quot;date&quot; 
-                     value=&quot;citrus:currentDate()&quot;/&gt;
+        &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate()&quot;/&gt;
     &lt;/variables&gt;
     &lt;actions&gt;
         &lt;echo&gt;

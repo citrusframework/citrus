@@ -13,8 +13,7 @@
     
     <programlisting>&lt;testcase name=&quot;receiveJMSimeoutTest&quot;&gt;
     &lt;actions&gt;
-        &lt;expect-timeout message-receiver=&quot;myMessageReceiver&quot; 
-                           wait=&quot;500&quot;/&gt;
+        &lt;expect-timeout message-receiver=&quot;myMessageReceiver&quot; wait=&quot;500&quot;/&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     

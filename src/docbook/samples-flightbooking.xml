@@ -251,8 +251,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;/data&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationId&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
             &lt;/send&gt;
             
@@ -284,8 +283,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;ignore path=&quot;//:FlightBookingRequestMessage/:bookingId&quot;/&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationId&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
                 &lt;extract&gt;
                     &lt;message path=&quot;//:FlightBookingRequestMessage/:bookingId&quot; 
@@ -316,8 +314,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;/data&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationId&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
             &lt;/send&gt;
             
@@ -349,8 +346,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;ignore path=&quot;//:FlightBookingRequestMessage/:bookingId&quot;/&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationId&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
                 &lt;extract&gt;
                     &lt;message path=&quot;//:FlightBookingRequestMessage/:bookingId&quot; 
@@ -381,8 +377,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;/data&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationid&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationid&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
             &lt;/send&gt;
             
@@ -419,8 +414,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                     &lt;/data&gt;
                 &lt;/message&gt;
                 &lt;header&gt;
-                    &lt;element name=&quot;correlationId&quot; 
-                                value=&quot;${correlationId}&quot;/&gt;
+                    &lt;element name=&quot;correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
                 &lt;/header&gt;
             &lt;/receive&gt;
             

@@ -66,8 +66,7 @@
             First example showing the basic test case definition elements!
         &lt;/description&gt;
         &lt;variables&gt;
-            &lt;variable name=&quot;text&quot; 
-                         value=&quot;Hello Test Framework&quot;/&gt;
+            &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework&quot;/&gt;
         &lt;/variables&gt;
         &lt;actions&gt;
             &lt;echo&gt;

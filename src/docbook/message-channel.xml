@@ -21,8 +21,7 @@
         <para>You can access message channels directly with a <emphasis>message-channel-sender</emphasis> component. The message 
         channel sender configuration is quite simple and receives a target channel as reference:</para>
         
-        <programlisting>&lt;citrus:message-channel-sender id=&quot;orderRequestSender&quot; 
-                            channel=&quot;orderChannel&quot;/&gt;
+        <programlisting>&lt;citrus:message-channel-sender id=&quot;orderRequestSender&quot; channel=&quot;orderChannel&quot;/&gt;
 
 &lt;si:channel id=&quot;orderChannel&quot;/&gt;</programlisting> 
         
@@ -117,8 +116,7 @@
         
         <para>We handle this synchronous communication with the synchronous message receiver in combination with a reply sender. The configuration looks like follows:</para>
         
-        <programlisting>&lt;citrus:sync-message-channel-receiver id=&quot;orderRequestReceiver&quot; 
-                    channel=&quot;order&quot;/&gt;
+        <programlisting>&lt;citrus:sync-message-channel-receiver id=&quot;orderRequestReceiver&quot; channel=&quot;order&quot;/&gt;
                                      
 &lt;citrus:message-channel-reply-sender id=&quot;orderReplySender&quot;
                     reply-channel-holder=&quot;orderRequestReceiver&quot;/&gt;</programlisting>
@@ -140,8 +138,7 @@
         Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to 
         message channels that are connected to the Spring Integration file adapter.</para>
         
-        <programlisting>&lt;citrus:message-channel-sender id=&quot;fileSender&quot; 
-                   channel=&quot;fileOutboundChannel&quot;/&gt;
+        <programlisting>&lt;citrus:message-channel-sender id=&quot;fileSender&quot; channel=&quot;fileOutboundChannel&quot;/&gt;
                    
 &lt;file:outbound-channel-adapter id=&quot;filesOut&quot; 
                   channel=&quot;fileOutboundChannel&quot; 

@@ -25,8 +25,7 @@
         &lt;list&gt;
             &lt;bean class=&quot;COM.TIBCO.hawk.talon.DataElement&quot;&gt;
                 &lt;constructor-arg value=&quot;ProcessDefinition&quot;/&gt;
-                &lt;constructor-arg    
-                    value=&quot;Test/UnitTest/BusinessServiceTester.process&quot;/&gt;
+                &lt;constructor-arg value=&quot;Test/UnitTest/BusinessServiceTester.process&quot;/&gt;
             &lt;/bean&gt;
         &lt;/list&gt;
     &lt;/property&gt;
@@ -82,8 +81,7 @@
     &lt;property name=&quot;network&quot; value=&quot;${ic.tibrv.network}&quot;/&gt;
     &lt;property name=&quot;daemon&quot; value=&quot;${ic.tibrv.daemon}&quot;/&gt;
     &lt;property name=&quot;queueCount&quot; value=&quot;${ic.tibrv.queue.count}&quot;/&gt;
-    &lt;property name=&quot;serverDiscoveryTimeout&quot; 
-                 value=&quot;${ic.tibrv.server.discovery.timeout}&quot;/&gt;
+    &lt;property name=&quot;serverDiscoveryTimeout&quot; value=&quot;${ic.tibrv.server.discovery.timeout}&quot;/&gt;
 &lt;/bean&gt;</programlisting>
         
         <para>The properties of that bean do all refer to the connection credentials of the Workflow InConcert Server instance.</para>

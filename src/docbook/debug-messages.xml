@@ -25,7 +25,7 @@
     configuration.</para>
     
     <programlisting>&lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
-        &lt;property name=&quot;debugDirectory&quot; value=&quot;debugging/messages&quot;/&gt;
+  &lt;property name=&quot;debugDirectory&quot; value=&quot;debugging/messages&quot;/&gt;
 &lt;/bean&gt;</programlisting>
     
     <note>

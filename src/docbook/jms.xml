@@ -37,12 +37,11 @@
         
         <programlisting>&lt;bean id=&quot;connectionFactory&quot; 
          class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-    &lt;property name=&quot;brokerURL&quot; 
-                 value=&quot;tcp://localhost:61616&quot; /&gt;
+    &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
 &lt;/bean&gt;
 
 &lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                              destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;/&gt;</programlisting>
+                           destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;/&gt;</programlisting>
         
         <para>The JMS connection factory is responsible for connecting to a JMS message broker. In this example we use the Apache ActiveMQ 
         connection factory implementation as we use a ActiveMQ message broker.</para>

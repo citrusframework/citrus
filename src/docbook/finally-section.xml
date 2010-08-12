@@ -22,8 +22,7 @@
     <programlisting>&lt;testcase name=&quot;finallyTest&quot;&gt;
     &lt;variables&gt;
         &lt;variable name=&quot;orderId&quot; value=&quot;1&quot;/&gt;
-        &lt;variable name=&quot;date&quot; 
-                     value=&quot;citrus:currentDate('dd.MM.yyyy')&quot;/&gt;
+        &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate('dd.MM.yyyy')&quot;/&gt;
     &lt;/variables&gt;
     &lt;actions&gt;
         &lt;sql datasource=&quot;testDataSource&quot;&gt;

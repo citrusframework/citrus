@@ -136,10 +136,8 @@
             
             <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot; 
   class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
-    &lt;property name=&quot;xpathMappingExpression&quot; 
-                 value=&quot;//MessageBody/Operation&quot;/&gt;
-    &lt;property name=&quot;messageHandlerContext&quot; 
-                 value=&quot;message-handler-context.xml&quot;/&gt;
+    &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation&quot;/&gt;
+    &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
 &lt;/bean&gt;</programlisting>
             
             <para>The handler receives a XPath mapping expression as well as a Spring ApllicationContext file resource. The message handlers
@@ -159,12 +157,10 @@
             <programlisting>&lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
          class=&quot;com.consol.citrus.http.handler.JmsConnectingMessageHandler&quot;&gt;
     &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
-    &lt;property name=&quot;replyDestinationName&quot; 
-                 value=&quot;JMS.Queue.Response.Out&quot;/&gt;
+    &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Queue.Response.Out&quot;/&gt;
     &lt;property name=&quot;connectionFactory&quot;&gt;
         &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-            &lt;property name=&quot;brokerURL&quot; 
-                         value=&quot;tcp://localhost:61616&quot; /&gt;
+            &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
         &lt;/bean&gt;
     &lt;/property&gt;
     &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;

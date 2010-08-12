@@ -41,10 +41,8 @@
         
         <programlisting>&lt;testcase name=&quot;concatFunctionTest&quot;&gt;
     &lt;variables&gt;
-        &lt;variable name=&quot;date&quot; 
-                     value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
-        &lt;variable name=&quot;text&quot; 
-                     value=&quot;Hello Test Framework!&quot; /&gt;
+        &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
+        &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework!&quot; /&gt;
     &lt;/variables&gt;
     &lt;actions&gt;
         &lt;echo&gt;
@@ -69,8 +67,7 @@
         the receive action.</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//element/element&quot; 
-                 value=&quot;citrus:concat('Cx1x', ${generatedId})&quot;/&gt;
+    &lt;validate path=&quot;//element/element&quot; value=&quot;citrus:concat('Cx1x', ${generatedId})&quot;/&gt;
 &lt;/message&gt;</programlisting>
 
     </section>
@@ -222,12 +219,9 @@
         <para>Next example will show the function usage:</para>
         
         <programlisting>&lt;variables&gt;
-    &lt;variable name=&quot;rndNumber1&quot; 
-                 value=&quot;citrus:randomNumber(10)&quot;/&gt;
-    &lt;variable name=&quot;rndNumber2&quot; 
-                 value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
-    &lt;variable name=&quot;rndNumber3&quot; 
-                 value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber1&quot; value=&quot;citrus:randomNumber(10)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber2&quot; value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber3&quot; value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
 &lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
@@ -243,16 +237,11 @@
         this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED)</para>
         
         <programlisting>&lt;variables&gt;
-    &lt;variable name=&quot;rndString0&quot; 
-                 value=&quot;${citrus:randomString(10)}&quot;/&gt;
-    &lt;variable name=&quot;rndString1&quot; 
-                 value=&quot;citrus:randomString(10)&quot;/&gt;
-    &lt;variable name=&quot;rndString2&quot; 
-                 value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
-    &lt;variable name=&quot;rndString3&quot; 
-                 value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
-    &lt;variable name=&quot;rndString4&quot; 
-                 value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
+    &lt;variable name=&quot;rndString0&quot; value=&quot;${citrus:randomString(10)}&quot;/&gt;
+    &lt;variable name=&quot;rndString1&quot; value=&quot;citrus:randomString(10)&quot;/&gt;
+    &lt;variable name=&quot;rndString2&quot; value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
+    &lt;variable name=&quot;rndString3&quot; value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
+    &lt;variable name=&quot;rndString4&quot; value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
 &lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
@@ -309,39 +298,17 @@
         <para>This function will definitely help you when accessing the current date. Some examples will show the
         usage in detail:</para>
         
-        <programlisting>&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate()&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
-&lt;/echo&gt;
-&lt;echo&gt;
-    &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
-&lt;/echo&gt;</programlisting>
+        <programlisting>&lt;echo&gt;&lt;message&gt;citrus:currentDate()&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;&lt;/echo&gt;</programlisting>
         
         <para>Note that the currentDate function provides two parameters. First parameter describes the date format
         string. The second will define a date offset string containing year, month, days, hours, minutes or seconds

@@ -102,8 +102,7 @@
                     &lt;/RequestMessage&gt;
                     ]]&gt;
                 &lt;/data&gt;
-                &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
-                            value=&quot;${requestTag}&quot;/&gt;
+                &lt;element path=&quot;/MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
             &lt;/message&gt;
             &lt;header&gt;
                 &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
@@ -219,8 +218,7 @@
             &lt;/RequestMessage&gt;
             ]]&gt;
         &lt;/data&gt;
-        &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
-                    value=&quot;${requestTag}&quot;/&gt;
+        &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
@@ -228,8 +226,7 @@
     &lt;/header&gt;
     &lt;extract&gt;
         &lt;header name=&quot;Operation&quot; variable=&quot;${operation}&quot;/&gt;
-        &lt;message path=&quot;//MessageBody/Customer/Id&quot; 
-                    variable=&quot;${customerId}&quot;/&gt;
+        &lt;message path=&quot;//MessageBody/Customer/Id&quot; variable=&quot;${customerId}&quot;/&gt;
     &lt;/extract&gt;
 &lt;/receive&gt;</programlisting>
     
@@ -317,8 +314,7 @@
         &lt;/RequestMessage&gt;
         ]]&gt;
     &lt;/data&gt;
-    &lt;element path=&quot;//MessageHeader/RequestTag&quot; 
-                value=&quot;${requestTag}&quot;/&gt;
+    &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
 &lt;/message&gt;</programlisting>
         
         <para>The program linsting shows both ways of setting variable values inside a message template. First of all you can
@@ -463,8 +459,7 @@
         
         <programlisting>&lt;extract&gt;
     &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
-    &lt;message name=&quot;//MessageBody/Customer/Id&quot; 
-                variable=&quot;customerId&quot;/&gt;
+    &lt;message name=&quot;//MessageBody/Customer/Id&quot; variable=&quot;customerId&quot;/&gt;
 &lt;/extract&gt;</programlisting>
         
         <para>As you can see Citrus is able to store both header and message payload content into test variables. It does not matter if you use new test variables 
