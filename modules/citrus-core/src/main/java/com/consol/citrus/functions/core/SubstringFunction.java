@@ -18,11 +18,17 @@ package com.consol.citrus.functions.core;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
 /**
  * Function implements simple substring functionality.
+ * 
+ * Function requires at least a target string and a beginIndex as function parameters. A
+ * optional endIndex may be given as function parameter, too. The parameter usage looks 
+ * like this: substring(targetString, beginIndex, [endIndex]).
  * 
  * @author Christoph Deppisch
  */
@@ -33,30 +39,30 @@ public class SubstringFunction implements Function {
      * @throws InvalidFunctionUsageException
      */
     public String execute(List<String> parameterList) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
+        if (parameterList == null || parameterList.size() < 2) {
+            throw new InvalidFunctionUsageException("Insufficient function parameters - parameter usage: (targetString, beginIndex, [endIndex])");
         }
 
-        String resultString = parameterList.get(0);
+        String targetString = parameterList.get(0);
 
-        String beginIndex = null;
+        String beginIndex = parameterList.get(1);
         String endIndex = null;
 
-        if (parameterList.size()>1) {
-            beginIndex = parameterList.get(1);
+        if(!StringUtils.hasText(beginIndex)) {
+            throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
         }
-
-        if (parameterList.size()>2) {
+        
+        if (parameterList.size() > 2) {
             endIndex = parameterList.get(2);
         }
 
-        if (endIndex != null && endIndex.length()>0) {
-            resultString = resultString.substring(new Integer(beginIndex).intValue(), new Integer(endIndex).intValue());
+        if (StringUtils.hasText(endIndex)) {
+            targetString = targetString.substring(Integer.valueOf(beginIndex), Integer.valueOf(endIndex));
         } else {
-            resultString = resultString.substring(new Integer(beginIndex).intValue());
+            targetString = targetString.substring(Integer.valueOf(beginIndex));
         }
 
-        return resultString;
+        return targetString;
     }
 
 }

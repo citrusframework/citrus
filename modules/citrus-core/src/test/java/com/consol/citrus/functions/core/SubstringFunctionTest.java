@@ -70,6 +70,19 @@ public class SubstringFunctionTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    public void testMissingBeginIndex() {
+        function.execute(Collections.singletonList("This is a test"));
+    }
+    
+    @Test(expectedExceptions = {NumberFormatException.class})
+    public void testNotANumber() {
+        List<String> params = new ArrayList<String>();
+        params.add("Hallo,TestFramework");
+        params.add("one");
+        function.execute(params);
+    }
+    
+    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList());
     }
