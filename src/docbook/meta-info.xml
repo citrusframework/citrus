@@ -59,7 +59,7 @@
     xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
       http://www.citrusframework.org/schema/testcase 
-      http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd 
+      http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd 
       http://www.citrusframework.org/samples/my-testcase-info 
       http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd&quot;&gt;
  
