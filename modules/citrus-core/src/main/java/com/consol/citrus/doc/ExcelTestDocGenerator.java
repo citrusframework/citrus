@@ -61,6 +61,10 @@ public class ExcelTestDocGenerator {
     private String customHeaders = "";
     
     public void generateDoc() {
+        BufferedReader reader = null;
+        FileOutputStream file = null;
+        OutputStream buffered = null;
+        
         try {
             List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
@@ -79,8 +83,8 @@ public class ExcelTestDocGenerator {
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
             t.setOutputProperty(OutputKeys.METHOD, "xml");
 
-            FileOutputStream file = new FileOutputStream("target/" + outputFile + ".xls");
-            OutputStream buffered = new BufferedOutputStream(file);
+            file = new FileOutputStream("target/" + outputFile + ".xls");
+            buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -88,7 +92,7 @@ public class ExcelTestDocGenerator {
             DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
             documentBuilderFactory.setNamespaceAware(true);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
+            reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
@@ -124,9 +128,6 @@ public class ExcelTestDocGenerator {
             while ((line = reader.readLine()) != null) {
                 buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
             }
-
-            buffered.flush();
-            file.close();
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         } catch (TransformerException e) {
@@ -135,6 +136,30 @@ public class ExcelTestDocGenerator {
             throw new CitrusRuntimeException(e);
         } catch (ParserConfigurationException e) {
             throw new CitrusRuntimeException(e);
+        } finally {
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if(buffered != null) {
+                try {
+                    buffered.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if(file != null) {
+                try {
+                    file.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
     

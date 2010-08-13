@@ -57,6 +57,10 @@ public class HtmlTestDocGenerator {
     private String testDocTemplate = "testdoc.html.template";
     
     public void generateDoc() {
+        BufferedReader reader = null;
+        FileOutputStream file = null;
+        OutputStream buffered = null;
+        
         try {
             List<File> testFiles = FileUtils.getTestFiles(testDirectory);
 
@@ -76,8 +80,8 @@ public class HtmlTestDocGenerator {
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/html");
             t.setOutputProperty(OutputKeys.METHOD, "html");
 
-            FileOutputStream file = new FileOutputStream("target/" + outputFile + ".html");
-            OutputStream buffered = new BufferedOutputStream(file);
+            file = new FileOutputStream("target/" + outputFile + ".html");
+            buffered = new BufferedOutputStream(file);
             StreamResult res = new StreamResult(buffered);
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -85,7 +89,7 @@ public class HtmlTestDocGenerator {
             DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
             documentBuilderFactory.setNamespaceAware(true);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(HtmlTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
+            reader = new BufferedReader(new InputStreamReader(HtmlTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().equalsIgnoreCase(OVERVIEW_PLACEHOLDER)) {
@@ -156,6 +160,30 @@ public class HtmlTestDocGenerator {
             throw new CitrusRuntimeException(e);
         } catch (ParserConfigurationException e) {
             throw new CitrusRuntimeException(e);
+        } finally {
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if(buffered != null) {
+                try {
+                    buffered.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if(file != null) {
+                try {
+                    file.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
     
