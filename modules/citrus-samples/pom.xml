@@ -2,7 +2,7 @@
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -10,7 +10,7 @@
   <artifactId>citrus-samples</artifactId>
   <name>citrus-samples</name>
   <packaging>pom</packaging>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   
   <modules>
     <module>modules/citrus-samples-common</module>
@@ -25,7 +25,7 @@
         <plugin>
             <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <configuration>
                 <author>Christoph Deppisch</author>
                 <targetPackage>com.consol.citrus.samples</targetPackage>
@@ -90,27 +90,27 @@
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-core</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-adapter</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-ws</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-http</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus.ant</groupId>
             <artifactId>citrus-ant-tasks</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         
         <!-- Spring framework -->
