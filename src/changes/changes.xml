@@ -19,6 +19,9 @@
         <action dev="mm" type="add">
           #313 Log message when validation fails
         </action>
+        <action dev="mm" type="fix">
+          #290 Log XSD schema validation errors properly
+        </action>
         <action dev="cwied" type="fix">
           #297 SubstringAfterFunction
         </action>
