@@ -72,7 +72,8 @@ public class StoreMessageInterceptorAspect {
      * @throws CitrusRuntimeException
      */
     private void storeMessage(Message<?> receivedMessage) {
-        Writer output = null;
+        Writer headerOutput = null;
+        Writer bodyOutput = null;
         
         try {
             if(!debugDirectory.exists()) {
@@ -85,28 +86,35 @@ public class StoreMessageInterceptorAspect {
             Resource file_header = debugDirectory.createRelative("message" + counter + ".header");
             
             //write body message
-            output = new BufferedWriter(new FileWriter(file_body.getFile()));
-            output.write(receivedMessage.getPayload().toString());
-            output.flush();
-            output.close();
+            bodyOutput = new BufferedWriter(new FileWriter(file_body.getFile()));
+            bodyOutput.write(receivedMessage.getPayload().toString());
+            bodyOutput.flush();
 
             //write header message
-            output = new BufferedWriter(new FileWriter(file_header.getFile()));
+            headerOutput = new BufferedWriter(new FileWriter(file_header.getFile()));
             Map<String, Object> header = receivedMessage.getHeaders();
 
             for (Entry<String, Object> entry : header.entrySet()) {
-                output.write(entry.getKey() + "=" + entry.getValue() + "\n");
+                headerOutput.write(entry.getKey() + "=" + entry.getValue() + "\n");
             }
             
+            headerOutput.flush();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Error while trying to save incoming message to filesystem", e);
         } finally {
-            if(output != null) {
+            if(headerOutput != null) {
                 try {
-                    output.flush();
-                    output.close();
+                    headerOutput.close();
                 } catch (IOException e) {
-                    log.error("Error while closing writer", e);
+                    log.error("Error while closing header writer", e);
+                }
+            }
+            
+            if(bodyOutput != null) {
+                try {
+                    bodyOutput.close();
+                } catch (IOException e) {
+                    log.error("Error while closing body writer", e);
                 }
             }
         }

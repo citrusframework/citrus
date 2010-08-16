@@ -151,9 +151,7 @@ public class TestCaseCreator {
                 file.getParentFile().mkdirs();
             }
                 
-            FileOutputStream fos = new FileOutputStream(file);
-            buffered = new BufferedOutputStream(fos);
-    
+            buffered = new BufferedOutputStream(new FileOutputStream(file));
             reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(templateFilePath)));
             
             StringWriter sWriter = new StringWriter();
@@ -165,8 +163,6 @@ public class TestCaseCreator {
     
             buffered.write(sWriter.toString().getBytes());
             buffered.flush();
-            fos.flush();
-            fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -176,7 +172,11 @@ public class TestCaseCreator {
                 if(buffered != null) {
                     buffered.close();
                 }
-                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            try {
                 if(reader != null) {
                     reader.close();
                 }

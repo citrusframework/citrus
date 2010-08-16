@@ -98,7 +98,11 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                 if(templateReader != null) {
                     templateReader.close();
                 }
-                
+            } catch (IOException e) {
+                throw new CitrusRuntimeException(e);
+            }
+            
+            try {
                 if(bodyReader != null) {
                     bodyReader.close();
                 }

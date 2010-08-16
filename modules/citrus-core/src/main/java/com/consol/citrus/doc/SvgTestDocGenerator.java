@@ -87,7 +87,9 @@ public class SvgTestDocGenerator {
                 StringWriter stringWriter = new StringWriter();
                 StreamSource xml = new StreamSource(testFile);
                 StreamResult res = new StreamResult(stringWriter);
-
+                
+                FileWriter fileWriter = null;
+                
                 try {
                     t.transform(xml, res);
                     stringWriter.flush();
@@ -97,10 +99,9 @@ public class SvgTestDocGenerator {
 
                     if (fileContent!= null && fileContent.indexOf("svg")!=-1) {
                         log.info("Created file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
-                        FileWriter fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
+                        fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                         fileWriter.write(stringWriter.toString());
                         fileWriter.flush();
-                        fileWriter.close();
                     } else {
                         log.warn("Could not create file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                     }
@@ -108,6 +109,14 @@ public class SvgTestDocGenerator {
                     log.error("XSLT tranformation failed", e);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    if(fileWriter != null) {
+                        try {
+                            fileWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         } catch (TransformerConfigurationException e) {
