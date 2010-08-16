@@ -47,8 +47,6 @@ public class TraceVariablesAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        boolean isSuccess = true;
-
         Iterator<String> it;
         if (variableNames != null && variableNames.size() > 0) {
             log.info("Validating variables using custom map:");
@@ -65,16 +63,6 @@ public class TraceVariablesAction extends AbstractTestAction {
             String value = context.getVariable(key);
 
             log.info("Current value of variable " + key + " = " + value);
-
-            if (value == null)  {
-                log.info("Validation error: Variable value is null");
-                
-                isSuccess = false;
-            }
-        }
-
-        if (!isSuccess) {
-            throw new CitrusRuntimeException("Validation error, because one or more variables are null");
         }
     }
 

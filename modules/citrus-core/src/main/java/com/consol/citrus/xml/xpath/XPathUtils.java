@@ -25,7 +25,6 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.util.XMLUtils;
 
 /**
@@ -58,10 +57,6 @@ public abstract class XPathUtils {
             NamespaceContext nsContext, XPathExpressionResult resultType) {
         if(resultType.equals(XPathExpressionResult.NODE)) {
             Node resultNode = evaluateAsNode(node, xPathExpression, nsContext);
-
-            if (resultNode == null) {
-                throw new UnknownElementException("No element found for XPath expression: '" + xPathExpression + "'");
-            }
 
             if (resultNode.getNodeType() == Node.ELEMENT_NODE) {
                 if (resultNode.getFirstChild() != null) {

@@ -45,9 +45,7 @@ public class SoapAttachmentParser {
      */
     public static void parseAttachment(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
-        if(attachmentElement == null) {
-            return;
-        }
+        if(attachmentElement == null) { return; }
         
         String contentId = attachmentElement.getAttribute("content-id");
         if(StringUtils.hasText(contentId)) {
@@ -64,22 +62,20 @@ public class SoapAttachmentParser {
             builder.addPropertyValue("charsetName", charset);
         }
         
-        if (attachmentElement != null) {
-            Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
-            if (attachmentDataElement != null) {
-                builder.addPropertyValue("attachmentData", DomUtils.getTextValue(attachmentDataElement));
-            }
-            
-            Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
-            if (attachmentResourceElement != null) {
-                String attachmentFilePath = attachmentResourceElement.getAttribute("file");
-                if (attachmentFilePath.startsWith("classpath:")) {
-                    builder.addPropertyValue("attachmentResource", new ClassPathResource(attachmentFilePath.substring("classpath:".length())));
-                } else if (attachmentFilePath.startsWith("file:")) {
-                    builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath.substring("file:".length())));
-                } else {
-                    builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath));
-                }
+        Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
+        if (attachmentDataElement != null) {
+            builder.addPropertyValue("attachmentData", DomUtils.getTextValue(attachmentDataElement));
+        }
+        
+        Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
+        if (attachmentResourceElement != null) {
+            String attachmentFilePath = attachmentResourceElement.getAttribute("file");
+            if (attachmentFilePath.startsWith("classpath:")) {
+                builder.addPropertyValue("attachmentResource", new ClassPathResource(attachmentFilePath.substring("classpath:".length())));
+            } else if (attachmentFilePath.startsWith("file:")) {
+                builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath.substring("file:".length())));
+            } else {
+                builder.addPropertyValue("attachmentResource", new FileSystemResource(attachmentFilePath));
             }
         }
     }

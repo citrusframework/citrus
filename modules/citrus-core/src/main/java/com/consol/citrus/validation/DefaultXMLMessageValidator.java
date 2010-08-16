@@ -147,10 +147,12 @@ public class DefaultXMLMessageValidator implements MessageValidator {
                 headerName = FunctionUtils.resolveFunction(headerName, context);
             }
 
-            if (receivedHeaderValues.containsKey(headerName) && receivedHeaderValues.get(headerName) != null) {
-                actualValue = receivedHeaderValues.get(headerName).toString();
-            } else {
+            if (!receivedHeaderValues.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
+            }
+            
+            if(receivedHeaderValues.get(headerName) != null) {
+                actualValue = receivedHeaderValues.get(headerName).toString();
             }
 
             if (VariableUtils.isVariableName(expectedValue)) {

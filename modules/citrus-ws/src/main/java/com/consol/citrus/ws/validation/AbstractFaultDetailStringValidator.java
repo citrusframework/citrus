@@ -20,7 +20,6 @@ import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.xml.transform.StringResult;
@@ -72,9 +71,7 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
                 
                 validateFaultDetailString(receivedDetailString, controlDetailString);
             } else {
-                Assert.isTrue(controlDetail == null, 
-                        "Values not equal for SOAP fault detail content, " +
-                        "expected detail content but was '" + null + "'");
+                throw new ValidationException("Missing SOAP fault detail in received message");
             }
         } catch (TransformerException e) {
             throw new CitrusRuntimeException(e);
