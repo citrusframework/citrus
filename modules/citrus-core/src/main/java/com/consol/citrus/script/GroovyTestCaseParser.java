@@ -22,6 +22,8 @@ import groovy.lang.GroovyObject;
 import java.io.*;
 
 import org.codehaus.groovy.control.CompilationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -39,6 +41,11 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
    
     /** Application context */
     private ApplicationContext applicationContext;
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(GroovyTestCaseParser.class);
 
     /** Builds a test case using the application context and test context */
     public interface TestCaseBuilder {
@@ -99,7 +106,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                     templateReader.close();
                 }
             } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
+                log.error("Failed to close stream for groovy template resource", e);
             }
             
             try {
@@ -107,7 +114,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
                     bodyReader.close();
                 }
             } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
+                log.error("Failed to close stream for groovy script resource", e);
             }
         }
     }
