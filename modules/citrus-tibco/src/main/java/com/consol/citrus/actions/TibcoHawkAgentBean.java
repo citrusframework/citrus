@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.StringUtils;
 
 import COM.TIBCO.hawk.console.hawkeye.AgentManager;
 import COM.TIBCO.hawk.console.hawkeye.TIBHawkConsole;
@@ -89,7 +90,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
 
             MethodInvocation methodInvocation = new MethodInvocation(methodName, methodParameters);
 
-            log.info("Invoking method " + methodInvocation.getMethodName() + "(" + methodInvocation.getArguments() + ")");
+            log.info("Invoking method " + methodInvocation.getMethodName() + "(" + StringUtils.arrayToCommaDelimitedString(methodInvocation.getArguments()) + ")");
             MicroAgentData m = agentManager.invoke(maids[0], methodInvocation);
 
             Object maData = m.getData();
@@ -165,7 +166,8 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
         } else if (madata instanceof MicroAgentException) {
             MicroAgentException exc = (MicroAgentException)madata;
             if (log.isDebugEnabled()) {
-                log.debug("Method Invocation returned exception: " + exc.getStackTrace());
+                log.debug("Method Invocation returned exception: "
+                        + StringUtils.arrayToCommaDelimitedString(exc.getStackTrace()));
             }
         } else if (madata == null) {
             log.info("Method Invocation returned NO data");

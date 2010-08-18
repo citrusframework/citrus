@@ -42,6 +42,21 @@ public class XMLUtils {
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;
 
+    static {
+        try {
+            registry = DOMImplementationRegistry.newInstance();
+            domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+        } catch (Exception e) {
+            throw new CitrusRuntimeException(e);
+        }
+    }
+    
+    /**
+     * Prevent instantiation.
+     */
+    private XMLUtils() {
+    }
+    
     /**
      * Searches for a node within a DOM document with a given node path expression.
      * Elements are separated by '.' characters.
@@ -159,15 +174,8 @@ public class XMLUtils {
     public static String serialize(Document doc) {
         LSSerializer serializer = null;
 
-        try {
-            if (domImpl == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-
+        checkDomImplInitialization();
+        
         serializer = domImpl.createLSSerializer();
         serializer.getDomConfig().setParameter("split-cdata-sections", false);
         serializer.getDomConfig().setParameter("format-pretty-print", true);
@@ -184,6 +192,16 @@ public class XMLUtils {
     }
 
     /**
+     * Checks if DOM implementation was initialized correctly.
+     * @throws CitrusRuntimeException
+     */
+    private static void checkDomImplInitialization() throws CitrusRuntimeException {
+        if (domImpl == null) {
+            throw new CitrusRuntimeException("DOM initialization was not done correctly - unable to continue");
+        }
+    }
+
+    /**
      * Pretty prints a XML string.
      * @param doc
      * @throws CitrusRuntimeException
@@ -192,15 +210,8 @@ public class XMLUtils {
     public static String prettyPrint(String xml) {
         LSParser parser = null;
 
-        try {
-            if (domImpl == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-
+        checkDomImplInitialization();
+        
         parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
         parser.getDomConfig().setParameter("cdata-sections", true);
         parser.getDomConfig().setParameter("split-cdata-sections", false);
@@ -309,36 +320,25 @@ public class XMLUtils {
      * @return DOM document.
      */
     public static Document parseMessagePayload(String messagePayload) {
+        checkDomImplInitialization();
+        
+        LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        parser.getDomConfig().setParameter("cdata-sections", true);
+        parser.getDomConfig().setParameter("split-cdata-sections", false);
+        parser.getDomConfig().setParameter("validate-if-schema", true);
+        
+        parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
+        
+        parser.getDomConfig().setParameter("element-content-whitespace", false);
+        
+        LSInput receivedInput = domImpl.createLSInput();
         try {
-            if(registry == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-    
-            LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-            parser.getDomConfig().setParameter("cdata-sections", true);
-            parser.getDomConfig().setParameter("split-cdata-sections", false);
-            parser.getDomConfig().setParameter("validate-if-schema", true);
-            
-            parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
-            
-            parser.getDomConfig().setParameter("element-content-whitespace", false);
-            
-            LSInput receivedInput = domImpl.createLSInput();
-            try {
-                receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
-            } catch(UnsupportedEncodingException e) {
-                throw new CitrusRuntimeException(e);
-            }
-            
-            return parser.parse(receivedInput);
-        } catch (ClassNotFoundException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
+            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
+        } catch(UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
         }
+        
+        return parser.parse(receivedInput);
     }
 
     /**

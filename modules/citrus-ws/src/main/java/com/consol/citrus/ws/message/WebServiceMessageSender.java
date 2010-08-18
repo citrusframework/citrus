@@ -138,7 +138,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 	/**
 	 * Callback for Webservice-Sending-Actions
 	 */
-	private class WebServiceMessageSenderCallback implements WebServiceMessageCallback {
+	private static class WebServiceMessageSenderCallback implements WebServiceMessageCallback {
 
 		private Message<?> message;
 		private Attachment attachment = null;
@@ -197,7 +197,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 	/**
 	 * Callback for Webservice-Receiving-Actions
 	 */
-	private class WebServiceMessageReceiverCallback implements WebServiceMessageCallback {
+	private static class WebServiceMessageReceiverCallback implements WebServiceMessageCallback {
 
 		private Message<String> response;
 		
