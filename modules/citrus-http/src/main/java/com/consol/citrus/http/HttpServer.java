@@ -144,19 +144,18 @@ public class HttpServer extends AbstractServer {
                         } catch (NumberFormatException ex) {
                         }
                     }
-                    String postLine = "";
+                    StringBuilder payloadBuilder = new StringBuilder();
                     char buf[] = new char[512];
                     int read = in.read(buf);
-                    while (read >= 0 && size > 0 && !postLine.endsWith(HttpConstants.LINE_BREAK)) {
+                    while (read >= 0 && size > 0 && !payloadBuilder.toString().endsWith(HttpConstants.LINE_BREAK)) {
                         size -= read;
-                        postLine += String.valueOf(buf, 0, read);
+                        payloadBuilder.append(String.valueOf(buf, 0, read));
                         if (size > 0) {
                             read = in.read(buf);
                         }
                     }
-                    postLine = postLine.trim();
                     
-                    request = MessageBuilder.withPayload(postLine).copyHeaders(requestHeaders).build();
+                    request = MessageBuilder.withPayload(payloadBuilder.toString().trim()).copyHeaders(requestHeaders).build();
                 } else {
                     //TODO implement GET method
                     request = MessageBuilder.withPayload("").copyHeaders(requestHeaders).build();
@@ -334,7 +333,7 @@ public class HttpServer extends AbstractServer {
                             .setHeader("HTTPMethod", HttpConstants.HTTP_POST)
                             .setHeader("HTTPUri", host + ":" + port + uri)
                             .setHeader("HTTPHost", host)
-                            .setHeader("HTTPPort", new Integer(port).toString())
+                            .setHeader("HTTPPort", Integer.valueOf(port).toString())
                             .build();
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
