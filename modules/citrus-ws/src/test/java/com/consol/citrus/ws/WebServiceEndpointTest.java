@@ -21,6 +21,8 @@ import static org.easymock.EasyMock.*;
 import java.util.*;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPMessage;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -29,6 +31,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Body;
@@ -244,6 +247,105 @@ public class WebServiceEndpointTest {
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
         verify(messageContext, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+    }
+    
+    @Test
+    public void testMessageProcessingWithMimeRequestHeaders() throws Exception {
+        WebServiceEndpoint endpoint = new WebServiceEndpoint();
+        endpoint.setHandleMimeHeaders(true);
+
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put("Operation", "sayHello");
+        requestHeaders.put("Host", "localhost:8080");
+        requestHeaders.put("Content-Length", "236");
+        requestHeaders.put("Accept", "text/xml, text/html, image/gif, image/jpeg");
+        requestHeaders.put("Content-Type", "text/xml");
+        
+        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(requestHeaders)
+                                .build();
+        
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
+                                .copyHeaders(responseHeaders)
+                                .build();
+        
+        endpoint.setMessageHandler(new MessageHandler() {
+            public Message<?> handleMessage(Message<?> message) {
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                
+                Assert.assertNotNull(message.getHeaders().get("Operation"));
+                Assert.assertEquals(message.getHeaders().get("Operation"), "sayHello");
+                
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                
+                return responseMessage;
+            }
+        });
+        
+        SaajSoapMessage soapRequest = org.easymock.classextension.EasyMock.createMock(SaajSoapMessage.class);
+        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
+        SoapBody soapRequestBody = EasyMock.createMock(SoapBody.class);
+        SoapEnvelope soapRequestEnvelope = EasyMock.createMock(SoapEnvelope.class);
+        
+        SOAPMessage soapRequestMessage = org.easymock.classextension.EasyMock.createMock(SOAPMessage.class);
+        MimeHeaders mimeHeaders = new MimeHeaders();
+        mimeHeaders.addHeader("Host", "localhost:8080");
+        mimeHeaders.addHeader("Content-Length", "236");
+        mimeHeaders.addHeader("Accept", "text/xml");
+        mimeHeaders.addHeader("Accept", "text/html");
+        mimeHeaders.addHeader("Accept", "image/gif");
+        mimeHeaders.addHeader("Accept", "image/jpeg");
+        mimeHeaders.addHeader("Content-Type", "text/xml");
+        
+        Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
+        SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
+        soapRequestHeaders.add(soapRequestHeaderEntry);
+        
+        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+        
+        StringResult soapResponsePayload = new StringResult();
+        
+        org.easymock.classextension.EasyMock.reset(soapRequest, soapRequestMessage);
+
+        org.easymock.classextension.EasyMock.expect(soapRequest.getEnvelope()).andReturn(soapRequestEnvelope).times(2);
+        org.easymock.classextension.EasyMock.expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        org.easymock.classextension.EasyMock.expect(soapRequest.getAttachments()).andReturn(Collections.emptySet().iterator()).once();
+        
+        org.easymock.classextension.EasyMock.expect(soapRequest.getSaajMessage()).andReturn(soapRequestMessage).once();
+        org.easymock.classextension.EasyMock.expect(soapRequestMessage.getMimeHeaders()).andReturn(mimeHeaders).once();
+        
+        org.easymock.classextension.EasyMock.replay(soapRequest, soapRequestMessage);
+        
+        reset(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse);
+        
+        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+
+        expect(soapRequestEnvelope.getBody()).andReturn(soapRequestBody).once();
+        expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        
+        expect(soapRequestEnvelope.getHeader()).andReturn(soapRequestHeader).once();
+        
+        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        
+        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(soapRequestHeaders.iterator()).once();
+        
+        expect(soapRequestHeaderEntry.getName()).andReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus")).once();
+        expect(soapRequestHeaderEntry.getText()).andReturn("sayHello").once();
+        
+        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+
+        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        
+        replay(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse);
+        
+        endpoint.invoke(messageContext);
+        
+        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        
+        verify(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse);
+        org.easymock.classextension.EasyMock.verify(soapRequest, soapRequestMessage);
     }
     
     @Test
