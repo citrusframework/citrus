@@ -227,6 +227,36 @@
         <programlisting>&lt;header&gt;
     &lt;resource file=&quot;classpath:request-soap-header.xml&quot;/&gt;
 &lt;/header&gt;</programlisting>
+
+        <note>
+            <para>When speaking of message headers we might also be interested in special mime headers. As an example SOAP over Http provides several
+            Http headers that might be candidates for validation (e.g. Content-Type, Content-Length, Authorization). These Http headers 
+            outside of the SOAP envelope are not handled in SOAP request processing by default. In order to receive and validate those in a test case we 
+            must enable a special feature in the SOAP WebService endpoint.</para>
+            
+            <programlisting>&lt;bean id=&quot;webServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+    &lt;property name=&quot;handleMimeHeaders&quot; value=&quot;true&quot;/&gt;
+    [...]
+&lt;/bean&gt;</programlisting>
+
+             <para>With this configuration Citrus will handle all available mime headers passing those to the test case for normal header validation.</para>
+             
+             <programlisting>&lt;ws:receive with=&quot;webServiceRequestReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;ns0:SoapMessageRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                    &lt;ns0:Operation&gt;Validate mime headers&lt;/ns0:Operation&gt;
+                &lt;/ns0:SoapMessageRequest&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml; charset=utf-8&quot;/&gt;
+    &lt;/header&gt;
+&lt;/ws:receive&gt;
+             </programlisting>
+        </note>
     </section>
     
     <section id="soap-faults">
