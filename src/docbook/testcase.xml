@@ -148,8 +148,18 @@
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
         
-        <para>Again we just place a Spring bean in the application context and everything is done. Citrus loads the properties as name-value-pairs
-        which represent the global variables.</para>
+        <para>Again we just place a Spring bean in the application context and everything is done. Citrus loads the properties as global 
+        test variables.</para>
+
+        <note>
+          <para>You can use variables and functions in the external property files, too. It is possible to use previously defined global 
+          variables in the values, like in this example:</para>
+        </note>
+      
+        <programlisting>user=Citrus
+greeting=Hello ${user}!
+date=citrus:currentDate('yyyy-MM-dd')</programlisting>
+        
     </section>
     
     <section id="testcase-actions">
