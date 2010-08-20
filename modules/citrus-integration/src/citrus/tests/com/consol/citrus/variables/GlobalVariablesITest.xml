@@ -2,35 +2,36 @@
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
   xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-  <testcase name="LoadPropertiesITest">
+  <testcase name="GlobalVariablesITest">
     <meta-info>
-      <author>Christoph Deppisch</author>
-      <creationdate>2008-05-15</creationdate>
+      <author>Philipp Komninos</author>
+      <creationdate>2010-08-13</creationdate>
       <status>FINAL</status>
-      <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2010-08-18T00:00:00</last-updated-on>
+      <last-updated-by>Philipp Komninos</last-updated-by>
+      <last-updated-on>2010-08-13T00:00:00</last-updated-on>
     </meta-info>
 
     <description>
-        Loading variables from properties file (load.properties). Expect variables to be created and ready for test. 
-        In addition to that test variable usage inside property file.
-    </description>
-
+		Test the use of property loader with global variables and general variable support.
+		Global variables are loaded in advance to this test. Variables are printed within this test
+        to show that global property loader works fine.
+	</description>
+  
     <variables>
         <variable name="checkDate" value="citrus:currentDate('yyyy-MM-dd')"/>
     </variables>
-    
-    <actions>
-      <load>
-        <properties file="classpath:com/consol/citrus/actions/load.properties" />
-      </load>
 
+    <actions>
       <echo>
-        <message>Use variables coming from property file</message>
+        <message>Value of global variable "globalGreeting": ${globalGreeting}</message>
       </echo>
       
       <echo>
-        <message>Variables are: ${user}, ${welcomeText}, ${todayDate}</message>
+        <message>Value of global variable "globalWelcomingText": ${globalWelcomingText}</message>
+      </echo>
+      
+      <echo>
+        <message>Value of global variable "globalDate": ${globalDate}</message>
       </echo>
 
       <echo>
@@ -47,8 +48,8 @@
           
           public class GScript implements ScriptExecutor {
               public void execute(TestContext context) {
-                  Assert.assertEquals("${welcomeText}", "Hello Mr. X")
-                  Assert.assertEquals("${todayDate}", "${checkDate}")
+                  Assert.assertEquals("${globalWelcomingText}", "Hello Citrus!")
+                  Assert.assertEquals("${globalDate}", "Today is ${checkDate}!")
               }
           }
         ]]>

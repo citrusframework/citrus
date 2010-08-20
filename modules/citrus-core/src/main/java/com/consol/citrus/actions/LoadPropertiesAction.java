@@ -17,6 +17,7 @@
 package com.consol.citrus.actions;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -75,11 +76,16 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
             log.info("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
 
-            if (context.getVariables().containsKey(key) && log.isDebugEnabled()) {
-                log.debug("Overwriting property " + key + " old value:" + context.getVariable(key) + " new value:" + props.getProperty(key));
+            if (log.isDebugEnabled() && context.getVariables().containsKey(key)) {
+                log.debug("Overwriting property " + key + " old value:" + context.getVariable(key) 
+                        + " new value:" + props.getProperty(key));
             }
 
-            context.setVariable(key, props.getProperty(key));
+            try {
+                context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
+            } catch (ParseException e) {
+                throw new CitrusRuntimeException("Failed to resolve value for property '" + key + "'", e);
+            }
         }
     }
 

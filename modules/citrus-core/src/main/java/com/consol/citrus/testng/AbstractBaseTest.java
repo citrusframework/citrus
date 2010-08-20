@@ -40,11 +40,11 @@ public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests 
 
     /** Function registry */
     @Autowired
-    FunctionRegistry functionRegistry;
+    protected FunctionRegistry functionRegistry;
 
     /** Global variables */
     @Autowired
-    GlobalVariables globalVariables;
+    protected GlobalVariables globalVariables;
 
     /**
      * Setup test execution.

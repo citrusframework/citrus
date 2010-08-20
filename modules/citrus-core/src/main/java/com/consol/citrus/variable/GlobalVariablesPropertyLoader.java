@@ -17,6 +17,7 @@
 package com.consol.citrus.variable;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -24,12 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.*;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.FunctionRegistry;
 
 /**
  * Loads properties from an external property file and creates global test variables.
@@ -39,6 +40,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class GlobalVariablesPropertyLoader implements InitializingBean {
     @Autowired
     private GlobalVariables globalVariables;
+    
+    @Autowired
+    private FunctionRegistry functionRegistry;
     
     /** List of property files loaded as global variables */
     private List<String> propertyFiles = new ArrayList<String>();
@@ -68,16 +72,30 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
 
                     log.info("Reading property file " + file.getFilename());
                     Properties props = PropertiesLoaderUtils.loadProperties(file);
+                    
+                    // local context instance handling variable replacement in property values
+                    TestContext context = new TestContext();
+                    context.setGlobalVariables(globalVariables);
+                    context.setFunctionRegistry(functionRegistry);
+                    
                     for (Entry<?, ?> entry : props.entrySet()) {
                         String key = entry.getKey().toString();
 
                         log.info("Loading property: " + key + "=" + props.getProperty(key) + " into default variables");
 
-                        if (globalVariables.getVariables().containsKey(key) && log.isDebugEnabled()) {
-                            log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key) + " new value:" + props.getProperty(key));
+                        if (log.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
+                            log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key) 
+                                    + " new value:" + props.getProperty(key));
                         }
-
-                        globalVariables.getVariables().put(key, props.getProperty(key));
+                        
+                        try {
+                            globalVariables.getVariables().put(key, context.replaceDynamicContentInString(props.getProperty(key)));
+                            // we need to keep local context up to date in case of recursive variable usage
+                            context.setVariable(key, globalVariables.getVariables().get(key));
+                        } catch (ParseException e) {
+                            throw new CitrusRuntimeException("Error while parsing global variables. " +
+                            		"Can not resolve property '" + key + "'", e);
+                        }
                     }
                 }
             }
@@ -110,18 +128,18 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     }
 
     /**
-     * Get global variables.
-     * @return the globalVariables
-     */
-    public GlobalVariables getGlobalVariables() {
-        return globalVariables;
-    }
-
-    /**
-     * Set global variables.
+     * Set the global variables.
      * @param globalVariables the globalVariables to set
      */
     public void setGlobalVariables(GlobalVariables globalVariables) {
         this.globalVariables = globalVariables;
+    }
+
+    /**
+     * Set the function registry.
+     * @param functionRegistry the functionRegistry to set
+     */
+    public void setFunctionRegistry(FunctionRegistry functionRegistry) {
+        this.functionRegistry = functionRegistry;
     }
 }

@@ -19,6 +19,9 @@
         <action dev="christophd" type="add">
           #315 HTTP headers in SOAP message validation
         </action>
+        <action dev="philkom" type="add">
+          #272 Variable support in property loader
+        </action>
     </release>
     
     <release version="1.1" date="12.08.2010" description="1.1 release">

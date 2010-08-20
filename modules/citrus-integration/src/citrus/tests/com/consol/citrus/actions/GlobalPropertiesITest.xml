@@ -17,7 +17,7 @@
 				<message>Project name is: ${project.name}</message>
 			</echo>
             <echo>
-                <message>Testing global variables from properties: ${myGlobalVariable}</message>
+                <message>Testing global variables from properties: ${globalWelcomingText}</message>
             </echo>
 		</actions>
 	</testcase>

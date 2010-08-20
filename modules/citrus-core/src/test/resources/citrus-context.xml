@@ -34,7 +34,7 @@
     <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
         <property name="propertyFiles">
             <list>
-                <value>classpath:citrus.properties</value>
+                <value>classpath:com/consol/citrus/variable/global-variable.properties</value>
             </list>
         </property>
     </bean>
