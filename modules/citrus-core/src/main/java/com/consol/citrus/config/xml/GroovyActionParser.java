@@ -43,6 +43,22 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         DescriptionElementParser.doParse(element, beanDefinition);
         
+        String useScriptTemplate = element.getAttribute("use-script-template");
+        if (StringUtils.hasText(useScriptTemplate)) {
+            beanDefinition.addPropertyValue("useScriptTemplate", Boolean.valueOf(useScriptTemplate));
+        }
+        
+        String scriptTemplatePath = element.getAttribute("script-template");
+        if (StringUtils.hasText(scriptTemplatePath)) {
+            if (scriptTemplatePath.startsWith("classpath:")) {
+                beanDefinition.addPropertyValue("scriptTemplateResource", new ClassPathResource(scriptTemplatePath.substring("classpath:".length())));
+            } else if (scriptTemplatePath.startsWith("file:")) {
+                beanDefinition.addPropertyValue("scriptTemplateResource", new FileSystemResource(scriptTemplatePath.substring("file:".length())));
+            } else {
+                beanDefinition.addPropertyValue("scriptTemplateResource", new FileSystemResource(scriptTemplatePath));
+            }
+        }
+        
         if(DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
             beanDefinition.addPropertyValue("script", DomUtils.getTextValue(element));
         }

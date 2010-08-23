@@ -5,8 +5,8 @@
 			<author>Christoph Deppisch</author>
 			<creationdate>2009-02-25</creationdate>
 			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2009-02-25T00:00:00</last-updated-on>
+			<last-updated-by>Philipp Komninos</last-updated-by>
+			<last-updated-on>2010-07-28T00:00:00</last-updated-on>
 		</meta-info>
 		
         <description>
@@ -14,14 +14,15 @@
 			and external file resource.
 		</description>
         <variables>
-            <variable name="time" value="citrus:currentDate()"/>
+            <variable name="date" value="citrus:currentDate()"/>
+            <variable name="greetingText" value="Hello Citrus!"/>
         </variables>
         <actions>
             <groovy>
                 println 'Hello TestSuite'
             </groovy>
             <groovy>
-                println 'Hello TestSuite ${time}'
+                println 'Current date is ${date}!'
             </groovy>
             <groovy>
                 <![CDATA[
@@ -29,12 +30,38 @@
                     import com.consol.citrus.variable.*
                     import com.consol.citrus.context.TestContext
                     import com.consol.citrus.script.GroovyAction.ScriptExecutor
+                    import org.testng.Assert
                     
                     public class GScript implements ScriptExecutor {
                         public void execute(TestContext context) {
-                            println context.getVariable("time")
+                            Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                            Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
                         }
                     }
+                ]]>
+            </groovy>
+            <groovy>
+            	println context.getVariable("date")
+                assert context.getVariable("greetingText").equals("Hello Citrus!")
+                assert context.getVariable("greetingText").equals("${greetingText}")
+            </groovy>
+            <groovy use-script-template="false">
+                println 'Hello TestSuite'
+            </groovy>
+            <groovy script-template="classpath:com/consol/citrus/script/custom-script-template.groovy">
+                <![CDATA[
+                  Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+                  Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                  Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                ]]>
+            </groovy>
+            <groovy>
+                <![CDATA[
+                  public class MyCustomClass {
+                    public void run() {
+                        println 'Just executed a custom class with run method!'
+                    }
+                  }
                 ]]>
             </groovy>
             <groovy resource="classpath:com/consol/citrus/script/example.groovy"/>
