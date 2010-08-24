@@ -16,17 +16,17 @@
 
 package com.consol.citrus.variable;
 
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.*;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -57,6 +57,8 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
      * @throws CitrusRuntimeException
      */
     public void loadPropertiesAsVariables() {
+        BufferedReader reader = null;
+        
         try {
             if (propertyFiles != null && propertyFiles.size() >0) {
                 for (String propertyFile: propertyFiles) {
@@ -71,36 +73,54 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                     }
 
                     log.info("Reading property file " + file.getFilename());
-                    Properties props = PropertiesLoaderUtils.loadProperties(file);
+                    reader = new BufferedReader(new FileReader(file.getFile()));
                     
                     // local context instance handling variable replacement in property values
                     TestContext context = new TestContext();
                     context.setGlobalVariables(globalVariables);
                     context.setFunctionRegistry(functionRegistry);
                     
-                    for (Entry<?, ?> entry : props.entrySet()) {
-                        String key = entry.getKey().toString();
+                    String propertyExpression;
+                    while ((propertyExpression = reader.readLine()) != null) {
+                        propertyExpression = propertyExpression.trim();
+                        if(!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#") 
+                                || propertyExpression.indexOf("=") == -1) {
+                            continue;
+                        }
+                        
+                        String key = propertyExpression.substring(0, propertyExpression.indexOf("=")).trim();
+                        String value = propertyExpression.substring(propertyExpression.indexOf("=")+1).trim();
 
-                        log.info("Loading property: " + key + "=" + props.getProperty(key) + " into default variables");
+                        try {
+                            value = context.replaceDynamicContentInString(value);
+                        } catch (ParseException e) {
+                            throw new CitrusRuntimeException("Error while parsing global variables. " +
+                                    "Can not resolve property '" + key + "'", e);
+                        }
+                        
+                        log.info("Loading property: " + key + "=" + value + " into default variables");
 
                         if (log.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
                             log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key) 
-                                    + " new value:" + props.getProperty(key));
+                                    + " new value:" + value);
                         }
                         
-                        try {
-                            globalVariables.getVariables().put(key, context.replaceDynamicContentInString(props.getProperty(key)));
-                            // we need to keep local context up to date in case of recursive variable usage
-                            context.setVariable(key, globalVariables.getVariables().get(key));
-                        } catch (ParseException e) {
-                            throw new CitrusRuntimeException("Error while parsing global variables. " +
-                            		"Can not resolve property '" + key + "'", e);
-                        }
+                        globalVariables.getVariables().put(key, value);
+                        // we need to keep local context up to date in case of recursive variable usage
+                        context.setVariable(key, globalVariables.getVariables().get(key));
                     }
                 }
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Error while loading property file", e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close property file reader", e);
+                }
+            }
         }
     }
     
