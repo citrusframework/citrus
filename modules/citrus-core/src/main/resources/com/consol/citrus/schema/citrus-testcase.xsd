@@ -63,6 +63,12 @@
                                     <xs:attribute name="file" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
+                            <xs:element name="script" type="xs:string"/>
+                            <xs:element name="script-resource">
+                                <xs:complexType>
+                                    <xs:attribute name="file" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:choice>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
@@ -133,6 +139,12 @@
                                 <xs:choice>
                                     <xs:element name="data" type="xs:string"/>
                                     <xs:element name="resource">
+                                        <xs:complexType>
+                                            <xs:attribute name="file" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="script" type="xs:string"/>
+                                    <xs:element name="script-resource">
                                         <xs:complexType>
                                             <xs:attribute name="file" type="xs:string" use="required"/>
                                         </xs:complexType>

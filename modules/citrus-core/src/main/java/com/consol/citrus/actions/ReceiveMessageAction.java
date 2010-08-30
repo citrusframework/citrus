@@ -35,6 +35,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.GroovyUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.XmlValidationContext;
@@ -74,7 +75,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** Inline control message payload */
     private String messageData;
     
-    /** Overwrites message elements before sending (via XPath expressions) */
+    /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
+    private Resource scriptResource;
+
+    /** Inline control message payload as Groovy MarkupBuilder script */
+    private String scriptData;
+    
+    /** Overwrites message elements before validating (via XPath expressions) */
     private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** MessageValidator responsible for message validation */
@@ -84,7 +91,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * ignored elements and so on */
     private XmlValidationContext validationContext = new XmlValidationContext();
     
-    /** XML namespace declaration used for XPath expression evaluation*/
+    /** XML namespace declaration used for XPath expression evaluation */
     private Map<String, String> namespaces = new HashMap<String, String>();
 
     /**
@@ -143,9 +150,33 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             //save variables from header values
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
-
+            
+            //set namespaces to validate
+            SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+            Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+            if(!namespaces.isEmpty()) {
+                //dynamic binding of namespaces declarations in root element of received message
+                for (Entry<String, String> binding : dynamicBindings.entrySet()) {
+                    //only bind namespace that is not present in explicit namespace bindings
+                    if(!namespaces.containsValue(binding.getValue())) {
+                        nsContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                    }
+                }
+                //add explicit namespace bindings
+                nsContext.setBindings(namespaces);
+            } else {
+                nsContext.setBindings(dynamicBindings);
+            }
+            
+            validationContext.setNamespaceContext(nsContext);
+            
+            //save variables from message payload
+            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
+            
+            //check if empty message was expected
             if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
-                if (messageResource == null && (messageData == null || messageData.length() == 0)) {
+                if (messageResource == null && (messageData == null || messageData.length() == 0) &&
+                    scriptResource == null && (scriptData == null || scriptData.length() == 0)) {
                     log.info("Received message body is empty as expected - therefore no message validation");
                     return;
                 } else {
@@ -159,37 +190,19 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 expectedMessagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
             } else if (messageData != null){
                 expectedMessagePayload = context.replaceDynamicContentInString(messageData);
+            } else if (scriptResource != null){
+                expectedMessagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(FileUtils.readToString(scriptResource)));
+            } else if (scriptData != null){
+                expectedMessagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
             }
 
             if (StringUtils.hasText(expectedMessagePayload)) {
                 expectedMessagePayload = context.replaceMessageValues(messageElements, expectedMessagePayload);
                 Message<String> expectedMessage = MessageBuilder.withPayload(expectedMessagePayload).build();
-                
+
                 validationContext.setExpectedMessage(expectedMessage);
             }
-            
-            SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-            Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
-            if(!namespaces.isEmpty()) {
-                //dynamic binding of namespaces declarations in root element of received message
-                for (Entry<String, String> binding : dynamicBindings.entrySet()) {
-                    //only bind namespace that is not present in explicit namespace bindings
-                    if(!namespaces.containsValue(binding.getValue())) {
-                        nsContext.bindNamespaceUri(binding.getKey(), binding.getValue());
-                    }
-                }
-                
-                //add explicit namespace bindings
-                nsContext.setBindings(namespaces);
-            } else {
-                nsContext.setBindings(dynamicBindings);
-            }
-            
-            validationContext.setNamespaceContext(nsContext);
-            
-            //save variables from message payload
-            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
-            
+
             //validate message
             validateMessage(receivedMessage, context);
         } catch (ParseException e) {
@@ -257,7 +270,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set message payload data.
+     * Set message payload as inline data.
      * @param messageData the messageData to set
      */
     public void setMessageData(String messageData) {
@@ -270,6 +283,22 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public void setMessageResource(Resource messageResource) {
         this.messageResource = messageResource;
+    }
+    
+    /**
+     * Set message payload data as inline Groovy MarkupBuilder script.
+     * @param scriptData the scriptData to set
+     */
+    public void setScriptData(String scriptData) {
+        this.scriptData = scriptData;
+    }
+
+    /**
+     * Message payload as external Groovy MarkupBuilder script file resource.
+     * @param scriptResource the scriptResource to set
+     */
+    public void setScriptResource(Resource scriptResource) {
+        this.scriptResource = scriptResource;
     }
 
     /**
@@ -303,7 +332,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     public void setValidator(MessageValidator validator) {
         this.validator = validator;
     }
-
+    
     /**
      * List of expected namespaces.
      * @param namespaces the namespaces to set

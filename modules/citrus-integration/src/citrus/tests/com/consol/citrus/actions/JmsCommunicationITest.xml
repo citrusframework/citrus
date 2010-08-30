@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="JmsCommunicationITest">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2009-09-01</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2009-09-01T00:00:00</last-updated-on>
-		</meta-info>
-		
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2009-09-01</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2009-09-01T00:00:00</last-updated-on>
+        </meta-info>
+        
         <variables>
             <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
             <variable name="messageId" value="citrus:randomNumber(10)"></variable>
@@ -16,20 +16,20 @@
         </variables>
         <actions>
             <send with="helloRequestSender">
-            	<description>
-            		Send asynchronous hello request: TestFramework -> HelloService
-            	</description>
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
                 <message>
                     <data>
                         <![CDATA[
-					       <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello TestFramework</Text>
-                           </HelloRequest>								
-						]]>
-				    </data>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -38,9 +38,9 @@
             </send>
             
             <receive with="helloResponseReceiver" timeout="5000">
-            	<description>
-            		Receive asynchronous hello response: HelloService -> TestFramework
-            	</description>
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                </description>
                 <message>
                     <data>
                         <![CDATA[
@@ -50,8 +50,8 @@
                                 <User>HelloService</User>
                                 <Text>Hello ${user}</Text>
                             </HelloResponse>
-						]]>
-				    </data>
+                        ]]>
+                    </data>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -78,6 +78,76 @@
                 </description>
                 <message>
                     <resource file="classpath:com/consol/citrus/actions/helloResponse.xml"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                    Use Groovy MarkupBuilder script for building the XML message
+                </description>
+                <message>                
+                    <script>
+                        xml.HelloRequest(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                            MessageId('${messageId}')
+                            CorrelationId('${correlationId}')
+                            User('${user}')
+                            Text('Hello TestFramework')
+                        }
+                    </script>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                    Use Groovy MarkupBuilder script for building the XML message
+                </description>
+                <message>
+                    <script>
+                        xml.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                            MessageId('${messageId}')
+                            CorrelationId('${correlationId}')
+                            User('HelloService')
+                            Text('Hello ${user}')
+                        }
+                    </script>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                    Use Groovy MarkupBuilder script for building the XML message
+                </description>
+                <message>
+                    <script-resource file="classpath:com/consol/citrus/actions/helloRequest.groovy"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                    Use Groovy MarkupBuilder script for building the XML message
+                </description>
+                <message>
+                    <script-resource file="classpath:com/consol/citrus/actions/helloResponse.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

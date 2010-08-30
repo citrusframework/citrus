@@ -37,7 +37,7 @@ import com.consol.citrus.validation.DefaultXMLMessageValidator;
  * @author Christoph Deppisch
  */
 public class ReceiveMessageActionTest extends AbstractBaseTest {
-	
+
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     private DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
@@ -71,6 +71,54 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         receiveAction.setMessageReceiver(messageReceiver);
         receiveAction.setValidator(validator);
         receiveAction.setMessageResource(new ClassPathResource("test-request-payload.xml", SendMessageActionTest.class));
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessagePayloadScriptData() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        StringBuilder sb = new StringBuilder();
+        sb.append("xml.TestRequest(){\n");
+        sb.append("Message('Hello World!')\n");
+        sb.append("}");
+        receiveAction.setScriptData(sb.toString());
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+        }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessagePayloadScriptResource() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setScriptResource(new ClassPathResource("test-request-payload.groovy", SendMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -225,7 +273,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-        		"<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
                                     .copyHeaders(headers)
                                     .build();
         
@@ -255,7 +303,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-        		"<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
                                     .copyHeaders(headers)
                                     .build();
         
@@ -493,7 +541,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
-        		"<Message>Hello World!</Message></TestRequest>")
+                "<Message>Hello World!</Message></TestRequest>")
                                     .copyHeaders(controlHeaders)
                                     .build();
         

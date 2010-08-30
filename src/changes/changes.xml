@@ -19,6 +19,9 @@
         <action dev="christophd" type="add">
           #315 HTTP headers in SOAP message validation
         </action>
+        <action dev="philkom" type="add">
+          #306 Groovy MarkupBuilder
+        </action>
         <action dev="philkom, christophd" type="add">
           #304 TestContext in Groovy action
         </action>
