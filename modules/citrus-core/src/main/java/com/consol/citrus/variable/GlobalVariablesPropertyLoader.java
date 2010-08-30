@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Loads properties from an external property file and creates global test variables.
@@ -63,14 +64,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
             if (propertyFiles != null && propertyFiles.size() >0) {
                 for (String propertyFile: propertyFiles) {
 
-                    Resource file;
-                    if (propertyFile.startsWith("classpath:")) {
-                        file = new ClassPathResource(propertyFile.substring("classpath:".length()));
-                    } else if (propertyFile.startsWith("file:")) {
-                        file = new FileSystemResource(propertyFile.substring("file:".length()));
-                    } else {
-                        file = new FileSystemResource(propertyFile);
-                    }
+                    Resource file = FileUtils.getResourceFromFilePath(propertyFile);
 
                     log.info("Reading property file " + file.getFilename());
                     reader = new BufferedReader(new FileReader(file.getFile()));

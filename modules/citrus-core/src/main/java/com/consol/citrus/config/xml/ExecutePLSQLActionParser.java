@@ -20,12 +20,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for plsql action in test case.
@@ -53,14 +52,8 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            String filePath = sqlResourceElement.getAttribute("file");
-            if (filePath.startsWith("classpath:")) {
-                beanDefinition.addPropertyValue("sqlResource", new ClassPathResource(filePath.substring("classpath:".length())));
-            } else if (filePath.startsWith("file:")) {
-                beanDefinition.addPropertyValue("sqlResource", new FileSystemResource(filePath.substring("file:".length())));
-            } else {
-                beanDefinition.addPropertyValue("sqlResource", new FileSystemResource(filePath));
-            }
+            beanDefinition.addPropertyValue("sqlResource", 
+                    FileUtils.getResourceFromFilePath(sqlResourceElement.getAttribute("file")));
         }
 
         String ignoreErrors = element.getAttribute("ignore-errors");

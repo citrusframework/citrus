@@ -24,14 +24,13 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.TestActionRegistry;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
 /**
@@ -71,13 +70,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 
                 String filePath = faultDetailElement.getAttribute("file");
                 
-                if (filePath.startsWith("classpath:")) {
-                    beanDefinition.addPropertyValue("faultDetailResource", new ClassPathResource(filePath.substring("classpath:".length())));
-                } else if (filePath.startsWith("file:")) {
-                    beanDefinition.addPropertyValue("faultDetailResource", new FileSystemResource(filePath.substring("file:".length())));
-                } else {
-                    beanDefinition.addPropertyValue("faultDetailResource", new FileSystemResource(filePath));
-                }
+                beanDefinition.addPropertyValue("faultDetailResource", FileUtils.getResourceFromFilePath(filePath));
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if(StringUtils.hasText(faultDetailData)) {

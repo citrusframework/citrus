@@ -20,13 +20,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for groovy action in test case.
@@ -50,13 +49,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String scriptTemplatePath = element.getAttribute("script-template");
         if (StringUtils.hasText(scriptTemplatePath)) {
-            if (scriptTemplatePath.startsWith("classpath:")) {
-                beanDefinition.addPropertyValue("scriptTemplateResource", new ClassPathResource(scriptTemplatePath.substring("classpath:".length())));
-            } else if (scriptTemplatePath.startsWith("file:")) {
-                beanDefinition.addPropertyValue("scriptTemplateResource", new FileSystemResource(scriptTemplatePath.substring("file:".length())));
-            } else {
-                beanDefinition.addPropertyValue("scriptTemplateResource", new FileSystemResource(scriptTemplatePath));
-            }
+            beanDefinition.addPropertyValue("scriptTemplateResource", FileUtils.getResourceFromFilePath(scriptTemplatePath));
         }
         
         if(DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
@@ -65,13 +58,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String filePath = element.getAttribute("resource");
         if (StringUtils.hasText(filePath)) {
-            if (filePath.startsWith("classpath:")) {
-                beanDefinition.addPropertyValue("fileResource", new ClassPathResource(filePath.substring("classpath:".length())));
-            } else if (filePath.startsWith("file:")) {
-                beanDefinition.addPropertyValue("fileResource", new FileSystemResource(filePath.substring("file:".length())));
-            } else {
-                beanDefinition.addPropertyValue("fileResource", new FileSystemResource(filePath));
-            }
+            beanDefinition.addPropertyValue("fileResource", FileUtils.getResourceFromFilePath(filePath));
         }
         
         return beanDefinition.getBeanDefinition();

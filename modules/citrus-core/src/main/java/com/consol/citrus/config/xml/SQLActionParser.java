@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for sql action in test case.
@@ -91,14 +92,8 @@ public class SQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            String filePath = sqlResourceElement.getAttribute("file");
-            if (filePath.startsWith("classpath:")) {
-                beanDefinition.addPropertyValue("sqlResource", new ClassPathResource(filePath.substring("classpath:".length())));
-            } else if (filePath.startsWith("file:")) {
-                beanDefinition.addPropertyValue("sqlResource", new FileSystemResource(filePath.substring("file:".length())));
-            } else {
-                beanDefinition.addPropertyValue("sqlResource", new FileSystemResource(filePath));
-            }
+            beanDefinition.addPropertyValue("sqlResource", 
+                    FileUtils.getResourceFromFilePath(sqlResourceElement.getAttribute("file")));
         }
 
         return beanDefinition.getBeanDefinition();

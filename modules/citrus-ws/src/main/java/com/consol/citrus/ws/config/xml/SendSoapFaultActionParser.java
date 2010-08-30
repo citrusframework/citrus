@@ -30,6 +30,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for send soap fault action in test case.
@@ -79,13 +80,7 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
                     
                     String filePath = faultDetailElement.getAttribute("file");
                     
-                    if (filePath.startsWith("classpath:")) {
-                        builder.addPropertyValue("faultDetailResource", new ClassPathResource(filePath.substring("classpath:".length())));
-                    } else if (filePath.startsWith("file:")) {
-                        builder.addPropertyValue("faultDetailResource", new FileSystemResource(filePath.substring("file:".length())));
-                    } else {
-                        builder.addPropertyValue("faultDetailResource", new FileSystemResource(filePath));
-                    }
+                    builder.addPropertyValue("faultDetailResource", FileUtils.getResourceFromFilePath(filePath));
                 } else {
                     String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                     if(StringUtils.hasText(faultDetailData)) {

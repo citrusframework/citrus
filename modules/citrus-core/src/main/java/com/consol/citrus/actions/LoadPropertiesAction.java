@@ -31,6 +31,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Action reads property files and creates test variables for every property entry. File
@@ -54,14 +55,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        Resource resource;
-        if (file.startsWith("classpath:")) {
-            resource = new ClassPathResource(file.substring("classpath:".length()));
-        } else if (file.startsWith("file:")) {
-            resource = new FileSystemResource(file.substring("file:".length()));
-        } else {
-            resource = new FileSystemResource(file);
-        }
+        Resource resource = FileUtils.getResourceFromFilePath(file);
 
         log.info("Reading property file " + resource.getFilename());
         Properties props;

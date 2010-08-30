@@ -23,11 +23,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for send action in test case.
@@ -64,14 +64,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
 
             Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
             if (xmlResourceElement != null) {
-                String filePath = xmlResourceElement.getAttribute("file");
-                if (filePath.startsWith("classpath:")) {
-                    builder.addPropertyValue("messageResource", new ClassPathResource(filePath.substring("classpath:".length())));
-                } else if (filePath.startsWith("file:")) {
-                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath.substring("file:".length())));
-                } else {
-                    builder.addPropertyValue("messageResource", new FileSystemResource(filePath));
-                }
+                builder.addPropertyValue("messageResource", FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
             }
             
             Element scriptElement = DomUtils.getChildElementByTagName(messageElement, "script");
@@ -81,14 +74,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
             
             Element scriptResourceElement = DomUtils.getChildElementByTagName(messageElement, "script-resource");
             if (scriptResourceElement != null) {
-                String filePath = scriptResourceElement.getAttribute("file");
-                if (filePath.startsWith("classpath:")) {
-                    builder.addPropertyValue("scriptResource", new ClassPathResource(filePath.substring("classpath:".length())));
-                } else if (filePath.startsWith("file:")) {
-                    builder.addPropertyValue("scriptResource", new FileSystemResource(filePath.substring("file:".length())));
-                } else {
-                    builder.addPropertyValue("scriptResource", new FileSystemResource(filePath));
-                }
+                builder.addPropertyValue("scriptResource", FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
             }
 
             Map<String, String> setMessageValues = new HashMap<String, String>();
@@ -117,14 +103,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
 
             Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
             if (headerResourceElement != null) {
-                String filePath = headerResourceElement.getAttribute("file");
-                if (filePath.startsWith("classpath:")) {
-                    builder.addPropertyValue("headerResource", new ClassPathResource(filePath.substring("classpath:".length())));
-                } else if (filePath.startsWith("file:")) {
-                    builder.addPropertyValue("headerResource", new FileSystemResource(filePath.substring("file:".length())));
-                } else {
-                    builder.addPropertyValue("headerResource", new FileSystemResource(filePath));
-                }
+                builder.addPropertyValue("headerResource", FileUtils.getResourceFromFilePath(headerResourceElement.getAttribute("file")));
             }
         }
         
