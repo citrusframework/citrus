@@ -48,7 +48,7 @@ public class GroovyAction extends AbstractTestAction {
     /** External script file resource */
     private Resource fileResource;
     
-    /** Placeholder identifyer for script body in template */
+    /** Placeholder identifier for script body in template */
     private final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
 
     /** Static code snippet for basic groovy action implementation */

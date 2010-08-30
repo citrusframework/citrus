@@ -41,7 +41,7 @@ import com.consol.citrus.validation.XmlValidationContext;
  * @author Christoph Deppisch
  */
 public class SendMessageActionTest extends AbstractBaseTest {
-	
+
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
     @Test
@@ -83,6 +83,76 @@ public class SendMessageActionTest extends AbstractBaseTest {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageResource(new ClassPathResource("test-request-payload.xml", SendMessageActionTest.class));
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+	public void testSendMessageWithMessagePayloadScriptData() {
+		SendMessageAction sendAction = new SendMessageAction();
+		sendAction.setMessageSender(messageSender);
+		StringBuilder sb = new StringBuilder();
+		sb.append("xml.TestRequest(){\n");
+		sb.append("Message('Hello World!')\n");
+		sb.append("}");
+		sendAction.setScriptData(sb.toString());
+		
+		Map<String, Object> headers = new HashMap<String, Object>();
+		final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+		                        .copyHeaders(headers)
+		                        .build();
+		
+		reset(messageSender);
+		
+		messageSender.send((Message)anyObject());
+		expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+                XmlValidationContext validationContext = new XmlValidationContext();
+                validationContext.setExpectedMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+		
+		replay(messageSender);
+		
+		sendAction.execute(context);
+		
+		verify(messageSender);
+	}
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithMessagePayloadScriptResource() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setScriptResource(new ClassPathResource("test-request-payload.groovy", SendMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -293,7 +363,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         sendAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-        		"<ns0:Message>?</ns0:Message></ns0:TestRequest>");
+                "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
@@ -548,7 +618,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
         try {
             sendAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Could not find message data. Either message-data or message-resource must be specified");
+            Assert.assertTrue(e.getMessage().startsWith("No message payload defined!"));
             return;
         }
         

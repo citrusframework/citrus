@@ -73,6 +73,23 @@ public class SendMessageActionParser implements BeanDefinitionParser {
                     builder.addPropertyValue("messageResource", new FileSystemResource(filePath));
                 }
             }
+            
+            Element scriptElement = DomUtils.getChildElementByTagName(messageElement, "script");
+            if (scriptElement != null) {
+                builder.addPropertyValue("scriptData", DomUtils.getTextValue(scriptElement));
+            }
+            
+            Element scriptResourceElement = DomUtils.getChildElementByTagName(messageElement, "script-resource");
+            if (scriptResourceElement != null) {
+                String filePath = scriptResourceElement.getAttribute("file");
+                if (filePath.startsWith("classpath:")) {
+                    builder.addPropertyValue("scriptResource", new ClassPathResource(filePath.substring("classpath:".length())));
+                } else if (filePath.startsWith("file:")) {
+                    builder.addPropertyValue("scriptResource", new FileSystemResource(filePath.substring("file:".length())));
+                } else {
+                    builder.addPropertyValue("scriptResource", new FileSystemResource(filePath));
+                }
+            }
 
             Map<String, String> setMessageValues = new HashMap<String, String>();
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");

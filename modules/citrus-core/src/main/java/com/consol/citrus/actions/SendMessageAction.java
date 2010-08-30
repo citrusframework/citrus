@@ -31,6 +31,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.GroovyUtils;
 
 
 /**
@@ -61,6 +62,12 @@ public class SendMessageAction extends AbstractTestAction {
 
     /** The message payload as inline data */
     private String messageData;
+    
+    /** The message payload as a Groovy MarkupBuilder script file resource */
+    private Resource scriptResource;
+    
+    /** The message payload as inline Groovy MarkupBuilder script */
+    private String scriptData;
     
     /** Extract message headers to variables */
     protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
@@ -93,8 +100,12 @@ public class SendMessageAction extends AbstractTestAction {
                 messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
             } else if (messageData != null){
                 messagePayload = context.replaceDynamicContentInString(messageData);
+            } else if (scriptResource != null){
+                messagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(FileUtils.readToString(scriptResource)));
+            } else if (scriptData != null){
+                messagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
             } else {
-                throw new CitrusRuntimeException("Could not find message data. Either message-data or message-resource must be specified");
+                throw new CitrusRuntimeException("No message payload defined! Either define message-data, message-resource or Groovy script.");
             }
     
             if(StringUtils.hasText(messagePayload)) {
@@ -139,6 +150,22 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public void setMessageResource(Resource messageResource) {
         this.messageResource = messageResource;
+    }
+    
+    /**
+     * Set the message payload as inline Groovy MarkupBuilder script.
+     * @param scriptData the scriptData to set
+     */
+    public void setScriptData(String scriptData) {
+        this.scriptData = scriptData;
+    }
+    
+    /**
+     * Set the message payload from external Groovy MarkupBuilder script file resource.
+     * @param scriptResource the scriptResource to set
+     */
+    public void setScriptResource(Resource scriptResource) {
+        this.scriptResource = scriptResource;
     }
     
     /**
