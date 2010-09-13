@@ -216,7 +216,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment.xml", SendSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment.xml", ReceiveSoapMessageActionTest.class));
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -262,7 +262,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment-with-variables.xml", SendSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment-with-variables.xml", ReceiveSoapMessageActionTest.class));
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

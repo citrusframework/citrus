@@ -70,7 +70,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload.xml", SendMessageActionTest.class));
+        receiveAction.setMessageResource(new ClassPathResource("test-request-payload.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -118,7 +118,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         receiveAction.setValidator(validator);
-        receiveAction.setScriptResource(new ClassPathResource("test-request-payload.groovy", SendMessageActionTest.class));
+        receiveAction.setScriptResource(new ClassPathResource("test-request-payload.groovy", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -164,7 +164,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-variables.xml", SendMessageActionTest.class));
+        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-variables.xml", ReceiveMessageActionTest.class));
         
         context.setVariable("myText", "Hello World!");
         
@@ -188,7 +188,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-functions.xml", SendMessageActionTest.class));
+        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-functions.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1020,5 +1020,49 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         }
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidationScript() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setValidationScript("assert root.Message.name() == 'Message'\n" + "assert root.Message.text() == 'Hello World!'");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidationScriptResource() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        receiveAction.setValidator(validator);
+        receiveAction.setValidationScriptResource(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class));
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
     }
 }

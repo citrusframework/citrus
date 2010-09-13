@@ -597,6 +597,58 @@
         overhead and we can construct complex message payloads with Groovy logic like iterations and conditions. For detailed MarkupBuilder descriptions please see the
         official Groovy documentation.</para> 
     </section>
+
+    <section id="groovy-xmlslurper">
+        <title>Groovy XmlSlurper</title>
+
+        <para>With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People who do not want to deal with XPath may 
+        also like this validation alternative. The tester directly navigates through the message elements and uses simple code assertions in order to control the message content. 
+        Here is an example how to validate messages with Groovy script:</para>
+
+        <programlisting>
+  &lt;receive with=&quot;helloResponseReceiver&quot; timeout=&quot;5000&quot;&gt;
+      &lt;message&gt;
+          &lt;validation-script&gt;
+              assert root.children().size() == 4
+              assert root.MessageId.text() == '${messageId}'
+              assert root.CorrelationId.text() == '${correlationId}'
+              assert root.User.text() == 'HelloService'
+              assert root.Text.text() == 'Hello ' + context.getVariable("user")
+          &lt;/validation-script&gt;
+      &lt;/message&gt;
+      &lt;header&gt;
+          &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+          &lt;element name=&quot;CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+      &lt;/header&gt;
+  &lt;/receive&gt;
+        </programlisting>
+
+        <para>The Groovy XmlSlurper validation script goes right into the message-tag instead of a XML control template or XPath validation. The Groovy script 
+        supports Java <literal>assert</literal> statements for message element validation. The element navigation starts with the root element 
+        reffered to as <literal>root</literal>. Based on this root element you can also access child elements and attributes. Just use the element names seperated 
+        by a simple dot. Very easy! If you need the list of child elements use the <literal>children()</literal> function on any element. With the 
+        <literal>text()</literal> function you get access to the element's text-value. The <literal>size()</literal> is very useful for validating the number of child 
+        elements which completes the basic validation statements.</para>
+
+        <para>As you can see from the example, we may use test variables within the validation script, too. Also not very surprising you may use external file resources
+        as validaton scripts. The syntax looks like follows:</para>
+
+        <programlisting>
+  &lt;receive with=&quot;helloResponseReceiver&quot; timeout=&quot;5000&quot;&gt;
+      &lt;message>
+          &lt;validation-script type=&quot;groovy&quot; file=&quot;classpath:validationScript.groovy&quot;/&gt;
+      &lt;/message&gt;
+      &lt;header&gt;
+          &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+          &lt;element name=&quot;CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+      &lt;/header&gt;
+  &lt;/receive&gt;
+        </programlisting>
+
+        <note>You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.</note>
+
+        <tip>For further information on the Groovy XmlSlurper please see the official Groovy website and documentation</tip>
+    </section>
   </section>
   
 </chapter>

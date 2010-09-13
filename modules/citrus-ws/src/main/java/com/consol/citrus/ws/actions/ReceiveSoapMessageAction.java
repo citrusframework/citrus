@@ -55,9 +55,9 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      */
     @Override
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {
-        super.validateMessage(receivedMessage, context);
-
         try {
+            super.validateMessage(receivedMessage, context);
+            
             if(attachmentData != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
             } else if(attachmentResource != null) {

@@ -34,11 +34,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.GroovyUtils;
+import com.consol.citrus.util.*;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.XmlValidationContext;
+import com.consol.citrus.validation.*;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -87,9 +85,19 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** MessageValidator responsible for message validation */
     private MessageValidator validator;
     
+    /** Script validator validates message via script (e.g. Groovy) */
+    private ScriptValidator scriptValidator = new GroovyScriptValidator();
+    
     /** Validation context holding information like expected message payload, 
      * ignored elements and so on */
     private XmlValidationContext validationContext = new XmlValidationContext();
+    
+    /** Validation script for message validation, 
+     * used instead of plain XML control message payloads */
+    private String validationScript;
+    
+    /** Validation script resource */
+    private Resource validationScriptResource;
     
     /** XML namespace declaration used for XPath expression evaluation */
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -216,8 +224,20 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Override this message if you want to add additional message validation
      * @param receivedMessage
      */
-    protected void validateMessage(Message<?> receivedMessage, TestContext context) {
+    protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
         validator.validateMessage(receivedMessage, context, validationContext);
+        
+        //validate groovy script
+        String script = null;
+        if (validationScriptResource != null) {
+            script = context.replaceDynamicContentInString(FileUtils.readToString(validationScriptResource));
+        } else if (validationScript != null) {
+            script = context.replaceDynamicContentInString(validationScript);
+        }
+        
+        if (StringUtils.hasText(script)) {
+            scriptValidator.validate(receivedMessage, context, script);
+        }
     }
 
     /**
@@ -334,6 +354,22 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
     
     /**
+     * Set the validation-script.
+     * @param validationScript the validationScript to set
+     */
+    public void setValidationScript(String validationScript){
+    	this.validationScript = validationScript;
+    }
+
+	/**
+	 * Set the validation-script as resource
+	 * @param validationScriptResource the validationScriptResource to set
+	 */
+	public void setValidationScriptResource(Resource validationScriptResource) {
+		this.validationScriptResource = validationScriptResource;
+	}
+    
+    /**
      * List of expected namespaces.
      * @param namespaces the namespaces to set
      */
@@ -387,5 +423,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public void setMessageElements(Map<String, String> messageElements) {
         this.messageElements = messageElements;
+    }
+
+    /**
+     * @param scriptValidator the scriptValidator to set
+     */
+    public void setScriptValidator(ScriptValidator scriptValidator) {
+        this.scriptValidator = scriptValidator;
     }
 }

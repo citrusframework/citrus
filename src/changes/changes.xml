@@ -20,6 +20,9 @@
           #315 HTTP headers in SOAP message validation
         </action>
         <action dev="philkom" type="add">
+          #305 Groovy XML message validation
+        </action>
+        <action dev="philkom" type="add">
           #306 Groovy MarkupBuilder
         </action>
         <action dev="philkom, christophd" type="add">

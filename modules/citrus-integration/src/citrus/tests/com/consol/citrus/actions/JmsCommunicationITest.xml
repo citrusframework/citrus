@@ -98,7 +98,7 @@
                             User('${user}')
                             Text('Hello TestFramework')
                         }
-                    </script>
+				    </script>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -141,13 +141,91 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive with="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
                     <script-resource file="classpath:com/consol/citrus/actions/helloResponse.groovy"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+                        
+            <send with="helloRequestSender">
+            	<description>
+            		Send asynchronous hello request: TestFramework -> HelloService
+            	</description>
+                <message>
+                    <data>
+                        <![CDATA[
+					       <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>								
+						]]>
+				    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+            		Use Groovy XmlSlurper validation script for validating the received XML message
+                </description>
+                <message>
+                    <validation-script>
+                        assert root.children().size() == 4
+                        assert root.MessageId.text() == '${messageId}'
+                        assert root.CorrelationId.text() == '${correlationId}'
+                        assert root.User.text() == 'HelloService'
+                        assert root.Text.text() == 'Hello ' + context.getVariable("user")
+                    </validation-script>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+            
+            <send with="helloRequestSender">
+            	<description>
+            		Send asynchronous hello request: TestFramework -> HelloService
+            	</description>
+                <message>
+                    <data>
+                        <![CDATA[
+					       <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>								
+						]]>
+				    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+            		Use Groovy XmlSlurper validation script for validating the received XML message
+                </description>
+                <message>
+                    <validation-script file="classpath:com/consol/citrus/actions/helloValidationScript.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
