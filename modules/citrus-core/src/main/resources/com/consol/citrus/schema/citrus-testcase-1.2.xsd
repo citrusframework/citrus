@@ -281,6 +281,7 @@
             <xs:element ref="catch"/>
             <xs:element ref="assert"/>
             <xs:element ref="groovy"/>
+            <xs:element ref="transform"/>
             <xs:any namespace="##other" processContents="strict"/>
         </xs:choice>
     </xs:group>
@@ -632,6 +633,30 @@
                 </xs:element>
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="transform">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element name="xml-data" type="xs:string" />
+                    <xs:element name="xml-resource">
+                        <xs:complexType>
+                            <xs:attribute name="file" type="xs:string" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:choice>
+                    <xs:element name="xslt-data" type="xs:string"></xs:element>
+                    <xs:element name="xslt-resource">
+                        <xs:complexType>
+                            <xs:attribute name="file" type="xs:string" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="variable" type="xs:string" use="required" />
         </xs:complexType>
     </xs:element>
     
