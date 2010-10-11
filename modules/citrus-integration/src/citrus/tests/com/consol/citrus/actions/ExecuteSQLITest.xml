@@ -51,11 +51,29 @@
                 <validate column="DESCRIPTION" value="NULL"/>
             </sql>
             <sql datasource="testDataSource">
-            	<statement>select DESCRIPTION as desc from ORDERS where ORDER_ID = 2</statement>
-            	<validate column="DESC" value=""/>
+            	<statement>select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS</statement>
+            	<validate column="RTAG">
+            		<values>
+            			<value>requestTag</value>
+            			<value>@ignore@</value>            		
+            		</values>            	
+            	</validate>
+            	<validate column="DESC" value="Migrate"/>
+            	<validate column="DESC">
+            		<values>
+            			<value>Migrate</value>
+            			<value>NULL</value>            		
+            		</values>            	
+            	</validate>
+                <extract column="RTAG" variable="tags"/>
+                <extract column="DESC" variable="description"/>
             </sql>
             <sql datasource="testDataSource">
                 <statement>DELETE FROM CUSTOMERS</statement>
+            </sql>
+            <sql datasource="testDataSource">
+            	<statement>select DESCRIPTION as desc from ORDERS where ORDER_ID = 2</statement>
+            	<validate column="DESC" value=""/>
             </sql>
         </actions>
     </testcase>

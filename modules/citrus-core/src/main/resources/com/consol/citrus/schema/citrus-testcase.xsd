@@ -326,8 +326,17 @@
                 </xs:choice>
                 <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="values" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
                         <xs:attribute name="column" type="xs:string" use="required"/>
-                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="extract" minOccurs="0" maxOccurs="unbounded">

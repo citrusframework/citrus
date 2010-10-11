@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
@@ -50,7 +51,7 @@ import com.consol.citrus.variable.VariableUtils;
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
     /** Map holding all column values to be validated, keys represent the column names */
-    protected Map<String, String> validationElements = new HashMap<String, String>();
+    protected Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
 
     /** SQL file resource holding several query statements */
     private Resource sqlResource;
@@ -64,9 +65,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /** Pause between retries (in milliseconds). */
     private int retryPauseInMs = 1000;
     
-    /** Map saving db values to test variables, keys represent the column names, 
-     * values the variable names */
-    private Map<String, String> extractToVariablesMap = new HashMap<String, String>();
+    /** Map of test variables to be created from database values, keys are column names, values are variable names */
+    private Map<String, String> extractVariables = new HashMap<String, String>();
 
     /**
      * Logger
@@ -88,7 +88,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 while (reader.ready()) {
                     String line = reader.readLine();
                     
-                    if(line!= null) {
+                    if (line!= null) {
                         line = line.trim();
                         
                         if (!line.startsWith("--")) {
@@ -100,10 +100,10 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
             }
 
-            Map<String, Object> resultMap = new HashMap<String, Object>();
+            Map<String, List<String>> resultSet = new HashMap<String, List<String>>();
             int countRetries = 0;
-            boolean successful = false;
-            while (!successful) {
+            boolean retry = true;
+            while (retry) {
                 try {
                     Iterator<String> iter = statements.iterator();
 
@@ -116,26 +116,38 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                             log.error("Error while parsing sql statement: " + stmt);
                             throw new CitrusRuntimeException(e);
                         }
-                        List list = getJdbcTemplate().queryForList(stmt);
+                        List<Map<String, Object>> results = getJdbcTemplate().queryForList(stmt);
 
-                        checkOnResultSize(stmt, list);
-
-                        resultMap.putAll((Map) list.get(0));
+                        if (results.size() == 0) {
+                            throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);
+                        }
+                        
+                        //form a Map object which contains all columns of the result as keys
+                        //and a List of row values as values of the Map
+                        for (Map<String, Object> row : results) {
+                        	for (Entry<String, Object> column : row.entrySet()) {
+								String columnName = column.getKey();
+								if (resultSet.containsKey(columnName)) {
+									resultSet.get(columnName).add((column.getValue() == null ? null : column.getValue().toString()));
+								} else {
+									List<String> columnValues = new ArrayList<String>();
+									columnValues.add((column.getValue() == null ? null : column.getValue().toString()));
+									resultSet.put(columnName, columnValues);
+								}
+							}
+                        }
                     }
+                    
+                	validate(resultSet, context);
 
-                    if (!validate(validationElements, resultMap, context)) {
-                        throw new CitrusRuntimeException("Database validation failed");
-                    }
-
-                    successful = true;
-                }
-                catch (CitrusRuntimeException ex) {
+                    retry = false;
+                } catch (CitrusRuntimeException ex) {
                     if (countRetries >= maxRetries) {
                         throw ex;
                     }
                     log.warn("Validation failed. Retrying...");
                     countRetries++;
-                    resultMap.clear();
+                    resultSet.clear();
                     try {
                         Thread.sleep(retryPauseInMs);
                     } catch (InterruptedException e) {
@@ -144,29 +156,22 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
             }
 
-            for (Entry<String, Object> entry : resultMap.entrySet()) {
-                if (entry.getValue() == null) {
-                    resultMap.put(entry.getKey(), "NULL");
-                }
-            }
-
-            //go through extract elements and save db values to variables
-            for (Entry<String, String> entry : extractToVariablesMap.entrySet()) {
-                String columnName = entry.getKey().toUpperCase();
-                if(resultMap.containsKey(columnName)) {
-                    context.setVariable(entry.getValue().toString(), resultMap.get(columnName).toString());
+            // go through extract elements and save db values to variables
+            for (Entry<String, String> variableEntry : extractVariables.entrySet()) {
+                String columnName = variableEntry.getKey().toUpperCase();
+                if (resultSet.containsKey(columnName)) {
+                    context.setVariable(variableEntry.getValue(), constructVariableValue(resultSet.get(columnName)));
                 } else {
-                    throw new CitrusRuntimeException("Unable to find column '" + columnName + "' in database result set");
+                    throw new CitrusRuntimeException("Failed to create variables from database values! " +
+                    		"Unable to find column '" + columnName + "' in database result set");
                 }
             }
 
-            //legacy: save all columns as variables TODO: remove in major version upgrade 
-            Map<String, String> variableMap = new HashMap<String, String>();
-            for (Entry<String, Object> entry : resultMap.entrySet()) {
-                variableMap.put(CitrusConstants.VARIABLE_PREFIX + entry.getKey() + CitrusConstants.VARIABLE_SUFFIX, entry.getValue().toString());
+            // legacy: save all columns as variables TODO: remove in major version upgrade 
+            for (Entry<String, List<String>> column : resultSet.entrySet()) {
+                List<String> columnValues = column.getValue();
+                context.setVariable(column.getKey(), columnValues.get(0) == null ? "NULL" : columnValues.get(0));
             }
-
-            context.addVariables(variableMap);
         } catch (IOException e) {
             log.error("File resource could not be found - filename: " + sqlResource.getFilename(), e);
             throw new CitrusRuntimeException(e);
@@ -184,38 +189,30 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
     }
 
-
     /**
-     * Checks on the size of the result set:
-     * if no rows were returned a CitrusRuntimeException is thrown, if more than one row
-     * is returned some logging entries are made, because we can only validate/save a single row.
+     * Constructs a delimited string from multiple row values in result set in order to
+     * set this expression as variable value.
      * 
-     * @param stmt The SQL statement (just needed for logging).
-     * @param resultList The list which is checked.
+     * @param rowValues the list of values representing the rows for a column in the result set.
+     * @return the variable value as delimited string or single value.
      */
-	@SuppressWarnings("unchecked")
-    private void checkOnResultSize(String stmt, List resultList) {
-        if (resultList.size() == 0) {
-            throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);
-        }
-
-        if (resultList.size()>1) {
-            log.warn("Result set has more than one rows (" + resultList.size() + ") for statement: " + stmt);
-            log.warn("Only first data row will be validated. Other rows in data set will be ignored!");
-
-            if (log.isDebugEnabled()) {
-                log.debug("Other data rows are:");
-                for (int i=1; i<resultList.size(); i++) {
-                    StringBuffer r = new StringBuffer();
-                    Iterator it = ((Map) resultList.get(i)).entrySet().iterator();
-                    while (it.hasNext()) {
-                        Entry entry = (Entry) it.next();
-                        String key = entry.getKey().toString();
-                        r.append(key + " = " + entry.getValue() + "; \t");
-                    }
-                    log.debug(r.toString());
-                }
+    private String constructVariableValue(List<String> rowValues) {
+        if (CollectionUtils.isEmpty(rowValues)) {
+            return "";
+        } else if (rowValues.size() == 1) {
+            return rowValues.get(0) == null ? "NULL" : rowValues.get(0);
+        } else {
+            StringBuilder result = new StringBuilder();
+            
+            Iterator<String> it = rowValues.iterator();
+            
+            result.append(it.next());
+            while (it.hasNext()) {
+                String nextValue = it.next();
+                result.append(";" + (nextValue == null ? "NULL" : nextValue));
             }
+            
+            return result.toString();
         }
     }
 
@@ -239,63 +236,79 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Validates the database result set. User can expect column names and respective values to be
      * present in the result set.
      * 
-     * @param expectedValues user specified control result set
-     * @param resultValues actual result set coming from the database
+     * @param resultSet actual result set coming from the database
      * @return success flag
      * @throws UnknownElementException
      * @throws ValidationException
      */
-    protected boolean validate(final Map<String, String> expectedValues, final Map<String, Object> resultValues, TestContext context) throws UnknownElementException, ValidationException
-    {
+    private void validate(final Map<String, List<String>> resultSet, TestContext context) 
+        throws UnknownElementException, ValidationException {
+        
+        if (CollectionUtils.isEmpty(controlResultSet)) { 
+            return; 
+        }
+        
         log.info("Start database query validation ...");
 
-        for (Entry<String, String> entry : expectedValues.entrySet()) {
-            String columnName = entry.getKey();
-            String expectedValue = entry.getValue();
+        for (Entry<String, List<String>> controlEntry : controlResultSet.entrySet()) {
+            String columnName = controlEntry.getKey();
             
-            if (!resultValues.containsKey(columnName)) {
-                throw new CitrusRuntimeException("Could not find column " + columnName + " in SQL result set");
+            if (!resultSet.containsKey(columnName)) {
+                throw new CitrusRuntimeException("Could not find column '" + columnName + "' in SQL result set");
             }
-
-            String columnValue = null;
-            if (resultValues.get(columnName) != null) {
-                columnValue = resultValues.get(columnName).toString();
+            
+            List<String> resultColumnValues = resultSet.get(columnName);
+            List<String> controlColumnValues = controlEntry.getValue();
+            
+            // first check size of column values (representing number of rows in result set)
+            if (resultColumnValues.size() != controlColumnValues.size()) {
+                throw new CitrusRuntimeException("Validation failed for column: '" +  columnName + "' " +
+                		"expected rows count: " + controlColumnValues.size() + " but was " + resultColumnValues.size());
             }
-
-            if (VariableUtils.isVariableName(expectedValue)) {
-                expectedValue = context.getVariable(expectedValue);
-            } else if(context.getFunctionRegistry().isFunction(expectedValue)) {
-                expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
-            } 
-
-            //when validating databaseQuery null values are allowed
-            if (columnValue == null) {
-                if (expectedValue == null || expectedValue.toUpperCase().equals("NULL") || expectedValue.length() == 0) {
+            
+            Iterator<String> it = resultColumnValues.iterator();
+            for (String controlValue : controlColumnValues) {
+                String resultValue = it.next();
+                
+                if (VariableUtils.isVariableName(controlValue)) {
+                    controlValue = context.getVariable(controlValue);
+                } else if(context.getFunctionRegistry().isFunction(controlValue)) {
+                    controlValue = FunctionUtils.resolveFunction(controlValue, context);
+                }
+                
+                // check if value is ignored
+                if (controlValue.equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
                     if(log.isDebugEnabled()) {
-                        log.debug("Validating database value for column: " + columnName + " value as expected: NULL - value OK");
+                        log.debug("Ignoring column value '" + columnName + "(resultValue)'");
                     }
                 } else {
-                    throw new ValidationException("Validation failed for column: " +  columnName
-                            + " found value: NULL expected value: " + expectedValue);
+                    if (resultValue == null) {
+                        if (controlValue == null || controlValue.toUpperCase().equals("NULL") || controlValue.length() == 0) {
+                            if(log.isDebugEnabled()) {
+                                log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
+                            }
+                        } else {
+                            throw new ValidationException("Validation failed for column: '" +  columnName + "'"
+                                    + "found value: NULL expected value: " + controlValue);
+                        }
+                    } else if (controlValue != null && resultValue.equals(controlValue)) {
+                        if(log.isDebugEnabled()) {
+                            log.debug("Validation successful for column: '" + columnName + "' expected value: " + controlValue + " - value OK");
+                        }
+                    } else {
+                        throw new ValidationException("Validation failed for column: '" +  columnName + "'"
+                                + " found value: '"
+                                + resultValue
+                                + "' expected value: "
+                                + ((controlValue == null || controlValue.length()==0) ? "NULL" : controlValue));
+                    }
                 }
-            } else if (expectedValue != null && columnValue.equals(expectedValue)) {
-                if(log.isDebugEnabled()) {
-                    log.debug("Validation successful for column: " + columnName + " expected value: " + expectedValue + " - value OK");
-                }
-            } else {
-                throw new ValidationException("Validation failed for column: " +  columnName
-                        + " found value: '"
-                        + columnValue
-                        + "' expected value: "
-                        + ((expectedValue == null || expectedValue.length()==0) ? "NULL" : expectedValue));
             }
         }
 
-        log.info("Validation finished successfully: All values OK");
-
-        return true;
+        log.info("Database query validation finished successfully: All values OK");
     }
-
+    
     /**
      * Setter for inline SQL statements.
      * @param statements
@@ -316,12 +329,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Set expected control result set. Keys represent the column names, values
      * the expected values.
      * 
-     * @param validateDBValues
+     * @param controlResultSet
      */
-    public void setValidationElements(Map<String, String> validationElements) {
-        this.validationElements = validationElements;
+    public void setControlResultSet(Map<String, List<String>> controlResultSet) {
+        this.controlResultSet = controlResultSet;
     }
-
+    
     /**
      * Setter for maximum number of retries.
      * @param maxRetries
@@ -343,9 +356,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * User can extract column values to test variables. Map holds column names (keys) and
      * respective target variable names (values).
      * 
-     * @param extractToVariables the extractToVariables to set
+     * @param variablesMap the variables to be created out of database values
      */
-    public void setExtractToVariablesMap(Map<String, String> extractToVariablesMap) {
-        this.extractToVariablesMap = extractToVariablesMap;
+    public void setExtractVariables(Map<String, String> variablesMap) {
+        this.extractVariables = variablesMap;
     }
 }

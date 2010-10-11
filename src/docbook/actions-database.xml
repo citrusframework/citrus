@@ -97,10 +97,63 @@
       
       <para>If a single validation happens to fail, the whole action will fail with respective validation errors.</para>
       
-      <note>
-        <para>When validating database query result sets Citrus can only handle single rows. In case a result set holds 
-        several rows only the first row is evaluated.</para>
-      </note>
+      <important>
+        <para>The validation with <literal>&quot;&lt;validate column=&quot;...&quot; value=&quot;...&quot;/&gt;&quot;</literal> 
+        meets single row result sets as you specify a single column control value. In case you have multiple rows in a result 
+        set you rather need to validate the columns with multiple control values like this:</para>
+        
+        <programlisting>
+  &lt;validate column=&quot;someColumnName&quot;&gt;
+      &lt;values&gt;
+          &lt;value&gt;Value in 1st row&lt;/value&gt;
+          &lt;value&gt;Value in 2nd row&lt;/value&gt;
+          &lt;value&gt;Value in 3rd row&lt;/value&gt;
+          &lt;value&gt;Value in x row&lt;/value&gt;
+      &lt;/values&gt;               
+  &lt;/validate&gt;
+        </programlisting>
+      </important>
+      
+      <para>Next example shows how to work with multiple row result sets:</para>
+      
+      <programlisting>
+  &lt;sql datasource=&quot;testDataSource&quot;&gt;
+      &lt;statement&gt;select WEEKDAY as DAY, DESCRIPTION from WEEK&lt;/statement&gt;
+      &lt;validate column=&quot;DAY&quot;&gt;
+          &lt;values&gt;
+       	      &lt;value&gt;Monday&lt;/value&gt;
+       	      &lt;value&gt;Tuesday&lt;/value&gt;
+              &lt;value&gt;Wednesday&lt;/value&gt;
+              &lt;value&gt;Thursday&lt;/value&gt;
+              &lt;value&gt;Friday&lt;/value&gt;
+              &lt;value&gt;@ignore@&lt;/value&gt;
+              &lt;value&gt;@ignore@&lt;/value&gt;
+          &lt;/values&gt;            	
+      &lt;/validate&gt;
+      &lt;validate column=&quot;DESCRIPTION&quot;&gt;
+          &lt;values&gt;
+              &lt;value&gt;I hate Mondays!&lt;/value&gt;
+              &lt;value&gt;Tuesday is sports day&lt;/value&gt;
+              &lt;value&gt;The mid of the week&lt;/value&gt;
+              &lt;value&gt;Thursday we play chess&lt;/value&gt;
+              &lt;value&gt;Friday, the weekend is near!&lt;/value&gt;
+              &lt;value&gt;@ignore@&lt;/value&gt;
+              &lt;value&gt;@ignore@&lt;/value&gt;
+          &lt;/values&gt;            	
+      &lt;/validate&gt;
+  &lt;/sql&gt;
+      </programlisting>
+      
+      <para>For the validation of multiple rows the <literal>&lt;validate&gt;</literal> element is able to host a list of control values for a column. 
+      As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care 
+      of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. 
+      Functions and variables are supported as usual.</para>
+      
+      <important>
+        <para>It is important, that the control values are defined in the correct order, because they are compared one on one with the actual 
+        result set coming from database query. You may need to add "order by" SQL expressions to get the right order of rows returned. If any of the values 
+        fails in validation or the total number of rows is not equal, the whole action will fail with respective validation errors.</para>
+      </important>
     </section>
     
     <section id="actions-database-read-values">

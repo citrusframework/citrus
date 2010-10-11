@@ -18,12 +18,11 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -53,21 +52,35 @@ public class SQLActionParser implements BeanDefinitionParser {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
             beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
             
-            Map<String, String> validateValues = new HashMap<String, String>();
+            Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
             for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
-                Element validate = (Element) iter.next();
-                validateValues.put(validate.getAttribute("column"), validate.getAttribute("value"));
+                Element validateElement = (Element) iter.next();
+                Element valueListElement = DomUtils.getChildElementByTagName(validateElement, "values");
+                if (valueListElement != null) {
+                	List<String> valueList = new ArrayList<String>();
+                	List<?> valueElements = DomUtils.getChildElementsByTagName(valueListElement, "value");
+                	for (Iterator<?> valueElementsIt = valueElements.iterator(); valueElementsIt.hasNext();) {
+						Element valueElement = (Element) valueElementsIt.next();
+						valueList.add(DomUtils.getTextValue(valueElement));
+					}
+                	controlResultSet.put(validateElement.getAttribute("column"), valueList);
+                } else if (validateElement.getAttribute("value") != null) {
+                    controlResultSet.put(validateElement.getAttribute("column"), Collections.singletonList(validateElement.getAttribute("value")));
+                } else {
+                    throw new BeanCreationException(element.getLocalName(), 
+                            "Neither value attribute nor value list is set for column validation: " + validateElement.getAttribute("column"));
+                }
             }
             
-            beanDefinition.addPropertyValue("validationElements", validateValues);
+            beanDefinition.addPropertyValue("controlResultSet", controlResultSet);
             
-            Map<String, String> extractToVariables = new HashMap<String, String>();
+            Map<String, String> extractVariables = new HashMap<String, String>();
             for (Iterator<?> iter = extractElements.iterator(); iter.hasNext();) {
                 Element validate = (Element) iter.next();
-                extractToVariables.put(validate.getAttribute("column"), validate.getAttribute("variable"));
+                extractVariables.put(validate.getAttribute("column"), validate.getAttribute("variable"));
             }
             
-            beanDefinition.addPropertyValue("extractToVariablesMap", extractToVariables);
+            beanDefinition.addPropertyValue("extractVariables", extractVariables);
         } else {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
             beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
