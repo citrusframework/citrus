@@ -75,6 +75,26 @@
         <role>Developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>philkom</id>
+      <name>Philipp Komninos</name>
+      <email>philipp.komninos@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jblipphaus</id>
+      <name>Jan Lipphaus</name>
+      <email>jan.lipphaus@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
   </developers>
 
   <prerequisites>
@@ -618,21 +638,14 @@
     <profile>
       <id>site</id>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>2.0.1</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.7</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
         <plugins>
           <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>2.1</version>
+          </plugin>
+          <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.7</version>
             <configuration>
               <aggregate>true</aggregate>
               <linksource>true</linksource>
@@ -643,9 +656,6 @@
                 <link>http://testng.org/javadocs/</link>
               </links>
             </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-site-plugin</artifactId>
           </plugin>
           <plugin>
             <artifactId>maven-resources-plugin</artifactId>
