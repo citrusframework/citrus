@@ -57,6 +57,13 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:choice>
+                            <xs:element name="payload">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="data" type="xs:string"/>
                             <xs:element name="resource">
                                 <xs:complexType>
@@ -137,6 +144,13 @@
                         <xs:choice>
                             <xs:sequence minOccurs="0">
                                 <xs:choice>
+                                    <xs:element name="payload">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
                                     <xs:element name="data" type="xs:string"/>
                                     <xs:element name="resource">
                                         <xs:complexType>

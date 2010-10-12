@@ -186,6 +186,33 @@
     <para>The message header is manipulated too. So Citrus uses name-value pairs like &quot;Operation&quot; and &quot;RequestTag&quot; in the example above to
     set the message's header entries.</para>
     
+    <note>
+      <para>In case you don't like to define the message payload in a simple CDATA section, you also have the possibility to use explicit payload setting with XML schema 
+      validation. In this case you need to use the <literal>&lt;payload&gt;</literal> instead of the <literal>&lt;data&gt;</literal> element. With this alternative you can 
+      validate the payload with XML schema during designtime. With XML editors you also have XSD auto completion when constructing your payload. See following example for 
+      usage explanation:</para>
+      
+      <programlisting>&lt;testcase name=&quot;sendMessageTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;send with=&quot;helloRequestSender&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                    &lt;hlo:HelloRequest xmlns:hlo=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+                        &lt;hlo:MessageId&gt;${messageId}&lt;/hlo:MessageId&gt;
+                        &lt;hlo:CorrelationId&gt;${correlationId}&lt;/hlo:CorrelationId&gt;
+                        &lt;hlo:User&gt;${user}&lt;/hlo:User&gt;
+                        &lt;hlo:Text&gt;Hello TestFramework&lt;/hlo:Text&gt;
+                    &lt;/hlo:HelloRequest&gt;
+                &lt;/payload&gt;
+            &lt;/message&gt;
+            ...
+        &lt;/send&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+      <para>This alternative works for receiving message action, too. We will see this in the next section when dealing with message receipt within Citrus.</para>
+    </note>
+    
     <para>This is how you send messages in Citrus. The test case is responsible for constructing the message content while predefined message senders are reused to publish 
     the messages. The variable support in message payload and message header enables you to add dynamic values.</para>
   </section>

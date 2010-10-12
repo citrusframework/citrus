@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="12.10.2010" description="Latest snapshot release">
+        <action dev="philkom" type="add">
+          #320 CDATA vs. any-element
+        </action>
         <action dev="christophd" type="add">
           #139 Dependency cleanup and version updates
         </action>   

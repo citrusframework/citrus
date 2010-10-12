@@ -232,6 +232,48 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                    Use payload instead of data element, without CDATA area
+                </description>
+                <message>
+                    <payload>
+                        <hlo:HelloRequest xmlns:hlo="http://www.consol.de/schemas/samples/sayHello.xsd">
+                            <hlo:MessageId>${messageId}</hlo:MessageId>
+                            <hlo:CorrelationId>${correlationId}</hlo:CorrelationId>
+                            <hlo:User>${user}</hlo:User>
+                            <hlo:Text>Hello TestFramework</hlo:Text>
+                        </hlo:HelloRequest>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver" timeout="5000">
+                <description>
+                    Receive asynchronous hello response: HelloService -> TestFramework
+                    Use payload instead of data element, without CDATA area
+                </description>
+                <message>
+                    <payload>
+                        <hlo:HelloResponse xmlns:hlo="http://www.consol.de/schemas/samples/sayHello.xsd">
+                            <hlo:MessageId>${messageId}</hlo:MessageId>
+                            <hlo:CorrelationId>${correlationId}</hlo:CorrelationId>
+                            <hlo:User>HelloService</hlo:User>
+                            <hlo:Text>Hello ${user}</hlo:Text>
+                        </hlo:HelloResponse>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
         </actions>
     </testcase>
 </spring:beans>
