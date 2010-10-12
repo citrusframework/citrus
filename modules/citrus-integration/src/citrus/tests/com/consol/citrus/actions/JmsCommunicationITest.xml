@@ -274,6 +274,50 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
+            
+            <send with="testMessageSender">
+                <message>
+                    <payload>
+                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                            <Message>Hello</Message>
+                        </trq:TestRequest>
+                    </payload>
+                </message>
+            </send>
+            
+            <receive with="testMessageReceiver" timeout="5000">
+                <message schema-validation="false">
+                    <data>
+                      <![CDATA[
+                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                            <Message>Hello</Message>
+                        </trq:TestRequest>
+                      ]]>
+                    </data>
+                </message>
+            </receive>
+            
+            <send with="testMessageSender">
+                <message>
+                    <data>
+                      <![CDATA[
+                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                            <Message>Hello</Message>
+                        </trq:TestRequest>
+                      ]]>
+                    </data>
+                </message>
+            </send>
+            
+            <receive with="testMessageReceiver" timeout="5000">
+                <message schema-validation="false">
+                    <payload>
+                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                            <Message>Hello</Message>
+                        </trq:TestRequest>
+                    </payload>
+                </message>
+            </receive>
         </actions>
     </testcase>
 </spring:beans>

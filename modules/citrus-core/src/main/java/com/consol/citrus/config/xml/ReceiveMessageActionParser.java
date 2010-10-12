@@ -18,9 +18,6 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -28,11 +25,9 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Element;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.XMLUtils;
 
 /**
  * Bean definition parser for receive action in test case.
@@ -95,36 +90,8 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 builder.addPropertyReference("validator", "messageValidator");
             }
             
-            Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
-            if (payloadElement != null) {
-                //remove text nodes from children (empty lines etc.)
-                NodeList childNodes = payloadElement.getChildNodes();
-                for(int i = 0; i < childNodes.getLength(); i++) {
-                    if (childNodes.item(i).getNodeType() == Node.TEXT_NODE) {
-                        payloadElement.removeChild(childNodes.item(i));
-                    }
-                }
-                
-                if (payloadElement.hasChildNodes()) {
-                    if (payloadElement.getChildNodes().getLength() > 1) {
-                        throw new CitrusRuntimeException("More than one root element defined in message XML payload!");
-                    }  else {
-                        
-                        try {
-                            Document payload = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                            payload.appendChild(payload.importNode(payloadElement.getChildNodes().item(0), true));
-                            
-                            builder.addPropertyValue("messageData", XMLUtils.serialize(payload));
-                        } catch (DOMException e) {
-                            throw new CitrusRuntimeException("Error while constructing message payload", e);
-                        } catch (ParserConfigurationException e) {
-                            throw new CitrusRuntimeException("Error while constructing message payload", e);
-                        }
-                    }
-                } else { //payload has no child nodes -> empty message
-                    builder.addPropertyValue("messageData", "");
-                }
-            }
+            // parse payload with xs-any element
+            PayloadElementParser.doParse(DomUtils.getChildElementByTagName(messageElement, "payload"), builder);
             
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
