@@ -73,6 +73,13 @@
     <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <scope>runtime</scope>
     </dependency>
     
     <!-- Samples related dependencies -->

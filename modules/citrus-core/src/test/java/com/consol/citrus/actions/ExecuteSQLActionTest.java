@@ -17,12 +17,14 @@
 package com.consol.citrus.actions;
 
 import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

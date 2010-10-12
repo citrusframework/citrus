@@ -16,15 +16,12 @@
 
 package com.consol.citrus.actions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -40,14 +37,15 @@ public class JavaActionTest extends AbstractBaseTest {
 		action.execute(context);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testJavaCallSingleMethodParameter() {
 		JavaAction action = new JavaAction();
 		action.setClassName("com.consol.citrus.util.InvocationDummy");
 		action.setMethodName("invoke");
 		
-		action.setMethodArgs(Collections.singletonList("Test"));
+		List<Object> args = new ArrayList<Object>();
+		args.add("Test");
+		action.setMethodArgs(args);
 		
 		action.execute(context);
 	}
@@ -68,7 +66,6 @@ public class JavaActionTest extends AbstractBaseTest {
 		action.execute(context);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testJavaCallConstructorNoArgs() {
 		JavaAction action = new JavaAction();
@@ -80,14 +77,15 @@ public class JavaActionTest extends AbstractBaseTest {
 		action.execute(context);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testJavaCallSingleConstructorArg() {
 		JavaAction action = new JavaAction();
 		action.setClassName("com.consol.citrus.util.InvocationDummy");
 		action.setMethodName("invoke");
 		
-		action.setConstructorArgs(Collections.singletonList("Test"));
+		List<Object> args = new ArrayList<Object>();
+        args.add("Test");
+		action.setConstructorArgs(args);
 		
 		action.execute(context);
 	}

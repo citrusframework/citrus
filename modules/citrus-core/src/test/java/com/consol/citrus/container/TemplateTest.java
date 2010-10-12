@@ -16,20 +16,18 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.Template;
 import com.consol.citrus.testng.AbstractBaseTest;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -57,7 +55,6 @@ public class TemplateTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testParams() {
         Template template = new Template();
         

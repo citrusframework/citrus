@@ -16,8 +16,8 @@
 
 package com.consol.citrus.util;
 
-import org.easymock.IMocksControl;
 import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -29,20 +29,13 @@ public class EasyMockFactoryBean implements FactoryBean {
     boolean singleton = true;
     Class<?> type;
     IMocksControl mockControl;
-    org.easymock.classextension.IMocksControl classMockControl;
 
     public Object getObject() throws Exception {
-        if(type.isInterface()){
-            if(mockControl == null) {
-                mockControl = EasyMock.createControl();
-            }
-            return mockControl.createMock(getObjectType());
-        }else{
-            if(classMockControl == null) {
-               classMockControl = org.easymock.classextension.EasyMock.createControl();
-            }
-            return classMockControl.createMock(getObjectType());
+        if (mockControl == null) {
+            mockControl = EasyMock.createControl();
         }
+        
+        return mockControl.createMock(getObjectType());
     }
 
     public Class<?> getObjectType() {

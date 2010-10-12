@@ -17,16 +17,13 @@
 package com.consol.citrus.jms;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.reset;
-import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.*;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;

@@ -16,14 +16,10 @@
 
 package com.consol.citrus.ws.actions;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.reset;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.easymock.classextension.EasyMock;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.core.Message;
 import org.springframework.ws.mime.Attachment;

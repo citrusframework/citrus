@@ -16,16 +16,12 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.reset;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.channel.PollableChannel;
 import org.springframework.integration.core.Message;
