@@ -90,13 +90,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending message to: " + getDestinationName());
+        log.info("Sending JMS message to destination: '" + getDestinationName() + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
 
         MessageProducer messageProducer = null;
@@ -131,6 +130,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             }
             
             messageProducer.send(jmsRequest);
+            
+            log.info("Message was successfully sent to destination: '" + getDestinationName() + "'");
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             

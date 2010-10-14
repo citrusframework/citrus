@@ -46,6 +46,10 @@ public class WSParserConstants {
     public static final String REPLY_HANDLER_ATTRIBUTE = "reply-handler";
     
     public static final String REPLY_HANDLER_PROPERTY = "replyMessageHandler";
+    
+    public static final String INTERCEPTORS_ATTRIBUTE = "interceptors";
+    
+    public static final String INTERCEPTORS_PROPERTY = "interceptors";
 
     public static final String MESSAGE_FACTORY_ATTRIBUTE = "message-factory";
 

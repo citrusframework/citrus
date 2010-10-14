@@ -93,7 +93,7 @@ public class MessageChannelSenderTest {
         try {
             messageChannelSender.send(message);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Failed to send message to channel 'testChannel'");
+            Assert.assertEquals(e.getLocalizedMessage(), "Failed to send message to channel: 'testChannel'");
             verify(messageChannelTemplate, channel);
             return;
         }

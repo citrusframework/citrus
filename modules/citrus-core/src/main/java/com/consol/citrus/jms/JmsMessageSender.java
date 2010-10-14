@@ -45,16 +45,17 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending message to: " + getDestinationName());
+        log.info("Sending JMS message to destination: '" + getDestinationName() + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         getJmsTemplate().convertAndSend(message);
+        
+        log.info("Message was successfully sent to destination: '" + getDestinationName() + "'");
     }
     
     /**

@@ -32,12 +32,23 @@
   </logger>
 
   <logger name="org.springframework">
-    <level value="INFO"/>
+    <level value="WARN"/>
+  </logger>
+  
+  <logger name="org.mortbay">
+    <level value="WARN"/>
   </logger>
 
-  <!-- Limit the org.apache logger to INFO as its DEBUG is verbose -->
   <logger name="org.apache">
-    <level value="INFO"/>
+    <level value="WARN"/>
+  </logger>
+  
+  <logger name="org.exolab.castor">
+    <level value="WARN"/>
+  </logger>
+  
+  <logger name="org.castor">
+    <level value="WARN"/>
   </logger>
 
   <!-- ======================= -->

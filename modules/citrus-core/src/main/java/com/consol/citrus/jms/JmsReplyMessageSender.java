@@ -86,7 +86,7 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
         Destination replyDestination;
         
@@ -94,24 +94,26 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
             		"you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
             
-            replyDestination = replyDestinationHolder.getReplyDestination(correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString()));
+            String correlationKey = correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            replyDestination = replyDestinationHolder.getReplyDestination(correlationKey);
+            Assert.notNull(replyDestination, "Unable to locate JMS reply destination with correlation key: '" + correlationKey + "'");
             
             //remove citrus specific header from message
             message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
         } else {
             replyDestination = replyDestinationHolder.getReplyDestination();
+            Assert.notNull(replyDestination, "Unable to locate JMS reply destination");
         }
         
-        Assert.notNull(replyDestination, "Not able to find temporary reply destination");
-        
-        log.info("Sending message to: " + getDestinationName(replyDestination));
+        log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         getJmsTemplate().convertAndSend(replyDestination, message);
+        
+        log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
     }
     
     /**

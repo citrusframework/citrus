@@ -65,8 +65,8 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
                 String receivedDetailString = receivedDetailResult.toString();
                 String controlDetailString = controlDetailResult.toString();
                 if(log.isDebugEnabled()) {
-                    log.debug("Received fault detail: " + StringUtils.trimWhitespace(receivedDetailString));
-                    log.debug("Control fault detail: " + StringUtils.trimWhitespace(controlDetailString));
+                    log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
+                    log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
                 }
                 
                 validateFaultDetailString(receivedDetailString, controlDetailString);

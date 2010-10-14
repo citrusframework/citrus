@@ -162,7 +162,7 @@ public class ReplyMessageChannelSenderTest {
         try {
             sender.send(message);
         } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Not able to find temporary reply channel"));
+            Assert.assertTrue(e.getMessage().startsWith("Unable to locate reply channel"));
             verify(replyChannelHolder);
             return;
         }
@@ -211,7 +211,7 @@ public class ReplyMessageChannelSenderTest {
         try {
             sender.send(message);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to send message to channel 'replyChannel'");
+            Assert.assertEquals(e.getMessage(), "Failed to send message to channel: 'replyChannel'");
             verify(messageChannelTemplate, replyChannel, replyChannelHolder);
             
             return;

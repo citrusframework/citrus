@@ -253,7 +253,7 @@ public class SyncMessageChannelSenderTest {
         try {
             sender.send(message);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on channel");
+            Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
             verify(messageChannelTemplate, channel, replyMessageHandler);
             return;
         }

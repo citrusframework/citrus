@@ -87,7 +87,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws CitrusRuntimeException
      */
     public void invoke(final MessageContext messageContext) throws Exception {
-        Assert.notNull(messageContext.getRequest(), "WebService request must not be null.");
+        Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -98,13 +98,13 @@ public class WebServiceEndpoint implements MessageEndpoint {
         //build request message for message handler
         Message<String> requestMessage = buildRequestMessage(messageContext, requestPayload.toString());
         
-        log.info("Received WebService request " + requestMessage);
+        log.info("Received SOAP request:\n" + requestMessage.toString());
         
         //delegate request processing to message handler
         Message<?> replyMessage = messageHandler.handleMessage(requestMessage);
         
         if (replyMessage != null && replyMessage.getPayload() != null) {
-            log.info("Sending WebService response " + replyMessage);
+            log.info("Sending SOAP response:\n" + replyMessage.toString());
             
             SoapMessage response = (SoapMessage)messageContext.getResponse();
             
@@ -117,7 +117,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             addSoapHeaders(response, replyMessage);
         } else {
-            log.warn("Did not receive any reply from message handler '" + messageHandler + "'");
+            log.info("No reply message from message handler '" + messageHandler + "'");
+            log.warn("No SOAP response for calling client");
         }
     }
 

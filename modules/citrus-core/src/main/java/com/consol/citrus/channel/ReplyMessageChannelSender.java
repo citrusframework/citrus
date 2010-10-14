@@ -60,26 +60,28 @@ public class ReplyMessageChannelSender implements MessageSender {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
             
-            replyChannel = replyMessageChannelHolder.getReplyMessageChannel(correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString()));
+            String correlationKey = correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            replyChannel = replyMessageChannelHolder.getReplyMessageChannel(correlationKey);
+            Assert.notNull(replyChannel, "Unable to locate reply channel with correlation key: " + correlationKey);
             
             //remove citrus specific header from message
             message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
         } else {
             replyChannel = replyMessageChannelHolder.getReplyMessageChannel();
+            Assert.notNull(replyChannel, "Unable to locate reply channel");
         }
         
-        Assert.notNull(replyChannel, "Not able to find temporary reply channel");
-        
-        log.info("Sending message to: " + replyChannel.getName());
+        log.info("Sending message to reply channel: '" + replyChannel.getName() + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         if(!messageChannelTemplate.send(message, replyChannel)) {
-            throw new CitrusRuntimeException("Failed to send message to channel '" + replyChannel.getName() + "'");
+            throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel.getName() + "'");
         }
+        
+        log.info("Message was successfully sent to reply channel: '" + replyChannel.getName() + "'");
     }
     
     /**

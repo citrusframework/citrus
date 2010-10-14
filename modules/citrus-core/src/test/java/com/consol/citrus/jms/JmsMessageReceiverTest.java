@@ -174,7 +174,7 @@ public class JmsMessageReceiverTest {
         try {
             receiver.receive();
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving message on"));
+            Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
             return;
         }
         

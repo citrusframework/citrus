@@ -6,10 +6,12 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
        http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
@@ -73,7 +75,8 @@
     <citrus-ws:message-sender id="webServiceRequestSender"
                               request-url="http://localhost:8071"
                               reply-handler="webServiceReplyHandler"
-                              message-factory="messageFactory"/>
+                              message-factory="messageFactory"
+                              interceptors="clientInterceptors"/>
     
     <citrus-ws:reply-message-handler id="webServiceReplyHandler"/>
     
@@ -84,7 +87,12 @@
     <citrus-ws:message-sender id="webServiceHelloRequestSender"
                               request-url="http://localhost:8071/hello"
                               reply-handler="webServiceHelloReplyHandler"
-                              message-factory="messageFactory"/>
+                              message-factory="messageFactory"
+                              interceptors="clientInterceptors"/>
+                              
+    <util:list id="clientInterceptors">
+        <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
+    </util:list>
     
     <citrus-ws:reply-message-handler id="webServiceHelloReplyHandler"/>
     

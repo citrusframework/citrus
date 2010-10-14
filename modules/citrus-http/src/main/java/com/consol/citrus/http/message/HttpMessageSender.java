@@ -77,8 +77,7 @@ public class HttpMessageSender implements MessageSender {
             log.info("Sending message to: " + getRequestUrl());
 
             if (log.isDebugEnabled()) {
-                log.debug("Message to be sent:");
-                log.debug(message.getPayload().toString());
+                log.debug("Message to be sent:\n" + message.getPayload().toString());
             }
 
             Map<String, Object> requestHeaders = new HashMap<String, Object>();

@@ -111,10 +111,10 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         } catch (LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
-            log.error("Failed to validate:\n"+XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
             throw new ValidationException("Validation failed:", e);
         } catch (ValidationException ex) {
-            log.error("Failed to validate:\n"+XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+            log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
             throw ex;
         }
     }
@@ -393,10 +393,8 @@ public class DefaultXMLMessageValidator implements MessageValidator {
         XMLUtils.stripWhitespaceNodes(source);
 
         if (log.isDebugEnabled()) {
-            log.debug("Received message:");
-            log.debug(XMLUtils.serialize(received));
-            log.debug("Control message:");
-            log.debug(XMLUtils.serialize(source));
+            log.debug("Received message:\n" + XMLUtils.serialize(received));
+            log.debug("Control message:\n" + XMLUtils.serialize(source));
         }
 
         validateXmlTree(received, source, validationContext);

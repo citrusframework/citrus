@@ -39,6 +39,7 @@
             <xs:attribute name="message-senders" type="xs:string"/>
             <xs:attribute name="reply-handler" type="xs:string"/>
             <xs:attribute name="reply-message-correlator" type="xs:string"/>
+            <xs:attribute name="interceptors" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="reply-message-handler">

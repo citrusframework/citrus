@@ -50,14 +50,16 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @throws ActionTimeoutException
      */
     public Message<?> receive(long timeout) {
-        log.info("Receiving message from: " + getDestinationName());
+        log.info("Waiting for JMS message on destination: '" + getDestinationName() + "'");
         
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveAndConvert();
         
         if(receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDestinationName() + "'");
         }
+        
+        log.info("Received JMS message on destination: '" + getDestinationName() + "'");
         
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
@@ -67,8 +69,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         }
         
         if(log.isDebugEnabled()) {
-            log.debug("Message received:");
-            log.debug(receivedMessage.toString());
+            log.debug("Received message is:\n" + receivedMessage.toString());
         }
         
         return receivedMessage;
@@ -79,14 +80,16 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @throws ActionTimeoutException
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        log.info("Receiving message from: " + getDestinationName() + "(" + selector + ")");
+        log.info("Waiting for JMS message on destination: '" + getDestinationName() + "(" + selector + ")'");
         
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
         
         if(receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving message on " + getDestinationName());
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDestinationName()  + "(" + selector + ")'");
         }
+        
+        log.info("Received JMS message on destination: '" + getDestinationName()  + "(" + selector + ")'");
         
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
@@ -96,8 +99,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         }
         
         if(log.isDebugEnabled()) {
-            log.debug("Message received:");
-            log.debug(receivedMessage.toString());
+            log.debug("Received message is:\n" + receivedMessage.toString());
         }
         
         return receivedMessage;

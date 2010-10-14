@@ -200,7 +200,7 @@ public class JmsReplyMessageSenderTest {
         try {
             sender.send(message);
         } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Not able to find temporary reply destination"));
+            Assert.assertTrue(e.getMessage().startsWith("Unable to locate JMS reply destination with correlation key"));
             verify(replyDestinationHolder);
             return;
         }
@@ -216,7 +216,7 @@ public class JmsReplyMessageSenderTest {
         try {
             sender.send(null);
         } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Can not send empty message");
+            Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;
         }
         

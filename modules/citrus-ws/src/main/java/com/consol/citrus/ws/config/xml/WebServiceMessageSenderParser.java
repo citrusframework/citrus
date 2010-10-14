@@ -81,6 +81,12 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
 			builder.addPropertyReference(WSParserConstants.MESSAGE_SENDERS_PROPERTY, messageSenderList);
 		}
 		
+		String interceptors = element.getAttribute(WSParserConstants.INTERCEPTORS_ATTRIBUTE);
+        
+        if (StringUtils.hasText(interceptors)) {
+            builder.addPropertyReference(WSParserConstants.INTERCEPTORS_PROPERTY, interceptors);
+        }
+		
         String replyHandler = element.getAttribute(WSParserConstants.REPLY_HANDLER_ATTRIBUTE);
         
         if (StringUtils.hasText(replyHandler)) {

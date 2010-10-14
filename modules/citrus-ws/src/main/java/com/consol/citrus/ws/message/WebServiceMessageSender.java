@@ -76,13 +76,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @param attachment
      */
     public void send(final Message<?> message, final Attachment attachment) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending message to: " + getDefaultUri());
+        log.info("Sending SOAP message to endpoint: '" + getDefaultUri() + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         if(!(message.getPayload() instanceof String)) {
@@ -97,6 +96,8 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         // send and receive
         getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
 
+        log.info("SOAP message was successfully sent to endpoint: '" + getDefaultUri() + "'");
+        
         Message<String> responseMessage = receiverCallback.getResponse();
         
         if(replyMessageHandler != null) {

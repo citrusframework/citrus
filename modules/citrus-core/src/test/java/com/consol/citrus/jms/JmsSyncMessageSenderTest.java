@@ -277,7 +277,7 @@ public class JmsSyncMessageSenderTest {
         try {
             sender.send(null);
         } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Can not send empty message");
+            Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;
         }
         
