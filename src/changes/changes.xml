@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="14.10.2010" description="Latest snapshot release">
         <action dev="christophd" type="add">
+          #325 Log SOAP client errors properly
+        </action>
+        <action dev="christophd" type="fix">
           #328 Handle and log errors during ApplicationContext setup
         </action>
         <action dev="christophd" type="add">
