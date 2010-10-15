@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="14.10.2010" description="Latest snapshot release">
         <action dev="christophd" type="add">
+          #328 Handle and log errors during ApplicationContext setup
+        </action>
+        <action dev="christophd" type="add">
           #329 Log SOAP messages in pure nature
         </action>
         <action dev="philkom" type="add">

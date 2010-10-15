@@ -54,6 +54,13 @@ public abstract class TestUtils {
         
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
+
+            // first check if test failed during setup
+            if (test.getLastExecutedAction() == null) {
+                failureStack.push("at " + testFilePath + "(init:0)");
+                // no actions were executed yet failure caused by test setup: abort
+                return failureStack;
+            }
             
             Resource testFileResource = new ClassPathResource(testFilePath + ".xml");
             
@@ -140,7 +147,7 @@ public abstract class TestUtils {
          * @return boolean flag to mark that target action is reached or not
          */
         public boolean isFailureStackElement(String eventElement) {
-            if(action == null) {
+            if (action == null) {
                 action = actionStack.pop();
             }
         

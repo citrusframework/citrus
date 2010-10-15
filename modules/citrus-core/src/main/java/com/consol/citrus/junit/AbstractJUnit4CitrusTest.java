@@ -33,6 +33,7 @@ import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
@@ -136,15 +137,29 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @return
      */
     protected ClassPathXmlApplicationContext createApplicationContext() {
-        return new ClassPathXmlApplicationContext(
-                new String[] {
-                        this.getClass().getPackage().getName()
-                                .replace('.', '/')
-                                + "/"
-                                + getClass().getSimpleName()
-                                + ".xml",
-                                "com/consol/citrus/spring/internal-helper-ctx.xml"},
-                true, applicationContext);
+        try {
+            return new ClassPathXmlApplicationContext(
+                    new String[] {
+                            this.getClass().getPackage().getName()
+                                    .replace('.', '/')
+                                    + "/" + getClass().getSimpleName() + ".xml",
+                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                    true, applicationContext);
+        } catch (Exception e) {
+            // Create empty backup test case for logging
+            TestCase backupTest = new TestCase();
+            backupTest.setName(getClass().getSimpleName());
+            backupTest.setPackageName(getClass().getPackage().getName());
+            
+            CitrusRuntimeException cause = new CitrusRuntimeException("Failed to load test case", e);
+            
+            // inform test listeners with failed test
+            testListener.onTestStart(backupTest);
+            testListener.onTestFailure(backupTest, cause);
+            testListener.onTestFinish(backupTest);
+            
+            throw cause;
+        }
     }
     
     /**
