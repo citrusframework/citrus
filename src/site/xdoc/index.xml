@@ -38,6 +38,11 @@
         <p>This site gives you detailed information about how to use Citrus. Visit the following pages and find out how Citrus 
         helps you to accomplish fully automated integration tests of message-based enterprise applications.</p>
         
+        <div id="twitter_widget">
+          <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+          <script src="./js/twitter_widget.js"/>
+        </div>
+                
         <ul>
           <li>Find out why testing can be a hard challenge: <a href="introduction.html">Why use Citrus?</a></li>
           <li>Check the complete <a href="features.html">Feature List</a></li>
@@ -72,6 +77,10 @@
           <li><a href="http://hudson-ci.org/">Hudson</a> as build management tool for continuous integration</li>
         </ul> 
       </p>
+    </section>
+    
+    <section name="News">
+      <div id="newsfeed"></div> 
     </section>
   </body>
 </document>

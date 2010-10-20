@@ -39,11 +39,8 @@ code{
 a {
   text-decoration: none;
 }
-a:link {
-  color:#47a;
-}
-a:visited {
-  color:#68a;
+a:link, a:visited {
+  color:#FF8805;
 }
 a:active, a:hover {
   color:#FEAB00;
@@ -68,18 +65,23 @@ a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWin
   padding-right: 18px;
 }
 h2 {
+  background: #EAEAEA;
+  display: block;
   font-size: 17px;
-  color: #333333;  
+  padding: 5px 5px 5px 15px;
+  margin-left: -4px;
+  height: 21px;
+  color: #666;
+  width: 720px;
+  font-weight: normal;  
 }
 h3 {
-  padding: 4px 4px 4px 24px;
-  color: #666;
-  background-color: #ccc;
-  font-weight: bold;
-  font-size: 14px;
-  background-image: url(../images/h3.jpg);
-  background-repeat: no-repeat;
-  background-position: left bottom;
+  padding: 4px 4px 4px 4px;
+  color: #555;
+  font-weight: normal;
+  font-size: 17px;
+  display: block;
+  border-bottom: #555 1px solid;
 }
 p {
   line-height: 1.3em;
@@ -139,7 +141,7 @@ p {
 }
 
 #contentBox {
-  padding-top: 2px;
+  padding-top: 15px;
 }
 
 table.bodyTable th {
@@ -179,7 +181,6 @@ dt {
   font-size: 13px;
   font-weight: bold;
   color: #666;
-
 }
 
 table {
@@ -277,4 +278,36 @@ span#download_more a {
   color: #FEAB00;
   background: url(../images/download_arrow.png) no-repeat right;
   padding-right: 20px;
+}
+
+#twitter_widget {
+  float: right;
+}
+#twitter_widget h3 {
+  background: none;
+}
+
+#newsfeed .rssBody ul {
+  padding: 0;
+  margin: 0;
+}
+#newsfeed .rssRow h4 {
+  border-bottom: 1px solid #B8B9BC;
+  font-size: 1.2em;
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+#newsfeed .rssRow h4 a {
+  color: #FF8805;
+}
+#newsfeed .rssRow h4 a:hover {
+  color: #FEAB00;
+}
+#newsfeed li {
+  list-style: none;
+}
+#newsfeed li div {
+  float: right;
+  margin-top: -2em;
+  color: #B8B9BC;
 }
