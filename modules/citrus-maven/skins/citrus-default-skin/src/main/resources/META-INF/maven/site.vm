@@ -349,10 +349,6 @@
                 $bodyContent
               </div>
             </div>
-            <div id="twitter_widget">
-                <script src="http://widgets.twimg.com/j/2/widget.js"></script>
-                <script src="./js/twitter_widget.js"/>
-            </div>
             <div class="clear">
               <hr/>
             </div>
@@ -363,6 +359,10 @@
             <div class="clear">
               <hr/>
             </div>
+        </div>
+        <div id="twitter_widget">
+            <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+            <script src="./js/twitter_widget.js"/>
         </div>
      </div>
   </body>
