@@ -298,12 +298,17 @@
     </style>
     
     <script src="./js/jquery-1.4.3.min.js"></script>
+    <script src="./js/jquery-ui-1.8.5.custom.min.js"></script>
     <script src="./js/jquery.zrssfeed.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
           $('#newsfeed').rssfeed('http://labs.consol.de/tags/citrus/feed/', {
             header: false,
             limit: 3
+          });
+          
+          $("#download").click(function() { 
+            $("#twtr-widget-1").toggle("slide",{},350);
           });
         });
     </script>
@@ -343,6 +348,10 @@
               <div id="contentBox">
                 $bodyContent
               </div>
+            </div>
+            <div id="twitter_widget">
+                <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+                <script src="./js/twitter_widget.js"/>
             </div>
             <div class="clear">
               <hr/>

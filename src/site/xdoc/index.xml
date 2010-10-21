@@ -38,47 +38,17 @@
         <p>This site gives you detailed information about how to use Citrus. Visit the following pages and find out how Citrus 
         helps you to accomplish fully automated integration tests of message-based enterprise applications.</p>
         
-        <div id="twitter_widget">
-          <script src="http://widgets.twimg.com/j/2/widget.js"></script>
-          <script src="./js/twitter_widget.js"/>
-        </div>
-                
         <ul>
           <li>Find out why testing can be a hard challenge: <a href="introduction.html">Why use Citrus?</a></li>
-          <li>Check the complete <a href="features.html">Feature List</a></li>
-          <li>Find the latest release: <a href="download.html">Download</a></li>
-          <li>Go to the <a href="reference-doc.html">Reference Documentation</a></li>
-          <li>Check out the <a href="tutorials.html">Tutorials</a> section</li>
-        </ul>
-    </section>
-    
-    <section name="Resources">
-      <p>
-        Find Citrus code and other resources at the following locations
-        <ul> 
+          <li>How does it work?: <a href="reference-doc.html">Documentation</a></li>
           <li>Sources: <a href="http://github.com/christophd/citrus">GitHub</a></li>
           <li>Continuous Build: <a href="http://labs.consol.de/hudson/">Hudson</a></li>
           <li>Code quality: <a href="http://labs.consol.de/sonar/">Sonar</a></li>
           <li>Forum: <a href="http://citrus.895196.n3.nabble.com/">Nabble</a></li>
           <li>Blog: <a href="http://labs.consol.de/tags/citrus">ConSol Labs</a></li>
-        </ul> 
-      </p>
+        </ul>
     </section>
      
-    <section name="Technologies">
-      <p>
-        Citrus uses following technologies and tools
-        <ul> 
-          <li><a href="http://www.springsource.org">Spring 2.5.x</a> as the glue for everything</li>
-          <li><a href="http://www.springsource.org/spring-integration">Spring Integration 1.0.4</a> as messaging solution</li>
-          <li><a href="http://testng.org/">TestNG</a> runs Citrus tests</li>
-          <li><a href="http://www.slf4j.org/">SLF4J</a> for logging</li>
-          <li><a href="http://maven.apache.org">Maven</a> as build tool with support for multi module projects</li>
-          <li><a href="http://hudson-ci.org/">Hudson</a> as build management tool for continuous integration</li>
-        </ul> 
-      </p>
-    </section>
-    
     <section name="News">
       <div id="newsfeed"></div> 
     </section>

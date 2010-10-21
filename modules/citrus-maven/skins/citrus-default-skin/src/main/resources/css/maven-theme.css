@@ -58,7 +58,29 @@ a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:acti
   padding-left: 18px;
 }
 #navcolumn {
-  padding: 12px 4px 0 8px;
+  padding: 20px 4px 0 8px;
+}
+#navcolumn ul {
+  margin: 5px 0 10px -0em;
+}
+#navcolumn ul ul {
+  margin: 1px 0px;
+}
+#navcolumn ul ul li {
+  padding-left: 8px;
+}
+#navcolumn li {
+  font-size: 11px;
+  padding-left: 15px;
+}
+#navcolumn li a {
+  color: #333333;
+}
+#navcolumn li a:hover {
+  color: #FEAB00;
+}
+#navcolumn li.expanded {
+  background: none;
 }
 a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWindow:hover {
   background: url(../images/newwindow.png) right center no-repeat;
@@ -130,14 +152,11 @@ p {
   padding-left: 5px;
 }
 #navcolumn h5 {
-  font-size: 11px;
+  font-size: 12px;
   border-bottom: 1px solid #aaaaaa;
   padding-top: 2px;
   padding-left: 10px;
-  color: #333333;
-  background-image: url(../images/h5.jpg);
-  background-repeat: no-repeat;
-  background-position: left bottom;
+  color: #666666;
 }
 
 #contentBox {
@@ -200,18 +219,6 @@ table {
   height: 235px;
 }
 
-#navcolumn ul {
-  margin: 5px 0 10px -0em;
-}
-#navcolumn ul ul{
-  margin: 1px 0px;
-}
-#navcolumn ul a {
-  color: #333333;
-}
-#navcolumn ul a:hover {
-  color: #333333;
-}
 #intro {
   border: solid #ccc 1px;
   margin: 6px 0px 0px 0px;
@@ -281,10 +288,9 @@ span#download_more a {
 }
 
 #twitter_widget {
-  float: right;
-}
-#twitter_widget h3 {
-  background: none;
+  margin-left: 978px;
+  position: absolute;
+  top: 220px;
 }
 
 #newsfeed .rssBody ul {
