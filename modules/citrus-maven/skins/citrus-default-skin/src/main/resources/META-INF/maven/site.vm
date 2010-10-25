@@ -302,13 +302,19 @@
     <script src="./js/jquery.zrssfeed.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+          $("#twtr-widget-1").hide();
+          
           $('#newsfeed').rssfeed('http://labs.consol.de/tags/citrus/feed/', {
             header: false,
             limit: 3
           });
           
-          $("#download").click(function() { 
-            $("#twtr-widget-1").toggle("slide",{},350);
+          $("#twtr_slider").click(function() { 
+            $("#twtr_slider").hide("slide",{},100, function() {
+                $("#twtr-widget-1").toggle("slide",{},300, function() {
+                    $("#twtr_slider").show("slide",{},100);
+                });    
+            });
           });
         });
     </script>
@@ -360,9 +366,12 @@
               <hr/>
             </div>
         </div>
-        <div id="twitter_widget">
-            <script src="http://widgets.twimg.com/j/2/widget.js"></script>
-            <script src="./js/twitter_widget.js"/>
+        <div id="widgets">
+            <div id="twtr_slider"></div>
+            <div id="twtr_widget">
+              <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+              <script src="./js/twitter_widget.js"/>
+            </div>
         </div>
      </div>
   </body>

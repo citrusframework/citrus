@@ -287,10 +287,21 @@ span#download_more a {
   padding-right: 20px;
 }
 
-#twitter_widget {
-  margin-left: 978px;
+#widgets {
+  margin-left: 976px;
   position: absolute;
   top: 220px;
+}
+#twtr_widget {
+  float: left;
+}
+#twtr_slider {
+  display: block;
+  background: url(../images/twitter_slider.png) no-repeat;
+  width: 25px;
+  height: 145px;
+  cursor: pointer;
+  float: right;
 }
 
 #newsfeed .rssBody ul {
