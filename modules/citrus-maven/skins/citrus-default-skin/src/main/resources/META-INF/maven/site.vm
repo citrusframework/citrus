@@ -309,10 +309,18 @@
             limit: 3
           });
           
-          $("#twtr_slider").click(function() { 
-            $("#twtr_slider").hide("slide",{},100, function() {
+          $("#twtr_slider_in").click(function() { 
+            $("#twtr_slider_in").hide("slide",{},100, function() {
                 $("#twtr-widget-1").toggle("slide",{},300, function() {
-                    $("#twtr_slider").show("slide",{},100);
+                    $("#twtr_slider_out").fadeIn(100);
+                });    
+            });
+          });
+          
+          $("#twtr_slider_out").click(function() { 
+            $("#twtr_slider_out").fadeOut(100, function() {
+                $("#twtr-widget-1").toggle("slide",{},300, function() {
+                    $("#twtr_slider_in").show("slide",{},100);
                 });    
             });
           });
@@ -366,8 +374,9 @@
               <hr/>
             </div>
         </div>
-        <div id="widgets">
-            <div id="twtr_slider"></div>
+        <div id="twtr_slider_out" style="display:none;"></div>
+        <div id="twtr_widget_content">
+            <div id="twtr_slider_in"></div>
             <div id="twtr_widget">
               <script src="http://widgets.twimg.com/j/2/widget.js"></script>
               <script src="./js/twitter_widget.js"/>

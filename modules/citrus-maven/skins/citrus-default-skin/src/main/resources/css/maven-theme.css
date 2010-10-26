@@ -287,21 +287,34 @@ span#download_more a {
   padding-right: 20px;
 }
 
-#widgets {
+#twtr_widget_content {
   margin-left: 976px;
   position: absolute;
   top: 220px;
 }
-#twtr_widget {
-  float: left;
-}
-#twtr_slider {
+#twtr_slider_in {
   display: block;
-  background: url(../images/twitter_slider.png) no-repeat;
-  width: 25px;
-  height: 145px;
+  background: url(../images/twitter_slider_in.png) no-repeat;
+  width: 21px;
+  height: 135px;
   cursor: pointer;
-  float: right;
+}
+#twtr_slider_out {
+  display: block;
+  background: url(../images/twitter_slider_out.png) no-repeat;
+  width: 145px;
+  height: 25px;
+  cursor: pointer;
+  position: absolute;
+  margin-left: 1041px;
+  top: 222px;
+  z-index: 99;
+}
+#twtr_widget h3 {
+  border-bottom: none;
+}
+.twtr-hd {
+  padding:25px 10px 10px !important;
 }
 
 #newsfeed .rssBody ul {
