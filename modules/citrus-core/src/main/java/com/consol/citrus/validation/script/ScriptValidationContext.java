@@ -24,7 +24,7 @@ import org.springframework.core.io.Resource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * Basic script validation context providing the validation code either from file resource or 

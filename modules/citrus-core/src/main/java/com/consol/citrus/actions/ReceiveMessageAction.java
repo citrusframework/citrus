@@ -39,7 +39,7 @@ import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.*;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationAware;
 import com.consol.citrus.validation.xml.XmlMessageValidationAware;
 

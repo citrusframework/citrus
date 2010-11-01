@@ -19,7 +19,7 @@ package com.consol.citrus.validation.xml;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.validation.AbstractValidationContextBuilder;
+import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
 
 /**
  * Validation context builder specific for XML message validation. Constructs a 

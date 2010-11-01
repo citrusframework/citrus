@@ -25,6 +25,7 @@ import org.springframework.integration.core.MessageHeaders;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 

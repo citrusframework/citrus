@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.context;
 
 import org.springframework.integration.core.Message;
+
 
 /**
  * Validation context providing an expected control message for message validation. 

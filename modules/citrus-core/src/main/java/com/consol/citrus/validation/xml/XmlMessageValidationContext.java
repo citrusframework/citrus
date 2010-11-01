@@ -23,7 +23,7 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.validation.AbstractValidationContext;
+import com.consol.citrus.validation.context.AbstractValidationContext;
 
 /**
  * XML validation context holding validation specific information needed for XML 

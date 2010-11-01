@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 

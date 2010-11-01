@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 

@@ -19,7 +19,7 @@ package com.consol.citrus.validation.script;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.validation.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * Validation context builder supposed to construct a basic script validation context with

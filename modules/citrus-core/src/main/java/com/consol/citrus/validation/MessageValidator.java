@@ -19,6 +19,8 @@ package com.consol.citrus.validation;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * Message validator interface. Message validation need specific information like

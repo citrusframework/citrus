@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.context;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.validation.ControlMessageValidationAware;
 
 /**
  * Abstract validation context builder taking care of control message information

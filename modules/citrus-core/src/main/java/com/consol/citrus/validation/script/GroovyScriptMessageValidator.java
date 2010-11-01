@@ -32,7 +32,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * @author Christoph Deppisch

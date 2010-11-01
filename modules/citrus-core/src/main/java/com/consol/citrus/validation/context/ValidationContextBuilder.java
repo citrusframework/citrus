@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.context;
 
+import com.consol.citrus.TestAction;
+import com.consol.citrus.context.TestContext;
 
 /**
- * Basic validation context holding validation specific information.
- * 
+ * Builds a validation context from information given on test action.
+ *  
  * @author Christoph Deppisch
  */
-public interface ValidationContext {
+public interface ValidationContextBuilder<T extends ValidationContext> {
+    public T buildValidationContext(TestAction action, TestContext context);
 }

@@ -46,7 +46,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
