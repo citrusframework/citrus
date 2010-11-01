@@ -238,7 +238,6 @@ table {
   color: #333333;
   height: 17px;
   background: #DADADA url(../images/bg_footer.png) repeat-y scroll 0 0;
-  margin-bottom: 10px;
 }
 #navcolumn img {
   margin-left: 10px;
@@ -288,7 +287,7 @@ span#download_more a {
 }
 
 #twtr_widget_content {
-  margin-left: 976px;
+  margin-left: 766px;
   position: absolute;
   top: 220px;
 }
@@ -306,7 +305,7 @@ span#download_more a {
   height: 25px;
   cursor: pointer;
   position: absolute;
-  margin-left: 1041px;
+  margin-left: 825px;
   top: 222px;
   z-index: 99;
 }

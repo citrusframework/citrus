@@ -3,12 +3,22 @@
   <properties>
     <title>Welcome to Citrus</title>
   </properties>
+  <head>
+    <meta name="description" content="Citrus is an OpenSource test framework written in Java. It provides fully automated integration tests for enterprise SOA applications."/>
+    
+    <script type="text/javascript" src="js/jquery.zrssfeed.min.js"></script>
+    <script type="text/javascript" src="js/newsfeed.js"></script>
+  </head>
   <body>
     <section name="Welcome to Citrus">
       <p>
-        Citrus is an integration test framework written in Java that tests your software on message interfaces to other 
-        applications. The framework simulates interface partners across various transports (e.g. Http, JMS, TCP/IP, SOAP, ...) 
-        in order to perform automated end-to-end integration tests.
+        Citrus is a test framework written in Java. It provides fully automated integration tests for 
+        enterprise SOA applications and messaging solutions. It easily simulates interface partners with support 
+        of various transports (Http, JMS, TCP/IP, SOAP).
+      </p> 
+      <p>
+        Citrus is able to perform high complex end-to-end integration tests with great validation capabilities. 
+        See the complete <a href="features.html">feature list</a> for details.
       </p>
       
       <div id="download">
@@ -22,18 +32,18 @@
       
       <p>Citrus</p>
       <ul>
-        <li>easily simulates interface partners supporting a wide range of protocols</li>
+        <li>simulates interface partners supporting a wide range of message protocols</li>
         <li>automates the integration testing for enterprise applications</li>
-        <li>performs fully qualified use case end-to-end tests</li>
+        <li>performs fully qualified use case end-to-end integration tests</li>
         <li>brings back the fun for integration testing</li>          
       </ul>
     </section>
     
     <section name="Overview">
-        <p>Citrus supports you in testing message interfaces in service-oriented enterprise applications. Manual testing 
-        as well as individual mocks and simulators for interface partner software are not necessary. Instead Citrus 
-        enables integration tests in an automated way with easy simulation of various message transports and powerful
-        message validation.</p>
+        <p>Citrus supports you in testing message interfaces in enterprise applications. Manual testing effort
+        as well as coding mocks and simulators are not necessary. Instead Citrus enables integration testing in an 
+        automated way with out-of-the-box simulation of various message transports. With each test step Citrus is able 
+        to validate messages towards syntax and semantics.</p>
         
         <p>This site gives you detailed information about how to use Citrus. Visit the following pages and find out how Citrus 
         helps you to accomplish fully automated integration tests of message-based enterprise applications.</p>
@@ -50,7 +60,18 @@
     </section>
      
     <section name="News">
-      <div id="newsfeed"></div> 
+      <div id="newsfeed"></div>
+      <noscript>Latest <a href="http://labs.consol.de/tags/citrus/">news</a> for Citrus are available at Labs: <a href="http://labs.consol.de/tags/citrus/">http://labs.consol.de/citrus</a></noscript>
     </section>
+    
+    <div id="twtr_slider_out" style="display:none;"></div>
+    <div id="twtr_widget_content">
+        <div id="twtr_slider_in" style="display:none;"></div>
+        <div id="twtr_widget">
+          <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+          <script src="js/twtr-widget.js"/>
+        </div>
+    </div>
+    
   </body>
 </document>
