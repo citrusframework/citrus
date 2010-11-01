@@ -135,7 +135,7 @@ public class XmlMessageValidationContext extends AbstractValidationContext {
      * Is schema validation enabled.
      * @return the schemaValidation
      */
-    public boolean isSchemaValidation() {
+    public boolean isSchemaValidationEnabled() {
         return schemaValidation;
     }
 

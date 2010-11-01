@@ -86,7 +86,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
         log.info("Start message validation");
 
         try {
-            if(validationContext.isSchemaValidation()) {
+            if(validationContext.isSchemaValidationEnabled()) {
                 validateXMLSchema(receivedMessage);
                 validateDTD(validationContext.getDTDResource(), receivedMessage);
             }

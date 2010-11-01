@@ -44,7 +44,7 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
             validationContext.setPathValidationExpressions(xmlMessageValidationAware.getPathValidationExpressions());
             validationContext.setIgnoreMessageElements(xmlMessageValidationAware.getIgnoreExpressions());
             validationContext.setControlNamespaces(xmlMessageValidationAware.getControlNamespaces());
-            validationContext.setSchemaValidation(xmlMessageValidationAware.isSchemaValidation());
+            validationContext.setSchemaValidation(xmlMessageValidationAware.isSchemaValidationEnabled());
             validationContext.setNamespaceContext(xmlMessageValidationAware.getNamespaceContext());
             
             return validationContext;
