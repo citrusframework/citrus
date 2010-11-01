@@ -58,7 +58,7 @@ public class NamespaceTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveMessageBean.setValidators(validators);
-        receiveMessageBean.setSchemaValidationEnabled(false);
+        receiveMessageBean.setSchemaValidation(false);
     }
     
     @Test

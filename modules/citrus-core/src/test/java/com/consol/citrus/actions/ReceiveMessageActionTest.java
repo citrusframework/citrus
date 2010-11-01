@@ -296,7 +296,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
@@ -329,7 +329,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>");
@@ -362,7 +362,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
@@ -592,7 +592,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -624,7 +624,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -656,7 +656,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -688,7 +688,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -758,7 +758,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -795,7 +795,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -832,7 +832,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
 
@@ -869,7 +869,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         List validators = new ArrayList<MessageValidator<ValidationContext>>();
         validators.add(validator);
         receiveAction.setValidators(validators);
-        receiveAction.setSchemaValidationEnabled(false);
+        receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 

@@ -53,7 +53,7 @@ public interface XmlMessageValidationAware extends ControlMessageValidationAware
      * Check schema validation enabled.
      * @return the flag to mark schema validation enabled/disabled
      */
-    public boolean isSchemaValidationEnabled();
+    public boolean isSchemaValidation();
     
     /**
      * Get the namespace context for this validation.

@@ -80,7 +80,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         if (messageElement != null) {
             String schemaValidation = messageElement.getAttribute("schema-validation");
             if(StringUtils.hasText(schemaValidation)) {
-                builder.addPropertyValue("schemaValidationEnabled", schemaValidation);
+                builder.addPropertyValue("schemaValidation", schemaValidation);
             }
             
             String messageValidator = messageElement.getAttribute("validator");

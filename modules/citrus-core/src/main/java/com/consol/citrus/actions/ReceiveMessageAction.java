@@ -112,7 +112,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
     private Map<String, Object> controlMessageHeaders = new HashMap<String, Object>();
     
     /** Mark schema validation enabled */
-    private boolean schemaValidationEnabled = false;
+    private boolean schemaValidation = false;
     
     /** The expected control message */
     private Message<?> controlMessage;
@@ -464,18 +464,18 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
 
     /**
      * Enable/Disable schema validation.
-     * @param enableSchemaValidationEnabled flag to enable/disable schema validation
+     * @param enableSchemaValidation flag to enable/disable schema validation
      */
-    public void setSchemaValidationEnabled(boolean schemaValidationEnabled) {
-        this.schemaValidationEnabled = schemaValidationEnabled;
+    public void setSchemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
     }
 
     /**
      * Check schema validation enabled.
-     * @return the schemaValidationEnabled
+     * @return the schemaValidation
      */
-    public boolean isSchemaValidationEnabled() {
-        return schemaValidationEnabled;
+    public boolean isSchemaValidation() {
+        return schemaValidation;
     }
     
     /**
