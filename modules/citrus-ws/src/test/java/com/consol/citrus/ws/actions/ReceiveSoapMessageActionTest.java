@@ -18,8 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -29,7 +28,6 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
@@ -40,21 +38,21 @@ import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 /**
  * @author Christoph Deppisch
  */
+@SuppressWarnings("unchecked")
 public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     private SoapAttachmentValidator attachmentValidator = EasyMock.createMock(SoapAttachmentValidator.class);
     
-    private MessageValidator messageValidator = EasyMock.createMock(MessageValidator.class);
-    
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setAttachmentData("TestAttachment!");
@@ -64,12 +62,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -82,20 +77,21 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -108,12 +104,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -127,20 +120,21 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -151,12 +145,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -170,20 +161,21 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithNoAttachmentExpected() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+        
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
@@ -191,27 +183,25 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
         
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
-        
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -223,12 +213,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -242,20 +229,21 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -269,12 +257,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -288,20 +273,21 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testSoapMessageWithAttachmentDataVariablesSupportTest() throws Exception {
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction();
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
-        soapMessageAction.setValidator(messageValidator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        soapMessageAction.setValidators(validators);
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -315,12 +301,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
                                     .copyHeaders(controlHeaders)
                                     .build();
         
-        reset(messageReceiver, attachmentValidator, messageValidator);
+        reset(messageReceiver, attachmentValidator);
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
-        
-        messageValidator.validateMessage((Message)anyObject(), (TestContext)anyObject(), (ValidationContext)anyObject());
-        expectLastCall().once();
         
         attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -334,10 +317,10 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
             }
         });
         
-        replay(messageReceiver, attachmentValidator, messageValidator);
+        replay(messageReceiver, attachmentValidator);
         
         soapMessageAction.execute(context);
         
-        verify(messageReceiver, attachmentValidator, messageValidator);
+        verify(messageReceiver, attachmentValidator);
     }
 }

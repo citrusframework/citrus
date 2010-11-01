@@ -18,19 +18,17 @@ package com.consol.citrus.validation;
 
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.context.TestContext;
-
 /**
+ * Interface marking classes to be aware of control messages for validation.
+ * 
  * @author Christoph Deppisch
  */
-public interface ScriptValidator {
+public interface ControlMessageValidationAware {
     
     /**
-     * Validates the message with validation script.
+     * Get the control message used for comparison in validation logic.
      * 
-     * @param receivedMessage the message to validate.
-     * @param testContext the current test context.
-     * @param validationScript the script containing message validation code.
+     * @return the expected control message.
      */
-    public void validate(Message<?> receivedMessage, TestContext testContext, String validationScript);
+    public Message<?> getControlMessage();
 }

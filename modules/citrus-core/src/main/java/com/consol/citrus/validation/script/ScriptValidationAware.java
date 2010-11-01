@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.script;
 
+import org.springframework.core.io.Resource;
 
 /**
- * Basic validation context holding validation specific information.
+ * Interface specifying information which is needed for script validation.
  * 
  * @author Christoph Deppisch
  */
-public interface ValidationContext {
+public interface ScriptValidationAware {
+    /**
+     * Get the validation script as direct string.
+     * @return the valdiatoin script code as string.
+     */
+    public String getValidationScript();
+    
+    /**
+     * Get the validation script as external file resource.
+     * @return the validation script code as file resource.
+     */
+    public Resource getValidationScriptResource();
 }

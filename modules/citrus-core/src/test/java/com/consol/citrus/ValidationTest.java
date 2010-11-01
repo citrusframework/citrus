@@ -16,7 +16,12 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +35,14 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class ValidationTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -44,12 +50,16 @@ public class ValidationTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
     }
     
     @Test

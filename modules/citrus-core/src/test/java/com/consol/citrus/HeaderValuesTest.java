@@ -18,7 +18,7 @@ package com.consol.citrus;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,14 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class HeaderValuesTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -66,7 +67,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -78,7 +82,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -105,7 +109,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -119,7 +126,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "B");
         validateHeaderValues.put("header-valueC", "C");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -146,7 +153,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+        
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -158,7 +169,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "wrong");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -185,7 +196,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+        
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -197,7 +211,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-wrong", "A");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -224,7 +238,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -238,7 +255,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "");
         validateHeaderValues.put("header-valueC", "");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -265,7 +282,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -279,7 +299,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "null");
         validateHeaderValues.put("header-valueC", "null");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -306,7 +326,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"

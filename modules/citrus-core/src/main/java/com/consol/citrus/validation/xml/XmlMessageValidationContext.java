@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.xml;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.core.io.Resource;
+
+import com.consol.citrus.validation.AbstractValidationContext;
 
 /**
  * XML validation context holding validation specific information needed for XML 
@@ -28,9 +31,9 @@ import org.springframework.core.io.Resource;
  * 
  * @author Christoph Deppisch
  */
-public class XmlValidationContext extends ValidationContext {
+public class XmlMessageValidationContext extends AbstractValidationContext {
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> expectedMessageElements;
+    private Map<String, String> pathValidationExpressions;
     
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreMessageElements;
@@ -41,8 +44,8 @@ public class XmlValidationContext extends ValidationContext {
     /** dtdResource for DTD validation */
     private Resource dtdResource;
     
-    /** Map holding expected namespaces */
-    private Map<String, String> expectedNamespaces;
+    /** Map holding control namespaces for validation */
+    private Map<String, String> controlNamespaces;
     
     /** Should message be validated with its schema definition */
     private boolean schemaValidation = true;
@@ -50,18 +53,18 @@ public class XmlValidationContext extends ValidationContext {
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
-     * @return the expectedMessageElements
+     * @return the pathValidationExpressions
      */
-    public Map<String, String> getExpectedMessageElements() {
-        return expectedMessageElements;
+    public Map<String, String> getPathValidationExpressions() {
+        return pathValidationExpressions;
     }
 
     /**
-     * Set the control message elements explicitly validated during message validation.
-     * @param expectedMessageElements the expectedMessageElements to set
+     * Set the control message elements explicitly validated XPath expression validation.
+     * @param pathValidationExpressions the pathValidationExpressions to set
      */
-    public void setExpectedMessageElements(Map<String, String> expectedMessageElements) {
-        this.expectedMessageElements = expectedMessageElements;
+    public void setPathValidationExpressions(Map<String, String> pathValidationExpressions) {
+        this.pathValidationExpressions = pathValidationExpressions;
     }
 
     /**
@@ -114,18 +117,18 @@ public class XmlValidationContext extends ValidationContext {
 
     /**
      * Get control namespace elements.
-     * @return the expectedNamespaces
+     * @return the controlNamespaces
      */
-    public Map<String, String> getExpectedNamespaces() {
-        return expectedNamespaces;
+    public Map<String, String> getControlNamespaces() {
+        return controlNamespaces;
     }
 
     /**
      * Set the control namespace elements.
-     * @param expectedNamespaces the expectedNamespaces to set
+     * @param controlNamespaces the controlNamespaces to set
      */
-    public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
-        this.expectedNamespaces = expectedNamespaces;
+    public void setControlNamespaces(Map<String, String> controlNamespaces) {
+        this.controlNamespaces = controlNamespaces;
     }
 
     /**

@@ -20,8 +20,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class XPathTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -49,13 +49,17 @@ public class XPathTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setSchemaValidation(false);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setSchemaValidationEnabled(false);
     }
     
     @Test
@@ -85,7 +89,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -117,7 +121,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -145,7 +149,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -173,7 +177,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://testsuite");
@@ -218,7 +222,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
         
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }

@@ -32,12 +32,13 @@ import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
 /**
  * @author Christoph Deppisch
  */
-public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
+public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
@@ -46,7 +47,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                         + "<test>Hello TestFramework</test>"
                     + "</message>").build();
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
@@ -69,7 +70,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
                         + "<wrongElement>totally wrong</wrongElement>"
                     + "</message>").build();
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
@@ -94,7 +95,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -109,7 +110,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -125,7 +126,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -142,7 +143,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -157,7 +158,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite/wrong");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -172,7 +173,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -188,7 +189,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default/wrong");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -205,7 +206,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
      
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -222,7 +223,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("nswrong", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -239,7 +240,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -256,7 +257,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -274,7 +275,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         expectedNamespaces.put("ns4", "http://testsuite/ns4");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
     
@@ -291,7 +292,7 @@ public class DefaultXMLMessageValidatorTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
     }
 }

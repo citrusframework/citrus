@@ -21,6 +21,8 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -36,7 +38,10 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.*;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
+import com.consol.citrus.validation.script.ScriptValidationAware;
+import com.consol.citrus.validation.xml.XmlMessageValidationAware;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -48,7 +53,7 @@ import com.consol.citrus.validation.*;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction {
+public class ReceiveMessageAction extends AbstractTestAction implements XmlMessageValidationAware, ScriptValidationAware {
     /** Map extracting message elements to variables */
     private Map<String, String> extractMessageElements = new HashMap<String, String>();
 
@@ -83,17 +88,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** MessageValidator responsible for message validation */
-    private MessageValidator validator;
+    private List<MessageValidator<ValidationContext>> validators;
     
-    /** Script validator validates message via script (e.g. Groovy) */
-    private ScriptValidator scriptValidator = new GroovyScriptValidator();
-    
-    /** Validation context holding information like expected message payload, 
-     * ignored elements and so on */
-    private XmlValidationContext validationContext = new XmlValidationContext();
-    
-    /** Validation script for message validation, 
-     * used instead of plain XML control message payloads */
+    /** Validation script for message validation */ 
     private String validationScript;
     
     /** Validation script resource */
@@ -101,6 +98,27 @@ public class ReceiveMessageAction extends AbstractTestAction {
     
     /** XML namespace declaration used for XPath expression evaluation */
     private Map<String, String> namespaces = new HashMap<String, String>();
+
+    /** XPath validation expressions */
+    private Map<String, String> pathValidationExpressions;
+
+    /** Ignored xml elements via XPath */
+    private Set<String> ignoreExpressions;
+
+    /** Control namespaces for message validation */
+    private Map<String, String> controlNamespaces;
+
+    /** The control headers expected for this message */
+    private Map<String, Object> controlMessageHeaders = new HashMap<String, Object>();
+    
+    /** Mark schema validation enabled */
+    private boolean schemaValidationEnabled = false;
+    
+    /** The expected control message */
+    private Message<?> controlMessage;
+    
+    /** Namespace context */
+    private NamespaceContext namespaceContext;
 
     /**
      * Logger
@@ -158,28 +176,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             //save variables from header values
             context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
-            
-            //set namespaces to validate
-            SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-            Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
-            if(!namespaces.isEmpty()) {
-                //dynamic binding of namespaces declarations in root element of received message
-                for (Entry<String, String> binding : dynamicBindings.entrySet()) {
-                    //only bind namespace that is not present in explicit namespace bindings
-                    if(!namespaces.containsValue(binding.getValue())) {
-                        nsContext.bindNamespaceUri(binding.getKey(), binding.getValue());
-                    }
-                }
-                //add explicit namespace bindings
-                nsContext.setBindings(namespaces);
-            } else {
-                nsContext.setBindings(dynamicBindings);
-            }
-            
-            validationContext.setNamespaceContext(nsContext);
-            
+
+            namespaceContext = buildNamespaceContext(receivedMessage);
             //save variables from message payload
-            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
+            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, namespaceContext);
             
             //check if empty message was expected
             if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
@@ -192,24 +192,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
             }
 
-            //construct control message payload
-            String expectedMessagePayload = "";
-            if (messageResource != null) {
-                expectedMessagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
-            } else if (messageData != null){
-                expectedMessagePayload = context.replaceDynamicContentInString(messageData);
-            } else if (scriptResource != null){
-                expectedMessagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(FileUtils.readToString(scriptResource)));
-            } else if (scriptData != null){
-                expectedMessagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
-            }
-
-            if (StringUtils.hasText(expectedMessagePayload)) {
-                expectedMessagePayload = context.replaceMessageValues(messageElements, expectedMessagePayload);
-                Message<String> expectedMessage = MessageBuilder.withPayload(expectedMessagePayload).build();
-
-                validationContext.setExpectedMessage(expectedMessage);
-            }
+            buildControlMessage(context);
 
             //validate message
             validateMessage(receivedMessage, context);
@@ -221,47 +204,112 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
+     * Construct a basic namespace context from the received message.
+     * @param receivedMessage the actual message received.
+     * @return the namespace context.
+     */
+    private NamespaceContext buildNamespaceContext(Message<?> receivedMessage) {
+        //set namespaces to validate
+        SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
+        Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+        if(!namespaces.isEmpty()) {
+            //dynamic binding of namespaces declarations in root element of received message
+            for (Entry<String, String> binding : dynamicBindings.entrySet()) {
+                //only bind namespace that is not present in explicit namespace bindings
+                if(!namespaces.containsValue(binding.getValue())) {
+                    simpleNamespaceContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                }
+            }
+            //add explicit namespace bindings
+            simpleNamespaceContext.setBindings(namespaces);
+        } else {
+            simpleNamespaceContext.setBindings(dynamicBindings);
+        }
+        
+        return simpleNamespaceContext;
+    }
+
+    /**
+     * Constructs a control message with message content and message headers.
+     */
+    private void buildControlMessage(TestContext context) throws ParseException, IOException {
+       //construct control message payload
+        String messagePayload = "";
+        if (messageResource != null) {
+            messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
+        } else if (messageData != null){
+            messagePayload = context.replaceDynamicContentInString(messageData);
+        } else if (scriptResource != null){
+            messagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(FileUtils.readToString(scriptResource)));
+        } else if (scriptData != null){
+            messagePayload = GroovyUtils.buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
+        }
+
+        if (StringUtils.hasText(messagePayload)) {
+            // TODO: Here add message manipulators
+            messagePayload = context.replaceMessageValues(messageElements, messagePayload);
+        }
+        
+        controlMessage = MessageBuilder.withPayload(messagePayload).copyHeaders(controlMessageHeaders).build();
+    }
+
+    /**
      * Override this message if you want to add additional message validation
      * @param receivedMessage
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
-        validator.validateMessage(receivedMessage, context, validationContext);
-        
-        //validate groovy script
-        String script = null;
-        if (validationScriptResource != null) {
-            script = context.replaceDynamicContentInString(FileUtils.readToString(validationScriptResource));
-        } else if (validationScript != null) {
-            script = context.replaceDynamicContentInString(validationScript);
-        }
-        
-        if (StringUtils.hasText(script)) {
-            scriptValidator.validate(receivedMessage, context, script);
+        for (MessageValidator<ValidationContext> messageValidator : validators) {
+            ValidationContext validationContext = messageValidator.getValidationContextBuilder().buildValidationContext(this, context);
+            messageValidator.validateMessage(receivedMessage, context, validationContext);
         }
     }
 
     /**
-     * Setter for validating elements.
-     * @param messageElements
+     * Setter for XPath validation expressions.
+     * @param validationExpressions
      */
-    public void setValidateMessageElements(Map<String, String> messageElements) {
-        validationContext.setExpectedMessageElements(messageElements);
+    public void setPathValidationExpressions(Map<String, String> validationExpressions) {
+        this.pathValidationExpressions = validationExpressions;
+    }
+    
+    /**
+     * Getter for XPath validation expressions.
+     * return the XPath validationExpressions
+     */
+    public Map<String, String> getPathValidationExpressions() {
+        return pathValidationExpressions;
     }
 
     /**
      * Setter for ignored message elements.
-     * @param ignoreMessageElements
+     * @param ignoreExpressions
      */
-    public void setIgnoreMessageElements(Set<String> ignoredMessageElements) {
-        validationContext.setIgnoreMessageElements(ignoredMessageElements);
+    public void setIgnoreExpressions(Set<String> ignoreExpressions) {
+        this.ignoreExpressions = ignoreExpressions;
+    }
+    
+    /**
+     * Get the ignored message elements specified via XPath. 
+     * @return the ignoreExpressions
+     */
+    public Set<String> getIgnoreExpressions() {
+        return ignoreExpressions;
     }
 
     /**
-     * Setter for expected namespaces.
-     * @param expectedNamespaces the expectedNamespaces to set
+     * Setter for control namespaces that must be present in the XML message.
+     * @param controlNamespaces the controlNamespaces to set
      */
-    public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
-        validationContext.setExpectedNamespaces(expectedNamespaces);
+    public void setControlNamespaces(Map<String, String> controlNamespaces) {
+        this.controlNamespaces = controlNamespaces;
+    }
+    
+    /**
+     * Get the control namesapces.
+     * @return the control namespaces
+     */
+    public Map<String, String> getControlNamespaces() {
+        return controlNamespaces;
     }
 
     /**
@@ -281,14 +329,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set expected control header values.
-     * @param headerValues the headerValues to set
+     * Set expected control headers.
+     * @param controlMessageHeaders the controlMessageHeaders to set
      */
-    public void setHeaderValues(Map<String, Object> headerValues) {
-        validationContext.setExpectedMessageHeaders(MessageBuilder.withPayload("")
-                .copyHeaders(headerValues).build().getHeaders());
+    public void setControlMessageHeaders(Map<String, Object> controlMessageHeaders) {
+        this.controlMessageHeaders = controlMessageHeaders;
     }
-
+    
     /**
      * Set message payload as inline data.
      * @param messageData the messageData to set
@@ -346,11 +393,25 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set validator instance.
-     * @param validator the validator to set
+     * Set the list of message validators.
+     * @param validators the list of message validators to set
      */
-    public void setValidator(MessageValidator validator) {
-        this.validator = validator;
+    public void setValidators(List<MessageValidator<ValidationContext>> validators) {
+        this.validators = validators;
+    }
+    
+    /**
+     * Set single message validator.
+     * @param validator the message validator to set
+     */
+    public void setValidator(MessageValidator<ValidationContext> validator) {
+        if (validators == null) {
+            List<MessageValidator<ValidationContext>> validatorList = new ArrayList<MessageValidator<ValidationContext>>();
+            validatorList.add(validator);
+            this.validators = validatorList;
+        } else {
+            this.validators.add(validator);
+        }
     }
     
     /**
@@ -402,13 +463,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Enable schema validation.
-     * @param enableSchemaValidation the schemaValidation to set
+     * Enable/Disable schema validation.
+     * @param enableSchemaValidationEnabled flag to enable/disable schema validation
      */
-    public void setSchemaValidation(boolean enableSchemaValidation) {
-        validationContext.setSchemaValidation(enableSchemaValidation);
+    public void setSchemaValidationEnabled(boolean schemaValidationEnabled) {
+        this.schemaValidationEnabled = schemaValidationEnabled;
     }
 
+    /**
+     * Check schema validation enabled.
+     * @return the schemaValidationEnabled
+     */
+    public boolean isSchemaValidationEnabled() {
+        return schemaValidationEnabled;
+    }
+    
     /**
      * Set the receive timeout.
      * @param receiveTimeout the receiveTimeout to set
@@ -426,9 +495,31 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * @param scriptValidator the scriptValidator to set
+     * Gets the validation script.
      */
-    public void setScriptValidator(ScriptValidator scriptValidator) {
-        this.scriptValidator = scriptValidator;
+    public String getValidationScript() {
+        return validationScript;
+    }
+
+    /**
+     * Gets the validation script resource.
+     */
+    public Resource getValidationScriptResource() {
+        return validationScriptResource;
+    }
+
+    /**
+     * Get the constructed control message.
+     * @return the control message needed for validation.
+     */
+    public Message<?> getControlMessage() {
+        return controlMessage;
+    }
+
+    /**
+     * @return the namespaceContext
+     */
+    public NamespaceContext getNamespaceContext() {
+        return namespaceContext;
     }
 }

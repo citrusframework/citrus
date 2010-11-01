@@ -18,8 +18,7 @@ package com.consol.citrus;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +32,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class VariableSupportTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -47,12 +47,16 @@ public class VariableSupportTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
     }
     
     @Test
@@ -78,7 +82,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "${variable}");
         validateMessageElements.put("//sub-elementB", "${variable}");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -107,7 +111,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "citrus:concat('text', '-', 'value')");
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -134,7 +138,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         Map<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("${expression}", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -162,7 +166,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("citrus:concat('//root/', 'element/sub-elementA')", "text-value");
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -204,7 +208,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "${variableB}");
         validateHeaderValues.put("header-valueC", "${variableC}");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -244,7 +248,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "citrus:upperCase('b')");
         validateHeaderValues.put("header-valueC", "citrus:upperCase(${variableC})");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -286,7 +290,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("${variableB}", "B");
         validateHeaderValues.put("${variableC}", "C");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }
@@ -324,7 +328,7 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("citrus:concat('header', '-', 'valueB')", "B");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueC')", "C");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.execute(context);
     }

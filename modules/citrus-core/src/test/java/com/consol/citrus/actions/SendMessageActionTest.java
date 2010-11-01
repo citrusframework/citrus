@@ -26,7 +26,6 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
 import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,8 +33,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.DefaultXMLMessageValidator;
-import com.consol.citrus.validation.XmlValidationContext;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -61,9 +60,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
 		messageSender.send((Message)anyObject());
 		expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -94,9 +93,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -131,9 +130,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
 		messageSender.send((Message)anyObject());
 		expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -164,9 +163,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -199,9 +198,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -234,9 +233,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -267,9 +266,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -304,9 +303,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -341,9 +340,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -379,9 +378,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 validationContext.setSchemaValidation(false);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
@@ -418,9 +417,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 validationContext.setSchemaValidation(false);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
@@ -457,10 +456,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
-                validationContext.setExpectedMessageHeaders(new MessageHeaders(controlHeaders));
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
@@ -499,10 +497,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
-                validationContext.setExpectedMessageHeaders(new MessageHeaders(controlHeaders));
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
@@ -586,10 +583,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
-                validationContext.setExpectedMessageHeaders(new MessageHeaders(controlHeaders));
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
@@ -642,9 +638,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -675,9 +671,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -708,9 +704,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -759,9 +755,9 @@ public class SendMessageActionTest extends AbstractBaseTest {
         messageSender.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
-                XmlValidationContext validationContext = new XmlValidationContext();
-                validationContext.setExpectedMessage(controlMessage);
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;

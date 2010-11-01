@@ -31,13 +31,14 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class IgnoreElementsTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -64,7 +65,10 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
     }
 
     @Test
@@ -80,7 +84,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -98,7 +102,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA/@attribute");
         ignoreMessageElements.add("//sub-elementB/@attribute");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -115,7 +119,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//@attribute");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -147,7 +151,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//sub-element[1]/@attribute");
         ignoreMessageElements.add("//sub-element[2]/@attribute");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -170,7 +174,7 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -188,12 +192,12 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        receiveMessageBean.setIgnoreMessageElements(ignoreMessageElements);
+        receiveMessageBean.setIgnoreExpressions(ignoreMessageElements);
         
         Map<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("//root/element/sub-elementA", "wrong value");
         validateElements.put("//sub-elementB", "wrong value");
-        receiveMessageBean.setValidateMessageElements(validateElements);
+        receiveMessageBean.setPathValidationExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }

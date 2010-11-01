@@ -21,16 +21,24 @@ import org.springframework.integration.core.Message;
 import com.consol.citrus.context.TestContext;
 
 /**
- * Message validator interface.
+ * Message validator interface. Message validation need specific information like
+ * control messages or validation scripts. These validation specific information is 
+ * stored in a validation context, which is passed to the validation method.
  * 
  * @author Christoph Deppisch
  */
-public interface MessageValidator {
+public interface MessageValidator<T extends ValidationContext> {
     /**
-     * Validates a message.
-     * @param receivedMessage
-     * @param context
-     * @param validationContext
+     * Validates a message with given test context and validation context.
+     * @param receivedMessage the message to validate.
+     * @param context the current test context
+     * @param validationContext the proper validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext);
+    public void validateMessage(Message<?> receivedMessage, TestContext context, T validationContext);
+    
+    /**
+     * Returns the validation context builder for this message validator.
+     * @return the validation context builder
+     */
+    public ValidationContextBuilder<T> getValidationContextBuilder();
 }

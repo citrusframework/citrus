@@ -80,7 +80,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         if (messageElement != null) {
             String schemaValidation = messageElement.getAttribute("schema-validation");
             if(StringUtils.hasText(schemaValidation)) {
-                builder.addPropertyValue("schemaValidation", schemaValidation);
+                builder.addPropertyValue("schemaValidationEnabled", schemaValidation);
             }
             
             String messageValidator = messageElement.getAttribute("validator");
@@ -121,15 +121,15 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             }
             builder.addPropertyValue("messageElements", setMessageValues);
 
-            List<String> ignoreValues = new ArrayList<String>();
+            List<String> ignoreExpressions = new ArrayList<String>();
             List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
             for (Iterator<?> iter = ignoreElements.iterator(); iter.hasNext();) {
                 Element ignoreValue = (Element) iter.next();
-                ignoreValues.add(ignoreValue.getAttribute("path"));
+                ignoreExpressions.add(ignoreValue.getAttribute("path"));
             }
-            builder.addPropertyValue("ignoreMessageElements", ignoreValues);
+            builder.addPropertyValue("ignoreExpressions", ignoreExpressions);
 
-            Map<String, String> validateValues = new HashMap<String, String>();
+            Map<String, String> validateExpressions = new HashMap<String, String>();
             List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
             if (validateElements.size() > 0) {
                 for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
@@ -141,9 +141,9 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                         pathExpression = validateValue.getAttribute("result-type") + ":" + pathExpression;
                     }
                     
-                    validateValues.put(pathExpression, validateValue.getAttribute("value"));
+                    validateExpressions.put(pathExpression, validateValue.getAttribute("value"));
                 }
-                builder.addPropertyValue("validateMessageElements", validateValues);
+                builder.addPropertyValue("pathValidationExpressions", validateExpressions);
             }
             
             Element validationScriptElement = DomUtils.getChildElementByTagName(messageElement, "validation-script");
@@ -167,14 +167,14 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         }
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
-        Map<String, String> setHeaderValues = new HashMap<String, String>();
+        Map<String, String> controlMessageHeaders = new HashMap<String, String>();
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
-                setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
+                controlMessageHeaders.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
-            builder.addPropertyValue("headerValues", setHeaderValues);
+            builder.addPropertyValue("controlMessageHeaders", controlMessageHeaders);
         }
 
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");

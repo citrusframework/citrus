@@ -20,7 +20,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,14 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class MessageElementsLegacyTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -50,12 +51,16 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+        
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
     }
     
     @Test
@@ -78,7 +83,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "text-value");
         validateMessageElements.put("sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -103,7 +108,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "");
         validateMessageElements.put("sub-elementB", "");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -128,7 +133,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute", "A");
         validateMessageElements.put("sub-elementB.attribute", "B");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -153,7 +158,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-element-wrong", "text-value");
         validateMessageElements.put("sub-element-wrong", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -178,7 +183,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
         validateMessageElements.put("sub-elementB", "text-value-wrong");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -203,7 +208,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -228,7 +233,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         receiveMessageBean.execute(context);
     }
@@ -333,7 +338,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateElements.put("root.element.sub-elementA", "text-value");
         validateElements.put("sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateElements);
+        receiveMessageBean.setPathValidationExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }

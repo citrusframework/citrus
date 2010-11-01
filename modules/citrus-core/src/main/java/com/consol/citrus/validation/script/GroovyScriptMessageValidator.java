@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.script;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
@@ -31,16 +31,18 @@ import org.springframework.integration.core.Message;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContextBuilder;
 
 /**
  * @author Christoph Deppisch
  */
-public class GroovyScriptValidator implements ScriptValidator {
+public class GroovyScriptMessageValidator implements MessageValidator<ScriptValidationContext> {
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(GroovyScriptValidator.class);
+    private static final Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
     
     /** Static code snippet for groovy xml slurper script */
     private static Resource xmlSlurperTemplateResource = null;
@@ -69,15 +71,24 @@ public class GroovyScriptValidator implements ScriptValidator {
         xmlSlurperHead = xmlSlurperTemplate.substring(0, xmlSlurperTemplate.indexOf(BODY_PLACEHOLDER));
         xmlSlurperTail = xmlSlurperTemplate.substring((xmlSlurperTemplate.indexOf(BODY_PLACEHOLDER) + BODY_PLACEHOLDER.length()));
     }
-    
-    public void validate(Message<?> receivedMessage, 
-            TestContext context, String validationScript) {
+
+    /**
+     * Validates the message with Groovy validation script.
+     */
+    public void validateMessage(Message<?> receivedMessage, 
+            TestContext context, ScriptValidationContext validationContext) {
+        if(!ScriptValidationContext.class.isAssignableFrom(validationContext.getClass())) {
+            throw new IllegalArgumentException("GroovyScriptMessageValidator must have an instance of ScriptMessageValidationContext, " +
+                    "but was '" + validationContext.getClass() + "'");
+        }
+
+        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)validationContext;
         
         log.info("Start groovy message validation");
         
         try {
-            GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptValidator.class.getClassLoader());
-            Class<?> groovyClass = loader.parseClass(xmlSlurperHead + validationScript + xmlSlurperTail);
+            GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
+            Class<?> groovyClass = loader.parseClass(xmlSlurperHead + scriptValidationContext.getValidationScript() + xmlSlurperTail);
             
             if (groovyClass == null) {
                 throw new CitrusRuntimeException("Failed to load groovy validation script resource");
@@ -94,6 +105,13 @@ public class GroovyScriptValidator implements ScriptValidator {
         } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         }
+    }
+
+    /**
+     * Gets the proper validation context builder for this message validator.
+     */
+    public ValidationContextBuilder<ScriptValidationContext> getValidationContextBuilder() {
+        return new ScriptValidationContextBuilder();
     }
     
     /**

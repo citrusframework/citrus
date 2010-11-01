@@ -18,8 +18,7 @@ package com.consol.citrus;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +33,14 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
 public class NamespaceTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -48,13 +48,17 @@ public class NamespaceTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
+    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setSchemaValidation(false);
+
+        List validators = new ArrayList<MessageValidator<ValidationContext>>();
+        validators.add(validator);
+        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setSchemaValidationEnabled(false);
     }
     
     @Test
@@ -287,7 +291,7 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -315,7 +319,7 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -344,7 +348,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -374,7 +378,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -402,7 +406,7 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite/wrong");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -430,7 +434,7 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -459,7 +463,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default/wrong");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -489,7 +493,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -519,7 +523,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("nswrong", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -549,7 +553,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -579,7 +583,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -610,7 +614,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         expectedNamespaces.put("ns4", "http://testsuite/ns4");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -640,7 +644,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        receiveMessageBean.setExpectedNamespaces(expectedNamespaces);
+        receiveMessageBean.setControlNamespaces(expectedNamespaces);
         
         receiveMessageBean.execute(context);
     }
@@ -665,7 +669,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:root/ns1:element/ns1:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://testsuite/default");
@@ -695,7 +699,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:root/pfx:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://testsuite/default");
@@ -725,7 +729,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:root/ns1:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://testsuite/wrong");
