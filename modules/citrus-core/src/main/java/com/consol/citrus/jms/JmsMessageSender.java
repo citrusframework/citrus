@@ -26,6 +26,7 @@ import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.message.MessageSender;
 
@@ -45,27 +46,46 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
+        send(message, null);
+    }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     */
+    public void send(Message<?> message, String endpoint) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending JMS message to destination: '" + getDestinationName() + "'");
+        String destinationName;
+        
+        if (StringUtils.hasText(endpoint)) {
+            destinationName = endpoint;
+        } else {
+            destinationName = getDefaultDestinationName();
+        }
+        
+        log.info("Sending JMS message to destination: '" + destinationName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
         }
+
+        if (StringUtils.hasText(endpoint)) {
+            getJmsTemplate().convertAndSend(endpoint, message);
+        } else { // use default destination
+            getJmsTemplate().convertAndSend(message);
+        }
         
-        getJmsTemplate().convertAndSend(message);
-        
-        log.info("Message was successfully sent to destination: '" + getDestinationName() + "'");
+        log.info("Message was successfully sent to destination: '" + destinationName + "'");
     }
     
     /**
      * Retrieve the destination name (either a queue name or a topic name).
      * @return the destinationName
      */
-    protected String getDestinationName() {
+    protected String getDefaultDestinationName() {
         try {
-            if(getJmsTemplate().getDefaultDestination() != null) {
-                if(getJmsTemplate().getDefaultDestination() instanceof Queue) {
+            if (getJmsTemplate().getDefaultDestination() != null) {
+                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
                     return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
                 } else if(getJmsTemplate().getDefaultDestination() instanceof Topic) {
                     return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();

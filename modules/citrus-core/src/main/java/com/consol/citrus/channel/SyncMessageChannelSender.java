@@ -18,9 +18,13 @@ package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -31,7 +35,7 @@ import com.consol.citrus.message.*;
  * 
  * @author Christoph Deppisch
  */
-public class SyncMessageChannelSender implements MessageSender {
+public class SyncMessageChannelSender implements MessageSender, ApplicationContextAware {
 
     /**
      * Logger
@@ -53,25 +57,45 @@ public class SyncMessageChannelSender implements MessageSender {
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /** The parent application context used for channel name resolving */
+    private ApplicationContext applicationContext;
+    
+    /** Channel resolver instance */
+    private ChannelResolver channelResolver;
+    
     /**
-     * @see MessageSender#send(Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message) {
-        log.info("Sending message to channel: '" + channel.getName() + "'");
+    public void send(Message<?> message, String endpoint) {
+        String channelName;
+        
+        if (StringUtils.hasText(endpoint)) {
+            channelName = endpoint;
+        } else {
+            channelName = channel.getName();
+        }
+        
+        log.info("Sending message to channel: '" + channelName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to sent is:\n" + message.toString());
         }
 
         messageChannelTemplate.setReceiveTimeout(replyTimeout);
-        Message<?> replyMessage = messageChannelTemplate.sendAndReceive(message, channel);
+        Message<?> replyMessage;
+        
+        if (StringUtils.hasText(endpoint)) {
+            replyMessage = messageChannelTemplate.sendAndReceive(message, resolveChannelName(channelName));
+        } else { // send message to default channel
+            replyMessage = messageChannelTemplate.sendAndReceive(message, channel);
+        }
         
         if(replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + replyTimeout + "ms. Did not receive reply message on reply channel");
         }
         
-        log.info("Message was successfully sent to channel: '" + channel.getName() + "'");
+        log.info("Message was successfully sent to channel: '" + channelName + "'");
         
         if(replyMessageHandler != null) {
             if(correlator != null) {
@@ -81,6 +105,26 @@ public class SyncMessageChannelSender implements MessageSender {
                 replyMessageHandler.onReplyMessage(replyMessage);
             }
         }
+    }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
+    public void send(Message<?> message) {
+        send(message, null);
+    }
+    
+    /**
+     * Resolve the channel by name.
+     * @param channelName the name to resolve
+     * @return the MessageChannel object
+     */
+    private MessageChannel resolveChannelName(String channelName) {
+        if (channelResolver == null) {
+            channelResolver = new BeanFactoryChannelResolver(applicationContext);
+        }
+        
+        return channelResolver.resolveChannelName(channelName);
     }
 
     /**
@@ -146,5 +190,20 @@ public class SyncMessageChannelSender implements MessageSender {
     public void setMessageChannelTemplate(
             MessageChannelTemplate messageChannelTemplate) {
         this.messageChannelTemplate = messageChannelTemplate;
+    }
+    
+    /**
+     * Set the Spring application context.
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Set the channel resolver.
+     * @param channelResolver the channelResolver to set
+     */
+    public void setChannelResolver(ChannelResolver channelResolver) {
+        this.channelResolver = channelResolver;
     }
 }

@@ -71,11 +71,21 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
             }
         
+            WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
             if(attachmentContent != null) {
                 attachment.setContent(attachmentContent);
-                ((WebServiceMessageSender)messageSender).send(message, attachment);
+                
+                if (StringUtils.hasText(endpoint)) {
+                    webServiceMessageSender.send(message, attachment, endpoint);
+                } else {
+                    webServiceMessageSender.send(message, attachment);
+                }
             } else {
-                ((WebServiceMessageSender)messageSender).send(message);
+                if (StringUtils.hasText(endpoint)) {
+                    webServiceMessageSender.send(message, endpoint);
+                } else {
+                    webServiceMessageSender.send(message);
+                }
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);

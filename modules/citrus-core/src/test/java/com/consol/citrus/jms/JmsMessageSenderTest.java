@@ -154,4 +154,77 @@ public class JmsMessageSenderTest {
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
     }
+    
+    @Test
+    public void testSendMessageEndpointOverwriteOnDestination() throws JMSException {
+        JmsMessageSender sender = new JmsMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        sender.setDestination(destination);
+        
+        Queue newDestinationQueue = EasyMock.createMock(Queue.class);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+        
+        expect(session.createQueue("newDestination")).andReturn(newDestinationQueue).once();
+        expect(session.createProducer(newDestinationQueue)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+        
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+        
+        expect(session.getTransacted()).andReturn(false).once();
+        
+        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+        
+        sender.send(message, "newDestination");
+        
+        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+    }
+    
+    @Test
+    public void testSendMessageEndpointOverwriteOnDestinationName() throws JMSException {
+        JmsMessageSender sender = new JmsMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        sender.setDestinationName("myDestination");
+        
+        Queue newDestinationQueue = EasyMock.createMock(Queue.class);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+
+        expect(session.createProducer(newDestinationQueue)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+        
+        expect(session.getTransacted()).andReturn(false).once();
+        
+        expect(session.createQueue("newDestination")).andReturn(newDestinationQueue).once();
+        
+        replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+        
+        sender.send(message, "newDestination");
+        
+        verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session, newDestinationQueue);
+    }
 }

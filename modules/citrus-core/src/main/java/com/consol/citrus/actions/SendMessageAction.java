@@ -71,6 +71,9 @@ public class SendMessageAction extends AbstractTestAction {
     
     /** Extract message headers to variables */
     protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
+    
+    /** Target endpoint for send operation, can be a JMS queue name, http uri, SOAP endpoint etc. */
+    protected String endpoint;
 
     /**
      * Message is constructed with payload and header entries and sent via
@@ -84,7 +87,11 @@ public class SendMessageAction extends AbstractTestAction {
         
         context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
         
-        messageSender.send(message);
+        if (StringUtils.hasText(endpoint)) {
+            messageSender.send(message, endpoint);
+        } else {
+            messageSender.send(message);
+        }
     }
 
     /**
@@ -257,5 +264,14 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
         this.extractHeaderValues = extractHeaderValues;
+    }
+
+    /**
+     * Sets the target endpoint of this send operation. In case 
+     * default endpoint in message sender should be overwritten.
+     * @param endpoint the endpoint to set
+     */
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 }

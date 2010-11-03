@@ -222,4 +222,40 @@ public class JmsReplyMessageSenderTest {
         
         Assert.fail("Missing " + IllegalArgumentException.class + " because of sending empty message");
     }
+    
+    @Test
+    public void testSendMessageEndpointOverwrite() throws JMSException {
+        JmsReplyMessageSender sender = new JmsReplyMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
+        sender.setReplyDestinationHolder(replyDestinationHolder);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+
+        expect(replyDestinationHolder.getReplyDestination()).andReturn(replyDestination).once();
+        
+        expect(session.createProducer(replyDestination)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+        
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+        
+        expect(session.getTransacted()).andReturn(false).once();
+        
+        replay(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+        
+        sender.send(message, "newDestination");
+        
+        verify(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+    }
 }

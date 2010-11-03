@@ -67,7 +67,14 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
-        send(message, null);
+        send(message, null, null);
+    }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     */
+    public void send(Message<?> message, String endpoint) {
+        send(message, null, endpoint);
     }
 
     /**
@@ -75,10 +82,17 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @param message
      * @param attachment
      */
-    public void send(final Message<?> message, final Attachment attachment) {
+    public void send(final Message<?> message, final Attachment attachment, String endpoint) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending SOAP message to endpoint: '" + getDefaultUri() + "'");
+        String endpointUri;
+        if (StringUtils.hasText(endpoint)) {
+            endpointUri = endpoint;
+        } else {
+            endpointUri = getDefaultUri();
+        }
+        
+        log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
@@ -93,10 +107,14 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         WebServiceMessageReceiverCallback receiverCallback = new WebServiceMessageReceiverCallback();
         getWebServiceTemplate().setFaultMessageResolver(this);
         
-        // send and receive
-        getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
+        // send and receive message
+        if (StringUtils.hasText(endpoint)) {
+            getWebServiceTemplate().sendAndReceive(endpointUri, senderCallback, receiverCallback);
+        } else { // use default endpoint uri
+            getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
+        }
 
-        log.info("SOAP message was successfully sent to endpoint: '" + getDefaultUri() + "'");
+        log.info("SOAP message was successfully sent to endpoint: '" + endpointUri + "'");
         
         Message<String> responseMessage = receiverCallback.getResponse();
         
@@ -107,6 +125,13 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
                 replyMessageHandler.onReplyMessage(responseMessage);
             }
         }
+    }
+    
+    /**
+     * Send message with attachment to default endpoint.
+     */
+    public void send(final Message<?> message, final Attachment attachment) {
+        send(message, attachment, null);
     }
 
     /**

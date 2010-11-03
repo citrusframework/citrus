@@ -268,6 +268,91 @@ public class JmsSyncMessageSenderTest {
     }
     
     @Test
+    public void testSendMessageEndpointOverwriteOnDestination() throws JMSException {
+        JmsSyncMessageSender sender = new JmsSyncMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        sender.setDestination(destination);
+        sender.setReplyDestination(replyDestinationQueue);
+        
+        Queue newDestinationQueue = EasyMock.createMock(Queue.class);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        Map<String, String> responseHeaders = new HashMap<String, String>();
+        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
+        
+        reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+
+        expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
+        expect(messageConsumer.receive(anyLong())).andReturn(jmsResponse).once();
+        
+        expect(session.createQueue("newDestination")).andReturn(newDestinationQueue).once();
+        expect(session.createProducer(newDestinationQueue)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+        
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+        
+        replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+        
+        sender.send(message, "newDestination");
+        
+        verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+    }
+    
+    @Test
+    public void testSendMessageEndpointOverwriteOnDestinationName() throws JMSException {
+        JmsSyncMessageSender sender = new JmsSyncMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        sender.setDestinationName("myDestination");
+        sender.setReplyDestinationName("replyDestination");
+        
+        Queue newDestinationQueue = EasyMock.createMock(Queue.class);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+
+        Map<String, String> responseHeaders = new HashMap<String, String>();
+        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
+        
+        reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+
+        expect(session.createQueue("replyDestination")).andReturn(replyDestinationQueue).once();
+        
+        expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
+        expect(messageConsumer.receive(anyLong())).andReturn(jmsResponse).once();
+        
+        expect(session.createProducer(newDestinationQueue)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
+        expectLastCall().once();
+        
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+        
+        expect(session.createQueue("newDestination")).andReturn(newDestinationQueue).once();
+        
+        replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+        
+        sender.send(message, "newDestination");
+        
+        verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer, newDestinationQueue);
+    }
+    
+    @Test
     public void testSendEmptyMessage() throws JMSException {
         JmsSyncMessageSender sender = new JmsSyncMessageSender();
         sender.setConnectionFactory(connectionFactory);

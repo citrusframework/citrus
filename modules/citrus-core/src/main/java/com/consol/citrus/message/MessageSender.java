@@ -25,8 +25,15 @@ import org.springframework.integration.core.Message;
  */
 public interface MessageSender {
     /**
-     * Send message.
-     * @param message
+     * Sends the message to the default endpoint.
+     * @param message the message object to send.
      */
     void send(Message<?> message);
+    
+    /**
+     * Sends a message to a dynamic endpoint.
+     * @param message the message object to send.
+     * @param endpoint the String representation (name, uri, queue name) of the target endpoint
+     */
+    void send(Message<?> message, String endpoint);
 }

@@ -49,7 +49,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     private static final Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
     
     /**
-     * @see MessageSender#send(Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
@@ -82,6 +82,16 @@ public class ReplyMessageChannelSender implements MessageSender {
         }
         
         log.info("Message was successfully sent to reply channel: '" + replyChannel.getName() + "'");
+    }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     */
+    public void send(Message<?> message, String endpoint) {
+        log.warn("Unable to use endpoint '" + endpoint + 
+                "' as reply channel, instead use reply channel coming from reply channel holder");
+        
+        send(message);
     }
     
     /**

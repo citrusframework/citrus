@@ -86,13 +86,21 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     private static final Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message) {
+    public void send(Message<?> message, String endpoint) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending JMS message to destination: '" + getDestinationName() + "'");
+        String targetDestinationName;
+        
+        if (StringUtils.hasText(endpoint)) {
+            targetDestinationName = endpoint;
+        } else {
+            targetDestinationName = getDefaultDestinationName();
+        }
+        
+        log.info("Sending JMS message to destination: '" + targetDestinationName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
@@ -112,7 +120,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             }
             
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(message, session);
-            messageProducer = session.createProducer(getDestination(session));
+            
+            if (StringUtils.hasText(endpoint)) {
+                messageProducer = session.createProducer(resolveDestinationName(targetDestinationName, session));
+            } else { // use default destination
+                messageProducer = session.createProducer(getDefaultDestination(session));
+            }
 
             replyDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyDestination);
@@ -131,7 +144,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             
             messageProducer.send(jmsRequest);
             
-            log.info("Message was successfully sent to destination: '" + getDestinationName() + "'");
+            log.info("Message was successfully sent to destination: '" + targetDestinationName + "'");
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
@@ -150,6 +163,13 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             JmsUtils.closeMessageConsumer(messageConsumer);
             deleteTemporaryDestination(replyDestination);
         }
+    }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
+    public void send(Message<?> message) {
+        send(message, null);
     }
     
     /**
@@ -182,14 +202,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             if(message.getHeaders().getReplyChannel() instanceof Destination) {
                 return (Destination)message.getHeaders().getReplyChannel();
             } else {
-                return new DynamicDestinationResolver().resolveDestinationName(session, 
-                                message.getHeaders().getReplyChannel().toString(), 
-                                pubSubDomain);
+                return resolveDestinationName(message.getHeaders().getReplyChannel().toString(), session);
             }
         } else if (replyDestination != null) {
             return replyDestination;
         } else if (StringUtils.hasText(replyDestinationName)) {
-            return new DynamicDestinationResolver().resolveDestinationName(session, this.replyDestinationName, pubSubDomain);
+            return resolveDestinationName(this.replyDestinationName, session);
         }
         
         if(pubSubDomain && session instanceof TopicSession){
@@ -207,19 +225,28 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @return the destination.
      * @throws JMSException
      */
-    private Destination getDestination(Session session) throws JMSException {
+    private Destination getDefaultDestination(Session session) throws JMSException {
         if (destination != null) {
             return destination;
         }
         
-        return new DynamicDestinationResolver().resolveDestinationName(session, destinationName, pubSubDomain);
+        return resolveDestinationName(destinationName, session);
+    }
+    
+    /**
+     * 
+     * @param destinationName
+     * @return
+     */
+    private Destination resolveDestinationName(String name, Session session) throws JMSException {
+        return new DynamicDestinationResolver().resolveDestinationName(session, name, pubSubDomain);
     }
     
     /**
      * Get the destination name (either queue name or topic name).
      * @return the destinationName
      */
-    protected String getDestinationName() {
+    protected String getDefaultDestinationName() {
         try {
             if(destination != null) {
                 if(destination instanceof Queue) {

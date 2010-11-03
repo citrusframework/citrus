@@ -770,4 +770,39 @@ public class SendMessageActionTest extends AbstractBaseTest {
         
         verify(messageSender);
     }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithEndpointOverwrite() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        sendAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        sendAction.setEndpoint("customEndpoint");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject(), eq("customEndpoint"));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
 }

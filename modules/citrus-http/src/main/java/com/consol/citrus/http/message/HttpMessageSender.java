@@ -66,15 +66,22 @@ public class HttpMessageSender implements MessageSender {
     private static final Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message) {
+    public void send(Message<?> message, String endpoint) {
         Writer writer = null;
         BufferedReader reader = null;
 
+        String endpointUri;
+        if (StringUtils.hasText(endpoint)) {
+            endpointUri = endpoint;
+        } else {
+            endpointUri = getRequestUrl();
+        }
+        
         try {
-            log.info("Sending message to: " + getRequestUrl());
+            log.info("Sending message to: " + endpointUri);
 
             if (log.isDebugEnabled()) {
                 log.debug("Message to be sent:\n" + message.getPayload().toString());
@@ -84,9 +91,9 @@ public class HttpMessageSender implements MessageSender {
             
             requestHeaders.put("HTTPVersion", HttpConstants.HTTP_VERSION);
             requestHeaders.put("HTTPMethod", requestMethod);
-            requestHeaders.put("HTTPUri", getUri());
-            requestHeaders.put("HTTPHost", getHost());
-            requestHeaders.put("HTTPPort", getPort());
+            requestHeaders.put("HTTPUri", getUri(endpointUri));
+            requestHeaders.put("HTTPHost", getHost(endpointUri));
+            requestHeaders.put("HTTPPort", getPort(endpointUri));
 
             /* before sending set header values */
             for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
@@ -115,10 +122,10 @@ public class HttpMessageSender implements MessageSender {
                 throw new CitrusRuntimeException("Unsupported request method: " + requestMethod);
             }
 
-            InetAddress addr = InetAddress.getByName(getHost());
-            socket = new Socket(addr, Integer.valueOf(getPort()));
+            InetAddress addr = InetAddress.getByName(getHost(endpointUri));
+            socket = new Socket(addr, Integer.valueOf(getPort(endpointUri)));
 
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
             writer.write(HttpUtils.generateRequest(request));
             writer.flush();
 
@@ -156,16 +163,24 @@ public class HttpMessageSender implements MessageSender {
             }
         }
     }
+    
+    /**
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     */
+    public void send(Message<?> message) {
+        send(message, null);
+    }
 
     /**
      * Get the port of the destination endpoint.
+     * @param endpoint the endpoint uri to read from.
      * @return
      */
-    private String getPort() {
-        Assert.isTrue(StringUtils.hasText(requestUrl),
-                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+    private String getPort(String endpoint) {
+        Assert.isTrue(StringUtils.hasText(endpoint),
+                        "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String port = requestUrl.substring("http://".length());
+        String port = endpoint.substring("http://".length());
         
         if(port.contains(":")) {
             port = port.substring(port.indexOf(':')+1);
@@ -182,13 +197,14 @@ public class HttpMessageSender implements MessageSender {
 
     /**
      * Get the host of the destination endpoint.
+     * @param endpoint the endpoint uri to read from.
      * @return
      */
-    private String getHost() {
-        Assert.isTrue(StringUtils.hasText(requestUrl),
-                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+    private String getHost(String endpoint) {
+        Assert.isTrue(StringUtils.hasText(endpoint),
+                        "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String host = requestUrl.substring("http://".length());
+        String host = endpoint.substring("http://".length());
         if(host.contains(":")) {
             host = host.substring(0, host.indexOf(":"));
         } else {
@@ -200,13 +216,14 @@ public class HttpMessageSender implements MessageSender {
 
     /**
      * Get the request URI.
+     * @param endpoint the endpoint uri to read from.
      * @return
      */
-    private String getUri() {
-        Assert.isTrue(StringUtils.hasText(requestUrl),
-                        "You must specify a requestUrl (e.g. http://localhost:8080/test");
+    private String getUri(String endpoint) {
+        Assert.isTrue(StringUtils.hasText(endpoint),
+                        "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String uri = requestUrl.substring("http://".length());
+        String uri = endpoint.substring("http://".length());
         
         if(uri.contains("/")) {
             uri = uri.substring(uri.indexOf("/"));
