@@ -117,16 +117,6 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     }
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
-     */
-    public void send(Message<?> message, String endpoint) {
-        log.warn("Unable to use endpoint '" + endpoint + 
-                "' as reply destination, instead of this use reply destination coming from reply destination holder");
-        
-        send(message);
-    }
-    
-    /**
      * Set the JMS connection factory.
      * @param connectionFactory
      */

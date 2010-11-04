@@ -75,17 +75,9 @@ public class SendSoapMessageAction extends SendMessageAction {
             if(attachmentContent != null) {
                 attachment.setContent(attachmentContent);
                 
-                if (StringUtils.hasText(endpoint)) {
-                    webServiceMessageSender.send(message, attachment, endpoint);
-                } else {
-                    webServiceMessageSender.send(message, attachment);
-                }
+                webServiceMessageSender.send(message, attachment);
             } else {
-                if (StringUtils.hasText(endpoint)) {
-                    webServiceMessageSender.send(message, endpoint);
-                } else {
-                    webServiceMessageSender.send(message);
-                }
+                webServiceMessageSender.send(message);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);

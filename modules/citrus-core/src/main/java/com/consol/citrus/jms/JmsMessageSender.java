@@ -26,7 +26,6 @@ import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.message.MessageSender;
 
@@ -46,36 +45,19 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
-        send(message, null);
-    }
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
-     */
-    public void send(Message<?> message, String endpoint) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        String destinationName;
+        String defaultDestinationName = getDefaultDestinationName();
         
-        if (StringUtils.hasText(endpoint)) {
-            destinationName = endpoint;
-        } else {
-            destinationName = getDefaultDestinationName();
-        }
-        
-        log.info("Sending JMS message to destination: '" + destinationName + "'");
+        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
         }
 
-        if (StringUtils.hasText(endpoint)) {
-            getJmsTemplate().convertAndSend(endpoint, message);
-        } else { // use default destination
-            getJmsTemplate().convertAndSend(message);
-        }
+        getJmsTemplate().convertAndSend(message);
         
-        log.info("Message was successfully sent to destination: '" + destinationName + "'");
+        log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
     }
     
     /**

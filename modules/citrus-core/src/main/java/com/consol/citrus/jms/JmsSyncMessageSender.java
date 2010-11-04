@@ -86,21 +86,15 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     private static final Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message, String endpoint) {
+    public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        String targetDestinationName;
+        String defaultDestinationName = getDefaultDestinationName();
         
-        if (StringUtils.hasText(endpoint)) {
-            targetDestinationName = endpoint;
-        } else {
-            targetDestinationName = getDefaultDestinationName();
-        }
-        
-        log.info("Sending JMS message to destination: '" + targetDestinationName + "'");
+        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
@@ -121,11 +115,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(message, session);
             
-            if (StringUtils.hasText(endpoint)) {
-                messageProducer = session.createProducer(resolveDestinationName(targetDestinationName, session));
-            } else { // use default destination
-                messageProducer = session.createProducer(getDefaultDestination(session));
-            }
+            messageProducer = session.createProducer(getDefaultDestination(session));
 
             replyDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyDestination);
@@ -144,7 +134,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             
             messageProducer.send(jmsRequest);
             
-            log.info("Message was successfully sent to destination: '" + targetDestinationName + "'");
+            log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
@@ -163,13 +153,6 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             JmsUtils.closeMessageConsumer(messageConsumer);
             deleteTemporaryDestination(replyDestination);
         }
-    }
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
-     */
-    public void send(Message<?> message) {
-        send(message, null);
     }
     
     /**

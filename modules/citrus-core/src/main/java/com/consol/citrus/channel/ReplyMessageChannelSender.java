@@ -85,16 +85,6 @@ public class ReplyMessageChannelSender implements MessageSender {
     }
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
-     */
-    public void send(Message<?> message, String endpoint) {
-        log.warn("Unable to use endpoint '" + endpoint + 
-                "' as reply channel, instead use reply channel coming from reply channel holder");
-        
-        send(message);
-    }
-    
-    /**
      * Set the reply message holder.
      * @param replyMessageChannelHolder the replyMessageChannelHolder to set
      */

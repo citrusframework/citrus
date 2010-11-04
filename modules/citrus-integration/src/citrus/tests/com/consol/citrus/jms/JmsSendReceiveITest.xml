@@ -231,53 +231,6 @@
               </receive>
             </assert>
             
-            <echo>
-                <message>Test 4: Check message destination overwrite</message>
-            </echo>
-        
-            <send with="helloRequestJmsMessageSender" endpoint="Citrus.Hello.Response.Queue">
-                <description>
-                    Send JMS response directly to response queue with endpoint overwrite
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                           <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                <MessageId>${messageId}</MessageId>
-                                <CorrelationId>${correlationId}</CorrelationId>
-                                <User>HelloService</User>
-                                <Text>Hello ${user}</Text>
-                            </HelloResponse>                              
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </send>
-            
-            <receive with="helloResponseJmsMessageReceiver">
-                <description>
-                    Receive direct message sent with endpoint overwrite
-                </description>
-                <message>
-                    <data>
-                        <![CDATA[
-                            <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
-                                <MessageId>${messageId}</MessageId>
-                                <CorrelationId>${correlationId}</CorrelationId>
-                                <User>HelloService</User>
-                                <Text>Hello ${user}</Text>
-                            </HelloResponse>
-                        ]]>
-                    </data>
-                </message>
-                <header>
-                    <element name="Operation" value="sayHello"/>
-                    <element name="CorrelationId" value="${correlationId}"/>
-                </header>
-            </receive>
         </actions>
     </testcase>
 </spring:beans>

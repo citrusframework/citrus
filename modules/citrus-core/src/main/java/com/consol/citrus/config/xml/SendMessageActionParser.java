@@ -53,11 +53,6 @@ public class SendMessageActionParser implements BeanDefinitionParser {
             throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
         }
         
-        String endpoint = element.getAttribute("endpoint");
-        if (StringUtils.hasText(messageSenderReference)) {
-            builder.addPropertyValue("endpoint", endpoint);
-        }
-        
         DescriptionElementParser.doParse(element, builder);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");

@@ -102,32 +102,4 @@ public class MessageChannelSenderTest {
         Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");    
     }
     
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testSendMessageEndpointOverwrite() {
-        MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessageChannelTemplate(messageChannelTemplate);
-        
-        MessageChannel newChannel = EasyMock.createMock(MessageChannel.class);
-        ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
-        
-        messageChannelSender.setChannelResolver(channelResolver);
-        messageChannelSender.setChannel(channel);
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
-        reset(messageChannelTemplate, channel, channelResolver, newChannel);
-        
-        expect(channelResolver.resolveChannelName("newChannel")).andReturn(newChannel).once();
-        expect(messageChannelTemplate.send(message, newChannel)).andReturn(true).once();
-        
-        replay(messageChannelTemplate, channel, channelResolver, newChannel);
-        
-        messageChannelSender.send(message, "newChannel");
-        
-        verify(messageChannelTemplate, channel, channelResolver, newChannel);
-    }
 }

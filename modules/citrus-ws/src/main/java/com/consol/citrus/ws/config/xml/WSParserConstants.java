@@ -71,6 +71,10 @@ public class WSParserConstants {
 
     public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
     
+    public static final String ENDPOINT_RESOLVER_ATTRIBUTE = "endpoint-resolver";
+
+    public static final String ENDPOINT_RESOLVER_PROPERTY = "endpointResolver";
+    
     public static final String USE_ROOT_CONTEXT_ATTRIBUTE = "root-parent-context";
     
     public static final String USE_ROOT_CONTEXT_PROPERTY = "useRootContextAsParent";

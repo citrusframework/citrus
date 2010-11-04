@@ -19,21 +19,15 @@ package com.consol.citrus.message;
 import org.springframework.integration.core.Message;
 
 /**
- * Message sender interface.
+ * Basic message sender interface. Message senders are capable of publishing messages to a 
+ * specific message endpoint. Each message transport may have dedicated message sender implementations.
  * 
  * @author Christoph Deppisch
  */
 public interface MessageSender {
     /**
-     * Sends the message to the default endpoint.
+     * Sends the message.
      * @param message the message object to send.
      */
-    void send(Message<?> message);
-    
-    /**
-     * Sends a message to a dynamic endpoint.
-     * @param message the message object to send.
-     * @param endpoint the String representation (name, uri, queue name) of the target endpoint
-     */
-    void send(Message<?> message, String endpoint);
+    public void send(Message<?> message);
 }

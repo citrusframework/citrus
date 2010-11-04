@@ -98,6 +98,12 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         if (StringUtils.hasText(replyMessageCorrelator)) {
             builder.addPropertyReference(WSParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
         }
+        
+        String endpointResolver = element.getAttribute(WSParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE);
+        
+        if (StringUtils.hasText(endpointResolver)) {
+            builder.addPropertyReference(WSParserConstants.ENDPOINT_RESOLVER_PROPERTY, endpointResolver);
+        }
 
         return builder.getBeanDefinition();
     }

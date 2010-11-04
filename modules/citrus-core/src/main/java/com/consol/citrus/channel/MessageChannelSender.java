@@ -24,7 +24,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
@@ -54,17 +53,11 @@ public class MessageChannelSender implements MessageSender, ApplicationContextAw
     private ChannelResolver channelResolver;
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message, String endpoint) {
-        String channelName;
-        
-        if (StringUtils.hasText(endpoint)) {
-            channelName = endpoint;
-        } else {
-            channelName = channel.getName();
-        }
+    public void send(Message<?> message) {
+        String channelName = channel.getName();
         
         log.info("Sending message to channel: '" + channelName + "'");
 
@@ -72,25 +65,11 @@ public class MessageChannelSender implements MessageSender, ApplicationContextAw
             log.debug("Message to send is:\n" + message.toString());
         }
         
-        boolean success;
-        if (StringUtils.hasText(endpoint)) {
-            success = messageChannelTemplate.send(message, resolveChannelName(channelName));
-        } else { // send message to default channel
-            success = messageChannelTemplate.send(message, channel);
-        }
-        
-        if (!success) {
+        if (!messageChannelTemplate.send(message, channel)) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + channelName + "'");
         }
         
         log.info("Message was successfully sent to channel: '" + channelName + "'");
-    }
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
-     */
-    public void send(Message<?> message) {
-        send(message, null);
     }
     
     /**

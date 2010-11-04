@@ -57,4 +57,8 @@ public class HttpParserConstants {
     public static final String REPLY_CORRELATOR_ATTRIBUTE = "reply-message-correlator";
 
     public static final String REPLY_CORRELATOR_PROPERTY = "correlator";
+    
+    public static final String ENDPOINT_RESOLVER_ATTRIBUTE = "endpoint-resolver";
+
+    public static final String ENDPOINT_RESOLVER_PROPERTY = "endpointResolver";
 }

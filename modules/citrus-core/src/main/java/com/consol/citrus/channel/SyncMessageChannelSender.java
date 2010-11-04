@@ -24,7 +24,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -64,17 +63,11 @@ public class SyncMessageChannelSender implements MessageSender, ApplicationConte
     private ChannelResolver channelResolver;
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message, String endpoint) {
-        String channelName;
-        
-        if (StringUtils.hasText(endpoint)) {
-            channelName = endpoint;
-        } else {
-            channelName = channel.getName();
-        }
+    public void send(Message<?> message) {
+        String channelName = channel.getName();
         
         log.info("Sending message to channel: '" + channelName + "'");
 
@@ -85,11 +78,7 @@ public class SyncMessageChannelSender implements MessageSender, ApplicationConte
         messageChannelTemplate.setReceiveTimeout(replyTimeout);
         Message<?> replyMessage;
         
-        if (StringUtils.hasText(endpoint)) {
-            replyMessage = messageChannelTemplate.sendAndReceive(message, resolveChannelName(channelName));
-        } else { // send message to default channel
-            replyMessage = messageChannelTemplate.sendAndReceive(message, channel);
-        }
+        replyMessage = messageChannelTemplate.sendAndReceive(message, channel);
         
         if(replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + replyTimeout + "ms. Did not receive reply message on reply channel");
@@ -105,13 +94,6 @@ public class SyncMessageChannelSender implements MessageSender, ApplicationConte
                 replyMessageHandler.onReplyMessage(replyMessage);
             }
         }
-    }
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
-     */
-    public void send(Message<?> message) {
-        send(message, null);
     }
     
     /**

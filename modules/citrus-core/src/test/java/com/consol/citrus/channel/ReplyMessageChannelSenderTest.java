@@ -220,31 +220,4 @@ public class ReplyMessageChannelSenderTest {
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of message channel template returned false");
     }
     
-    @Test
-    public void testSendReplyMessageEndpointOverwrite() {
-        ReplyMessageChannelSender sender = new ReplyMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
-        
-        ReplyMessageChannelHolder replyChannelHolder = org.easymock.EasyMock.createMock(ReplyMessageChannelHolder.class);
-        sender.setReplyMessageChannelHolder(replyChannelHolder);
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
-        reset(messageChannelTemplate, replyChannel, replyChannelHolder);
-
-        expect(replyChannel.getName()).andReturn("replyChannel").anyTimes();
-        
-        expect(replyChannelHolder.getReplyMessageChannel()).andReturn(replyChannel).once();
-        
-        expect(messageChannelTemplate.send(message, replyChannel)).andReturn(true).once();
-        
-        replay(messageChannelTemplate, replyChannel, replyChannelHolder);
-        
-        sender.send(message, "newChannel");
-        
-        verify(messageChannelTemplate, replyChannel, replyChannelHolder);
-    }
 }

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * Copyright 2006-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns="http://www.citrusframework.org/schema/ws/testcase"
+     xmlns:core="http://www.citrusframework.org/schema/testcase"
+     targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified">
+    
+    <xs:import namespace="http://www.citrusframework.org/schema/testcase" 
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-1.1.xsd" />
+    
+    <xs:element name="assert">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="core:actionType">
+                    <xs:sequence>
+                        <xs:element name="fault-detail" minOccurs="0">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="file" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:group ref="core:actionGroup"/>                    
+                    </xs:sequence>
+                    <xs:attribute name="fault-code" type="xs:string" use="required"/>
+                    <xs:attribute name="fault-string" type="xs:string"/>
+                    <xs:attribute name="fault-validator" type="xs:string"/>
+                    <xs:attribute name="message-factory" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="send">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="core:sendActionType">
+                    <xs:sequence>
+                        <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="send-fault">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="core:description" minOccurs="0"/>
+                <xs:element name="fault">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="fault-code" type="xs:string"/>
+                            <xs:element name="fault-string" type="xs:string" minOccurs="0"/>                            
+                            <xs:element name="fault-detail" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="file" type="xs:string"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="header" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="element" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="with" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="receive">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="core:receiveActionType">
+                    <xs:sequence>
+                        <xs:element name="attachment" minOccurs="0">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="soapAttachmentType">
+                                        <xs:attribute name="validator" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="soapAttachmentType">
+        <xs:choice>
+            <xs:element name="data" type="xs:string"/>
+            <xs:element name="resource">
+                <xs:complexType>
+                    <xs:attribute name="file" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="content-id"/>
+        <xs:attribute name="content-type"/>
+        <xs:attribute name="charset-name"/>
+    </xs:complexType>    
+</xs:schema>

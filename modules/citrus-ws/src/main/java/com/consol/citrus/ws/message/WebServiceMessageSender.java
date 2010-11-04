@@ -40,6 +40,7 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
@@ -58,6 +59,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /** Resolves dynamic endpoint uri */
+    private EndpointUriResolver endpointResolver;
+    
     /**
      * Logger
      */
@@ -67,28 +71,21 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
-        send(message, null, null);
+        send(message, null);
     }
     
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
-     */
-    public void send(Message<?> message, String endpoint) {
-        send(message, null, endpoint);
-    }
-
     /**
      * Send message with SOAP attachment.
      * @param message
      * @param attachment
      */
-    public void send(final Message<?> message, final Attachment attachment, String endpoint) {
+    public void send(final Message<?> message, final Attachment attachment) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
         String endpointUri;
-        if (StringUtils.hasText(endpoint)) {
-            endpointUri = endpoint;
-        } else {
+        if (endpointResolver != null) {
+            endpointUri = endpointResolver.resolveEndpointUri(message, getDefaultUri());
+        } else { // use default uri
             endpointUri = getDefaultUri();
         }
         
@@ -108,7 +105,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         getWebServiceTemplate().setFaultMessageResolver(this);
         
         // send and receive message
-        if (StringUtils.hasText(endpoint)) {
+        if (endpointResolver != null) {
             getWebServiceTemplate().sendAndReceive(endpointUri, senderCallback, receiverCallback);
         } else { // use default endpoint uri
             getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
@@ -127,13 +124,6 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         }
     }
     
-    /**
-     * Send message with attachment to default endpoint.
-     */
-    public void send(final Message<?> message, final Attachment attachment) {
-        send(message, attachment, null);
-    }
-
     /**
      * Set the reply message handler.
      * @param replyMessageHandler the replyMessageHandler to set
@@ -292,4 +282,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 			return response;
 		}
 	}
+
+    /**
+     * Sets the endpoint uri resolver.
+     * @param endpointResolver the endpointUriResolver to set
+     */
+    public void setEndpointResolver(EndpointUriResolver endpointResolver) {
+        this.endpointResolver = endpointResolver;
+    }
 }

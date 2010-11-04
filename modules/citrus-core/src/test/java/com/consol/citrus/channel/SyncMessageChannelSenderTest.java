@@ -262,40 +262,4 @@ public class SyncMessageChannelSenderTest {
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
     }
     
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testSendMessageEndpointOverwrite() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
-        
-        MessageChannel newChannel = EasyMock.createMock(MessageChannel.class);
-        ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
-        
-        sender.setChannelResolver(channelResolver);
-        sender.setChannel(channel);
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-
-        reset(messageChannelTemplate, channel, replyMessageHandler, channelResolver, newChannel);
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
-        expectLastCall().once();
-        
-        expect(channelResolver.resolveChannelName("newChannel")).andReturn(newChannel).once();
-        expect(messageChannelTemplate.sendAndReceive(message, newChannel)).andReturn(response).once();
-        
-        replay(messageChannelTemplate, channel, replyMessageHandler, channelResolver, newChannel);
-        
-        sender.send(message, "newChannel");
-        
-        verify(messageChannelTemplate, channel, replyMessageHandler, channelResolver, newChannel);
-    }
 }

@@ -59,6 +59,12 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
             builder.addPropertyReference(HttpParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
         }
         
+        String endpointResolver = element.getAttribute(HttpParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE);
+        
+        if (StringUtils.hasText(endpointResolver)) {
+            builder.addPropertyReference(HttpParserConstants.ENDPOINT_RESOLVER_PROPERTY, endpointResolver);
+        }
+        
         return builder.getBeanDefinition();
     }
 }

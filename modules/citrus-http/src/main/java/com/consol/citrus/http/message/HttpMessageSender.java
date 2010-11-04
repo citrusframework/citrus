@@ -30,6 +30,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.util.HttpConstants;
 import com.consol.citrus.http.util.HttpUtils;
@@ -60,28 +61,32 @@ public class HttpMessageSender implements MessageSender {
     /** The reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /** Resolves dynamic endpoint uri */
+    private EndpointUriResolver endpointUriResolver;
+    
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message, java.lang.String)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
-    public void send(Message<?> message, String endpoint) {
+    public void send(Message<?> message) {
         Writer writer = null;
         BufferedReader reader = null;
 
-        String endpointUri;
-        if (StringUtils.hasText(endpoint)) {
-            endpointUri = endpoint;
-        } else {
-            endpointUri = getRequestUrl();
-        }
-        
         try {
-            log.info("Sending message to: " + endpointUri);
+            
+            String endpointUri;
+            if (endpointUriResolver != null) {
+                endpointUri = endpointUriResolver.resolveEndpointUri(message, getRequestUrl());
+            } else {
+                endpointUri = getRequestUrl();
+            }
+            
+            log.info("Sending HTTP message to: '" + endpointUri + "'");
 
             if (log.isDebugEnabled()) {
                 log.debug("Message to be sent:\n" + message.getPayload().toString());
@@ -91,9 +96,9 @@ public class HttpMessageSender implements MessageSender {
             
             requestHeaders.put("HTTPVersion", HttpConstants.HTTP_VERSION);
             requestHeaders.put("HTTPMethod", requestMethod);
-            requestHeaders.put("HTTPUri", getUri(endpointUri));
-            requestHeaders.put("HTTPHost", getHost(endpointUri));
-            requestHeaders.put("HTTPPort", getPort(endpointUri));
+            requestHeaders.put("HTTPUri", getUriFromEndpointUri(endpointUri));
+            requestHeaders.put("HTTPHost", getHostFromEndpointUri(endpointUri));
+            requestHeaders.put("HTTPPort", getPortFromEndpointUri(endpointUri));
 
             /* before sending set header values */
             for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
@@ -122,13 +127,15 @@ public class HttpMessageSender implements MessageSender {
                 throw new CitrusRuntimeException("Unsupported request method: " + requestMethod);
             }
 
-            InetAddress addr = InetAddress.getByName(getHost(endpointUri));
-            socket = new Socket(addr, Integer.valueOf(getPort(endpointUri)));
+            InetAddress addr = InetAddress.getByName(getHostFromEndpointUri(endpointUri));
+            socket = new Socket(addr, Integer.valueOf(getPortFromEndpointUri(endpointUri)));
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
             writer.write(HttpUtils.generateRequest(request));
             writer.flush();
 
+            log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
+            
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             StringBuffer buffer = new StringBuffer();
             String line;
@@ -165,22 +172,14 @@ public class HttpMessageSender implements MessageSender {
     }
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
-     */
-    public void send(Message<?> message) {
-        send(message, null);
-    }
-
-    /**
      * Get the port of the destination endpoint.
-     * @param endpoint the endpoint uri to read from.
      * @return
      */
-    private String getPort(String endpoint) {
-        Assert.isTrue(StringUtils.hasText(endpoint),
+    private String getPortFromEndpointUri(String endpointUri) {
+        Assert.isTrue(StringUtils.hasText(endpointUri),
                         "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String port = endpoint.substring("http://".length());
+        String port = endpointUri.substring("http://".length());
         
         if(port.contains(":")) {
             port = port.substring(port.indexOf(':')+1);
@@ -197,14 +196,13 @@ public class HttpMessageSender implements MessageSender {
 
     /**
      * Get the host of the destination endpoint.
-     * @param endpoint the endpoint uri to read from.
      * @return
      */
-    private String getHost(String endpoint) {
-        Assert.isTrue(StringUtils.hasText(endpoint),
+    private String getHostFromEndpointUri(String endpointUri) {
+        Assert.isTrue(StringUtils.hasText(endpointUri),
                         "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String host = endpoint.substring("http://".length());
+        String host = endpointUri.substring("http://".length());
         if(host.contains(":")) {
             host = host.substring(0, host.indexOf(":"));
         } else {
@@ -216,14 +214,14 @@ public class HttpMessageSender implements MessageSender {
 
     /**
      * Get the request URI.
-     * @param endpoint the endpoint uri to read from.
+     * @param endpointUri the whole endpoint uri.
      * @return
      */
-    private String getUri(String endpoint) {
-        Assert.isTrue(StringUtils.hasText(endpoint),
+    private String getUriFromEndpointUri(String endpointUri) {
+        Assert.isTrue(StringUtils.hasText(endpointUri),
                         "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
-        String uri = endpoint.substring("http://".length());
+        String uri = endpointUri.substring("http://".length());
         
         if(uri.contains("/")) {
             uri = uri.substring(uri.indexOf("/"));
@@ -287,5 +285,13 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
+    }
+
+    /**
+     * Sets the endpoint uri resolver.
+     * @param endpointUriResolver the endpointUriResolver to set
+     */
+    public void setEndpointUriResolver(EndpointUriResolver endpointUriResolver) {
+        this.endpointUriResolver = endpointUriResolver;
     }
 }

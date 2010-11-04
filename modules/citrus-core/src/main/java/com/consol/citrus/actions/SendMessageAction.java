@@ -35,8 +35,9 @@ import com.consol.citrus.util.GroovyUtils;
 
 
 /**
- * This action sends a messages to a specified service destination endpoint. Action uses
- * a {@link MessageSender} so action is independent from message transport.
+ * This action sends a messages to a specified message endpoint. The action holds a reference to
+ * a {@link MessageSender}, which is capable of the message transport implementation. So action is
+ * independent of the message transport.
  *
  * @author Christoph Deppisch 
  * @since 2008
@@ -72,9 +73,6 @@ public class SendMessageAction extends AbstractTestAction {
     /** Extract message headers to variables */
     protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
     
-    /** Target endpoint for send operation, can be a JMS queue name, http uri, SOAP endpoint etc. */
-    protected String endpoint;
-
     /**
      * Message is constructed with payload and header entries and sent via
      * {@link MessageSender} instance.
@@ -87,11 +85,7 @@ public class SendMessageAction extends AbstractTestAction {
         
         context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
         
-        if (StringUtils.hasText(endpoint)) {
-            messageSender.send(message, endpoint);
-        } else {
-            messageSender.send(message);
-        }
+        messageSender.send(message);
     }
 
     /**
@@ -264,14 +258,5 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
         this.extractHeaderValues = extractHeaderValues;
-    }
-
-    /**
-     * Sets the target endpoint of this send operation. In case 
-     * default endpoint in message sender should be overwritten.
-     * @param endpoint the endpoint to set
-     */
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
     }
 }
