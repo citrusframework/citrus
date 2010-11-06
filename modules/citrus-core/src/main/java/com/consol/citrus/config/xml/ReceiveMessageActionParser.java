@@ -86,8 +86,6 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             String messageValidator = messageElement.getAttribute("validator");
             if(StringUtils.hasText(messageValidator)) {
                 builder.addPropertyReference("validator", messageValidator);
-            } else { //set default message validator defined in root-context
-                builder.addPropertyReference("validator", "messageValidator");
             }
             
             // parse payload with xs-any element

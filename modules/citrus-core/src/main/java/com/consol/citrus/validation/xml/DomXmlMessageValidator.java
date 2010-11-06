@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
@@ -46,7 +47,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
@@ -72,29 +73,36 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
     private XsdSchemaRepository schemaRepository;
 
     /**
-     * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.MessageValidationContext)
+     * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.context.ValidationContext)
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
-        Assert.notNull(validationContext.getControlMessage(), "Missing control message for XML message validation, " +
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
+        if(!XmlMessageValidationContext.class.isAssignableFrom(validationContext.getClass())) {
+            throw new IllegalArgumentException("DomXmlMessageValidator must have an instance of XmlMessageValidationContext, " +
+                    "but was '" + validationContext.getClass() + "'");
+        }
+
+        XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)validationContext;
+        
+        Assert.notNull(xmlValidationContext.getControlMessage(), "Missing control message for XML message validation, " +
         		"please specify an expected control message");
         
-        if(!(validationContext.getControlMessage().getPayload() instanceof String)) {
+        if(!(xmlValidationContext.getControlMessage().getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
-                    "but was " + validationContext.getControlMessage().getPayload().getClass());
+                    "but was " + xmlValidationContext.getControlMessage().getPayload().getClass());
         }
         
         log.info("Start message validation");
 
         try {
-            if(validationContext.isSchemaValidationEnabled()) {
+            if(xmlValidationContext.isSchemaValidationEnabled()) {
                 validateXMLSchema(receivedMessage);
-                validateDTD(validationContext.getDTDResource(), receivedMessage);
+                validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
             }
 
-            validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
-            validateMessageHeader(validationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
-            validateMessagePayload(receivedMessage, validationContext, context);
-            validateMessageElements(receivedMessage, validationContext, context);
+            validateNamespaces(xmlValidationContext.getControlNamespaces(), receivedMessage);
+            validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
+            validateMessagePayload(receivedMessage, xmlValidationContext, context);
+            validateMessageElements(receivedMessage, xmlValidationContext, context);
 
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
@@ -747,8 +755,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
     /**
      * Gets the proper validation context builder for this message validator.
      */
-    public ValidationContextBuilder<XmlMessageValidationContext> getValidationContextBuilder() {
-        return new XmlMessageValidationContextBuilder();
+    public XmlMessageValidationContext createValidationContext(TestAction action, TestContext context) {
+        return new XmlMessageValidationContextBuilder().buildValidationContext(action, context);
     }
     
     /**

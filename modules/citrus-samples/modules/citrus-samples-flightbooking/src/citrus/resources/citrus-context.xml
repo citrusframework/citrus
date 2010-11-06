@@ -28,6 +28,9 @@
     
     <context:property-placeholder location="classpath:citrus.properties"/>
 	
+    <!-- Message Validators -->
+    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+    
     <!-- Embedded ActiveMQ JMS broker -->
     <amq:broker useJmx="false" persistent="false">
         <amq:transportConnectors>

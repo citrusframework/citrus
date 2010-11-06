@@ -23,9 +23,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageHeaders;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
@@ -45,7 +46,7 @@ public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageVa
     /**
      * Delegate to new dom tree xml validator
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
         domXmlMessageValidatorDelegate.validateMessage(receivedMessage, context, validationContext);
     }
 
@@ -89,7 +90,7 @@ public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageVa
     /**
      * Delegate to new dom tree xml validator
      */
-    public ValidationContextBuilder<XmlMessageValidationContext> getValidationContextBuilder() {
-        return domXmlMessageValidatorDelegate.getValidationContextBuilder();
+    public XmlMessageValidationContext createValidationContext(TestAction action, TestContext context) {
+        return domXmlMessageValidatorDelegate.createValidationContext(action, context);
     }
 }

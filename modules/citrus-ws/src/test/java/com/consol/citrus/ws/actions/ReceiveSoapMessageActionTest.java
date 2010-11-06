@@ -18,7 +18,8 @@ package com.consol.citrus.ws.actions;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -30,8 +31,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
@@ -51,8 +51,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setAttachmentData("TestAttachment!");
@@ -90,8 +89,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -133,8 +131,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -174,8 +171,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
         
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
@@ -200,8 +196,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -242,8 +237,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -286,8 +280,7 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setMessageReceiver(messageReceiver);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        soapMessageAction.setValidators(validators);
+        soapMessageAction.setValidator(new DomXmlMessageValidator());
         soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");

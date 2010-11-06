@@ -38,6 +38,7 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.util.*;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.ControlMessageValidationAware;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationAware;
@@ -53,7 +54,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationAware;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction implements XmlMessageValidationAware, ScriptValidationAware {
+public class ReceiveMessageAction extends AbstractTestAction implements ControlMessageValidationAware, XmlMessageValidationAware, ScriptValidationAware {
     /** Map extracting message elements to variables */
     private Map<String, String> extractMessageElements = new HashMap<String, String>();
 
@@ -88,7 +89,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
     private Map<String, String> messageElements = new HashMap<String, String>();
 
     /** MessageValidator responsible for message validation */
-    private List<MessageValidator<ValidationContext>> validators;
+    private MessageValidator<? extends ValidationContext> validator;
     
     /** Validation script for message validation */ 
     private String validationScript;
@@ -258,9 +259,16 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
      * @param receivedMessage
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
-        for (MessageValidator<ValidationContext> messageValidator : validators) {
-            ValidationContext validationContext = messageValidator.getValidationContextBuilder().buildValidationContext(this, context);
-            messageValidator.validateMessage(receivedMessage, context, validationContext);
+        if (validator != null) {
+            ValidationContext validationContext = validator.createValidationContext(this, context);
+            validator.validateMessage(receivedMessage, context, validationContext);
+        } else {
+            List<MessageValidator<? extends ValidationContext>> validators = context.getMessageValidators();
+            
+            for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                messageValidator.validateMessage(receivedMessage, context, 
+                        messageValidator.createValidationContext(this, context));
+            }
         }
     }
 
@@ -393,25 +401,11 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
     }
 
     /**
-     * Set the list of message validators.
-     * @param validators the list of message validators to set
-     */
-    public void setValidators(List<MessageValidator<ValidationContext>> validators) {
-        this.validators = validators;
-    }
-    
-    /**
      * Set single message validator.
      * @param validator the message validator to set
      */
-    public void setValidator(MessageValidator<ValidationContext> validator) {
-        if (validators == null) {
-            List<MessageValidator<ValidationContext>> validatorList = new ArrayList<MessageValidator<ValidationContext>>();
-            validatorList.add(validator);
-            this.validators = validatorList;
-        } else {
-            this.validators.add(validator);
-        }
+    public void setValidator(MessageValidator<? extends ValidationContext> validator) {
+        this.validator = validator;
     }
     
     /**

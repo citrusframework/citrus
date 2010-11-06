@@ -68,9 +68,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -110,9 +108,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -155,9 +151,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean.setMessageReceiver(messageReceiver);
         
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -197,9 +191,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -239,9 +231,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -283,9 +273,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -327,9 +315,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setMessageData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"

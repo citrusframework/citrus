@@ -28,11 +28,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -75,8 +76,7 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
     /**
      * Validates the message with Groovy validation script.
      */
-    public void validateMessage(Message<?> receivedMessage, 
-            TestContext context, ScriptValidationContext validationContext) {
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
         if(!ScriptValidationContext.class.isAssignableFrom(validationContext.getClass())) {
             throw new IllegalArgumentException("GroovyScriptMessageValidator must have an instance of ScriptMessageValidationContext, " +
                     "but was '" + validationContext.getClass() + "'");
@@ -110,8 +110,8 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
     /**
      * Gets the proper validation context builder for this message validator.
      */
-    public ValidationContextBuilder<ScriptValidationContext> getValidationContextBuilder() {
-        return new ScriptValidationContextBuilder();
+    public ScriptValidationContext createValidationContext(TestAction action, TestContext context) {
+        return new ScriptValidationContextBuilder().buildValidationContext(action, context);
     }
     
     /**

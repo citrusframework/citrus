@@ -58,6 +58,9 @@
         </property>
     </bean>
     
+    <!-- Message validators -->
+    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+    
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
 
     <!-- SOAP WebService settings -->

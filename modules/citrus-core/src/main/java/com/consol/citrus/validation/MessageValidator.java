@@ -18,9 +18,9 @@ package com.consol.citrus.validation;
 
 import org.springframework.integration.core.Message;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * Message validator interface. Message validation need specific information like
@@ -36,11 +36,13 @@ public interface MessageValidator<T extends ValidationContext> {
      * @param context the current test context
      * @param validationContext the proper validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, T validationContext);
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext);
     
     /**
-     * Returns the validation context builder for this message validator.
-     * @return the validation context builder
+     * Returns a validation context for this message validator. Validation information is
+     * provided in the current test action and the test context.
+     * 
+     * @return the validation context
      */
-    public ValidationContextBuilder<T> getValidationContextBuilder();
+    public T createValidationContext(TestAction action, TestContext context);
 }

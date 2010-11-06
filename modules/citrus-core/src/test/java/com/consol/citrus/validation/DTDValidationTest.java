@@ -16,10 +16,9 @@
 
 package com.consol.citrus.validation;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +45,13 @@ public class DTDValidationTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
-    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
         
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
     }
     
 	@Test

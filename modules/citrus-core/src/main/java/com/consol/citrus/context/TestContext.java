@@ -34,6 +34,8 @@ import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
@@ -59,6 +61,9 @@ public class TestContext {
     
     /** Function registry holding all available functions */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
+    
+    /** List of registered message validator implementations */
+    private List<MessageValidator<? extends ValidationContext>> messageValidators;
     
     /**
      * Default constructor
@@ -412,5 +417,22 @@ public class TestContext {
      */
     public void setFunctionRegistry(FunctionRegistry functionRegistry) {
         this.functionRegistry = functionRegistry;
+    }
+
+    /**
+     * Get the list of registered message validator implementations.
+     * @return the messageValidators
+     */
+    public List<MessageValidator<? extends ValidationContext>> getMessageValidators() {
+        return messageValidators;
+    }
+
+    /**
+     * Set the list of message validators registered in this test environment.
+     * @param messageValidators the messageValidators to set
+     */
+    public void setMessageValidators(
+            List<MessageValidator<? extends ValidationContext>> messageValidators) {
+        this.messageValidators = messageValidators;
     }
 }

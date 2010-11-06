@@ -38,4 +38,6 @@
             </list>
         </property>
     </bean>
+    
+    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
 </beans>

@@ -26,6 +26,9 @@
     
     <context:property-placeholder location="classpath:citrus.properties"/>
 	
+    <!-- Message Validators -->
+    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+    
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="${jms.server.url}" />
     </bean>

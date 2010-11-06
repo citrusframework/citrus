@@ -66,9 +66,7 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
     }
 
     @Test

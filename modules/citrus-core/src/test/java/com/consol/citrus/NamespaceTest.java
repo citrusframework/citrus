@@ -48,16 +48,13 @@ public class NamespaceTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
-    @SuppressWarnings("unchecked")
     public void setup() {
         super.setup();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveMessageBean.setValidators(validators);
+        receiveMessageBean.setValidator(validator);
         receiveMessageBean.setSchemaValidation(false);
     }
     

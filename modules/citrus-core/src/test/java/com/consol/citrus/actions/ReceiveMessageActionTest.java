@@ -21,7 +21,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.core.io.ClassPathResource;
@@ -33,8 +34,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 
 /**
@@ -52,9 +51,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 		ReceiveMessageAction receiveAction = new ReceiveMessageAction();
 		receiveAction.setMessageReceiver(messageReceiver);
 		
-		List validators = new ArrayList<MessageValidator<ValidationContext>>();
-		validators.add(validator);
-		receiveAction.setValidators(validators);
+		receiveAction.setValidator(validator);
 		receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		
 		Map<String, Object> headers = new HashMap<String, Object>();
@@ -77,9 +74,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageResource(new ClassPathResource("test-request-payload.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -102,9 +97,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         StringBuilder sb = new StringBuilder();
         sb.append("xml.TestRequest(){\n");
         sb.append("Message('Hello World!')\n");
@@ -131,9 +124,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setScriptResource(new ClassPathResource("test-request-payload.groovy", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -156,9 +147,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -183,9 +172,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-variables.xml", ReceiveMessageActionTest.class));
         
         context.setVariable("myText", "Hello World!");
@@ -210,9 +197,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-functions.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -235,9 +220,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
@@ -264,9 +247,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
@@ -293,9 +274,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -326,9 +305,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -359,9 +336,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -391,9 +366,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -423,9 +396,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -457,9 +428,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -494,9 +463,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -524,9 +491,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -559,9 +524,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -589,9 +552,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -621,9 +582,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -653,9 +612,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -685,9 +642,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -721,9 +676,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
@@ -755,9 +708,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
@@ -792,9 +743,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
@@ -829,9 +778,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
@@ -866,9 +813,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setSchemaValidation(false);
         receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
@@ -907,9 +852,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
@@ -934,9 +877,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         String messageSelectorString = "Operation = 'sayHello'";
@@ -963,9 +904,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
@@ -994,9 +933,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, String> messageSelector = new HashMap<String, String>();
@@ -1024,9 +961,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
@@ -1051,14 +986,11 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testMessageTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messageReceiver);
@@ -1082,9 +1014,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("");
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -1107,9 +1037,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -1138,9 +1066,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setValidationScript("assert root.Message.name() == 'Message'\n" + "assert root.Message.text() == 'Hello World!'");
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -1163,9 +1089,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
-        List validators = new ArrayList<MessageValidator<ValidationContext>>();
-        validators.add(validator);
-        receiveAction.setValidators(validators);
+        receiveAction.setValidator(validator);
         receiveAction.setValidationScriptResource(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();

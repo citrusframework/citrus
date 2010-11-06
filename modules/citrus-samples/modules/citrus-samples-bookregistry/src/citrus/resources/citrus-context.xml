@@ -32,6 +32,9 @@
         </property>
     </bean>
     
+    <!-- Message Validators -->
+    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+    
     <!-- Message Sender/Receiver -->
     <citrus-ws:message-sender id="bookRegistryRequestMessageSender" 
                               request-url="http://localhost:8070/bookregistry"
