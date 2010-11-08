@@ -18,7 +18,6 @@ package com.consol.citrus.validation.context;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.ControlMessageValidationAware;
 
 /**
@@ -39,9 +38,6 @@ public abstract class AbstractValidationContextBuilder<T extends AbstractValidat
             ControlMessageValidationAware controlMessageValidationAware = (ControlMessageValidationAware)action;
             
             validationContext.setControlMessage(controlMessageValidationAware.getControlMessage());
-        } else {
-            throw new CitrusRuntimeException("Test action type '" + action.getClass().getName() +
-                    "' is not able to handle script validation - need validation script information");
         }
         
         return validationContext;

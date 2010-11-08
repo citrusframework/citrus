@@ -83,15 +83,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
 
         XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)validationContext;
         
-        Assert.notNull(xmlValidationContext.getControlMessage(), "Missing control message for XML message validation, " +
-        		"please specify an expected control message");
-        
-        if(!(xmlValidationContext.getControlMessage().getPayload() instanceof String)) {
-            throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
-                    "but was " + xmlValidationContext.getControlMessage().getPayload().getClass());
-        }
-        
-        log.info("Start message validation");
+        log.info("Start XML message validation");
 
         try {
             if(xmlValidationContext.isSchemaValidationEnabled()) {
@@ -100,8 +92,12 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
             }
 
             validateNamespaces(xmlValidationContext.getControlNamespaces(), receivedMessage);
-            validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
-            validateMessagePayload(receivedMessage, xmlValidationContext, context);
+            
+            if (xmlValidationContext.getControlMessage() != null) {
+                validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
+                validateMessagePayload(receivedMessage, xmlValidationContext, context);
+            }
+            
             validateMessageElements(receivedMessage, xmlValidationContext, context);
 
             log.info("XML tree validation finished successfully: All values OK");
@@ -129,7 +125,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param context
      */
     public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
-        if (CollectionUtils.isEmpty(expectedHeaderValues)) {return;}
+        if (CollectionUtils.isEmpty(expectedHeaderValues)) { return; }
 
         log.info("Start message header validation");
 
@@ -204,7 +200,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
     public void validateMessageElements(Message<?> receivedMessage,
             XmlMessageValidationContext validationContext,
             TestContext context) throws CitrusRuntimeException {
-        if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) {return;}
+        if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
 
         log.info("Start XML elements validation");
 
@@ -381,6 +377,11 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param context
      */
     private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext, TestContext context) {
+        if(!(validationContext.getControlMessage().getPayload() instanceof String)) {
+            throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
+                    "but was " + validationContext.getControlMessage().getPayload().getClass());
+        }
+        
         String controlMessagePayload = validationContext.getControlMessage().getPayload().toString();
 
         if(!StringUtils.hasText(controlMessagePayload)) { return; }

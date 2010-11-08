@@ -18,7 +18,6 @@ package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
 
 /**
@@ -37,20 +36,18 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
      * @return the xml validation context.
      */
     public XmlMessageValidationContext prepareValidationContext(TestAction action, TestContext context) {
+        XmlMessageValidationContext validationContext =  new XmlMessageValidationContext();
+        
         if (action instanceof XmlMessageValidationAware) {
             XmlMessageValidationAware xmlMessageValidationAware = (XmlMessageValidationAware)action;
-            XmlMessageValidationContext validationContext =  new XmlMessageValidationContext();
             
             validationContext.setPathValidationExpressions(xmlMessageValidationAware.getPathValidationExpressions());
             validationContext.setIgnoreMessageElements(xmlMessageValidationAware.getIgnoreExpressions());
             validationContext.setControlNamespaces(xmlMessageValidationAware.getControlNamespaces());
             validationContext.setSchemaValidation(xmlMessageValidationAware.isSchemaValidationEnabled());
             validationContext.setNamespaceContext(xmlMessageValidationAware.getNamespaceContext());
-            
-            return validationContext;
-        } else {
-            throw new CitrusRuntimeException("Test action type '" + action.getClass().getName() +
-            "' is not able to handle xml validation - must implement '"  + XmlMessageValidationAware.class.getName() + "'");
         }
+        
+        return validationContext;
     }
 }

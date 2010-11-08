@@ -37,11 +37,19 @@ public class ScriptValidationContext implements ValidationContext {
     private Resource validationScriptResource;
     
     /** Validation script code */
-    private String validationScript;
+    private String validationScript = "";
     
     /** The current test context */
     private TestContext context;
 
+    /**
+     * Constructor just using test context as field.
+     * @param context
+     */
+    public ScriptValidationContext(TestContext context) {
+        this.context = context;
+    }
+    
     /**
      * Constructor using validation script resource.
      * @param validationScriptResource

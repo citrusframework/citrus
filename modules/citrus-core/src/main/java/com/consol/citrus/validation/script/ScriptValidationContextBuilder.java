@@ -18,7 +18,6 @@ package com.consol.citrus.validation.script;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
@@ -40,14 +39,11 @@ public class ScriptValidationContextBuilder implements ValidationContextBuilder<
                 return new ScriptValidationContext(scriptValidationAware.getValidationScript(), context);
             } else if (scriptValidationAware.getValidationScriptResource() != null) {
                 return new ScriptValidationContext(scriptValidationAware.getValidationScriptResource(), context);
-            } else {
-                // return empty script validation context
-                return new ScriptValidationContext("", context);
             }
-        } else {
-            throw new CitrusRuntimeException("Test action type '" + action.getClass().getName() +
-                    "' is not able to handle script validation - must implement '" + ScriptValidationAware.class.getName() + "'");
         }
+        
+        // return empty script validation context
+        return new ScriptValidationContext(context);
     }
 
 }
