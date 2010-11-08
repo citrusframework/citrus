@@ -1,7 +1,7 @@
 import com.consol.citrus.*
 import com.consol.citrus.variable.*
 import com.consol.citrus.context.TestContext
-import com.consol.citrus.validation.GroovyScriptValidator.ValidationScriptExecutor
+import com.consol.citrus.validation.script.GroovyScriptMessageValidator.ValidationScriptExecutor
 import groovy.util.XmlSlurper
 import org.springframework.integration.core.Message
 

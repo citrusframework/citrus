@@ -21,8 +21,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.core.io.ClassPathResource;
@@ -31,9 +30,13 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 
 /**
@@ -1102,6 +1105,38 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testInjectedMessageValidators() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        
+        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).times(2);
+        replay(messageReceiver);
+        
+        receiveAction.execute(context);
+        
+        // now inject multiple validators
+        List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+        validators.add(new DomXmlMessageValidator());
+        validators.add(new GroovyScriptMessageValidator());
+        
+        TestContext newContext = createTestContext();
+        newContext.setMessageValidators(validators);
+        
+        receiveAction.execute(newContext);
         
         verify(messageReceiver);
     }

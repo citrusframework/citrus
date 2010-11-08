@@ -20,16 +20,25 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
  * @author Christoph Deppisch
  */
 public class LoadPropertiesAsGlobalVariablesTest extends AbstractBaseTest {
+    
+    @Autowired
+    private FunctionRegistry functionRegistry;
+    
+    @Autowired
+    private GlobalVariables globalVariables;
+    
     @Test
     public void testPropertyLoadingFromClasspath() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();

@@ -22,8 +22,8 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeMethod;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Abstract base testng test implementation for Citrus unit testing. Provides access to
@@ -38,13 +38,9 @@ public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests 
     /** Test context */
     protected TestContext context;
 
-    /** Function registry */
+    /** Factory bean for test context */
     @Autowired
-    protected FunctionRegistry functionRegistry;
-
-    /** Global variables */
-    @Autowired
-    protected GlobalVariables globalVariables;
+    protected TestContextFactoryBean testContextFactoryBean;
 
     /**
      * Setup test execution.
@@ -59,11 +55,10 @@ public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests 
      * @return
      */
     protected TestContext createTestContext() {
-        TestContext newContext = new TestContext();
-
-        newContext.setFunctionRegistry(functionRegistry);
-        newContext.setGlobalVariables(globalVariables);
-
-        return newContext;
+        try {
+            return (TestContext)testContextFactoryBean.getObject();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to create test context", e);
+        }
     }
 }

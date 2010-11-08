@@ -104,6 +104,8 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
             throw new CitrusRuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
+        } catch (AssertionError e) {
+            throw new CitrusRuntimeException("Groovy script validation failed with assertion error:\n" + e.getMessage(), e);
         }
     }
 

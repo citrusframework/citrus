@@ -25,7 +25,6 @@ import javax.jms.JMSException;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.channel.ChannelResolver;
 import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;

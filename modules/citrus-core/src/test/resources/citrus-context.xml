@@ -39,5 +39,6 @@
         </property>
     </bean>
     
+    <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
 </beans>
