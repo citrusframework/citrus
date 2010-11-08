@@ -74,7 +74,7 @@ public class Citrus {
                 testDirectory = testDirectory + "/";
             }
             
-            TestNG testNG = new TestNG(false);
+            TestNG testNG = new TestNG(true);
             
             XmlSuite suite = new XmlSuite();
             suite.setName(cmd.getOptionValue("suitename", CitrusConstants.DEFAULT_SUITE_NAME));
