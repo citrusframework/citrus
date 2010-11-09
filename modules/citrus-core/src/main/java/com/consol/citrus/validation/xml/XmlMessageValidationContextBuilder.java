@@ -35,7 +35,7 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
      * @param context the current test context.
      * @return the xml validation context.
      */
-    public XmlMessageValidationContext prepareValidationContext(TestAction action, TestContext context) {
+    public XmlMessageValidationContext getValidationContext(TestAction action, TestContext context) {
         XmlMessageValidationContext validationContext =  new XmlMessageValidationContext();
         
         if (action instanceof XmlMessageValidationAware) {

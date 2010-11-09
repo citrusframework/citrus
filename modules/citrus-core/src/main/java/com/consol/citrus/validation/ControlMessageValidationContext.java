@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.context;
+package com.consol.citrus.validation;
 
 import org.springframework.integration.core.Message;
 
+import com.consol.citrus.validation.context.ValidationContext;
+
 
 /**
- * Validation context providing an expected control message for message validation. 
+ * Validation context providing a control message for message validation. 
  * The control message holds expected message content and header information. Message 
- * validators compare the actual message and the control message in order to mark differences.
+ * validators compare the actual message to the control message marking differences.
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationContext implements ValidationContext {
+public class ControlMessageValidationContext implements ValidationContext {
     /** Control message */
     private Message<?> controlMessage;
     

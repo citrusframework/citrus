@@ -23,7 +23,7 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.validation.context.AbstractValidationContext;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 
 /**
  * XML validation context holding validation specific information needed for XML 
@@ -31,7 +31,7 @@ import com.consol.citrus.validation.context.AbstractValidationContext;
  * 
  * @author Christoph Deppisch
  */
-public class XmlMessageValidationContext extends AbstractValidationContext {
+public class XmlMessageValidationContext extends ControlMessageValidationContext {
     /** Map holding xpath expressions as key and expected values as values */
     private Map<String, String> pathValidationExpressions;
     
