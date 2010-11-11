@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
@@ -84,20 +85,24 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
 
         ScriptValidationContext scriptValidationContext = (ScriptValidationContext)validationContext;
         
-        log.info("Start groovy message validation");
-        
         try {
-            GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-            Class<?> groovyClass = loader.parseClass(xmlSlurperHead + scriptValidationContext.getValidationScript() + xmlSlurperTail);
+            String validationScript = scriptValidationContext.getValidationScript();
             
-            if (groovyClass == null) {
-                throw new CitrusRuntimeException("Failed to load groovy validation script resource");
+            if (StringUtils.hasText(validationScript)) {
+                log.info("Start groovy message validation");
+                
+                GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
+                Class<?> groovyClass = loader.parseClass(xmlSlurperHead + scriptValidationContext.getValidationScript() + xmlSlurperTail);
+                
+                if (groovyClass == null) {
+                    throw new CitrusRuntimeException("Failed to load groovy validation script resource");
+                }
+                
+                GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
+                ((ValidationScriptExecutor) groovyObject).validate(receivedMessage, context);
+                
+                log.info("Groovy message validation finished successfully: All values OK");
             }
-            
-            GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-            ((ValidationScriptExecutor) groovyObject).validate(receivedMessage, context);
-            
-            log.info("Groovy message validation finished successfully: All values OK");
         } catch (CompilationFailedException e) {
             throw new CitrusRuntimeException(e);
         } catch (InstantiationException e) {
@@ -113,7 +118,11 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
      * Gets the proper validation context builder for this message validator.
      */
     public ScriptValidationContext createValidationContext(TestAction action, TestContext context) {
-        return new ScriptValidationContextBuilder().buildValidationContext(action, context);
+        if (action instanceof ScriptValidationAware) {
+            return ((ScriptValidationAware)action).getScriptValidationContext(context);
+        } else {
+            return new ScriptValidationContext(context);
+        }
     }
     
     /**

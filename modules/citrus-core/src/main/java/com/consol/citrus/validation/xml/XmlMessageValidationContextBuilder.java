@@ -16,7 +16,9 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.TestAction;
+import java.util.Map;
+import java.util.Set;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
 
@@ -28,6 +30,21 @@ import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
  */
 public class XmlMessageValidationContextBuilder extends AbstractValidationContextBuilder<XmlMessageValidationContext> {
 
+    /** XPath validation expressions */
+    private Map<String, String> pathValidationExpressions;
+
+    /** Ignored xml elements via XPath */
+    private Set<String> ignoreExpressions;
+
+    /** Control namespaces for message validation */
+    private Map<String, String> controlNamespaces;
+
+    /** Mark schema validation enabled */
+    private boolean schemaValidation = true;
+    
+    /** Namespace definitions for xpath expression evaluation */
+    private Map<String, String> namespaces;
+    
     /**
      * Prepare the message validation context with XML validation specific information.
      * 
@@ -35,19 +52,55 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
      * @param context the current test context.
      * @return the xml validation context.
      */
-    public XmlMessageValidationContext getValidationContext(TestAction action, TestContext context) {
+    public XmlMessageValidationContext getValidationContext(TestContext context) {
         XmlMessageValidationContext validationContext =  new XmlMessageValidationContext();
         
-        if (action instanceof XmlMessageValidationAware) {
-            XmlMessageValidationAware xmlMessageValidationAware = (XmlMessageValidationAware)action;
-            
-            validationContext.setPathValidationExpressions(xmlMessageValidationAware.getPathValidationExpressions());
-            validationContext.setIgnoreMessageElements(xmlMessageValidationAware.getIgnoreExpressions());
-            validationContext.setControlNamespaces(xmlMessageValidationAware.getControlNamespaces());
-            validationContext.setSchemaValidation(xmlMessageValidationAware.isSchemaValidationEnabled());
-            validationContext.setNamespaceContext(xmlMessageValidationAware.getNamespaceContext());
-        }
+        validationContext.setPathValidationExpressions(pathValidationExpressions);
+        validationContext.setIgnoreMessageElements(ignoreExpressions);
+        validationContext.setControlNamespaces(controlNamespaces);
+        validationContext.setSchemaValidation(schemaValidation);
+        validationContext.setNamespaces(namespaces);
         
         return validationContext;
+    }
+    
+    /**
+     * Setter for XPath validation expressions.
+     * @param validationExpressions
+     */
+    public void setPathValidationExpressions(Map<String, String> validationExpressions) {
+        this.pathValidationExpressions = validationExpressions;
+    }
+    
+    /**
+     * Setter for ignored message elements.
+     * @param ignoreExpressions
+     */
+    public void setIgnoreExpressions(Set<String> ignoreExpressions) {
+        this.ignoreExpressions = ignoreExpressions;
+    }
+    
+    /**
+     * Setter for control namespaces that must be present in the XML message.
+     * @param controlNamespaces the controlNamespaces to set
+     */
+    public void setControlNamespaces(Map<String, String> controlNamespaces) {
+        this.controlNamespaces = controlNamespaces;
+    }
+    
+    /**
+     * Enable/Disable schema validation.
+     * @param enableSchemaValidation flag to enable/disable schema validation
+     */
+    public void setSchemaValidation(boolean schemaValidation) {
+        this.schemaValidation = schemaValidation;
+    }
+
+    /**
+     * Set the namespace definitions.
+     * @param namespaces the namespaces to set
+     */
+    public void setNamespaces(Map<String, String> namespaces) {
+        this.namespaces = namespaces;
     }
 }

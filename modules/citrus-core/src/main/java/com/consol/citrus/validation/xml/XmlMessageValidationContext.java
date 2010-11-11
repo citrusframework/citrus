@@ -16,10 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.namespace.NamespaceContext;
+import java.util.*;
 
 import org.springframework.core.io.Resource;
 
@@ -38,8 +35,8 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreMessageElements;
 
-    /** Namespace context resolving namespaces in XML message */
-    private NamespaceContext namespaceContext;
+    /** Namespace definitions resolving namespaces in XML message validation */
+    private Map<String, String> namespaces = new HashMap<String, String>();
     
     /** dtdResource for DTD validation */
     private Resource dtdResource;
@@ -84,19 +81,19 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     }
 
     /**
-     * Get the namespace context.
+     * Get the namespace definitions for this validator.
      * @return the namespaceContext
      */
-    public NamespaceContext getNamespaceContext() {
-        return namespaceContext;
+    public Map<String, String> getNamespaces() {
+        return namespaces;
     }
 
     /**
-     * Set the namespace context.
+     * Set the namespace definitions.
      * @param namespaceContext the namespaceContext to set
      */
-    public void setNamespaceContext(NamespaceContext namespaceContext) {
-        this.namespaceContext = namespaceContext;
+    public void setNamespaces(Map<String, String> namespaces) {
+        this.namespaces = namespaces;
     }
 
     /**

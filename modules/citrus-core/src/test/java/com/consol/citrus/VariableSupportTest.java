@@ -16,9 +16,12 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +35,11 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.PayloadTemplateControlMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -79,8 +86,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "${variable}");
         validateMessageElements.put("//sub-elementB", "${variable}");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -108,8 +119,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "citrus:concat('text', '-', 'value')");
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -135,8 +150,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         Map<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("${expression}", "text-value");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -163,8 +182,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateMessageElements.put("citrus:concat('//root/', 'element/sub-elementA')", "text-value");
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -188,7 +211,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -205,8 +231,9 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "${variableB}");
         validateHeaderValues.put("header-valueC", "${variableC}");
         
-        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -230,7 +257,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -245,8 +275,9 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "citrus:upperCase('b')");
         validateHeaderValues.put("header-valueC", "citrus:upperCase(${variableC})");
         
-        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -270,7 +301,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -287,8 +321,9 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("${variableB}", "B");
         validateHeaderValues.put("${variableC}", "C");
         
-        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -312,7 +347,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -325,8 +363,9 @@ public class VariableSupportTest extends AbstractBaseTest {
         validateHeaderValues.put("citrus:concat('header', '-', 'valueB')", "B");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueC')", "C");
         
-        receiveMessageBean.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -350,7 +389,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -362,8 +404,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         extractMessageElements.put("//root/element/sub-elementA", "${variableA}");
         extractMessageElements.put("//root/element/sub-elementB", "${variableB}");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
         
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
         
         Assert.assertTrue(context.getVariables().containsKey("variableA"));
@@ -395,7 +441,10 @@ public class VariableSupportTest extends AbstractBaseTest {
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -407,8 +456,12 @@ public class VariableSupportTest extends AbstractBaseTest {
         extractHeaderValues.put("header-valueA", "${variableA}");
         extractHeaderValues.put("header-valueB", "${variableB}");
         
-        receiveMessageBean.setExtractHeaderValues(extractHeaderValues);
+        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
+        variableExtractor.setHeaderMappings(extractHeaderValues);
         
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
         
         Assert.assertTrue(context.getVariables().containsKey("variableA"));

@@ -59,7 +59,10 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         if (messageElement != null) {
         	
             // parse payload with xs-any element
-        	PayloadElementParser.doParse(DomUtils.getChildElementByTagName(messageElement, "payload"), builder);
+            Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
+            if (payloadElement != null) {
+                builder.addPropertyValue("messageData", PayloadElementParser.parseMessagePayload(payloadElement));
+            }
 
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {

@@ -16,21 +16,30 @@
 
 package com.consol.citrus.validation;
 
+import org.springframework.integration.core.Message;
+
 import com.consol.citrus.context.TestContext;
 
 
 /**
- * Interface marking that classes are aware of control message validation.
+ * Implementing classes may intercept the message paload constructing mechanism in order 
+ * to modify the message content.
  * 
  * @author Christoph Deppisch
  */
-public interface ControlMessageValidationAware {
+public interface MessageConstructingInterceptor<T> {
+
+    /**
+     * Intercept the message construction.
+     * @param message the message to be modified.
+     * @param context the current test context
+     */
+    public Message<T> interceptMessageConstruction(Message<T> message, TestContext context);
     
     /**
-     * Get the validation context used for message comparison.
-     * 
-     * @param context the current test context.
-     * @return the validation context.
+     * Intercept the message payload construction.
+     * @param messagePayload the payload
+     * @param context the current test context
      */
-    public ControlMessageValidationContext getControlMessageValidationContext(TestContext context);
+    public T interceptMessageConstruction(T messagePayload, TestContext context);
 }

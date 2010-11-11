@@ -16,7 +16,6 @@
 
 package com.consol.citrus.validation.context;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -25,5 +24,5 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  */
 public interface ValidationContextBuilder<T extends ValidationContext> {
-    public T buildValidationContext(TestAction action, TestContext context);
+    public T buildValidationContext(TestContext context);
 }

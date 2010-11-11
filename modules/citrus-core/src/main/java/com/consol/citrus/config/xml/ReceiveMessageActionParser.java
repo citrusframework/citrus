@@ -28,6 +28,10 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.script.ScriptValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.*;
 
 /**
  * Bean definition parser for receive action in test case.
@@ -76,57 +80,161 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             builder.addPropertyValue("messageSelector", messageSelector);
         }
 
+        builder.addPropertyValue("xmlMessageValidationContextBuilder", getMessagevalidationValidationContextBuilder(element, parserContext));
+        builder.addPropertyValue("scriptValidationContextBuilder", getScriptValidationContextBuilder(element, parserContext));
+        
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
-            String schemaValidation = messageElement.getAttribute("schema-validation");
-            if(StringUtils.hasText(schemaValidation)) {
-                builder.addPropertyValue("schemaValidation", schemaValidation);
-            }
-            
             String messageValidator = messageElement.getAttribute("validator");
             if(StringUtils.hasText(messageValidator)) {
                 builder.addPropertyReference("validator", messageValidator);
             }
+        }
+        
+        builder.addPropertyValue("variableExtractors", getVariableExtractors(element, parserContext));
+
+        return builder.getBeanDefinition();
+    }
+
+    /**
+     * @param element
+     * @param parserContext
+     * @return
+     */
+    private List<VariableExtractor> getVariableExtractors(Element element, ParserContext parserContext) {
+        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        
+        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
+        Map<String, String> getMessageValues = new HashMap<String, String>();
+        Map<String, String> getHeaderValues = new HashMap<String, String>();
+        if (extractElement != null) {
+            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
+            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
+                Element headerValue = (Element) iter.next();
+                getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
+            }
+            MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
+            headerVariableExtractor.setHeaderMappings(getHeaderValues);
             
-            // parse payload with xs-any element
-            PayloadElementParser.doParse(DomUtils.getChildElementByTagName(messageElement, "payload"), builder);
+            variableExtractors.add(headerVariableExtractor);
+
+            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
+            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
+                Element messageValue = (Element) iter.next();
+                String pathExpression = messageValue.getAttribute("path");
+                
+                //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+                if(messageValue.hasAttribute("result-type")) {
+                    pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
+                }
+                
+                getMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
+            }
+            
+            XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
+            payloadVariableExtractor.setxPathExpressions(getMessageValues);
+            
+            Map<String, String> namespaces = new HashMap<String, String>();
+            Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+            if (messageElement != null) {
+                List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+                if (namespaceElements.size() > 0) {
+                    for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext();) {
+                        Element namespaceElement = (Element) iter.next();
+                        namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+                    }
+                    payloadVariableExtractor.setNamespaces(namespaces);
+                }
+            }
+            
+            variableExtractors.add(payloadVariableExtractor);
+        }
+        
+        return variableExtractors;
+    }
+
+    /**
+     * Construct the message validation context builder.
+     * @param messageElement
+     * @param parserContext
+     * @return
+     */
+    private XmlMessageValidationContextBuilder getMessagevalidationValidationContextBuilder(Element element, ParserContext parserContext) {
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        
+        PayloadTemplateControlMessageBuilder payloadTemplateControlMessageBuilder = null;
+        GroovyScriptControlMessageBuilder scriptControlMessageBuilder = null;
+        
+        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        
+        if (messageElement != null) {
+            String schemaValidation = messageElement.getAttribute("schema-validation");
+            if(StringUtils.hasText(schemaValidation)) {
+                contextBuilder.setSchemaValidation(Boolean.valueOf(schemaValidation));
+            }
+            
+            Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
+            if (payloadElement != null) {
+                payloadTemplateControlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+                payloadTemplateControlMessageBuilder.setPayloadData(PayloadElementParser.parseMessagePayload(payloadElement));
+            }
             
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
-                builder.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
+                payloadTemplateControlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+                payloadTemplateControlMessageBuilder.setPayloadData(DomUtils.getTextValue(xmlDataElement));
+                
+                Map<String, String> setMessageValues = new HashMap<String, String>();
+                List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+                for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
+                    Element messageValue = (Element) iter.next();
+                    setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
+                }
+                
+                if (!setMessageValues.isEmpty()) {
+                    XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(setMessageValues);
+                    payloadTemplateControlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+                }
             }
-
+    
             Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
             if (xmlResourceElement != null) {
-                builder.addPropertyValue("messageResource", FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+                payloadTemplateControlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+                payloadTemplateControlMessageBuilder.setPayloadResource(FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+                
+                Map<String, String> setMessageValues = new HashMap<String, String>();
+                List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+                for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
+                    Element messageValue = (Element) iter.next();
+                    setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
+                }
+                
+                if (!setMessageValues.isEmpty()) {
+                    XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(setMessageValues);
+                    payloadTemplateControlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+                }
             }
             
             Element scriptElement = DomUtils.getChildElementByTagName(messageElement, "script");
             if (scriptElement != null) {
-                builder.addPropertyValue("scriptData", DomUtils.getTextValue(scriptElement));
+                scriptControlMessageBuilder = new GroovyScriptControlMessageBuilder();
+                scriptControlMessageBuilder.setScriptData(DomUtils.getTextValue(scriptElement));
             }
             
             Element scriptResourceElement = DomUtils.getChildElementByTagName(messageElement, "script-resource");
             if (scriptResourceElement != null) {
-                builder.addPropertyValue("scriptResource", FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
+                scriptControlMessageBuilder = new GroovyScriptControlMessageBuilder();
+                scriptControlMessageBuilder.setScriptResource(FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
             }
-
-            Map<String, String> setMessageValues = new HashMap<String, String>();
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
-            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
-                Element messageValue = (Element) iter.next();
-                setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
-            }
-            builder.addPropertyValue("messageElements", setMessageValues);
-
-            List<String> ignoreExpressions = new ArrayList<String>();
+            
+            Set<String> ignoreExpressions = new HashSet<String>();
             List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
             for (Iterator<?> iter = ignoreElements.iterator(); iter.hasNext();) {
                 Element ignoreValue = (Element) iter.next();
                 ignoreExpressions.add(ignoreValue.getAttribute("path"));
             }
-            builder.addPropertyValue("ignoreExpressions", ignoreExpressions);
-
+            contextBuilder.setIgnoreExpressions(ignoreExpressions);
+            
             Map<String, String> validateExpressions = new HashMap<String, String>();
             List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
             if (validateElements.size() > 0) {
@@ -141,16 +249,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                     
                     validateExpressions.put(pathExpression, validateValue.getAttribute("value"));
                 }
-                builder.addPropertyValue("pathValidationExpressions", validateExpressions);
-            }
-            
-            Element validationScriptElement = DomUtils.getChildElementByTagName(messageElement, "validation-script");
-            if (validationScriptElement != null) {
-            	builder.addPropertyValue("validationScript", DomUtils.getTextValue(validationScriptElement));
-            	String filePath = validationScriptElement.getAttribute("file");
-            	if (StringUtils.hasText(filePath)) {
-                    builder.addPropertyValue("validationScriptResource", FileUtils.getResourceFromFilePath(filePath));
-            	}
+                contextBuilder.setPathValidationExpressions(validateExpressions);
             }
             
             Map<String, String> namespaces = new HashMap<String, String>();
@@ -160,48 +259,57 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                     Element namespaceElement = (Element) iter.next();
                     namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                 }
-                builder.addPropertyValue("namespaces", namespaces);
+                contextBuilder.setNamespaces(namespaces);
             }
         }
-
+        
+        AbstractHeaderAwareControlMessageBuilder<String> controlMessageBuilder;
+        
+        if (payloadTemplateControlMessageBuilder != null) {
+            controlMessageBuilder = payloadTemplateControlMessageBuilder;
+        } else if (scriptControlMessageBuilder != null) {
+            controlMessageBuilder = scriptControlMessageBuilder;
+        } else {
+            controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        }
+        
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
-        Map<String, String> controlMessageHeaders = new HashMap<String, String>();
+        Map<String, Object> controlMessageHeaders = new HashMap<String, Object>();
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
                 controlMessageHeaders.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
-            builder.addPropertyValue("controlMessageHeaders", controlMessageHeaders);
+            
+            controlMessageBuilder.setControlMessageHeaders(controlMessageHeaders);
         }
+        
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        return contextBuilder;
+    }
 
-        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> getMessageValues = new HashMap<String, String>();
-        Map<String, String> getHeaderValues = new HashMap<String, String>();
-        if (extractElement != null) {
-            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
-            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
-                Element headerValue = (Element) iter.next();
-                getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
+    /**
+     * Construct the message validation context builder.
+     * @param messageElement
+     * @param parserContext
+     * @return
+     */
+    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element messageElement, ParserContext parserContext) {
+        ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
+        
+        Element validationScriptElement = DomUtils.getChildElementByTagName(messageElement, "validation-script");
+        if (validationScriptElement != null) {
+            contextBuilder.setValidationScript(DomUtils.getTextValue(validationScriptElement));
+            
+            String filePath = validationScriptElement.getAttribute("file");
+            if (StringUtils.hasText(filePath)) {
+                contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
             }
-            builder.addPropertyValue("extractHeaderValues", getHeaderValues);
-
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
-            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
-                Element messageValue = (Element) iter.next();
-                String pathExpression = messageValue.getAttribute("path");
-                
-                //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                if(messageValue.hasAttribute("result-type")) {
-                    pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
-                }
-                
-                getMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
-            }
-            builder.addPropertyValue("extractMessageElements", getMessageValues);
         }
-
-        return builder.getBeanDefinition();
+        
+        return contextBuilder;
     }
 
     /**

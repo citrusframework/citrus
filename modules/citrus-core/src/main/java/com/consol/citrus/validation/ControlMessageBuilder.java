@@ -16,21 +16,21 @@
 
 package com.consol.citrus.validation;
 
+import org.springframework.integration.core.Message;
+
 import com.consol.citrus.context.TestContext;
 
-
 /**
- * Interface marking that classes are aware of control message validation.
+ * Interface for classes beeing able to build control messages for validation.
  * 
  * @author Christoph Deppisch
  */
-public interface ControlMessageValidationAware {
+public interface ControlMessageBuilder<T> {
     
     /**
-     * Get the validation context used for message comparison.
-     * 
+     * Builds the control message. 
      * @param context the current test context.
-     * @return the validation context.
+     * @return the constructed message object.
      */
-    public ControlMessageValidationContext getControlMessageValidationContext(TestContext context);
+    public Message<T> buildControlMessage(TestContext context);
 }

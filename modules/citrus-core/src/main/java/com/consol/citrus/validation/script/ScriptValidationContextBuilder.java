@@ -16,7 +16,8 @@
 
 package com.consol.citrus.validation.script;
 
-import com.consol.citrus.TestAction;
+import org.springframework.core.io.Resource;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
@@ -28,22 +29,39 @@ import com.consol.citrus.validation.context.ValidationContextBuilder;
  */
 public class ScriptValidationContextBuilder implements ValidationContextBuilder<ScriptValidationContext> {
 
+    /** Validation script for message validation */ 
+    private String validationScript;
+    
+    /** Validation script resource */
+    private Resource validationScriptResource;
+    
     /**
      * Build a validation context with validation script.
      */
-    public ScriptValidationContext buildValidationContext(TestAction action, TestContext context) {
-        if (action instanceof ScriptValidationAware) {
-            ScriptValidationAware scriptValidationAware = (ScriptValidationAware)action;
-            
-            if (scriptValidationAware.getValidationScript() != null) {
-                return new ScriptValidationContext(scriptValidationAware.getValidationScript(), context);
-            } else if (scriptValidationAware.getValidationScriptResource() != null) {
-                return new ScriptValidationContext(scriptValidationAware.getValidationScriptResource(), context);
-            }
+    public ScriptValidationContext buildValidationContext(TestContext context) {
+        if (validationScript != null) {
+            return new ScriptValidationContext(validationScript, context);
+        } else if (validationScriptResource != null) {
+            return new ScriptValidationContext(validationScriptResource, context);
         }
         
         // return empty script validation context
         return new ScriptValidationContext(context);
     }
+    
+    /**
+     * Set the validation-script.
+     * @param validationScript the validationScript to set
+     */
+    public void setValidationScript(String validationScript){
+        this.validationScript = validationScript;
+    }
 
+    /**
+     * Set the validation-script as resource
+     * @param validationScriptResource the validationScriptResource to set
+     */
+    public void setValidationScriptResource(Resource validationScriptResource) {
+        this.validationScriptResource = validationScriptResource;
+    }
 }

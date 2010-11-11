@@ -16,7 +16,6 @@
 
 package com.consol.citrus.validation;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
@@ -28,13 +27,16 @@ import com.consol.citrus.validation.context.ValidationContextBuilder;
  */
 public class ControlMessageValidationContextBuilder implements ValidationContextBuilder<ControlMessageValidationContext> {
 
+    /** Builder constructing a control message */
+    private ControlMessageBuilder<?> messageBuilder = new PayloadTemplateControlMessageBuilder();
+    
     /**
      * Build the validation context.
      */
-    public ControlMessageValidationContext buildValidationContext(TestAction action, TestContext context) {
+    public ControlMessageValidationContext buildValidationContext(TestContext context) {
         ControlMessageValidationContext validationContext = new ControlMessageValidationContext();
         
-        addControlMessageToValidationContext(action, context, validationContext);
+        addControlMessageToValidationContext(context, validationContext);
         
         return validationContext;
     }
@@ -47,13 +49,16 @@ public class ControlMessageValidationContextBuilder implements ValidationContext
      * @param context the current test context
      * @param validationContext the validation context object
      */
-    public void addControlMessageToValidationContext(TestAction action, TestContext context, 
+    public void addControlMessageToValidationContext(TestContext context, 
             ControlMessageValidationContext validationContext) {
-        
-        if (action instanceof ControlMessageValidationAware) {
-            ControlMessageValidationAware controlMessageValidationAware = (ControlMessageValidationAware)action;
-            
-            validationContext.setControlMessage(controlMessageValidationAware.getControlMessage());
-        }
+        validationContext.setControlMessage(messageBuilder.buildControlMessage(context));
+    }
+
+    /**
+     * Sets the control message builder.
+     * @param messageBuilder the messageBuilder to set
+     */
+    public void setMessageBuilder(ControlMessageBuilder<?> messageBuilder) {
+        this.messageBuilder = messageBuilder;
     }
 }

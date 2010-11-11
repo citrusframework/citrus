@@ -16,48 +16,22 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.namespace.NamespaceContext;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.ControlMessageValidationAware;
 
 /**
- * Interface marking that a class is aware of Xml specific validation information like expected namespaces, XPath
- * expressions, Xml dom tree validation and so on.
+ * Interface marking that a class is aware of XML message validation.
  * 
  * @author Christoph Deppisch
  */
 public interface XmlMessageValidationAware extends ControlMessageValidationAware {
-    /**
-     * Get XPath validation expressions.
-     * @return the validation expressions.
-     */
-    public Map<String, String> getPathValidationExpressions();
     
     /**
-     * Get the ignored message elements specified via XPath. 
-     * @return the ignoreExpressions
+     * Get the validation context used for XML message validation.
+     * 
+     * @param context the current test context.
+     * @return the validation context.
      */
-    public Set<String> getIgnoreExpressions();
+    public XmlMessageValidationContext getXmlMessageValidationContext(TestContext context);
     
-    /**
-     * Get the control namesapces which must be present 
-     * in the received message.
-     * @return the control namespaces map
-     */
-    public Map<String, String> getControlNamespaces();
-    
-    /**
-     * Check schema validation enabled.
-     * @return the flag to mark schema validation enabled/disabled
-     */
-    public boolean isSchemaValidationEnabled();
-    
-    /**
-     * Get the namespace context for this validation.
-     * @return the namespace context.
-     */
-    public NamespaceContext getNamespaceContext();
 }

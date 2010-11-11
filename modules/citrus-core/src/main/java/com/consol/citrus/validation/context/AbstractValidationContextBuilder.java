@@ -16,9 +16,9 @@
 
 package com.consol.citrus.validation.context;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.ControlMessageValidationContext;
+import com.consol.citrus.validation.ControlMessageValidationContextBuilder;
 
 /**
  * Abstract validation context builder taking care of control message information
@@ -31,10 +31,10 @@ public abstract class AbstractValidationContextBuilder<T extends ControlMessageV
     /**
      * Build the validation context.
      */
-    public T buildValidationContext(TestAction action, TestContext context) {
-        T validationContext = getValidationContext(action, context); 
+    public T buildValidationContext(TestContext context) {
+        T validationContext = getValidationContext(context); 
         
-        addControlMessageToValidationContext(action, context, validationContext);
+        addControlMessageToValidationContext(context, validationContext);
         
         return validationContext;
     }
@@ -47,5 +47,5 @@ public abstract class AbstractValidationContextBuilder<T extends ControlMessageV
      * @param context the current test context.
      * @return
      */
-    public abstract T getValidationContext(TestAction action, TestContext context);
+    public abstract T getValidationContext(TestContext context);
 }

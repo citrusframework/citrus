@@ -31,6 +31,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -73,7 +74,10 @@ public class DTDValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<!DOCTYPE root [ "
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
                 + "<!ELEMENT text (#PCDATA)>"
@@ -84,6 +88,7 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>");
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -102,13 +107,17 @@ public class DTDValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     

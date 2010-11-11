@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.variable;
+
+import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 
-
 /**
- * Interface marking that classes are aware of control message validation.
+ * Class extracting variables form messages. Implementing classes may read
+ * message contents and save those to test variables.
  * 
  * @author Christoph Deppisch
  */
-public interface ControlMessageValidationAware {
-    
+public interface VariableExtractor {
     /**
-     * Get the validation context used for message comparison.
      * 
-     * @param context the current test context.
-     * @return the validation context.
+     * @param message
+     * @param context
      */
-    public ControlMessageValidationContext getControlMessageValidationContext(TestContext context);
+    public void extractVariables(Message<?> message, TestContext context);
 }

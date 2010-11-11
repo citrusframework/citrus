@@ -34,7 +34,10 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.PayloadTemplateControlMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -56,7 +59,6 @@ public class XPathTest extends AbstractBaseTest {
         receiveMessageBean.setMessageReceiver(messageReceiver);
 
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setSchemaValidation(false);
     }
     
     @Test
@@ -86,8 +88,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -118,8 +126,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -146,8 +160,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -174,13 +194,19 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://testsuite");
         
-        receiveMessageBean.setNamespaces(namespaces);
+        contextBuilder.setNamespaces(namespaces);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -218,9 +244,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("boolean:/ns1:root/:element", "true");
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
         
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setPathValidationExpressions(validateMessageElements);
+        contextBuilder.setSchemaValidation(false);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -255,8 +286,18 @@ public class XPathTest extends AbstractBaseTest {
         extractMessageElements.put("boolean:/ns1:root/:element", "exists");
         extractMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "existsNot");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
         
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
         
         Assert.assertNotNull(context.getVariable("elementA"));

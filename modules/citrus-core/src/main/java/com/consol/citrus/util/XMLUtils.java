@@ -19,10 +19,15 @@ package com.consol.citrus.util;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 
+import org.springframework.integration.core.Message;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
@@ -311,6 +316,32 @@ public class XMLUtils {
         }
         
         return namespaces;
+    }
+    
+    /**
+     * Construct a basic namespace context from the received message.
+     * @param receivedMessage the actual message received.
+     * @return the namespace context.
+     */
+    public static NamespaceContext buildNamespaceContext(Message<?> receivedMessage, Map<String, String> namespaces) {
+        //set namespaces to validate
+        SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
+        Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+        if(!CollectionUtils.isEmpty(namespaces)) {
+            //dynamic binding of namespaces declarations in root element of received message
+            for (Entry<String, String> binding : dynamicBindings.entrySet()) {
+                //only bind namespace that is not present in explicit namespace bindings
+                if(!namespaces.containsValue(binding.getValue())) {
+                    simpleNamespaceContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                }
+            }
+            //add explicit namespace bindings
+            simpleNamespaceContext.setBindings(namespaces);
+        } else {
+            simpleNamespaceContext.setBindings(dynamicBindings);
+        }
+        
+        return simpleNamespaceContext;
     }
     
     /**

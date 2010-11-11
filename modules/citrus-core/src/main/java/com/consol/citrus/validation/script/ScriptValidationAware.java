@@ -16,23 +16,21 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.core.io.Resource;
+import com.consol.citrus.context.TestContext;
+
 
 /**
- * Interface specifying information which is needed for script validation.
+ * Interface marking that classes are aware of script validation.
  * 
  * @author Christoph Deppisch
  */
 public interface ScriptValidationAware {
-    /**
-     * Get the validation script as direct string.
-     * @return the valdiatoin script code as string.
-     */
-    public String getValidationScript();
     
     /**
-     * Get the validation script as external file resource.
-     * @return the validation script code as file resource.
+     * Get the validation context used for script validation.
+     * 
+     * @param context the current test context.
+     * @return the validation context.
      */
-    public Resource getValidationScriptResource();
+    public ScriptValidationContext getScriptValidationContext(TestContext context);
 }

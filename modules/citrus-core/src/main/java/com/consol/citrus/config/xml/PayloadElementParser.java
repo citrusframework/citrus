@@ -19,7 +19,6 @@ package com.consol.citrus.config.xml;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.w3c.dom.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -38,9 +37,9 @@ public abstract class PayloadElementParser {
      * @param element
      * @param builder
      */
-    public static void doParse(Element payloadElement, BeanDefinitionBuilder builder) {
+    public static String parseMessagePayload(Element payloadElement) {
         if (payloadElement == null) {
-            return;
+            return "";
         }
         
         //remove text nodes from children (empty lines etc.)
@@ -63,7 +62,7 @@ public abstract class PayloadElementParser {
                     String payloadData = XMLUtils.serialize(payload);
                     // temporary quickfix for unwanted testcase namespace in target payload
                     payloadData = payloadData.replaceAll(" xmlns=\\\"http://www.citrusframework.org/schema/testcase\\\"", "");
-                    builder.addPropertyValue("messageData", payloadData.trim());
+                    return payloadData.trim();
                 } catch (DOMException e) {
                     throw new CitrusRuntimeException("Error while constructing message payload", e);
                 } catch (ParserConfigurationException e) {
@@ -71,7 +70,7 @@ public abstract class PayloadElementParser {
                 }
             }
         } else { //payload has no child nodes -> empty message
-            builder.addPropertyValue("messageData", "");
+            return "";
         }
     }
 }

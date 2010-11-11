@@ -83,7 +83,7 @@ public class ScriptValidationContext implements ValidationContext {
             } else if (validationScript != null) {
                 return context.replaceDynamicContentInString(validationScript);
             } else {
-                return null; //should never happen
+                return "";
             }
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to replace variables in validation script", e);

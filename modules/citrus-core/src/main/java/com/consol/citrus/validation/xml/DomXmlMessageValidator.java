@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.transform.dom.DOMSource;
 
 import org.slf4j.Logger;
@@ -84,22 +85,28 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
         XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)validationContext;
         
         log.info("Start XML message validation");
-
+        
         try {
-            if(xmlValidationContext.isSchemaValidationEnabled()) {
-                validateXMLSchema(receivedMessage);
-                validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
-            }
+            // first check if payload is empty
+            if (StringUtils.hasText(receivedMessage.getPayload().toString())) {
+                if(xmlValidationContext.isSchemaValidationEnabled()) {
+                    validateXMLSchema(receivedMessage);
+                    validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
+                }
 
-            validateNamespaces(xmlValidationContext.getControlNamespaces(), receivedMessage);
-            
-            if (xmlValidationContext.getControlMessage() != null) {
-                validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
-                validateMessagePayload(receivedMessage, xmlValidationContext, context);
+                validateNamespaces(xmlValidationContext.getControlNamespaces(), receivedMessage);
+                
+                if (xmlValidationContext.getControlMessage() != null) {
+                    validateMessagePayload(receivedMessage, xmlValidationContext, context);
+                }
+                
+                validateMessageElements(receivedMessage, xmlValidationContext, context);
+            } else {
+                Assert.isTrue(!StringUtils.hasText(xmlValidationContext.getControlMessage().getPayload().toString()),
+                        "Missing message payload data but was empty");
             }
             
-            validateMessageElements(receivedMessage, xmlValidationContext, context);
-
+            validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
             throw new CitrusRuntimeException(e);
@@ -216,18 +223,25 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
             }
 
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-
+            NamespaceContext namespaceContext = XMLUtils.buildNamespaceContext(receivedMessage, validationContext.getNamespaces());
             if (XPathUtils.isXPathExpression(elementPathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(elementPathExpression, XPathExpressionResult.NODE);
                 elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
 
                 //Give ignore elements the chance to prevent the validation in case result type is node
                 if(resultType.equals(XPathExpressionResult.NODE) &&
-                        isNodeIgnored(XPathUtils.evaluateAsNode(received, elementPathExpression, validationContext.getNamespaceContext()), validationContext)) {
+                        isNodeIgnored(XPathUtils.evaluateAsNode(received, 
+                                elementPathExpression, 
+                                namespaceContext), 
+                                validationContext,
+                                namespaceContext)) {
                     continue;
                 }
 
-                actualValue = XPathUtils.evaluate(received, elementPathExpression, validationContext.getNamespaceContext(), resultType);
+                actualValue = XPathUtils.evaluate(received, 
+                            elementPathExpression, 
+                            namespaceContext, 
+                            resultType);
             } else {
                 Node node = XMLUtils.findNodeByName(received, elementPathExpression);
 
@@ -235,7 +249,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
                     throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
                 }
 
-                if(isNodeIgnored(node, validationContext)) {
+                if(isNodeIgnored(node, validationContext, namespaceContext)) {
                     continue;
                 }
 
@@ -376,7 +390,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param validationContext
      * @param context
      */
-    private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext, TestContext context) {
+    private void validateMessagePayload(Message<?> receivedMessage, 
+            XmlMessageValidationContext validationContext, TestContext context) {
         if(!(validationContext.getControlMessage().getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
                     "but was " + validationContext.getControlMessage().getPayload().getClass());
@@ -399,7 +414,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
             log.debug("Control message:\n" + XMLUtils.serialize(source));
         }
 
-        validateXmlTree(received, source, validationContext);
+        validateXmlTree(received, source, validationContext, XMLUtils.buildNamespaceContext(receivedMessage, validationContext.getNamespaces()));
     }
 
     /**
@@ -409,13 +424,15 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param source
      * @param validationContext
      */
-    private void validateXmlTree(Node received, Node source, XmlMessageValidationContext validationContext) {
+    private void validateXmlTree(Node received, Node source, 
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         switch(received.getNodeType()) {
             case Node.DOCUMENT_NODE:
-                validateXmlTree(received.getFirstChild(), source.getFirstChild(), validationContext);
+                validateXmlTree(received.getFirstChild(), source.getFirstChild(), 
+                        validationContext, namespaceContext);
                 break;
             case Node.ELEMENT_NODE:
-                doElement(received, source, validationContext);
+                doElement(received, source, validationContext, namespaceContext);
                 break;
             case Node.TEXT_NODE:
                 doText(received, source);
@@ -441,7 +458,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param source
      * @param validationContext
      */
-    private void doElement(Node received, Node source, XmlMessageValidationContext validationContext) {
+    private void doElement(Node received, Node source, 
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         //validate element name
         if(log.isDebugEnabled()) {
             log.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
@@ -478,7 +496,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
         }
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
-        if (isNodeIgnored(received, validationContext)) {
+        if (isNodeIgnored(received, validationContext, namespaceContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
@@ -506,7 +524,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
                     + countAttributes(receivedAttr));
 
         for(int i = 0; i<receivedAttr.getLength(); i++) {
-            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext);
+            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext);
         }
 
         //work on child nodes
@@ -520,7 +538,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
                     + receivedChilds.getLength());
 
         for(int i = 0; i<receivedChilds.getLength(); i++) {
-            this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), validationContext);
+            this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), 
+                    validationContext, namespaceContext);
         }
 
         if(log.isDebugEnabled()) {
@@ -572,7 +591,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param sourceAttributes
      * @param validationContext
      */
-    private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, XmlMessageValidationContext validationContext) {
+    private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, 
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         if(received.getNodeName().startsWith("xmlns")) { return; }
 
         String receivedName = received.getLocalName();
@@ -589,7 +609,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
                     + receivedName + " (" + received.getNamespaceURI() + ")");
 
         if ((StringUtils.hasText(source.getNodeValue()) && source.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) 
-                || isAttributeIgnored(element, received, validationContext)) {
+                || isAttributeIgnored(element, received, validationContext, namespaceContext)) {
             if(log.isDebugEnabled()) {
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
@@ -654,7 +674,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param validationContext
      * @return
      */
-    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, XmlMessageValidationContext validationContext) {
+    private boolean isAttributeIgnored(Node elementNode, Node attributeNode, 
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
 
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
@@ -691,7 +712,9 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
          */
         for (String expression : ignoreMessageElements) {
             if (XPathUtils.isXPathExpression(expression)) {
-                Node foundAttributeNode = XPathUtils.evaluateAsNode(elementNode.getOwnerDocument(), expression, validationContext.getNamespaceContext());
+                Node foundAttributeNode = XPathUtils.evaluateAsNode(elementNode.getOwnerDocument(), 
+                        expression, 
+                        namespaceContext);
                 if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
                     return true;
                 }
@@ -707,7 +730,8 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @param validationContext
      * @return
      */
-    private boolean isNodeIgnored(final Node node, XmlMessageValidationContext validationContext) {
+    private boolean isNodeIgnored(final Node node, XmlMessageValidationContext validationContext,
+            NamespaceContext namespaceContext) {
         Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
 
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
@@ -742,7 +766,9 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
          */
         for (String expression : ignoreMessageElements) {
             if (XPathUtils.isXPathExpression(expression)) {
-                Node foundNode = XPathUtils.evaluateAsNode(node.getOwnerDocument(), expression, validationContext.getNamespaceContext());
+                Node foundNode = XPathUtils.evaluateAsNode(node.getOwnerDocument(), 
+                            expression, 
+                            namespaceContext);
 
                 if (foundNode != null && foundNode.isSameNode(node)) {
                     return true;
@@ -757,7 +783,11 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * Gets the proper validation context builder for this message validator.
      */
     public XmlMessageValidationContext createValidationContext(TestAction action, TestContext context) {
-        return new XmlMessageValidationContextBuilder().buildValidationContext(action, context);
+        if (action instanceof XmlMessageValidationAware) {
+            return ((XmlMessageValidationAware)action).getXmlMessageValidationContext(context);
+        } else {
+            return new XmlMessageValidationContext();
+        }
     }
     
     /**
