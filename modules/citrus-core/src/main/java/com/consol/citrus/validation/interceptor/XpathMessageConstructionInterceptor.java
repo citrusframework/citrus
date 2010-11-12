@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public class XpathExpressionMessageConstructingInterceptor implements MessageConstructingInterceptor<String> {
+public class XpathMessageConstructionInterceptor implements MessageConstructionInterceptor<String> {
 
     /** Overwrites message elements before validating (via XPath expressions) */
     private Map<String, String> xPathExpressions = new HashMap<String, String>();
@@ -40,7 +40,7 @@ public class XpathExpressionMessageConstructingInterceptor implements MessageCon
      * Default constructor using fields.
      * @param xPathExpressions
      */
-    public XpathExpressionMessageConstructingInterceptor(Map<String, String> xPathExpressions) {
+    public XpathMessageConstructionInterceptor(Map<String, String> xPathExpressions) {
         super();
         this.xPathExpressions = xPathExpressions;
     }

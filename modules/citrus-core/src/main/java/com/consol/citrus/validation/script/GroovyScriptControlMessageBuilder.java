@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.script;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -25,6 +25,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.GroovyUtils;
+import com.consol.citrus.validation.builder.AbstractHeaderAwareControlMessageBuilder;
 
 /**
  * Builds a control message from Groovy code with XML slurper support.

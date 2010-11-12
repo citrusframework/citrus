@@ -35,11 +35,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
-import com.consol.citrus.validation.script.ScriptValidationContextBuilder;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.script.*;
+import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.*;
 
 /**
@@ -268,7 +268,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(overwriteElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -301,7 +301,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(overwriteElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -336,7 +336,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(overwriteElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -374,7 +374,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
 
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(overwriteElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -412,7 +412,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(overwriteElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();

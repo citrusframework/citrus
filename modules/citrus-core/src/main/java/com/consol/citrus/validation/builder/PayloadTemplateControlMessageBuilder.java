@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.builder;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +41,7 @@ public class PayloadTemplateControlMessageBuilder extends AbstractHeaderAwareCon
     private String payloadData;
     
     /** List of manipulators for static message payload */
-    private List<MessageConstructingInterceptor<String>> messageInterceptors = new ArrayList<MessageConstructingInterceptor<String>>();
+    private List<MessageConstructionInterceptor<String>> messageInterceptors = new ArrayList<MessageConstructionInterceptor<String>>();
     
     /**
      * Build the control message from
@@ -56,7 +57,7 @@ public class PayloadTemplateControlMessageBuilder extends AbstractHeaderAwareCon
             }
             
             if (StringUtils.hasText(messagePayload)) {
-                for (MessageConstructingInterceptor<String> modifyer : messageInterceptors) {
+                for (MessageConstructionInterceptor<String> modifyer : messageInterceptors) {
                     messagePayload = modifyer.interceptMessageConstruction(messagePayload, context);
                 }
             }
@@ -89,7 +90,7 @@ public class PayloadTemplateControlMessageBuilder extends AbstractHeaderAwareCon
      * Adds a new interceptor to the message construction process.
      * @param interceptor
      */
-    public void addMessageConstructingInterceptor(MessageConstructingInterceptor<String> interceptor) {
+    public void addMessageConstructingInterceptor(MessageConstructionInterceptor<String> interceptor) {
         messageInterceptors.add(interceptor);
     }
 }

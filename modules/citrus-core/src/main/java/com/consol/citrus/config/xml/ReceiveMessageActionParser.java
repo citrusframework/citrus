@@ -29,6 +29,10 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.builder.AbstractHeaderAwareControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.script.GroovyScriptControlMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContextBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.*;
@@ -192,7 +196,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 }
                 
                 if (!setMessageValues.isEmpty()) {
-                    XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(setMessageValues);
+                    XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(setMessageValues);
                     payloadTemplateControlMessageBuilder.addMessageConstructingInterceptor(interceptor);
                 }
             }
@@ -210,7 +214,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 }
                 
                 if (!setMessageValues.isEmpty()) {
-                    XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(setMessageValues);
+                    XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(setMessageValues);
                     payloadTemplateControlMessageBuilder.addMessageConstructingInterceptor(interceptor);
                 }
             }

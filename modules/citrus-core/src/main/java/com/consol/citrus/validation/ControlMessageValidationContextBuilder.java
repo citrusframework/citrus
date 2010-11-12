@@ -17,6 +17,8 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.builder.ControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**

@@ -36,7 +36,9 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
@@ -297,7 +299,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
@@ -335,7 +337,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA", "");
         messageElements.put("sub-elementB", "");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
@@ -373,7 +375,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         HashMap<String, String> validateElements = new HashMap<String, String>();
@@ -417,7 +419,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA.attribute", "A");
         messageElements.put("sub-elementB.attribute", "B");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
@@ -455,7 +457,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-element-wrong", "text-value");
         messageElements.put("sub-element-wrong", "text-value");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
@@ -493,7 +495,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         messageElements.put("sub-elementB.attribute-wrong", "B");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
@@ -531,7 +533,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
         messageElements.put("sub-elementB-wrong.attribute", "B");
         
-        XpathExpressionMessageConstructingInterceptor interceptor = new XpathExpressionMessageConstructingInterceptor(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);

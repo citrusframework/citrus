@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.interceptor;
 
 import org.springframework.integration.core.Message;
 
@@ -27,7 +27,7 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public interface MessageConstructingInterceptor<T> {
+public interface MessageConstructionInterceptor<T> {
 
     /**
      * Intercept the message construction.

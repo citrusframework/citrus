@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.builder;
 
 import java.util.HashMap;
 import java.util.Map;
