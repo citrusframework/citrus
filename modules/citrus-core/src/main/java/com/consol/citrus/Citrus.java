@@ -116,7 +116,9 @@ public class Citrus {
             testNG.setXmlSuites(suites);
             testNG.run();
             
-            System.exit(testNG.getStatus());
+            if (testNG.hasFailure()) {
+                throw new TestEngineFailedException("Citrus test run failed!");
+            }
         } catch (ParseException e) {
             log.error("Failed to parse command line arguments", e);
             HelpFormatter formatter = new HelpFormatter();

@@ -64,7 +64,7 @@ public class CitrusAntTask extends Java {
             }
         }
         
-        this.setFork(true);
+        this.setFork(false);
         
         this.setFailonerror(true);
         
