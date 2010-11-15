@@ -31,6 +31,7 @@ import com.consol.citrus.jms.JmsMessageSender;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
@@ -46,10 +47,14 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
+        
         reset(messageSender);
         
         messageSender.send((Message)anyObject(), (Attachment)anyObject());
@@ -77,7 +82,11 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
@@ -111,7 +120,11 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
         
@@ -130,10 +143,14 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment.xml", SendSoapMessageActionTest.class));
 
+        soapMessageAction.setMessageBuilder(messageBuilder);
+        
         reset(messageSender);
         
         messageSender.send((Message)anyObject(), (Attachment)anyObject());
@@ -161,12 +178,16 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithAttachmentDataVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
         
         soapMessageAction.setAttachmentData("<TestAttachment><Message>${myText}</Message></TestAttachment>");
 
+        soapMessageAction.setMessageBuilder(messageBuilder);
+        
         reset(messageSender);
         
         messageSender.send((Message)anyObject(), (Attachment)anyObject());
@@ -194,12 +215,16 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
         
         soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment-with-variables.xml", SendSoapMessageActionTest.class));
 
+        soapMessageAction.setMessageBuilder(messageBuilder);
+        
         reset(messageSender);
         
         messageSender.send((Message)anyObject(), (Attachment)anyObject());
@@ -227,9 +252,13 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithHeaderContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        soapMessageAction.setHeaderData("<TestHeader><operation>soapOperation</operation></TestHeader>");
+        messageBuilder.setMessageHeaderData("<TestHeader><operation>soapOperation</operation></TestHeader>");
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(messageSender);
         
@@ -258,10 +287,14 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithHeaderResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        soapMessageAction.setHeaderResource(new ClassPathResource("test-header-resource.xml", SendSoapMessageActionTest.class));
 
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        messageBuilder.setMessageHeaderResource(new ClassPathResource("test-header-resource.xml", SendSoapMessageActionTest.class));
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
+        
         reset(messageSender);
         
         messageSender.send((Message)anyObject());
@@ -289,10 +322,15 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("operation", "soapOperation");
-        soapMessageAction.setHeaderData("<TestHeader><operation>${operation}</operation></TestHeader>");
+        
+        messageBuilder.setMessageHeaderData("<TestHeader><operation>${operation}</operation></TestHeader>");
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(messageSender);
         
@@ -321,10 +359,15 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("operation", "soapOperation");
-        soapMessageAction.setHeaderResource(new ClassPathResource("test-header-resource-with-variables.xml", SendSoapMessageActionTest.class));
+        
+        messageBuilder.setMessageHeaderResource(new ClassPathResource("test-header-resource-with-variables.xml", SendSoapMessageActionTest.class));
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(messageSender);
         
@@ -353,7 +396,11 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         MessageSender jmsMessageSender = new JmsMessageSender();
         soapMessageAction.setMessageSender(jmsMessageSender);
-        soapMessageAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        soapMessageAction.setMessageBuilder(messageBuilder);
         
         try {
             soapMessageAction.execute(context);

@@ -28,6 +28,11 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.builder.*;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.VariableExtractor;
 
 /**
  * Bean definition parser for send action in test case.
@@ -55,77 +60,126 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         
         DescriptionElementParser.doParse(element, builder);
 
+        MessageContentBuilder<?> messageBuidler = getMessageBuilder(element, parserContext);
+        if (messageBuidler != null) {
+            builder.addPropertyValue("messageBuilder", messageBuidler);
+        }
+
+        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        
+        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
+        Map<String, String> extractHeaderValues = new HashMap<String, String>();
+        if (extractElement != null) {
+            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
+            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
+                Element headerValue = (Element) iter.next();
+                extractHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
+            }
+            
+            MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
+            headerVariableExtractor.setHeaderMappings(extractHeaderValues);
+            
+            variableExtractors.add(headerVariableExtractor);
+        }
+        
+        if (!variableExtractors.isEmpty()) {
+            builder.addPropertyValue("variableExtractors", variableExtractors);
+        }
+
+        return builder.getBeanDefinition();
+    }
+
+    /**
+     * Constructs a message builder from the given information in send action.
+     * @param messageElement
+     * @param parserContext
+     * @return
+     */
+    private MessageContentBuilder<?> getMessageBuilder(Element element, ParserContext parserContext) {
+        PayloadTemplateMessageBuilder payloadTemplateMessageBuilder = null;
+        GroovyScriptMessageBuilder scriptMessageBuilder = null;
+        
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        
         if (messageElement != null) {
-        	
             // parse payload with xs-any element
             Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
             if (payloadElement != null) {
-                builder.addPropertyValue("messageData", PayloadElementParser.parseMessagePayload(payloadElement));
+                payloadTemplateMessageBuilder = new PayloadTemplateMessageBuilder();
+                payloadTemplateMessageBuilder.setPayloadData(PayloadElementParser.parseMessagePayload(payloadElement));
             }
-
+    
             Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
             if (xmlDataElement != null) {
-                builder.addPropertyValue("messageData", DomUtils.getTextValue(xmlDataElement));
+                payloadTemplateMessageBuilder = new PayloadTemplateMessageBuilder();
+                payloadTemplateMessageBuilder.setPayloadData(DomUtils.getTextValue(xmlDataElement));
             }
-
+    
             Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
             if (xmlResourceElement != null) {
-                builder.addPropertyValue("messageResource", FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+                payloadTemplateMessageBuilder = new PayloadTemplateMessageBuilder();
+                payloadTemplateMessageBuilder.setPayloadResource(FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+            }
+            
+            if (payloadElement != null || xmlDataElement != null || xmlResourceElement != null) {
+                Map<String, String> setMessageValues = new HashMap<String, String>();
+                List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+                for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
+                    Element messageValue = (Element) iter.next();
+                    setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
+                }
+                
+                if (!setMessageValues.isEmpty()) {
+                    XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(setMessageValues);
+                    payloadTemplateMessageBuilder.addMessageConstructingInterceptor(interceptor);
+                }
             }
             
             Element scriptElement = DomUtils.getChildElementByTagName(messageElement, "script");
             if (scriptElement != null) {
-                builder.addPropertyValue("scriptData", DomUtils.getTextValue(scriptElement));
+                scriptMessageBuilder = new GroovyScriptMessageBuilder();
+                scriptMessageBuilder.setScriptData(DomUtils.getTextValue(scriptElement));
             }
             
             Element scriptResourceElement = DomUtils.getChildElementByTagName(messageElement, "script-resource");
             if (scriptResourceElement != null) {
-                builder.addPropertyValue("scriptResource", FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
+                scriptMessageBuilder = new GroovyScriptMessageBuilder();
+                scriptMessageBuilder.setScriptResource(FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
             }
-
-            Map<String, String> setMessageValues = new HashMap<String, String>();
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
-            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
-                Element messageValue = (Element) iter.next();
-                setMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
-            }
-            builder.addPropertyValue("messageElements", setMessageValues);
         }
-
+        
+        AbstractMessageContentBuilder<String> messageBuilder;
+        
+        if (payloadTemplateMessageBuilder != null) {
+            messageBuilder = payloadTemplateMessageBuilder;
+        } else if (scriptMessageBuilder != null) {
+            messageBuilder = scriptMessageBuilder;
+        } else {
+            messageBuilder = new PayloadTemplateMessageBuilder();
+        }
+        
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
-        Map<String, String> setHeaderValues = new HashMap<String, String>();
+        Map<String, Object> setHeaderValues = new HashMap<String, Object>();
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
                 setHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
             }
-            builder.addPropertyValue("headerValues", setHeaderValues);
+            messageBuilder.setMessageHeaders(setHeaderValues);
             
             Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");
             if (headerDataElement != null) {
-                builder.addPropertyValue("headerData", DomUtils.getTextValue(headerDataElement));
+                messageBuilder.setMessageHeaderData(DomUtils.getTextValue(headerDataElement));
             }
 
             Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
             if (headerResourceElement != null) {
-                builder.addPropertyValue("headerResource", FileUtils.getResourceFromFilePath(headerResourceElement.getAttribute("file")));
+                messageBuilder.setMessageHeaderResource(FileUtils.getResourceFromFilePath(headerResourceElement.getAttribute("file")));
             }
         }
         
-        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> getHeaderValues = new HashMap<String, String>();
-        if (extractElement != null) {
-            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
-            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
-                Element headerValue = (Element) iter.next();
-                getHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
-            }
-            builder.addPropertyValue("extractHeaderValues", getHeaderValues);
-        }
-
-        return builder.getBeanDefinition();
+        return messageBuilder;
     }
 
     /**

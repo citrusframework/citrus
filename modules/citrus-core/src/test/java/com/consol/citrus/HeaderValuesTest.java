@@ -34,7 +34,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -75,7 +75,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -89,7 +89,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -120,7 +120,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -136,7 +136,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "B");
         validateHeaderValues.put("header-valueC", "C");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -168,7 +168,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
 
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -182,7 +182,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "wrong");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -213,7 +213,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean.setValidator(validator);
 
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -227,7 +227,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-wrong", "A");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -258,7 +258,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
 
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -274,7 +274,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "");
         validateHeaderValues.put("header-valueC", "");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -305,7 +305,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
 
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -321,7 +321,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "null");
         validateHeaderValues.put("header-valueC", "null");
         
-        controlMessageBuilder.setControlMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
@@ -352,7 +352,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
 
         receiveMessageBean.setValidator(validator);
 
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"

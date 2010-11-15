@@ -33,7 +33,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 
@@ -73,7 +73,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -102,7 +102,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://testsuite'>"
@@ -131,7 +131,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
@@ -160,7 +160,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -189,7 +189,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
@@ -218,7 +218,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
@@ -247,7 +247,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
@@ -276,7 +276,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -305,7 +305,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/wrong'>"
@@ -334,7 +334,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
@@ -368,7 +368,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
@@ -402,7 +402,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
@@ -437,7 +437,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -473,7 +473,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
@@ -507,7 +507,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
@@ -541,7 +541,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
@@ -576,7 +576,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -612,7 +612,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -648,7 +648,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -684,7 +684,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -720,7 +720,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
@@ -757,7 +757,7 @@ public class NamespaceTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
@@ -799,7 +799,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:root/ns1:element/ns1:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -835,7 +835,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:root/pfx:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -871,7 +871,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:root/ns1:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);

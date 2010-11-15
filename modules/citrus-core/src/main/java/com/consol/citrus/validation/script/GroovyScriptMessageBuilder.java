@@ -25,14 +25,14 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.GroovyUtils;
-import com.consol.citrus.validation.builder.AbstractHeaderAwareControlMessageBuilder;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 
 /**
  * Builds a control message from Groovy code with XML slurper support.
  * 
  * @author Christoph Deppisch
  */
-public class GroovyScriptControlMessageBuilder extends AbstractHeaderAwareControlMessageBuilder<String> {
+public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<String> {
 
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
     private Resource scriptResource;

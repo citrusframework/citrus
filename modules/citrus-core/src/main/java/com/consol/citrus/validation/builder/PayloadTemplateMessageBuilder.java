@@ -32,7 +32,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 /**
  * @author Christoph Deppisch
  */
-public class PayloadTemplateControlMessageBuilder extends AbstractHeaderAwareControlMessageBuilder<String> {
+public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder<String> {
 
     /** Message payload defined in external file resource */
     private Resource payloadResource;

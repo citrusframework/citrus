@@ -27,6 +27,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
@@ -56,7 +57,10 @@ public class SendSoapMessageAction extends SendMessageAction {
     public void execute(final TestContext context) {
         Message<?> message = createMessage(context);
         
-        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
+        // extract variables from before sending message so we can save dynamic message ids
+        for (VariableExtractor variableExtractor : getVariableExtractors()) {
+            variableExtractor.extractVariables(message, context);
+        }
         
         if(!(messageSender instanceof WebServiceMessageSender)) {
             throw new CitrusRuntimeException("Sending SOAP messages requires a " +

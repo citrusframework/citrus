@@ -36,7 +36,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.*;
-import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
@@ -84,7 +84,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "text-value");
         validateMessageElements.put("sub-elementB", "text-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -113,7 +113,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "");
         validateMessageElements.put("sub-elementB", "");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -142,7 +142,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute", "A");
         validateMessageElements.put("sub-elementB.attribute", "B");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -171,7 +171,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-element-wrong", "text-value");
         validateMessageElements.put("sub-element-wrong", "text-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -201,7 +201,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA", "text-value-wrong");
         validateMessageElements.put("sub-elementB", "text-value-wrong");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -230,7 +230,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute", "wrong-value");
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -259,7 +259,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
@@ -284,7 +284,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -322,7 +322,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -360,7 +360,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -404,7 +404,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -442,7 +442,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -480,7 +480,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -518,7 +518,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -556,7 +556,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -601,7 +601,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -646,7 +646,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -689,7 +689,7 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"

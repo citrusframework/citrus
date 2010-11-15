@@ -17,8 +17,8 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.builder.ControlMessageBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
@@ -30,7 +30,7 @@ import com.consol.citrus.validation.context.ValidationContextBuilder;
 public class ControlMessageValidationContextBuilder implements ValidationContextBuilder<ControlMessageValidationContext> {
 
     /** Builder constructing a control message */
-    private ControlMessageBuilder<?> messageBuilder = new PayloadTemplateControlMessageBuilder();
+    private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
     
     /**
      * Build the validation context.
@@ -53,14 +53,14 @@ public class ControlMessageValidationContextBuilder implements ValidationContext
      */
     public void addControlMessageToValidationContext(TestContext context, 
             ControlMessageValidationContext validationContext) {
-        validationContext.setControlMessage(messageBuilder.buildControlMessage(context));
+        validationContext.setControlMessage(messageBuilder.buildMessageContent(context));
     }
 
     /**
      * Sets the control message builder.
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(ControlMessageBuilder<?> messageBuilder) {
+    public void setMessageBuilder(MessageContentBuilder<?> messageBuilder) {
         this.messageBuilder = messageBuilder;
     }
 }

@@ -25,12 +25,12 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public interface ControlMessageBuilder<T> {
+public interface MessageContentBuilder<T> {
     
     /**
      * Builds the control message. 
      * @param context the current test context.
      * @return the constructed message object.
      */
-    public Message<T> buildControlMessage(TestContext context);
+    public Message<T> buildMessageContent(TestContext context);
 }

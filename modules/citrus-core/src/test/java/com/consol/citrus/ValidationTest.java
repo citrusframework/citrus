@@ -32,7 +32,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateControlMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 
@@ -74,7 +74,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -105,7 +105,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -136,7 +136,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -166,7 +166,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -198,7 +198,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -229,7 +229,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -260,7 +260,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -291,7 +291,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -322,7 +322,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
@@ -353,7 +353,7 @@ public class ValidationTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        PayloadTemplateControlMessageBuilder controlMessageBuilder = new PayloadTemplateControlMessageBuilder();
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
