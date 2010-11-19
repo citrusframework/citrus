@@ -59,7 +59,7 @@ public class ReporterInvokingTestSuiteListener extends AbstractTestSuiteListener
         //in case last testsuite has finished
         if(++testSuitesFinished == testSuitesStarted) {
             for (TestReporter reporter : reporterList) {
-                reporter.generateTestResults(suites.toArray(new TestSuite[]{}));
+                reporter.generateTestResults(suites);
             }
         }
     }

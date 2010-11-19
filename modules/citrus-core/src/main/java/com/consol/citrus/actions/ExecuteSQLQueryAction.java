@@ -283,7 +283,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     }
                 } else {
                     if (resultValue == null) {
-                        if (controlValue == null || controlValue.toUpperCase().equals("NULL") || controlValue.length() == 0) {
+                        if (controlValue.toUpperCase().equals("NULL") || controlValue.length() == 0) {
                             if(log.isDebugEnabled()) {
                                 log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
                             }
@@ -291,7 +291,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                             throw new ValidationException("Validation failed for column: '" +  columnName + "'"
                                     + "found value: NULL expected value: " + controlValue);
                         }
-                    } else if (controlValue != null && resultValue.equals(controlValue)) {
+                    } else if (resultValue.equals(controlValue)) {
                         if(log.isDebugEnabled()) {
                             log.debug("Validation successful for column: '" + columnName + "' expected value: " + controlValue + " - value OK");
                         }
@@ -300,7 +300,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                                 + " found value: '"
                                 + resultValue
                                 + "' expected value: "
-                                + ((controlValue == null || controlValue.length()==0) ? "NULL" : controlValue));
+                                + ((controlValue.length()==0) ? "NULL" : controlValue));
                     }
                 }
             }

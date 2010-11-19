@@ -18,6 +18,7 @@ package com.consol.citrus.report;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     /**
      * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
      */
-    public void generateTestResults(TestSuite[] suites) {
+    public void generateTestResults(List<TestSuite> suites) {
         if (log.isInfoEnabled()) {
             log.info("________________________________________________________________________");
             log.info("");

@@ -19,8 +19,7 @@ package com.consol.citrus.report;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     /**
      * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
      */
-    public void generateTestResults(TestSuite[] suites) {
+    public void generateTestResults(List<TestSuite> suites) {
         try {
             log.info("Generating JUnit results");
 

@@ -93,7 +93,7 @@ public class AssertSoapFault extends AbstractActionContainer {
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating SOAP fault ...");
-            if (SoapFaultClientException.class.isAssignableFrom(e.getClass())) {
+            if (e instanceof SoapFaultClientException) {
                 SoapFaultClientException soapFaultException = (SoapFaultClientException)e;
 
                 SoapFault controlFault = constructControlFault(context);

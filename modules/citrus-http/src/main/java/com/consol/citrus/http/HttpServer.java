@@ -101,12 +101,13 @@ public class HttpServer extends AbstractServer {
                 final Message<?> request;
                 Map<String, Object> requestHeaders = new HashMap<String, Object>();
                 
-                String readLine = in.readLine();
-                if (readLine == null || readLine.length() == 0) {
+                // first line should give method, uri and version header
+                String line = in.readLine();
+                if (line == null || line.length() == 0) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 }
 
-                StringTokenizer st = new StringTokenizer(readLine);
+                StringTokenizer st = new StringTokenizer(line);
                 if (!st.hasMoreTokens()) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 } else {
@@ -125,15 +126,15 @@ public class HttpServer extends AbstractServer {
                     requestHeaders.put("HTTPVersion", st.nextToken());
                 }
 
-                String line = "";
-
+                // further headers
                 do {
                     line = in.readLine();
-                    int p = line.indexOf(':');
+                    
+                    int p = (line == null) ? -1: line.indexOf(':');
                     if (p > 0) {
-                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(),	line.substring(p + 1).trim());
+                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
                     }
-                } while (line.trim().length() > 0);
+                } while (line != null && line.trim().length() > 0);
 
                 if (requestHeaders.get("HTTPMethod").equals(HttpConstants.HTTP_POST)) {
                     long size = 0x7FFFFFFFFFFFFFFFl;

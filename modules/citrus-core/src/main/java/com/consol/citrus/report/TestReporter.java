@@ -16,6 +16,8 @@
 
 package com.consol.citrus.report;
 
+import java.util.List;
+
 import com.consol.citrus.TestSuite;
 
 /**
@@ -28,5 +30,5 @@ public interface TestReporter {
      * Test reporter generates a report for several test suite instances.
      * @param suites
      */
-    public void generateTestResults(TestSuite[] suites);
+    public void generateTestResults(List<TestSuite> suites);
 }

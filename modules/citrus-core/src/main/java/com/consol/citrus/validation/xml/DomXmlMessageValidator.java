@@ -77,7 +77,7 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.context.ValidationContext)
      */
     public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
-        if(!XmlMessageValidationContext.class.isAssignableFrom(validationContext.getClass())) {
+        if(!(validationContext instanceof XmlMessageValidationContext)) {
             throw new IllegalArgumentException("DomXmlMessageValidator must have an instance of XmlMessageValidationContext, " +
                     "but was '" + validationContext.getClass() + "'");
         }
@@ -434,16 +434,13 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
             case Node.ELEMENT_NODE:
                 doElement(received, source, validationContext, namespaceContext);
                 break;
-            case Node.TEXT_NODE:
+            case Node.TEXT_NODE: case Node.CDATA_SECTION_NODE:
                 doText(received, source);
                 break;
             case Node.ATTRIBUTE_NODE:
                 throw new IllegalStateException();
             case Node.COMMENT_NODE:
                 doComment(received, source);
-                break;
-            case Node.CDATA_SECTION_NODE:
-                doText(received, source);
                 break;
             case Node.PROCESSING_INSTRUCTION_NODE:
                 doPI(received, source);

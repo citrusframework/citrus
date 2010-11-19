@@ -78,7 +78,7 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
      * Validates the message with Groovy validation script.
      */
     public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
-        if(!ScriptValidationContext.class.isAssignableFrom(validationContext.getClass())) {
+        if(!(validationContext instanceof ScriptValidationContext)) {
             throw new IllegalArgumentException("GroovyScriptMessageValidator must have an instance of ScriptMessageValidationContext, " +
                     "but was '" + validationContext.getClass() + "'");
         }
