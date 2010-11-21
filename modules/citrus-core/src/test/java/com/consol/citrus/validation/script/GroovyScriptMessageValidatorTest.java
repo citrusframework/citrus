@@ -50,7 +50,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text.text() == 'Hello TestFramework'";
                         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, context);
+        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -65,7 +66,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")";
                         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, context);
+        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -77,7 +79,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text == 'Hello Citrus'"; //should fail
                         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, context);
+        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
         
         try {
             validator.validateMessage(message, context, validationContext);
@@ -94,7 +97,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
     @Test
     public void testEmptyValidationScript() {
         String validationScript = "";
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, context);
+        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
         
         validator.validateMessage(message, context, validationContext);
     }

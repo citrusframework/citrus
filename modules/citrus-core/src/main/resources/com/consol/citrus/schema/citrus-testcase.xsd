@@ -70,22 +70,7 @@
                                     <xs:attribute name="file" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="builder">
-                                <xs:complexType>
-                                    <xs:simpleContent>
-                                        <xs:extension base="xs:string">
-                                          <xs:attribute name="type" use="required">
-                                              <xs:simpleType>
-                                                  <xs:restriction base="xs:string">
-                                                      <xs:enumeration value="groovy"></xs:enumeration>
-                                                  </xs:restriction>
-                                              </xs:simpleType>
-                                          </xs:attribute>
-                                          <xs:attribute name="file" type="xs:string"/>
-                                        </xs:extension>
-                                    </xs:simpleContent>
-                                </xs:complexType>
-                            </xs:element>
+                            <xs:element name="builder" type="scriptDefinitionType"/>
                         </xs:choice>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
@@ -167,22 +152,7 @@
                                             <xs:attribute name="file" type="xs:string" use="required"/>
                                         </xs:complexType>
                                     </xs:element>
-                                    <xs:element name="builder">
-                                        <xs:complexType>
-                                            <xs:simpleContent>
-                                                <xs:extension base="xs:string">
-                                                  <xs:attribute name="type" use="required">
-                                                      <xs:simpleType>
-                                                          <xs:restriction base="xs:string">
-                                                              <xs:enumeration value="groovy"></xs:enumeration>
-                                                          </xs:restriction>
-                                                      </xs:simpleType>
-                                                  </xs:attribute>
-                                                  <xs:attribute name="file" type="xs:string"/>
-                                                </xs:extension>
-                                            </xs:simpleContent>
-                                        </xs:complexType>
-                                    </xs:element>
+                                    <xs:element name="builder" type="scriptDefinitionType"/>
                                 </xs:choice>
                                 <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                                     <xs:complexType>
@@ -199,8 +169,11 @@
                             <xs:sequence minOccurs="0">
                                 <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
                                     <xs:complexType>
-                                        <xs:attribute name="path" type="xs:string" use="required"/>
-                                        <xs:attribute name="value" type="xs:string" use="required"/>
+                                        <xs:sequence>
+                                            <xs:element name="script" minOccurs="0" type="scriptDefinitionType"/>
+                                        </xs:sequence>
+                                        <xs:attribute name="path" type="xs:string"/>
+                                        <xs:attribute name="value" type="xs:string"/>
                                         <xs:attribute name="result-type">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:string">
@@ -211,17 +184,6 @@
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:attribute>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                            <xs:sequence>
-                                <xs:element name="validation-script">
-                                    <xs:complexType mixed="true">
-                                    	<xs:simpleContent>
-                                    		<xs:extension base="xs:string">
-                                        		<xs:attribute name="file" type="xs:string"/>
-                                    		</xs:extension>
-                                    	</xs:simpleContent>
                                     </xs:complexType>
                                 </xs:element>
                             </xs:sequence>
@@ -284,6 +246,21 @@
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
         <xs:attribute name="timeout" type="xs:int"/>
+    </xs:complexType>
+    
+    <xs:complexType name="scriptDefinitionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="type" use="required">
+                  <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                          <xs:enumeration value="groovy"/>
+                      </xs:restriction>
+                  </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="file" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:element name="description" type="xs:string"/>

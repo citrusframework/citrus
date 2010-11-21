@@ -18,6 +18,8 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -43,6 +45,11 @@ import com.consol.citrus.variable.*;
  */
 public class ReceiveMessageActionParser implements BeanDefinitionParser {
 
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(ReceiveMessageActionParser.class);
+    
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
@@ -83,7 +90,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             builder.addPropertyValue("messageSelector", messageSelector);
         }
 
-        builder.addPropertyValue("xmlMessageValidationContextBuilder", getMessagevalidationValidationContextBuilder(element, parserContext));
+        builder.addPropertyValue("xmlMessageValidationContextBuilder", getXmlMessageValidationContextBuilder(element, parserContext));
         builder.addPropertyValue("scriptValidationContextBuilder", getScriptValidationContextBuilder(element, parserContext));
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -163,7 +170,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
      * @param parserContext
      * @return
      */
-    private XmlMessageValidationContextBuilder getMessagevalidationValidationContextBuilder(Element element, ParserContext parserContext) {
+    private XmlMessageValidationContextBuilder getXmlMessageValidationContextBuilder(Element element, ParserContext parserContext) {
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         
         PayloadTemplateMessageBuilder payloadTemplateMessageBuilder = null;
@@ -243,15 +250,23 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
             if (validateElements.size() > 0) {
                 for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
-                    Element validateValue = (Element) iter.next();
-                    String pathExpression = validateValue.getAttribute("path");
+                    Element validateElement = (Element) iter.next();
                     
-                    //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                    if(validateValue.hasAttribute("result-type")) {
-                        pathExpression = validateValue.getAttribute("result-type") + ":" + pathExpression;
+                    // check if validate script child node is present - only continue when it is missing
+                    if (!validateElement.hasChildNodes()) {
+                        String pathExpression = validateElement.getAttribute("path");
+                        
+                        //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+                        if(validateElement.hasAttribute("result-type")) {
+                            pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
+                        }
+                        
+                        validateExpressions.put(pathExpression, validateElement.getAttribute("value"));
+                    } else if (validateElement.hasAttribute("path")) {
+                        // inform user that this xpath expression was skipped as validation script is defined too
+                        log.warn("Skipping xpath validation (" + validateElement.getAttribute("path") + 
+                                ") instead using validation script which is defined for this element too");
                     }
-                    
-                    validateExpressions.put(pathExpression, validateValue.getAttribute("value"));
                 }
                 contextBuilder.setPathValidationExpressions(validateExpressions);
             }
@@ -303,13 +318,33 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
     private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element messageElement, ParserContext parserContext) {
         ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
         
-        Element validationScriptElement = DomUtils.getChildElementByTagName(messageElement, "validation-script");
-        if (validationScriptElement != null) {
-            contextBuilder.setValidationScript(DomUtils.getTextValue(validationScriptElement));
-            
-            String filePath = validationScriptElement.getAttribute("file");
-            if (StringUtils.hasText(filePath)) {
-                contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
+        boolean done = false;
+        List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
+        if (validateElements.size() > 0) {
+            for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
+                Element validateElement = (Element) iter.next();
+                
+                Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
+                
+                String type = scriptElement.getAttribute("type");
+                contextBuilder.setScriptType(type);
+                
+                // check for nested validate script child node
+                if (scriptElement != null) {
+                    if (!done) {
+                        done = true;
+                    } else {
+                        throw new BeanCreationException("Found multiple validation script definitions - " +
+                        		"only supporting a single validation script for message validation");
+                    }
+                    
+                    String filePath = scriptElement.getAttribute("file");
+                    if (StringUtils.hasText(filePath)) {
+                        contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
+                    } else {
+                        contextBuilder.setValidationScript(DomUtils.getTextValue(scriptElement));
+                    }
+                }
             }
         }
         

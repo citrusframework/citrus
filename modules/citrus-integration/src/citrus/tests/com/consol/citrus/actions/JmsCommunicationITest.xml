@@ -183,13 +183,15 @@
             		Use Groovy XmlSlurper validation script for validating the received XML message
                 </description>
                 <message>
-                    <validation-script>
-                        assert root.children().size() == 4
-                        assert root.MessageId.text() == '${messageId}'
-                        assert root.CorrelationId.text() == '${correlationId}'
-                        assert root.User.text() == 'HelloService'
-                        assert root.Text.text() == 'Hello ' + context.getVariable("user")
-                    </validation-script>
+                    <validate>
+                        <script type="groovy">
+                          assert root.children().size() == 4
+                          assert root.MessageId.text() == '${messageId}'
+                          assert root.CorrelationId.text() == '${correlationId}'
+                          assert root.User.text() == 'HelloService'
+                          assert root.Text.text() == 'Hello ' + context.getVariable("user")
+                        </script>
+                    </validate>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -225,7 +227,10 @@
             		Use Groovy XmlSlurper validation script for validating the received XML message
                 </description>
                 <message>
-                    <validation-script file="classpath:com/consol/citrus/actions/helloValidationScript.groovy"/>
+                    <validate>
+                        <script type="groovy" 
+                                file="classpath:com/consol/citrus/actions/helloValidationScript.groovy"/>
+                    </validate>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

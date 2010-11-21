@@ -29,6 +29,9 @@ import com.consol.citrus.validation.context.ValidationContextBuilder;
  */
 public class ScriptValidationContextBuilder implements ValidationContextBuilder<ScriptValidationContext> {
 
+    /** Type indicating which type of script validator to use (e.g. groovy) */
+    private String scriptType = "";
+    
     /** Validation script for message validation */ 
     private String validationScript;
     
@@ -40,13 +43,13 @@ public class ScriptValidationContextBuilder implements ValidationContextBuilder<
      */
     public ScriptValidationContext buildValidationContext(TestContext context) {
         if (validationScript != null) {
-            return new ScriptValidationContext(validationScript, context);
+            return new ScriptValidationContext(validationScript, scriptType, context);
         } else if (validationScriptResource != null) {
-            return new ScriptValidationContext(validationScriptResource, context);
+            return new ScriptValidationContext(validationScriptResource, scriptType, context);
         }
         
         // return empty script validation context
-        return new ScriptValidationContext(context);
+        return new ScriptValidationContext(context, scriptType);
     }
     
     /**
@@ -63,5 +66,21 @@ public class ScriptValidationContextBuilder implements ValidationContextBuilder<
      */
     public void setValidationScriptResource(Resource validationScriptResource) {
         this.validationScriptResource = validationScriptResource;
+    }
+
+    /**
+     * Sets the type of script used in this context.
+     * @param scriptType the scriptType to set
+     */
+    public void setScriptType(String scriptType) {
+        this.scriptType = scriptType;
+    }
+
+    /**
+     * Gets the script type for this context.
+     * @return the scriptType
+     */
+    public String getScriptType() {
+        return scriptType;
     }
 }

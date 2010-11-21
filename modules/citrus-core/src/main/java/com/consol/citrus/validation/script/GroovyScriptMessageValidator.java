@@ -56,6 +56,9 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
     /** Placeholder identifier for script body in template */
     private static final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
     
+    /** This is the supported script type for this message validator */
+    public static final String GROOVY_SCRIPT_TYPE = "groovy";
+    
     static {
         xmlSlurperTemplateResource = new ClassPathResource("com/consol/citrus/validation/xml-slurper-template.groovy");
         
@@ -84,6 +87,15 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
         }
 
         ScriptValidationContext scriptValidationContext = (ScriptValidationContext)validationContext;
+        
+        // check if script type fits this message validator
+        if (!scriptValidationContext.getScriptType().equalsIgnoreCase(GROOVY_SCRIPT_TYPE)) {
+            if (log.isDebugEnabled()) {
+                log.debug(GroovyScriptMessageValidator.class.getName() + " not supporting script type '" + 
+                        scriptValidationContext.getScriptType() + "' skipping groovy message validation");
+            }
+            return;
+        }
         
         try {
             String validationScript = scriptValidationContext.getValidationScript();
@@ -121,7 +133,7 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
         if (action instanceof ScriptValidationAware) {
             return ((ScriptValidationAware)action).getScriptValidationContext(context);
         } else {
-            return new ScriptValidationContext(context);
+            return new ScriptValidationContext(context, GROOVY_SCRIPT_TYPE);
         }
     }
     

@@ -1301,6 +1301,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
         contextBuilder.setValidationScript("assert root.Message.name() == 'Message'\n" + "assert root.Message.text() == 'Hello World!'");
+        contextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1326,6 +1327,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         receiveAction.setValidator(new GroovyScriptMessageValidator());
         ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
         contextBuilder.setValidationScriptResource(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class));
+        contextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1374,7 +1376,9 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         newContext.setMessageValidators(validators);
         
         receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
-        receiveAction.setScriptValidationContextBuilder(new ScriptValidationContextBuilder());
+        ScriptValidationContextBuilder scriptValidationContextBuilder = new ScriptValidationContextBuilder();
+        scriptValidationContextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        receiveAction.setScriptValidationContextBuilder(scriptValidationContextBuilder);
         receiveAction.execute(newContext);
         
         verify(messageReceiver);

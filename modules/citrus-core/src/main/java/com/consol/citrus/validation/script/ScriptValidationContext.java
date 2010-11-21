@@ -41,35 +41,44 @@ public class ScriptValidationContext implements ValidationContext {
     
     /** The current test context */
     private TestContext context;
+    
+    /** Type indicating which type of script was used to builde this context (e.g. groovy, scala etc.) */
+    private String scriptType;
 
     /**
      * Constructor just using test context as field.
+     * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(TestContext context) {
+    public ScriptValidationContext(TestContext context, String scriptType) {
         this.context = context;
+        this.scriptType = scriptType;
     }
     
     /**
      * Constructor using validation script resource.
      * @param validationScriptResource
+     * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(Resource validationScriptResource, TestContext context) {
+    public ScriptValidationContext(Resource validationScriptResource, String scriptType, TestContext context) {
         super();
         this.validationScriptResource = validationScriptResource;
         this.context = context;
+        this.scriptType = scriptType;
     }
     
     /**
      * Constructor using validation script.
      * @param validationScript
+     * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(String validationScript, TestContext context) {
+    public ScriptValidationContext(String validationScript, String scriptType, TestContext context) {
         super();
         this.validationScript = validationScript;
         this.context = context;
+        this.scriptType = scriptType;
     }
 
     /**
@@ -90,5 +99,21 @@ public class ScriptValidationContext implements ValidationContext {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load validation script resource", e);
         }
+    }
+
+    /**
+     * Gets the type of script used in this validation context.
+     * @return the scriptType
+     */
+    public String getScriptType() {
+        return scriptType;
+    }
+
+    /**
+     * Sets the script type for this validation context.
+     * @param scriptType the scriptType to set
+     */
+    public void setScriptType(String scriptType) {
+        this.scriptType = scriptType;
     }
 }
