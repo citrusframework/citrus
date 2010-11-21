@@ -123,7 +123,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-	public void testSendMessageWithMessagePayloadScriptData() {
+	public void testSendMessageWithMessageBuilderScriptData() {
 		SendMessageAction sendAction = new SendMessageAction();
 		sendAction.setMessageSender(messageSender);
 		StringBuilder sb = new StringBuilder();
@@ -164,7 +164,50 @@ public class SendMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testSendMessageWithMessagePayloadScriptResource() {
+    public void testSendMessageWithMessageBuilderScriptDataVariableSupport() {
+        context.setVariable("text", "Hello World!");
+        
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        StringBuilder sb = new StringBuilder();
+        sb.append("markupBuilder.TestRequest(){\n");
+        sb.append("Message('${text}')\n");
+        sb.append("}");
+        
+        GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
+        scriptMessageBuidler.setScriptData(sb.toString());
+        
+        sendAction.setMessageBuilder(scriptMessageBuidler);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                DomXmlMessageValidator validator = new DomXmlMessageValidator();
+                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+                validationContext.setControlMessage(controlMessage);
+                
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageWithMessageBuilderScriptResource() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         

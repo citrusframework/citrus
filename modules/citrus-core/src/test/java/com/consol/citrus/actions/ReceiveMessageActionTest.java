@@ -107,7 +107,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testReceiveMessageWithMessagePayloadScriptData() {
+    public void testReceiveMessageWithMessageBuilderScriptData() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
@@ -136,11 +136,46 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         receiveAction.execute(context);
         
         verify(messageReceiver);
-        }
+    }
     
     @Test
     @SuppressWarnings("unchecked")
-    public void testReceiveMessageWithMessagePayloadScriptResource() {
+    public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
+        context.setVariable("text", "Hello World!");
+        
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(validator);
+        StringBuilder sb = new StringBuilder();
+        sb.append("markupBuilder.TestRequest(){\n");
+        sb.append("Message('${text}')\n");
+        sb.append("}");
+        
+        receiveAction.setValidator(validator);
+        GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setScriptData(sb.toString());
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessageBuilderScriptResource() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
 
