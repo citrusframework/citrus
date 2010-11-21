@@ -1,3 +1,3 @@
-xml.TestRequest(){
+markupBuilder.TestRequest(){
     Message('Hello World!')
 }

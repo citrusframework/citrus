@@ -113,7 +113,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         receiveAction.setValidator(validator);
         StringBuilder sb = new StringBuilder();
-        sb.append("xml.TestRequest(){\n");
+        sb.append("markupBuilder.TestRequest(){\n");
         sb.append("Message('Hello World!')\n");
         sb.append("}");
         

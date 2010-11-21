@@ -209,16 +209,26 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 }
             }
             
-            Element scriptElement = DomUtils.getChildElementByTagName(messageElement, "script");
-            if (scriptElement != null) {
-                scriptMessageBuilder = new GroovyScriptMessageBuilder();
-                scriptMessageBuilder.setScriptData(DomUtils.getTextValue(scriptElement));
-            }
-            
-            Element scriptResourceElement = DomUtils.getChildElementByTagName(messageElement, "script-resource");
-            if (scriptResourceElement != null) {
-                scriptMessageBuilder = new GroovyScriptMessageBuilder();
-                scriptMessageBuilder.setScriptResource(FileUtils.getResourceFromFilePath(scriptResourceElement.getAttribute("file")));
+            Element builderElement = DomUtils.getChildElementByTagName(messageElement, "builder");
+            if (builderElement != null) {
+                String builderType = builderElement.getAttribute("type");
+                
+                if (!StringUtils.hasText(builderType)) {
+                    throw new BeanCreationException("Missing message builder type - please define valid type " +
+                            "attribute for message builder");
+                } else if (builderType.equals("groovy")) {
+                    scriptMessageBuilder = new GroovyScriptMessageBuilder();
+                } else {
+                    throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
+                }
+                
+                String scriptResource = builderElement.getAttribute("file");
+                
+                if (StringUtils.hasText(scriptResource)) {
+                    scriptMessageBuilder.setScriptResource(FileUtils.getResourceFromFilePath(scriptResource));
+                } else {
+                    scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
+                }
             }
             
             Set<String> ignoreExpressions = new HashSet<String>();

@@ -2,7 +2,7 @@ import groovy.xml.MarkupBuilder
 
 
 def writer = new StringWriter()
-def xml = new MarkupBuilder(writer)
+def markupBuilder = new MarkupBuilder(writer)
 
 @SCRIPTBODY@
 

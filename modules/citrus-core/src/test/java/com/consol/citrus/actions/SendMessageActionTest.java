@@ -127,7 +127,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
 		SendMessageAction sendAction = new SendMessageAction();
 		sendAction.setMessageSender(messageSender);
 		StringBuilder sb = new StringBuilder();
-		sb.append("xml.TestRequest(){\n");
+		sb.append("markupBuilder.TestRequest(){\n");
 		sb.append("Message('Hello World!')\n");
 		sb.append("}");
 		

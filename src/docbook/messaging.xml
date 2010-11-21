@@ -560,8 +560,8 @@
         
         <programlisting>&lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
       &lt;message&gt;
-          &lt;script&gt;
-              xml.RequestMessage{
+          &lt;builder type=&quot;groovy&quot;&gt;
+              markupBuilder.RequestMessage{
                   MessageHeader{
                       CorrelationId('${correlationId}')
                       Timestamp('2001-12-17T09:30:47.0Z')
@@ -574,7 +574,7 @@
                       }
                   }
               }
-          &lt;/script&gt;
+          &lt;/builder&gt;
           &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
                       value=&quot;${requestTag}&quot;/&gt;
       &lt;/message&gt;
@@ -585,11 +585,11 @@
   &lt;/send&gt;</programlisting>
         
         <para>The MarkupBuilder code is directly written into the well-known message element. As you can see from the example above, the MarkupBuilder syntax 
-        is very easy and follows the simple rule: <emphasis>xml.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follwow some simple rules and
+        is very easy and follows the simple rule: <emphasis>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follwow some simple rules and
         naming conventions when using the Citrus MarkupBuilder extension:</para>
         
         <itemizedlist>
-            <listitem>The MarkupBuilder is accessed within the script over an object named <literal>xml</literal>. The name of the custom root element follows with all its child elements.</listitem>
+            <listitem>The MarkupBuilder is accessed within the script over an object named <literal>markupBuilder</literal>. The name of the custom root element follows with all its child elements.</listitem>
             <listitem>Child elements may be defined within curly brackets after the root-element (the same applies for further nested child elements)</listitem>
             <listitem>Attributes and element values are defined within round brackets, after the element name</listitem>
             <listitem>Attribute and element values have to stand within apostrophes (e.g. attribute-name: 'attribute-value')</listitem>
@@ -599,20 +599,20 @@
         
         <programlisting>&lt;send with=&quot;helloRequestSender&quot;&gt;
       &lt;message&gt;
-          &lt;script-resource file=&quot;classpath:com/consol/citrus/groovy/helloRequest.groovy&quot;/&gt;
+          &lt;builder type=&quot;groovy&quot; file=&quot;classpath:com/consol/citrus/groovy/helloRequest.groovy&quot;/&gt;
       &lt;/message&gt;
   &lt;/send&gt;
   
   &lt;receive with="helloResponseReceiver" timeout="5000"&gt;
       &lt;message&gt;
-          &lt;script&gt;
-              xml.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+          &lt;builder type=&quot;groovy&quot;&gt;
+              markupBuilder.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
                   MessageId('${messageId}')
                   CorrelationId('${correlationId}')
                   User('HelloService')
                   Text('Hello ${user}')
               }
-          &lt;/script&gt;
+          &lt;/builder&gt;
       &lt;/message&gt;
   &lt;/receive&gt;
         </programlisting>

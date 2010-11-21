@@ -91,14 +91,14 @@
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>                
-                    <script>
-                        xml.HelloRequest(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                    <builder type="groovy">
+                        markupBuilder.HelloRequest(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
                             MessageId('${messageId}')
                             CorrelationId('${correlationId}')
                             User('${user}')
                             Text('Hello TestFramework')
                         }
-				    </script>
+				    </builder>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -112,14 +112,14 @@
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
-                    <script>
-                        xml.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                    <builder type="groovy">
+                        markupBuilder.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
                             MessageId('${messageId}')
                             CorrelationId('${correlationId}')
                             User('HelloService')
                             Text('Hello ${user}')
                         }
-                    </script>
+                    </builder>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -133,7 +133,7 @@
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
-                    <script-resource file="classpath:com/consol/citrus/actions/helloRequest.groovy"/>
+                    <builder type="groovy" file="classpath:com/consol/citrus/actions/helloRequest.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -147,7 +147,7 @@
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
-                    <script-resource file="classpath:com/consol/citrus/actions/helloResponse.groovy"/>
+                    <builder type="groovy" file="classpath:com/consol/citrus/actions/helloResponse.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
