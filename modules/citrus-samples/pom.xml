@@ -1,16 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-samples</artifactId>
   <name>citrus-samples</name>
   <packaging>pom</packaging>
-  <version>1.2-SNAPSHOT</version>
   
   <modules>
     <module>modules/citrus-samples-common</module>
@@ -25,7 +27,7 @@
         <plugin>
             <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <configuration>
                 <author>Christoph Deppisch</author>
                 <targetPackage>com.consol.citrus.samples</targetPackage>
@@ -37,9 +39,7 @@
     
     <plugins>
         <plugin>
-          <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
           <artifactId>maven-surefire-plugin</artifactId>
-          <!-- Version is required as mvn has currently a problem updating. -->
           <version>2.5</version>
           <configuration>
             <properties>
@@ -90,27 +90,27 @@
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-core</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-adapter</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-ws</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus</groupId>
             <artifactId>citrus-http</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.consol.citrus.ant</groupId>
             <artifactId>citrus-ant-tasks</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         
         <!-- Spring framework -->

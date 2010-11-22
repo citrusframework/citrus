@@ -11,17 +11,16 @@
   
   <groupId>com.consol.citrus.ant</groupId>
   <artifactId>citrus-ant-tasks</artifactId>
-  <version>1.2-SNAPSHOT</version>
   <name>citrus-ant-tasks</name>
   <description>Citrus Ant Tasks</description>
   
   <dependencyManagement>
     <dependencies>
-        <dependency>
-          <groupId>org.apache.ant</groupId>
-          <artifactId>ant</artifactId>
-          <version>1.8.1</version>
-        </dependency>
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant</artifactId>
+        <version>1.8.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   
@@ -31,10 +30,10 @@
       <artifactId>ant</artifactId>
     </dependency>
     <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-core</artifactId>
-        <version>1.2-SNAPSHOT</version>
-        <scope>provided</scope>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
