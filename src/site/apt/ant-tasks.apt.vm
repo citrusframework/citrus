@@ -10,10 +10,18 @@ Citrus ANT tasks
   <<Latest snapshot release>>: ${project.version}
   
   * citrus-ant-tasks-${project.version}.jar ({{{dist/citrus-ant-tasks-${project.version}.jar}download}})
+ 
+  []
+  
+  <<Latest stable release>>: 1.1
+  
+  * citrus-ant-tasks-1.1.jar ({{{dist/citrus-ant-tasks-1.1.jar}download}})
   
   []
   
-  <<Latest stable release>>: 1.0
+  <<Older versions>>:
+  
+  Version 1.0 (Note: This version is licensed under GPLv3).
   
   * citrus-ant-tasks-1.0.jar ({{{dist/citrus-ant-tasks-1.0.jar}download}})
   
@@ -25,7 +33,7 @@ Citrus ANT tasks
   Here is a simple usage example:
   
 +---
-  <typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-1.1-SNAPSHOT.jar"/>
+  <typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-${project.version}.jar"/>
   
   <target name="citrus.run.tests" description="Runs all Citrus tests">
       <citrus suitename="citrus-samples" package="com.consol.citrus.*"/>

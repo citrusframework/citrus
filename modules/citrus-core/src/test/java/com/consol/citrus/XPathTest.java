@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus;
@@ -23,8 +20,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +34,17 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
  */
 public class XPathTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -57,8 +57,8 @@ public class XPathTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setSchemaValidation(false);
     }
     
     @Test
@@ -88,8 +88,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -120,8 +126,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -148,8 +160,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -176,13 +194,19 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://testsuite");
         
-        receiveMessageBean.setNamespaces(namespaces);
+        contextBuilder.setNamespaces(namespaces);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -220,9 +244,14 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("boolean:/ns1:root/:element", "true");
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
         
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        contextBuilder.setSchemaValidation(false);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -257,8 +286,18 @@ public class XPathTest extends AbstractBaseTest {
         extractMessageElements.put("boolean:/ns1:root/:element", "exists");
         extractMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "existsNot");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
         
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
         
         Assert.assertNotNull(context.getVariable("elementA"));

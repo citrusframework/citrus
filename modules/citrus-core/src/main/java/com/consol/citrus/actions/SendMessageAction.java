@@ -1,72 +1,51 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.variable.VariableExtractor;
 
 
 /**
- * This action sends a messages to a specified service destination endpoint. Action uses
- * a {@link MessageSender} so action is independent from message transport.
+ * This action sends a messages to a specified message endpoint. The action holds a reference to
+ * a {@link MessageSender}, which is capable of the message transport implementation. So action is
+ * independent of the message transport.
  *
  * @author Christoph Deppisch 
  * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction {
-    /** Overwrite message payload elements before sending */
-    private Map<String, String> messageElements = new HashMap<String, String>();
-
-    /** Message header entries */
-    private Map<String, Object> headerValues = new HashMap<String, Object>();
-
-    /** The message header as a file resource */
-    private Resource headerResource;
-
-    /** The message header as inline data */
-    private String headerData;
-    
     /** The message sender */
     protected MessageSender messageSender;
-
-    /** The message payload as a file resource */
-    private Resource messageResource;
-
-    /** The message payload as inline data */
-    private String messageData;
     
-    /** Extract message headers to variables */
-    protected Map<String, String> extractHeaderValues = new HashMap<String, String>();
+    /** List of variable extractors responsible for creating variables from received message content */
+    private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+    
+    /** Builder constructing a control message */
+    private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
 
     /**
      * Message is constructed with payload and header entries and sent via
@@ -78,7 +57,10 @@ public class SendMessageAction extends AbstractTestAction {
     public void execute(TestContext context) {
         Message<?> message = createMessage(context);
         
-        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
+        // extract variables from before sending message so we can save dynamic message ids
+        for (VariableExtractor variableExtractor : variableExtractors) {
+            variableExtractor.extractVariables(message, context);
+        }
         
         messageSender.send(message);
     }
@@ -89,136 +71,9 @@ public class SendMessageAction extends AbstractTestAction {
      * @return
      */
     protected Message<?> createMessage(TestContext context) {
-        try {
-            String messagePayload = null;
-            
-            if (messageResource != null) {
-                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
-            } else if (messageData != null){
-                messagePayload = context.replaceDynamicContentInString(messageData);
-            } else {
-                throw new CitrusRuntimeException("Could not find message data. Either message-data or message-resource must be specified");
-            }
-    
-            if(StringUtils.hasText(messagePayload)) {
-                /* explicitly overwrite message elements */
-                messagePayload = context.replaceMessageValues(messageElements, messagePayload);
-            }
-    
-            /* Set message header */
-            Map<String, Object> headerValuesCopy = context.replaceVariablesInMap(headerValues);
-
-            String headerContent = null;
-            if (headerResource != null) {
-                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(headerResource).trim());
-            } else if (headerData != null){
-                headerContent = context.replaceDynamicContentInString(headerData.trim());
-            }
-            
-            if(StringUtils.hasText(headerContent)) {
-                headerValuesCopy.put(CitrusMessageHeaders.HEADER_CONTENT, headerContent);
-            }
-            
-            /* store header values map to context - service will read the map */
-            return MessageBuilder.withPayload(messagePayload).copyHeaders(headerValuesCopy).build();
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        return messageBuilder.buildMessageContent(context);
     }
 
-    /**
-     * Set the message payload as inline data.
-     * @param messageData the messageData to set
-     */
-    public void setMessageData(String messageData) {
-        this.messageData = messageData;
-    }
-
-    /**
-     * Set the message payload from external file resource.
-     * @param messageResource the messageResource to set
-     */
-    public void setMessageResource(Resource messageResource) {
-        this.messageResource = messageResource;
-    }
-    
-    /**
-     * Set the message header as inline data.
-     * @param headerData the headerData to set
-     */
-    public void setHeaderData(String headerData) {
-        this.headerData = headerData;
-    }
-
-    /**
-     * Set the header payload from external file resource.
-     * @param headerResource the headerResource to set
-     */
-    public void setHeaderResource(Resource headerResource) {
-        this.headerResource = headerResource;
-    }
-
-    /**
-     * Set header entries.
-     * @param headerValues the headerValues to set
-     */
-    public void setHeaderValues(Map<String, Object> headerValues) {
-        this.headerValues = headerValues;
-    }
-
-    /**
-     * Set message elements to overwrite before sending.
-     * @param messageElements the messageElements to set
-     */
-    public void setMessageElements(Map<String, String> setMessageElements) {
-        this.messageElements = setMessageElements;
-    }
-
-    /**
-     * Get the header values.
-     * @return the headerValues
-     */
-    public Map<String, Object> getHeaderValues() {
-        return headerValues;
-    }
-
-    /**
-     * @return the messageElements
-     */
-    public Map<String, String> getMessageElements() {
-        return messageElements;
-    }
-
-    /**
-     * @return the messageData
-     */
-    public String getMessageData() {
-        return messageData;
-    }
-
-    /**
-     * @return the messageResource
-     */
-    public Resource getMessageResource() {
-        return messageResource;
-    }
-    
-    /**
-     * @return the headerData
-     */
-    public String getHeaderData() {
-        return headerData;
-    }
-
-    /**
-     * @return the headerResource
-     */
-    public Resource getHeaderResource() {
-        return headerResource;
-    }
-    
     /**
      * Set the message sender instance.
      * @param messageSender the messageSender to set
@@ -228,10 +83,26 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set values to extract as variables.
-     * @param extractHeaderValues the extractHeaderValues to set
+     * Sets the message builder implementation.
+     * @param messageBuilder the messageBuilder to set
      */
-    public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
-        this.extractHeaderValues = extractHeaderValues;
+    public void setMessageBuilder(MessageContentBuilder<?> messageBuilder) {
+        this.messageBuilder = messageBuilder;
+    }
+
+    /**
+     * The variable extractors for this message sending action.
+     * @param variableExtractors the variableExtractors to set
+     */
+    public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
+        this.variableExtractors = variableExtractors;
+    }
+
+    /**
+     * Get the variable extractors.
+     * @return the variableExtractors
+     */
+    public List<VariableExtractor> getVariableExtractors() {
+        return variableExtractors;
     }
 }

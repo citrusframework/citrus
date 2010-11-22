@@ -1,31 +1,34 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.functions.core;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 
 /**
  * Function implements simple substring functionality.
+ * 
+ * Function requires at least a target string and a beginIndex as function parameters. A
+ * optional endIndex may be given as function parameter, too. The parameter usage looks 
+ * like this: substring(targetString, beginIndex, [endIndex]).
  * 
  * @author Christoph Deppisch
  */
@@ -36,30 +39,30 @@ public class SubstringFunction implements Function {
      * @throws InvalidFunctionUsageException
      */
     public String execute(List<String> parameterList) {
-        if (parameterList == null || parameterList.isEmpty()) {
-            throw new InvalidFunctionUsageException("Function parameters must not be empty");
+        if (parameterList == null || parameterList.size() < 2) {
+            throw new InvalidFunctionUsageException("Insufficient function parameters - parameter usage: (targetString, beginIndex, [endIndex])");
         }
 
-        String resultString = parameterList.get(0);
+        String targetString = parameterList.get(0);
 
-        String beginIndex = null;
+        String beginIndex = parameterList.get(1);
         String endIndex = null;
 
-        if (parameterList.size()>1) {
-            beginIndex = parameterList.get(1);
+        if(!StringUtils.hasText(beginIndex)) {
+            throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
         }
-
-        if (parameterList.size()>2) {
+        
+        if (parameterList.size() > 2) {
             endIndex = parameterList.get(2);
         }
 
-        if (endIndex != null && endIndex.length()>0) {
-            resultString = resultString.substring(new Integer(beginIndex).intValue(), new Integer(endIndex).intValue());
+        if (StringUtils.hasText(endIndex)) {
+            targetString = targetString.substring(Integer.valueOf(beginIndex), Integer.valueOf(endIndex));
         } else {
-            resultString = resultString.substring(new Integer(beginIndex).intValue());
+            targetString = targetString.substring(Integer.valueOf(beginIndex));
         }
 
-        return resultString;
+        return targetString;
     }
 
 }

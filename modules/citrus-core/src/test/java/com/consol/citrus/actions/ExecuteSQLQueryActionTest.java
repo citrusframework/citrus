@@ -1,35 +1,36 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.actions;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.reset;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.*;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
@@ -112,6 +113,42 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
     }
 	
 	@Test
+    public void testSQLResource() {
+	    Resource sqlResource = new ClassPathResource("test-query.sql", ExecuteSQLQueryActionTest.class);
+	    
+	    String sql1 = "SELECT ORDERTYPE, STATUS FROM orders WHERE ID=5;";
+        String sql2 = "SELECT NAME, HEIGHT FROM customers WHERE ID=1;";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap1 = new HashMap<String, String>();
+        resultMap1.put("ORDERTYPE", "small");
+        resultMap1.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
+        
+        Map<String, String> resultMap2 = new HashMap<String, String>();
+        resultMap2.put("NAME", "Mickey Mouse");
+        resultMap2.put("HEIGHT", "0,3");
+        
+        expect(jdbcTemplate.queryForList(sql2)).andReturn(Collections.singletonList(resultMap2));
+        
+        replay(jdbcTemplate);
+        
+        executeSQLQueryAction.setSqlResource(sqlResource);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+        Assert.assertNotNull(context.getVariable("${NAME}"));
+        Assert.assertEquals(context.getVariable("${NAME}"), "Mickey Mouse");
+        Assert.assertNotNull(context.getVariable("${HEIGHT}"));
+        Assert.assertEquals(context.getVariable("${HEIGHT}"), "0,3");
+    }
+	
+	@Test
     public void testNullValue() {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
@@ -179,7 +216,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         
         Map<String, String> extractVariables = new HashMap<String, String>();
         extractVariables.put("STATUS", "orderStatus");
-        executeSQLQueryAction.setExtractToVariablesMap(extractVariables);
+        executeSQLQueryAction.setExtractVariables(extractVariables);
         
         executeSQLQueryAction.execute(context);
         
@@ -209,7 +246,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         
         Map<String, String> extractVariables = new HashMap<String, String>();
         extractVariables.put("UNKNOWN_COLUMN", "orderStatus");
-        executeSQLQueryAction.setExtractToVariablesMap(extractVariables);
+        executeSQLQueryAction.setExtractVariables(extractVariables);
         
         executeSQLQueryAction.execute(context);
     }
@@ -230,11 +267,11 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
         
-        Map<String, String> validationElements = new HashMap<String, String>();
-        validationElements.put("ORDERTYPE", "small");
-        validationElements.put("STATUS", "in_progress");
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("small"));
+        controlResultSet.put("STATUS", Collections.singletonList("in_progress"));
         
-        executeSQLQueryAction.setValidationElements(validationElements);
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
         
@@ -260,11 +297,11 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
         
-        Map<String, String> validationElements = new HashMap<String, String>();
-        validationElements.put("TYPE", "small");
-        validationElements.put("STATE", "in_progress");
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("TYPE", Collections.singletonList("small"));
+        controlResultSet.put("STATE", Collections.singletonList("in_progress"));
         
-        executeSQLQueryAction.setValidationElements(validationElements);
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
         
@@ -290,11 +327,11 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
         
-        Map<String, String> validationElements = new HashMap<String, String>();
-        validationElements.put("ORDERTYPE", "xxl"); //this is supposed to cause an error
-        validationElements.put("STATUS", "in_progress");
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("xxl")); //this is supposed to cause an error
+        controlResultSet.put("STATUS", Collections.singletonList("in_progress"));
         
-        executeSQLQueryAction.setValidationElements(validationElements);
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         try {
             executeSQLQueryAction.execute(context);
@@ -306,6 +343,217 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         }
         
         Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
+    }
+    
+    @Test
+    public void testResultSetMultipleRowsValidation() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
+        reset(jdbcTemplate);
+        
+        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+        Map<String, String> resultRow1 = new HashMap<String, String>();
+        Map<String, String> resultRow2 = new HashMap<String, String>();
+        Map<String, String> resultRow3 = new HashMap<String, String>();
+
+        resultRow1.put("ORDERTYPE", "small");
+        resultRow1.put("STATUS", "started");
+        resultList.add(resultRow1);
+        resultRow2.put("ORDERTYPE", "medium");
+        resultRow2.put("STATUS", "in_progress");
+        resultList.add(resultRow2);
+        resultRow3.put("ORDERTYPE", "big");
+        resultRow3.put("STATUS", "finished");
+        resultList.add(resultRow3);
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(resultList);
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        List<String> ordertypeValues = new ArrayList<String>();
+        ordertypeValues.add("small");
+        ordertypeValues.add("medium");
+        ordertypeValues.add("big");
+        controlResultSet.put("ORDERTYPE", ordertypeValues);
+        
+        List<String> statusValues = new ArrayList<String>();
+        statusValues.add("started");
+        statusValues.add("in_progress");
+        statusValues.add("finished");
+        controlResultSet.put("STATUS", statusValues);
+        
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("ORDERTYPE"));
+        Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
+        Assert.assertNotNull(context.getVariable("STATUS"));
+        Assert.assertEquals(context.getVariable("STATUS"), "started");
+    }
+    
+    @Test
+    public void testNullValuesInMultipleRowsValidation() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
+        reset(jdbcTemplate);
+        
+        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+        Map<String, String> resultRow1 = new HashMap<String, String>();
+        Map<String, String> resultRow2 = new HashMap<String, String>();
+        Map<String, String> resultRow3 = new HashMap<String, String>();
+
+        resultRow1.put("ORDERTYPE", "small");
+        resultRow1.put("STATUS", null);
+        resultList.add(resultRow1);
+        resultRow2.put("ORDERTYPE", "medium");
+        resultRow2.put("STATUS", "in_progress");
+        resultList.add(resultRow2);
+        resultRow3.put("ORDERTYPE", null);
+        resultRow3.put("STATUS", "finished");
+        resultList.add(resultRow3);
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(resultList);
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        List<String> ordertypeValues = new ArrayList<String>();
+        ordertypeValues.add("small");
+        ordertypeValues.add("medium");
+        ordertypeValues.add(""); // 1st possibility to validate null values
+        controlResultSet.put("ORDERTYPE", ordertypeValues);
+        
+        List<String> statusValues = new ArrayList<String>();
+        statusValues.add("NULL"); // 2nd possibility to validate null values
+        statusValues.add("in_progress");
+        statusValues.add("finished");
+        controlResultSet.put("STATUS", statusValues);
+        
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("ORDERTYPE"));
+        Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
+        Assert.assertNotNull(context.getVariable("STATUS"));
+        Assert.assertEquals(context.getVariable("STATUS"), "NULL");
+    }
+    
+    @Test
+    public void testIgnoreInMultipleRowsValidation() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
+        reset(jdbcTemplate);
+        
+        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+        Map<String, String> resultRow1 = new HashMap<String, String>();
+        Map<String, String> resultRow2 = new HashMap<String, String>();
+        Map<String, String> resultRow3 = new HashMap<String, String>();
+
+        resultRow1.put("ORDERTYPE", "small");
+        resultRow1.put("STATUS", "started");
+        resultList.add(resultRow1);
+        resultRow2.put("ORDERTYPE", "medium");
+        resultRow2.put("STATUS", "in_progress");
+        resultList.add(resultRow2);
+        resultRow3.put("ORDERTYPE", "big");
+        resultRow3.put("STATUS", "finished");
+        resultList.add(resultRow3);
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(resultList);
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        List<String> ordertypeValues = new ArrayList<String>();
+        ordertypeValues.add("small");
+        ordertypeValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        ordertypeValues.add("big");
+        
+        controlResultSet.put("ORDERTYPE", ordertypeValues);
+        
+        List<String> statusValues = new ArrayList<String>();
+        statusValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        statusValues.add("in_progress");
+        statusValues.add("finished");
+        controlResultSet.put("STATUS", statusValues);
+        
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("ORDERTYPE"));
+        Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
+        Assert.assertNotNull(context.getVariable("STATUS"));
+        Assert.assertEquals(context.getVariable("STATUS"), "started");
+    }
+    
+    @Test
+    public void testExtractMultipleRowValues() {
+        String sql = "select distinct STATUS from orders";
+        reset(jdbcTemplate);
+        
+        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+        Map<String, String> resultRow1 = new HashMap<String, String>();
+        Map<String, String> resultRow2 = new HashMap<String, String>();
+        Map<String, String> resultRow3 = new HashMap<String, String>();
+
+        resultRow1.put("ORDERTYPE", "small");
+        resultRow1.put("STATUS", "started");
+        resultList.add(resultRow1);
+        resultRow2.put("ORDERTYPE", null);
+        resultRow2.put("STATUS", "in_progress");
+        resultList.add(resultRow2);
+        resultRow3.put("ORDERTYPE", "big");
+        resultRow3.put("STATUS", "finished");
+        resultList.add(resultRow3);
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(resultList);
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, String> extractVariables = new HashMap<String, String>();
+        extractVariables.put("STATUS", "orderStatus");
+        extractVariables.put("ORDERTYPE", "orderType");
+        executeSQLQueryAction.setExtractVariables(extractVariables);
+        
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        List<String> ordertypeValues = new ArrayList<String>();
+        ordertypeValues.add("small");
+        ordertypeValues.add(CitrusConstants.IGNORE_PLACEHOLDER);
+        ordertypeValues.add("big");
+        
+        controlResultSet.put("ORDERTYPE", ordertypeValues);
+        
+        List<String> statusValues = new ArrayList<String>();
+        statusValues.add("started");
+        statusValues.add("in_progress");
+        statusValues.add("finished");
+        controlResultSet.put("STATUS", statusValues);
+        
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("orderType"));
+        Assert.assertEquals(context.getVariable("orderType"), "small;NULL;big");
+        Assert.assertNotNull(context.getVariable("orderStatus"));
+        Assert.assertEquals(context.getVariable("orderStatus"), "started;in_progress;finished");
+        Assert.assertNotNull(context.getVariable("ORDERTYPE"));
+        Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
+        Assert.assertNotNull(context.getVariable("STATUS"));
+        Assert.assertEquals(context.getVariable("STATUS"), "started");
     }
     
     @Test
@@ -334,13 +582,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         
         executeSQLQueryAction.setStatements(stmts);
         
-        Map<String, String> validationElements = new HashMap<String, String>();
-        validationElements.put("ORDERTYPE", "small");
-        validationElements.put("STATUS", "in_progress");
-        validationElements.put("NAME", "Donald Duck"); //this is supposed to cause an error
-        validationElements.put("HEIGHT", "0,3");
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("small"));
+        controlResultSet.put("STATUS", Collections.singletonList("in_progress"));
+        controlResultSet.put("NAME", Collections.singletonList("Donald Duck")); //this is supposed to cause an error
+        controlResultSet.put("HEIGHT", Collections.singletonList("0,3"));
         
-        executeSQLQueryAction.setValidationElements(validationElements);
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         try {
             executeSQLQueryAction.execute(context);

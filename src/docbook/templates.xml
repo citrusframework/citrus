@@ -9,23 +9,21 @@
     <para>The template always has a unique name. Inside a test case we call the template by this unique name. 
     Have a look at a first example:</para>
   
-    <programlisting>
-  &lt;template name=&quot;doCreateVariables&quot;&gt;
-      &lt;create-variables&gt;
-          &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
-      &lt;/create-variables&gt;
-      
-      &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
-  &lt;/template&gt;
-  
-  &lt;template name=&quot;doTraceVariables&quot;&gt;
-      &lt;echo&gt;
-          &lt;message&gt;Current time is: ${time}&lt;/message&gt;
-      &lt;/echo&gt;
-      
-      &lt;trace-variables/&gt;
-  &lt;/template&gt;
-    </programlisting>
+    <programlisting>&lt;template name=&quot;doCreateVariables&quot;&gt;
+    &lt;create-variables&gt;
+        &lt;variable name=&quot;var&quot; value=&quot;123456789&quot;/&gt;
+    &lt;/create-variables&gt;
+    
+    &lt;call-template name=&quot;doTraceVariables&quot;/&gt;
+&lt;/template&gt;
+
+&lt;template name=&quot;doTraceVariables&quot;&gt;
+    &lt;echo&gt;
+        &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+    &lt;/echo&gt;
+    
+    &lt;trace-variables/&gt;
+&lt;/template&gt;</programlisting>
   
     <para>The code example above describes two template definitions. Templates hold a sequence of test 
     actions or call other templates themselves as seen in the example above.</para>
@@ -36,20 +34,18 @@
       a separate XML file other than the test case itself:</para>
     </note>
     
-    <programlisting>
-  &lt;testcase name=&quot;templateTest&quot;&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;myTime&quot; value=&quot;citrus:currentDate()&quot;/&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;call-template name=&quot;doCreateVariables&quot;/&gt;
-          
-          &lt;call-template name=&quot;doTraceVariables&quot;&gt;
-              &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
-          &lt;/call-template&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;templateTest&quot;&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;myTime&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;call-template name=&quot;doCreateVariables&quot;/&gt;
+        
+        &lt;call-template name=&quot;doTraceVariables&quot;&gt;
+            &lt;parameter name=&quot;time&quot; value=&quot;${myTime}&quot;&gt;
+        &lt;/call-template&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>There is an open question when dealing with templates that are defined somewhere else outside the test case.
     How to handle variables? A templates may use different variable names then the test and vice versa. No doubt the 
@@ -64,11 +60,9 @@
     <para>The template &quot;doDateCoversion&quot; in the next sample uses the variable ${date}. The calling test case 
     can set this variable as a parameter without actually declaring the variable in the test itself:</para>
     
-    <programlisting>
-  &lt;call-template name=&quot;doDateCoversion&quot;&gt;
-      &lt;parameter name=&quot;date&quot; value=&quot;${sampleDate}&quot;&gt;
-  &lt;/call-template&gt;
-    </programlisting>
+    <programlisting>&lt;call-template name=&quot;doDateCoversion&quot;&gt;
+    &lt;parameter name=&quot;date&quot; value=&quot;${sampleDate}&quot;&gt;
+&lt;/call-template&gt;</programlisting>
     
     <para>The variable <emphasis>sampleDate</emphasis> is already present in the test case and gets translated into the 
     <emphasis>date</emphasis> parameter. Following from that the template works fine although test and template do work on 
@@ -81,19 +75,17 @@
     <para>Template parameters may contain more complex values like XML fragments. The call-template action offers following 
     CDATA variation for defining complex parameter values:</para>
     
-    <programlisting>
-  &lt;call-template name=&quot;printXMLPayload&quot;&gt;
-      &lt;parameter name=&quot;payload&quot;&gt;
-        &lt;value&gt;
-          &lt;![CDATA[
-            &lt;HelloRequest xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
-              &lt;Text&gt;Hello South ${var}&lt;/Text&gt;
-            &lt;/HelloRequest&gt;
-          ]]&gt;
-        &lt;/value&gt;
-      &lt;/parameter&gt;
-  &lt;/call-template&gt;
-    </programlisting>
+    <programlisting>&lt;call-template name=&quot;printXMLPayload&quot;&gt;
+    &lt;parameter name=&quot;payload&quot;&gt;
+      &lt;value&gt;
+        &lt;![CDATA[
+          &lt;HelloRequest xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+            &lt;Text&gt;Hello South ${var}&lt;/Text&gt;
+          &lt;/HelloRequest&gt;
+        ]]&gt;
+      &lt;/value&gt;
+    &lt;/parameter&gt;
+&lt;/call-template&gt;</programlisting>
     
     <important>
         <para>When a template works on variable values and parameters changes to these variables will automatically affect the variables 
@@ -101,45 +93,39 @@
         changes will affect the variable in a global context. We have to be careful with this when executing a template several
         times in a test, especially in combination with parallel containers (see <xref linkend="containers-parallel"/>).</para>
         
-        <programlisting>
-  &lt;parallel&gt;
-      &lt;call-template name=&quot;print&quot;&gt;
-          &lt;parameter name=&quot;param1&quot; value=&quot;1&quot;/&gt;
-          &lt;parameter name=&quot;param2&quot; value=&quot;Hello Europe&quot;/&gt;
-      &lt;/call-template&gt;
-      &lt;call-template name=&quot;print&quot;&gt;
-          &lt;parameter name=&quot;param1&quot; value=&quot;2&quot;/&gt;
-          &lt;parameter name=&quot;param2&quot; value=&quot;Hello Asia&quot;/&gt;
-      &lt;/call-template&gt;
-      &lt;call-template name=&quot;print&quot;&gt;
-          &lt;parameter name=&quot;param1&quot; value=&quot;3&quot;/&gt;
-          &lt;parameter name=&quot;param2&quot; value=&quot;Hello Africa&quot;/&gt;
-      &lt;/call-template&gt;
-  &lt;/parallel&gt;
-        </programlisting>
+        <programlisting>&lt;parallel&gt;
+    &lt;call-template name=&quot;print&quot;&gt;
+        &lt;parameter name=&quot;param1&quot; value=&quot;1&quot;/&gt;
+        &lt;parameter name=&quot;param2&quot; value=&quot;Hello Europe&quot;/&gt;
+    &lt;/call-template&gt;
+    &lt;call-template name=&quot;print&quot;&gt;
+        &lt;parameter name=&quot;param1&quot; value=&quot;2&quot;/&gt;
+        &lt;parameter name=&quot;param2&quot; value=&quot;Hello Asia&quot;/&gt;
+    &lt;/call-template&gt;
+    &lt;call-template name=&quot;print&quot;&gt;
+        &lt;parameter name=&quot;param1&quot; value=&quot;3&quot;/&gt;
+        &lt;parameter name=&quot;param2&quot; value=&quot;Hello Africa&quot;/&gt;
+    &lt;/call-template&gt;
+&lt;/parallel&gt;</programlisting>
         
         <para>In the listing above a template <emphasis>print</emphasis> is called several times in a parallel container. The parameter values
         will be handled in a global context, so it is quite likely to happen that the template instances influence each other during execution.
         We might get such print messages:</para>
         
-        <programlisting>
-  2. Hello Europe
-  2. Hello Africa
-  3. Hello Africa
-        </programlisting>
+        <programlisting>2. Hello Europe
+2. Hello Africa
+3. Hello Africa</programlisting>
         
         <para>Index parameters do not fit and the message <emphasis>'Hello Asia'</emphasis> is completely gone. This is because templates 
         overwrite parameters to each other as they are executed in parallel at the same time. To avoid this behavior we need to tell the template 
         that it should handle parameters as well as variables in a local context. This will enforce that each template instance is working on a 
         dedicated local context. See the <emphasis>global-context</emphasis> attribute that is set to <emphasis>false</emphasis> in this example:</para>
         
-        <programlisting>
-  &lt;template name=&quot;print&quot; global-context=&quot;false&quot;&gt;
-      &lt;echo&gt;
-          &lt;message&gt;${param1}.${param2}&lt;/message&gt;
-      &lt;/echo&gt;
-  &lt;/template&gt;
-        </programlisting>
+        <programlisting>&lt;template name=&quot;print&quot; global-context=&quot;false&quot;&gt;
+    &lt;echo&gt;
+        &lt;message&gt;${param1}.${param2}&lt;/message&gt;
+    &lt;/echo&gt;
+&lt;/template&gt;</programlisting>
         
         <para>After that template instances won't influence each other anymore. But notice that variable changes inside the template then do not affect 
         the test case neither.</para>

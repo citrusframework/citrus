@@ -14,24 +14,22 @@
     <para>The library is built in the Spring configuration and contains a set of functions that are of
     public use.</para>
     
-    <programlisting>
-  &lt;bean id=&quot;testFrameworkFunctionLibrary&quot; 
-           class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
-      &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
-      &lt;property name=&quot;prefix&quot; value=&quot;citrus:&quot;/&gt;
-      &lt;property name=&quot;members&quot;&gt;
-          &lt;map&gt;
-            &lt;entry key=&quot;randomNumber&quot;&gt;
-                &lt;bean class=&quot;com.consol.citrus.functions.RandomNumberFunction&quot;/&gt;
-            &lt;/entry&gt;
-            &lt;entry key=&quot;randomString&quot;&gt;
-                &lt;bean class=&quot;com.consol.citrus.functions.RandomStringFunction&quot;/&gt;
-            &lt;/entry&gt;
-            ...
-          &lt;/map&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-    </programlisting>
+    <programlisting>&lt;bean id=&quot;testFrameworkFunctionLibrary&quot; 
+         class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;testFrameworkFunctionLibrary&quot;/&gt;
+    &lt;property name=&quot;prefix&quot; value=&quot;citrus:&quot;/&gt;
+    &lt;property name=&quot;members&quot;&gt;
+        &lt;map&gt;
+          &lt;entry key=&quot;randomNumber&quot;&gt;
+              &lt;bean class=&quot;com.consol.citrus.functions.RandomNumberFunction&quot;/&gt;
+          &lt;/entry&gt;
+          &lt;entry key=&quot;randomString&quot;&gt;
+              &lt;bean class=&quot;com.consol.citrus.functions.RandomStringFunction&quot;/&gt;
+          &lt;/entry&gt;
+          ...
+        &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
     
     <para>In the next chapters the default functions offered by the framework will be described in detail.</para>
 
@@ -41,28 +39,24 @@
         <para>The function will combine several string tokens to a single string value. This means that you can combine
         a static text value with a variable value for instance. A first example should clarify the usage:</para>
         
-        <programlisting>
-  &lt;testcase name=&quot;concatFunctionTest&quot;&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;date&quot; 
-                       value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
-          &lt;variable name=&quot;text&quot; 
-                       value=&quot;Hello Test Framework!&quot; /&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;echo&gt;
-              &lt;message&gt;
-                  citrus:concat('Today is: ', ${date}, ' right!?')
-              &lt;/message&gt;
-          &lt;/echo&gt;
-          &lt;echo&gt;
-              &lt;message&gt;
-                  citrus:concat('Text is: ', ${text})
-              &lt;/message&gt;
-          &lt;/echo&gt;
-      &lt;/actions&gt;
-  &lt;/testcase&gt;
-        </programlisting>
+        <programlisting>&lt;testcase name=&quot;concatFunctionTest&quot;&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate(yyyy-MM-dd)&quot; /&gt;
+        &lt;variable name=&quot;text&quot; value=&quot;Hello Test Framework!&quot; /&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;echo&gt;
+            &lt;message&gt;
+                citrus:concat('Today is: ', ${date}, ' right!?')
+            &lt;/message&gt;
+        &lt;/echo&gt;
+        &lt;echo&gt;
+            &lt;message&gt;
+                citrus:concat('Text is: ', ${text})
+            &lt;/message&gt;
+        &lt;/echo&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
         
         <para>Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to
         be combined.</para>
@@ -72,12 +66,10 @@
         <para>The function can be used wherever variables can be used. For instance when validating XML elements in
         the receive action.</para>
         
-        <programlisting>
-  &lt;message&gt;
-      &lt;validate path=&quot;//element/element&quot; 
-                   value=&quot;citrus:concat('Cx1x', ${generatedId})&quot;/&gt;
-  &lt;/message&gt;
-        </programlisting>
+        <programlisting>&lt;message&gt;
+    &lt;validate path=&quot;//element/element&quot; value=&quot;citrus:concat('Cx1x', ${generatedId})&quot;/&gt;
+&lt;/message&gt;</programlisting>
+
     </section>
     
     <section id="functions-substring">
@@ -91,18 +83,16 @@
 
         <para>Let us have a look at a simple example for this function:</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;
-          citrus:substring('Hello Test Framework', 6)
-      &lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;
-          citrus:substring('Hello Test Framework', 0, 5)
-      &lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;
+        citrus:substring('Hello Test Framework', 6)
+    &lt;/message&gt;
+&lt;/echo&gt;
+&lt;echo&gt;
+    &lt;message&gt;
+        citrus:substring('Hello Test Framework', 0, 5)
+    &lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>Test Framework</emphasis></para>
@@ -114,11 +104,9 @@
         
         <para>The function will calculate the number of characters in a string representation and return the number.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:stringLength('Hello Test Framework')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:stringLength('Hello Test Framework')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>20</emphasis></para>
@@ -130,13 +118,11 @@
         <para>This function will replace regular expression matching values inside a string representation with a
         specified replacement string.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;
-          citrus:translate('H.llo Test Fr.mework', '\.', 'a')
-      &lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;
+        citrus:translate('H.llo Test Fr.mework', '\.', 'a')
+    &lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Note that the second parameter will be a regular expression. The third parameter will be a simple
         replacement string value.</para>
@@ -151,13 +137,11 @@
         <para>The function will search for the first occurrence of a specified string and will return the substring before
         that occurrence. Let us have a closer look in a simple example:</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;
-          citrus:substringBefore('Test/Framework', '/')
-      &lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;
+        citrus:substringBefore('Test/Framework', '/')
+    &lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>In the specific example the function will search for the ‘/’ character and return the string before that index.</para>
         
@@ -171,13 +155,11 @@
         <para>The function will search for the first occurrence of a specified string and will return the substring after that
         occurrence. Let us clarify this with a simple example:</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;
-          citrus:substringAfter('Test/Framework', '/')
-      &lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;
+        citrus:substringAfter('Test/Framework', '/')
+    &lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Similar to the substringBefore function the ‘/’ character is found in the string. But now the remaining
         string is returned by the function meaning the substring after this character index.</para>
@@ -192,11 +174,9 @@
         <para>This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal
         number.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:round('3.14')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:round('3.14')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>3</emphasis></para>
@@ -207,11 +187,9 @@
         
         <para>This function will round down decimal number values.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:floor('3.14')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:floor('3.14')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>3.0</emphasis></para>
@@ -222,11 +200,9 @@
         
         <para>Similar to floor function, but now the function will round up the decimal number values.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:ceiling('3.14')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:ceiling('3.14')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>4.0</emphasis></para>
@@ -242,16 +218,11 @@
     
         <para>Next example will show the function usage:</para>
         
-        <programlisting>
-  &lt;variables&gt;
-      &lt;variable name=&quot;rndNumber1&quot; 
-                   value=&quot;citrus:randomNumber(10)&quot;/&gt;
-      &lt;variable name=&quot;rndNumber2&quot; 
-                   value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
-      &lt;variable name=&quot;rndNumber3&quot; 
-                   value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
-  &lt;/variables&gt;
-        </programlisting>
+        <programlisting>&lt;variables&gt;
+    &lt;variable name=&quot;rndNumber1&quot; value=&quot;citrus:randomNumber(10)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber2&quot; value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber3&quot; value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
+&lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>8954638765</emphasis></para>
@@ -265,20 +236,13 @@
         <para>This function will generate a random string representation with a defined length. A second parameter for
         this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED)</para>
         
-        <programlisting>
-  &lt;variables&gt;
-      &lt;variable name=&quot;rndString0&quot; 
-                   value=&quot;${citrus:randomString(10)}&quot;/&gt;
-      &lt;variable name=&quot;rndString1&quot; 
-                   value=&quot;citrus:randomString(10)&quot;/&gt;
-      &lt;variable name=&quot;rndString2&quot; 
-                   value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
-      &lt;variable name=&quot;rndString3&quot; 
-                   value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
-      &lt;variable name=&quot;rndString4&quot; 
-                   value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
-  &lt;/variables&gt;
-        </programlisting>
+        <programlisting>&lt;variables&gt;
+    &lt;variable name=&quot;rndString0&quot; value=&quot;${citrus:randomString(10)}&quot;/&gt;
+    &lt;variable name=&quot;rndString1&quot; value=&quot;citrus:randomString(10)&quot;/&gt;
+    &lt;variable name=&quot;rndString2&quot; value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
+    &lt;variable name=&quot;rndString3&quot; value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
+    &lt;variable name=&quot;rndString4&quot; value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
+&lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>Hr546dfA65</emphasis></para>
@@ -298,40 +262,34 @@
         <para>
               In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
         </para>
-        <programlisting>
-  &lt;variable name="httpStatusCode" value="citrus:randomEnumValue('200', '401', '500')" /&gt;
-        </programlisting>
+        <programlisting>&lt;variable name="httpStatusCode" value="citrus:randomEnumValue('200', '401', '500')" /&gt;</programlisting>
         <para>
             As mentioned before you can define a custom function for your very specific needs in order to easily manage a list of predefined values like this:
         </para>
-        <programlisting>
- &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
-  &lt;property name="name" value="myCustomFunctionLibrary" /&gt;
-  &lt;property name="prefix" value="custom:" /&gt;
-  &lt;property name="members"&gt;
-    &lt;map&gt;
-      &lt;entry key="randomHttpStatusCode"&gt;
-        &lt;bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"&gt;
-          &lt;property name="values"&gt;
-            &lt;list&gt;
-              &lt;value&gt;200&lt;/value&gt;
-              &lt;value&gt;500&lt;/value&gt;
-              &lt;value&gt;401&lt;/value&gt;
-            &lt;/list&gt;
-          &lt;/property&gt;
-        &lt;/bean&gt;
-      &lt;/entry&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
- &lt;/bean&gt;
-        </programlisting>
+        <programlisting>&lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
+&lt;property name="name" value="myCustomFunctionLibrary" /&gt;
+&lt;property name="prefix" value="custom:" /&gt;
+&lt;property name="members"&gt;
+  &lt;map&gt;
+    &lt;entry key="randomHttpStatusCode"&gt;
+      &lt;bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"&gt;
+        &lt;property name="values"&gt;
+          &lt;list&gt;
+            &lt;value&gt;200&lt;/value&gt;
+            &lt;value&gt;500&lt;/value&gt;
+            &lt;value&gt;401&lt;/value&gt;
+          &lt;/list&gt;
+        &lt;/property&gt;
+      &lt;/bean&gt;
+    &lt;/entry&gt;
+  &lt;/map&gt;
+&lt;/property&gt;
+&lt;/bean&gt;</programlisting>
         <para>
             We have added a custom function library with a custom function definition. The custom function "randomHttpStatusCode" randomly 
             chooses an HTTP status code each time it is called. Inside the test you can use the function like this:
         </para>
-        <programlisting>
-&lt;variable name="httpStatusCode" value="custom:randomHttpStatusCode()" /&gt;
-        </programlisting>
+        <programlisting>&lt;variable name="httpStatusCode" value="custom:randomHttpStatusCode()" /&gt;</programlisting>
     </section> 
     
     <section id="functions-current-date">
@@ -340,41 +298,17 @@
         <para>This function will definitely help you when accessing the current date. Some examples will show the
         usage in detail:</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate()&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
-  &lt;/echo&gt;
-  &lt;echo&gt;
-      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;&lt;message&gt;citrus:currentDate()&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;&lt;/echo&gt;
+&lt;echo&gt;&lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;&lt;/echo&gt;</programlisting>
         
         <para>Note that the currentDate function provides two parameters. First parameter describes the date format
         string. The second will define a date offset string containing year, month, days, hours, minutes or seconds
@@ -392,11 +326,9 @@
         
         <para>This function converts any string to upper case letters.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:upperCase('Hello Test Framework')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:upperCase('Hello Test Framework')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>HELLO TEST FRAMEWORK</emphasis></para>
@@ -407,11 +339,9 @@
         
         <para>This function converts any string to lower case letters.</para>
         
-        <programlisting>
-  &lt;echo&gt;
-      &lt;message&gt;citrus:lowerCase('Hello Test Framework')&lt;/message&gt;
-  &lt;/echo&gt;
-        </programlisting>
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:lowerCase('Hello Test Framework')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>hello test framework</emphasis></para>
@@ -422,10 +352,7 @@
         
         <para>The function will sum up all specified number values and divide the result through the number of values.</para>
         
-        <programlisting>
-  &lt;variable name=&quot;avg&quot; 
-               value=&quot;citrus:average('3', '4', '5')&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;variable name=&quot;avg&quot; value=&quot;citrus:average('3', '4', '5')&quot;/&gt;</programlisting>
         
         <para>avg = <emphasis>4.0</emphasis></para>
     </section>
@@ -435,10 +362,7 @@
         
         <para>This function returns the minimum value in a set of number values.</para>
         
-        <programlisting>
-  &lt;variable name=&quot;min&quot; 
-               value=&quot;citrus:minimum('3', '4', '5')&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;variable name=&quot;min&quot; value=&quot;citrus:minimum('3', '4', '5')&quot;/&gt;</programlisting>
         
         <para>min = <emphasis>3.0</emphasis></para>
     </section>
@@ -448,10 +372,7 @@
         
         <para>This function returns the maximum value in a set of number values.</para>
         
-        <programlisting>
-  &lt;variable name=&quot;max&quot; 
-               value=&quot;citrus:maximum('3', '4', '5')&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;variable name=&quot;max&quot; value=&quot;citrus:maximum('3', '4', '5')&quot;/&gt;</programlisting>
         
         <para>max = <emphasis>5.0</emphasis></para>
     </section>
@@ -461,10 +382,7 @@
         
         <para>The function will sum up all number values. The number values can also be negative.</para>
         
-        <programlisting>
-  &lt;variable name=&quot;sum&quot; 
-               value=&quot;citrus:sum('3', '4', '5')&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;variable name=&quot;sum&quot; value=&quot;citrus:sum('3', '4', '5')&quot;/&gt;</programlisting>
         
         <para>sum = <emphasis>12.0</emphasis></para>
     </section>
@@ -474,10 +392,7 @@
         
         <para>The function will return the absolute number value.</para>
         
-        <programlisting>
-  &lt;variable name=&quot;abs&quot; 
-               value=&quot;citrus:absolute('-3')&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;variable name=&quot;abs&quot; value=&quot;citrus:absolute('-3')&quot;/&gt;</programlisting>
         
         <para>abs = <emphasis>3.0</emphasis></para>
     </section>
@@ -491,8 +406,7 @@
         <para>
               The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:
         </para>
-        <programlisting>
- &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
+        <programlisting>&lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
   &lt;property name="name" value="myCustomFunctionLibrary" /&gt;
   &lt;property name="prefix" value="custom:" /&gt;
   &lt;property name="members"&gt;
@@ -510,14 +424,11 @@
       &lt;/entry&gt;
     &lt;/map&gt;
   &lt;/property&gt;
- &lt;/bean&gt;
-        </programlisting>
+&lt;/bean&gt;</programlisting>
         <para>
             In this example the function sets the variable httpStatusMessage to the 'Internal Server Error' string dynamically at runtime.
             The test only knows the HTTP status code and does not care about spelling and message locales.
         </para>
-        <programlisting>
-&lt;variable name="httpStatusCodeMessage" value="custom:getHttpStatusMessage('500')" /&gt;
-        </programlisting>
+        <programlisting>&lt;variable name="httpStatusCodeMessage" value="custom:getHttpStatusMessage('500')" /&gt;</programlisting>
     </section> 
 </chapter>

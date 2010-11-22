@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.jms;
@@ -93,13 +90,14 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending message to: " + getDestinationName());
+        String defaultDestinationName = getDefaultDestinationName();
+        
+        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
 
         MessageProducer messageProducer = null;
@@ -116,7 +114,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             }
             
             javax.jms.Message jmsRequest = getMessageConverter().toMessage(message, session);
-            messageProducer = session.createProducer(getDestination(session));
+            
+            messageProducer = session.createProducer(getDefaultDestination(session));
 
             replyDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyDestination);
@@ -134,6 +133,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             }
             
             messageProducer.send(jmsRequest);
+            
+            log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
@@ -184,14 +185,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             if(message.getHeaders().getReplyChannel() instanceof Destination) {
                 return (Destination)message.getHeaders().getReplyChannel();
             } else {
-                return new DynamicDestinationResolver().resolveDestinationName(session, 
-                                message.getHeaders().getReplyChannel().toString(), 
-                                pubSubDomain);
+                return resolveDestinationName(message.getHeaders().getReplyChannel().toString(), session);
             }
         } else if (replyDestination != null) {
             return replyDestination;
         } else if (StringUtils.hasText(replyDestinationName)) {
-            return new DynamicDestinationResolver().resolveDestinationName(session, this.replyDestinationName, pubSubDomain);
+            return resolveDestinationName(this.replyDestinationName, session);
         }
         
         if(pubSubDomain && session instanceof TopicSession){
@@ -209,19 +208,28 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @return the destination.
      * @throws JMSException
      */
-    private Destination getDestination(Session session) throws JMSException {
+    private Destination getDefaultDestination(Session session) throws JMSException {
         if (destination != null) {
             return destination;
         }
         
-        return new DynamicDestinationResolver().resolveDestinationName(session, destinationName, pubSubDomain);
+        return resolveDestinationName(destinationName, session);
+    }
+    
+    /**
+     * 
+     * @param destinationName
+     * @return
+     */
+    private Destination resolveDestinationName(String name, Session session) throws JMSException {
+        return new DynamicDestinationResolver().resolveDestinationName(session, name, pubSubDomain);
     }
     
     /**
      * Get the destination name (either queue name or topic name).
      * @return the destinationName
      */
-    protected String getDestinationName() {
+    protected String getDefaultDestinationName() {
         try {
             if(destination != null) {
                 if(destination instanceof Queue) {

@@ -1,27 +1,24 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus;
 
 import static org.easymock.EasyMock.*;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +33,19 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
  */
 public class MessageElementsTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -56,7 +58,7 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
-        receiveMessageBean.setValidator(validator);
+        receiveMessageBean.setValidator(validator);        
     }
     
     @Test
@@ -79,7 +81,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "text-value");
         validateMessageElements.put("//sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -104,7 +111,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "");
         validateMessageElements.put("//sub-elementB", "");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -130,7 +142,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementB/@attribute", "");
         validateMessageElements.put("//root/element/sub-elementC/@attribute", "");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -155,7 +172,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "null");
         validateMessageElements.put("//sub-elementB", "null");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -180,7 +202,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "A");
         validateMessageElements.put("//sub-elementB/@attribute", "B");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -205,7 +232,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-element-wrong", "text-value");
         validateMessageElements.put("//sub-element-wrong", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -230,7 +262,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA", "text-value-wrong");
         validateMessageElements.put("//sub-elementB", "text-value-wrong");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -255,7 +292,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "wrong-value");
         validateMessageElements.put("//sub-elementB/@attribute", "wrong-value");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -280,7 +322,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         validateMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         validateMessageElements.put("//sub-elementB/@attribute-wrong", "B");
         
-        receiveMessageBean.setValidateMessageElements(validateMessageElements);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -301,7 +348,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
@@ -313,7 +364,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA", "text-value");
         messageElements.put("//sub-elementB", "text-value");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -334,7 +387,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
@@ -346,7 +403,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA", "");
         messageElements.put("//sub-elementB", "");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -367,7 +426,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
@@ -379,13 +442,15 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA", "text-value");
         messageElements.put("//sub-elementB", "text-value");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         HashMap<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("//root/element/sub-elementA", "text-value");
         validateElements.put("//sub-elementB", "text-value");
         
-        receiveMessageBean.setValidateMessageElements(validateElements);
+        contextBuilder.setPathValidationExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }
@@ -406,7 +471,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
@@ -418,7 +487,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA/@attribute", "A");
         messageElements.put("//sub-elementB/@attribute", "B");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -439,7 +510,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
@@ -451,7 +526,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-element-wrong", "text-value");
         messageElements.put("//sub-element-wrong", "text-value");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -472,7 +549,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
@@ -484,7 +565,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         messageElements.put("//sub-elementB/@attribute-wrong", "B");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -505,7 +588,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
@@ -517,7 +604,9 @@ public class MessageElementsTest extends AbstractBaseTest {
         messageElements.put("//root/element/sub-elementA-wrong/@attribute", "A");
         messageElements.put("//sub-elementB-wrong/@attribute", "B");
         
-        receiveMessageBean.setMessageElements(messageElements);
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
     }
@@ -538,7 +627,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -550,7 +643,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         extractMessageElements.put("//root/element/sub-elementA", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB", "${valueB}");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
         
@@ -576,7 +674,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -588,7 +690,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         extractMessageElements.put("//root/element/sub-elementA/@attribute", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB/@attribute", "${valueB}");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
         
@@ -614,7 +721,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -626,7 +737,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         extractMessageElements.put("//root/element/sub-element-wrong", "${valueA}");
         extractMessageElements.put("//element/sub-element-wrong", "${valueB}");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
         
@@ -650,7 +766,11 @@ public class MessageElementsTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(message);
         replay(messageReceiver);
         
-        receiveMessageBean.setMessageData("<root>"
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
+        controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -661,7 +781,12 @@ public class MessageElementsTest extends AbstractBaseTest {
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "${attributeA}");
         
-        receiveMessageBean.setExtractMessageElements(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
         

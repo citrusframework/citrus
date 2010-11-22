@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.util;
@@ -22,10 +19,15 @@ package com.consol.citrus.util;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 
+import org.springframework.integration.core.Message;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
@@ -45,6 +47,21 @@ public class XMLUtils {
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;
 
+    static {
+        try {
+            registry = DOMImplementationRegistry.newInstance();
+            domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+        } catch (Exception e) {
+            throw new CitrusRuntimeException(e);
+        }
+    }
+    
+    /**
+     * Prevent instantiation.
+     */
+    private XMLUtils() {
+    }
+    
     /**
      * Searches for a node within a DOM document with a given node path expression.
      * Elements are separated by '.' characters.
@@ -162,15 +179,8 @@ public class XMLUtils {
     public static String serialize(Document doc) {
         LSSerializer serializer = null;
 
-        try {
-            if (domImpl == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-
+        checkDomImplInitialization();
+        
         serializer = domImpl.createLSSerializer();
         serializer.getDomConfig().setParameter("split-cdata-sections", false);
         serializer.getDomConfig().setParameter("format-pretty-print", true);
@@ -187,6 +197,16 @@ public class XMLUtils {
     }
 
     /**
+     * Checks if DOM implementation was initialized correctly.
+     * @throws CitrusRuntimeException
+     */
+    private static void checkDomImplInitialization() throws CitrusRuntimeException {
+        if (domImpl == null) {
+            throw new CitrusRuntimeException("DOM initialization was not done correctly - unable to continue");
+        }
+    }
+
+    /**
      * Pretty prints a XML string.
      * @param doc
      * @throws CitrusRuntimeException
@@ -195,15 +215,8 @@ public class XMLUtils {
     public static String prettyPrint(String xml) {
         LSParser parser = null;
 
-        try {
-            if (domImpl == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-
+        checkDomImplInitialization();
+        
         parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
         parser.getDomConfig().setParameter("cdata-sections", true);
         parser.getDomConfig().setParameter("split-cdata-sections", false);
@@ -306,42 +319,57 @@ public class XMLUtils {
     }
     
     /**
+     * Construct a basic namespace context from the received message.
+     * @param receivedMessage the actual message received.
+     * @return the namespace context.
+     */
+    public static NamespaceContext buildNamespaceContext(Message<?> receivedMessage, Map<String, String> namespaces) {
+        //set namespaces to validate
+        SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
+        Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
+        if(!CollectionUtils.isEmpty(namespaces)) {
+            //dynamic binding of namespaces declarations in root element of received message
+            for (Entry<String, String> binding : dynamicBindings.entrySet()) {
+                //only bind namespace that is not present in explicit namespace bindings
+                if(!namespaces.containsValue(binding.getValue())) {
+                    simpleNamespaceContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                }
+            }
+            //add explicit namespace bindings
+            simpleNamespaceContext.setBindings(namespaces);
+        } else {
+            simpleNamespaceContext.setBindings(dynamicBindings);
+        }
+        
+        return simpleNamespaceContext;
+    }
+    
+    /**
      * Parse message payload with DOM implementation.
      * @param messagePayload
      * @throws CitrusRuntimeException
      * @return DOM document.
      */
     public static Document parseMessagePayload(String messagePayload) {
+        checkDomImplInitialization();
+        
+        LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        parser.getDomConfig().setParameter("cdata-sections", true);
+        parser.getDomConfig().setParameter("split-cdata-sections", false);
+        parser.getDomConfig().setParameter("validate-if-schema", true);
+        
+        parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
+        
+        parser.getDomConfig().setParameter("element-content-whitespace", false);
+        
+        LSInput receivedInput = domImpl.createLSInput();
         try {
-            if(registry == null) {
-                registry = DOMImplementationRegistry.newInstance();
-                domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            }
-    
-            LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-            parser.getDomConfig().setParameter("cdata-sections", true);
-            parser.getDomConfig().setParameter("split-cdata-sections", false);
-            parser.getDomConfig().setParameter("validate-if-schema", true);
-            
-            parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
-            
-            parser.getDomConfig().setParameter("element-content-whitespace", false);
-            
-            LSInput receivedInput = domImpl.createLSInput();
-            try {
-                receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
-            } catch(UnsupportedEncodingException e) {
-                throw new CitrusRuntimeException(e);
-            }
-            
-            return parser.parse(receivedInput);
-        } catch (ClassNotFoundException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
+            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
+        } catch(UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
         }
+        
+        return parser.parse(receivedInput);
     }
 
     /**

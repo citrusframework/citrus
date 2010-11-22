@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.ws;
@@ -24,6 +21,8 @@ import static org.easymock.EasyMock.*;
 import java.util.*;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPMessage;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -32,6 +31,7 @@ import org.springframework.integration.message.MessageBuilder;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Body;
@@ -45,8 +45,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -247,6 +245,100 @@ public class WebServiceEndpointTest {
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
         verify(messageContext, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+    }
+    
+    @Test
+    public void testMessageProcessingWithMimeRequestHeaders() throws Exception {
+        WebServiceEndpoint endpoint = new WebServiceEndpoint();
+        endpoint.setHandleMimeHeaders(true);
+
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put("Operation", "sayHello");
+        requestHeaders.put("Host", "localhost:8080");
+        requestHeaders.put("Content-Length", "236");
+        requestHeaders.put("Accept", "text/xml, text/html, image/gif, image/jpeg");
+        requestHeaders.put("Content-Type", "text/xml");
+        
+        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(requestHeaders)
+                                .build();
+        
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
+                                .copyHeaders(responseHeaders)
+                                .build();
+        
+        endpoint.setMessageHandler(new MessageHandler() {
+            public Message<?> handleMessage(Message<?> message) {
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                
+                Assert.assertNotNull(message.getHeaders().get("Operation"));
+                Assert.assertEquals(message.getHeaders().get("Operation"), "sayHello");
+                
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                
+                return responseMessage;
+            }
+        });
+        
+        SaajSoapMessage soapRequest = EasyMock.createMock(SaajSoapMessage.class);
+        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
+        SoapBody soapRequestBody = EasyMock.createMock(SoapBody.class);
+        SoapEnvelope soapRequestEnvelope = EasyMock.createMock(SoapEnvelope.class);
+        
+        SOAPMessage soapRequestMessage = EasyMock.createMock(SOAPMessage.class);
+        MimeHeaders mimeHeaders = new MimeHeaders();
+        mimeHeaders.addHeader("Host", "localhost:8080");
+        mimeHeaders.addHeader("Content-Length", "236");
+        mimeHeaders.addHeader("Accept", "text/xml");
+        mimeHeaders.addHeader("Accept", "text/html");
+        mimeHeaders.addHeader("Accept", "image/gif");
+        mimeHeaders.addHeader("Accept", "image/jpeg");
+        mimeHeaders.addHeader("Content-Type", "text/xml");
+        
+        Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
+        SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
+        soapRequestHeaders.add(soapRequestHeaderEntry);
+        
+        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+        
+        StringResult soapResponsePayload = new StringResult();
+        
+        reset(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
+
+        expect(soapRequest.getEnvelope()).andReturn(soapRequestEnvelope).times(2);
+        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        expect(soapRequest.getAttachments()).andReturn(Collections.emptySet().iterator()).once();
+        
+        expect(soapRequest.getSaajMessage()).andReturn(soapRequestMessage).once();
+        expect(soapRequestMessage.getMimeHeaders()).andReturn(mimeHeaders).once();
+        
+        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+
+        expect(soapRequestEnvelope.getBody()).andReturn(soapRequestBody).once();
+        expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        
+        expect(soapRequestEnvelope.getHeader()).andReturn(soapRequestHeader).once();
+        
+        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        
+        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(soapRequestHeaders.iterator()).once();
+        
+        expect(soapRequestHeaderEntry.getName()).andReturn(QNameUtils.createQName("http://www.consol.de/citrus", "Operation", "citrus")).once();
+        expect(soapRequestHeaderEntry.getText()).andReturn("sayHello").once();
+        
+        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+
+        expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        
+        replay(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
+        
+        endpoint.invoke(messageContext);
+        
+        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        
+        verify(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
     }
     
     @Test

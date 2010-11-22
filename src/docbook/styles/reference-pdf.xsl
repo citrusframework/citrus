@@ -383,7 +383,7 @@
     <!-- Verbatim text formatting (programlistings) -->
     <xsl:attribute-set name="monospace.verbatim.properties">
         <xsl:attribute name="font-family">Courier</xsl:attribute>
-        <xsl:attribute name="font-size">0.9em</xsl:attribute>
+        <xsl:attribute name="font-size">0.7em</xsl:attribute>
     </xsl:attribute-set>
     
     <xsl:attribute-set name="verbatim.properties">

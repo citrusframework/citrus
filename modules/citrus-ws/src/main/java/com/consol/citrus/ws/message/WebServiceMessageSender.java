@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.ws.message;
@@ -24,38 +21,30 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.FaultMessageResolver;
-import org.springframework.ws.client.core.SimpleFaultMessageResolver;
-import org.springframework.ws.client.core.WebServiceMessageCallback;
+import org.springframework.ws.client.core.*;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageHandler;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.MessageUtils;
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
@@ -70,6 +59,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
+    /** Resolves dynamic endpoint uri */
+    private EndpointUriResolver endpointResolver;
+    
     /**
      * Logger
      */
@@ -81,20 +73,26 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     public void send(Message<?> message) {
         send(message, null);
     }
-
+    
     /**
      * Send message with SOAP attachment.
      * @param message
      * @param attachment
      */
     public void send(final Message<?> message, final Attachment attachment) {
-        Assert.notNull(message, "Can not send empty message");
+        Assert.notNull(message, "Message is empty - unable to send empty message");
         
-        log.info("Sending message to: " + getDefaultUri());
+        String endpointUri;
+        if (endpointResolver != null) {
+            endpointUri = endpointResolver.resolveEndpointUri(message, getDefaultUri());
+        } else { // use default uri
+            endpointUri = getDefaultUri();
+        }
+        
+        log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         if(!(message.getPayload() instanceof String)) {
@@ -106,9 +104,15 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         WebServiceMessageReceiverCallback receiverCallback = new WebServiceMessageReceiverCallback();
         getWebServiceTemplate().setFaultMessageResolver(this);
         
-        // send and receive
-        getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
+        // send and receive message
+        if (endpointResolver != null) {
+            getWebServiceTemplate().sendAndReceive(endpointUri, senderCallback, receiverCallback);
+        } else { // use default endpoint uri
+            getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
+        }
 
+        log.info("SOAP message was successfully sent to endpoint: '" + endpointUri + "'");
+        
         Message<String> responseMessage = receiverCallback.getResponse();
         
         if(replyMessageHandler != null) {
@@ -119,7 +123,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
             }
         }
     }
-
+    
     /**
      * Set the reply message handler.
      * @param replyMessageHandler the replyMessageHandler to set
@@ -150,7 +154,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 	/**
 	 * Callback for Webservice-Sending-Actions
 	 */
-	private class WebServiceMessageSenderCallback implements WebServiceMessageCallback {
+	private static class WebServiceMessageSenderCallback implements WebServiceMessageCallback {
 
 		private Message<?> message;
 		private Attachment attachment = null;
@@ -171,7 +175,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 		    
 	        // Copy headers into soap-header:
 		    for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-		        if(headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
+		        if(MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
 		            continue;
 		        }
 		        
@@ -209,7 +213,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 	/**
 	 * Callback for Webservice-Receiving-Actions
 	 */
-	private class WebServiceMessageReceiverCallback implements WebServiceMessageCallback {
+	private static class WebServiceMessageReceiverCallback implements WebServiceMessageCallback {
 
 		private Message<String> response;
 		
@@ -278,4 +282,12 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
 			return response;
 		}
 	}
+
+    /**
+     * Sets the endpoint uri resolver.
+     * @param endpointResolver the endpointUriResolver to set
+     */
+    public void setEndpointResolver(EndpointUriResolver endpointResolver) {
+        this.endpointResolver = endpointResolver;
+    }
 }

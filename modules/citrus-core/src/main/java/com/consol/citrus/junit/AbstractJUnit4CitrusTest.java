@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.junit;
@@ -36,6 +33,7 @@ import com.consol.citrus.*;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
@@ -139,15 +137,29 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @return
      */
     protected ClassPathXmlApplicationContext createApplicationContext() {
-        return new ClassPathXmlApplicationContext(
-                new String[] {
-                        this.getClass().getPackage().getName()
-                                .replace('.', '/')
-                                + "/"
-                                + getClass().getSimpleName()
-                                + ".xml",
-                                "com/consol/citrus/spring/internal-helper-ctx.xml"},
-                true, applicationContext);
+        try {
+            return new ClassPathXmlApplicationContext(
+                    new String[] {
+                            this.getClass().getPackage().getName()
+                                    .replace('.', '/')
+                                    + "/" + getClass().getSimpleName() + ".xml",
+                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                    true, applicationContext);
+        } catch (Exception e) {
+            // Create empty backup test case for logging
+            TestCase backupTest = new TestCase();
+            backupTest.setName(getClass().getSimpleName());
+            backupTest.setPackageName(getClass().getPackage().getName());
+            
+            CitrusRuntimeException cause = new CitrusRuntimeException("Failed to load test case", e);
+            
+            // inform test listeners with failed test
+            testListener.onTestStart(backupTest);
+            testListener.onTestFailure(backupTest, cause);
+            testListener.onTestFinish(backupTest);
+            
+            throw cause;
+        }
     }
     
     /**

@@ -15,7 +15,49 @@
   </properties>
   
   <body>
-    <release version="1.1-SNAPSHOT" date="01.07.2010" description="1.1 snapshot release">
+    <release version="1.2-SNAPSHOT" date="14.10.2010" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #325 Log SOAP client errors properly
+        </action>
+        <action dev="christophd" type="fix">
+          #328 Handle and log errors during ApplicationContext setup
+        </action>
+        <action dev="christophd" type="add">
+          #329 Log SOAP messages in pure nature
+        </action>
+        <action dev="philkom" type="add">
+          #320 CDATA vs. any-element
+        </action>
+        <action dev="christophd" type="add">
+          #139 Dependency cleanup and version updates
+        </action>   
+        <action dev="christophd" type="add">
+          #315 HTTP headers in SOAP message validation
+        </action>
+        <action dev="philkom" type="add">
+          #241 Validate multiple db rows
+        </action>
+        <action dev="philkom" type="add">
+          #305 Groovy XML message validation
+        </action>
+        <action dev="philkom" type="add">
+          #306 Groovy MarkupBuilder
+        </action>
+        <action dev="philkom, christophd" type="add">
+          #304 TestContext in Groovy action
+        </action>
+        <action dev="philkom" type="add">
+          #272 Variable support in property loader
+        </action>
+    </release>
+    
+    <release version="1.1" date="12.08.2010" description="1.1 release">
+        <action dev="mm" type="add">
+          #313 Log message when validation fails
+        </action>
+        <action dev="mm" type="fix">
+          #290 Log XSD schema validation errors properly
+        </action>
         <action dev="cwied" type="fix">
           #297 SubstringAfterFunction
         </action>

@@ -1,25 +1,24 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.HashMap;
 
@@ -35,13 +34,17 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 
 /**
  * @author Christoph Deppisch
  */
 public class HeaderValuesTest extends AbstractBaseTest {
     @Autowired
-    MessageValidator validator;
+    MessageValidator<ValidationContext> validator;
     
     MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
@@ -69,8 +72,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -81,8 +89,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -108,8 +117,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -122,8 +136,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "B");
         validateHeaderValues.put("header-valueC", "C");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -149,8 +164,14 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+        
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -161,8 +182,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "wrong");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -188,8 +210,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+        
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -200,8 +227,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-wrong", "A");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -227,8 +255,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -241,8 +274,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "");
         validateHeaderValues.put("header-valueC", "");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
     
@@ -268,8 +302,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -282,8 +321,9 @@ public class HeaderValuesTest extends AbstractBaseTest {
         validateHeaderValues.put("header-valueB", "null");
         validateHeaderValues.put("header-valueC", "null");
         
-        receiveMessageBean.setHeaderValues(validateHeaderValues);
+        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveMessageBean.execute(context);
     }
 
@@ -309,8 +349,13 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);
+
         receiveMessageBean.setValidator(validator);
-        receiveMessageBean.setMessageData("<root>"
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -322,7 +367,11 @@ public class HeaderValuesTest extends AbstractBaseTest {
         extractHeaderValues.put("header-valueA", "${valueA}");
         extractHeaderValues.put("header-valueB", "${valueB}");
         
-        receiveMessageBean.setExtractHeaderValues(extractHeaderValues);
+        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
+        variableExtractor.setHeaderMappings(extractHeaderValues);
+        
+        receiveMessageBean.addVariableExtractors(variableExtractor);
+        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
         
         receiveMessageBean.execute(context);
         

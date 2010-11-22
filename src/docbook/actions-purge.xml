@@ -9,23 +9,21 @@
     
     <para>So we need to purge some JMS queues in out test case. This can be done with following action definition:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;purgeTest&quot;&gt;
-    &lt;actions&gt;
-        &lt;purge-jms-queues&gt;
-            &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
-            &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
-            &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
-        &lt;/purge-jms-queues&gt;
-        
-        &lt;purge-jms-queues connection-factory=&quot;connectionFactory&quot;&gt;
-            &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
-            &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
-            &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
-        &lt;/purge-jms-queues&gt;
-    &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
+  &lt;actions&gt;
+      &lt;purge-jms-queues&gt;
+          &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
+          &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
+          &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
+      &lt;/purge-jms-queues&gt;
+      
+      &lt;purge-jms-queues connection-factory=&quot;connectionFactory&quot;&gt;
+          &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
+          &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
+          &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
+      &lt;/purge-jms-queues&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the 
     very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which 
@@ -37,53 +35,48 @@
     that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration.
     This purging bean is then added to the test suite in the tasks between section.</para>
         
-    <programlisting>
-  &lt;bean id=&quot;purgeJmsQueues&quot;
-      class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
-      &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
-      &lt;property name=&quot;queueNames&quot;&gt;
-          &lt;list&gt;
-              &lt;value&gt;${jms.queue.hello.request.in}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.hello.response.out}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.echo.request}&lt;/value&gt;
-              &lt;value&gt;${jms.queue.echo.response}&lt;/value&gt;
-              &lt;value&gt;JMS.Queue.Dummy&lt;/value&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-    </programlisting>
+    <programlisting>&lt;bean id=&quot;purgeJmsQueues&quot;
+    class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
+    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
+    &lt;property name=&quot;queueNames&quot;&gt;
+        &lt;list&gt;
+            &lt;value&gt;${jms.queue.hello.request.in}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.hello.response.out}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.echo.request}&lt;/value&gt;
+            &lt;value&gt;${jms.queue.echo.response}&lt;/value&gt;
+            &lt;value&gt;JMS.Queue.Dummy&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
     
     <para>So now we are able to purge JMS destinations with given destination names. But sometimes we do not want to rely on queue or topic names as 
     we retrieve destinations over JNDI for instance. We can deal with destinations coming from JNDI lookup like follows:</para>
     
-    <programlisting>
-  &lt;jee:jndi-lookup id=&quot;jmsQueueHelloRequestIn&quot; jndi-name=&quot;jms/jmsQueueHelloRequestIn&quot;/&gt;
-  &lt;jee:jndi-lookup id=&quot;jmsQueueHelloResponseOut&quot; jndi-name=&quot;jms/jmsQueueHelloResponseOut&quot;/&gt;
-  
-  &lt;bean id=&quot;purgeJmsQueues&quot;
-      class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
-      &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
-      &lt;property name=&quot;queues&quot;&gt;
-          &lt;list&gt;
-              &lt;ref bean=&quot;jmsQueueHelloRequestIn&quot;/&gt;
-              &lt;ref bean=&quot;jmsQueueHelloResponseOut&quot;/&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-    </programlisting>
+    <programlisting>&lt;jee:jndi-lookup id=&quot;jmsQueueHelloRequestIn&quot; jndi-name=&quot;jms/jmsQueueHelloRequestIn&quot;/&gt;
+&lt;jee:jndi-lookup id=&quot;jmsQueueHelloResponseOut&quot; jndi-name=&quot;jms/jmsQueueHelloResponseOut&quot;/&gt;
+
+&lt;bean id=&quot;purgeJmsQueues&quot;
+    class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
+    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
+    &lt;property name=&quot;queues&quot;&gt;
+        &lt;list&gt;
+            &lt;ref bean=&quot;jmsQueueHelloRequestIn&quot;/&gt;
+            &lt;ref bean=&quot;jmsQueueHelloResponseOut&quot;/&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
     
     <para>We just use the property <emphasis>'queues'</emphasis> instead of <emphasis>'queueNames'</emphasis> and Citrus will be able to receive 
     bean references that resolve to JMS destinations. We can purge these destination references in a test case, too. Just use the <emphasis>'ref'</emphasis>
     attribute instead of already known <emphasis>'name'</emphasis> attribute:</para>
     
-    <programlisting>
-  &lt;testcase name=&quot;purgeTest&quot;&gt;
-    &lt;actions&gt;
-        &lt;purge-jms-queues&gt;
-            &lt;queue ref=&quot;jmsQueueHelloRequestIn&quot;/&gt;
-            &lt;queue ref=&quot;jmsQueueHelloResponseOut&quot;/&gt;
-        &lt;/purge-jms-queues&gt;
-    &lt;/actions&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
+  &lt;actions&gt;
+      &lt;purge-jms-queues&gt;
+          &lt;queue ref=&quot;jmsQueueHelloRequestIn&quot;/&gt;
+          &lt;queue ref=&quot;jmsQueueHelloResponseOut&quot;/&gt;
+      &lt;/purge-jms-queues&gt;
+  &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
 </section>

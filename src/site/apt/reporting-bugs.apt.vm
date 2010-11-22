@@ -4,8 +4,11 @@
  
 Reporting Bugs
 
- If you have recovered a bug in Citrus, please send us a description to <<dev@citrusframwork.org>>. 
+ If you have found a bug in Citrus, please send us a description to <<dev@citrusframwork.org>>. 
  We listen very carefully for bugs and work hard on the issues you presented to us.
  
+ You can also use the issue tracker at GitHub in order to report bugs to us: 
+ {{{http://github.com/christophd/citrus/issues}http://github.com/christophd/citrus/issues}}
+ 
  We would also be happy for any help you can give us. In case you want to fix a bug yourself 
- see {{{contributing.html}how to contribute code changes}}.
+ see {{{contributing.html}how to contribute code changes and patches}}.

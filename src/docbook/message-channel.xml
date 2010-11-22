@@ -21,43 +21,36 @@
         <para>You can access message channels directly with a <emphasis>message-channel-sender</emphasis> component. The message 
         channel sender configuration is quite simple and receives a target channel as reference:</para>
         
-        <programlisting>
-  &lt;citrus:message-channel-sender id=&quot;orderRequestSender&quot; 
-                              channel=&quot;orderChannel&quot;/&gt;
-  
-  &lt;si:channel id=&quot;orderChannel&quot;/&gt;
-        </programlisting> 
+        <programlisting>&lt;citrus:message-channel-sender id=&quot;orderRequestSender&quot; channel=&quot;orderChannel&quot;/&gt;
+
+&lt;si:channel id=&quot;orderChannel&quot;/&gt;</programlisting> 
         
         <note>
             <para>The Spring Integration configuration components use a specific namespace that has to be included into your
             Spring application context. You can use the following template which holds all necessary namespaces and schema 
             locations:</para>
             
-            <programlisting>
-  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-      xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-      xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
-      xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-              http://www.citrusframework.org/schema/config 
-              http://www.citrusframework.org/schema/config/citrus-config.xsd
-              http://www.springframework.org/schema/integration
-              http://www.springframework.org/schema/integration/spring-integration-1.0.xsd&quot;&gt;
-  &lt;/beans&gt;          
-            </programlisting>
+            <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+    xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.citrusframework.org/schema/config 
+            http://www.citrusframework.org/schema/config/citrus-config.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd&quot;&gt;
+&lt;/beans&gt;</programlisting>
         </note>
         
         <para>The Citrus message-channel-sender also supports a customized message channel template that will actually send 
         the messages. The customized template might give you access to special configuration possibilities. However it is optional, 
         so if no message channel template is defined in the configuration Citrus will create a default template.</para>
         
-        <programlisting>
-  &lt;citrus:message-channel-sender id=&quot;statusRequestSender&quot;
-                              channel=&quot;orderChannel&quot; 
-                              message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;citrus:message-channel-sender id=&quot;statusRequestSender&quot;
+                            channel=&quot;orderChannel&quot; 
+                            message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;</programlisting>
     </section>
     
     <para>The message sender is now ready to publish messages to the defined channel. The communication is supposed to be asynchronous, 
@@ -70,11 +63,9 @@
         <para>Citrus is able to receive messages from Spring Integration message channel destinations. Again the message-channel-receiver needs 
         nothing but a reference to a message channel in its simplest configuration.</para>
         
-        <programlisting>
-  &lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
-                                  channel=&quot;orderChannel&quot;
-                                  receive-timeout=&quot;5000&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
+                                channel=&quot;orderChannel&quot;
+                                receive-timeout=&quot;5000&quot;/&gt;</programlisting>
         
         <para>As usual the receiver connects to the message destination and waits for messages to arrive. The user can set a receive timeout which is 
         set to 5000 milliseconds by default. In case no message was received in this time frame the receiver raises timeout errors and the test 
@@ -83,12 +74,10 @@
         <para>Similar to the previously described <emphasis>message-channel-sender</emphasis> the <emphasis>message-channel-receiver</emphasis> supports
         a message-channel-template that is used for receiving messages.</para>
         
-        <programlisting>
-  &lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
-                                  channel=&quot;orderChannel&quot;
-                                  receive-timeout=&quot;5000&quot;
-                                  message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
+                                channel=&quot;orderChannel&quot;
+                                receive-timeout=&quot;5000&quot;
+                                message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;</programlisting>
     </section>
     
     <section id="sync-message-channel-sender">
@@ -98,14 +87,12 @@
         channel destination. The reply channel name is set in the message's header attributes so the counterpart in this communication can send its reply 
         to that channel. The basic configuration for a synchronous send-receive message channel sender looks like follows:</para>
         
-        <programlisting>
-  &lt;citrus:sync-message-channel-sender id=&quot;customerRequestSender&quot; 
-                              channel=&quot;customerRequestChannel&quot;
-                              reply-handler=&quot;customerReplyMessageHandler&quot;
-                              reply-timeout=&quot;1000&quot;/&gt;
-                              
-  &lt;citrus:message-channel-reply-handler id=&quot;customerReplyMessageHandler&quot;/&gt;      
-        </programlisting>
+        <programlisting>&lt;citrus:sync-message-channel-sender id=&quot;customerRequestSender&quot; 
+                            channel=&quot;customerRequestChannel&quot;
+                            reply-handler=&quot;customerReplyMessageHandler&quot;
+                            reply-timeout=&quot;1000&quot;/&gt;
+                            
+&lt;citrus:message-channel-reply-handler id=&quot;customerReplyMessageHandler&quot;/&gt;</programlisting>
         
         <para>Synchronous message channel senders usually go with a reply message handler that handles the reply messages. Once the synchronous reply 
         message was consumed from the reply channel the reply-message-handler implementation is responsible for further processing (e.g. message validation).</para>
@@ -129,13 +116,10 @@
         
         <para>We handle this synchronous communication with the synchronous message receiver in combination with a reply sender. The configuration looks like follows:</para>
         
-        <programlisting>
-  &lt;citrus:sync-message-channel-receiver id=&quot;orderRequestReceiver&quot; 
-                      channel=&quot;order&quot;/&gt;
-                                       
-  &lt;citrus:message-channel-reply-sender id=&quot;orderReplySender&quot;
-                      reply-channel-holder=&quot;orderRequestReceiver&quot;/&gt;
-        </programlisting>
+        <programlisting>&lt;citrus:sync-message-channel-receiver id=&quot;orderRequestReceiver&quot; channel=&quot;order&quot;/&gt;
+                                     
+&lt;citrus:message-channel-reply-sender id=&quot;orderReplySender&quot;
+                    reply-channel-holder=&quot;orderRequestReceiver&quot;/&gt;</programlisting>
         
         <para>The synchronous message channel receiver will store dynamic reply channel destinations and provide those
         dynamic channel names to a reply message sender. Those two components <emphasis>sync-message-channel-receiver</emphasis> and 
@@ -154,16 +138,13 @@
         Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to 
         message channels that are connected to the Spring Integration file adapter.</para>
         
-        <programlisting>
-  &lt;citrus:message-channel-sender id=&quot;fileSender&quot; 
-                     channel=&quot;fileOutboundChannel&quot;/&gt;
-                     
-  &lt;file:outbound-channel-adapter id=&quot;filesOut&quot; 
-                    channel=&quot;fileOutboundChannel&quot; 
-                    directory=&quot;file:${some.directory.property}&quot;/>
-  
-  &lt;si:channel id=&quot;fileOutboundChannel&quot;/&gt;      
-        </programlisting>
+        <programlisting>&lt;citrus:message-channel-sender id=&quot;fileSender&quot; channel=&quot;fileOutboundChannel&quot;/&gt;
+                   
+&lt;file:outbound-channel-adapter id=&quot;filesOut&quot; 
+                  channel=&quot;fileOutboundChannel&quot; 
+                  directory=&quot;file:${some.directory.property}&quot;/>
+
+&lt;si:channel id=&quot;fileOutboundChannel&quot;/&gt;</programlisting>
         
         <para>The configuration above describes a Citrus message channel sender in combination with a Spring Integration outbound file adapter 
         that writes messages to a storage directory. With this combination you are able to write files to a directory in your Citrus test case.</para>
@@ -172,51 +153,47 @@
             <para>The Spring Integration file adapter configuration components add a new namespace to our
             Spring application context. See this template which holds all necessary namespaces and schema locations:</para>
             
-            <programlisting>
-  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-  &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-      xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-      xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
-      xmlns:file=&quot;http://www.springframework.org/schema/integration/file&quot;
-      xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-              http://www.citrusframework.org/schema/config 
-              http://www.citrusframework.org/schema/config/citrus-config.xsd
-              http://www.springframework.org/schema/integration
-              http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
-              http://www.springframework.org/schema/integration/file
-              http://www.springframework.org/schema/integration/file/spring-integration-file-1.0.xsd&quot;&gt;
-  &lt;/beans&gt;          
-            </programlisting>
+            <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+    xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
+    xmlns:file=&quot;http://www.springframework.org/schema/integration/file&quot;
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.citrusframework.org/schema/config 
+            http://www.citrusframework.org/schema/config/citrus-config.xsd
+            http://www.springframework.org/schema/integration
+            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/file
+            http://www.springframework.org/schema/integration/file/spring-integration-file-1.0.xsd&quot;&gt;
+&lt;/beans&gt;</programlisting>
         </note>
         
         <para>The next program listing shows a possible inbound file communication. So Spring's file inbound adapter will read files from a 
         storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case
         and validate the file contents for instance.</para>
         
-        <programlisting>
-  &lt;file:inbound-channel-adapter  id=&quot;fileIn&quot; 
-                   channel=&quot;fileInputChannel&quot;
-                   directory=&quot;file:${some.directory.property}&quot;&gt;
-      &lt;si:poller&gt;
-          &lt;si:interval-trigger time-unit=&quot;MILLISECONDS&quot; interval=&quot;100&quot; /&gt;
-      &lt;/si:poller&gt;
-  &lt;/file:inbound-channel-adapter&gt;
+        <programlisting>&lt;file:inbound-channel-adapter  id=&quot;fileIn&quot; 
+                 channel=&quot;fileInputChannel&quot;
+                 directory=&quot;file:${some.directory.property}&quot;&gt;
+    &lt;si:poller&gt;
+        &lt;si:interval-trigger time-unit=&quot;MILLISECONDS&quot; interval=&quot;100&quot; /&gt;
+    &lt;/si:poller&gt;
+&lt;/file:inbound-channel-adapter&gt;
 
-  &lt;si:channel id=&quot;fileInputChannel&quot;&gt;
-      &lt;si:queue capacity=&quot;25&quot;/&gt;
-      &lt;si:interceptors&gt;
-          &lt;bean class=&quot;org.springframework.integration.transformer.MessageTransformingChannelInterceptor&quot;&gt;
-              &lt;constructor-arg&gt;
-                  &lt;bean class=&quot;org.springframework.integration.file.transformer.FileToStringTransformer&quot;/&gt;
-              &lt;/constructor-arg&gt;
-          &lt;/bean&gt;
-      &lt;/si:interceptors&gt;
-  &lt;/si:channel&gt;
+&lt;si:channel id=&quot;fileInputChannel&quot;&gt;
+    &lt;si:queue capacity=&quot;25&quot;/&gt;
+    &lt;si:interceptors&gt;
+        &lt;bean class=&quot;org.springframework.integration.transformer.MessageTransformingChannelInterceptor&quot;&gt;
+            &lt;constructor-arg&gt;
+                &lt;bean class=&quot;org.springframework.integration.file.transformer.FileToStringTransformer&quot;/&gt;
+            &lt;/constructor-arg&gt;
+        &lt;/bean&gt;
+    &lt;/si:interceptors&gt;
+&lt;/si:channel&gt;
 
-  &lt;citrus:message-channel-receiver id=&quot;fileReceiver&quot; channel=&quot;fileInputChannel&quot;/&gt; 
-        </programlisting>
+&lt;citrus:message-channel-receiver id=&quot;fileReceiver&quot; channel=&quot;fileInputChannel&quot;/&gt;</programlisting>
         
         <important>
             <para>The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String 

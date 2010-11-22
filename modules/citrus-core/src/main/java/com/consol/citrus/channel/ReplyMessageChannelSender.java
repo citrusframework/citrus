@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.channel;
@@ -52,7 +49,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     private static final Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
     
     /**
-     * @see MessageSender#send(Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
@@ -63,26 +60,28 @@ public class ReplyMessageChannelSender implements MessageSender {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
             
-            replyChannel = replyMessageChannelHolder.getReplyMessageChannel(correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString()));
+            String correlationKey = correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            replyChannel = replyMessageChannelHolder.getReplyMessageChannel(correlationKey);
+            Assert.notNull(replyChannel, "Unable to locate reply channel with correlation key: " + correlationKey);
             
             //remove citrus specific header from message
             message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
         } else {
             replyChannel = replyMessageChannelHolder.getReplyMessageChannel();
+            Assert.notNull(replyChannel, "Unable to locate reply channel");
         }
         
-        Assert.notNull(replyChannel, "Not able to find temporary reply channel");
-        
-        log.info("Sending message to: " + replyChannel.getName());
+        log.info("Sending message to reply channel: '" + replyChannel.getName() + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
         if(!messageChannelTemplate.send(message, replyChannel)) {
-            throw new CitrusRuntimeException("Failed to send message to channel '" + replyChannel.getName() + "'");
+            throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel.getName() + "'");
         }
+        
+        log.info("Message was successfully sent to reply channel: '" + replyChannel.getName() + "'");
     }
     
     /**

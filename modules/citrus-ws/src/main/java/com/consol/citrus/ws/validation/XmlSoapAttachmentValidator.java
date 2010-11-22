@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.ws.validation;
 
 import org.slf4j.Logger;
@@ -9,21 +25,22 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.XmlValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 
 /**
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
- * Through {@link XmlValidationContext} this class supports message validation for XML payload.
+ * Through {@link XmlMessageValidationContext} this class supports message validation for XML payload.
  * 
  * @author Christoph Deppisch
  */
 public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
     @Autowired
-    private MessageValidator validator;
+    private MessageValidator<ValidationContext> validator;
     
     /** validation context holding information like expected message payload, ignored elements and so on */
-    private XmlValidationContext validationContext = new XmlValidationContext();
+    private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
     
     /**
      * Logger
@@ -43,7 +60,7 @@ public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator 
 	        String receivedContent = receivedAttachment.getContent();
 	        
 	        Message<String> controlMessage = MessageBuilder.withPayload(controlContent).build();
-	        validationContext.setExpectedMessage(controlMessage);
+	        validationContext.setControlMessage(controlMessage);
 
 	        Message<String> receivedMessage = MessageBuilder.withPayload(receivedContent).build();
 	        validator.validateMessage(receivedMessage, null, validationContext);

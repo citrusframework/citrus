@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
+ * Copyright 2006-2010 the original author or authors.
  *
- * This file is part of Citrus.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.xml.xpath;
@@ -28,7 +25,6 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.util.XMLUtils;
 
 /**
@@ -61,10 +57,6 @@ public abstract class XPathUtils {
             NamespaceContext nsContext, XPathExpressionResult resultType) {
         if(resultType.equals(XPathExpressionResult.NODE)) {
             Node resultNode = evaluateAsNode(node, xPathExpression, nsContext);
-
-            if (resultNode == null) {
-                throw new UnknownElementException("No element found for XPath expression: '" + xPathExpression + "'");
-            }
 
             if (resultNode.getNodeType() == Node.ELEMENT_NODE) {
                 if (resultNode.getFirstChild() != null) {

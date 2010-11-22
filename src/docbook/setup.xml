@@ -25,99 +25,87 @@
         <listitem>
             <para>We add Citrus as test-scoped project dependency to the project POM (pom.xml)</para>
             
-            <programlisting>
-  &lt;dependency&gt;
-    &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
-    &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
-    &lt;version&gt;0.9&lt;/version&gt;
-    &lt;scope&gt;test&lt;/scope&gt;
-  &lt;/dependency&gt;
-            </programlisting>
+            <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
+  &lt;version&gt;1.1&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</programlisting>
         </listitem>
         <listitem>
             <para>Add the citrus Maven plugin to your project</para>
             
-            <programlisting>
-  &lt;plugin&gt;
-    &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
-    &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;0.9&lt;/version&gt;
-    &lt;configuration&gt;
-      &lt;author&gt;Mickey Mouse&lt;/author&gt;
-      &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
-    &lt;/configuration&gt;
-  &lt;/plugin&gt;            
-            </programlisting>
+            <programlisting>&lt;plugin&gt;
+  &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;1.1&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;author&gt;Donald Duck&lt;/author&gt;
+    &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</programlisting>
         </listitem>
     </itemizedlist>
     
     <para>Now that we have added Citrus to our Maven project we can start writing new test cases with the Citrus Maven
     plugin:</para>
     
-    <programlisting>
-  mvn citrus:create-test
-    </programlisting>
+    <programlisting>mvn citrus:create-test</programlisting>
         
     <para>Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecylce. 
     The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample
     surefire configuration for Citrus.</para>
             
-    <programlisting>
-  &lt;plugin&gt;
-    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
-    &lt;version&gt;2.4.3&lt;/version&gt;
-    &lt;configuration&gt;
-      &lt;skip&gt;true&lt;/skip&gt;
-    &lt;/configuration&gt;
-    &lt;executions&gt;
-      &lt;execution&gt;
-        &lt;id&gt;citrus-tests&lt;/id&gt;
-        &lt;phase&gt;integration-test&lt;/phase&gt;
-        &lt;goals&gt;
-          &lt;goal&gt;test&lt;/goal&gt;
-        &lt;/goals&gt;
-        &lt;configuration&gt;
-          &lt;skip&gt;false&lt;/skip&gt;
-        &lt;/configuration&gt;
-      &lt;/execution&gt;
-    &lt;/executions&gt;
-  &lt;/plugin&gt;
-    </programlisting>
+    <programlisting>&lt;plugin&gt;
+  &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+  &lt;version&gt;2.4.3&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;skip&gt;true&lt;/skip&gt;
+  &lt;/configuration&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;id&gt;citrus-tests&lt;/id&gt;
+      &lt;phase&gt;integration-test&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;test&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;skip&gt;false&lt;/skip&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</programlisting>
     
     <para>The Citrus source directories are defined as test sources like follows:</para>
             
-    <programlisting>
-  &lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
-  &lt;testResources&gt;
-    &lt;testResource&gt;
-      &lt;directory&gt;src/citrus/java&lt;/directory&gt;
-      &lt;includes&gt;
-        &lt;include&gt;**&lt;/include&gt;
-      &lt;/includes&gt;
-      &lt;excludes&gt;
-        &lt;exclude&gt;*.java&lt;/exclude&gt;
-      &lt;/excludes&gt;
-    &lt;/testResource&gt;
-    &lt;testResource&gt;
-      &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
-      &lt;includes&gt;
-        &lt;include&gt;**/*&lt;/include&gt;
-      &lt;/includes&gt;
-      &lt;excludes&gt;
-      &lt;/excludes&gt;
-    &lt;/testResource&gt;
-  &lt;/testResources&gt;            
-    </programlisting>
+    <programlisting>&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+&lt;testResources&gt;
+  &lt;testResource&gt;
+    &lt;directory&gt;src/citrus/java&lt;/directory&gt;
+    &lt;includes&gt;
+      &lt;include&gt;**&lt;/include&gt;
+    &lt;/includes&gt;
+    &lt;excludes&gt;
+      &lt;exclude&gt;*.java&lt;/exclude&gt;
+    &lt;/excludes&gt;
+  &lt;/testResource&gt;
+  &lt;testResource&gt;
+    &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+    &lt;includes&gt;
+      &lt;include&gt;**/*&lt;/include&gt;
+    &lt;/includes&gt;
+    &lt;excludes&gt;
+    &lt;/excludes&gt;
+  &lt;/testResource&gt;
+&lt;/testResources&gt;</programlisting>
 
     <para>Now everything is set up and you can call the usual Maven <emphasis>install</emphasis> goal (mvn clean install) 
     in order to build your project. The Citrus integration tests are executed automatically during the build process. 
     Besides that you can call the Maven integration-test phase explicitly to execute all Citrus tests or a specific test 
     by its name:</para>
     
-    <programlisting>
-  mvn integration-test 
-  mvn integration-test -Dtest=MyFirstCitrusTest 
-    </programlisting>
+    <programlisting>mvn integration-test 
+mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     
     <note>
         <para>If you need additional assistance in setting up a Citrus Maven project please visit the official Maven tutorial
@@ -192,57 +180,57 @@
       See the following sample Ant build script which uses the Citrus project artefacts in combination with the Citrus Ant tasks 
       to setup and run the tests.</para>
       
-      <programlisting>
-  &lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
-    
-      &lt;property file=&quot;src/citrus/resources/citrus.properties&quot;/&gt;
-      
-      &lt;path id=&quot;citrus-classpath&quot;&gt;
-          &lt;fileset dir=&quot;lib&quot;&gt;
-              &lt;include name=&quot;*.jar&quot;/&gt;
-          &lt;/fileset&gt;
-      &lt;/path&gt;
-      
-      &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.0.jar&quot;/&gt;
-      
-      &lt;target name=&quot;compile.tests&quot;>
-          &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
-          &lt;javac srcdir=&quot;src/citrus/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
-      &lt;/target>
-    
-      &lt;target name=&quot;create.test&quot; description=&quot;Creates a new empty test case&quot;&gt;
-          &lt;input message=&quot;Enter test name:&quot; addproperty=&quot;test.name&quot;/&gt;
-          &lt;input message=&quot;Enter test description:&quot; addproperty=&quot;test.description&quot;/&gt;
-          &lt;input message=&quot;Enter author's name:&quot; addproperty=&quot;test.author&quot; defaultvalue=&quot;${default.test.author}&quot;/&gt;
-          &lt;input message=&quot;Enter package:&quot; addproperty=&quot;test.package&quot; defaultvalue=&quot;${default.test.package}&quot;/&gt;
-          &lt;input message=&quot;Enter framework:&quot; addproperty=&quot;test.framework&quot; defaultvalue=&quot;testng&quot;/&gt;
+      <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
   
-          &lt;java classname=&quot;com.consol.citrus.util.TestCaseCreator&quot;&gt;
-              &lt;classpath refid=&quot;citrus-classpath&quot;/&gt;
-              &lt;arg line=&quot;-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package} -framework ${test.framework}&quot;/&gt;
-          &lt;/java&gt;
-      &lt;/target&gt;
-      
-      &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
-          &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
-      &lt;/target&gt;
-      
-      &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
-          &lt;touch file=&quot;test.history&quot;/&gt;
-          &lt;loadproperties srcfile=&quot;test.history&quot;/&gt;
-          
-          &lt;echo message=&quot;Last test executed: ${last.test.executed}&quot;/&gt;
-          &lt;input message=&quot;Enter test name or leave empty for last test executed:&quot; addproperty=&quot;testclass&quot; defaultvalue=&quot;${last.test.executed}&quot;/&gt;
-          
-          &lt;propertyfile file=&quot;test.history&quot;&gt;
-              &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
-          &lt;/propertyfile&gt;
+  &lt;property file=&quot;src/citrus/resources/citrus.properties&quot;/&gt;
   
-          &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;${testclass}&quot;/&gt;
-      &lt;/target&gt;
-      
-  &lt;/project&gt;
-      </programlisting>
+  &lt;path id=&quot;citrus-classpath&quot;&gt;
+    &lt;fileset dir=&quot;lib&quot;&gt;
+      &lt;include name=&quot;*.jar&quot;/&gt;
+    &lt;/fileset&gt;
+  &lt;/path&gt;
+  
+  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.0.jar&quot;/&gt;
+  
+  &lt;target name=&quot;compile.tests&quot;>
+    &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+    &lt;javac srcdir=&quot;src/citrus/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
+  &lt;/target>
+
+  &lt;target name=&quot;create.test&quot; description=&quot;Creates a new empty test case&quot;&gt;
+    &lt;input message=&quot;Enter test name:&quot; addproperty=&quot;test.name&quot;/&gt;
+    &lt;input message=&quot;Enter test description:&quot; addproperty=&quot;test.description&quot;/&gt;
+    &lt;input message=&quot;Enter author's name:&quot; addproperty=&quot;test.author&quot; defaultvalue=&quot;${default.test.author}&quot;/&gt;
+    &lt;input message=&quot;Enter package:&quot; addproperty=&quot;test.package&quot; defaultvalue=&quot;${default.test.package}&quot;/&gt;
+    &lt;input message=&quot;Enter framework:&quot; addproperty=&quot;test.framework&quot; defaultvalue=&quot;testng&quot;/&gt;
+
+    &lt;java classname=&quot;com.consol.citrus.util.TestCaseCreator&quot;&gt;
+      &lt;classpath refid=&quot;citrus-classpath&quot;/&gt;
+      &lt;arg line=&quot;-name ${test.name} -author ${test.author} -description ${test.description} 
+                    -package ${test.package} -framework ${test.framework}&quot;/&gt;
+    &lt;/java&gt;
+  &lt;/target&gt;
+  
+  &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
+    &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
+  &lt;/target&gt;
+  
+  &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
+    &lt;touch file=&quot;test.history&quot;/&gt;
+    &lt;loadproperties srcfile=&quot;test.history&quot;/&gt;
+    
+    &lt;echo message=&quot;Last test executed: ${last.test.executed}&quot;/&gt;
+    &lt;input message=&quot;Enter test name or leave empty for last test executed:&quot; addproperty=&quot;testclass&quot; 
+                    defaultvalue=&quot;${last.test.executed}&quot;/&gt;
+    
+    &lt;propertyfile file=&quot;test.history&quot;&gt;
+        &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
+    &lt;/propertyfile&gt;
+
+    &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;${testclass}&quot;/&gt;
+  &lt;/target&gt;
+    
+&lt;/project&gt;</programlisting>
       
       <note>
         <para>If you need detailed assistance for building Citrus with Ant do also visit our tutorials section on 

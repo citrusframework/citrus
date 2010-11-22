@@ -12,29 +12,27 @@
         <para>A tester can influence the behavior of a test suite before, after and during the test run. See the next code example to find
         out how it works:</para>
         
-        <programlisting>
-  &lt;bean name=&quot;integrationTests&quot; 
-           class=&quot;com.consol.citrus.TestSuite&quot;&gt;
-      &lt;property name=&quot;tasksBefore&quot;&gt;
-          &lt;list&gt;
-              <!-- list of actions -->
-          &lt;/list&gt;
-      &lt;/property&gt;
-  
-      &lt;property name=&quot;tasksBetween&quot;&gt;
-          &lt;list&gt;
-              <!-- list of actions -->
-          &lt;/list&gt;
-      &lt;/property&gt;
-  
-      &lt;property name=&quot;tasksAfter&quot;&gt;
-          &lt;list&gt;
-              <!-- list of actions -->
-          &lt;/list&gt;
-      &lt;/property&gt;
-  
-  &lt;/bean&gt;
-        </programlisting>
+        <programlisting>&lt;bean name=&quot;integrationTests&quot; 
+         class=&quot;com.consol.citrus.TestSuite&quot;&gt;
+    &lt;property name=&quot;tasksBefore&quot;&gt;
+        &lt;list&gt;
+            <!-- list of actions -->
+        &lt;/list&gt;
+    &lt;/property&gt;
+
+    &lt;property name=&quot;tasksBetween&quot;&gt;
+        &lt;list&gt;
+            <!-- list of actions -->
+        &lt;/list&gt;
+    &lt;/property&gt;
+
+    &lt;property name=&quot;tasksAfter&quot;&gt;
+        &lt;list&gt;
+            <!-- list of actions -->
+        &lt;/list&gt;
+    &lt;/property&gt;
+
+&lt;/bean&gt;</programlisting>
         
         <para>The test suite bean is of the type com.consol.citrus.TestSuite and offers the following properties to affect
         the basic behavior:</para>

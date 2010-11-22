@@ -1,29 +1,26 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.validation.xml;
 
 import java.util.*;
 
-import javax.xml.namespace.NamespaceContext;
-
 import org.springframework.core.io.Resource;
+
+import com.consol.citrus.validation.ControlMessageValidationContext;
 
 /**
  * XML validation context holding validation specific information needed for XML 
@@ -31,21 +28,21 @@ import org.springframework.core.io.Resource;
  * 
  * @author Christoph Deppisch
  */
-public class XmlValidationContext extends ValidationContext {
+public class XmlMessageValidationContext extends ControlMessageValidationContext {
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> expectedMessageElements;
+    private Map<String, String> pathValidationExpressions;
     
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreMessageElements;
 
-    /** Namespace context resolving namespaces in XML message */
-    private NamespaceContext namespaceContext;
+    /** Namespace definitions resolving namespaces in XML message validation */
+    private Map<String, String> namespaces = new HashMap<String, String>();
     
     /** dtdResource for DTD validation */
     private Resource dtdResource;
     
-    /** Map holding expected namespaces */
-    private Map<String, String> expectedNamespaces;
+    /** Map holding control namespaces for validation */
+    private Map<String, String> controlNamespaces;
     
     /** Should message be validated with its schema definition */
     private boolean schemaValidation = true;
@@ -53,18 +50,18 @@ public class XmlValidationContext extends ValidationContext {
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
-     * @return the expectedMessageElements
+     * @return the pathValidationExpressions
      */
-    public Map<String, String> getExpectedMessageElements() {
-        return expectedMessageElements;
+    public Map<String, String> getPathValidationExpressions() {
+        return pathValidationExpressions;
     }
 
     /**
-     * Set the control message elements explicitly validated during message validation.
-     * @param expectedMessageElements the expectedMessageElements to set
+     * Set the control message elements explicitly validated XPath expression validation.
+     * @param pathValidationExpressions the pathValidationExpressions to set
      */
-    public void setExpectedMessageElements(Map<String, String> expectedMessageElements) {
-        this.expectedMessageElements = expectedMessageElements;
+    public void setPathValidationExpressions(Map<String, String> pathValidationExpressions) {
+        this.pathValidationExpressions = pathValidationExpressions;
     }
 
     /**
@@ -84,19 +81,19 @@ public class XmlValidationContext extends ValidationContext {
     }
 
     /**
-     * Get the namespace context.
+     * Get the namespace definitions for this validator.
      * @return the namespaceContext
      */
-    public NamespaceContext getNamespaceContext() {
-        return namespaceContext;
+    public Map<String, String> getNamespaces() {
+        return namespaces;
     }
 
     /**
-     * Set the namespace context.
+     * Set the namespace definitions.
      * @param namespaceContext the namespaceContext to set
      */
-    public void setNamespaceContext(NamespaceContext namespaceContext) {
-        this.namespaceContext = namespaceContext;
+    public void setNamespaces(Map<String, String> namespaces) {
+        this.namespaces = namespaces;
     }
 
     /**
@@ -117,25 +114,25 @@ public class XmlValidationContext extends ValidationContext {
 
     /**
      * Get control namespace elements.
-     * @return the expectedNamespaces
+     * @return the controlNamespaces
      */
-    public Map<String, String> getExpectedNamespaces() {
-        return expectedNamespaces;
+    public Map<String, String> getControlNamespaces() {
+        return controlNamespaces;
     }
 
     /**
      * Set the control namespace elements.
-     * @param expectedNamespaces the expectedNamespaces to set
+     * @param controlNamespaces the controlNamespaces to set
      */
-    public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
-        this.expectedNamespaces = expectedNamespaces;
+    public void setControlNamespaces(Map<String, String> controlNamespaces) {
+        this.controlNamespaces = controlNamespaces;
     }
 
     /**
      * Is schema validation enabled.
      * @return the schemaValidation
      */
-    public boolean isSchemaValidation() {
+    public boolean isSchemaValidationEnabled() {
         return schemaValidation;
     }
 

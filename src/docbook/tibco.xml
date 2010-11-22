@@ -18,21 +18,18 @@
         
         <para>The next example shows how the Hawk agent can be used in the test suite setup.</para>
         
-        <programlisting>
-  &lt;bean parent=&quot;tibcoHawkAgent&quot;&gt;
-      &lt;property name=&quot;methodName&quot; 
-                   value=&quot;ResumeProcessStarter&quot;/&gt;
-      &lt;property name=&quot;methodParameters&quot;&gt;
-          &lt;list&gt;
-              &lt;bean class=&quot;COM.TIBCO.hawk.talon.DataElement&quot;&gt;
-                  &lt;constructor-arg value=&quot;ProcessDefinition&quot;/&gt;
-                  &lt;constructor-arg    
-                      value=&quot;Test/UnitTest/BusinessServiceTester.process&quot;/&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-        </programlisting>
+        <programlisting>&lt;bean parent=&quot;tibcoHawkAgent&quot;&gt;
+    &lt;property name=&quot;methodName&quot; 
+                 value=&quot;ResumeProcessStarter&quot;/&gt;
+    &lt;property name=&quot;methodParameters&quot;&gt;
+        &lt;list&gt;
+            &lt;bean class=&quot;COM.TIBCO.hawk.talon.DataElement&quot;&gt;
+                &lt;constructor-arg value=&quot;ProcessDefinition&quot;/&gt;
+                &lt;constructor-arg value=&quot;Test/UnitTest/BusinessServiceTester.process&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
         
         <para>The example shows a method call to a Hawk agent. The method is declared through the methodName
         property. In the above example the Hawk agent will resume a particular process starter. The
@@ -75,20 +72,17 @@
         
         <para>The bean looks like follows:</para>
         
-        <programlisting>
-  &lt;bean id=&quot;cleanIcJobs&quot;
-      class=&quot;com.consol.citrus.actions.CleanIcJobsBean&quot;&gt;
-      &lt;property name=&quot;userName&quot; value=&quot;${ic.username}&quot;/&gt;
-      &lt;property name=&quot;password&quot; value=&quot;${ic.password}&quot;/&gt;
-      &lt;property name=&quot;serverName&quot; value=&quot;${ic.servername}&quot;/&gt;
-      &lt;property name=&quot;service&quot; value=&quot;${ic.tibrv.service}&quot;/&gt;
-      &lt;property name=&quot;network&quot; value=&quot;${ic.tibrv.network}&quot;/&gt;
-      &lt;property name=&quot;daemon&quot; value=&quot;${ic.tibrv.daemon}&quot;/&gt;
-      &lt;property name=&quot;queueCount&quot; value=&quot;${ic.tibrv.queue.count}&quot;/&gt;
-      &lt;property name=&quot;serverDiscoveryTimeout&quot; 
-                   value=&quot;${ic.tibrv.server.discovery.timeout}&quot;/&gt;
-  &lt;/bean&gt;
-        </programlisting>
+        <programlisting>&lt;bean id=&quot;cleanIcJobs&quot;
+    class=&quot;com.consol.citrus.actions.CleanIcJobsBean&quot;&gt;
+    &lt;property name=&quot;userName&quot; value=&quot;${ic.username}&quot;/&gt;
+    &lt;property name=&quot;password&quot; value=&quot;${ic.password}&quot;/&gt;
+    &lt;property name=&quot;serverName&quot; value=&quot;${ic.servername}&quot;/&gt;
+    &lt;property name=&quot;service&quot; value=&quot;${ic.tibrv.service}&quot;/&gt;
+    &lt;property name=&quot;network&quot; value=&quot;${ic.tibrv.network}&quot;/&gt;
+    &lt;property name=&quot;daemon&quot; value=&quot;${ic.tibrv.daemon}&quot;/&gt;
+    &lt;property name=&quot;queueCount&quot; value=&quot;${ic.tibrv.queue.count}&quot;/&gt;
+    &lt;property name=&quot;serverDiscoveryTimeout&quot; value=&quot;${ic.tibrv.server.discovery.timeout}&quot;/&gt;
+&lt;/bean&gt;</programlisting>
         
         <para>The properties of that bean do all refer to the connection credentials of the Workflow InConcert Server instance.</para>
     </section>

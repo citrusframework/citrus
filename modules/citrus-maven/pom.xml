@@ -5,14 +5,14 @@
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>citrus-maven</name>
   <description>Citrus Maven Parent</description>
   

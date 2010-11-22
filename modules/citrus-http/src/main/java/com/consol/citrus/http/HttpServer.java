@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.http;
@@ -104,12 +101,13 @@ public class HttpServer extends AbstractServer {
                 final Message<?> request;
                 Map<String, Object> requestHeaders = new HashMap<String, Object>();
                 
-                String readLine = in.readLine();
-                if (readLine == null || readLine.length() == 0) {
+                // first line should give method, uri and version header
+                String line = in.readLine();
+                if (line == null || line.length() == 0) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 }
 
-                StringTokenizer st = new StringTokenizer(readLine);
+                StringTokenizer st = new StringTokenizer(line);
                 if (!st.hasMoreTokens()) {
                     throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
                 } else {
@@ -128,15 +126,15 @@ public class HttpServer extends AbstractServer {
                     requestHeaders.put("HTTPVersion", st.nextToken());
                 }
 
-                String line = "";
-
+                // further headers
                 do {
                     line = in.readLine();
-                    int p = line.indexOf(':');
+                    
+                    int p = (line == null) ? -1: line.indexOf(':');
                     if (p > 0) {
-                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(),	line.substring(p + 1).trim());
+                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
                     }
-                } while (line.trim().length() > 0);
+                } while (line != null && line.trim().length() > 0);
 
                 if (requestHeaders.get("HTTPMethod").equals(HttpConstants.HTTP_POST)) {
                     long size = 0x7FFFFFFFFFFFFFFFl;
@@ -147,19 +145,18 @@ public class HttpServer extends AbstractServer {
                         } catch (NumberFormatException ex) {
                         }
                     }
-                    String postLine = "";
+                    StringBuilder payloadBuilder = new StringBuilder();
                     char buf[] = new char[512];
                     int read = in.read(buf);
-                    while (read >= 0 && size > 0 && !postLine.endsWith(HttpConstants.LINE_BREAK)) {
+                    while (read >= 0 && size > 0 && !payloadBuilder.toString().endsWith(HttpConstants.LINE_BREAK)) {
                         size -= read;
-                        postLine += String.valueOf(buf, 0, read);
+                        payloadBuilder.append(String.valueOf(buf, 0, read));
                         if (size > 0) {
                             read = in.read(buf);
                         }
                     }
-                    postLine = postLine.trim();
                     
-                    request = MessageBuilder.withPayload(postLine).copyHeaders(requestHeaders).build();
+                    request = MessageBuilder.withPayload(payloadBuilder.toString().trim()).copyHeaders(requestHeaders).build();
                 } else {
                     //TODO implement GET method
                     request = MessageBuilder.withPayload("").copyHeaders(requestHeaders).build();
@@ -337,7 +334,7 @@ public class HttpServer extends AbstractServer {
                             .setHeader("HTTPMethod", HttpConstants.HTTP_POST)
                             .setHeader("HTTPUri", host + ":" + port + uri)
                             .setHeader("HTTPHost", host)
-                            .setHeader("HTTPPort", new Integer(port).toString())
+                            .setHeader("HTTPPort", Integer.valueOf(port).toString())
                             .build();
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));

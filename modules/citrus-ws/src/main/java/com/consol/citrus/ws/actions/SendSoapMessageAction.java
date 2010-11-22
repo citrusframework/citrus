@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.ws.actions;
@@ -30,6 +27,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 
@@ -59,7 +57,10 @@ public class SendSoapMessageAction extends SendMessageAction {
     public void execute(final TestContext context) {
         Message<?> message = createMessage(context);
         
-        context.createVariablesFromHeaderValues(extractHeaderValues, message.getHeaders());
+        // extract variables from before sending message so we can save dynamic message ids
+        for (VariableExtractor variableExtractor : getVariableExtractors()) {
+            variableExtractor.extractVariables(message, context);
+        }
         
         if(!(messageSender instanceof WebServiceMessageSender)) {
             throw new CitrusRuntimeException("Sending SOAP messages requires a " +
@@ -74,11 +75,13 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
             }
         
+            WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
             if(attachmentContent != null) {
                 attachment.setContent(attachmentContent);
-                ((WebServiceMessageSender)messageSender).send(message, attachment);
+                
+                webServiceMessageSender.send(message, attachment);
             } else {
-                ((WebServiceMessageSender)messageSender).send(message);
+                webServiceMessageSender.send(message);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);

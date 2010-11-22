@@ -5,7 +5,7 @@
   <skin>
     <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-default-skin</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </skin>
   <poweredBy>
     <logo name="ConSol Labs" href="http://labs.consol.de" img="images/logos/powered-by-labs-consol.png"/>    
@@ -17,7 +17,8 @@
       <item name="ConSol* Labs" href="http://labs.consol.de/"/>
       <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
       <item name="GitHub" href="http://github.com/christophd/citrus"/>
-      <item name="Build" href="http://build2.int.consol.de/bamboo/browse/CITRUS"/>
+      <item name="Build" href="http://labs.consol.de/hudson/"/>
+      <item name="Sonar" href="http://labs.consol.de/sonar/"/>
     </links>
 
     <menu name="Citrus">
@@ -42,7 +43,7 @@
     <menu name="Documentation">
       <item name="Reference" href="${site.url}/reference-doc.html"/>
       <item name="License" href="${site.url}/license.html"/>
-      <!-- item name="FAQ" href="${site.url}/faq.html"/-->
+      <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
     </menu>
     
     <menu name="Tools">

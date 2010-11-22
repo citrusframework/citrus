@@ -19,35 +19,32 @@
     
     <para>The following example shows how to use the finally section at the end of a test:</para>
   
-    <programlisting>
-  &lt;testcase name=&quot;finallyTest&quot;&gt;
-      &lt;variables&gt;
-          &lt;variable name=&quot;orderId&quot; value=&quot;1&quot;/&gt;
-          &lt;variable name=&quot;date&quot; 
-                       value=&quot;citrus:currentDate('dd.MM.yyyy')&quot;/&gt;
-      &lt;/variables&gt;
-      &lt;actions&gt;
-          &lt;sql datasource=&quot;testDataSource&quot;&gt;
-              &lt;statement&gt;
-                  INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
-              &lt;/statement&gt;
-          &lt;/sql&gt;
-          
-          &lt;echo&gt;
-              &lt;message&gt;
-                  ORDER creation time: ${date}
-              &lt;/message&gt;
-          &lt;/echo&gt;
-      &lt;/actions&gt;
-      &lt;finally&gt;
-          &lt;sql datasource=&quot;testDataSource&quot;&gt;
-              &lt;statement&gt;
-                DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
-              &lt;/statement&gt;
-          &lt;/sql&gt;
-      &lt;/finally&gt;
-  &lt;/testcase&gt;
-    </programlisting>
+    <programlisting>&lt;testcase name=&quot;finallyTest&quot;&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;orderId&quot; value=&quot;1&quot;/&gt;
+        &lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate('dd.MM.yyyy')&quot;/&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;sql datasource=&quot;testDataSource&quot;&gt;
+            &lt;statement&gt;
+                INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
+            &lt;/statement&gt;
+        &lt;/sql&gt;
+        
+        &lt;echo&gt;
+            &lt;message&gt;
+                ORDER creation time: ${date}
+            &lt;/message&gt;
+        &lt;/echo&gt;
+    &lt;/actions&gt;
+    &lt;finally&gt;
+        &lt;sql datasource=&quot;testDataSource&quot;&gt;
+            &lt;statement&gt;
+              DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
+            &lt;/statement&gt;
+        &lt;/sql&gt;
+    &lt;/finally&gt;
+&lt;/testcase&gt;</programlisting>
     
     <para>In the example the first action creates an entry in the database using an <literal>INSERT</literal> statement. 
     To be sure that the entry in the database is deleted after the test, the finally section contains the respective 

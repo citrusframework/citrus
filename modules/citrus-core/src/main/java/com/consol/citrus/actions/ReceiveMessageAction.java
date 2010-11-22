@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.actions;
@@ -22,25 +19,23 @@ package com.consol.citrus.actions;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.XmlValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.script.*;
+import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.variable.VariableExtractor;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -52,13 +47,7 @@ import com.consol.citrus.validation.XmlValidationContext;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction {
-    /** Map extracting message elements to variables */
-    private Map<String, String> extractMessageElements = new HashMap<String, String>();
-
-    /** Map extracting header values to variables */
-    private Map<String, String> extractHeaderValues = new HashMap<String, String>();
-
+public class ReceiveMessageAction extends AbstractTestAction implements XmlMessageValidationAware, ScriptValidationAware {
     /** Build message selector with name value pairs */
     private Map<String, String> messageSelector = new HashMap<String, String>();
 
@@ -71,24 +60,17 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** Receive timeout */
     private long receiveTimeout = 0L;
 
-    /** Control message payload defined in external file resource */
-    private Resource messageResource;
-
-    /** Inline control message payload */
-    private String messageData;
-    
-    /** Overwrites message elements before sending (via XPath expressions) */
-    private Map<String, String> messageElements = new HashMap<String, String>();
-
     /** MessageValidator responsible for message validation */
-    private MessageValidator validator;
+    private MessageValidator<? extends ValidationContext> validator;
     
-    /** Validation context holding information like expected message payload, 
-     * ignored elements and so on */
-    private XmlValidationContext validationContext = new XmlValidationContext();
+    /** Builds a script validation context */
+    private ScriptValidationContextBuilder scriptValidationContextBuilder;
     
-    /** XML namespace declaration used for XPath expression evaluation*/
-    private Map<String, String> namespaces = new HashMap<String, String>();
+    /** Builds a xml message validation context */
+    private XmlMessageValidationContextBuilder xmlMessageValidationContextBuilder;
+    
+    /** List of variable extractors responsible for creating variables from received message content */
+    private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
 
     /**
      * Logger
@@ -141,59 +123,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
 
             if (receivedMessage == null) {
-                throw new CitrusRuntimeException("Received message is null!");
+                throw new CitrusRuntimeException("Unable to process received message - message is null");
             }
 
-            //save variables from header values
-            context.createVariablesFromHeaderValues(extractHeaderValues, receivedMessage.getHeaders());
-
-            if (receivedMessage.getPayload() == null || receivedMessage.getPayload().toString().length() == 0) {
-                if (messageResource == null && (messageData == null || messageData.length() == 0)) {
-                    log.info("Received message body is empty as expected - therefore no message validation");
-                    return;
-                } else {
-                    throw new CitrusRuntimeException("Validation error: Received message body is empty");
-                }
-            }
-
-            //construct control message payload
-            String expectedMessagePayload = "";
-            if (messageResource != null) {
-                expectedMessagePayload = context.replaceDynamicContentInString(FileUtils.readToString(messageResource));
-            } else if (messageData != null){
-                expectedMessagePayload = context.replaceDynamicContentInString(messageData);
-            }
-
-            if (StringUtils.hasText(expectedMessagePayload)) {
-                expectedMessagePayload = context.replaceMessageValues(messageElements, expectedMessagePayload);
-                Message<String> expectedMessage = MessageBuilder.withPayload(expectedMessagePayload).build();
-                
-                validationContext.setExpectedMessage(expectedMessage);
+            // extract variables from received message content
+            for (VariableExtractor variableExtractor : variableExtractors) {
+                variableExtractor.extractVariables(receivedMessage, context);
             }
             
-            SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-            Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
-            if(!namespaces.isEmpty()) {
-                //dynamic binding of namespaces declarations in root element of received message
-                for (Entry<String, String> binding : dynamicBindings.entrySet()) {
-                    //only bind namespace that is not present in explicit namespace bindings
-                    if(!namespaces.containsValue(binding.getValue())) {
-                        nsContext.bindNamespaceUri(binding.getKey(), binding.getValue());
-                    }
-                }
-                
-                //add explicit namespace bindings
-                nsContext.setBindings(namespaces);
-            } else {
-                nsContext.setBindings(dynamicBindings);
-            }
-            
-            validationContext.setNamespaceContext(nsContext);
-            
-            //save variables from message payload
-            context.createVariablesFromMessageValues(extractMessageElements, receivedMessage, validationContext.getNamespaceContext());
-            
-            //validate message
+            //validate the message
             validateMessage(receivedMessage, context);
         } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
@@ -206,81 +144,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Override this message if you want to add additional message validation
      * @param receivedMessage
      */
-    protected void validateMessage(Message<?> receivedMessage, TestContext context) {
-        validator.validateMessage(receivedMessage, context, validationContext);
-    }
-
-    /**
-     * Setter for validating elements.
-     * @param messageElements
-     */
-    public void setValidateMessageElements(Map<String, String> messageElements) {
-        validationContext.setExpectedMessageElements(messageElements);
-    }
-
-    /**
-     * Setter for ignored message elements.
-     * @param ignoreMessageElements
-     */
-    public void setIgnoreMessageElements(Set<String> ignoredMessageElements) {
-        validationContext.setIgnoreMessageElements(ignoredMessageElements);
-    }
-
-    /**
-     * Setter for expected namespaces.
-     * @param expectedNamespaces the expectedNamespaces to set
-     */
-    public void setExpectedNamespaces(Map<String, String> expectedNamespaces) {
-        validationContext.setExpectedNamespaces(expectedNamespaces);
-    }
-
-    /**
-     * Extract variables from header.
-     * @param getHeaderValues the getHeaderValues to set
-     */
-    public void setExtractHeaderValues(Map<String, String> extractHeaderValues) {
-        this.extractHeaderValues = extractHeaderValues;
-    }
-
-    /**
-     * Extract variables from message payload.
-     * @param extractMessageElements the extractMessageElements to set
-     */
-    public void setExtractMessageElements(Map<String, String> extractMessageElements) {
-        this.extractMessageElements = extractMessageElements;
-    }
-
-    /**
-     * Set expected control header values.
-     * @param headerValues the headerValues to set
-     */
-    public void setHeaderValues(Map<String, Object> headerValues) {
-        validationContext.setExpectedMessageHeaders(MessageBuilder.withPayload("")
-                .copyHeaders(headerValues).build().getHeaders());
-    }
-
-    /**
-     * Set message payload data.
-     * @param messageData the messageData to set
-     */
-    public void setMessageData(String messageData) {
-        this.messageData = messageData;
-    }
-
-    /**
-     * Message payload as external file resource.
-     * @param messageResource the messageResource to set
-     */
-    public void setMessageResource(Resource messageResource) {
-        this.messageResource = messageResource;
-    }
-
-    /**
-     * Check if header values for extraction are present.
-     * @return boolean flag to mark existence
-     */
-    public boolean hasExtractHeaderValues() {
-        return (this.extractHeaderValues != null && !this.extractHeaderValues.isEmpty());
+    protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
+        if (validator != null) {
+            ValidationContext validationContext = validator.createValidationContext(this, context);
+            validator.validateMessage(receivedMessage, context, validationContext);
+        } else {
+            List<MessageValidator<? extends ValidationContext>> validators = context.getMessageValidators();
+            
+            for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                messageValidator.validateMessage(receivedMessage, context, 
+                        messageValidator.createValidationContext(this, context));
+            }
+        }
     }
 
     /**
@@ -300,29 +175,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set validator instance.
-     * @param validator the validator to set
+     * Set single message validator.
+     * @param validator the message validator to set
      */
-    public void setValidator(MessageValidator validator) {
+    public void setValidator(MessageValidator<? extends ValidationContext> validator) {
         this.validator = validator;
     }
-
-    /**
-     * List of expected namespaces.
-     * @param namespaces the namespaces to set
-     */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
-
-    /**
-     * Get expected namespaces.
-     * @return the namespaces
-     */
-    public Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
+    
     /**
      * Set message receiver instance.
      * @param messageReceiver the messageReceiver to set
@@ -340,26 +199,77 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Enable schema validation.
-     * @param enableSchemaValidation the schemaValidation to set
-     */
-    public void setSchemaValidation(boolean enableSchemaValidation) {
-        validationContext.setSchemaValidation(enableSchemaValidation);
-    }
-
-    /**
      * Set the receive timeout.
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
     }
+    
+    /**
+     * Get the script validation context.
+     */
+    public ScriptValidationContext getScriptValidationContext(TestContext context) {
+        if (scriptValidationContextBuilder == null) {
+            throw new CitrusRuntimeException("Unable to perform script validation - no context builder available");
+        }
+        
+        return scriptValidationContextBuilder.buildValidationContext(context);
+    }
 
     /**
-     * Set message elements to overwrite before validation.
-     * @param messageElements the messageElements to set
+     * Get the xml message validation context.
      */
-    public void setMessageElements(Map<String, String> messageElements) {
-        this.messageElements = messageElements;
+    public XmlMessageValidationContext getXmlMessageValidationContext(TestContext context) {
+        if (xmlMessageValidationContextBuilder == null) {
+            throw new CitrusRuntimeException("Unable to perform xml message validation - no context builder available");
+        }
+        
+        return xmlMessageValidationContextBuilder.buildValidationContext(context);
+    }
+
+    /**
+     * Get the control message validation context.
+     */
+    public ControlMessageValidationContext getControlMessageValidationContext(TestContext context) {
+        if (xmlMessageValidationContextBuilder == null) {
+            throw new CitrusRuntimeException("Unable to perform control message validation - no context builder available");
+        }
+        
+        return xmlMessageValidationContextBuilder.buildValidationContext(context);
+    }
+
+    /**
+     * Sets the xml validation context builder.
+     * @param xmlMessageValidationContextBuilder the xmlMessageValidationContextBuilder to set
+     */
+    public void setXmlMessageValidationContextBuilder(
+            XmlMessageValidationContextBuilder xmlMessageValidationContextBuilder) {
+        this.xmlMessageValidationContextBuilder = xmlMessageValidationContextBuilder;
+    }
+
+    /**
+     * Sets the script validation context builder.
+     * @param scriptValidationContextBuilder the scriptValidationContextBuilder to set
+     */
+    public void setScriptValidationContextBuilder(
+            ScriptValidationContextBuilder scriptValidationContextBuilder) {
+        this.scriptValidationContextBuilder = scriptValidationContextBuilder;
+    }
+
+    /**
+     * Adds a new variable extractor.
+     * @param variableExtractor the variableExtractor to set
+     */
+    public void addVariableExtractors(VariableExtractor variableExtractor) {
+        this.variableExtractors.add(variableExtractor);
+    }
+
+    /**
+     * Set the list of variable extractors.
+     * @param variableExtractors the variableExtractors to set
+     */
+    public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
+        this.variableExtractors = variableExtractors;
     }
 }

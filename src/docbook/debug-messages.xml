@@ -8,9 +8,7 @@
     <para>Citrus offers an easy way to debug all received messages to the file system. You need to enable a specific aspect in the
     Citrus Spring configuration.</para>
     
-    <programlisting>
-  &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;/&gt;
-    </programlisting>
+    <programlisting>&lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;/&gt;</programlisting>
     
     <para>Just add this bean to the Spring configuration and Citrus will debug received messages to the file system by generating files
     containing the message header and message body content.</para>
@@ -26,12 +24,9 @@
     <literal>logs/debug/messages/</literal> relative to the project root directory. But you can set your own debug directory in the 
     configuration.</para>
     
-    <programlisting>
-  &lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
-          &lt;property name=&quot;debugDirectory&quot; 
-                       value=&quot;debugging/messages&quot;/&gt;
-  &lt;/bean&gt;
-    </programlisting>
+    <programlisting>&lt;bean class=&quot;com.consol.citrus.aop.StoreMessageInterceptorAspect&quot;&gt;
+  &lt;property name=&quot;debugDirectory&quot; value=&quot;debugging/messages&quot;/&gt;
+&lt;/bean&gt;</programlisting>
     
     <note>
         <para>As the file counter is always reset to 0 after a test run the message files may be overwritten. So you eventually need to 

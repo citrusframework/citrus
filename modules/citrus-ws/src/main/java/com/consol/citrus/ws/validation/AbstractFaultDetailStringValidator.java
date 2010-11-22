@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.ws.validation;
@@ -23,7 +20,6 @@ import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.xml.transform.StringResult;
@@ -69,15 +65,13 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
                 String receivedDetailString = receivedDetailResult.toString();
                 String controlDetailString = controlDetailResult.toString();
                 if(log.isDebugEnabled()) {
-                    log.debug("Received fault detail: " + StringUtils.trimWhitespace(receivedDetailString));
-                    log.debug("Control fault detail: " + StringUtils.trimWhitespace(controlDetailString));
+                    log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
+                    log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
                 }
                 
                 validateFaultDetailString(receivedDetailString, controlDetailString);
             } else {
-                Assert.isTrue(controlDetail == null, 
-                        "Values not equal for SOAP fault detail content, " +
-                        "expected detail content but was '" + null + "'");
+                throw new ValidationException("Missing SOAP fault detail in received message");
             }
         } catch (TransformerException e) {
             throw new CitrusRuntimeException(e);

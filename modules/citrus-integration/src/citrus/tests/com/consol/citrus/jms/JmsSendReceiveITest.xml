@@ -230,6 +230,7 @@
                   </header>
               </receive>
             </assert>
+            
         </actions>
     </testcase>
 </spring:beans>

@@ -56,17 +56,6 @@ git clone git://github.com/christophd/citrus.git
   directory is referred to as <<<PROJECT_HOME>>>. For detailed instructions about the version control system git, 
   please consult the official website {{{http://git-scm.com/}http://git-scm.com/}}.
   
-  Now we have to tell Citrus our environment settings. Therefore create a <<<profiles.xml>>> file in <<<PROJECT_HOME>>>. 
-  A template <<<profiles.xml.template>>> is provided as a starting point for creating the file. Unix and OS X users are 
-  lucky to simply call
-
----
-  ./setup.sh
----
-
-  which is doing the whole work for you. Note that you need to call <<<setup.sh>>> only once for 
-  the <<<profiles.xml>>> generation.
-  
 * Build the Citrus artifacts
 
   Now everything is setup properly and you can use Maven for all the rest. Call
@@ -83,7 +72,7 @@ mvn install
   <dependency>
     <groupId>com.consol.citrus</groupId>
     <artifactId>citrus-core</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>${project.version}</version>
     <scope>test</scope>
   </dependency>
 +---

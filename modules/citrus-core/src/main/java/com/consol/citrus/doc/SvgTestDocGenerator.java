@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.doc;
@@ -90,7 +87,9 @@ public class SvgTestDocGenerator {
                 StringWriter stringWriter = new StringWriter();
                 StreamSource xml = new StreamSource(testFile);
                 StreamResult res = new StreamResult(stringWriter);
-
+                
+                FileWriter fileWriter = null;
+                
                 try {
                     t.transform(xml, res);
                     stringWriter.flush();
@@ -100,10 +99,9 @@ public class SvgTestDocGenerator {
 
                     if (fileContent!= null && fileContent.indexOf("svg")!=-1) {
                         log.info("Created file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
-                        FileWriter fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
+                        fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                         fileWriter.write(stringWriter.toString());
                         fileWriter.flush();
-                        fileWriter.close();
                     } else {
                         log.warn("Could not create file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                     }
@@ -111,6 +109,14 @@ public class SvgTestDocGenerator {
                     log.error("XSLT tranformation failed", e);
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    if(fileWriter != null) {
+                        try {
+                            fileWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         } catch (TransformerConfigurationException e) {

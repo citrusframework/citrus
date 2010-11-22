@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.config.xml;
@@ -23,13 +20,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for groovy action in test case.
@@ -46,19 +42,23 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         DescriptionElementParser.doParse(element, beanDefinition);
         
+        String useScriptTemplate = element.getAttribute("use-script-template");
+        if (StringUtils.hasText(useScriptTemplate)) {
+            beanDefinition.addPropertyValue("useScriptTemplate", Boolean.valueOf(useScriptTemplate));
+        }
+        
+        String scriptTemplatePath = element.getAttribute("script-template");
+        if (StringUtils.hasText(scriptTemplatePath)) {
+            beanDefinition.addPropertyValue("scriptTemplateResource", FileUtils.getResourceFromFilePath(scriptTemplatePath));
+        }
+        
         if(DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
             beanDefinition.addPropertyValue("script", DomUtils.getTextValue(element));
         }
         
         String filePath = element.getAttribute("resource");
         if (StringUtils.hasText(filePath)) {
-            if (filePath.startsWith("classpath:")) {
-                beanDefinition.addPropertyValue("fileResource", new ClassPathResource(filePath.substring("classpath:".length())));
-            } else if (filePath.startsWith("file:")) {
-                beanDefinition.addPropertyValue("fileResource", new FileSystemResource(filePath.substring("file:".length())));
-            } else {
-                beanDefinition.addPropertyValue("fileResource", new FileSystemResource(filePath));
-            }
+            beanDefinition.addPropertyValue("fileResource", FileUtils.getResourceFromFilePath(filePath));
         }
         
         return beanDefinition.getBeanDefinition();

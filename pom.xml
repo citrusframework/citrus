@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>citrus</name>
   <description>Citrus Test Framework</description>
   <url>http://www.citrusframework.org</url>
@@ -13,20 +13,18 @@
 
   <licenses>
     <license>
-      <name>GPL Version 3</name>
+      <name>Apache License, Version 2.0</name>
       <url>LICENSE.txt</url>
       <distribution>manual</distribution>
-      <comments>Citrus is published free of charge under GNU GPL. You are allowed to use Citrus to test any kind of software 
+      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software 
       (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references 
-      list. You may also use our "Tested using Citrus" logo in your online or printed documentation. You are not allowed to incorporate 
-      Citrus or parts of it into your own software (as long as it is not GPL software itself). 
-      If you plan to do this, please contact ConSol* Software GmbH for an appropriate license.</comments>
+      list. You may also use our "Tested using Citrus" logo in your online or printed documentation.</comments>
     </license>
   </licenses>
 
   <ciManagement>
-    <system>Bamboo</system>
-    <url>http://build2.int.consol.de/bamboo/browse/CITRUS</url>
+    <system>Hudson</system>
+    <url>http://labs.consol.de/hudson/job/Citrus/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -51,6 +49,46 @@
       <id>christophd</id>
       <name>Christoph Deppisch</name>
       <email>christoph.deppisch@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>cwied</id>
+      <name>Christian Wied</name>
+      <email>christian.wied@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mm</id>
+      <name>Marcel May</name>
+      <email>marcel.may@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>philkom</id>
+      <name>Philipp Komninos</name>
+      <email>philipp.komninos@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jblipphaus</id>
+      <name>Jan Lipphaus</name>
+      <email>jan.lipphaus@consol.de</email>
       <organization>ConSol* Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
@@ -99,7 +137,6 @@
   </mailingLists>
   
   <properties>
-    <!-- If you want to override these properties, use your local profiles.xml! -->
     <spring.version>2.5.6</spring.version>
     <spring.ws.version>1.5.9</spring.ws.version>
     <spring.integration.version>1.0.4.RELEASE</spring.integration.version>
@@ -135,7 +172,22 @@
       <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
-        <version>1.3</version>
+        <version>1.3.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <version>1.7.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.castor</groupId>
+        <artifactId>castor-xml</artifactId>
+        <version>1.3.1</version>
       </dependency>
 
       <!-- Spring Framework -->
@@ -208,10 +260,14 @@
       <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>5.11</version>
-        <classifier>jdk15</classifier>
+        <version>5.13.1</version>
       </dependency>
-      
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.7</version>
+      </dependency>
+    
       <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-core</artifactId>
@@ -224,21 +280,27 @@
         </exclusions>
       </dependency>
       
+      <dependency>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty</artifactId>
+        <version>7.0.0.pre5</version>
+      </dependency>
+      
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.5.10</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.5.10</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.10</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>commons-logging</groupId>
@@ -257,13 +319,25 @@
       <dependency>
         <groupId>org.easymock</groupId>
         <artifactId>easymock</artifactId>
-        <version>2.5.2</version>
+        <version>3.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.easymock</groupId>
         <artifactId>easymockclassextension</artifactId>
-        <version>2.5.2</version>
+        <version>3.0</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xbean</groupId>
+        <artifactId>xbean-spring</artifactId>
+        <version>3.7</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>1.3</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -286,7 +360,6 @@
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <classifier>jdk15</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -336,7 +409,7 @@
           <!-- http://maven.apache.org/plugins/maven-compile-plugin/plugin-info.html -->
           <artifactId>maven-compiler-plugin</artifactId>
           <!-- Version is required as mvn has currently a problem updating. -->
-          <version>2.1</version>
+          <version>2.3.1</version>
           <configuration>
             <source>1.5</source>
             <target>1.5</target>
@@ -344,7 +417,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.3.1</version>
         </plugin>
         <plugin>
           <!-- http://maven.apache.org/plugins/maven-surefire-plugin/plugin-info.html -->
@@ -353,10 +426,6 @@
           <version>2.5</version>
           <configuration>
             <systemProperties>
-              <property>
-                <name>log4j.configuration</name>
-                <value>file://${PROJECT_HOME}/tools/log4j-test.xml</value>
-              </property>
               <property>
                 <name>javax.xml.parsers.SAXParserFactory</name>
                 <value>org.apache.xerces.jaxp.SAXParserFactoryImpl</value>
@@ -389,19 +458,19 @@
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.1</version>
+          <version>1.3</version>
         </plugin>
         <plugin>
           <artifactId>maven-ear-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.4.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-help-plugin</artifactId>
-          <version>2.1</version>
+          <version>2.1.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.4.1</version>
         </plugin>
         <!-- IDE plugins -->
         <plugin>
@@ -425,7 +494,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1.1</version>
+          <version>2.1.2</version>
           <executions>
             <execution>
               <id>generate-sources-jar</id>
@@ -435,6 +504,11 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.7</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -481,7 +555,7 @@
     
     <!-- Distribution Management -->
     <profile>
-      <id>release-inhouse</id>
+      <id>release-build</id>
       <distributionManagement>
         <repository>
           <id>repository-consol-releases</id>
@@ -506,6 +580,19 @@
           <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
       </distributionManagement>
+    </profile>
+    
+    <profile>
+      <id>site-local</id>
+      <distributionManagement>
+        <site>
+          <id>site-citrus</id>
+          <url>file:///stage/citrus-site</url>
+        </site>
+      </distributionManagement>
+      <properties>
+        <site.url></site.url>
+      </properties>
     </profile>
     
     <profile>
@@ -540,7 +627,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.3</version>
             <inherited>false</inherited>
             <executions>
               <execution>
@@ -587,84 +673,15 @@
     
     <profile>
       <id>site</id>
-      <properties>
-        <clover.plugin.version>2.4.2</clover.plugin.version>
-        <clover.plugin.licenseLocation>${CLOVER_LICENSE}</clover.plugin.licenseLocation>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.cenqua.clover</groupId>
-          <artifactId>clover</artifactId>
-          <version>${clover.plugin.version}</version>
-        </dependency>
-      </dependencies>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>com.atlassian.maven.plugins</groupId>
-              <artifactId>maven-clover2-plugin</artifactId>
-              <version>${clover.plugin.version}</version>
-              <configuration>
-                <jdk>1.5</jdk>
-                <!--
-                This is a server license for nightly builds on build2.int.consol.de!
-
-                Quote: A Server Edition license entitles the Licensee to execute one
-                       instance of Clover Server Edition on one (1) machine for the
-                       purposes of instrumententing source code and generating reports.
-                       There are no limitations on the use of the instrumented source code
-                       or generated reports produced by Server Edition.
-                       -->
-                <licenseLocation>${clover.plugin.licenseLocation}</licenseLocation>
-                <cloverMergeDatabase>${PROJECT_HOME}/target/cloverMerge.db</cloverMergeDatabase>
-                <!-- <generateHistorical>true</generateHistorical> -->
-                <historyDir>${PROJECT_HOME}/tools/clover</historyDir>
-                <generatePdf>false</generatePdf>
-                <generateXml>true</generateXml>
-                <contextFilters>@deprecated</contextFilters>
-                <flushPolicy>threaded</flushPolicy>
-                <flushInterval>100</flushInterval>
-                <targetPercentage>0%</targetPercentage>
-                <useSurefireTestResults>true</useSurefireTestResults>
-              </configuration>
-            </plugin>
-            <plugin>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>2.0.1</version>
-            </plugin>
-            <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.6.1</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
         <plugins>
           <plugin>
-            <!-- Aggregates clover reports for main project. -->
-            <artifactId>maven-clover2-plugin</artifactId>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <executions>
-              <execution>
-                <id>verify</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>instrument</goal>
-                  <goal>aggregate</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>site</id>
-                <phase>pre-site</phase>
-                <goals>
-                  <goal>instrument</goal>
-                  <goal>aggregate</goal>
-                </goals>
-              </execution>
-            </executions>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>2.1.1</version>
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.7</version>
             <configuration>
               <aggregate>true</aggregate>
               <linksource>true</linksource>
@@ -675,9 +692,6 @@
                 <link>http://testng.org/javadocs/</link>
               </links>
             </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-site-plugin</artifactId>
           </plugin>
           <plugin>
             <artifactId>maven-resources-plugin</artifactId>
@@ -784,20 +798,6 @@
       <reporting>
         <plugins>
           <plugin>
-            <groupId>com.atlassian.maven.plugins</groupId>
-            <artifactId>maven-clover2-plugin</artifactId>
-            <version>${clover.plugin.version}</version>
-            <configuration>
-              <licenseLocation>${clover.plugin.licenseLocation}</licenseLocation>
-              <cloverMergeDatabase>${PROJECT_HOME}/target/cloverMerge.db</cloverMergeDatabase>
-              <historyDir>${PROJECT_HOME}/tools/clover</historyDir>
-              <flushPolicy>threaded</flushPolicy>
-              <flushInterval>100</flushInterval>
-              <jdk>1.5</jdk>
-              <generateXml>true</generateXml>
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
             <version>2.3</version>
@@ -822,7 +822,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>taglist-maven-plugin</artifactId>
-            <version>2.2</version>
+            <version>2.4</version>
             <configuration>
               <tags>
                 <tag>TODO</tag>
@@ -842,12 +842,12 @@
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.6.1</version>
+            <version>2.7</version>
           </plugin>
           <plugin>
             <!--  This report includes a cross-reference of the project's sources. Each source entry is also linked with its corresponding Javadoc (if Javadoc was generated). -->
             <artifactId>maven-jxr-plugin</artifactId>
-            <version>2.1</version>
+            <version>2.2</version>
             <configuration>
               <linkJavadoc>true</linkJavadoc>
               <aggregate>true</aggregate>
@@ -855,7 +855,7 @@
           </plugin>
           <plugin>
             <artifactId>maven-jxr-plugin</artifactId>
-            <version>2.1</version>
+            <version>2.2</version>
             <configuration>
               <linkJavadoc>true</linkJavadoc>
               <aggregate>false</aggregate> <!-- Generates additional per module report -->
@@ -865,31 +865,6 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>jdepend-maven-plugin</artifactId>
             <version>2.0-beta-2</version>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-              <format>html</format>
-              <linkXRef>true</linkXRef>
-              <!-- <xrefLocation>xref</xrefLocation> -->
-              <sourceEncoding>utf-8</sourceEncoding>
-              <minimumTokens>100</minimumTokens>
-              <targetJdk>1.5</targetJdk>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>2.3.1</version>
-            <configuration>
-              <threshold>Normal</threshold>
-              <effort>Max</effort>
-              <excludeFilterFile>${PROJECT_HOME}/tools/findbugs-excludes.xml</excludeFilterFile>
-              <findbugsXmlOutput>true</findbugsXmlOutput>
-              <xmlOutput>true</xmlOutput>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -915,15 +890,6 @@
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-              <configLocation>${PROJECT_HOME}/tools/checkstyle.xml</configLocation>
-              <enableRulesSummary>false</enableRulesSummary>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-plugin-plugin</artifactId>
             <version>2.5.1</version>
           </plugin>
@@ -937,7 +903,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.3</version>
             <inherited>false</inherited>
             <executions>
               <execution>

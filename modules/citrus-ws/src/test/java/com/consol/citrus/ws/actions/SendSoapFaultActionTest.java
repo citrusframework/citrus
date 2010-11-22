@@ -1,20 +1,17 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.ws.actions;
@@ -27,10 +24,12 @@ import org.springframework.integration.core.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -42,10 +41,14 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testSendSoapFault() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
+        SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
-        sendSoapFaultAction.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
-        sendSoapFaultAction.setFaultString("Internal server error");
+        
+        SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
+        messageBuilder.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
+        messageBuilder.setFaultString("Internal server error");
+        
+        sendSoapFaultAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
         
@@ -70,9 +73,13 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testSendSoapFaultMissingFaultString() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
+        SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
-        sendSoapFaultAction.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
+        
+        SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
+        messageBuilder.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
+        
+        sendSoapFaultAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
         
@@ -97,10 +104,14 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testSendSoapFaultWithVariableSupport() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
+        SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
-        sendSoapFaultAction.setFaultCode("citrus:concat('{http://citrusframework.org}ws:', ${faultCode})");
-        sendSoapFaultAction.setFaultString("${faultString}");
+        
+        SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
+        messageBuilder.setFaultCode("citrus:concat('{http://citrusframework.org}ws:', ${faultCode})");
+        messageBuilder.setFaultString("${faultString}");
+        
+        sendSoapFaultAction.setMessageBuilder(messageBuilder);
         
         context.setVariable("faultCode", "TEC-1000");
         context.setVariable("faultString", "Internal server error");
@@ -127,8 +138,11 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     
     @Test
     public void testSendSoapFaultMissingFaultCode() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
+        SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
+        
+        SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
+        sendSoapFaultAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
         replay(messageSender);

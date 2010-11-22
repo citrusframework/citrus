@@ -1,28 +1,27 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.core.io.ClassPathResource;
@@ -31,27 +30,38 @@ import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.DefaultXMLMessageValidator;
+import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.script.*;
+import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.variable.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveMessageActionTest extends AbstractBaseTest {
-	
+
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    private DefaultXMLMessageValidator validator = new DefaultXMLMessageValidator();
+    private DomXmlMessageValidator validator = new DomXmlMessageValidator();
     
     @Test
     @SuppressWarnings("unchecked")
 	public void testReceiveMessageWithMessagePayloadData() {
 		ReceiveMessageAction receiveAction = new ReceiveMessageAction();
 		receiveAction.setMessageReceiver(messageReceiver);
+		
 		receiveAction.setValidator(validator);
-		receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+		PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		
 		Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -62,7 +72,8 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 		expect(messageReceiver.receive()).andReturn(controlMessage).once();
 		replay(messageReceiver);
 		
-		receiveAction.execute(context);
+		receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
 		
 		verify(messageReceiver);
 	}
@@ -72,8 +83,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessagePayloadResource() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+        
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload.xml", SendMessageActionTest.class));
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -84,6 +99,103 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessageBuilderScriptData() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(validator);
+        StringBuilder sb = new StringBuilder();
+        sb.append("markupBuilder.TestRequest(){\n");
+        sb.append("Message('Hello World!')\n");
+        sb.append("}");
+        
+        receiveAction.setValidator(validator);
+        GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setScriptData(sb.toString());
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
+        context.setVariable("text", "Hello World!");
+        
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(validator);
+        StringBuilder sb = new StringBuilder();
+        sb.append("markupBuilder.TestRequest(){\n");
+        sb.append("Message('${text}')\n");
+        sb.append("}");
+        
+        receiveAction.setValidator(validator);
+        GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setScriptData(sb.toString());
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithMessageBuilderScriptResource() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(validator);
+        receiveAction.setValidator(validator);
+        GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setScriptResource(new ClassPathResource("test-request-payload.groovy", ReceiveMessageActionTest.class));
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -94,8 +206,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
         
@@ -108,6 +224,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -118,8 +235,13 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-variables.xml", SendMessageActionTest.class));
+        receiveAction.setValidator(validator);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload-with-variables.xml", ReceiveMessageActionTest.class));
         
         context.setVariable("myText", "Hello World!");
         
@@ -132,6 +254,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -142,8 +265,13 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageResource(new ClassPathResource("test-request-payload-with-functions.xml", SendMessageActionTest.class));
+        receiveAction.setValidator(validator);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload-with-functions.xml", ReceiveMessageActionTest.class));
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -154,6 +282,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -164,12 +293,18 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageOverwriteMessageElementsXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
-        receiveAction.setMessageElements(overwriteElements);
+        
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -180,6 +315,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -190,12 +326,18 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageOverwriteMessageElementsDotNotation() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>?</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
-        receiveAction.setMessageElements(overwriteElements);
+        
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -206,6 +348,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -216,26 +359,34 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageOverwriteMessageElementsXPathWithNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
         
-        receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
-        receiveAction.setMessageElements(overwriteElements);
+
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-        		"<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
                                     .copyHeaders(headers)
                                     .build();
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -246,26 +397,34 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
         
-        receiveAction.setMessageData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
-        receiveAction.setMessageElements(overwriteElements);
+
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-        		"<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
                                     .copyHeaders(headers)
                                     .build();
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -276,15 +435,20 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageOverwriteMessageElementsXPathWithDefaultNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
         
-        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
         
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
-        receiveAction.setMessageElements(overwriteElements);
+
+        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>")
@@ -294,7 +458,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -305,14 +472,18 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessageHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        receiveAction.setHeaderValues(headers);
+        controlMessageBuilder.setMessageHeaders(headers);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -324,6 +495,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -334,8 +506,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
@@ -343,7 +519,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
-        receiveAction.setHeaderValues(headers);
+        controlMessageBuilder.setMessageHeaders(headers);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -355,6 +531,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -365,14 +542,18 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
-        receiveAction.setHeaderValues(headers);
+        controlMessageBuilder.setMessageHeaders(headers);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -384,6 +565,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -399,8 +581,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>${myText}</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -411,6 +597,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -426,14 +613,23 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Operation", "myOperation");
-        receiveAction.setExtractHeaderValues(headers);
+        
+        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
+        headerVariableExtractor.setHeaderMappings(headers);
+        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        variableExtractors.add(headerVariableExtractor);
+        receiveAction.addVariableExtractors(headerVariableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -445,6 +641,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("myOperation"));
@@ -458,13 +655,17 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/TestRequest/Message", "Hello World!");
-        receiveAction.setValidateMessageElements(messageElements);
+        contextBuilder.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -475,6 +676,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -485,25 +687,31 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/:TestRequest/:Message", "Hello World!");
-        receiveAction.setValidateMessageElements(messageElements);
+        contextBuilder.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
-        		"<Message>Hello World!</Message></TestRequest>")
+                "<Message>Hello World!</Message></TestRequest>")
                                     .copyHeaders(controlHeaders)
                                     .build();
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -514,14 +722,17 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
-        receiveAction.setValidateMessageElements(messageElements);
+        contextBuilder.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -532,7 +743,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -543,14 +757,17 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
-        receiveAction.setValidateMessageElements(messageElements);
+        contextBuilder.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -561,7 +778,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -572,18 +792,21 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
-        receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
 
+        receiveAction.setValidator(validator);
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
-        receiveAction.setValidateMessageElements(messageElements);
+        contextBuilder.setPathValidationExpressions(messageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrusframework.org/unittest");
-        receiveAction.setNamespaces(namespaces);
+        contextBuilder.setNamespaces(namespaces);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -594,7 +817,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
+
+        contextBuilder.setSchemaValidation(false);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -605,14 +831,21 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/TestRequest/Message", "messageVar");
-        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -623,6 +856,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -636,16 +870,23 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
-        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/:TestRequest/:Message", "messageVar");
-        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
@@ -657,6 +898,9 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -670,16 +914,23 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
-        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
-        receiveAction.setExtractMessageElements(extractMessageElements);
+
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -691,6 +942,9 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -704,16 +958,23 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
-        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
-        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -725,6 +986,9 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -738,20 +1002,27 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setSchemaValidation(false);
-        receiveAction.setMessageData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
         validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
-        receiveAction.setExtractMessageElements(extractMessageElements);
+        
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
+        variableExtractor.setxPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrusframework.org/unittest");
-        receiveAction.setNamespaces(namespaces);
+        variableExtractor.setNamespaces(namespaces);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -763,6 +1034,9 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        contextBuilder.setSchemaValidation(false);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -776,8 +1050,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveMessageWithTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
         
@@ -790,6 +1068,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive(5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -800,8 +1079,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveSelectedWithMessageSelectorString() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         String messageSelectorString = "Operation = 'sayHello'";
         receiveAction.setMessageSelectorString(messageSelectorString);
@@ -816,6 +1099,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected(messageSelectorString)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -826,8 +1110,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveSelectedWithMessageSelectorStringAndTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
         
@@ -844,6 +1132,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected(messageSelectorString, 5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -854,8 +1143,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveSelectedWithMessageSelectorMap() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, String> messageSelector = new HashMap<String, String>();
         messageSelector.put("Operation", "sayHello");
@@ -871,6 +1164,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'")).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -881,8 +1175,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         receiveAction.setReceiveTimeout(5000L);
         
@@ -900,6 +1198,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -909,17 +1208,22 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testMessageTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+        
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(null).once();
         replay(messageReceiver);
-        
+
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Received message is null!");
+            Assert.assertEquals(e.getMessage(), "Unable to process received message - message is null");
             verify(messageReceiver);
             return;
         }
@@ -932,8 +1236,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveEmptyMessagePayloadAsExpected() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("")
@@ -944,6 +1252,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -954,8 +1263,12 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     public void testReceiveEmptyMessagePayloadUnexpected() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
+
         receiveAction.setValidator(validator);
-        receiveAction.setMessageData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("")
@@ -966,14 +1279,108 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Validation error: Received message body is empty");
+            Assert.assertEquals(e.getMessage(), "Validation failed: Missing message payload data but was empty");
             verify(messageReceiver);
             return;
         }
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidationScript() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(new GroovyScriptMessageValidator());
+        
+        ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
+        contextBuilder.setValidationScript("assert root.Message.name() == 'Message'\n" + "assert root.Message.text() == 'Hello World!'");
+        contextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setScriptValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageWithValidationScriptResource() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+
+        receiveAction.setValidator(new GroovyScriptMessageValidator());
+        ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
+        contextBuilder.setValidationScriptResource(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class));
+        contextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        replay(messageReceiver);
+        
+        receiveAction.setScriptValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testInjectedMessageValidators() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                    .copyHeaders(headers)
+                                    .build();
+        
+        reset(messageReceiver);
+        expect(messageReceiver.receive()).andReturn(controlMessage).times(2);
+        replay(messageReceiver);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        receiveAction.execute(context);
+        
+        // now inject multiple validators
+        List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+        validators.add(new DomXmlMessageValidator());
+        validators.add(new GroovyScriptMessageValidator());
+        
+        TestContext newContext = createTestContext();
+        newContext.setMessageValidators(validators);
+        
+        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        ScriptValidationContextBuilder scriptValidationContextBuilder = new ScriptValidationContextBuilder();
+        scriptValidationContextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        receiveAction.setScriptValidationContextBuilder(scriptValidationContextBuilder);
+        receiveAction.execute(newContext);
+        
+        verify(messageReceiver);
     }
 }

@@ -1,27 +1,27 @@
 /*
- * Copyright 2006-2010 ConSol* Software GmbH.
- * 
- * This file is part of Citrus.
- * 
- * Citrus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright 2006-2010 the original author or authors.
  *
- * Citrus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You should have received a copy of the GNU General Public License
- * along with Citrus. If not, see <http://www.gnu.org/licenses/>.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 
@@ -33,7 +33,7 @@ import com.consol.citrus.message.MessageSender;
  * 
  * @author Christoph Christoph
  */
-public class MessageChannelSender implements MessageSender {
+public class MessageChannelSender implements MessageSender, ApplicationContextAware {
 
     /**
      * Logger
@@ -46,21 +46,43 @@ public class MessageChannelSender implements MessageSender {
     /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
     
+    /** The parent application context used for channel name resolving */
+    private ApplicationContext applicationContext;
+    
+    /** Channel resolver instance */
+    private ChannelResolver channelResolver;
+    
     /**
-     * @see MessageSender#send(Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        log.info("Sending message to: " + channel.getName());
+        String channelName = channel.getName();
+        
+        log.info("Sending message to channel: '" + channelName + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:");
-            log.debug(message.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
         
-        if(!messageChannelTemplate.send(message, channel)) {
-            throw new CitrusRuntimeException("Failed to send message to channel '" + channel.getName() + "'");
+        if (!messageChannelTemplate.send(message, channel)) {
+            throw new CitrusRuntimeException("Failed to send message to channel: '" + channelName + "'");
         }
+        
+        log.info("Message was successfully sent to channel: '" + channelName + "'");
+    }
+    
+    /**
+     * Resolve the channel by name.
+     * @param channelName the name to resolve
+     * @return the MessageChannel object
+     */
+    private MessageChannel resolveChannelName(String channelName) {
+        if (channelResolver == null) {
+            channelResolver = new BeanFactoryChannelResolver(applicationContext);
+        }
+        
+        return channelResolver.resolveChannelName(channelName);
     }
 
     /**
@@ -78,5 +100,20 @@ public class MessageChannelSender implements MessageSender {
     public void setMessageChannelTemplate(
             MessageChannelTemplate messageChannelTemplate) {
         this.messageChannelTemplate = messageChannelTemplate;
+    }
+
+    /**
+     * Set the Spring application context.
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Set the channel resolver.
+     * @param channelResolver the channelResolver to set
+     */
+    public void setChannelResolver(ChannelResolver channelResolver) {
+        this.channelResolver = channelResolver;
     }
 }

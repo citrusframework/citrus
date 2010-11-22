@@ -2,14 +2,14 @@
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-http</artifactId>
   <name>citrus-http</name>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <build>
     <plugins>
         <plugin>
@@ -21,12 +21,12 @@
   	<dependency>
   		<groupId>com.consol.citrus</groupId>
   		<artifactId>citrus-core</artifactId>
-  		<version>1.1-SNAPSHOT</version>
+  		<version>1.2-SNAPSHOT</version>
   	</dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-adapter</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
