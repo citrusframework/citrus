@@ -48,6 +48,12 @@ public class TestCaseCreator {
     /** Target package of test case */
     private String targetPackage;
     
+    /** Sample XML-Request */
+    private String xmlRequest;
+    
+    /** Sample XML-Request */
+    private String xmlResponse;
+    
     /** Target unit testing framework */
     private UnitFramework framework;
     
@@ -106,7 +112,7 @@ public class TestCaseCreator {
             formatter.printHelp("\n **** CITRUS TESTCREATOR ****", "\n CLI options:", options, "");
         }
     }
-    
+
     /**
      * Create the test case.
      */
@@ -126,11 +132,16 @@ public class TestCaseCreator {
         properties.put("test.method.name", name.substring(0,1).toLowerCase() + name.substring(1));
         properties.put("test.package", targetPackage);
         
+        if (xmlRequest != null && xmlResponse != null) {
+        	properties.put("test.request", xmlRequest);
+        	properties.put("test.response", xmlResponse);
+        }
+        
         targetPackage = targetPackage.replace('.', '/');
         
         createFileFromTemplate(properties,
                 CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml",
-                getTemplateFileForXMLTest());
+                getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
         
         createFileFromTemplate(properties, 
                 CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java", 
@@ -202,8 +213,8 @@ public class TestCaseCreator {
      * Get the XML test case file template.
      * @return file path of template file.
      */
-    private String getTemplateFileForXMLTest() {
-        return "test-template.xml";
+    private String getTemplateFileForXMLTest(boolean isWithRequestAndResponse) {
+        return isWithRequestAndResponse ? "test-req-res-template.xml" : "test-template.xml";
     }
 
     /**
@@ -262,6 +273,26 @@ public class TestCaseCreator {
     public TestCaseCreator withFramework(UnitFramework framework) {
         this.framework = framework;
         return this;
+    }
+    
+    /**
+     * Set the request to use.
+     * @param framework
+     * @return
+     */
+    public TestCaseCreator withXmlRequest(String xmlRequest) {
+    	this.xmlRequest = xmlRequest;
+    	return this;
+    }
+    
+    /**
+     * Set the response to use.
+     * @param framework
+     * @return
+     */
+    public TestCaseCreator withXmlResponse(String xmlResponse) {
+    	this.xmlResponse = xmlResponse;
+    	return this;
     }
     
     /**
