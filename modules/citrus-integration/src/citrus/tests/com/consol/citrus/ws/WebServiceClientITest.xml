@@ -28,6 +28,10 @@
             			]]>
             		</data>
             	</message>
+                <header>
+                    <element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
+                    <element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHello"/>
+                </header>
             </send>
             
             <receive with="webServiceHelloReplyHandler">
@@ -43,6 +47,10 @@
             			]]>
             		</data>
             	</message>
+                <header>
+                    <element name="Request" value="HelloRequest"/>
+                    <element name="Operation" value="sayHelloResponse"/>
+                </header>
             </receive>
     	</actions>
     </testcase>
