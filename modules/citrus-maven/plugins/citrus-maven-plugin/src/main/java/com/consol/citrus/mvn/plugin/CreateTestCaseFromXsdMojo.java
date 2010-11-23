@@ -139,13 +139,15 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 				}
 			
 				// try to guess the response-element and the testname from the request:
-				if(xsdRequestElem.endsWith("Req")) {
+				if (xsdRequestElem.endsWith("Req")) {
 					xsdResponseElem = xsdRequestElem.substring(0, xsdRequestElem.indexOf("Req")) + "Res";
 					name = xsdRequestElem.substring(0, xsdRequestElem.indexOf("Req")) + "Test";
-				}
-				if(xsdRequestElem.endsWith("Request")) {
+				} else if (xsdRequestElem.endsWith("Request")) {
 					xsdResponseElem = xsdRequestElem.substring(0, xsdRequestElem.indexOf("Request")) + "Response";
 					name = xsdRequestElem.substring(0, xsdRequestElem.indexOf("Request")) + "Test";
+				} else if (xsdRequestElem.endsWith("RequestMessage")) {
+				    xsdResponseElem = xsdRequestElem.substring(0, xsdRequestElem.indexOf("RequestMessage")) + "ResponseMessage";
+                    name = xsdRequestElem.substring(0, xsdRequestElem.indexOf("RequestMessage")) + "Test";
 				}
 
 				xsdResponseElem = prompter.prompt("Enter tag of response-element", xsdResponseElem);
