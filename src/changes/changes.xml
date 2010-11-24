@@ -17,6 +17,24 @@
   <body>
     <release version="1.2-SNAPSHOT" date="14.10.2010" description="Latest snapshot release">
         <action dev="christophd" type="add">
+          #338 WsAddressing support in Soap message sender
+        </action>
+        <action dev="christophd" type="add">
+          #308 Maven plugin for test generation from WSDL and XSD
+        </action>
+        <action dev="christophd" type="add">
+          #333 Dynamic SOAP endpoint uri resolver
+        </action>
+        <action dev="christophd" type="add">
+          #334 Dynamic Http endpoint uri resolver
+        </action>
+        <action dev="christophd" type="add">
+          #333 Dynamic SOAP endpoint uri resolver
+        </action>
+        <action dev="christophd" type="fix">
+          #332 Handle errors in before suite/class annotated methods
+        </action>
+        <action dev="christophd" type="add">
           #325 Log SOAP client errors properly
         </action>
         <action dev="christophd" type="fix">
