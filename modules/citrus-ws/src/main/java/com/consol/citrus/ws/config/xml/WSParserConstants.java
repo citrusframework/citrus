@@ -78,5 +78,8 @@ public class WSParserConstants {
     public static final String USE_ROOT_CONTEXT_ATTRIBUTE = "root-parent-context";
     
     public static final String USE_ROOT_CONTEXT_PROPERTY = "useRootContextAsParent";
+
+    public static final String ADRESSING_HEADERS_ATTRIBUTE = "addressing-headers";
     
+    public static final String ADRESSING_HEADERS_PROPERTY = "addressingHeaders";
 }

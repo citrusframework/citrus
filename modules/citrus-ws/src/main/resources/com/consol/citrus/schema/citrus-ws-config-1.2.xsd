@@ -41,6 +41,7 @@
             <xs:attribute name="reply-message-correlator" type="xs:string"/>
             <xs:attribute name="interceptors" type="xs:string"/>
             <xs:attribute name="endpoint-resolver" type="xs:string"/>
+            <xs:attribute name="addressing-headers" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="reply-message-handler">

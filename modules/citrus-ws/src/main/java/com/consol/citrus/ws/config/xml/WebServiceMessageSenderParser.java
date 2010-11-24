@@ -104,7 +104,13 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         if (StringUtils.hasText(endpointResolver)) {
             builder.addPropertyReference(WSParserConstants.ENDPOINT_RESOLVER_PROPERTY, endpointResolver);
         }
-
+        
+        String addressingHeaders = element.getAttribute(WSParserConstants.ADRESSING_HEADERS_ATTRIBUTE);
+        
+        if (StringUtils.hasText(addressingHeaders)) {
+            builder.addPropertyReference(WSParserConstants.ADRESSING_HEADERS_PROPERTY, addressingHeaders);
+        }
+        
         return builder.getBeanDefinition();
     }
 }

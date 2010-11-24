@@ -94,6 +94,34 @@
                               message-factory="messageFactory"
                               interceptors="clientInterceptors"/>
                               
+    <citrus-ws:message-sender id="wsAddressingHelloRequestSender"
+                              request-url="http://localhost:8071/hello"
+                              reply-handler="webServiceHelloReplyHandler"
+                              message-factory="messageFactory"
+                              interceptors="clientInterceptors"
+                              addressing-headers="wsAddressing200408"/>
+    
+    <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
+        <property name="version" value="VERSION200408"/>
+        <property name="action" value="sayHello"/>
+        <property name="to" value="urn:CitrusHelloServer"/>
+        <property name="from">
+            <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+                <constructor-arg value="urn:CitrusClient"/>
+            </bean>
+        </property>
+        <property name="replyTo">
+            <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+                <constructor-arg value="urn:CitrusClient"/>
+            </bean>
+        </property>
+        <property name="faultTo">
+            <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+                <constructor-arg value="urn:ClientFaultResolver"/>
+            </bean>
+        </property>
+    </bean>
+                                  
     <util:list id="clientInterceptors">
         <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
     </util:list>

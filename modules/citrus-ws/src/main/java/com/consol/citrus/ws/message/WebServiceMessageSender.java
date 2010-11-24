@@ -17,34 +17,23 @@
 package com.consol.citrus.ws.message;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.*;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.ws.addressing.WsAddressingHeaders;
+import com.consol.citrus.ws.message.callback.*;
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
@@ -61,6 +50,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     
     /** Resolves dynamic endpoint uri */
     private EndpointUriResolver endpointResolver;
+    
+    /** WS adressing specific headers */
+    private WsAddressingHeaders addressingHeaders;
     
     /**
      * Logger
@@ -100,20 +92,28 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     				"' Currently only 'java.lang.String' is supported as payload type.");
         }
         
-        WebServiceMessageSenderCallback senderCallback = new WebServiceMessageSenderCallback(message, attachment);
-        WebServiceMessageReceiverCallback receiverCallback = new WebServiceMessageReceiverCallback();
+        WebServiceMessageCallback requestCallback;
+        if (addressingHeaders == null) {
+            requestCallback = new SoapRequestMessageCallback(message, attachment);
+        } else {
+            requestCallback = new WsAddressingRequestMessageCallback(message, 
+                    attachment, addressingHeaders);
+        }
+        
+        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback();
+        
         getWebServiceTemplate().setFaultMessageResolver(this);
         
         // send and receive message
         if (endpointResolver != null) {
-            getWebServiceTemplate().sendAndReceive(endpointUri, senderCallback, receiverCallback);
+            getWebServiceTemplate().sendAndReceive(endpointUri, requestCallback, responseCallback);
         } else { // use default endpoint uri
-            getWebServiceTemplate().sendAndReceive(senderCallback, receiverCallback);
+            getWebServiceTemplate().sendAndReceive(requestCallback, responseCallback);
         }
 
         log.info("SOAP message was successfully sent to endpoint: '" + endpointUri + "'");
         
-        Message<String> responseMessage = receiverCallback.getResponse();
+        Message<String> responseMessage = responseCallback.getResponse();
         
         if(replyMessageHandler != null) {
             if(correlator != null) {
@@ -151,143 +151,19 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         this.correlator = correlator;
     }
     
-	/**
-	 * Callback for Webservice-Sending-Actions
-	 */
-	private static class WebServiceMessageSenderCallback implements WebServiceMessageCallback {
-
-		private Message<?> message;
-		private Attachment attachment = null;
-		
-		public WebServiceMessageSenderCallback(Message<?> message, Attachment attachment) {
-			this.message = message;
-			this.attachment = attachment;
-		}
-
-		public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-			
-		    SoapMessage soapRequest = ((SoapMessage)requestMessage);
-		    
-		    // Copy payload into soap-body: 
-		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	        Transformer transformer = transformerFactory.newTransformer();
-	        transformer.transform(new StringSource(message.getPayload().toString()), soapRequest.getSoapBody().getPayloadResult());
-		    
-	        // Copy headers into soap-header:
-		    for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-		        if(MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
-		            continue;
-		        }
-		        
-		        if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
-		            soapRequest.setSoapAction(headerEntry.getValue().toString());
-		        } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
-		            transformer.transform(new StringSource(headerEntry.getValue().toString()), 
-		                    soapRequest.getSoapHeader().getResult());
-		        } else {
-		            SoapHeaderElement headerElement;
-		            if(QNameUtils.validateQName(headerEntry.getKey())) {
-		                headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
-		            } else {
-		                headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
-		            }
-		            
-		            headerElement.setText(headerEntry.getValue().toString());
-		        }
-		    }
-		    // Add attachment:
-		    if(attachment != null) {
-		        if(log.isDebugEnabled()) {
-		            log.debug("Adding attachment to SOAP message: '" + attachment.getContentId() + "' ('" + attachment.getContentType() + "')");
-		        }
-		        
-		        soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
-		            public InputStream getInputStream() throws IOException {
-		                return attachment.getInputStream();
-		            }
-		        }, attachment.getContentType());
-		    }
-		}
-	}
-	
-	/**
-	 * Callback for Webservice-Receiving-Actions
-	 */
-	private static class WebServiceMessageReceiverCallback implements WebServiceMessageCallback {
-
-		private Message<String> response;
-		
-		public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
-			
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	        Transformer transformer = transformerFactory.newTransformer();
-	        
-	        StringResult responsePayload = new StringResult();
-	        transformer.transform(responseMessage.getPayloadSource(), responsePayload);
-	        
-			MessageBuilder<String> responseMessageBuilder = MessageBuilder.withPayload(responsePayload.toString());
-			
-		    if (responseMessage instanceof SoapMessage) {
-	            SoapMessage soapMessage = (SoapMessage) responseMessage;
-	            SoapHeader soapHeader = soapMessage.getSoapHeader();
-	            
-	            if (soapHeader != null) {
-	                Iterator<?> iter = soapHeader.examineAllHeaderElements();
-	                while (iter.hasNext()) {
-	                    SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
-	                    responseMessageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
-	                }
-	            }
-	            
-	            if(StringUtils.hasText(soapMessage.getSoapAction())) {
-	                if(soapMessage.getSoapAction().equals("\"\"")) {
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
-	                } else {
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
-	                }
-	            }
-	            
-	            Iterator<?> attachments = soapMessage.getAttachments();
-
-	            while (attachments.hasNext()) {
-	                Attachment attachment = (Attachment)attachments.next();
-	                
-	                if(StringUtils.hasText(attachment.getContentId())) {
-	                    String contentId = attachment.getContentId();
-	                    
-	                    if(contentId.startsWith("<")) {contentId = contentId.substring(1);}
-	                    if(contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
-	                    
-	                    if(log.isDebugEnabled()) {
-	                    	log.debug("Response contains attachment with contentId '" + contentId + "'");
-	                    }
-	                    
-	                    responseMessageBuilder.setHeader(contentId, attachment);	                    
-	                    // TODO CW: is this ok here or do we have to include the SoapAttachmentAwareJmsCallback?
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
-	                    responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8");
-	                } else {
-	                    log.warn("Could not handle response attachment with empty 'contentId'. Attachment is ignored in further processing");
-	                }
-	            }
-	        }
-		    
-		    // now set response for later access via getResponse():
-	        response = responseMessageBuilder.build();
-		}
-		
-		public Message<String> getResponse() {
-			return response;
-		}
-	}
-
     /**
      * Sets the endpoint uri resolver.
      * @param endpointResolver the endpointUriResolver to set
      */
     public void setEndpointResolver(EndpointUriResolver endpointResolver) {
         this.endpointResolver = endpointResolver;
+    }
+
+    /**
+     * Sets the ws addressing headers for this message sender.
+     * @param addressingHeaders the addressingHeaders to set
+     */
+    public void setAddressingHeaders(WsAddressingHeaders addressingHeaders) {
+        this.addressingHeaders = addressingHeaders;
     }
 }
