@@ -315,34 +315,38 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
      * @param parserContext
      * @return
      */
-    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element messageElement, ParserContext parserContext) {
+    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element element, ParserContext parserContext) {
         ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
         
-        boolean done = false;
-        List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-        if (validateElements.size() > 0) {
-            for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
-                Element validateElement = (Element) iter.next();
-                
-                Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
-                
-                String type = scriptElement.getAttribute("type");
-                contextBuilder.setScriptType(type);
-                
-                // check for nested validate script child node
-                if (scriptElement != null) {
-                    if (!done) {
-                        done = true;
-                    } else {
-                        throw new BeanCreationException("Found multiple validation script definitions - " +
-                        		"only supporting a single validation script for message validation");
-                    }
+        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        
+        if (messageElement != null) {
+            boolean done = false;
+            List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
+            if (validateElements.size() > 0) {
+                for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
+                    Element validateElement = (Element) iter.next();
                     
-                    String filePath = scriptElement.getAttribute("file");
-                    if (StringUtils.hasText(filePath)) {
-                        contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
-                    } else {
-                        contextBuilder.setValidationScript(DomUtils.getTextValue(scriptElement));
+                    Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
+                    
+                    // check for nested validate script child node
+                    if (scriptElement != null) {
+                        if (!done) {
+                            done = true;
+                        } else {
+                            throw new BeanCreationException("Found multiple validation script definitions - " +
+                            		"only supporting a single validation script for message validation");
+                        }
+    
+                        String type = scriptElement.getAttribute("type");
+                        contextBuilder.setScriptType(type);
+                        
+                        String filePath = scriptElement.getAttribute("file");
+                        if (StringUtils.hasText(filePath)) {
+                            contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
+                        } else {
+                            contextBuilder.setValidationScript(DomUtils.getTextValue(scriptElement));
+                        }
                     }
                 }
             }
