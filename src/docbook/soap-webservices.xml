@@ -580,5 +580,78 @@ Server: Jetty(7.0.0.pre5)
             you do not need to worry about the JMS header encoding done in the SoapAttachmentAwareJmsMessageCallback, because the ws:attachment extension will do all magic for you.
             Just use a extended message receiving action as shown in the example at the beginning of this chapter and you are able to validate the SOAP attachment data.</para>
         </section>
+        
+        <section id="soap-ws-adressing">
+            <title>WS-Addressing support</title>
+            
+            <para>WebServices offer lots of technologies and standards within the context of WebServices. Some people call them WS-* specifications. One of these specifications deals 
+            with addressing WebServices. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</para>
+            
+            <para>In Citrus WebServiceMessageSender you can add those header information using the common configuration like this:</para>
+            
+            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+                         request-url=&quot;http://localhost:8090/test&quot; 
+                         reply-handler=&quot;soapResponseHandler&quot;
+                         addressing-headers=&quot;wsAddressing200408&quot;/&gt;
+
+&lt;bean id=&quot;wsAddressing200408&quot; class=&quot;com.consol.citrus.ws.addressing.WsAddressingHeaders&quot;&gt;
+    &lt;property name=&quot;version&quot; value=&quot;VERSION200408&quot;/&gt;
+    &lt;property name=&quot;action&quot; 
+                 value=&quot;http://citrus.sample/sayHello&quot;/&gt;
+    &lt;property name=&quot;to&quot; 
+                 value=&quot;http://citrus.sample/server&quot;/&gt;
+    &lt;property name=&quot;from&quot;&gt;
+        &lt;bean class=&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;&gt;
+            &lt;constructor-arg value=&quot;http://citrus.sample/client&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;replyTo&quot;&gt;
+        &lt;bean class=&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;&gt;
+            &lt;constructor-arg value=&quot;http://citrus.sample/client&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;faultTo&quot;&gt;
+        &lt;bean class=&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;&gt;
+            &lt;constructor-arg value=&quot;http://citrus.sample/fault/resolver&quot;/&gt;
+        &lt;/bean&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+            
+            <note>
+                <para>The WS-Addressing specification knows several versions. Supported version are VERSION10 (WS-Addressing 1.0 May 2006) and VERSION200408 
+                (August 2004 edition of the WS-Addressing specification).</para>
+            </note>
+            
+            <para>The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request  with
+            ws addressing headers looks like follows:</para>
+            
+            <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+    &lt;SOAP-ENV:Header xmlns:wsa=&quot;http://schemas.xmlsoap.org/ws/2004/08/addressing&quot;&gt;
+        &lt;wsa:To SOAP-ENV:mustUnderstand=&quot;1&quot;&gt;http://citrus.sample/server&lt;/wsa:To&gt;
+        &lt;wsa:From&gt;
+            &lt;wsa:Address&gt;http://citrus.sample/client&lt;/wsa:Address&gt;
+        &lt;/wsa:From&gt;
+        &lt;wsa:ReplyTo&gt;
+            &lt;wsa:Address&gt;http://citrus.sample/client&lt;/wsa:Address&gt;
+        &lt;/wsa:ReplyTo&gt;
+        &lt;wsa:FaultTo&gt;
+            &lt;wsa:Address&gt;http://citrus.sample/fault/resolver&lt;/wsa:Address&gt;
+        &lt;/wsa:FaultTo&gt;
+        &lt;wsa:Action&gt;http://citrus.sample/sayHello&lt;/wsa:Action&gt;
+        &lt;wsa:MessageID&gt;urn:uuid:4c4d8af2-b402-4bc0-a2e3-ad33b910e394&lt;/wsa:MessageID&gt;
+    &lt;/SOAP-ENV:Header&gt;
+    &lt;SOAP-ENV:Body&gt;
+        &lt;cit:HelloRequest xmlns:cit=&quot;http://citrus/sample/sayHello&quot;&gt;
+            &lt;cit:Text&gt;Hello Citrus!&lt;/cit:Text&gt;
+        &lt;/cit:HelloRequest&gt;
+    &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;
+            </programlisting>
+            
+            <important>
+                <para>The message id property is automatically generated for each request. If you need to set a static message 
+                id you can do so in citrus-context message sender configuration.</para>
+            </important>
+        </section>
     </section>    
 </chapter>
