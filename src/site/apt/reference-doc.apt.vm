@@ -6,47 +6,47 @@ Documentation
   
   Citrus offers following documentation material:
   
-    * {{{installation.html}Installation}}
+    * {{{./installation.html}Installation}}
     
-    * {{{tutorials.html}Tutorials}}
+    * {{{./tutorials.html}Tutorials}}
     
     []
     
     <<Latest snapshot release>>: ${project.version}
     
-    * Reference: {{{reference/html_single/index.html}HTML}} | {{{reference/html/index.html}HTML (multipage)}} | {{{reference/pdf/citrus-reference.pdf}PDF}}
+    * Reference: {{{./reference/html_single/index.html}HTML}} | {{{./reference/html/index.html}HTML (multipage)}} | {{{./reference/pdf/citrus-reference.pdf}PDF}}
         
     * API (Javadoc)
         
-        * {{{modules/citrus-core/apidocs/index.html}citrus-core}}
+        * {{{./modules/citrus-core/apidocs/index.html}citrus-core}}
         
-        * {{{modules/citrus-http/apidocs/index.html}citrus-http}}
+        * {{{./modules/citrus-http/apidocs/index.html}citrus-http}}
         
-        * {{{modules/citrus-adapter/apidocs/index.html}citrus-adapter}}
+        * {{{./modules/citrus-adapter/apidocs/index.html}citrus-adapter}}
         
-        * {{{modules/citrus-ws/apidocs/index.html}citrus-ws}}
+        * {{{./modules/citrus-ws/apidocs/index.html}citrus-ws}}
         
-        * {{{modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
+        * {{{./modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
     
     []
     
     <<Latest stable release>>: 1.1
     
-    * Reference: {{{reference/1.1/html_single/index.html}HTML}} | {{{reference/1.1/html/index.html}HTML (multipage)}} | {{{reference/1.1/pdf/citrus-reference.pdf}PDF}}
+    * Reference: {{{./reference/1.1/html_single/index.html}HTML}} | {{{./reference/1.1/html/index.html}HTML (multipage)}} | {{{./reference/1.1/pdf/citrus-reference.pdf}PDF}}
     
     []
     
     <<Older versions>>: 1.0
     
-    * Reference: {{{reference/1.0/html_single/index.html}HTML}} | {{{reference/1.0/html/index.html}HTML (multipage)}} | {{{reference/1.0/pdf/citrus-reference.pdf}PDF}}
+    * Reference: {{{./reference/1.0/html_single/index.html}HTML}} | {{{./reference/1.0/html/index.html}HTML (multipage)}} | {{{./reference/1.0/pdf/citrus-reference.pdf}PDF}}
     
     []
             
 Citrus developers
     
-    * {{{dev-quickstart.html}Quickstart}}
+    * {{{./dev-quickstart.html}Quickstart}}
     
-    * {{{conventions.html}Coding conventions}}
+    * {{{./conventions.html}Coding conventions}}
     
-    * {{{contributing.html}How to contribute changes}}
+    * {{{./contributing.html}How to contribute changes}}
     

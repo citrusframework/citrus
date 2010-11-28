@@ -8,7 +8,7 @@ Contributing
   You can access the Citrus source on GitHub {{{http://github.com/christophd/citrus}http://github.com/christophd/citrus}}. 
   You can fork the Citrus project on GitHub very easy in order to provide changes. In case you have coded 
   extensions, bug fixes or simply new features, please send us a pull request from your repository. If you are not sure 
-  how to do it please see our {{{quickstart.html}quickstart}} or refer to the very good documentation and how-to section 
+  how to do it please see our {{{./quickstart.html}quickstart}} or refer to the very good documentation and how-to section 
   on GitHub ({{{http://github.com/}http://github.com/}}).
   
   If you still have questions regarding Citrus development please do not hesitate to send us a mail regarding your 

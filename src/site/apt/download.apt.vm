@@ -11,9 +11,9 @@ Download Citrus
   
   The snapshot release keeps you up-to-date with the latest changes.
   
-  * citrus-${project.version}-with-dependencies ({{{dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
+  * citrus-${project.version}-with-dependencies ({{{./dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{./dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-${project.version}-src ({{{dist/citrus-${project.version}-src.zip}zip}}/{{{dist/citrus-${project.version}-src.tar.gz}tar.gz}})
+  * citrus-${project.version}-src ({{{./dist/citrus-${project.version}-src.zip}zip}}/{{{./dist/citrus-${project.version}-src.tar.gz}tar.gz}})
   
   []
 
@@ -21,9 +21,9 @@ Download Citrus
   
   Version 1.1 is the current stable release.
   
-  * citrus-1.1-with-dependencies ({{{dist/citrus-1.1-with-dependencies.zip}zip}}/{{{dist/citrus-1.1-with-dependencies.tar.gz}tar.gz}})
+  * citrus-1.1-with-dependencies ({{{./dist/citrus-1.1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.1-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-1.1-src ({{{dist/citrus-1.1-src.zip}zip}}/{{{dist/citrus-1.1-src.tar.gz}tar.gz}})
+  * citrus-1.1-src ({{{./dist/citrus-1.1-src.zip}zip}}/{{{./dist/citrus-1.1-src.tar.gz}tar.gz}})
   
   []
   
@@ -31,9 +31,9 @@ Download Citrus
 
   Version 1.0 (Note: This version is licensed under GPLv3).
   
-  * citrus-1.0-with-dependencies ({{{dist/citrus-1.0-with-dependencies.zip}zip}}/{{{dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
+  * citrus-1.0-with-dependencies ({{{./dist/citrus-1.0-with-dependencies.zip}zip}}/{{{./dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-1.0-src ({{{dist/citrus-1.0-src.zip}zip}}/{{{dist/citrus-1.0-src.tar.gz}tar.gz}})
+  * citrus-1.0-src ({{{./dist/citrus-1.0-src.zip}zip}}/{{{./dist/citrus-1.0-src.tar.gz}tar.gz}})
   
   []
     
@@ -52,7 +52,7 @@ Logging framework notice
 Maven 2
 
   You can easily use Citrus in a Maven project by defining test-scoped dependencies. Simply add the ConSol Labs repository and 
-  the following dependencies to your POM (pom.xml). See also our {{{tutorials/run-with-maven.html} Maven tutorial}} for a detailed description.
+  the following dependencies to your POM (pom.xml). See also our {{{./tutorials/run-with-maven.html} Maven tutorial}} for a detailed description.
 
 +---
   <repository>
@@ -90,7 +90,7 @@ Maven 2
   </dependency>
 +---
   
-  In case you need Citrus modules add following dependencies. See also our {{{modules-introduction.html} modules section}} 
+  In case you need Citrus modules add following dependencies. See also our {{{./modules-introduction.html} modules section}} 
   for more information on Citrus modules:
   
 +---

@@ -25,13 +25,13 @@ Installation
  
  <<Installation>>
  
- * {{{download.html}Download}} the latest Citrus {{{download.html}release archive}}
+ * {{{./download.html}Download}} the latest Citrus {{{./download.html}release archive}}
  
  * Extract the archive into an appropriate location on your local storage
  
- * Use the {{{tutorials/run-with-ant.html}ANT tutorial}} in our tutorials section to find out how to run tests using ANT.
+ * Use the {{{./tutorials/run-with-ant.html}ANT tutorial}} in our tutorials section to find out how to run tests using ANT.
  
- * Read the {{{tutorials/run-with-maven.html}Maven tutorial}} to find out how to integrate the Citrus tests 
+ * Read the {{{./tutorials/run-with-maven.html}Maven tutorial}} to find out how to integrate the Citrus tests 
    into the Maven build lifecycle
  
  []

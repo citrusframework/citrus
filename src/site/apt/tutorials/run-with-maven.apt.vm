@@ -7,8 +7,8 @@ Integrate Citrus with Maven
   In case you already use Maven build tool in your project it is most suitable for you to include Citrus into your Maven build lifecycle. In this
   tutorial we will setup a project with Maven and configure the Maven POM to execute all Citrus tests during the integration-test phase.
   First of all we create a new Java project called "citrus-sample". We use the Maven command line tool in combination with Maven's archetype 
-  plugin. In case you do not have Maven installed yet it is time for you to do so before continuing this tutorial. See the {{{}Maven Homepage}} for
-  detailed installation instructions. as a test-scoped dependency into your Maven project. 
+  plugin. In case you do not have Maven installed yet it is time for you to do so before continuing this tutorial. See the {{{http://http://maven.apache.org/}Maven}} 
+  site for detailed installation instructions. as a test-scoped dependency into your Maven project. 
   
 +---
   mvn archetype:generate
