@@ -91,6 +91,7 @@
                 <exclude>org.apache.ant:ant</exclude>
                 <exclude>org.apache.ant:ant-launcher</exclude>
                 <exclude>org.springframework:spring-tx</exclude>
+                <exclude>org.testng:testng</exclude>
             </excludes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
