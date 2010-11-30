@@ -16,8 +16,10 @@
 
 package com.consol.citrus.samples.bookregistry.endpoint.interceptor;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.springframework.core.io.*;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
 import org.springframework.ws.soap.SoapMessage;
@@ -31,13 +33,17 @@ public class BookCoverAttachmentEndpointInterceptor extends EndpointInterceptorA
 
     private Object bookCoverInboundGateway;
     
+    private final Resource cover = new ClassPathResource("com/consol/citrus/samples/bookregistry/covers/citrus.png");
+    
     @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         SoapMessage response = (SoapMessage)messageContext.getResponse();
         
         if (endpoint.equals(bookCoverInboundGateway)) {
-            Resource cover = new ClassPathResource("com/consol/citrus/samples/bookregistry/covers/citrus.png");
-            response.addAttachment("bookCoverImage", cover.getFile());
+            response.addAttachment("bookCoverImage", new InputStreamSource() {
+                public InputStream getInputStream() throws IOException {
+                    return cover.getInputStream();
+                }}, "image/png");
         }
         
         return true;
