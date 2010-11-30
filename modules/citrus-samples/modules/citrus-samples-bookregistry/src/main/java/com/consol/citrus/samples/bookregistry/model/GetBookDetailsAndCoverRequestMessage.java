@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.samples.bookregistry.exceptions;
-
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageHandlingException;
+package com.consol.citrus.samples.bookregistry.model;
 
 /**
  * @author Christoph Deppisch
  */
-public class UnknownBookException extends MessageHandlingException {
-
-    private static final long serialVersionUID = 1L;
+public class GetBookDetailsAndCoverRequestMessage {
+    private String isbn;
 
     /**
-     * @param failedMessage
-     * @param isbn
+     * @param isbn the isbn to set
      */
-    public UnknownBookException(Message<?> failedMessage, String isbn) {
-        super(failedMessage, "Book(isbn:'" + isbn + "') not available in registry");
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    /**
+     * @return the isbn
+     */
+    public String getIsbn() {
+        return isbn;
     }
 }

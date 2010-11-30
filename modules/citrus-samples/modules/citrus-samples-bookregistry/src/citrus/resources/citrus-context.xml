@@ -51,6 +51,7 @@
     <citrus-ws:reply-message-handler id="bookRegistryResponseMessageHandler"/>
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
         
     <!-- TestSuite definition -->

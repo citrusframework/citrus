@@ -65,6 +65,22 @@
         </field>
     </class>
     
+    <class name="com.consol.citrus.samples.bookregistry.model.GetBookDetailsAndCoverRequestMessage">
+        <map-to xml="GetBookDetailsAndCoverRequestMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="isbn">
+            <bind-xml name="isbn" node="element"/>
+        </field>
+    </class>
+    
+    <class name="com.consol.citrus.samples.bookregistry.model.GetBookDetailsAndCoverResponseMessage">
+        <map-to xml="GetBookDetailsAndCoverResponseMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
+
+        <field name="book" type="com.consol.citrus.samples.bookregistry.model.Book">
+            <bind-xml name="book" node="element"/>
+        </field>
+    </class>
+    
     <class name="com.consol.citrus.samples.bookregistry.model.ListBooksRequestMessage">
         <map-to xml="ListBooksRequestMessage" ns-prefix="bkr" ns-uri="http://www.consol.com/schemas/bookregistry"/>
     </class>

@@ -71,7 +71,26 @@ public class BookRegistry {
         Book book = bookRegistry.get(request.getPayload().getIsbn());
         
         if(book == null) {
-            throw new UnknownBookException(request);
+            throw new UnknownBookException(request, request.getPayload().getIsbn());
+        } else {
+            response.setBook(book);
+        }
+        
+        return MessageBuilder.withPayload(response).build();
+    }
+    
+    /**
+     * Get the book cover for a book with given isbn.
+     * @param request
+     * @return
+     */
+    public Message<GetBookDetailsAndCoverResponseMessage> getBookCover(Message<GetBookDetailsAndCoverRequestMessage> request) {
+        GetBookDetailsAndCoverResponseMessage response = new GetBookDetailsAndCoverResponseMessage();
+        
+        Book book = bookRegistry.get(request.getPayload().getIsbn());
+        
+        if(book == null) {
+            throw new UnknownBookException(request, request.getPayload().getIsbn());
         } else {
             response.setBook(book);
         }

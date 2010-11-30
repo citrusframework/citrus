@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.samples.bookregistry.exceptions;
+package com.consol.citrus.samples.bookregistry;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageHandlingException;
+import org.testng.ITestContext;
+import org.testng.annotations.Test;
+
+import com.consol.citrus.samples.CitrusSamplesDemo;
+import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTest;
 
 /**
+ * TODO: Description
+ *
  * @author Christoph Deppisch
+ * @since 2010-02-24
  */
-public class UnknownBookException extends MessageHandlingException {
+public class GetBookDetailsAndCover_OK_1_Test extends DemoAwareTestNGCitrusTest {
+    
+    BookRegistryDemo demo = new BookRegistryDemo();
+    
+    @Test
+    public void getBookDetailsAndCover_OK_1_Test(ITestContext testContext) {
+        executeTest(testContext);
+    }
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * @param failedMessage
-     * @param isbn
-     */
-    public UnknownBookException(Message<?> failedMessage, String isbn) {
-        super(failedMessage, "Book(isbn:'" + isbn + "') not available in registry");
+    @Override
+    public CitrusSamplesDemo getDemo() {
+        return demo;
     }
 }

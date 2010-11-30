@@ -49,6 +49,22 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="GetBookDetailsAndCoverRequestMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isbn" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="GetBookDetailsAndCoverResponseMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="book" type="Book"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="ListBooksRequestMessage"/>
     
     <xs:element name="ListBooksResponseMessage">
