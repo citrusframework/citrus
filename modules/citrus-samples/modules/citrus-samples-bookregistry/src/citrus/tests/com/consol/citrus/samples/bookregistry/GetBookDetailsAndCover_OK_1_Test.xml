@@ -94,7 +94,7 @@
                 <extract>
                     <message path="/bkr:GetBookDetailsAndCoverResponseMessage/bkr:book/bkr:id" variable="bookId"></message>
                 </extract>
-                <ws:attachment content-id="bookCoverImage" content-type="application/octet-stream">
+                <ws:attachment content-id="bookCoverImage" content-type="image/png">
                     <ws:resource file="classpath:com/consol/citrus/samples/bookregistry/covers/citrus.png"/>
                 </ws:attachment>
             </ws:receive>
