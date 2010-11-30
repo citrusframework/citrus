@@ -68,7 +68,7 @@
                     </data>
                 </message>
                 <header>
-                    <element name="citrus_soap_action" value="get-book-details"/>
+                    <element name="citrus_soap_action" value="list-books"/>
                 </header>
             </send>
             

@@ -5,9 +5,11 @@
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
 	
@@ -35,10 +37,16 @@
     <!-- Message Validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     
+    <!-- SOAP client interceptor basically for logging whole SOAP envelope to logger -->
+    <util:list id="clientInterceptors">
+        <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
+    </util:list>
+  
     <!-- Message Sender/Receiver -->
     <citrus-ws:message-sender id="bookRegistryRequestMessageSender" 
                               request-url="http://localhost:8070/bookregistry"
-                              reply-handler="bookRegistryResponseMessageHandler"/>
+                              reply-handler="bookRegistryResponseMessageHandler"
+                              interceptors="clientInterceptors"/>
                               
     <citrus-ws:reply-message-handler id="bookRegistryResponseMessageHandler"/>
 
