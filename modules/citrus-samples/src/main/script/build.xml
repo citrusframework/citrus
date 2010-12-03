@@ -1,4 +1,4 @@
-<project name="flight-booking" basedir="." default="citrus.run.tests">
+<project name="citrus-samples" basedir="." default="citrus.run.tests">
 		
 	<property file="src/citrus/resources/citrus.properties"/>
 	
