@@ -19,6 +19,7 @@ package com.consol.citrus.ws.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.springframework.util.Assert;
@@ -36,7 +37,8 @@ import com.consol.citrus.ws.SoapAttachment;
  * @author Christoph Deppisch
  */
 public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
-    @Autowired
+    @Autowired(required = false)
+    @Qualifier("soapAttachmentValidator")
     private MessageValidator<ValidationContext> validator;
     
     /** validation context holding information like expected message payload, ignored elements and so on */
