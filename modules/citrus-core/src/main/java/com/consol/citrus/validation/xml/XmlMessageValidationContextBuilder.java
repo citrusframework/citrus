@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
+import com.consol.citrus.validation.ControlMessageValidationContext;
+import com.consol.citrus.validation.ControlMessageValidationContextBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * Validation context builder specific for XML message validation. Constructs a 
@@ -28,7 +30,7 @@ import com.consol.citrus.validation.context.AbstractValidationContextBuilder;
  * 
  * @author Christoph Deppisch
  */
-public class XmlMessageValidationContextBuilder extends AbstractValidationContextBuilder<XmlMessageValidationContext> {
+public class XmlMessageValidationContextBuilder extends ControlMessageValidationContextBuilder {
 
     /** XPath validation expressions */
     private Map<String, String> pathValidationExpressions;
@@ -45,14 +47,8 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
     /** Namespace definitions for xpath expression evaluation */
     private Map<String, String> namespaces;
     
-    /**
-     * Prepare the message validation context with XML validation specific information.
-     * 
-     * @param action the test action.
-     * @param context the current test context.
-     * @return the xml validation context.
-     */
-    public XmlMessageValidationContext getValidationContext(TestContext context) {
+    @Override
+    public ControlMessageValidationContext prepareValidationContext(TestContext context) {
         XmlMessageValidationContext validationContext =  new XmlMessageValidationContext();
         
         validationContext.setPathValidationExpressions(pathValidationExpressions);
@@ -62,6 +58,11 @@ public class XmlMessageValidationContextBuilder extends AbstractValidationContex
         validationContext.setNamespaces(namespaces);
         
         return validationContext;
+    }
+    
+    @Override
+    public boolean supportsValidationContextType(Class<? extends ValidationContext> validationContextType) {
+        return validationContextType.equals(XmlMessageValidationContext.class);
     }
     
     /**

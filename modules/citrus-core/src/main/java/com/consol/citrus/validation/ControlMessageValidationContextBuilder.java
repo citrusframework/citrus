@@ -19,6 +19,7 @@ package com.consol.citrus.validation;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
@@ -36,26 +37,32 @@ public class ControlMessageValidationContextBuilder implements ValidationContext
      * Build the validation context.
      */
     public ControlMessageValidationContext buildValidationContext(TestContext context) {
-        ControlMessageValidationContext validationContext = new ControlMessageValidationContext();
+        ControlMessageValidationContext validationContext = prepareValidationContext(context);
         
-        addControlMessageToValidationContext(context, validationContext);
+        validationContext.setControlMessage(messageBuilder.buildMessageContent(context));
         
         return validationContext;
     }
     
     /**
-     * Adds control message to the validation context if present. Subclasses may use this method to add
-     * the control message to their implementation of {@link ControlMessageValidationContext}
-     * 
-     * @param action the current test action
-     * @param context the current test context
-     * @param validationContext the validation context object
+     * Checks the support for this validation context type.
      */
-    public void addControlMessageToValidationContext(TestContext context, 
-            ControlMessageValidationContext validationContext) {
-        validationContext.setControlMessage(messageBuilder.buildMessageContent(context));
+    public boolean supportsValidationContextType(Class<? extends ValidationContext> validationContextType) {
+        return validationContextType.equals(ControlMessageValidationContext.class);
     }
-
+    
+    /**
+     * Prepare the validation context. Hook for subclasses to add specific information 
+     * to the validation context.
+     * 
+     * @param action the test action.
+     * @param context the current test context.
+     * @return
+     */
+    public ControlMessageValidationContext prepareValidationContext(TestContext context) {
+        return new ControlMessageValidationContext();
+    }
+    
     /**
      * Sets the control message builder.
      * @param messageBuilder the messageBuilder to set

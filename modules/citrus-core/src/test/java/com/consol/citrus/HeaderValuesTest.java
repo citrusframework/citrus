@@ -20,7 +20,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 
@@ -91,7 +92,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -138,7 +142,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -184,7 +191,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -229,7 +239,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -276,7 +289,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -323,7 +339,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
 
@@ -371,7 +390,10 @@ public class HeaderValuesTest extends AbstractBaseTest {
         variableExtractor.setHeaderMappings(extractHeaderValues);
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
         

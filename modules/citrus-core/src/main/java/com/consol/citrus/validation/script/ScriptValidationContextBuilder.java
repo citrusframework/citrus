@@ -19,6 +19,7 @@ package com.consol.citrus.validation.script;
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
@@ -50,6 +51,13 @@ public class ScriptValidationContextBuilder implements ValidationContextBuilder<
         
         // return empty script validation context
         return new ScriptValidationContext(context, scriptType);
+    }
+
+    /**
+     * Checks the support for this validation context type.
+     */
+    public boolean supportsValidationContextType(Class<? extends ValidationContext> validationContextType) {
+        return validationContextType.equals(ScriptValidationContext.class);
     }
     
     /**

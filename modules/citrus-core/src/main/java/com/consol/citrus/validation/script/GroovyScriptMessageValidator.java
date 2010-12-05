@@ -20,6 +20,7 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
@@ -29,17 +30,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * @author Christoph Deppisch
  */
-public class GroovyScriptMessageValidator implements MessageValidator<ScriptValidationContext> {
+public class GroovyScriptMessageValidator extends AbstractMessageValidator<ScriptValidationContext> {
 
     /**
      * Logger
@@ -78,33 +79,17 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
     }
 
     /**
-     * Validates the message with Groovy validation script.
+     * Validates the message with test context and script validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
-        if(!(validationContext instanceof ScriptValidationContext)) {
-            throw new IllegalArgumentException("GroovyScriptMessageValidator must have an instance of ScriptMessageValidationContext, " +
-                    "but was '" + validationContext.getClass() + "'");
-        }
-
-        ScriptValidationContext scriptValidationContext = (ScriptValidationContext)validationContext;
-        
-        // check if script type fits this message validator
-        if (!scriptValidationContext.getScriptType().equalsIgnoreCase(GROOVY_SCRIPT_TYPE)) {
-            if (log.isDebugEnabled()) {
-                log.debug(GroovyScriptMessageValidator.class.getName() + " not supporting script type '" + 
-                        scriptValidationContext.getScriptType() + "' skipping groovy message validation");
-            }
-            return;
-        }
-        
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ScriptValidationContext validationContext) {
         try {
-            String validationScript = scriptValidationContext.getValidationScript();
+            String validationScript = validationContext.getValidationScript();
             
             if (StringUtils.hasText(validationScript)) {
                 log.info("Start groovy message validation");
                 
                 GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-                Class<?> groovyClass = loader.parseClass(xmlSlurperHead + scriptValidationContext.getValidationScript() + xmlSlurperTail);
+                Class<?> groovyClass = loader.parseClass(xmlSlurperHead + validationContext.getValidationScript() + xmlSlurperTail);
                 
                 if (groovyClass == null) {
                     throw new CitrusRuntimeException("Failed to load groovy validation script resource");
@@ -127,20 +112,25 @@ public class GroovyScriptMessageValidator implements MessageValidator<ScriptVali
     }
 
     /**
-     * Gets the proper validation context builder for this message validator.
-     */
-    public ScriptValidationContext createValidationContext(TestAction action, TestContext context) {
-        if (action instanceof ScriptValidationAware) {
-            return ((ScriptValidationAware)action).getScriptValidationContext(context);
-        } else {
-            return new ScriptValidationContext(context, GROOVY_SCRIPT_TYPE);
-        }
-    }
-    
-    /**
      * Executes a validation-script
      */
      public static interface ValidationScriptExecutor {
          public void validate(Message<?> receivedMessage, TestContext context);
      }
+
+    /**
+     * Returns the needed validation context for this validation mechanism.
+     */
+    public ScriptValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
+        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
+            if (validationContextBuilder.supportsValidationContextType(ScriptValidationContext.class)) {
+                ScriptValidationContext validationContext = (ScriptValidationContext)validationContextBuilder.buildValidationContext(context);
+                if (validationContext.getScriptType().equals(GROOVY_SCRIPT_TYPE)) {
+                    return validationContext;
+                }
+            }
+        }
+        
+        return null;
+    }
 }

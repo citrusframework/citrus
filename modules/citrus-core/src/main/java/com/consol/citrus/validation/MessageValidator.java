@@ -16,11 +16,13 @@
 
 package com.consol.citrus.validation;
 
+import java.util.List;
+
 import org.springframework.integration.core.Message;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * Message validator interface. Message validation need specific information like
@@ -34,15 +36,26 @@ public interface MessageValidator<T extends ValidationContext> {
      * Validates a message with given test context and validation context.
      * @param receivedMessage the message to validate.
      * @param context the current test context
-     * @param validationContext the proper validation context.
+     * @param validationContextBuilders validation context builders.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext);
+    public void validateMessage(Message<?> receivedMessage, 
+                                TestContext context, 
+                                List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders);
     
     /**
-     * Returns a validation context for this message validator. Validation information is
-     * provided in the current test action and the test context.
-     * 
-     * @return the validation context
+     * Validates a message with given test context and validation context.
+     * @param receivedMessage the message to validate.
+     * @param context the current test context
+     * @param validationContext the proper validation context.
      */
-    public T createValidationContext(TestAction action, TestContext context);
+    public void validateMessage(Message<?> receivedMessage, 
+                                TestContext context, 
+                                T validationContext);
+    
+    /**
+     * Returns the validation context required for this validators validation mechanism.
+     * @return the validation context type.
+     */
+    public T createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, 
+                                     TestContext context);
 }

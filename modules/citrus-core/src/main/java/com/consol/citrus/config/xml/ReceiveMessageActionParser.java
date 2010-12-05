@@ -32,6 +32,8 @@ import org.w3c.dom.Element;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContextBuilder;
@@ -90,8 +92,12 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             builder.addPropertyValue("messageSelector", messageSelector);
         }
 
-        builder.addPropertyValue("xmlMessageValidationContextBuilder", getXmlMessageValidationContextBuilder(element, parserContext));
-        builder.addPropertyValue("scriptValidationContextBuilder", getScriptValidationContextBuilder(element, parserContext));
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        
+        validationContextBuilders.add(getXmlMessageValidationContextBuilder(element, parserContext));
+        validationContextBuilders.add(getScriptValidationContextBuilder(element, parserContext));
+        
+        builder.addPropertyValue("validationContextBuilders", validationContextBuilders);
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {

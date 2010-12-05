@@ -35,6 +35,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 
 /**
@@ -84,7 +85,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -113,7 +117,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -142,7 +149,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -171,7 +181,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -200,7 +213,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
 
@@ -229,7 +245,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -258,7 +277,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -287,7 +309,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -316,7 +341,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -350,7 +378,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -384,7 +415,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -419,7 +453,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -455,7 +492,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -489,7 +529,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -523,7 +566,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -558,7 +604,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -594,7 +643,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -630,7 +682,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -666,7 +721,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -702,7 +760,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -739,7 +800,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -775,7 +839,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -811,7 +878,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -847,7 +917,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -883,7 +956,10 @@ public class NamespaceTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
 }

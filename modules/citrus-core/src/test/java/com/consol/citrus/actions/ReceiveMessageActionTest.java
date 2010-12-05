@@ -37,6 +37,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.*;
@@ -72,7 +73,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 		expect(messageReceiver.receive()).andReturn(controlMessage).once();
 		replay(messageReceiver);
 		
-		receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+		List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
 		
 		verify(messageReceiver);
@@ -99,7 +103,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -132,7 +139,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -167,7 +177,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -195,7 +208,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -224,7 +240,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -254,7 +273,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -282,7 +304,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -315,7 +340,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -348,7 +376,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -386,7 +417,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -424,7 +458,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -461,7 +498,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -495,7 +535,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -531,7 +574,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -565,7 +611,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -597,7 +646,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -641,7 +693,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("myOperation"));
@@ -676,7 +731,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -711,7 +769,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -746,7 +807,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -781,7 +845,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -820,7 +887,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -856,7 +926,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -900,7 +973,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -944,7 +1020,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -988,7 +1067,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -1036,7 +1118,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         contextBuilder.setSchemaValidation(false);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         Assert.assertNotNull(context.getVariable("messageVar"));
@@ -1068,7 +1153,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive(5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1099,7 +1187,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected(messageSelectorString)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1132,7 +1223,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected(messageSelectorString, 5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1164,7 +1258,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'")).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1198,7 +1295,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1219,7 +1319,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(null).once();
         replay(messageReceiver);
 
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -1252,7 +1355,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1279,7 +1385,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
@@ -1312,7 +1421,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setScriptValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1338,7 +1450,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
         replay(messageReceiver);
         
-        receiveAction.setScriptValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         verify(messageReceiver);
@@ -1364,7 +1479,11 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         expect(messageReceiver.receive()).andReturn(controlMessage).times(2);
         replay(messageReceiver);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(context);
         
         // now inject multiple validators
@@ -1375,10 +1494,13 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         TestContext newContext = createTestContext();
         newContext.setMessageValidators(validators);
         
-        receiveAction.setXmlMessageValidationContextBuilder(contextBuilder);
+        validationContextBuilders = new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
         ScriptValidationContextBuilder scriptValidationContextBuilder = new ScriptValidationContextBuilder();
         scriptValidationContextBuilder.setScriptType(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
-        receiveAction.setScriptValidationContextBuilder(scriptValidationContextBuilder);
+        validationContextBuilders.add(scriptValidationContextBuilder);
+
+        receiveAction.setValidationContextBuilders(validationContextBuilders);
         receiveAction.execute(newContext);
         
         verify(messageReceiver);

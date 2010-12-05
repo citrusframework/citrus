@@ -36,6 +36,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
@@ -86,7 +87,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -116,7 +120,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -147,7 +154,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -177,7 +187,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -207,7 +220,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -237,7 +253,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -267,7 +286,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -297,7 +319,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -327,7 +352,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         contextBuilder.setMessageBuilder(controlMessageBuilder);
         contextBuilder.setPathValidationExpressions(validateMessageElements);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -366,7 +394,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -405,7 +436,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -444,7 +478,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         HashMap<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("//root/element/sub-elementA", "text-value");
@@ -489,7 +526,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -528,7 +568,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -567,7 +610,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -606,7 +652,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
     }
@@ -648,7 +697,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
         
@@ -695,7 +747,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
         
@@ -742,7 +797,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
         
@@ -786,7 +844,10 @@ public class MessageElementsTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         
         receiveMessageBean.execute(context);
         

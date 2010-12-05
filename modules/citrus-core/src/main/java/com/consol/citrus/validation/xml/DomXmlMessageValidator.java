@@ -18,8 +18,7 @@ package com.consol.citrus.validation.xml;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
@@ -40,15 +39,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
@@ -61,7 +60,7 @@ import com.consol.citrus.xml.xpath.XPathUtils;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class DomXmlMessageValidator implements MessageValidator<XmlMessageValidationContext> {
+public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> {
     /**
      * Logger
      */
@@ -74,39 +73,32 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
     private XsdSchemaRepository schemaRepository;
 
     /**
-     * @see com.consol.citrus.validation.MessageValidator#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext, com.consol.citrus.validation.context.ValidationContext)
+     * Validates the message with test context and xml validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ValidationContext validationContext) {
-        if(!(validationContext instanceof XmlMessageValidationContext)) {
-            throw new IllegalArgumentException("DomXmlMessageValidator must have an instance of XmlMessageValidationContext, " +
-                    "but was '" + validationContext.getClass() + "'");
-        }
-
-        XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)validationContext;
-        
+    public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
         log.info("Start XML message validation");
         
         try {
             // first check if payload is empty
             if (StringUtils.hasText(receivedMessage.getPayload().toString())) {
-                if(xmlValidationContext.isSchemaValidationEnabled()) {
+                if(validationContext.isSchemaValidationEnabled()) {
                     validateXMLSchema(receivedMessage);
-                    validateDTD(xmlValidationContext.getDTDResource(), receivedMessage);
+                    validateDTD(validationContext.getDTDResource(), receivedMessage);
                 }
 
-                validateNamespaces(xmlValidationContext.getControlNamespaces(), receivedMessage);
+                validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
                 
-                if (xmlValidationContext.getControlMessage() != null) {
-                    validateMessagePayload(receivedMessage, xmlValidationContext, context);
+                if (validationContext.getControlMessage() != null) {
+                    validateMessagePayload(receivedMessage, validationContext, context);
                 }
                 
-                validateMessageElements(receivedMessage, xmlValidationContext, context);
+                validateMessageElements(receivedMessage, validationContext, context);
             } else {
-                Assert.isTrue(!StringUtils.hasText(xmlValidationContext.getControlMessage().getPayload().toString()),
+                Assert.isTrue(!StringUtils.hasText(validationContext.getControlMessage().getPayload().toString()),
                         "Missing message payload data but was empty");
             }
             
-            validateMessageHeader(xmlValidationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
+            validateMessageHeader(validationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
             throw new CitrusRuntimeException(e);
@@ -777,17 +769,6 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
     }
 
     /**
-     * Gets the proper validation context builder for this message validator.
-     */
-    public XmlMessageValidationContext createValidationContext(TestAction action, TestContext context) {
-        if (action instanceof XmlMessageValidationAware) {
-            return ((XmlMessageValidationAware)action).getXmlMessageValidationContext(context);
-        } else {
-            return new XmlMessageValidationContext();
-        }
-    }
-    
-    /**
      * Set the schema repository holding all known schema definition files.
      * @param schemaRepository the schemaRepository to set
      */
@@ -801,5 +782,18 @@ public class DomXmlMessageValidator implements MessageValidator<XmlMessageValida
      */
     public void setFunctionRegistry(FunctionRegistry functionRegistry) {
         this.functionRegistry = functionRegistry;
+    }
+
+    /**
+     * Returns the needed validation context for this validation mechanism.
+     */
+    public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
+        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
+            if (validationContextBuilder.supportsValidationContextType(XmlMessageValidationContext.class)) {
+                return (XmlMessageValidationContext)validationContextBuilder.buildValidationContext(context);
+            }
+        }
+        
+        return null;
     }
 }

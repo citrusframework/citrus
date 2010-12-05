@@ -20,6 +20,9 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
@@ -34,6 +37,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 
 /**
@@ -85,7 +89,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -116,7 +123,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -146,7 +156,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -178,7 +191,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -209,7 +225,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -240,7 +259,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -271,7 +293,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -302,7 +327,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -333,7 +361,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
     
@@ -364,7 +395,10 @@ public class ValidationTest extends AbstractBaseTest {
                         + "</element>" 
                         + "</root>");
         
-        receiveMessageBean.setXmlMessageValidationContextBuilder(contextBuilder);
+        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
+            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        validationContextBuilders.add(contextBuilder);
+        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
         receiveMessageBean.execute(context);
     }
 }

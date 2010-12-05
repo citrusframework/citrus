@@ -24,5 +24,16 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  */
 public interface ValidationContextBuilder<T extends ValidationContext> {
+    /**
+     * Builds a validation context.
+     * @param context the current test context.
+     * @return the validation context implementation.
+     */
     public T buildValidationContext(TestContext context);
+    
+    /**
+     * Checks if this builder is suitable for construction such a validation context type.
+     * @return the validation context type.
+     */
+    public boolean supportsValidationContextType(Class<? extends ValidationContext> validationContextType);
 }

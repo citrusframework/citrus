@@ -30,11 +30,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.script.*;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 
 /**
@@ -47,7 +45,7 @@ import com.consol.citrus.variable.VariableExtractor;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction implements XmlMessageValidationAware, ScriptValidationAware {
+public class ReceiveMessageAction extends AbstractTestAction {
     /** Build message selector with name value pairs */
     private Map<String, String> messageSelector = new HashMap<String, String>();
 
@@ -63,11 +61,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
     /** MessageValidator responsible for message validation */
     private MessageValidator<? extends ValidationContext> validator;
     
-    /** Builds a script validation context */
-    private ScriptValidationContextBuilder scriptValidationContextBuilder;
-    
-    /** Builds a xml message validation context */
-    private XmlMessageValidationContextBuilder xmlMessageValidationContextBuilder;
+    /** Context builder implementations */
+    private List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders =
+        new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
     
     /** List of variable extractors responsible for creating variables from received message content */
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
@@ -146,14 +142,12 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
         if (validator != null) {
-            ValidationContext validationContext = validator.createValidationContext(this, context);
-            validator.validateMessage(receivedMessage, context, validationContext);
+            validator.validateMessage(receivedMessage, context, validationContextBuilders);
         } else {
             List<MessageValidator<? extends ValidationContext>> validators = context.getMessageValidators();
             
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                messageValidator.validateMessage(receivedMessage, context, 
-                        messageValidator.createValidationContext(this, context));
+                messageValidator.validateMessage(receivedMessage, context, validationContextBuilders);
             }
         }
     }
@@ -207,57 +201,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
     }
     
     /**
-     * Get the script validation context.
-     */
-    public ScriptValidationContext getScriptValidationContext(TestContext context) {
-        if (scriptValidationContextBuilder == null) {
-            throw new CitrusRuntimeException("Unable to perform script validation - no context builder available");
-        }
-        
-        return scriptValidationContextBuilder.buildValidationContext(context);
-    }
-
-    /**
-     * Get the xml message validation context.
-     */
-    public XmlMessageValidationContext getXmlMessageValidationContext(TestContext context) {
-        if (xmlMessageValidationContextBuilder == null) {
-            throw new CitrusRuntimeException("Unable to perform xml message validation - no context builder available");
-        }
-        
-        return xmlMessageValidationContextBuilder.buildValidationContext(context);
-    }
-
-    /**
-     * Get the control message validation context.
-     */
-    public ControlMessageValidationContext getControlMessageValidationContext(TestContext context) {
-        if (xmlMessageValidationContextBuilder == null) {
-            throw new CitrusRuntimeException("Unable to perform control message validation - no context builder available");
-        }
-        
-        return xmlMessageValidationContextBuilder.buildValidationContext(context);
-    }
-
-    /**
-     * Sets the xml validation context builder.
-     * @param xmlMessageValidationContextBuilder the xmlMessageValidationContextBuilder to set
-     */
-    public void setXmlMessageValidationContextBuilder(
-            XmlMessageValidationContextBuilder xmlMessageValidationContextBuilder) {
-        this.xmlMessageValidationContextBuilder = xmlMessageValidationContextBuilder;
-    }
-
-    /**
-     * Sets the script validation context builder.
-     * @param scriptValidationContextBuilder the scriptValidationContextBuilder to set
-     */
-    public void setScriptValidationContextBuilder(
-            ScriptValidationContextBuilder scriptValidationContextBuilder) {
-        this.scriptValidationContextBuilder = scriptValidationContextBuilder;
-    }
-
-    /**
      * Adds a new variable extractor.
      * @param variableExtractor the variableExtractor to set
      */
@@ -271,5 +214,14 @@ public class ReceiveMessageAction extends AbstractTestAction implements XmlMessa
      */
     public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
         this.variableExtractors = variableExtractors;
+    }
+
+    /**
+     * Sets the list of available validation context builders for this action.
+     * @param validationContextBuilders the validationContextBuilders to set
+     */
+    public void setValidationContextBuilders(
+            List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) {
+        this.validationContextBuilders = validationContextBuilders;
     }
 }
