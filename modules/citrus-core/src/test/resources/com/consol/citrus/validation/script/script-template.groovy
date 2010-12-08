@@ -1,0 +1,5 @@
++++HEAD+++
+
+@SCRIPTBODY@
+
++++TAIL+++

@@ -38,46 +38,14 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
  */
 public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<String> {
 
-    /** Head and tail for markup builder script */
-    private String scriptHead = null;
-    private String scriptTail = null;
-    
     /** Default path to script template */
-    private static final String DEFAULT_SCRIPT_TEMPLATE = "com/consol/citrus/script/markup-builder-template.groovy";
-    
-    /** Placeholder identifier for script body in template */
-    private static final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
+    private Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");
     
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
     private Resource scriptResource;
 
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
-    
-    /**
-     * Default constructor using a default script 
-     * template resource
-     */
-    public GroovyScriptMessageBuilder() {
-        this(new ClassPathResource(DEFAULT_SCRIPT_TEMPLATE));
-    }
-    
-    public GroovyScriptMessageBuilder(Resource scriptTemplateResource) {
-        String markupBuilderTemplate = null;
-        try {
-            markupBuilderTemplate = FileUtils.readToString(scriptTemplateResource.getInputStream());
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Error loading Groovy markup builder template from file resource", e);
-        }
-        
-        if (!markupBuilderTemplate.contains(BODY_PLACEHOLDER)) {
-            throw new CitrusRuntimeException("Invalid script template - please define '" + BODY_PLACEHOLDER + "' placeholder");
-        }
-        
-        scriptHead = markupBuilderTemplate.substring(0, markupBuilderTemplate.indexOf(BODY_PLACEHOLDER));
-        scriptTail = markupBuilderTemplate.substring((markupBuilderTemplate.indexOf(BODY_PLACEHOLDER) + 
-                BODY_PLACEHOLDER.length()));
-    }
     
     /**
      * Build the control message from script code.
@@ -113,7 +81,10 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
             ClassLoader parent = GroovyScriptMessageBuilder.class.getClassLoader(); 
             GroovyClassLoader loader = new GroovyClassLoader(parent);
             
-            Class<?> groovyClass = loader.parseClass(scriptHead + scriptData + scriptTail);
+            Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
+                                                            .withCode(scriptData)
+                                                            .build());
+            
             if(groovyClass == null) {
                 throw new CitrusRuntimeException("Could not load groovy script!");    
             }

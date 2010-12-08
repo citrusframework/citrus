@@ -19,7 +19,6 @@ package com.consol.citrus.validation.script;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -32,7 +31,6 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
@@ -48,36 +46,11 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     private static final Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
     
     /** Static code snippet for groovy xml slurper script */
-    private static Resource xmlSlurperTemplateResource = null;
-    
-    /** Head and tail for xml slurper script */
-    private static String xmlSlurperHead = null;
-    private static String xmlSlurperTail = null;
-    
-    /** Placeholder identifier for script body in template */
-    private static final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
+    private Resource xmlSlurperTemplateResource = new ClassPathResource("com/consol/citrus/validation/xml-slurper-template.groovy");
     
     /** This is the supported script type for this message validator */
     public static final String GROOVY_SCRIPT_TYPE = "groovy";
     
-    static {
-        xmlSlurperTemplateResource = new ClassPathResource("com/consol/citrus/validation/xml-slurper-template.groovy");
-        
-        String xmlSlurperTemplate = null;
-        try {
-            xmlSlurperTemplate = FileUtils.readToString(xmlSlurperTemplateResource.getInputStream());
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Error loading Groovy xml slurper template from file resource", e);
-        }
-        
-        if (!xmlSlurperTemplate.contains(BODY_PLACEHOLDER)) {
-            throw new CitrusRuntimeException("Invalid script template - please define '" + BODY_PLACEHOLDER + "' placeholder");
-        }
-        
-        xmlSlurperHead = xmlSlurperTemplate.substring(0, xmlSlurperTemplate.indexOf(BODY_PLACEHOLDER));
-        xmlSlurperTail = xmlSlurperTemplate.substring((xmlSlurperTemplate.indexOf(BODY_PLACEHOLDER) + BODY_PLACEHOLDER.length()));
-    }
-
     /**
      * Validates the message with test context and script validation context.
      */
@@ -89,7 +62,9 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 log.info("Start groovy message validation");
                 
                 GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-                Class<?> groovyClass = loader.parseClass(xmlSlurperHead + validationContext.getValidationScript() + xmlSlurperTail);
+                Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(xmlSlurperTemplateResource)
+                                                            .withCode(validationScript)
+                                                            .build());
                 
                 if (groovyClass == null) {
                     throw new CitrusRuntimeException("Failed to load groovy validation script resource");

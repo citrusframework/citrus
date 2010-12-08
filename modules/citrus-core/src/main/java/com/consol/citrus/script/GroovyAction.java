@@ -33,6 +33,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.script.TemplateBasedScriptBuilder;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
@@ -48,9 +49,6 @@ public class GroovyAction extends AbstractTestAction {
     /** External script file resource */
     private Resource fileResource;
     
-    /** Placeholder identifier for script body in template */
-    private final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
-
     /** Static code snippet for basic groovy action implementation */
     private Resource scriptTemplateResource = null;
     
@@ -101,16 +99,11 @@ public class GroovyAction extends AbstractTestAction {
                     scriptTemplateResource = new ClassPathResource("script-template.groovy", GroovyAction.class);
                 }
                 
-                String scriptTemplate = FileUtils.readToString(scriptTemplateResource.getInputStream());
-                if (!scriptTemplate.contains(BODY_PLACEHOLDER)) {
-                    throw new CitrusRuntimeException("Invalid script template - please define '" + BODY_PLACEHOLDER + "' placeholder");
-                }
-                
-                String scriptHeader = scriptTemplate.substring(0, scriptTemplate.indexOf(BODY_PLACEHOLDER));
-                String scriptTail = scriptTemplate.substring((scriptTemplate.indexOf(BODY_PLACEHOLDER) + BODY_PLACEHOLDER.length()));
-                
                 // build new script with surrounding template
-                code = scriptHeader + code + scriptTail;
+                code = TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
+                                                 .withCode(code)
+                                                 .build();
+                
                 groovyClass = loader.parseClass(code);
                 groovyObject = (GroovyObject) groovyClass.newInstance();
             }
