@@ -33,13 +33,9 @@ public class TransformActionTest extends AbstractBaseTest {
 		transformAction.setXmlData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		StringBuilder xsltDoc = new StringBuilder();
 		xsltDoc.append("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n");
+		xsltDoc.append("<xsl:output method=\"text\"/>");
 		xsltDoc.append("<xsl:template match=\"/\">\n");
-		xsltDoc.append("<html>\n");
-		xsltDoc.append("<body>\n");
-		xsltDoc.append("<h2>Test Request</h2>\n");
-		xsltDoc.append("<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>\n");
-		xsltDoc.append("</body>\n");  
-		xsltDoc.append("</html>\n");
+		xsltDoc.append("Message: <xsl:value-of select=\"TestRequest/Message\"/>");
 		xsltDoc.append("</xsl:template>\n");
 		xsltDoc.append("</xsl:stylesheet>");
 		transformAction.setXsltData(xsltDoc.toString());
@@ -47,15 +43,7 @@ public class TransformActionTest extends AbstractBaseTest {
 		
 		transformAction.execute(context);
 		
-		StringBuilder transformedDoc = new StringBuilder();
-		transformedDoc.append("<html>\n");
-		transformedDoc.append("<body>\n");
-		transformedDoc.append("<h2>Test Request</h2>\n");
-		transformedDoc.append("<p>Message: Hello World!</p>\n");
-		transformedDoc.append("</body>\n");
-		transformedDoc.append("</html>\n");
-		
-		Assert.assertEquals(context.getVariable("var"), transformedDoc.toString());
+		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
 	}
 	
 	@Test
@@ -67,14 +55,6 @@ public class TransformActionTest extends AbstractBaseTest {
 		
 		transformAction.execute(context);
 		
-		StringBuilder transformedDoc = new StringBuilder();
-		transformedDoc.append("<html>\n");
-		transformedDoc.append("<body>\n");
-		transformedDoc.append("<h2>Test Request</h2>\n");
-		transformedDoc.append("<p>Message: Hello World!</p>\n");
-		transformedDoc.append("</body>\n");
-		transformedDoc.append("</html>\n");
-		
-		Assert.assertEquals(context.getVariable("var"), transformedDoc.toString());
+		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
 	}
 }
