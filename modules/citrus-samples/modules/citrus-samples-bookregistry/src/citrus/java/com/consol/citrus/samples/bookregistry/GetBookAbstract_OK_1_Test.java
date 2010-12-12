@@ -28,7 +28,7 @@ import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTest;
  * @author Christoph Deppisch
  * @since 2010-02-24
  */
-public class GetBookDetailsAndCover_OK_1_Test extends DemoAwareTestNGCitrusTest {
+public class GetBookAbstract_OK_1_Test extends DemoAwareTestNGCitrusTest {
     
     BookRegistryDemo demo = new BookRegistryDemo();
     

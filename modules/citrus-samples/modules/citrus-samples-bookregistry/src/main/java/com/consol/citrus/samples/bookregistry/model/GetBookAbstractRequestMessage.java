@@ -19,20 +19,20 @@ package com.consol.citrus.samples.bookregistry.model;
 /**
  * @author Christoph Deppisch
  */
-public class GetBookDetailsAndCoverResponseMessage {
-    private Book book;
+public class GetBookAbstractRequestMessage {
+    private String isbn;
 
     /**
-     * @param book the book to set
+     * @param isbn the isbn to set
      */
-    public void setBook(Book book) {
-        this.book = book;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     /**
-     * @return the book
+     * @return the isbn
      */
-    public Book getBook() {
-        return book;
+    public String getIsbn() {
+        return isbn;
     }
 }

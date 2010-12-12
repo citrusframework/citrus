@@ -49,7 +49,7 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="GetBookDetailsAndCoverRequestMessage">
+    <xs:element name="GetBookAbstractRequestMessage">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="isbn" type="xs:string"/>
@@ -57,7 +57,7 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="GetBookDetailsAndCoverResponseMessage">
+    <xs:element name="GetBookAbstractResponseMessage">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="book" type="Book"/>

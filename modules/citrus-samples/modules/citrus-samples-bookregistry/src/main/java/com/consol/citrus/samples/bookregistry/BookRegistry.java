@@ -84,8 +84,8 @@ public class BookRegistry {
      * @param request
      * @return
      */
-    public Message<GetBookDetailsAndCoverResponseMessage> getBookCover(Message<GetBookDetailsAndCoverRequestMessage> request) {
-        GetBookDetailsAndCoverResponseMessage response = new GetBookDetailsAndCoverResponseMessage();
+    public Message<GetBookAbstractResponseMessage> getBookAbstract(Message<GetBookAbstractRequestMessage> request) {
+        GetBookAbstractResponseMessage response = new GetBookAbstractResponseMessage();
         
         Book book = bookRegistry.get(request.getPayload().getIsbn());
         

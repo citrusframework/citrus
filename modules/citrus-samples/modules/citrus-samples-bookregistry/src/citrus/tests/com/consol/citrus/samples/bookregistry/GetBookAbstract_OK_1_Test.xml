@@ -6,7 +6,7 @@
                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     
-    <testcase name="GetBookDetailsAndCover_OK_1_Test">
+    <testcase name="GetBookAbstract_OK_1_Test">
         <meta-info>
             <author>Christoph Deppisch</author>
             <creationdate>2010-02-24</creationdate>
@@ -18,8 +18,8 @@
         <description>
             This test shows basic SOAP WebService client server communication. 
             Citrus first of all adds a book to the registry in order to request for the book 
-            details right after book was added. This time the book cover is also returned by the server in form of
-            SOAP attachments.
+            details right after book was added. This time the book abstract is also returned 
+            as SOAP attachment.
         </description>
         
         <variables>
@@ -63,9 +63,9 @@
                 <message>
                     <data>
                         <![CDATA[
-                            <bkr:GetBookDetailsAndCoverRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry">
+                            <bkr:GetBookAbstractRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry">
                                 <bkr:isbn>${isbn}</bkr:isbn>
-                            </bkr:GetBookDetailsAndCoverRequestMessage>                        
+                            </bkr:GetBookAbstractRequestMessage>                        
                         ]]>
                     </data>
                 </message>
@@ -78,7 +78,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                            <bkr:GetBookDetailsAndCoverResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry">
+                            <bkr:GetBookAbstractResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry">
                                 <bkr:book>
                                     <bkr:id>@ignore@</bkr:id>
                                     <bkr:title>Spring in Action</bkr:title>
@@ -87,15 +87,15 @@
                                     <bkr:year>2007</bkr:year>
                                     <bkr:registration-date>@ignore@</bkr:registration-date>
                                 </bkr:book>
-                            </bkr:GetBookDetailsAndCoverResponseMessage>
+                            </bkr:GetBookAbstractResponseMessage>
                         ]]>
                     </data>
                 </message>
                 <extract>
-                    <message path="/bkr:GetBookDetailsAndCoverResponseMessage/bkr:book/bkr:id" variable="bookId"></message>
+                    <message path="/bkr:GetBookAbstractResponseMessage/bkr:book/bkr:id" variable="bookId"></message>
                 </extract>
-                <ws:attachment content-id="bookCoverImage" content-type="image/png">
-                    <ws:resource file="classpath:com/consol/citrus/samples/bookregistry/covers/citrus.png"/>
+                <ws:attachment content-id="book-abstract" content-type="text/plain">
+                    <ws:resource file="classpath:com/consol/citrus/samples/bookregistry/book-abstract.txt"/>
                 </ws:attachment>
             </ws:receive>
         </actions>

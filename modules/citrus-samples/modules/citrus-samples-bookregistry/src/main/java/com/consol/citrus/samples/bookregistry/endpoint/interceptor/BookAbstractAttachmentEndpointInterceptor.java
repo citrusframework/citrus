@@ -29,30 +29,31 @@ import org.springframework.ws.soap.SoapMessage;
  * 
  * @author Christoph Deppisch
  */
-public class BookCoverAttachmentEndpointInterceptor extends EndpointInterceptorAdapter {
+public class BookAbstractAttachmentEndpointInterceptor extends EndpointInterceptorAdapter {
 
-    private Object bookCoverInboundGateway;
+    private Object bookAbstractInboundGateway;
     
-    private final Resource cover = new ClassPathResource("com/consol/citrus/samples/bookregistry/covers/citrus.png");
+    private final Resource bookAbstractResource = 
+        new ClassPathResource("com/consol/citrus/samples/bookregistry/book-abstract.txt");
     
     @Override
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
         SoapMessage response = (SoapMessage)messageContext.getResponse();
         
-        if (endpoint.equals(bookCoverInboundGateway)) {
-            response.addAttachment("bookCoverImage", new InputStreamSource() {
+        if (endpoint.equals(bookAbstractInboundGateway)) {
+            response.addAttachment("book-abstract", new InputStreamSource() {
                 public InputStream getInputStream() throws IOException {
-                    return cover.getInputStream();
-                }}, "image/png");
+                    return bookAbstractResource.getInputStream();
+                }}, "text/plain");
         }
         
         return true;
     }
 
     /**
-     * @param bookCoverInboundGateway the bookCoverInboundGateway to set
+     * @param bookAbstractInboundGateway the bookAbstractInboundGateway to set
      */
-    public void setBookCoverInboundGateway(Object bookCoverInboundGateway) {
-        this.bookCoverInboundGateway = bookCoverInboundGateway;
+    public void setBookAbstractInboundGateway(Object bookAbstractInboundGateway) {
+        this.bookAbstractInboundGateway = bookAbstractInboundGateway;
     }
 }
