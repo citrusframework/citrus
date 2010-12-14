@@ -17,7 +17,6 @@
 package com.consol.citrus.validation.builder;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,8 +76,6 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             
             return headers;
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to build message content", e);
-        } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
     }

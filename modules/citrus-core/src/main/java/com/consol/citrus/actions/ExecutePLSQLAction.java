@@ -17,7 +17,6 @@
 package com.consol.citrus.actions;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -127,9 +126,6 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             }
         } catch (IOException e) {
             log.error("Resource could not be found - filename: " + sqlResource.getFilename(), e);
-            throw new CitrusRuntimeException(e);
-        } catch (ParseException e) {
-            log.error("Error while parsing string", e);
             throw new CitrusRuntimeException(e);
         } finally {
             if(reader != null) {

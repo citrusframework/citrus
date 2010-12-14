@@ -16,8 +16,6 @@
 
 package com.consol.citrus.functions;
 
-import java.text.ParseException;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
@@ -132,12 +130,8 @@ public class FunctionUtils {
 
         FunctionLibrary library = context.getFunctionRegistry().getLibraryForPrefix(functionPrefix);
 
-        try {
-            parameterString = VariableUtils.replaceVariablesInString(parameterString, context);
-            parameterString = replaceFunctionsInString(parameterString, context);
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        parameterString = VariableUtils.replaceVariablesInString(parameterString, context);
+        parameterString = replaceFunctionsInString(parameterString, context);
 
         return library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString));
     }

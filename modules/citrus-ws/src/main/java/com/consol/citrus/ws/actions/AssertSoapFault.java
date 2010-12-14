@@ -17,7 +17,6 @@
 package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -169,8 +168,6 @@ public class AssertSoapFault extends AbstractActionContainer {
                 transformer.transform(new StringSource(
                         context.replaceDynamicContentInString(faultDetail)), controlFault.addFaultDetail().getResult());
             }
-        } catch (ParseException ex) {
-            throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
         } catch (IOException ex) {
             throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
         } catch (TransformerException ex) {

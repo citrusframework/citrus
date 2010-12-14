@@ -16,8 +16,6 @@
 
 package com.consol.citrus.variable;
 
-import java.text.ParseException;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchVariableException;
@@ -64,9 +62,8 @@ public class VariableUtils {
     * @param str
     * @param context
     * @return
-    * @throws ParseException
     */
-   public static String replaceVariablesInString(final String str, TestContext context) throws ParseException {
+   public static String replaceVariablesInString(final String str, TestContext context) {
        return replaceVariablesInString(str, context, false);
    }
 
@@ -79,9 +76,8 @@ public class VariableUtils {
     * @param context
     * @param enableQuoting
     * @return
-    * @throws ParseException
     */
-   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) throws ParseException {
+   public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) {
        StringBuffer newStr = new StringBuffer();
 
        boolean isVarComplete = false;

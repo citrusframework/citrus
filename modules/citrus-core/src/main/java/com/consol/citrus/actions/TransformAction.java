@@ -17,7 +17,6 @@
 package com.consol.citrus.actions;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import javax.xml.transform.*;
 
@@ -107,8 +106,6 @@ public class TransformAction extends AbstractTestAction {
 			context.setVariable(targetVariable, result.toString());
 			
 			log.info("Transformation finished successfully");
-		} catch (ParseException e) {
-			throw new CitrusRuntimeException(e);
 		} catch (IOException e) {
 			throw new CitrusRuntimeException(e);
 		} catch (TransformerConfigurationException e) {

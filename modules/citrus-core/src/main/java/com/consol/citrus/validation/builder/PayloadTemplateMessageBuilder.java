@@ -17,7 +17,6 @@
 package com.consol.citrus.validation.builder;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +62,6 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
             }
             
             return messagePayload;
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to build control message payload", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }

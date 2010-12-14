@@ -20,7 +20,6 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.core.io.ClassPathResource;
@@ -63,8 +62,6 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
             }
             
             return messagePayload;
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to build control message payload", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }

@@ -108,7 +108,7 @@ public class TestContextTest extends AbstractBaseTest {
     }
     
     @Test
-    public void testReplaceDynamicContentInString() throws java.text.ParseException {
+    public void testReplaceDynamicContentInString() {
         context.getVariables().put("test", "456");
         
         Assert.assertEquals(context.replaceDynamicContentInString("Variable test is: ${test}"), "Variable test is: 456");

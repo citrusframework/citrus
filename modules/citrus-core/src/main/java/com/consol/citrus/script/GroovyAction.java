@@ -20,7 +20,6 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
@@ -127,8 +126,6 @@ public class GroovyAction extends AbstractTestAction {
         } catch (CompilationFailedException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         }
     }

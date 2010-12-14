@@ -17,7 +17,6 @@
 package com.consol.citrus.validation.script;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import org.springframework.core.io.Resource;
 
@@ -94,8 +93,6 @@ public class ScriptValidationContext implements ValidationContext {
             } else {
                 return "";
             }
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to replace variables in validation script", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load validation script resource", e);
         }

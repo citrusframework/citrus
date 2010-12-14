@@ -17,7 +17,6 @@
 package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
@@ -84,8 +83,6 @@ public class SendSoapMessageAction extends SendMessageAction {
                 webServiceMessageSender.send(message);
             }
         } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ParseException e) {
             throw new CitrusRuntimeException(e);
         }
     }

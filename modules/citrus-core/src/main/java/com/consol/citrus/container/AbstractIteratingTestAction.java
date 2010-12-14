@@ -16,8 +16,6 @@
 
 package com.consol.citrus.container;
 
-import java.text.ParseException;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -42,11 +40,7 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
      */
     @Override
     public void execute(TestContext context) {
-        try {
-            condition = context.replaceDynamicContentInString(condition);
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        condition = context.replaceDynamicContentInString(condition);
         
         executeIteration(context);
     }

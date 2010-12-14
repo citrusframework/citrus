@@ -17,16 +17,13 @@
 package com.consol.citrus.actions;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.*;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -75,11 +72,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
                         + " new value:" + props.getProperty(key));
             }
 
-            try {
-                context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
-            } catch (ParseException e) {
-                throw new CitrusRuntimeException("Failed to resolve value for property '" + key + "'", e);
-            }
+            context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
         }
     }
 

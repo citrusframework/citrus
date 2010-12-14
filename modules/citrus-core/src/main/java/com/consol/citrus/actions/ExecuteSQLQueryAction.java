@@ -17,7 +17,6 @@
 package com.consol.citrus.actions;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -110,12 +109,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     while (iter.hasNext()) {
                         String stmt = iter.next();
 
-                        try {
-                            stmt = context.replaceDynamicContentInString(stmt);
-                        } catch (ParseException e) {
-                            log.error("Error while parsing sql statement: " + stmt);
-                            throw new CitrusRuntimeException(e);
-                        }
+                        stmt = context.replaceDynamicContentInString(stmt);
                         List<Map<String, Object>> results = getJdbcTemplate().queryForList(stmt);
 
                         if (results.size() == 0) {

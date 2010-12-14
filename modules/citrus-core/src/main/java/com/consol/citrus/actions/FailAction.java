@@ -16,8 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.text.ParseException;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -36,11 +34,7 @@ public class FailAction extends AbstractTestAction {
      */
     @Override
     public void execute(TestContext context) {
-        try {
-            throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));
     }
     
     /**

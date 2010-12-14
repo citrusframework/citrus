@@ -16,7 +16,6 @@
 
 package com.consol.citrus.context;
 
-import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -381,9 +380,8 @@ public class TestContext {
      * Method replacing variable declarations and functions in a string
      * @param str
      * @return
-     * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str) throws ParseException {
+    public String replaceDynamicContentInString(String str) {
         str = VariableUtils.replaceVariablesInString(str, this);
         str = FunctionUtils.replaceFunctionsInString(str, this);
         return str;
@@ -395,9 +393,8 @@ public class TestContext {
      * @param str
      * @param enableQuoting
      * @return
-     * @throws ParseException
      */
-    public String replaceDynamicContentInString(String str, boolean enableQuoting) throws ParseException {
+    public String replaceDynamicContentInString(String str, boolean enableQuoting) {
         str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
         str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
         return str;

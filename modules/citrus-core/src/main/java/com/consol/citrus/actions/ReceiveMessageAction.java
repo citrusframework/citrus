@@ -17,7 +17,6 @@
 package com.consol.citrus.actions;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -129,8 +128,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
             
             //validate the message
             validateMessage(receivedMessage, context);
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException(e);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
@@ -140,7 +137,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Override this message if you want to add additional message validation
      * @param receivedMessage
      */
-    protected void validateMessage(Message<?> receivedMessage, TestContext context) throws ParseException, IOException {
+    protected void validateMessage(Message<?> receivedMessage, TestContext context) throws IOException {
         if (validator != null) {
             validator.validateMessage(receivedMessage, context, validationContextBuilders);
         } else {

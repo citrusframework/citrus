@@ -16,7 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -50,11 +49,8 @@ public class EchoAction extends AbstractTestAction {
         if (message == null) {
             log.info("TestSuite " + new Date(System.currentTimeMillis()));
         } else {
-            try {
-                log.info("echo " + context.replaceDynamicContentInString(message));
-            } catch (ParseException e) {
-                throw new CitrusRuntimeException(e);
-            }
+            log.info("echo " + context.replaceDynamicContentInString(message));
+
         }
     }
 

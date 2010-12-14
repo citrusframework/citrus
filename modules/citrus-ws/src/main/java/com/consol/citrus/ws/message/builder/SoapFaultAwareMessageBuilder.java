@@ -16,7 +16,6 @@
 
 package com.consol.citrus.ws.message.builder;
 
-import java.text.ParseException;
 import java.util.Map;
 
 import org.springframework.core.io.Resource;
@@ -42,27 +41,23 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     
     @Override
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
-        try {
-            Map<String, Object> headers = super.buildMessageHeaders(context);
-            
-            if(!StringUtils.hasText(faultCode)) {
-                throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
-            }
-            
-            String soapFaultString = context.replaceDynamicContentInString(faultCode);
-            
-            if(StringUtils.hasText(faultString)) {
-                soapFaultString += "," + context.replaceDynamicContentInString(faultString);
-            }
-    
-            //put special SOAP fault QName string to message headers. Citrus SOAP ws endpoint will
-            //take read the entry an generate the SOAP fauflt for us
-            headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultString);
-            
-            return headers;
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to add SOAP fault string", e);
+        Map<String, Object> headers = super.buildMessageHeaders(context);
+        
+        if(!StringUtils.hasText(faultCode)) {
+            throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
         }
+        
+        String soapFaultString = context.replaceDynamicContentInString(faultCode);
+        
+        if(StringUtils.hasText(faultString)) {
+            soapFaultString += "," + context.replaceDynamicContentInString(faultString);
+        }
+
+        //put special SOAP fault QName string to message headers. Citrus SOAP ws endpoint will
+        //take read the entry an generate the SOAP fauflt for us
+        headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultString);
+        
+        return headers;
     }
     
     /**

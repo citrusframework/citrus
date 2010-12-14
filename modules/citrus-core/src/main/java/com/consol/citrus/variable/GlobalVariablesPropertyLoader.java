@@ -17,7 +17,6 @@
 package com.consol.citrus.variable;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.*;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -85,12 +84,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         String key = propertyExpression.substring(0, propertyExpression.indexOf("=")).trim();
                         String value = propertyExpression.substring(propertyExpression.indexOf("=")+1).trim();
 
-                        try {
-                            value = context.replaceDynamicContentInString(value);
-                        } catch (ParseException e) {
-                            throw new CitrusRuntimeException("Error while parsing global variables. " +
-                                    "Can not resolve property '" + key + "'", e);
-                        }
+                        value = context.replaceDynamicContentInString(value);
                         
                         log.info("Loading property: " + key + "=" + value + " into default variables");
 

@@ -17,7 +17,6 @@
 package com.consol.citrus.validation.xml;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -208,11 +207,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             String expectedValue = entry.getValue();
             String actualValue = null;
 
-            try {
-                elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
-            } catch (ParseException e) {
-                throw new CitrusRuntimeException(e);
-            }
+            elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
 
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
             NamespaceContext namespaceContext = XMLUtils.buildNamespaceContext(receivedMessage, validationContext.getNamespaces());
