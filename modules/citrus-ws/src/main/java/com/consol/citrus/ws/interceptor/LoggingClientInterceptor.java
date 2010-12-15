@@ -89,21 +89,6 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
      */
     public boolean handleFault(MessageContext messageContext)
             throws WebServiceClientException {
-        if (messageContext.hasResponse() && log.isDebugEnabled()) {
-            if (messageContext.getResponse() instanceof SoapMessage) {
-                try {
-                    logSoapMessage("Received SOAP fault:\n", 
-                            ((SoapMessage) messageContext.getResponse()).getEnvelope().getSource());
-                } catch (SoapEnvelopeException e) {
-                    log.warn("Unable to write SOAP fault to logger", e);
-                } catch (TransformerException e) {
-                    log.warn("Unable to write SOAP fault to logger", e);
-                }
-            } else {
-                logWebServiceMessage("Received WebService fault:\n", messageContext.getResponse());
-            }
-        }
-        
-        return true;
+        return handleResponse(messageContext);
     }
 }
