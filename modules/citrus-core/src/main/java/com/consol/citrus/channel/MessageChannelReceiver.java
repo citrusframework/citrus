@@ -18,12 +18,16 @@ package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.channel.PollableChannel;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageReceiver;
 import com.consol.citrus.message.MessageReceiver;
 
@@ -31,7 +35,7 @@ import com.consol.citrus.message.MessageReceiver;
  * Receive messages from {@link MessageChannel} instance.
  * @author Christoph Christoph
  */
-public class MessageChannelReceiver extends AbstractMessageReceiver {
+public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {
 
     /**
      * Logger
@@ -41,8 +45,17 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
     /** Pollable channel */
     private PollableChannel channel;
     
+    /** Destination channel name */
+    private String channelName;
+    
     /** Message channel template */
     private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
+    
+    /** The parent bean factory used for channel name resolving */
+    private BeanFactory beanFactory;
+    
+    /** Channel resolver instance */
+    private ChannelResolver channelResolver;
     
     /**
      * @see MessageReceiver#receive(long)
@@ -50,14 +63,16 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
      */
     @Override
     public Message<?> receive(long timeout) {
-        log.info("Receiving message from: " + channel.getName());
+        String channelName = getDestinationChannelName();
+        
+        log.info("Receiving message from: " + channelName);
         
         messageChannelTemplate.setReceiveTimeout(timeout);
-        Message<?> received = messageChannelTemplate.receive(channel);
+        Message<?> received = messageChannelTemplate.receive(getDestinationChannel());
         
         if(received == null) {
             throw new ActionTimeoutException("Action timeout while receiving message from channel '"
-                    + channel.getName() + "'");
+                    + channelName + "'");
         }
         
         return received;
@@ -70,6 +85,60 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
     public Message<?> receiveSelected(String selector, long timeout) {
         throw new UnsupportedOperationException("MessageChannelTemplate " +
         		"does not support selected receiving.");
+    }
+    
+    /**
+     * Get the destination channel depending on settings in this message sender.
+     * Either a direct channel object is set or a channel name which will be resolved 
+     * to a channel.
+     * 
+     * @return the destination channel object.
+     */
+    private PollableChannel getDestinationChannel() {
+        if (channel != null) {
+            return channel;
+        } else if (StringUtils.hasText(channelName)) {
+            MessageChannel messageChannel = resolveChannelName(channelName);
+            if (messageChannel instanceof PollableChannel) {
+                return (PollableChannel)messageChannel;
+            } else {
+                throw new CitrusRuntimeException("Invalid destination channel type " + messageChannel.getClass().getName()
+                        + " - must be of type PollableChannel");
+            }
+        } else {
+            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
+                    "please specify destination channel");
+        }
+    }
+
+    /**
+     * Gets the channel name depending on what is set in this message sender. 
+     * Either channel name is set directly or channel object is consulted for channel name.
+     * 
+     * @return the channel name.
+     */
+    private String getDestinationChannelName() {
+        if (channel != null) {
+            return channel.getName();
+        } else if (StringUtils.hasText(channelName)) {
+            return channelName;
+        } else {
+            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
+                    "please specify destination channel");
+        }
+    }
+
+    /**
+     * Resolve the channel by name.
+     * @param channelName the name to resolve
+     * @return the MessageChannel object
+     */
+    protected MessageChannel resolveChannelName(String channelName) {
+        if (channelResolver == null) {
+            channelResolver = new BeanFactoryChannelResolver(beanFactory);
+        }
+        
+        return channelResolver.resolveChannelName(channelName);
     }
 
     /**
@@ -87,5 +156,29 @@ public class MessageChannelReceiver extends AbstractMessageReceiver {
     public void setMessageChannelTemplate(
             MessageChannelTemplate messageChannelTemplate) {
         this.messageChannelTemplate = messageChannelTemplate;
+    }
+    
+    /**
+     * Sets the bean factory for channel resolver.
+     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     */
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+    
+    /**
+     * Sets the destination channel name.
+     * @param channelName the channelName to set
+     */
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+    
+    /**
+     * Set the channel resolver.
+     * @param channelResolver the channelResolver to set
+     */
+    public void setChannelResolver(ChannelResolver channelResolver) {
+        this.channelResolver = channelResolver;
     }
 }

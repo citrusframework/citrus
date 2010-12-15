@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.channel.PollableChannel;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageBuilder;
 import org.testng.Assert;
@@ -38,7 +37,9 @@ public class MessageChannelReceiverTest {
 
     private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
     
-    private PollableChannel channel = org.easymock.EasyMock.createMock(PollableChannel.class);
+    private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
+    
+    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings("unchecked")
@@ -69,6 +70,39 @@ public class MessageChannelReceiverTest {
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
         verify(messageChannelTemplate, channel);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testReceiveMessageChannelNameResolver() {
+        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
+        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        
+        messageChannelReceiver.setChannelName("testChannel");
+        
+        messageChannelReceiver.setChannelResolver(channelResolver);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageChannelTemplate, channel, channelResolver);
+        
+        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        
+        messageChannelTemplate.setReceiveTimeout(5000L);
+        expectLastCall().once();
+        
+        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        
+        replay(messageChannelTemplate, channel, channelResolver);
+        
+        Message receivedMessage = messageChannelReceiver.receive();
+        
+        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
+        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        verify(messageChannelTemplate, channel, channelResolver);
     }
     
     @Test

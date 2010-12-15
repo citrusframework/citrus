@@ -42,6 +42,18 @@ public class MessageChannelSenderParser extends AbstractMessageChannelTemplateAw
             builder.addPropertyReference("channel", channel);
         }
         
+        String channelName = element.getAttribute("channel-name");
+        
+        if (StringUtils.hasText(channelName)) {
+            builder.addPropertyValue("channelName", channelName);
+        }
+        
+        String channelResolver = element.getAttribute("channel-resolver");
+        
+        if (StringUtils.hasText(channelResolver)) {
+            builder.addPropertyReference("channelResolver", channelResolver);
+        }
+        
         return builder;
     }
 

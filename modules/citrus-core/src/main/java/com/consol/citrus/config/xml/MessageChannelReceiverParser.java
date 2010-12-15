@@ -33,13 +33,24 @@ public class MessageChannelReceiverParser extends AbstractMessageChannelTemplate
      */
     @Override
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition("com.consol.citrus.channel.MessageChannelReceiver");
+        BeanDefinitionBuilder builder = getBeanDefinitionBuilder(element, parserContext);
         
         String channel = element.getAttribute("channel");
         
         if (StringUtils.hasText(channel)) {
             builder.addPropertyReference("channel", channel);
+        }
+        
+        String channelName = element.getAttribute("channel-name");
+        
+        if (StringUtils.hasText(channelName)) {
+            builder.addPropertyValue("channelName", channelName);
+        }
+        
+        String channelResolver = element.getAttribute("channel-resolver");
+        
+        if (StringUtils.hasText(channelResolver)) {
+            builder.addPropertyReference("channelResolver", channelResolver);
         }
         
         String receiveTimeout = element.getAttribute("receive-timeout");
@@ -49,5 +60,16 @@ public class MessageChannelReceiverParser extends AbstractMessageChannelTemplate
         }
         
         return builder;
+    }
+    
+    /**
+     * Get the bean definition builder. Subclasses may add some logic here.
+     * @param element the actual xml element.
+     * @param parserContext the current parser context.
+     * @return the bean definition builder.
+     */
+    protected BeanDefinitionBuilder getBeanDefinitionBuilder(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.genericBeanDefinition(
+                "com.consol.citrus.channel.MessageChannelReceiver");
     }
 }

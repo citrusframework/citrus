@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
+import org.springframework.integration.channel.ChannelResolver;
 import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
@@ -41,7 +42,9 @@ public class MessageChannelSenderTest {
 
     private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
     
-    private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
+    private MessageChannel channel = EasyMock.createMock(MessageChannel.class);
+    
+    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings("unchecked")
@@ -67,6 +70,34 @@ public class MessageChannelSenderTest {
         messageChannelSender.send(message);
         
         verify(messageChannelTemplate, channel);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageChannelNameResolver() {
+        MessageChannelSender messageChannelSender = new MessageChannelSender();
+        messageChannelSender.setMessageChannelTemplate(messageChannelTemplate);
+        
+        messageChannelSender.setChannelName("testChannel");
+        
+        messageChannelSender.setChannelResolver(channelResolver);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        reset(messageChannelTemplate, channel, channelResolver);
+        
+        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        
+        expect(messageChannelTemplate.send(message, channel)).andReturn(true).once();
+        
+        replay(messageChannelTemplate, channel, channelResolver);
+        
+        messageChannelSender.send(message);
+        
+        verify(messageChannelTemplate, channel, channelResolver);
     }
     
     @Test

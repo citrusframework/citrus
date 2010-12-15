@@ -25,8 +25,7 @@ import javax.jms.JMSException;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.channel.PollableChannel;
+import org.springframework.integration.channel.*;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 import org.springframework.integration.message.MessageBuilder;
@@ -43,11 +42,12 @@ public class SyncMessageChannelReceiverTest {
 
     private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
     
-    private PollableChannel channel = org.easymock.EasyMock.createMock(PollableChannel.class);
-    private MessageChannel replyChannel = org.easymock.EasyMock.createMock(MessageChannel.class);
+    private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
+    private MessageChannel replyChannel = EasyMock.createMock(MessageChannel.class);
 
-    private ReplyMessageCorrelator replyMessageCorrelator = org.easymock.EasyMock.createMock(ReplyMessageCorrelator.class);
+    private ReplyMessageCorrelator replyMessageCorrelator = EasyMock.createMock(ReplyMessageCorrelator.class);
     
+    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings("unchecked")
@@ -87,12 +87,50 @@ public class SyncMessageChannelReceiverTest {
     
     @Test
     @SuppressWarnings("unchecked")
+    public void testReceiveMessageChannelNameResolver() throws JMSException {
+        SyncMessageChannelReceiver receiver = new SyncMessageChannelReceiver();
+        receiver.setMessageChannelTemplate(messageChannelTemplate);
+        receiver.setChannelName("testChannel");
+        
+        receiver.setChannelResolver(channelResolver);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+                                .copyHeaders(headers)
+                                .setReplyChannel(replyChannel)
+                                .build();
+
+        reset(messageChannelTemplate, channel, replyChannel, channelResolver);
+        
+        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        
+        messageChannelTemplate.setReceiveTimeout(5000L);
+        expectLastCall().once();
+        
+        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        
+        replay(messageChannelTemplate, channel, replyChannel, channelResolver);
+        
+        Message receivedMessage = receiver.receive();
+        
+        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
+        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        
+        MessageChannel savedReplyChannel = receiver.getReplyMessageChannel();
+        Assert.assertNotNull(savedReplyChannel);
+        Assert.assertEquals(savedReplyChannel, replyChannel);
+        
+        verify(messageChannelTemplate, channel, replyChannel, channelResolver);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
     public void testReceiveMessageWithReplyChannelName() throws JMSException {
         SyncMessageChannelReceiver receiver = new SyncMessageChannelReceiver();
         receiver.setMessageChannelTemplate(messageChannelTemplate);
         receiver.setChannel(channel);
         
-        BeanFactory factory = org.easymock.EasyMock.createMock(BeanFactory.class);
+        BeanFactory factory = EasyMock.createMock(BeanFactory.class);
         receiver.setBeanFactory(factory);
         
         Map<String, Object> headers = new HashMap<String, Object>();

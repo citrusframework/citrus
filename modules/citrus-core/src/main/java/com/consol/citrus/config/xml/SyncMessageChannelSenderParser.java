@@ -36,6 +36,24 @@ public class SyncMessageChannelSenderParser extends AbstractMessageChannelTempla
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.channel.SyncMessageChannelSender");
         
+        String channel = element.getAttribute("channel");
+        
+        if (StringUtils.hasText(channel)) {
+            builder.addPropertyReference("channel", channel);
+        }
+        
+        String channelName = element.getAttribute("channel-name");
+        
+        if (StringUtils.hasText(channelName)) {
+            builder.addPropertyValue("channelName", channelName);
+        }
+        
+        String channelResolver = element.getAttribute("channel-resolver");
+        
+        if (StringUtils.hasText(channelResolver)) {
+            builder.addPropertyReference("channelResolver", channelResolver);
+        }
+        
         String replyTimeout = element.getAttribute("reply-timeout");
         
         if (StringUtils.hasText(replyTimeout)) {

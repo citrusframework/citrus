@@ -26,27 +26,12 @@ import org.w3c.dom.Element;
  * 
  * @author Christoph Deppisch
  */
-public class SyncMessageChannelReceiverParser extends AbstractMessageChannelTemplateAwareParser {
+public class SyncMessageChannelReceiverParser extends MessageChannelReceiverParser {
 
-    /**
-     * @see com.consol.citrus.config.xml.AbstractMessageChannelTemplateAwareParser#doParseComponent(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
     @Override
-    protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
+    protected BeanDefinitionBuilder getBeanDefinitionBuilder(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.channel.SyncMessageChannelReceiver");
-        
-        String channel = element.getAttribute("channel");
-        
-        if (StringUtils.hasText(channel)) {
-            builder.addPropertyReference("channel", channel);
-        }
-        
-        String replyTimeout = element.getAttribute("receive-timeout");
-        
-        if (StringUtils.hasText(replyTimeout)) {
-            builder.addPropertyValue("receiveTimeout", replyTimeout);
-        }
         
         String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
         
@@ -56,5 +41,4 @@ public class SyncMessageChannelReceiverParser extends AbstractMessageChannelTemp
         
         return builder;
     }
-
 }

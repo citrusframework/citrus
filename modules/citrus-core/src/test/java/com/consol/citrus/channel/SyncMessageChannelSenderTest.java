@@ -25,6 +25,7 @@ import javax.jms.JMSException;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.springframework.integration.channel.ChannelResolver;
 import org.springframework.integration.channel.MessageChannelTemplate;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
@@ -48,6 +49,8 @@ public class SyncMessageChannelSenderTest {
     private ReplyMessageHandler replyMessageHandler = org.easymock.EasyMock.createMock(ReplyMessageHandler.class);
     
     private ReplyMessageCorrelator replyMessageCorrelator = org.easymock.EasyMock.createMock(ReplyMessageCorrelator.class);
+    
+    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings("unchecked")
@@ -80,6 +83,41 @@ public class SyncMessageChannelSenderTest {
         sender.send(message);
         
         verify(messageChannelTemplate, channel, replyMessageHandler);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSendMessageChannelNameResolver() throws JMSException {
+        SyncMessageChannelSender sender = new SyncMessageChannelSender();
+        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setChannelName("testChannel");
+        
+        sender.setChannelResolver(channelResolver);
+        
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
+        
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+                                .copyHeaders(responseHeaders)
+                                .build();
+
+        reset(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
+        
+        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        
+        messageChannelTemplate.setReceiveTimeout(5000L);
+        expectLastCall().once();
+        
+        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        
+        replay(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
+        
+        sender.send(message);
+        
+        verify(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
     }
     
     @Test

@@ -21,15 +21,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.integration.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.core.MessageChannel;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
@@ -39,24 +34,18 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
  * 
  * @author Christoph Deppisch
  */
-public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder, BeanFactoryAware {
+public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
     /** Reply channel store */
     private Map<String, MessageChannel> replyChannels = new HashMap<String, MessageChannel>();
     
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
-    /** Channel resolver */
-    private BeanFactoryChannelResolver channelResolver = new BeanFactoryChannelResolver();
-    
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(SyncMessageChannelReceiver.class);
     
-    /**
-     * @see MessageReceiver#receive(long)
-     */
     @Override
     public Message<?> receive(long timeout) {
         Message<?> receivedMessage = super.receive(timeout);
@@ -66,9 +55,6 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
         return receivedMessage;
     }
 
-    /**
-     * @see MessageReceiver#receiveSelected(String, long)
-     */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         Message<?> receivedMessage = super.receiveSelected(selector, timeout);
@@ -88,7 +74,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
         if(receivedMessage.getHeaders().getReplyChannel() instanceof MessageChannel) {
             replyChannel = (MessageChannel)receivedMessage.getHeaders().getReplyChannel();
         } else if(StringUtils.hasText((String)receivedMessage.getHeaders().getReplyChannel())){
-            replyChannel = channelResolver.resolveChannelName(receivedMessage.getHeaders().getReplyChannel().toString());
+            replyChannel = resolveChannelName(receivedMessage.getHeaders().getReplyChannel().toString());
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" + 
                     receivedMessage + "\n - no reply channel found in message headers!");
@@ -101,7 +87,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
             replyChannels.put("", replyChannel);
         }
     }
-
+    
     /**
      * Get the reply message channel with given corelation key.
      */
@@ -123,12 +109,5 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
     }
-
-    /**
-     * Forward the bean factory to channel resolver.
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        channelResolver.setBeanFactory(beanFactory);
-    }
+    
 }
