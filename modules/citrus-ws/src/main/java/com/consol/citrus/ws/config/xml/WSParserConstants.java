@@ -82,4 +82,12 @@ public class WSParserConstants {
     public static final String ADRESSING_HEADERS_ATTRIBUTE = "addressing-headers";
     
     public static final String ADRESSING_HEADERS_PROPERTY = "addressingHeaders";
+    
+    public static final String CONNECTORS_ATTRIBUTE = "connectors";
+    
+    public static final String CONNECTORS_PROPERTY = CONNECTORS_ATTRIBUTE;
+    
+    public static final String CONNECTOR_ATTRIBUTE = "connector";
+    
+    public static final String CONNECTOR_PROPERTY = CONNECTOR_ATTRIBUTE;
 }

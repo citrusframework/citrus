@@ -19,6 +19,7 @@
      targetNamespace="http://www.citrusframework.org/schema/ws/config"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
+    
     <xs:element name="jetty-server">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
@@ -27,8 +28,11 @@
             <xs:attribute name="context-config-location" type="xs:string"/>
             <xs:attribute name="resource-base" type="xs:string"/>
             <xs:attribute name="root-parent-context" type="xs:boolean"/>
+            <xs:attribute name="connector" type="xs:string"/>
+            <xs:attribute name="connectors" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="message-sender">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
@@ -44,6 +48,7 @@
             <xs:attribute name="addressing-headers" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    
     <xs:element name="reply-message-handler">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>

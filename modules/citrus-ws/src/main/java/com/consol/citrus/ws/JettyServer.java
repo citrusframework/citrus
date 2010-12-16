@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.*;
 import org.mortbay.jetty.servlet.*;
@@ -66,6 +67,12 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     /** Do only start one instance after another so we need a static lock object */
     private static Object serverLock = new Object();
     
+    /** Set custom connector with custom idle time and other configuration options */
+    private Connector connector;
+    
+    /** Set list of custom connectors with custom configuration options */
+    private Connector[] connectors;
+    
     @Override
     protected void shutdown() {
         if(jettyServer != null) {
@@ -82,7 +89,15 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     @Override
     protected void startup() {
         synchronized (serverLock) {
-            jettyServer = new Server(port);
+            if (connectors != null) {
+                jettyServer = new Server();
+                jettyServer.setConnectors(connectors);
+            } else if (connector != null) {
+                jettyServer = new Server();
+                jettyServer.addConnector(connector);
+            } else {
+                jettyServer = new Server(port);
+            }
             
             HandlerCollection handlers = new HandlerCollection();
             
@@ -294,4 +309,19 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         }
     }
 
+    /**
+     * Sets the custom connector.
+     * @param connector the connector to set
+     */
+    public void setConnector(Connector connector) {
+        this.connector = connector;
+    }
+
+    /**
+     * Sets a list of custom connectors.
+     * @param connectors the connectors to set
+     */
+    public void setConnectors(Connector[] connectors) {
+        this.connectors = connectors;
+    }
 }

@@ -66,6 +66,18 @@ public class JettyServerParser extends AbstractBeanDefinitionParser {
             builder.addPropertyValue(WSParserConstants.USE_ROOT_CONTEXT_PROPERTY, Boolean.valueOf(useRootContext));
         }
         
+        String connectors = element.getAttribute(WSParserConstants.CONNECTORS_ATTRIBUTE);
+        
+        if (StringUtils.hasText(connectors)) {
+            builder.addPropertyReference(WSParserConstants.CONNECTORS_PROPERTY, connectors);
+        }
+        
+        String connector = element.getAttribute(WSParserConstants.CONNECTOR_ATTRIBUTE);
+        
+        if (StringUtils.hasText(connector)) {
+            builder.addPropertyReference(WSParserConstants.CONNECTOR_PROPERTY, connector);
+        }
+        
         return builder.getBeanDefinition();
     }
 }
