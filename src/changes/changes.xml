@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="17.12.2010" description="Latest snapshot release">
+        <action dev="christophd" type="fix">
+          #195 Validate namespaces support is broken
+        </action>
         <action dev="christophd" type="add">
           #336 Support message channel name resolving
         </action>
