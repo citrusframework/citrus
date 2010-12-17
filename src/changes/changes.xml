@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="14.10.2010" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="17.12.2010" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #321 Add custom connectors to Citrus Jetty server
+        </action>
         <action dev="christophd" type="add">
           #338 WsAddressing support in Soap message sender
         </action>
