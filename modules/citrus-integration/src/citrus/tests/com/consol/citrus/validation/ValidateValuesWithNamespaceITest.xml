@@ -118,6 +118,120 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
+            
+            <echo>
+                <message>Now using xpath validation elements</message>
+            </echo>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate>
+                        <xpath expression="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate>
+                        <xpath expression="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns1:HelloResponse/ns1:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns1:HelloResponse/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="ns1" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate>
+                        <xpath expression="//:HelloResponse/:MessageId" value="${messageId}"/>
+                        <xpath expression="//:HelloResponse/:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//:HelloResponse/:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
         </actions>
     </testcase>
 </spring:beans>

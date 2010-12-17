@@ -18,8 +18,6 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -47,11 +45,6 @@ import com.consol.citrus.variable.*;
  */
 public class ReceiveMessageActionParser implements BeanDefinitionParser {
 
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(ReceiveMessageActionParser.class);
-    
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
@@ -252,31 +245,57 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             }
             contextBuilder.setIgnoreExpressions(ignoreExpressions);
             
-            Map<String, String> validateExpressions = new HashMap<String, String>();
+            //check for validate elements, these elements can either have script, xpath or namespace validation information
+            //script validation is handled separately for now we only handle xpath and namepsace validation
+            Map<String, String> validateNamespaces = new HashMap<String, String>();
+            Map<String, String> validateXpathExpressions = new HashMap<String, String>();
             List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
             if (validateElements.size() > 0) {
                 for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                     Element validateElement = (Element) iter.next();
                     
-                    // check if validate script child node is present - only continue when it is missing
-                    if (!validateElement.hasChildNodes()) {
-                        String pathExpression = validateElement.getAttribute("path");
-                        
+                    //check for xpath validation - old style with direct attribute TODO: remove with next major version
+                    String pathExpression = validateElement.getAttribute("path");
+                    if (StringUtils.hasText(pathExpression)) {
                         //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
                         if(validateElement.hasAttribute("result-type")) {
                             pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
                         }
                         
-                        validateExpressions.put(pathExpression, validateElement.getAttribute("value"));
-                    } else if (validateElement.hasAttribute("path")) {
-                        // inform user that this xpath expression was skipped as validation script is defined too
-                        log.warn("Skipping xpath validation (" + validateElement.getAttribute("path") + 
-                                ") instead using validation script which is defined for this element too");
+                        validateXpathExpressions.put(pathExpression, validateElement.getAttribute("value"));
+                    }
+                    
+                    //check for xpath validation elements - new style preferred
+                    List<?> xpathElements = DomUtils.getChildElementsByTagName(validateElement, "xpath");
+                    if (xpathElements.size() > 0) {
+                        for (Iterator<?> xpathIterator = xpathElements.iterator(); xpathIterator.hasNext();) {
+                            Element xpathElement = (Element) xpathIterator.next();
+                            String expression = xpathElement.getAttribute("expression");
+                            if (StringUtils.hasText(expression)) {
+                                //construct expression with explicit result-type, like boolean:/TestMessage/Value
+                                if(xpathElement.hasAttribute("result-type")) {
+                                    expression = xpathElement.getAttribute("result-type") + ":" + expression;
+                                }
+                                
+                                validateXpathExpressions.put(expression, xpathElement.getAttribute("value"));
+                            }
+                        }
+                    }
+                    
+                    //check for namespace validation elements
+                    List<?> validateNamespaceElements = DomUtils.getChildElementsByTagName(validateElement, "namespace");
+                    if (validateNamespaceElements.size() > 0) {
+                        for (Iterator<?> namespaceIterator = validateNamespaceElements.iterator(); namespaceIterator.hasNext();) {
+                            Element namespaceElement = (Element) namespaceIterator.next();
+                            validateNamespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+                        }
                     }
                 }
-                contextBuilder.setPathValidationExpressions(validateExpressions);
+                contextBuilder.setPathValidationExpressions(validateXpathExpressions);
+                contextBuilder.setControlNamespaces(validateNamespaces);
             }
             
+            //Catch namespace declarations for namespace context
             Map<String, String> namespaces = new HashMap<String, String>();
             List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
             if (namespaceElements.size() > 0) {
