@@ -43,12 +43,8 @@ public class StartServerAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(StartServerAction.class);
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         log.info("Starting up servers");
 
         for (Server actServer : serverList) {

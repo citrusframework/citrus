@@ -61,12 +61,8 @@ public class TransformAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(TransformAction.class);
 
-	/**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
 	@Override
-	public void execute(TestContext context) {
+	public void doExecute(TestContext context) {
 		try {
 			log.info("Starting XSLT transformation");
 			

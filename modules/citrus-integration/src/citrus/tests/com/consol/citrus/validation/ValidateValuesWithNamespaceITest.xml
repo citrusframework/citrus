@@ -232,6 +232,53 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
+            
+            <echo>
+                <message>Test: Default namespace mapping</message>
+            </echo>
+            
+            <send with="helloRequestSender">
+                <description>
+                    Send asynchronous hello request: TestFramework -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello TestFramework</Text>
+                           </HelloRequest>                              
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+            
+            <receive with="helloResponseReceiver">
+                <message>
+                    <validate>
+                        <xpath expression="/def:HelloResponse/def:MessageId" value="${messageId}"/>
+                        <xpath expression="/def:HelloResponse/def:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="/def:HelloResponse/def:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+                <extract>
+                    <message path="/def:HelloResponse/def:Text" variable="extractedText"></message>
+                </extract>
+            </receive>
+            
+            <groovy>
+                assert context.getVariable('extractedText') == 'Hello ${user}'
+            </groovy>
         </actions>
     </testcase>
 </spring:beans>

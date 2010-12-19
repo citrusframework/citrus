@@ -35,11 +35,8 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
     /** Looping index */
     protected int index = 1;
     
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         condition = context.replaceDynamicContentInString(condition);
         
         executeIteration(context);

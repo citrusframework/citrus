@@ -55,13 +55,9 @@ public class JavaAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(JavaAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @SuppressWarnings("unchecked")
 	@Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         try {
             if (className != null) {
                 log.info("Loading class " + className);

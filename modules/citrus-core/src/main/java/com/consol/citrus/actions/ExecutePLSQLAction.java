@@ -58,12 +58,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         this.statements = statements;
     }
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         BufferedReader reader = null;
         StringBuffer buffer;
         String stmt;

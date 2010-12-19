@@ -80,12 +80,8 @@ public class AssertSoapFault extends AbstractActionContainer {
      */
     private static final Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute()
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         log.info("Asserting SOAP fault ...");
 
         try {

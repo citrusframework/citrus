@@ -60,7 +60,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /**
      * Method executes the test case and all its actions.
      */
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing TestCase");
         }

@@ -40,8 +40,6 @@
     
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
-    <bean class="com.consol.citrus.aop.TestActionExecutionAspect"/>
-    
     <bean id="testContextFactory" class="com.consol.citrus.context.TestContextFactoryBean"/>
     
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>

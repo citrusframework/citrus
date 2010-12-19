@@ -59,7 +59,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
      
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -86,7 +86,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
         
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -113,7 +113,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
         
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -147,7 +147,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
         
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -181,7 +181,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
      
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -218,7 +218,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
      
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -257,7 +257,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
      
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
@@ -294,7 +294,7 @@ public class AssertSoapFaultTest extends AbstractBaseTest {
      
         assertAction.setAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 SoapMessage faultMessage = null;
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();

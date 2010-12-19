@@ -19,7 +19,6 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 
@@ -36,11 +35,8 @@ public class StopServerAction extends AbstractTestAction {
     /** Single server isntance to stop */
     private Server server;
 
-    /**
-     * @see TestAction#execute(TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         for (Server actServer : serverList) {
             actServer.stop();
         }

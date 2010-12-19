@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.aop;
+package com.consol.citrus.util;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -28,27 +24,33 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
 
 /**
- * Aspect prints test action name and description before execution.
+ * Logger prints test action anem and description to the logging console.
+ * Usually done before execution in test case.
  * 
  * @author Christoph Deppisch
  */
-@Aspect
-public class TestActionExecutionAspect {
+public class TestActionExecutionLogger {
 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestActionExecutionAspect.class);
-
-    @Pointcut("(within(com.consol.citrus.actions.*) || within(com.consol.citrus.container.*)) && execution(* com.consol.citrus.TestAction.execute(com.consol.citrus.context.TestContext))")
-    public void inTestActionExecution() {}
-
-    @Around("com.consol.citrus.aop.TestActionExecutionAspect.inTestActionExecution()")
-    public Object doTestActionExecution(ProceedingJoinPoint pjp) throws Throwable {
+    private static final Logger log = LoggerFactory.getLogger(TestActionExecutionLogger.class);
+    
+    /**
+     * Prevent instantiation.
+     */
+    private TestActionExecutionLogger() {
+    }
+    
+    /**
+     * Print test action information to the console.
+     * 
+     * @param action the current test action.
+     */
+    public static void logTestAction(TestAction action) {
         StringBuilder builder = new StringBuilder();
         
         builder.append("Executing: <");
-        TestAction action = (TestAction)pjp.getThis();
         
         if (action.getName() != null) {
             builder.append(action.getName());
@@ -57,7 +59,7 @@ public class TestActionExecutionAspect {
                 builder.append("(" + action.getDescription() + ")");
             }
         } else {
-            builder.append(pjp.getTarget().getClass().getName());
+            builder.append(action.getClass().getName());
         }
 
         builder.append(">");
@@ -67,7 +69,5 @@ public class TestActionExecutionAspect {
         }
         
         log.info(builder.toString());
-        
-        return pjp.proceed();
     }
 }

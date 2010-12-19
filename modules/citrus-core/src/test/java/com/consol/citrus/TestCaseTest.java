@@ -52,7 +52,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 Assert.assertEquals(context.getVariable("${text}"), message);
             }
         });
@@ -70,7 +70,7 @@ public class TestCaseTest extends AbstractBaseTest {
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override
-            public void execute(TestContext context) {
+            public void doExecute(TestContext context) {
                 Assert.assertEquals(context.getVariable("${unknown}"), message);
             }
         });

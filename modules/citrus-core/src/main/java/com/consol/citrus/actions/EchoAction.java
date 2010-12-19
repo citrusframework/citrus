@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Prints messages to the console/logger during test execution.
@@ -40,12 +39,8 @@ public class EchoAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(EchoAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         if (message == null) {
             log.info("TestSuite " + new Date(System.currentTimeMillis()));
         } else {

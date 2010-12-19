@@ -54,7 +54,7 @@ public class SendMessageAction extends AbstractTestAction {
      * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         Message<?> message = createMessage(context);
         
         // extract variables from before sending message so we can save dynamic message ids

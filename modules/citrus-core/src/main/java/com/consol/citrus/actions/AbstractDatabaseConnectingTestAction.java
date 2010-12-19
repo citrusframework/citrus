@@ -22,6 +22,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.util.TestActionExecutionLogger;
 
 /**
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
@@ -37,10 +38,18 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     private String name = this.getClass().getSimpleName();
 
     /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute(com.consol.citrus.context.TestContext)
+     * Do basic logging and delegate execution to subclass.
      */
-    public abstract void execute(TestContext context);
+    public void execute(TestContext context) {
+        TestActionExecutionLogger.logTestAction(this);
+        
+        doExecute(context);
+    }
+    
+    /**
+     * Subclasses may add custom execution logic here.
+     */
+    public abstract void doExecute(TestContext context);
 
     /**
      * @return the description

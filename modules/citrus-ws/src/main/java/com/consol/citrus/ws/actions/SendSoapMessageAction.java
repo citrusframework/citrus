@@ -49,11 +49,8 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
     
-    /**
-     * @see com.consol.citrus.actions.SendMessageAction#execute(com.consol.citrus.context.TestContext)
-     */
     @Override
-    public void execute(final TestContext context) {
+    public void doExecute(final TestContext context) {
         Message<?> message = createMessage(context);
         
         // extract variables from before sending message so we can save dynamic message ids

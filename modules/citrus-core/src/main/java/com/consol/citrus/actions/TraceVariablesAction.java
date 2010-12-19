@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Action that prints variable values to the console/logger. Action requires a list of variable
@@ -41,12 +40,8 @@ public class TraceVariablesAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(TraceVariablesAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         Iterator<String> it;
         if (variableNames != null && variableNames.size() > 0) {
             log.info("Validating variables using custom map:");

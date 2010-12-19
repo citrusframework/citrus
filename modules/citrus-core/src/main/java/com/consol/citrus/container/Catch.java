@@ -37,11 +37,8 @@ public class Catch extends AbstractActionContainer {
      */
     private static final Logger log = LoggerFactory.getLogger(Catch.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute()
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         log.debug("Catch container catching exceptions of type " + exception);
 
         for (TestAction action: actions) {

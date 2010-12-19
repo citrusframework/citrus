@@ -54,12 +54,8 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         BufferedReader reader = null;
         String stmt = "";
 

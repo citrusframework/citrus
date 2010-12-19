@@ -46,12 +46,8 @@ public class LoadPropertiesAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         Resource resource = FileUtils.getResourceFromFilePath(file);
 
         log.info("Reading property file " + resource.getFilename());

@@ -64,12 +64,8 @@ public class CleanIcJobsBean extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(CleanIcJobsBean.class);
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
 	@Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         int cntJobsDeleted = 0;
 
         if (serverName == null || serverName.trim().length() == 0) {

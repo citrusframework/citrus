@@ -313,7 +313,7 @@ public class TestUtilsTest extends AbstractBaseTest {
         }
         
         @Override
-        public void execute(TestContext context) {}
+        public void doExecute(TestContext context) {}
     }
     
     private static class MockedActionContainer extends AbstractActionContainer {
@@ -325,6 +325,6 @@ public class TestUtilsTest extends AbstractBaseTest {
         }
         
         @Override
-        public void execute(TestContext context) {}
+        public void doExecute(TestContext context) {}
     }
 }

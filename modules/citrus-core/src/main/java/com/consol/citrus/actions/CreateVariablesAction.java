@@ -44,12 +44,8 @@ public class CreateVariablesAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         for (Entry<String, String> entry : newVariables.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();

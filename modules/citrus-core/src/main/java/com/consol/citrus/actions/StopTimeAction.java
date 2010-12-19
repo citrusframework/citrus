@@ -50,12 +50,8 @@ public class StopTimeAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(StopTimeAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         DecimalFormat decFormat = new DecimalFormat("0.0");
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');

@@ -80,7 +80,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @throws CitrusRuntimeException
      */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         Message<?> receivedMessage;
         
         try {

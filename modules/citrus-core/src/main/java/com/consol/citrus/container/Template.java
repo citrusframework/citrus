@@ -70,11 +70,8 @@ public class Template extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(Template.class);
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         log.info("Executing template '" + name + "' with " + actions.size() + " embedded actions");
 
         TestContext innerContext;

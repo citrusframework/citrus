@@ -35,11 +35,8 @@ public class Sequence extends AbstractActionContainer {
      */
     private static final Logger log = LoggerFactory.getLogger(Sequence.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         for (TestAction action: actions) {
             setLastExecutedAction(action);
             action.execute(context);

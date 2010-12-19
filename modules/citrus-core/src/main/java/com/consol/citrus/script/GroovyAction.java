@@ -64,12 +64,8 @@ public class GroovyAction extends AbstractTestAction {
      */
     private static final Logger log = LoggerFactory.getLogger(GroovyAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         try {
             ClassLoader parent = getClass().getClassLoader();
             GroovyClassLoader loader = new GroovyClassLoader(parent);

@@ -72,13 +72,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
-    /**
-     * @see com.consol.citrus.TestAction#execute(TestContext)
-     * @throws CitrusRuntimeException
-     */
     @SuppressWarnings("unchecked")
 	@Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         BufferedReader reader = null;
         
         try {

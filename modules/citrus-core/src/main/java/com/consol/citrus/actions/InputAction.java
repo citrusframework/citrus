@@ -53,12 +53,8 @@ public class InputAction extends AbstractTestAction {
     /** Valid answers, tokenized by '/' character */
     private String validAnswers;
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
 
         String input = null;
 

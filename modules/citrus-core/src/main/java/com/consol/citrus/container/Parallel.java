@@ -45,11 +45,8 @@ public class Parallel extends AbstractActionContainer {
      */
     private static final Logger log = LoggerFactory.getLogger(Parallel.class);
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         for (final TestAction action : actions) {
             Thread t = new Thread(new ActionRunner(action, context) {
                 @Override

@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.util.TestActionExecutionLogger;
 
 /**
  * Abstract base class for test acions. Class provides a default name and description.
@@ -32,10 +33,18 @@ public abstract class AbstractTestAction implements TestAction {
     private String name = this.getClass().getSimpleName();
 
     /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#execute(com.consol.citrus.context.TestContext)
+     * Do basic logging and delegate execution to subclass.
      */
-    public abstract void execute(TestContext context);
+    public void execute(TestContext context) {
+        TestActionExecutionLogger.logTestAction(this);
+        
+        doExecute(context);
+    }
+    
+    /**
+     * Subclasses may add custom execution logic here.
+     */
+    public abstract void doExecute(TestContext context);
 
     /**
      * @return the description

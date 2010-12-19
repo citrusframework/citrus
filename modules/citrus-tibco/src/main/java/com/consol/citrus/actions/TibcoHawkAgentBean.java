@@ -66,12 +66,8 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     /** Method parameters */
     private DataElement[] methodParameters;
 
-    /**
-     * @see com.consol.citrus.actions.AbstractTestAction#execute(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public void execute(TestContext context) {
+    public void doExecute(TestContext context) {
         if (hawkDomain == null || hawkDomain.trim().length() == 0) {
             log.info("Skip TibcoHawkAgentBean because hawk domain is not set properly");
             return;
