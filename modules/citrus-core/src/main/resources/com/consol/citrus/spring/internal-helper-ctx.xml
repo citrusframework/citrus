@@ -27,5 +27,7 @@
     
     <!-- Used for autowiring -->
     <context:annotation-config/>
+    
+    <bean id="namespaceContextBeanPostProcessor" class="com.consol.citrus.xml.namespace.NamespaceContextBeanPostProcessor"/>
 	
 </beans>

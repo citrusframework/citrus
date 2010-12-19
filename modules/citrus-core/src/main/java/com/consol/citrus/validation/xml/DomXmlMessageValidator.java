@@ -49,6 +49,7 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
@@ -70,6 +71,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
     @Autowired
     private XsdSchemaRepository schemaRepository;
+    
+    @Autowired(required= false)
+    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder(); 
 
     /**
      * Validates the message with test context and xml validation context.
@@ -210,7 +214,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
 
             Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-            NamespaceContext namespaceContext = XMLUtils.buildNamespaceContext(receivedMessage, validationContext.getNamespaces());
+            NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces());
             if (XPathUtils.isXPathExpression(elementPathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(elementPathExpression, XPathExpressionResult.NODE);
                 elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
@@ -401,7 +405,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             log.debug("Control message:\n" + XMLUtils.serialize(source));
         }
 
-        validateXmlTree(received, source, validationContext, XMLUtils.buildNamespaceContext(receivedMessage, validationContext.getNamespaces()));
+        validateXmlTree(received, source, validationContext, namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces()));
     }
 
     /**

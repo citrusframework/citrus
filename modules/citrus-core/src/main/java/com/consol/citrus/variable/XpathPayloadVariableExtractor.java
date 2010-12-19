@@ -19,10 +19,11 @@ package com.consol.citrus.variable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -30,14 +31,22 @@ import com.consol.citrus.util.XMLUtils;
 public class XpathPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines xpath expressions and target variable names */
-    Map<String, String> xPathExpressions = new HashMap<String, String>();
+    private Map<String, String> xPathExpressions = new HashMap<String, String>();
     
     /** Namespace definitions used in xpath expressions */
-    Map<String, String> namespaces;
+    private Map<String, String> namespaces;
     
+    @Autowired(required= false)
+    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+    
+    /**
+     * Extract variables using Xpath expressions.
+     */
     public void extractVariables(Message<?> message, TestContext context) {
-        context.createVariablesFromMessageValues(xPathExpressions, message, 
-                XMLUtils.buildNamespaceContext(message, namespaces));
+        //TODO move logic from test context to this extractor.
+        context.createVariablesFromMessageValues(xPathExpressions, 
+                message, 
+                namespaceContextBuilder.buildContext(message, namespaces));
     }
 
     /**
@@ -54,5 +63,13 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      */
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
+    }
+
+    /**
+     * Sets the namespace context builder.
+     * @param namespaceContextBuilder the namespaceContextBuilder to set
+     */
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        this.namespaceContextBuilder = namespaceContextBuilder;
     }
 }

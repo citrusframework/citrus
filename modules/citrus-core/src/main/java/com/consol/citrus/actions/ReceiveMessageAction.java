@@ -221,4 +221,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
             List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) {
         this.validationContextBuilders = validationContextBuilders;
     }
+
+    /**
+     * Gets the variable extractors.
+     * @return the variableExtractors
+     */
+    public List<VariableExtractor> getVariableExtractors() {
+        return variableExtractors;
+    }
 }

@@ -63,6 +63,15 @@
     <bean id="groovyScriptMessageValidator" class="com.consol.citrus.validation.script.GroovyScriptMessageValidator"/>
     
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
+    
+    <!-- Default namespace mappings used in XPath expression evaluations -->
+    <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="def">http://www.consol.de/schemas/samples/sayHello.xsd</prop>            
+            </props>
+        </property>
+    </bean>
 
     <!-- SOAP WebService settings -->
     <citrus-ws:jetty-server id="jettyServer" port="8071"

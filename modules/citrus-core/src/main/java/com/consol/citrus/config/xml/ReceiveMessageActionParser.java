@@ -115,7 +115,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> getMessageValues = new HashMap<String, String>();
+        Map<String, String> extractMessageValues = new HashMap<String, String>();
         Map<String, String> extractHeaderValues = new HashMap<String, String>();
         if (extractElement != null) {
             List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
@@ -138,11 +138,11 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                     pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
                 }
                 
-                getMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
+                extractMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
             }
             
             XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
-            payloadVariableExtractor.setxPathExpressions(getMessageValues);
+            payloadVariableExtractor.setxPathExpressions(extractMessageValues);
             
             Map<String, String> namespaces = new HashMap<String, String>();
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");
