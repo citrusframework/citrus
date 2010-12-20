@@ -60,6 +60,29 @@
              reply-handler=&quot;soapResponseHandler&quot;
              message-factory=&quot;mySepcialMessageFactory&quot;/&gt;</programlisting>
         </important>
+        
+        <tip>
+            <para>Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in
+            configuration. We just use an endpoint resolver bean instead of the static request url like this:</para>
+            
+            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+             endpoint-resolver=&quot;dynamicEndpointResolver&quot; 
+             reply-handler=&quot;soapResponseHandler&quot;
+             message-factory=&quot;mySepcialMessageFactory&quot;/&gt;
+             
+&lt;bean id=&quot;dynamicEndpointResolver&quot; 
+       class=&quot;com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver&quot;/&gt;</programlisting>
+             
+             <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
+             dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>MessageHeaderEndpointUriResolver</emphasis>, which
+             uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header 
+             <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri.</para>
+             
+             <programlisting>&lt;header&gt;
+  &lt;element name=&quot;citrus_endpoint_uri&quot; 
+           value=&quot;http://localhost:${port}/${context}&quot; /&gt;
+&lt;/header&gt;</programlisting>
+        </tip>
     </section>
     
     <section id="soap-receiver">
@@ -75,9 +98,15 @@
              context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
              resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
         
-        <para>The Jetty server is able to startup automatically during application startup. In the example above the Server is
-        listening on the port <literal>8091</literal> for SOAP requests. The context-config-location attribute defines a further Spring
-        application context. In this application context the request mapping is configured. See the example below.</para>
+        <para>The Jetty server is able to start automatically during application startup. In the example above the server is
+        listening for requests on port <literal>8091</literal>. This is the standard connector configuration for the Jetty server.
+        For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations 
+        (@connector and @connectors attributes). For more information please see the Jetty Connector implementations.</para>
+             
+        <para>Now let us have a closer look at the context-config-location attribute. This configuration defines the Spring
+        application context file for endpoints, request mappings and other SpringWS specific information. Please see the 
+        official SpringWS documentation for details on this Spring based configuration. You can also just copy the following 
+        example application context which should work for you in general.</para>
         
         <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; 
        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
@@ -141,9 +170,9 @@
   &lt;/bean&gt;
 &lt;/beans&gt;</programlisting>
         
-        <para>The program listing above describes a normal request mapping. The mapping is responsible to forward incoming requests to
-        an endpoint which will handle the request and provide a response. First of all Spring's logging interceptor is added to the 
-        context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <literal>'HelloStandaloneRequest'</literal> 
+        <para>The program listing above describes a normal SpringWS request mapping with endpoint configurations. The mapping is responsible to forward 
+        incoming requests to the endpoint which will handle the request and provide a proper response message. First of all Spring's logging interceptor 
+        is added to the context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <literal>'HelloStandaloneRequest'</literal> 
         SOAP messages to the <literal>'helloServiceEndpoint'</literal>. Endpoints are of essential nature in Citrus SOAP WebServices implementation.
         They are responsible for processing a request in order to provide a proper response message that is sent back to the calling client. 
         Citrus uses the endpoint in combination with a message handler implementation.</para>
