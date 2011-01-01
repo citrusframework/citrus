@@ -31,16 +31,37 @@ import com.consol.citrus.TestSuite;
  */
 public class TestSuiteListeners implements TestSuiteListener {
     
+    /** Track number of startet test suites */
+    private int testSuitesStarted = 0;
+    /** Track number of finished test suites */
+    private int testSuitesFinished = 0;
+    
+    /** List of test suites */
+    private ArrayList<TestSuite> suites = new ArrayList<TestSuite>();
+    
     /** List of testsuite listeners **/
     @Autowired
-    private List<TestSuiteListener> tesSuiteListeners = new ArrayList<TestSuiteListener>();
+    private List<TestSuiteListener> testSuiteListeners = new ArrayList<TestSuiteListener>();
+    
+    /** List of testsuite reporter **/
+    @Autowired
+    private List<TestReporter> testReporters = new ArrayList<TestReporter>();
     
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
      */
     public void onFinish(TestSuite testsuite) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinish(testsuite);
+        }
+            
+        suites.add(testsuite);
+        
+        //in case last testsuite has finished
+        if(++testSuitesFinished == testSuitesStarted) {
+            for (TestReporter reporter : testReporters) {
+                reporter.generateTestResults(suites);
+            }
         }
     }
 
@@ -48,7 +69,7 @@ public class TestSuiteListeners implements TestSuiteListener {
      * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
      */
     public void onFinishFailure(TestSuite testsuite, Throwable cause) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishFailure(testsuite, cause);
         }
     }
@@ -57,7 +78,7 @@ public class TestSuiteListeners implements TestSuiteListener {
      * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
      */
     public void onFinishSuccess(TestSuite testsuite) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishSuccess(testsuite);
         }
     }
@@ -66,7 +87,9 @@ public class TestSuiteListeners implements TestSuiteListener {
      * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
      */
     public void onStart(TestSuite testsuite) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        testSuitesStarted++;
+        
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStart(testsuite);
         }
     }
@@ -75,7 +98,7 @@ public class TestSuiteListeners implements TestSuiteListener {
      * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
      */
     public void onStartFailure(TestSuite testsuite, Throwable cause) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartFailure(testsuite, cause);
         }
     }
@@ -84,7 +107,7 @@ public class TestSuiteListeners implements TestSuiteListener {
      * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
      */
     public void onStartSuccess(TestSuite testsuite) {
-        for (TestSuiteListener listener : tesSuiteListeners) {
+        for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartSuccess(testsuite);
         }
     }
