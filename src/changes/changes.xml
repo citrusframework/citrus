@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="01.01.2011" description="Latest snapshot release">
+        <action dev="philkom, christophd" type="fix">
+          #324 Multi-line SQL validation stmts
+        </action>
         <action dev="christophd" type="fix">
           #322 onFinish() of JUnitReporter called too late
         </action>

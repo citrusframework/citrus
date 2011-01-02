@@ -16,13 +16,11 @@
 
 package com.consol.citrus.actions;
 
-import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.CollectionUtils;
 
@@ -52,12 +50,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /** Map holding all column values to be validated, keys represent the column names */
     protected Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
 
-    /** SQL file resource holding several query statements */
-    private Resource sqlResource;
-
-    /** List of SQL statements given inline inside the test case */
-    private List<String> statements = new ArrayList<String>();
-
     /** Number of retries when validation fails */
     private int maxRetries = 0;
 
@@ -75,24 +67,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     @SuppressWarnings("unchecked")
 	@Override
     public void doExecute(TestContext context) {
-        BufferedReader reader = null;
-        
         try {
             if (statements.isEmpty()) {
-                reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
-                while (reader.ready()) {
-                    String line = reader.readLine();
-                    
-                    if (line!= null) {
-                        line = line.trim();
-                        
-                        if (!line.startsWith("--")) {
-                            validateSqlStatement(line);
-
-                            statements.add(line);
-                        }
-                    }
-                }
+                statements = getStatementsFromResource();
+            }
+            
+            for (String statement : statements) {
+                validateSqlStatement(statement);
             }
 
             Map<String, List<String>> resultSet = new HashMap<String, List<String>>();
@@ -162,20 +143,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 List<String> columnValues = column.getValue();
                 context.setVariable(column.getKey(), columnValues.get(0) == null ? "NULL" : columnValues.get(0));
             }
-        } catch (IOException e) {
-            log.error("File resource could not be found - filename: " + sqlResource.getFilename(), e);
-            throw new CitrusRuntimeException(e);
         } catch (DataAccessException e) {
             log.error("Failed to execute SQL statement", e);
             throw new CitrusRuntimeException(e);
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Error while closing reader instance.", e);
-                }
-            }
         }
     }
 
@@ -300,22 +270,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
     
     /**
-     * Setter for inline SQL statements.
-     * @param statements
-     */
-    public void setStatements(List<String> statements) {
-        this.statements = statements;
-    }
-
-    /**
-     * Setter for external file resource holding the SQL statements.
-     * @param sqlResource
-     */
-    public void setSqlResource(Resource sqlResource) {
-        this.sqlResource = sqlResource;
-    }
-
-    /**
      * Set expected control result set. Keys represent the column names, values
      * the expected values.
      * 
@@ -340,7 +294,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     public void setRetryPauseInMs(int retryPauseInMs) {
         this.retryPauseInMs = retryPauseInMs;
     }
-
 
     /**
      * User can extract column values to test variables. Map holds column names (keys) and

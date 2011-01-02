@@ -16,12 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import java.io.*;
-import java.util.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import java.util.Iterator;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -37,110 +32,40 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @since 2006
  */
 public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLAction.class);
-
-    /** SQL file resource */
-    private Resource sqlResource;
-
-    /** List of SQL statements */
-    private List<String> statements = new ArrayList<String>();
-
-    /** Constant representing SQL comment */
-    private static final String SQL_COMMENT = "--";
-
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
 
     @Override
     public void doExecute(TestContext context) {
-        BufferedReader reader = null;
         String stmt = "";
 
-        try {
-            if (statements.isEmpty()) {
-                log.info("Executing Sql file: " + sqlResource.getFilename());
-                
-                reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
-                StringBuffer buffer = new StringBuffer();
-                String line;
-                while (reader.ready()) {
-                    line = reader.readLine();
+        if (statements.isEmpty()) {
+            statements = getStatementsFromResource();
+        }
 
-                    if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
-                        if (line.trim().endsWith(";")) {
-                            buffer.append(line);
-                            stmt = buffer.toString();
-                            buffer.setLength(0);
-                            buffer = new StringBuffer();
+        Iterator<String> it = statements.iterator();
+        while (it.hasNext())  {
+            try {
+                stmt = it.next();
+                stmt = stmt.trim();
 
-                            if(log.isDebugEnabled()) {
-                                log.debug("Found statement: " + stmt);
-                            }
-
-                            statements.add(stmt);
-                        } else {
-                            buffer.append(line);
-                        }
-                    }
+                if (stmt.endsWith(";")) {
+                    stmt = stmt.substring(0, stmt.length()-1);
                 }
-            }
 
-            Iterator<String> it = statements.iterator();
-            while (it.hasNext())  {
-                try {
-                    stmt = it.next();
-                    stmt = stmt.trim();
+                stmt = context.replaceDynamicContentInString(stmt);
 
-                    if (stmt.endsWith(";")) {
-                        stmt = stmt.substring(0, stmt.length()-1);
-                    }
-
-                    stmt = context.replaceDynamicContentInString(stmt);
-
-                    log.info("Found Sql statement " + stmt);
-                    getJdbcTemplate().execute(stmt);
-                } catch (Exception e) {
-                    if (ignoreErrors) {
-                        log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
-                        continue;
-                    } else {
-                        throw new CitrusRuntimeException(e);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            log.error("Sql resource could not be found - filename: "
-                    + sqlResource.getFilename() + ". Nested Exception is: ");
-            log.error(e.getLocalizedMessage());
-            throw new CitrusRuntimeException(e);
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Warning: Error while closing reader instance", e);
+                log.info("Found Sql statement " + stmt);
+                getJdbcTemplate().execute(stmt);
+            } catch (Exception e) {
+                if (ignoreErrors) {
+                    log.error("Error while executing statement " + stmt + " " + e.getLocalizedMessage());
+                    continue;
+                } else {
+                    throw new CitrusRuntimeException(e);
                 }
             }
         }
-    }
-
-    /**
-     * List of statements to execute. Declared inline in the test case. 
-     * @param statements
-     */
-    public void setStatements(List<String> statements) {
-        this.statements = statements;
-    }
-    
-    /**
-     * Setter for external file resource containing the SQL statements to execute.
-     * @param sqlResource
-     */
-    public void setSqlResource(Resource sqlResource) {
-        this.sqlResource = sqlResource;
     }
 
     /**

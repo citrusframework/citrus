@@ -51,6 +51,13 @@
                 <validate column="DESCRIPTION" value="NULL"/>
             </sql>
             <sql datasource="testDataSource">
+                <resource file="classpath:com/consol/citrus/actions/query-script.sql"/>
+                <validate column="ORDER_ID" value="1"/>
+                <validate column="NAME" value="Christoph"/>
+                <validate column="OVERALL_CNT" value="${rowsCount}"/>
+                <validate column="DESCRIPTION" value="NULL"/>
+            </sql>
+            <sql datasource="testDataSource">
             	<statement>select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS</statement>
             	<validate column="RTAG">
             		<values>
