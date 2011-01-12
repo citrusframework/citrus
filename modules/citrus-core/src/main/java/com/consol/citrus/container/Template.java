@@ -92,7 +92,7 @@ public class Template extends AbstractTestAction {
             String param = entry.getKey();
             String paramValue = entry.getValue();
 
-			paramValue = VariableUtils.replaceVariablesInString(paramValue, innerContext);
+			paramValue = VariableUtils.replaceVariablesInString(paramValue, innerContext, false);
             if(functionRegistry.isFunction(paramValue)) {
                 paramValue = FunctionUtils.resolveFunction(paramValue, context);
             } 

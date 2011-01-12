@@ -19,7 +19,6 @@ package com.consol.citrus.context;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -207,55 +206,5 @@ public class TestContextTest extends AbstractBaseTest {
         Assert.assertEquals(replaceValues.get(0), "Hello TestFramework!");
         Assert.assertEquals(replaceValues.get(1), "123");
         Assert.assertEquals(replaceValues.get(2), "test");
-    }
-    
-    @Test
-    public void testReplaceMessageValuesWithXPath() {
-        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>";
-        
-        Map<String, String> xPathExpressions = new HashMap<String, String>();
-        xPathExpressions.put("/TestMessage/Text", "Hello!");
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(context.replaceMessageValues(xPathExpressions, messagePayload))
-                .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
-    }
-    
-    @Test
-    public void testReplaceMessageValuesWithXPathAndDefaultNamespace() {
-        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://www.citrusframework.org/test\">" +
-        		"<Text>Hello World!</Text>" +
-        		"</TestMessage>";
-        
-        Map<String, String> xPathExpressions = new HashMap<String, String>();
-        xPathExpressions.put("/:TestMessage/:Text", "Hello!");
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(context.replaceMessageValues(xPathExpressions, messagePayload))
-                .contains("<Text>Hello!</Text>"));
-    }
-    
-    @Test
-    public void testReplaceMessageValuesWithXPathAndNamespace() {
-        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://www.citrusframework.org/test\">" +
-        		"<ns0:Text>Hello World!</ns0:Text>" +
-        		"</ns0:TestMessage>";
-        
-        Map<String, String> xPathExpressions = new HashMap<String, String>();
-        xPathExpressions.put("/ns0:TestMessage/ns0:Text", "Hello!");
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(context.replaceMessageValues(xPathExpressions, messagePayload))
-                .contains("<ns0:Text>Hello!</ns0:Text>"));
-    }
-    
-    @Test
-    public void testReplaceMessageValuesWithXPathAndNestedNamespace() {
-        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://www.citrusframework.org/test\">" +
-        		"<ns1:Text xmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello World!</ns1:Text>" +
-        		"</ns0:TestMessage>";
-        
-        Map<String, String> xPathExpressions = new HashMap<String, String>();
-        xPathExpressions.put("/ns0:TestMessage/ns1:Text", "Hello!");
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(context.replaceMessageValues(xPathExpressions, messagePayload))
-                .contains("<ns1:Textxmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 }

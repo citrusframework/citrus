@@ -18,14 +18,32 @@ package com.consol.citrus.variable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.xml.namespace.NamespaceContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
+import org.springframework.util.CollectionUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.xml.xpath.XPathExpressionResult;
+import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
+ * Class reads message elements via XPath expressions and saves the text values as new test variables.
+ * 
+ * Implementation parsed the message payload as DOM document, so XML message payload is needed here.
+ *  
  * @author Christoph Deppisch
  */
 public class XpathPayloadVariableExtractor implements VariableExtractor {
@@ -40,13 +58,66 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
     
     /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
+    
+    /**
      * Extract variables using Xpath expressions.
      */
     public void extractVariables(Message<?> message, TestContext context) {
-        //TODO move logic from test context to this extractor.
-        context.createVariablesFromMessageValues(xPathExpressions, 
-                message, 
-                namespaceContextBuilder.buildContext(message, namespaces));
+        if (CollectionUtils.isEmpty(xPathExpressions)) {return;}
+
+        if(log.isDebugEnabled()) {
+            log.debug("Reading XML elements from document");
+        }
+        
+        NamespaceContext nsContext = namespaceContextBuilder.buildContext(message, namespaces);
+
+        for (Entry<String, String> entry : xPathExpressions.entrySet()) {
+            String pathExpression = entry.getKey();
+            String variableName = entry.getValue();
+
+            if(log.isDebugEnabled()) {
+                log.debug("Reading element: " + pathExpression);
+            }
+            
+            Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+            
+            if (XPathUtils.isXPathExpression(pathExpression)) {
+                if(nsContext == null) {
+                    nsContext = new SimpleNamespaceContext();
+                    ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
+                }
+                
+                XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
+                pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
+                
+                String value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
+
+                if(value == null) {
+                    throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
+                }
+                
+                context.setVariable(variableName, value);
+            } else {
+                Node node = XMLUtils.findNodeByName(doc, pathExpression);
+
+                if (node == null) {
+                    throw new UnknownElementException("No element found for expression" + pathExpression);
+                }
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    if (node.getFirstChild() != null) {
+                        context.setVariable((String)xPathExpressions.get(pathExpression), node.getFirstChild().getNodeValue());
+                    } else {
+                        context.setVariable((String)xPathExpressions.get(pathExpression), "");
+                    }
+                } else {
+                    context.setVariable((String)xPathExpressions.get(pathExpression), node.getNodeValue());
+                }
+            }
+        }
     }
 
     /**

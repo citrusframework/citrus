@@ -618,7 +618,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable '${myOperation}'");
+            Assert.assertEquals(e.getMessage(), "Unknown variable 'myOperation'");
             return;
         }
         

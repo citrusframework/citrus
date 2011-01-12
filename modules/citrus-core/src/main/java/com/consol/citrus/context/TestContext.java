@@ -19,26 +19,19 @@ package com.consol.citrus.context;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javax.xml.namespace.NamespaceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
 import org.springframework.util.CollectionUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
-import com.consol.citrus.xml.xpath.XPathExpressionResult;
-import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -72,53 +65,55 @@ public class TestContext {
     }
     
     /**
-     * Get the value for the given variable expression.
-     * Expression can be a function or a simple variable name.
-     * @param variableExpression expression to be parsed
+     * Gets the value for the given variable expression. Expression usually is the 
+     * simple variable name, with optional expression prefix/suffix.
+     * 
+     * In case variable is not known to the context throw runtime exception.
+     * 
+     * @param variableExpression expression to search for.
      * @throws CitrusRuntimeException
-     * @return value of variable as String
+     * @return value of the variable
      */
     public String getVariable(final String variableExpression) {
-        String value = null;
-
-        if (variables.containsKey(VariableUtils.cutOffVariablesPrefix(variableExpression))) {
-            value = (String)variables.get(VariableUtils.cutOffVariablesPrefix(variableExpression));
+        String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
+        
+        if (!variables.containsKey(variableName)) {
+            throw new CitrusRuntimeException("Unknown variable '" + variableName + "'");
         }
 
-        if (value == null) {
-            throw new CitrusRuntimeException("Unknown variable '" + variableExpression + "'");
-        }
-
-        return value;
+        return (String)variables.get(variableName);
     }
     
     /**
-     * Creates a new variable with the respective value
-     * @param variableName, name of new variable
-     * @param value, value of new variable
+     * Creates a new variable in this test context with the respective value. In case variable already exists 
+     * variable is overwritten.
+     * 
+     * @param variableName the name of the new variable
+     * @param value the new variable value
      * @throws CitrusRuntimeException
      * @return
      */
     public void setVariable(final String variableName, String value) {
-        if (variableName == null || variableName.length() == 0 || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
-            throw new CitrusRuntimeException("No variable name defined");
+        if (!StringUtils.hasText(variableName) || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
+            throw new CitrusRuntimeException("Can not create variable '"+ variableName + "', please define proper variable name");
         }
 
         if (value == null) {
-            throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but value is null");
+            throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
         if(log.isDebugEnabled()) {
-            log.debug("Setting variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + " to value: " + value);
+            log.debug("Setting variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + " with value: '" + value + "'");
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
     }
     
     /**
-     * Add all variables in map to local variables.
-     * Existing variables will be overwritten.
-     * @param context
+     * Add several new variables to test context. Existing variables will be 
+     * overwritten.
+     * 
+     * @param variablesToSet the list of variables to set.
      */
     public void addVariables(Map<String, String> variablesToSet) {
         for (Entry<String, String> entry : variablesToSet.entrySet()) {
@@ -131,83 +126,20 @@ public class TestContext {
     }
     
     /**
-     * Creates new variables from message payload.
-     * The messageElements map holds XPath expressions (keys) and variable names (values). XPath expressions
-     * are evaluated against the message's payload XML.
+     * Replaces variables inside a map with respective variable values and returns a new
+     * map representation.
      * 
-     * @param messageElements map holding variable names and XPath expressions.
-     * @param message
-     * @param nsContext
-     * @throws UnknownElementException
-     */
-    public void createVariablesFromMessageValues(final Map<String, String> messageElements, 
-            Message<?> message, NamespaceContext nsContext) throws UnknownElementException {
-        if (CollectionUtils.isEmpty(messageElements)) {return;}
-
-        if(log.isDebugEnabled()) {
-            log.debug("Reading XML elements from document");
-        }
-
-        for (Entry<String, String> entry : messageElements.entrySet()) {
-            String pathExpression = entry.getKey();
-            String variableName = entry.getValue();
-
-            if(log.isDebugEnabled()) {
-                log.debug("Reading element: " + pathExpression);
-            }
-            
-            Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
-            
-            if (XPathUtils.isXPathExpression(pathExpression)) {
-                if(nsContext == null) {
-                    nsContext = new SimpleNamespaceContext();
-                    ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
-                }
-                
-                XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
-                pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
-                
-                String value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
-
-                if(value == null) {
-                    throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
-                }
-                
-                setVariable(variableName, value);
-            } else {
-                Node node = XMLUtils.findNodeByName(doc, pathExpression);
-
-                if (node == null) {
-                    throw new UnknownElementException("No element found for expression" + pathExpression);
-                }
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    if (node.getFirstChild() != null) {
-                        setVariable((String)messageElements.get(pathExpression), node.getFirstChild().getNodeValue());
-                    } else {
-                        setVariable((String)messageElements.get(pathExpression), "");
-                    }
-                } else {
-                    setVariable((String)messageElements.get(pathExpression), node.getNodeValue());
-                }
-            }
-        }
-    }
-    
-    /**
-     * Replaces variables in given map with respective variable values.
-     * @param map
+     * @param map optionally having variable entries.
+     * @return the constructed map without variable entries.
      */
     public Map<String, Object> replaceVariablesInMap(final Map<String, ?> map) {
-        Map<String, Object> target = new HashMap<String, Object>();
+        Map<String, Object> target = new HashMap<String, Object>(map.size());
         
         for (Entry<String, ?> entry : map.entrySet()) {
             String key = entry.getKey();
             String value = (String)entry.getValue();
 
-            // If value is a variable
             if (VariableUtils.isVariableName(value)) {
-                // then replace variable name by variable value
                 target.put(key, getVariable(value));
             } else if(functionRegistry.isFunction(value)) {
                 target.put(key, FunctionUtils.resolveFunction(value, this));
@@ -220,21 +152,22 @@ public class TestContext {
     }
     
     /**
-     * Replaces variables in list with respective variable values
-     * @param list
+     * Replaces variables in a list with respective variable values and
+     * returns the new list representation.
+     * 
+     * @param list having optional variable entries.
+     * @return the constructed list without variable entries.
      */
     public List<String> replaceVariablesInList(List<String> list) {
-        List<String> variableFreeList = new ArrayList<String>();
+        List<String> variableFreeList = new ArrayList<String>(list.size());
 
-        for (int i = 0; i < list.size(); i++) {
-            String variable = list.get(i);
-            if (VariableUtils.isVariableName(variable)) {
-                // then replace variable by variable value
-                variableFreeList.add(getVariable(variable));
-            } else if(functionRegistry.isFunction(variable)) {
-                variableFreeList.add(FunctionUtils.resolveFunction(variable, this));
+        for (String entry : list) {
+            if (VariableUtils.isVariableName(entry)) {
+                variableFreeList.add(getVariable(entry));
+            } else if(functionRegistry.isFunction(entry)) {
+                variableFreeList.add(FunctionUtils.resolveFunction(entry, this));
             } else {
-                variableFreeList.add(variable);
+                variableFreeList.add(entry);
             }
         }
 
@@ -242,92 +175,7 @@ public class TestContext {
     }
     
     /**
-     * Create new variables from message headers.
-     *
-     * @param extractHeaderValues map containing name value pairs 
-     * where the keys represent header entry names and the value set variable names. 
-     * @param receivedHeaderValues message header entries
-     */
-    public void createVariablesFromHeaderValues(final Map<String, String> extractHeaderValues, final Map<String, ?> receivedHeaderValues) throws UnknownElementException {
-        if (extractHeaderValues== null || extractHeaderValues.isEmpty()) {return;}
-
-        for (Entry<String, String> entry : extractHeaderValues.entrySet()) {
-            String headerElementName = entry.getKey();
-            String targetVariableName = entry.getValue();
-
-            if (receivedHeaderValues.get(headerElementName) == null) {
-                throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
-            }
-
-            setVariable(targetVariableName, receivedHeaderValues.get(headerElementName).toString());
-        }
-    }
-    
-    /**
-     * Overwrite message elements in given message payload string.
-     * 
-     * Each key of the messageElements map represents a XPath expression.
-     * Each value set entry represents the new value to set.
-     *
-     * @param messageElements map holding the elements to be overwritten
-     * @param messagePayload
-     * @throws CitrusRuntimeException
-     * @throws UnknownElementException
-     */
-    public String replaceMessageValues(final Map<String, String> messageElements, String messagePayload) {
-        Document doc = XMLUtils.parseMessagePayload(messagePayload);
-
-        if (doc == null) {
-            throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
-        }
-        
-        for (Entry<String, String> entry : messageElements.entrySet()) {
-            String pathExpression = entry.getKey();
-            String valueExpression = entry.getValue();
-
-            if (VariableUtils.isVariableName(valueExpression)) {
-                valueExpression = getVariable(valueExpression);
-            } else if(functionRegistry.isFunction(valueExpression)) {
-                valueExpression = FunctionUtils.resolveFunction(valueExpression, this);
-            } 
-
-            if (valueExpression == null) {
-                throw new CitrusRuntimeException("Can not set null values in XML document - path expression is " + pathExpression);
-            }
-            
-            Node node;
-            if (XPathUtils.isXPathExpression(pathExpression)) {
-                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                nsContext.setBindings(XMLUtils.lookupNamespaces(messagePayload));
-                node = XPathUtils.evaluateAsNode(doc, pathExpression, nsContext);
-            } else {
-                node = XMLUtils.findNodeByName(doc, pathExpression);
-            }
-
-            if (node == null) {
-                throw new UnknownElementException("Could not find element for expression" + pathExpression);
-            }
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (node.getFirstChild() == null) {
-                    node.appendChild(doc.createTextNode(valueExpression));
-                } else {
-                    node.getFirstChild().setNodeValue(valueExpression);
-                }
-            } else {
-                node.setNodeValue(valueExpression);
-            }
-            
-            if(log.isDebugEnabled()) {
-                log.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
-            }
-        }
-        
-        return XMLUtils.serialize(doc);
-    }
-    
-    /**
-     * Clear local variables.
+     * Clears variables in this test context. Initially adds all global variables.
      */
     public void clear() {
         variables.clear();
@@ -339,11 +187,36 @@ public class TestContext {
      * @return boolean flag to mark existence
      */
     public boolean hasVariables() {
-        return (this.variables != null && !this.variables.isEmpty());
+        return !CollectionUtils.isEmpty(variables);
     }
     
     /**
-     * Setter for local variables.
+     * Method replacing variable declarations and place holders as well as 
+     * function expressions in a string
+     * 
+     * @param str the string to parse.
+     * @return resulting string without any variable place holders.
+     */
+    public String replaceDynamicContentInString(String str) {
+        return replaceDynamicContentInString(str, false);
+    }
+
+    /**
+     * Method replacing variable declarations and functions in a string, optionally 
+     * the variable values get surrounded with single quotes.
+     * 
+     * @param str the string to parse for variable place holders.
+     * @param enableQuoting flag marking surrounding quotes should be added or not.
+     * @return resulting string without any variable place holders.
+     */
+    public String replaceDynamicContentInString(String str, boolean enableQuoting) {
+        str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
+        str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
+        return str;
+    }
+    
+    /**
+     * Setter for test variables in this context.
      * @param variables
      */
     public void setVariables(Map<String, String> variables) {
@@ -351,8 +224,8 @@ public class TestContext {
     }
 
     /**
-     * Getter for local variables.
-     * @return global variables
+     * Getter for test variables in this context.
+     * @return test variables for this test context.
      */
     public Map<String, String> getVariables() {
         return variables;
@@ -376,30 +249,6 @@ public class TestContext {
         return globalVariables.getVariables();
     }
     
-    /**
-     * Method replacing variable declarations and functions in a string
-     * @param str
-     * @return
-     */
-    public String replaceDynamicContentInString(String str) {
-        str = VariableUtils.replaceVariablesInString(str, this);
-        str = FunctionUtils.replaceFunctionsInString(str, this);
-        return str;
-    }
-
-    /**
-     * Method replacing variable declarations and functions in a string, but adds quotes
-     * to the replaced variable values.
-     * @param str
-     * @param enableQuoting
-     * @return
-     */
-    public String replaceDynamicContentInString(String str, boolean enableQuoting) {
-        str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
-        str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
-        return str;
-    }
-
     /**
      * Get the current function registry.
      * @return the functionRegistry

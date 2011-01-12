@@ -57,17 +57,6 @@ public class VariableUtils {
     }
     
    /**
-    * Replace all variable expression in a string with 
-    * its respective values.
-    * @param str
-    * @param context
-    * @return
-    */
-   public static String replaceVariablesInString(final String str, TestContext context) {
-       return replaceVariablesInString(str, context, false);
-   }
-
-   /**
     * Replace all variable expression in a string with
     * its respective value. Variable values are enclosed with quotes
     * if enabled.

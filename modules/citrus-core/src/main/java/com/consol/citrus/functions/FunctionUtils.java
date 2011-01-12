@@ -130,7 +130,7 @@ public class FunctionUtils {
 
         FunctionLibrary library = context.getFunctionRegistry().getLibraryForPrefix(functionPrefix);
 
-        parameterString = VariableUtils.replaceVariablesInString(parameterString, context);
+        parameterString = VariableUtils.replaceVariablesInString(parameterString, context, false);
         parameterString = replaceFunctionsInString(parameterString, context);
 
         return library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString));
