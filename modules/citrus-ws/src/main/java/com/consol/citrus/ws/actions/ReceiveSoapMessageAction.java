@@ -64,8 +64,15 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             } else {
                 return; //no attachment expected, no validation
             }
+            
+            // handle variables in content id
             if (controlAttachment.getContentId() != null) {
             	controlAttachment.setContentId(context.replaceDynamicContentInString(controlAttachment.getContentId()));
+            }
+            
+            // handle variables in content type
+            if (controlAttachment.getContentType() != null) {
+                controlAttachment.setContentType(context.replaceDynamicContentInString(controlAttachment.getContentType()));
             }
             
             attachmentValidator.validateAttachment(receivedMessage, controlAttachment);
