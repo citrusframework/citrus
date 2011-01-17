@@ -60,7 +60,7 @@
     
     <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-    <bean id="groovyScriptMessageValidator" class="com.consol.citrus.validation.script.GroovyScriptMessageValidator"/>
+    <bean id="groovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
     <bean id="plainTextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
     <bean id="jsonTextMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
     

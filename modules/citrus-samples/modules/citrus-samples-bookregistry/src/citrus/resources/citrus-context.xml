@@ -36,7 +36,7 @@
     
     <!-- Message Validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-    <bean id="groovyScriptMessageValidator" class="com.consol.citrus.validation.script.GroovyScriptMessageValidator"/>
+    <bean id="groovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
     
     <!-- SOAP client interceptor basically for logging whole SOAP envelope to logger -->
     <util:list id="clientInterceptors">

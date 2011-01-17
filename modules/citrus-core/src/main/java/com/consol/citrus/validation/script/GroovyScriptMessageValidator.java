@@ -36,6 +36,12 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
+ * Groovy script message validator passing the message to a validation script.
+ * Tester needs to write validation code in Groovy.
+ * 
+ * Available objects inside groovy script are 'receivedMessage' which is the actual {@link Message} object
+ * to validate and 'context' the current {@link TestContext}.
+ * 
  * @author Christoph Deppisch
  */
 public class GroovyScriptMessageValidator extends AbstractMessageValidator<ScriptValidationContext> {
@@ -45,12 +51,27 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      */
     private static final Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
     
-    /** Static code snippet for groovy xml slurper script */
-    private Resource xmlSlurperTemplateResource = new ClassPathResource("com/consol/citrus/validation/xml-slurper-template.groovy");
+    /** Static code snippet for groovy script validation */
+    private Resource scriptTemplateResource;
     
     /** This is the supported script type for this message validator */
     public static final String GROOVY_SCRIPT_TYPE = "groovy";
     
+    /**
+     * Default constructor using default script template.
+     */
+    public GroovyScriptMessageValidator() {
+        this(new ClassPathResource("com/consol/citrus/validation/script-validation-template.groovy"));
+    }
+    
+    /**
+     * Constructor setting the script template for this validator.
+     * @param scriptTemplateResource the script template to use in this validator.
+     */
+    public GroovyScriptMessageValidator(ClassPathResource scriptTemplateResource) {
+        this.scriptTemplateResource = scriptTemplateResource;
+    }
+
     /**
      * Validates the message with test context and script validation context.
      */
@@ -62,7 +83,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 log.info("Start groovy message validation");
                 
                 GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-                Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(xmlSlurperTemplateResource)
+                Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                             .withCode(validationScript)
                                                             .build());
                 
@@ -113,6 +134,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      * Checks if the message type is supported. 
      */
     public boolean supportsMessageType(String messageType) {
-        return messageType.equalsIgnoreCase("xml");
+        // support all message types other than xml
+        return !messageType.equalsIgnoreCase("xml");
     }
 }

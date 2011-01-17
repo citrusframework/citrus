@@ -28,9 +28,9 @@ import com.consol.citrus.testng.AbstractBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
+public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
 
-    private GroovyScriptMessageValidator validator = new GroovyScriptMessageValidator();
+    private GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
     
     private Message<?> message;
 
