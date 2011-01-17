@@ -21,12 +21,10 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
@@ -59,9 +57,6 @@ public class Template extends AbstractTestAction {
     /** List of parameters to set before execution */
     private Map<String, String> parameter = new LinkedHashMap<String, String>();
     
-    @Autowired
-    private FunctionRegistry functionRegistry;
-    
     /** Should variables effect the global variables scope? */
     private boolean globalContext = true;
 
@@ -93,7 +88,7 @@ public class Template extends AbstractTestAction {
             String paramValue = entry.getValue();
 
 			paramValue = VariableUtils.replaceVariablesInString(paramValue, innerContext, false);
-            if(functionRegistry.isFunction(paramValue)) {
+            if (context.getFunctionRegistry().isFunction(paramValue)) {
                 paramValue = FunctionUtils.resolveFunction(paramValue, context);
             } 
 

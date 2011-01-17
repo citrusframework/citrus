@@ -19,14 +19,17 @@ package com.consol.citrus.container;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 
 import java.util.*;
 
 import org.easymock.EasyMock;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
@@ -35,7 +38,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 public class TemplateTest extends AbstractBaseTest {
     
     @Test
-    public void testTemplate() {
+    public void testTemplateExecution() {
         Template template = new Template();
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -51,11 +54,46 @@ public class TemplateTest extends AbstractBaseTest {
         actions.add(action);
         template.setActions(actions);
         
-        template.equals(context);
+        template.execute(context);
+        
+        verify(action);
     }
     
     @Test
-    public void testParams() {
+    public void testTemplateWithParams() {
+        Template template = new Template();
+        
+        context.setVariable("text", "Hello Citrus!");
+        
+        List<TestAction> actions = new ArrayList<TestAction>();
+        EchoAction echo = new EchoAction();
+        echo.setMessage("${myText}");
+        
+        actions.add(echo);
+        template.setActions(actions);
+        
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("param", "Parameter was set");
+        parameters.put("myText", "${text}");
+        
+        template.setParameter(parameters);
+        
+        Assert.assertFalse(context.getVariables().containsKey("param"));
+        Assert.assertFalse(context.getVariables().containsKey("myText"));
+        
+        template.execute(context);
+        
+        Assert.assertTrue(context.getVariables().containsKey("param"), 
+        "Missing new variable 'param' in global test context");
+        Assert.assertEquals(context.getVariable("param"), "Parameter was set");
+        
+        Assert.assertTrue(context.getVariables().containsKey("myText"), 
+                "Missing new variable 'myText' in global test context");
+        Assert.assertEquals(context.getVariable("myText"), "Hello Citrus!");
+    }
+    
+    @Test
+    public void testTemplateWithParamsLocalContext() {
         Template template = new Template();
         
         context.setVariable("text", "Hello Citrus!");
@@ -68,6 +106,35 @@ public class TemplateTest extends AbstractBaseTest {
         template.setActions(actions);
         
         template.setParameter(Collections.singletonMap("myText", "${text}"));
-        template.equals(context);
+        template.setGlobalContext(false);
+        
+        Assert.assertFalse(context.getVariables().containsKey("myText"));
+        
+        template.execute(context);
+        
+        Assert.assertFalse(context.getVariables().containsKey("myText"), 
+                "Variable 'myText' present in global test context, although global context was disabled before");
+    }
+    
+    @Test
+    public void testTemplateMissingParams() {
+        Template template = new Template();
+        
+        context.setVariable("text", "Hello Citrus!");
+        
+        List<TestAction> actions = new ArrayList<TestAction>();
+        EchoAction echo = new EchoAction();
+        echo.setMessage("${myText}");
+        
+        actions.add(echo);
+        template.setActions(actions);
+        
+        try {
+            template.execute(context);
+        } catch (CitrusRuntimeException e) {
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException due to unknown parameter");
     }
 }
