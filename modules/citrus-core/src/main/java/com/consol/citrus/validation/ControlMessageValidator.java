@@ -71,7 +71,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * @param context the current test context with all variables.
      */
     public void validateMessagePayload(Message<?> receivedMessage, 
-            Message<?> controlMessage, TestContext context) {
+            Message<?> controlMessage, TestContext context) throws ValidationException {
     }
     
     

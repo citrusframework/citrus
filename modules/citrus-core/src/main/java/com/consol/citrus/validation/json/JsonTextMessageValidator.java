@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.ControlMessageValidator;
 
 /**
@@ -44,7 +45,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
     @Override
     public void validateMessagePayload(Message<?> receivedMessage,
             Message<?> controlMessage,
-            TestContext context) {
+            TestContext context) throws ValidationException {
         log.info("Start JSON message validation");
         
         if (log.isDebugEnabled()) {
@@ -53,7 +54,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
         }
 
         String receivedJsonText = receivedMessage.getPayload().toString();
-        String controlJsonText = controlMessage.getPayload().toString();
+        String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload().toString());
         
         JSONParser parser = new JSONParser();
         
@@ -62,6 +63,8 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
             JSONObject controlJson = (JSONObject) parser.parse(controlJsonText);
             
             validateJson(receivedJson, controlJson, context);
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Failed to validate JSON text:\n" + receivedJsonText, e);
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }

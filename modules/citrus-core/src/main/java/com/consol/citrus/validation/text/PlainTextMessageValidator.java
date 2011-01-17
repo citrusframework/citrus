@@ -20,6 +20,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.ControlMessageValidator;
 
 /**
@@ -32,7 +33,7 @@ public class PlainTextMessageValidator extends ControlMessageValidator {
     @Override
     public void validateMessagePayload(Message<?> receivedMessage,
             Message<?> controlMessage,
-            TestContext context) {
+            TestContext context) throws ValidationException {
         log.info("Start plain text message validation");
         
         if (log.isDebugEnabled()) {
@@ -40,12 +41,28 @@ public class PlainTextMessageValidator extends ControlMessageValidator {
             log.debug("Control message:\n" + controlMessage);
         }
         
-        Assert.isTrue(receivedMessage.getPayload().toString().trim().equals(controlMessage.getPayload().toString().trim()),
-                "Failed to validate message:\n" + receivedMessage.getPayload());
+        try {
+            validateText(receivedMessage.getPayload().toString().trim(), 
+                    context.replaceDynamicContentInString(controlMessage.getPayload().toString().trim()));
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Failed to validate plain text", e);
+        }
         
         log.info("Plain text validation finished successfully: All values OK");
     }
     
+    /**
+     * Compares two string with each other in order to validate plain text.
+     * 
+     * @param receivedMessagePayload
+     * @param controlMessagePayload
+     */
+    private void validateText(String receivedMessagePayload, String controlMessagePayload) {
+        Assert.isTrue(receivedMessagePayload.equals(controlMessagePayload),
+                "Plain text values not equal, expected '" + controlMessagePayload + "' " +
+                		"but was '" + receivedMessagePayload + "'");
+    }
+
     @Override
     public boolean supportsMessageType(String messageType) {
         return messageType.equalsIgnoreCase("plaintext");
