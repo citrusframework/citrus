@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
@@ -75,7 +76,8 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     /**
      * Validates the message with test context and script validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ScriptValidationContext validationContext) {
+    public void validateMessage(Message<?> receivedMessage, TestContext context, ScriptValidationContext validationContext) 
+        throws ValidationException {
         try {
             String validationScript = validationContext.getValidationScript();
             
@@ -103,7 +105,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
         } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         } catch (AssertionError e) {
-            throw new CitrusRuntimeException("Groovy script validation failed with assertion error:\n" + e.getMessage(), e);
+            throw new ValidationException("Groovy script validation failed with assertion error:\n" + e.getMessage(), e);
         }
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
@@ -40,7 +41,8 @@ public interface MessageValidator<T extends ValidationContext> {
      */
     public void validateMessage(Message<?> receivedMessage, 
                                 TestContext context, 
-                                List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders);
+                                List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) 
+                                throws ValidationException;
     
     /**
      * Validates a message with given test context and validation context.
@@ -50,7 +52,8 @@ public interface MessageValidator<T extends ValidationContext> {
      */
     public void validateMessage(Message<?> receivedMessage, 
                                 TestContext context, 
-                                T validationContext);
+                                T validationContext) 
+                                throws ValidationException;
     
     /**
      * Returns the validation context required for this validators validation mechanism.

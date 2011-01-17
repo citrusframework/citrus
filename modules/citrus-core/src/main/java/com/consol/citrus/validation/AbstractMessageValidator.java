@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 
@@ -35,7 +36,8 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
      * Try to build proper validation context and perform message validation.
      */
     public void validateMessage(Message<?> receivedMessage, TestContext context,
-            List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) {
+            List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders)
+            throws ValidationException {
         T validationContext = createValidationContext(validationContextBuilders, context);
         
         // check if we were able to construct a proper validation context

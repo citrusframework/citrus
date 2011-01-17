@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
@@ -44,7 +45,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
     }
     
     @Test
-    public void testGroovyScriptValidation() {
+    public void testGroovyScriptValidation() throws ValidationException {
         String validationScript = "assert root.children().size() == 3 \n" +
                         "assert root.CorrelationId.text() == 'Kx1R123456789' \n" +
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +

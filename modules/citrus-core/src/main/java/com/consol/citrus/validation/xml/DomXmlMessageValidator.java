@@ -78,7 +78,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /**
      * Validates the message with test context and xml validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
+    public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) 
+        throws ValidationException {
         log.info("Start XML message validation");
         
         try {
