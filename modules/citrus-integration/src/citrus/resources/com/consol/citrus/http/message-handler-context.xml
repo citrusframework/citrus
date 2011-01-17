@@ -2,10 +2,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<bean id="defaultMessageHandler" class="com.consol.citrus.message.SimpleXMLMessageHandler" abstract="true"/>
+	<bean id="defaultMessageHandler" class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler" abstract="true"/>
 	
 	<bean name="testRequestMessage" parent="defaultMessageHandler">
-		<property name="xmlData">
+		<property name="messagePayload">
 			<value>
 				<![CDATA[
 					<testResponseMessage>
@@ -17,5 +17,4 @@
 	</bean>
 	
 	<alias name="testRequestMessage" alias="moreRequestMessage"/>
-		
 </beans>
