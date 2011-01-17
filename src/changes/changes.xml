@@ -15,7 +15,16 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="01.01.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="17.01.2011" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #344 Plain text message validator
+        </action>
+        <action dev="christophd" type="add">
+          #343 JSON message validator
+        </action>
+        <action dev="christophd" type="fix">
+          #345 No XML specifica in TestContext
+        </action>
         <action dev="philkom, christophd" type="fix">
           #324 Multi-line SQL validation stmts
         </action>

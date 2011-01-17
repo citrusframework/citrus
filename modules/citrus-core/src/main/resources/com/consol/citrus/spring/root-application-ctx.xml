@@ -42,6 +42,8 @@
     
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>
     
+    <bean class="com.consol.citrus.validation.MessageValidatorRegistry"/>
+    
     <bean id="citrus-default-testsuite" class="com.consol.citrus.TestSuite"/>
 	
 </beans>

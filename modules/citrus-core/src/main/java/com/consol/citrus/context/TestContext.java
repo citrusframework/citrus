@@ -28,8 +28,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -54,8 +53,8 @@ public class TestContext {
     /** Function registry holding all available functions */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
     
-    /** List of registered message validator implementations */
-    private List<MessageValidator<? extends ValidationContext>> messageValidators;
+    /** Registered message validators */
+    private MessageValidatorRegistry messageValidatorRegistry;
     
     /**
      * Default constructor
@@ -266,19 +265,19 @@ public class TestContext {
     }
 
     /**
-     * Get the list of registered message validator implementations.
-     * @return the messageValidators
+     * Set the message validator registry.
+     * @param messageValidatorRegistry the messageValidatorRegistry to set
      */
-    public List<MessageValidator<? extends ValidationContext>> getMessageValidators() {
-        return messageValidators;
+    public void setMessageValidatorRegistry(MessageValidatorRegistry messageValidatorRegistry) {
+        this.messageValidatorRegistry = messageValidatorRegistry;
     }
 
     /**
-     * Set the list of message validators registered in this test environment.
-     * @param messageValidators the messageValidators to set
+     * Get the message validator registry.
+     * @return the messageValidatorRegistry
      */
-    public void setMessageValidators(
-            List<MessageValidator<? extends ValidationContext>> messageValidators) {
-        this.messageValidators = messageValidators;
+    public MessageValidatorRegistry getMessageValidatorRegistry() {
+        return messageValidatorRegistry;
     }
+    
 }

@@ -65,7 +65,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, builder);
 
         String receiveTimeout = element.getAttribute("timeout");
-        if(StringUtils.hasText(receiveTimeout)) {
+        if (StringUtils.hasText(receiveTimeout)) {
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
         
@@ -95,9 +95,14 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             String messageValidator = messageElement.getAttribute("validator");
-            if(StringUtils.hasText(messageValidator)) {
+            if (StringUtils.hasText(messageValidator)) {
                 builder.addPropertyReference("validator", messageValidator);
             }
+        }
+        
+        String messageType = messageElement.getAttribute("type");
+        if (StringUtils.hasText(messageType)) {
+            builder.addPropertyValue("messageType", messageType);
         }
         
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element, parserContext));

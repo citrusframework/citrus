@@ -42,9 +42,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
+import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
@@ -101,7 +101,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         "Missing message payload data but was empty");
             }
             
-            validateMessageHeader(validationContext.getControlMessage().getHeaders(), receivedMessage.getHeaders(), context);
+            validateMessageHeader(validationContext.getControlMessage().getHeaders(), 
+                    receivedMessage.getHeaders(), context);
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
             throw new CitrusRuntimeException(e);
@@ -126,70 +127,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param receivedHeaderValues
      * @param context
      */
-    public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
-        if (CollectionUtils.isEmpty(expectedHeaderValues)) { return; }
-
-        log.info("Start message header validation");
-
-        for (Entry<String, Object> entry : expectedHeaderValues.entrySet()) {
-            String headerName = entry.getKey();
-            String expectedValue = entry.getValue().toString();
-            String actualValue = null;
-
-            if(MessageUtils.isSpringInternalHeader(headerName)) {
-                continue;
-            }
-
-            if (VariableUtils.isVariableName(headerName)) {
-                headerName = context.getVariable(headerName);
-            } else if(functionRegistry.isFunction(headerName)) {
-                headerName = FunctionUtils.resolveFunction(headerName, context);
-            }
-
-            if (!receivedHeaderValues.containsKey(headerName)) {
-                throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
-            }
-            
-            if(receivedHeaderValues.get(headerName) != null) {
-                actualValue = receivedHeaderValues.get(headerName).toString();
-            }
-
-            if (VariableUtils.isVariableName(expectedValue)) {
-                expectedValue = context.getVariable(expectedValue);
-            } else if(functionRegistry.isFunction(expectedValue)) {
-                expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
-            }
-
-            try {
-                if(actualValue != null) {
-                    Assert.isTrue(expectedValue != null,
-                            "Values not equal for header element '"
-                                + headerName + "', expected '"
-                                + null + "' but was '"
-                                + actualValue + "'");
-
-                    Assert.isTrue(actualValue.equals(expectedValue),
-                            "Values not equal for header element '"
-                                + headerName + "', expected '"
-                                + expectedValue + "' but was '"
-                                + actualValue + "'");
-                } else {
-                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
-                            "Values not equal for header element '"
-                                + headerName + "', expected '"
-                                + expectedValue + "' but was '"
-                                + null + "'");
-                }
-            } catch (IllegalArgumentException e) {
-                throw new ValidationException("Validation failed:", e);
-            }
-
-            if(log.isDebugEnabled()) {
-                log.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
-            }
-        }
-
-        log.info("Validation of message headers finished successfully: All properties OK");
+    public void validateMessageHeader(MessageHeaders controlHeaders, 
+            MessageHeaders receivedHeaders, 
+            TestContext context) {
+        ControlMessageValidator validatorDelegate = new ControlMessageValidator();
+        validatorDelegate.validateMessageHeader(controlHeaders, receivedHeaders, context);
     }
 
     /**
@@ -768,6 +710,26 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     }
 
     /**
+     * Returns the needed validation context for this validation mechanism.
+     */
+    public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
+        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
+            if (validationContextBuilder.supportsValidationContextType(XmlMessageValidationContext.class)) {
+                return (XmlMessageValidationContext)validationContextBuilder.buildValidationContext(context);
+            }
+        }
+        
+        return null;
+    }
+
+    /**
+     * Checks if the message type is supported.
+     */
+    public boolean supportsMessageType(String messageType) {
+        return messageType.equalsIgnoreCase("xml");
+    }
+    
+    /**
      * Set the schema repository holding all known schema definition files.
      * @param schemaRepository the schemaRepository to set
      */
@@ -781,18 +743,5 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     public void setFunctionRegistry(FunctionRegistry functionRegistry) {
         this.functionRegistry = functionRegistry;
-    }
-
-    /**
-     * Returns the needed validation context for this validation mechanism.
-     */
-    public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
-        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
-            if (validationContextBuilder.supportsValidationContextType(XmlMessageValidationContext.class)) {
-                return (XmlMessageValidationContext)validationContextBuilder.buildValidationContext(context);
-            }
-        }
-        
-        return null;
     }
 }

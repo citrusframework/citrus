@@ -108,4 +108,11 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
         
         return null;
     }
+
+    /**
+     * Checks if the message type is supported. 
+     */
+    public boolean supportsMessageType(String messageType) {
+        return messageType.equalsIgnoreCase("xml");
+    }
 }

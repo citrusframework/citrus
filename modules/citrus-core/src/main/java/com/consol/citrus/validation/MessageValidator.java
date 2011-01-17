@@ -58,4 +58,14 @@ public interface MessageValidator<T extends ValidationContext> {
      */
     public T createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, 
                                      TestContext context);
+    
+    /**
+     * Checks if this message validator is capable of this message type. XML message validators may only apply to this message
+     * type while JSON message validator implementations do not and vice versa. This check is called by the {@link MessageValidatorRegistry}
+     * in order to find a proper message validator for a message.
+     * 
+     * @param messageType the message type representation as String (e.g. xml, json, csv, plaintext).
+     * @return true if this message validator is capable of validating the message type.
+     */
+    public boolean supportsMessageType(String messageType);
 }

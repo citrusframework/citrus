@@ -25,6 +25,7 @@ import org.springframework.integration.core.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
@@ -66,6 +67,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
     
     /** List of variable extractors responsible for creating variables from received message content */
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+    
+    /** The expected message type to arrive in this receive action - this information is needed to find a proper
+     * message validator for this message */
+    private String messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
 
     /**
      * Logger
@@ -141,7 +146,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
         if (validator != null) {
             validator.validateMessage(receivedMessage, context, validationContextBuilders);
         } else {
-            List<MessageValidator<? extends ValidationContext>> validators = context.getMessageValidators();
+            List<MessageValidator<? extends ValidationContext>> validators = 
+                                context.getMessageValidatorRegistry().findMessageValidators(messageType);
             
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                 messageValidator.validateMessage(receivedMessage, context, validationContextBuilders);
@@ -228,5 +234,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public List<VariableExtractor> getVariableExtractors() {
         return variableExtractors;
+    }
+
+    /**
+     * Sets the expected message type for this receive action.
+     * @param messageType the messageType to set
+     */
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
+     * Gets the message type for this receive action.
+     * @return the messageType
+     */
+    public String getMessageType() {
+        return messageType;
     }
 }

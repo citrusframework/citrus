@@ -19,6 +19,8 @@ package com.consol.citrus.validation.xml;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.util.CollectionUtils;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.ControlMessageValidationContextBuilder;
@@ -62,7 +64,18 @@ public class XmlMessageValidationContextBuilder extends ControlMessageValidation
     
     @Override
     public boolean supportsValidationContextType(Class<? extends ValidationContext> validationContextType) {
-        return validationContextType.equals(XmlMessageValidationContext.class);
+        // this builder supports XmlMessageValidationContext as well as simple ControlMessageValidationContext
+        // in latter case only if Xml specific validation information is not set at all
+        if (validationContextType.equals(XmlMessageValidationContext.class)) {
+            return true;
+        } else if (validationContextType.equals(ControlMessageValidationContext.class) && 
+                CollectionUtils.isEmpty(controlNamespaces) &&
+                CollectionUtils.isEmpty(ignoreExpressions) &&
+                CollectionUtils.isEmpty(pathValidationExpressions)) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**

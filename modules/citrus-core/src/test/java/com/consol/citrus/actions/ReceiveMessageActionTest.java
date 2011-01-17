@@ -34,13 +34,15 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.*;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
+import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
 import com.consol.citrus.variable.*;
 
 /**
@@ -1491,8 +1493,10 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         validators.add(new DomXmlMessageValidator());
         validators.add(new GroovyScriptMessageValidator());
         
+        MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
+        messageValidatorRegistry.setMessageValidators(validators);
         TestContext newContext = createTestContext();
-        newContext.setMessageValidators(validators);
+        newContext.setMessageValidatorRegistry(messageValidatorRegistry);
         
         validationContextBuilders = new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
         validationContextBuilders.add(contextBuilder);

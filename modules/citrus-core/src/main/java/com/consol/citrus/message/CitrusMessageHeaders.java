@@ -35,4 +35,7 @@ public class CitrusMessageHeaders {
     
     /** Header content data */
     public static final String HEADER_CONTENT = PREFIX + "header_content";
+
+    /** Header indicating the message type (e.g. xml, json, csv, plaintext, etc) */
+    public static final String MESSAGE_TYPE = PREFIX + "message_type";
 }

@@ -17,15 +17,11 @@
 package com.consol.citrus.validation;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
@@ -61,44 +57,14 @@ public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageVa
     /**
      * Delegate to new dom tree xml validator
      */
-    public void validateMessageHeader(MessageHeaders expectedHeaderValues, MessageHeaders receivedHeaderValues, TestContext context) {
-        domXmlMessageValidatorDelegate.validateMessageHeader(expectedHeaderValues, receivedHeaderValues, context);
-    }
-
-    /**
-     * Delegate to new dom tree xml validator
-     */
-    public void validateMessageElements(Message<?> receivedMessage,
-            XmlMessageValidationContext validationContext,
-            TestContext context) throws CitrusRuntimeException {
-        domXmlMessageValidatorDelegate.validateMessageElements(receivedMessage, validationContext, context);
-    }
-
-    /**
-     * Delegate to new dom tree xml validator
-     */
-    public void validateDTD(Resource dtdResource, Message<?> receivedMessage) {
-        domXmlMessageValidatorDelegate.validateDTD(dtdResource, receivedMessage);
-    }
-
-    /**
-     * Delegate to new dom tree xml validator
-     */
-    public void validateXMLSchema(Message<?> receivedMessage) {
-       domXmlMessageValidatorDelegate.validateXMLSchema(receivedMessage); 
-    }
-
-    /**
-     * Delegate to new dom tree xml validator
-     */
-    public void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
-        domXmlMessageValidatorDelegate.validateNamespaces(expectedNamespaces, receivedMessage);
-    }
-
-    /**
-     * Delegate to new dom tree xml validator
-     */
     public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
         return domXmlMessageValidatorDelegate.createValidationContext(builders, context);
+    }
+
+    /**
+     * Delegate to new dom tree xml validator
+     */
+    public boolean supportsMessageType(String messageType) {
+        return domXmlMessageValidatorDelegate.supportsMessageType(messageType);
     }
 }

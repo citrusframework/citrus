@@ -16,18 +16,13 @@
 
 package com.consol.citrus.context;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 
 /**
@@ -43,8 +38,8 @@ public class TestContextFactoryBean implements FactoryBean {
     @Autowired(required = false)
     private GlobalVariables globalVariables = new GlobalVariables();
     
-    @Autowired(required = false)
-    private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+    @Autowired
+    private MessageValidatorRegistry messageValidatorRegistry;
     
     /**
      * Logger
@@ -58,12 +53,7 @@ public class TestContextFactoryBean implements FactoryBean {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
         context.setGlobalVariables(globalVariables);
-        
-        if (messageValidators.isEmpty()) {
-            throw new BeanCreationException("No message validators available in context - please spacify at leaest one message validator!");
-        }
-        
-        context.setMessageValidators(messageValidators);
+        context.setMessageValidatorRegistry(messageValidatorRegistry);
         
         if(log.isDebugEnabled()) {
             log.debug("TestContextFactory created test context '" + context

@@ -45,4 +45,7 @@ public class CitrusConstants {
     
     /** Placeholder used in messages to ignore elements */
     public static final String IGNORE_PLACEHOLDER = "@ignore@";
+    
+    /** Default message type used in message validation mechanism */
+    public static final String DEFAULT_MESSAGE_TYPE = "xml";
 }
