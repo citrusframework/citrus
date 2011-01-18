@@ -21,7 +21,7 @@ package com.consol.citrus.http.config.xml;
  * 
  * @author Christoph Deppisch
  */
-public class HttpParserConstants {
+public final class HttpParserConstants {
     
     /**
      * Prevent instantiation.

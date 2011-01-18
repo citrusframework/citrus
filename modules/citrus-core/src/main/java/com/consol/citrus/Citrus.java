@@ -34,7 +34,7 @@ import com.consol.citrus.exceptions.TestEngineFailedException;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class Citrus {
+public final class Citrus {
     /**
      * Logger
      */

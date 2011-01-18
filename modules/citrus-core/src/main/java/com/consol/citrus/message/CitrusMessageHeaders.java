@@ -21,11 +21,12 @@ package com.consol.citrus.message;
  * 
  * @author Christoph Deppisch
  */
-public class CitrusMessageHeaders {
+public final class CitrusMessageHeaders {
     /**
      * Prevent instantiation.
      */
-    private CitrusMessageHeaders() {}
+    private CitrusMessageHeaders() {
+    }
     
     /** Common header name prefix */
     public static final String PREFIX = "citrus_";

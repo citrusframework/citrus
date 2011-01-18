@@ -29,7 +29,7 @@ import com.consol.citrus.util.FileUtils;
  * 
  * @author Christoph Deppisch
  */
-public class SoapAttachmentParser {
+public final class SoapAttachmentParser {
     /**
      * Prevent instantiation
      */

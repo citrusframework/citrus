@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
  * 
  * @author Christoph Deppisch
  */
-public class FunctionParameterHelper {
+public final class FunctionParameterHelper {
     
     /**
      * Prevent class instantiation.

@@ -29,7 +29,7 @@ import com.consol.citrus.util.FileUtils;
  * 
  * @author Christoph Deppisch
  */
-public class TemplateBasedScriptBuilder {
+public final class TemplateBasedScriptBuilder {
 
     /** Placeholder identifier for script body in template */
     private static final String BODY_PLACEHOLDER = "@SCRIPTBODY@";

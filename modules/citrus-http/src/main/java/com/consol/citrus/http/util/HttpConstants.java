@@ -21,7 +21,7 @@ package com.consol.citrus.http.util;
  * 
  * @author Christoph Deppisch 2007
  */
-public class HttpConstants {
+public final class HttpConstants {
 
     /**
      * Prevent instantiation.

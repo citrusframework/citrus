@@ -23,7 +23,7 @@ import org.springframework.integration.core.MessageHeaders;
  * 
  * @author Christoph Deppisch
  */
-public class MessageUtils {
+public final class MessageUtils {
     
     /**
      * Prevent instantiation.

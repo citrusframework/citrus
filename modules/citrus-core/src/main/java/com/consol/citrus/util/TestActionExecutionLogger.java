@@ -29,7 +29,7 @@ import com.consol.citrus.container.TestActionContainer;
  * 
  * @author Christoph Deppisch
  */
-public class TestActionExecutionLogger {
+public final class TestActionExecutionLogger {
 
     /**
      * Logger

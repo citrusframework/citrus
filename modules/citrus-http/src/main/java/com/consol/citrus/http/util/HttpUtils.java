@@ -28,7 +28,7 @@ import com.consol.citrus.util.MessageUtils;
  * 
  * @author Christoph Deppisch
  */
-public class HttpUtils {
+public final class HttpUtils {
     
     /**
      * Prevent instantiation.

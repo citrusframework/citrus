@@ -30,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  */
 @SuppressWarnings("unchecked")
-public class BooleanExpressionParser {
+public final class BooleanExpressionParser {
     /** List of operators */
     private static Stack<String> operators = new Stack<String>();
     

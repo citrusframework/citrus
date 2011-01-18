@@ -37,7 +37,7 @@ import com.consol.citrus.xml.LSResolverImpl;
  * @since 2006
  *
  */
-public class XMLUtils {
+public final class XMLUtils {
     /** DOM implementation */
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;

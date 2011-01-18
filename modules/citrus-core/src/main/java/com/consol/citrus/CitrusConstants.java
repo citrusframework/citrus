@@ -22,7 +22,7 @@ package com.consol.citrus;
  * @author Christoph Deppisch
  * @since 2006
  */
-public class CitrusConstants {
+public final class CitrusConstants {
     
     /**
      * Prevent instantiation.

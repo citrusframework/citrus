@@ -30,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  * @since 2009
  */
-public class PropertyUtils {
+public final class PropertyUtils {
 
     /** Constant marking a property in template files */
     private static final char propertyMarker = '@';

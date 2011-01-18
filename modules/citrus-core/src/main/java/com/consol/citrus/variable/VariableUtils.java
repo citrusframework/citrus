@@ -25,7 +25,7 @@ import com.consol.citrus.exceptions.NoSuchVariableException;
  * 
  * @author Christoph Deppisch
  */
-public class VariableUtils {
+public final class VariableUtils {
     
     /**
      * Prevent instantiation.

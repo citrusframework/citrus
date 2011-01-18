@@ -22,7 +22,7 @@ package com.consol.citrus.config.xml;
  * 
  * @author Christoph Deppisch
  */
-public class JmsParserConstants {
+public final class JmsParserConstants {
     
     /**
      * Prevent instantiation.

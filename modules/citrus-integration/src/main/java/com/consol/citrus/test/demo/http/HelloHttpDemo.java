@@ -21,7 +21,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * @author Christoph Deppisch
  */
-public class HelloHttpDemo {
+public final class HelloHttpDemo {
     
     /**
      * Prevent instantiation.

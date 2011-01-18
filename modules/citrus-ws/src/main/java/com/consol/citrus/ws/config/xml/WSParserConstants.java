@@ -21,7 +21,7 @@ package com.consol.citrus.ws.config.xml;
  * 
  * @author Christoph Deppisch
  */
-public class WSParserConstants {
+public final class WSParserConstants {
     
     /**
      * Prevent instantiation.

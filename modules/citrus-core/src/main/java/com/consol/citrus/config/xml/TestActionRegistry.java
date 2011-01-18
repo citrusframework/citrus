@@ -27,7 +27,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class TestActionRegistry {
+public final class TestActionRegistry {
     /** Parser registry as map */
     private static Map<String, BeanDefinitionParser> parser = new HashMap<String, BeanDefinitionParser>();
 

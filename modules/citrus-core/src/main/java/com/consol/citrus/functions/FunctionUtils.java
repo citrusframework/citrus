@@ -26,7 +26,7 @@ import com.consol.citrus.variable.VariableUtils;
  * 
  * @author Christoph Deppisch
  */
-public class FunctionUtils {
+public final class FunctionUtils {
 
     /**
      * Prevent class instantiation.
