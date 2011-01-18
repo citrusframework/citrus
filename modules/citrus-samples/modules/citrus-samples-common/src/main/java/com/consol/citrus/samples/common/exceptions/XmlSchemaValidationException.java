@@ -16,6 +16,8 @@
 
 package com.consol.citrus.samples.common.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 import org.springframework.integration.message.MessageHandlingException;
 
@@ -27,9 +29,16 @@ public class XmlSchemaValidationException extends MessageHandlingException {
     private static final long serialVersionUID = 1L;
     
     /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(XmlSchemaValidationException.class);
+    
+    /**
      * @param failedMessage
      */
     public XmlSchemaValidationException(Message<?> failedMessage, Throwable cause) {
-        super(failedMessage, cause);
+        super(failedMessage);
+        
+        log.error("Schema validation error", cause);
     }
 }
