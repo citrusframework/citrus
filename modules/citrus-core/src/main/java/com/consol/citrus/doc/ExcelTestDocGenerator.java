@@ -25,6 +25,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -59,6 +61,11 @@ public class ExcelTestDocGenerator {
     private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocGenerator.class);
     
     private String customHeaders = "";
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(ExcelTestDocGenerator.class);
     
     public void generateDoc() {
         BufferedReader reader = null;
@@ -141,7 +148,7 @@ public class ExcelTestDocGenerator {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close reader", e);
                 }
             }
             
@@ -149,7 +156,7 @@ public class ExcelTestDocGenerator {
                 try {
                     buffered.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close output stream", e);
                 }
             }
             
@@ -157,7 +164,7 @@ public class ExcelTestDocGenerator {
                 try {
                     file.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close file", e);
                 }
             }
         }

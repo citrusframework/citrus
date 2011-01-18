@@ -25,6 +25,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.xml.sax.SAXException;
 
@@ -55,6 +57,11 @@ public class HtmlTestDocGenerator {
     private String outputFile = "CitrusTests";
     
     private String testDocTemplate = "testdoc.html.template";
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(HtmlTestDocGenerator.class);
     
     public void generateDoc() {
         BufferedReader reader = null;
@@ -165,7 +172,7 @@ public class HtmlTestDocGenerator {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close reader", e);
                 }
             }
             
@@ -173,7 +180,7 @@ public class HtmlTestDocGenerator {
                 try {
                     buffered.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close output stream", e);
                 }
             }
             
@@ -181,7 +188,7 @@ public class HtmlTestDocGenerator {
                 try {
                     file.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed to close file", e);
                 }
             }
         }

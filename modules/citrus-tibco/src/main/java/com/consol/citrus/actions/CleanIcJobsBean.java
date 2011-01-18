@@ -89,7 +89,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
                 log.debug("Using transport configuration: " + client.getDefaultTransportConfig(serverName));
             }
 
-            //			WfJobManager manager = session.getWfJobManager();
+            //WfJobManager manager = session.getWfJobManager();
             WfJobSet jobSet = session.getUser().getJobsOwned();
 
             for (Iterator<?> iter = jobSet.iterator(); iter.hasNext();) {
@@ -110,16 +110,16 @@ public class CleanIcJobsBean extends AbstractTestAction {
             }
 
             session.terminate();
-        } catch (Exception e) {
+        } catch (WfException e) {
             if (session != null) {
                 try {
                     session.terminate();
-                } catch (WfException e1) {
-                    e1.printStackTrace();
+                } catch (WfException ex) {
+                    log.error("Failed t terminate session", ex);
                 }
             }
 
-            throw new CitrusRuntimeException(e);
+            throw new CitrusRuntimeException("Failed to delete collaborator jobs", e);
         }
     }
 

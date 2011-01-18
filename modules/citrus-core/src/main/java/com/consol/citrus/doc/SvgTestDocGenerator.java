@@ -16,18 +16,10 @@
 
 package com.consol.citrus.doc;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.List;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -35,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -112,21 +105,21 @@ public class SvgTestDocGenerator {
                         log.warn("Could not create file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                     }
                 } catch(TransformerException e) {
-                    log.error("XSLT tranformation failed", e);
+                    throw new CitrusRuntimeException("XSLT tranformation failed", e);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CitrusRuntimeException("Failed to generate test documentation, IO error", e);
                 } finally {
                     if(fileWriter != null) {
                         try {
                             fileWriter.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.error("Failed to close test documentation file", e);
                         }
                     }
                 }
             }
         } catch (TransformerConfigurationException e) {
-            log.error("Error during doc generation", e);
+            throw new CitrusRuntimeException("Error during doc generation", e);
         }
     }
 }

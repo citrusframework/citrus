@@ -46,6 +46,10 @@ public class HelloJmsDemo implements Runnable {
     }
     
     public void run() {
+        HelloJmsDemo.initApplicationContext();
+    }
+
+    private static void initApplicationContext() {
         ctx = new ClassPathXmlApplicationContext("jms-demo-context.xml", HelloJmsDemo.class);
     }
 }

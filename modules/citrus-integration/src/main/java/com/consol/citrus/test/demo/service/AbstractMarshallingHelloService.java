@@ -26,6 +26,7 @@ import org.springframework.oxm.*;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.test.demo.model.HelloRequest;
 import com.consol.citrus.test.demo.model.HelloResponse;
 
@@ -54,12 +55,10 @@ public abstract class AbstractMarshallingHelloService implements HelloService {
             return MessageBuilder.withPayload(result.toString()).copyHeaders(request.getHeaders()).build();
             
         } catch (XmlMappingException e) {
-            e.printStackTrace();
+            throw new CitrusRuntimeException("Failed to marshal/unmarshal XML", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CitrusRuntimeException("Failed due to IO error", e);
         }
-        
-        return MessageBuilder.withPayload("").build();
     }
     
     public abstract Message<HelloResponse> sayHello(Message<HelloRequest> requestMessage);

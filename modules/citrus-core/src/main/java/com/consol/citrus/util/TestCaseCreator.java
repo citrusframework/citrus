@@ -22,6 +22,8 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import org.apache.commons.cli.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -53,6 +55,11 @@ public class TestCaseCreator {
     
     /** Target unit testing framework */
     private UnitFramework framework;
+    
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(TestCaseCreator.class);
     
     /**
      * Unit testing framework can be either JUnit or TestNG. Test case creator
@@ -175,16 +182,16 @@ public class TestCaseCreator {
             buffered.write(sWriter.toString().getBytes());
             buffered.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new CitrusRuntimeException("Failed to generate test documentation, file not found", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CitrusRuntimeException("Failed to generate test documentation, IO error", e);
         } finally {
             try {
                 if(buffered != null) {
                     buffered.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Failed to close file", e);
             }
             
             try {
@@ -192,7 +199,7 @@ public class TestCaseCreator {
                     reader.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Failed to close reader", e);
             }
         }
     }
