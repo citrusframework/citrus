@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.core.Message;
 import org.springframework.util.CollectionUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -85,11 +84,6 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
             
             if (XPathUtils.isXPathExpression(pathExpression)) {
-                if(nsContext == null) {
-                    nsContext = new SimpleNamespaceContext();
-                    ((SimpleNamespaceContext)nsContext).setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
-                }
-                
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
                 pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
                 
