@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.script;
 
-import java.io.IOException;
+import java.io.*;
 
 import org.springframework.core.io.Resource;
 
@@ -59,7 +59,33 @@ public class TemplateBasedScriptBuilder {
      * Builds the final script.
      */
     public String build() {
-        return scriptHead + scriptCode + scriptTail;
+        StringBuilder scriptBuilder = new StringBuilder();
+        StringBuilder scriptBody = new StringBuilder();
+        String importStmt = "import ";
+        
+        try {
+            if (scriptCode.contains(importStmt)) {
+                BufferedReader reader = new BufferedReader(new StringReader(scriptCode));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().startsWith(importStmt)) {
+                        scriptBuilder.append(line + "\n");
+                    } else {
+                        scriptBody.append((scriptBody.length() == 0 ? "" : "\n") + line);
+                    }
+                }
+            } else {
+                scriptBody.append(scriptCode);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to construct script from template", e);
+        }
+        
+        scriptBuilder.append(scriptHead);
+        scriptBuilder.append(scriptBody.toString());
+        scriptBuilder.append(scriptTail);
+        
+        return scriptBuilder.toString();
     }
     
     /**

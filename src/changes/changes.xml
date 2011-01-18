@@ -15,7 +15,13 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="17.01.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="18.01.2011" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #347 Custom imports in Groovy scripts
+        </action>
+        <action dev="christophd" type="add">
+          #349 Objects as test variables
+        </action>
         <action dev="christophd" type="add">
           #344 Plain text message validator
         </action>

@@ -57,6 +57,15 @@
             </groovy>
             <groovy>
                 <![CDATA[
+                  import org.testng.Assert
+                    
+                  Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+                  Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+                  Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+                ]]>
+            </groovy>
+            <groovy>
+                <![CDATA[
                   public class MyCustomClass {
                     public void run() {
                         println 'Just executed a custom class with run method!'

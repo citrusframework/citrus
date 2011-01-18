@@ -61,4 +61,16 @@ public class TemplateBasedScriptBuilderTest {
         
         Assert.fail("Missing error due to invalid script template");
     }
+    
+    @Test
+    public void testCustomImports() {
+        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
+                .withCode("import com.consol.citrus.MyClass;\n" +
+                		"import com.consol.citrus.SomeOtherClass;\n" +
+                		"importedBODYimported\n" +
+                		"this is also script body\n\n" +
+                		"END")
+                .build(), "import com.consol.citrus.MyClass;\nimport com.consol.citrus.SomeOtherClass;\n" +
+                		"+++HEAD+++importedBODYimported\nthis is also script body\n\nEND+++TAIL+++");
+    }
 }
