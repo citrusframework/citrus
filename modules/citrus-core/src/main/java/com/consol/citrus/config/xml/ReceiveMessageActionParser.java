@@ -98,11 +98,11 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             if (StringUtils.hasText(messageValidator)) {
                 builder.addPropertyReference("validator", messageValidator);
             }
-        }
-        
-        String messageType = messageElement.getAttribute("type");
-        if (StringUtils.hasText(messageType)) {
-            builder.addPropertyValue("messageType", messageType);
+            
+            String messageType = messageElement.getAttribute("type");
+            if (StringUtils.hasText(messageType)) {
+                builder.addPropertyValue("messageType", messageType);
+            }
         }
         
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element, parserContext));
