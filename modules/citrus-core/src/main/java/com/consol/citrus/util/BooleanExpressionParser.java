@@ -47,6 +47,12 @@ public class BooleanExpressionParser {
     private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
     /**
+     * Prevent instantiation.
+     */
+    private BooleanExpressionParser() {
+    }
+    
+    /**
      * Perform evaluation of boolean expression string.
      * @param expression
      * @throws CitrusRuntimeException

@@ -63,6 +63,12 @@ public class TestActionRegistry {
         registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
     }
+    
+    /**
+     * Prevent instantiation.
+     */
+    private TestActionRegistry() {
+    }
 
     /**
      * Register method to add new action parser.

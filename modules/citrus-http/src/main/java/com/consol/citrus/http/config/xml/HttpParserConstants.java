@@ -22,6 +22,13 @@ package com.consol.citrus.http.config.xml;
  * @author Christoph Deppisch
  */
 public class HttpParserConstants {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private HttpParserConstants() {
+    }
+    
     static final String DEAMON_ATTRIBUTE = "deamon";
     
     static final String DEAMON_PROPERTY = "deamon";

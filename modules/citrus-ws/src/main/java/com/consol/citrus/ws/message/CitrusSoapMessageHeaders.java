@@ -22,6 +22,13 @@ import com.consol.citrus.message.CitrusMessageHeaders;
  * @author Christoph Deppisch
  */
 public abstract class CitrusSoapMessageHeaders {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusSoapMessageHeaders() {
+    }
+    
     /** Citrus ws specific header prefix */
     public static final String SOAP_PREFIX = CitrusMessageHeaders.PREFIX + "soap_";
 

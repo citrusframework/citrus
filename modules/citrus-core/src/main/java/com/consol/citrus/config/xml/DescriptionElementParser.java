@@ -28,6 +28,12 @@ import org.w3c.dom.Element;
 public abstract class DescriptionElementParser {
     
     /**
+     * Prevent instantiation.
+     */
+    private DescriptionElementParser() {
+    }
+    
+    /**
      * Static parse method taking care of test action description.
      * @param element
      * @param builder

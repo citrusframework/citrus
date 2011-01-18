@@ -23,6 +23,13 @@ package com.consol.citrus;
  * @since 2006
  */
 public class CitrusConstants {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusConstants() {
+    }
+    
     /** Prefix/sufix used to identify variable expressions */
     public static final String VARIABLE_PREFIX = "${";
     public static final char VARIABLE_SUFFIX = '}';

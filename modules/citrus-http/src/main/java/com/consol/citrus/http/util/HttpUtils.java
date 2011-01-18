@@ -29,6 +29,12 @@ import com.consol.citrus.util.MessageUtils;
  * @author Christoph Deppisch
  */
 public class HttpUtils {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private HttpUtils() {
+    }
 
     /**
      * Generates a new Http request from message.

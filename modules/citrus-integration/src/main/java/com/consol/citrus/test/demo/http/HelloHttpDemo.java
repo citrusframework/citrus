@@ -22,6 +22,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Christoph Deppisch
  */
 public class HelloHttpDemo {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private HelloHttpDemo() {
+    }
+    
     public static void main(String[] args) {
         new ClassPathXmlApplicationContext("http-demo-context.xml", HelloHttpDemo.class);
     }

@@ -36,6 +36,12 @@ public class PropertyUtils {
     private static final char propertyMarker = '@';
     
     /**
+     * Prevent instantiation.
+     */
+    private PropertyUtils() {
+    }
+    
+    /**
      * Replaces properties in string.
      * 
      * @param line

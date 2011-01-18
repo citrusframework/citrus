@@ -33,6 +33,12 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  */
 public abstract class ActionContainerParser implements BeanDefinitionParser {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private ActionContainerParser() {
+    }
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)

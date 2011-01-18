@@ -24,6 +24,12 @@ package com.consol.citrus.config.xml;
  */
 public class JmsParserConstants {
     
+    /**
+     * Prevent instantiation.
+     */
+    private JmsParserConstants() {
+    }
+    
     static final String REPLY_DESTINATION_ATTRIBUTE = "reply-destination";
     
     static final String REPLY_DESTINATION_PROPERTY = "replyDestination";

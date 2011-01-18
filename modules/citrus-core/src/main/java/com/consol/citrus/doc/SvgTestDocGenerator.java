@@ -52,6 +52,12 @@ public class SvgTestDocGenerator {
      */
     private static final Logger log = LoggerFactory.getLogger(SvgTestDocGenerator.class);
 
+    /**
+     * Prevent instantiation.
+     */
+    private SvgTestDocGenerator() {
+    }
+    
     public static void main(String[] args) {
         try {
             String testDirectory = DEFAULT_TEST_DIRECTORY;

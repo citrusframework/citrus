@@ -23,6 +23,12 @@ package com.consol.citrus.ws.config.xml;
  */
 public class WSParserConstants {
     
+    /**
+     * Prevent instantiation.
+     */
+    private WSParserConstants() {
+    }
+    
     public static final String AUTOSTART_ATTRIBUTE = "auto-start";
     
     public static final String AUTOSTART_PROPERTY = "autoStart";

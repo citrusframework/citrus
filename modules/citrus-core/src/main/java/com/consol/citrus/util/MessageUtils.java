@@ -24,6 +24,13 @@ import org.springframework.integration.core.MessageHeaders;
  * @author Christoph Deppisch
  */
 public class MessageUtils {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private MessageUtils() {
+    }
+    
     /**
      * Check if given header name belongs to Spring Integration internal headers.
      * Means that header name starts with internal header prefix.

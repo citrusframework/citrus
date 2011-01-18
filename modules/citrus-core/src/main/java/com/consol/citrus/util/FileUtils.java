@@ -34,6 +34,12 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public abstract class FileUtils {
 
     /**
+     * Prevent instantiation.
+     */
+    private FileUtils() {
+    }
+    
+    /**
      * Constructs a resource from file path supporting "classpath:" and "file:" prefix
      * in file path string returning either a {@link ClassPathResource} or {@link FileSystemResource}.
      * 

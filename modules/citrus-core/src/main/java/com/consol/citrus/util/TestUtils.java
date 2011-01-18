@@ -45,6 +45,12 @@ public abstract class TestUtils {
     private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
     
     /**
+     * Prevent instantiation.
+     */
+    private TestUtils() {
+    }
+    
+    /**
      * 
      * @param test
      * @return

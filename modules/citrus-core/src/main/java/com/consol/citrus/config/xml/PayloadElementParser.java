@@ -33,6 +33,12 @@ import com.consol.citrus.util.XMLUtils;
 public abstract class PayloadElementParser {
     
     /**
+     * Prevent instantiation.
+     */
+    private PayloadElementParser() {
+    }
+    
+    /**
      * Static parse method taking care of payload element.
      * @param element
      * @param builder

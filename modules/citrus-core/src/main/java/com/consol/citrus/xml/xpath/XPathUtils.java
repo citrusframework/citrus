@@ -43,6 +43,12 @@ public abstract class XPathUtils {
     static {
         xPathFactory = XPathFactory.newInstance();
     }
+    
+    /**
+     * Prevent instantiation.
+     */
+    private XPathUtils() {
+    }
 
     /**
      * Evaluate XPath expression as String result type regardless

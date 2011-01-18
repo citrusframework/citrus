@@ -22,6 +22,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Christoph Deppisch
  */
 public class HelloWsDemo {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private HelloWsDemo() {
+    }
+    
     public static void main(String[] args) {
         new ClassPathXmlApplicationContext("ws-demo-context.xml", HelloWsDemo.class);
     }

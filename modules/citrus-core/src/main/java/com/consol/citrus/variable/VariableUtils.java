@@ -26,6 +26,13 @@ import com.consol.citrus.exceptions.NoSuchVariableException;
  * @author Christoph Deppisch
  */
 public class VariableUtils {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private VariableUtils() {
+    }
+    
     /**
      * Cut off variables prefix
      * @param key

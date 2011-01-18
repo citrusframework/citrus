@@ -22,6 +22,13 @@ package com.consol.citrus.http.util;
  * @author Christoph Deppisch 2007
  */
 public class HttpConstants {
+
+    /**
+     * Prevent instantiation.
+     */
+    private HttpConstants() {
+    }
+    
     /** Http version */
     public static final String HTTP_VERSION = "HTTP/1.1";
 
