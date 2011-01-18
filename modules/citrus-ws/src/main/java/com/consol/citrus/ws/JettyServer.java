@@ -322,6 +322,11 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
      * @param connectors the connectors to set
      */
     public void setConnectors(Connector[] connectors) {
-        this.connectors = connectors;
+        Connector[] clone = new Connector[connectors.length];
+        for (int i = 0; i < connectors.length; i++) {
+            clone[i] = connectors[i];
+        }
+        
+        this.connectors = clone;
     }
 }
