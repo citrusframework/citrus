@@ -77,12 +77,12 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                     while ((propertyExpression = reader.readLine()) != null) {
                         propertyExpression = propertyExpression.trim();
                         if(!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#") 
-                                || propertyExpression.indexOf("=") == -1) {
+                                || propertyExpression.indexOf('=') == -1) {
                             continue;
                         }
                         
-                        String key = propertyExpression.substring(0, propertyExpression.indexOf("=")).trim();
-                        String value = propertyExpression.substring(propertyExpression.indexOf("=")+1).trim();
+                        String key = propertyExpression.substring(0, propertyExpression.indexOf('=')).trim();
+                        String value = propertyExpression.substring(propertyExpression.indexOf('=')+1).trim();
 
                         value = context.replaceDynamicContentInString(value);
                         

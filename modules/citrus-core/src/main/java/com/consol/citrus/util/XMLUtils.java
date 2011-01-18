@@ -287,7 +287,7 @@ public final class XMLUtils {
 
                 String nsPrefix;
                 if (token.startsWith(":")) {
-                    nsPrefix = token.substring(1, token.indexOf("="));
+                    nsPrefix = token.substring(1, token.indexOf('='));
                 } else if(token.startsWith("=")) { 
                     nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
                 } else {
@@ -298,10 +298,10 @@ public final class XMLUtils {
 
                 String nsUri;
                 try {
-                    nsUri = token.substring(token.indexOf("\"")+1, token.indexOf("\"", token.indexOf("\"")+1));
+                    nsUri = token.substring(token.indexOf('\"')+1, token.indexOf('\"', token.indexOf('\"')+1));
                 } catch (StringIndexOutOfBoundsException e) {
                     //maybe we have more luck with single "'"
-                    nsUri = token.substring(token.indexOf("'")+1, token.indexOf("'", token.indexOf("'")+1));
+                    nsUri = token.substring(token.indexOf('\'')+1, token.indexOf('\'', token.indexOf('\'')+1));
                 }
                 
                 namespaces.put(nsPrefix, nsUri);
@@ -350,8 +350,8 @@ public final class XMLUtils {
     private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
         if(messagePayload.trim().startsWith("<?xml") && messagePayload.contains("encoding")) {
             String encoding = messagePayload.substring(messagePayload.indexOf("encoding") + 8);
-            encoding = encoding.substring(encoding.indexOf("\"")+1);
-            encoding = encoding.substring(0, encoding.indexOf("\""));
+            encoding = encoding.substring(encoding.indexOf('\"')+1);
+            encoding = encoding.substring(0, encoding.indexOf('\"'));
             
             if(Charset.availableCharsets().containsKey(encoding)) {
                 return encoding;

@@ -158,8 +158,8 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
 				String inputElem = getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./wsdl:input/@message");
 				String outputElem = getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./wsdl:output/@message");
 				//remove ns-prefix:
-				inputElem = inputElem.contains(":") ? inputElem.substring(inputElem.indexOf(":") + 1) : inputElem;
-				outputElem = outputElem.contains(":") ? outputElem.substring(outputElem.indexOf(":") + 1) : outputElem;
+				inputElem = inputElem.indexOf(':') != -1 ? inputElem.substring(inputElem.indexOf(':') + 1) : inputElem;
+				outputElem = outputElem.indexOf(':')  != -1 ? outputElem.substring(outputElem.indexOf(':') + 1) : outputElem;
 
 				SchemaType requestElem = null;
 				SchemaType responseElem = null;

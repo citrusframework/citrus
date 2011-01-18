@@ -73,7 +73,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                     
                     if(content.contains("<?xml")) {
                         //strip off possible leading prolog characters in xml content
-                        attachment.setContent(content.substring(content.indexOf("<")));
+                        attachment.setContent(content.substring(content.indexOf('<')));
                     } else {
                         attachment.setContent(content);
                     }

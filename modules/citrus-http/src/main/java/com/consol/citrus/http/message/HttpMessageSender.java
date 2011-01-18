@@ -181,10 +181,10 @@ public class HttpMessageSender implements MessageSender {
         
         String port = endpointUri.substring("http://".length());
         
-        if(port.contains(":")) {
+        if(port.indexOf(':') != -1) {
             port = port.substring(port.indexOf(':')+1);
             
-            if(port.contains("/")) {
+            if(port.indexOf('/') != -1) {
                 port = port.substring(0, port.indexOf('/'));
             }
             
@@ -203,7 +203,7 @@ public class HttpMessageSender implements MessageSender {
                         "You must specify a proper endpoint uri (e.g. http://localhost:8080/test");
         
         String host = endpointUri.substring("http://".length());
-        if(host.contains(":")) {
+        if (host.indexOf(':') != -1) {
             host = host.substring(0, host.indexOf(":"));
         } else {
             host = host.substring(0, host.indexOf('/'));
@@ -223,8 +223,8 @@ public class HttpMessageSender implements MessageSender {
         
         String uri = endpointUri.substring("http://".length());
         
-        if(uri.contains("/")) {
-            uri = uri.substring(uri.indexOf("/"));
+        if (uri.indexOf('/') != -1) {
+            uri = uri.substring(uri.indexOf('/'));
             return uri;
         } else {
             return "";
