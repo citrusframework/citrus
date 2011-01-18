@@ -87,8 +87,8 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
 
         List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
         
-        validationContextBuilders.add(getXmlMessageValidationContextBuilder(element, parserContext));
-        validationContextBuilders.add(getScriptValidationContextBuilder(element, parserContext));
+        validationContextBuilders.add(getXmlMessageValidationContextBuilder(element));
+        validationContextBuilders.add(getScriptValidationContextBuilder(element));
         
         builder.addPropertyValue("validationContextBuilders", validationContextBuilders);
         
@@ -105,7 +105,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             }
         }
         
-        builder.addPropertyValue("variableExtractors", getVariableExtractors(element, parserContext));
+        builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
     }
@@ -113,10 +113,9 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
     /**
      * Constructs a list of variable extractors.
      * @param element
-     * @param parserContext
      * @return
      */
-    private List<VariableExtractor> getVariableExtractors(Element element, ParserContext parserContext) {
+    private List<VariableExtractor> getVariableExtractors(Element element) {
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
@@ -171,10 +170,9 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
     /**
      * Construct the message validation context builder.
      * @param messageElement
-     * @param parserContext
      * @return
      */
-    private XmlMessageValidationContextBuilder getXmlMessageValidationContextBuilder(Element element, ParserContext parserContext) {
+    private XmlMessageValidationContextBuilder getXmlMessageValidationContextBuilder(Element element) {
         XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
         
         PayloadTemplateMessageBuilder payloadTemplateMessageBuilder = null;
@@ -342,10 +340,9 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
     /**
      * Construct the message validation context builder.
      * @param messageElement
-     * @param parserContext
      * @return
      */
-    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element element, ParserContext parserContext) {
+    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element element) {
         ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -389,7 +386,6 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
      * Parse component returning generic bean definition.
      * 
      * @param element
-     * @param parserContext
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {

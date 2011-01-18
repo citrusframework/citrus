@@ -60,7 +60,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
         
         DescriptionElementParser.doParse(element, builder);
 
-        MessageContentBuilder<?> messageBuidler = getMessageBuilder(element, parserContext);
+        MessageContentBuilder<?> messageBuidler = getMessageBuilder(element);
         if (messageBuidler != null) {
             builder.addPropertyValue("messageBuilder", messageBuidler);
         }
@@ -92,10 +92,9 @@ public class SendMessageActionParser implements BeanDefinitionParser {
     /**
      * Constructs a message builder from the given information in send action.
      * @param messageElement
-     * @param parserContext
      * @return
      */
-    private MessageContentBuilder<?> getMessageBuilder(Element element, ParserContext parserContext) {
+    private MessageContentBuilder<?> getMessageBuilder(Element element) {
         PayloadTemplateMessageBuilder payloadTemplateMessageBuilder = null;
         GroovyScriptMessageBuilder scriptMessageBuilder = null;
         

@@ -93,7 +93,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
                 
                 if (validationContext.getControlMessage() != null) {
-                    validateMessagePayload(receivedMessage, validationContext, context);
+                    validateMessagePayload(receivedMessage, validationContext);
                 }
                 
                 validateMessageElements(receivedMessage, validationContext, context);
@@ -324,8 +324,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    private void validateMessagePayload(Message<?> receivedMessage, 
-            XmlMessageValidationContext validationContext, TestContext context) {
+    private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext) {
         if(!(validationContext.getControlMessage().getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
                     "but was " + validationContext.getControlMessage().getPayload().getClass());
@@ -374,10 +373,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             case Node.ATTRIBUTE_NODE:
                 throw new IllegalStateException();
             case Node.COMMENT_NODE:
-                doComment(received, source);
+                doComment(received);
                 break;
             case Node.PROCESSING_INSTRUCTION_NODE:
-                doPI(received, source);
+                doPI(received);
                 break;
         }
     }
@@ -567,7 +566,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      * @param source
      */
-    private void doComment(Node received, Node source) {
+    private void doComment(Node received) {
         log.info("Ignored comment node (" + received.getNodeValue() + ")");
     }
 
@@ -577,7 +576,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      * @param source
      */
-    private void doPI(Node received, Node source) {
+    private void doPI(Node received) {
         log.info("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");
     }
 

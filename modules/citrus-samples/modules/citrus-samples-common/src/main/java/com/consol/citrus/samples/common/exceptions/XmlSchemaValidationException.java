@@ -30,6 +30,6 @@ public class XmlSchemaValidationException extends MessageHandlingException {
      * @param failedMessage
      */
     public XmlSchemaValidationException(Message<?> failedMessage, Throwable cause) {
-        super(failedMessage);
+        super(failedMessage, cause);
     }
 }
