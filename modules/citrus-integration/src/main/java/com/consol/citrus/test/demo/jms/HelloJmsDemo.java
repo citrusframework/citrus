@@ -23,7 +23,7 @@ import org.springframework.core.task.TaskExecutor;
 /**
  * @author Christoph Deppisch
  */
-public class HelloJmsDemo {
+public class HelloJmsDemo implements Runnable {
     private static ClassPathXmlApplicationContext ctx;
     
     private static Object contextLock = new Object();
@@ -32,12 +32,7 @@ public class HelloJmsDemo {
         synchronized (contextLock) {
             if(ctx == null) {
                 TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor("HelloJmsDemo");
-                
-                taskExecutor.execute(new Runnable() {
-                    public void run() {
-                        ctx = new ClassPathXmlApplicationContext("jms-demo-context.xml", HelloJmsDemo.class);
-                    }
-                });
+                taskExecutor.execute(this);
             }
         }
     }
@@ -48,5 +43,9 @@ public class HelloJmsDemo {
                 ctx.close();
             }
         }
+    }
+    
+    public void run() {
+        ctx = new ClassPathXmlApplicationContext("jms-demo-context.xml", HelloJmsDemo.class);
     }
 }

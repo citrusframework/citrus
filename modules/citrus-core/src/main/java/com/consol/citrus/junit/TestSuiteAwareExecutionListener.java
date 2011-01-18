@@ -67,13 +67,7 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
                 throw new CitrusRuntimeException("Before suite failed with errors");
             }
             
-            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-                public void run() {
-                    if(!suite.afterSuite()) {
-                        throw new CitrusRuntimeException("After suite failed with errors");
-                    }
-                }
-            }));
+            Runtime.getRuntime().addShutdownHook(new Thread(new AfterSuiteShutdownHook(suite)));
         }
     }
 
@@ -95,5 +89,28 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
         
         log.warn("Could not find custom test suite - using default test suite");
         return (TestSuite)ctx.getBean(CitrusConstants.DEFAULT_SUITE_NAME, TestSuite.class);
+    }
+    
+    /**
+     * Shutdown hook runnable gets executed during JVM shutdown.
+     * This is our only chance to provide after suite logic when using JUnit. After
+     * all tests are executed this after suite logic get executed before processing ends. 
+     */
+    private static class AfterSuiteShutdownHook implements Runnable {
+        /** The test suite to call after suite when executed */
+        private TestSuite suite;
+        
+        /**
+         * Default constructor using test suite field.
+         */
+        public AfterSuiteShutdownHook(TestSuite suite) {
+            this.suite = suite;
+        }
+        
+        public void run() {
+            if(!suite.afterSuite()) {
+                throw new CitrusRuntimeException("After suite failed with errors");
+            }
+        }
     }
 }
