@@ -85,7 +85,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         /* Debug print all variables */
         if (context.hasVariables() && log.isDebugEnabled()) {
             log.debug("TestCase using the following global variables:");
-            for (Entry<String, String> entry : context.getVariables().entrySet()) {
+            for (Entry<String, Object> entry : context.getVariables().entrySet()) {
                 log.debug(entry.getKey() + " = " + entry.getValue());
             }
         }

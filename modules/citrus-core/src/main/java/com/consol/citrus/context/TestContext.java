@@ -45,7 +45,7 @@ public class TestContext {
     private static final Logger log = LoggerFactory.getLogger(TestContext.class);
     
     /** Local variables */
-    protected Map<String, String> variables;
+    protected Map<String, Object> variables;
     
     /** Global variables */
     private GlobalVariables globalVariables;
@@ -60,7 +60,7 @@ public class TestContext {
      * Default constructor
      */
     public TestContext() {
-        variables = new LinkedHashMap<String, String>();
+        variables = new LinkedHashMap<String, Object>();
     }
     
     /**
@@ -92,7 +92,7 @@ public class TestContext {
      * @throws CitrusRuntimeException
      * @return
      */
-    public void setVariable(final String variableName, String value) {
+    public void setVariable(final String variableName, Object value) {
         if (!StringUtils.hasText(variableName) || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
             throw new CitrusRuntimeException("Can not create variable '"+ variableName + "', please define proper variable name");
         }
@@ -114,8 +114,8 @@ public class TestContext {
      * 
      * @param variablesToSet the list of variables to set.
      */
-    public void addVariables(Map<String, String> variablesToSet) {
-        for (Entry<String, String> entry : variablesToSet.entrySet()) {
+    public void addVariables(Map<String, Object> variablesToSet) {
+        for (Entry<String, Object> entry : variablesToSet.entrySet()) {
             if (entry.getValue() != null) {
                 setVariable(entry.getKey(), entry.getValue());
             } else {
@@ -218,7 +218,7 @@ public class TestContext {
      * Setter for test variables in this context.
      * @param variables
      */
-    public void setVariables(Map<String, String> variables) {
+    public void setVariables(Map<String, Object> variables) {
         this.variables = variables;
     }
 
@@ -226,7 +226,7 @@ public class TestContext {
      * Getter for test variables in this context.
      * @return test variables for this test context.
      */
-    public Map<String, String> getVariables() {
+    public Map<String, Object> getVariables() {
         return variables;
     }
 
@@ -244,7 +244,7 @@ public class TestContext {
      * Set global variables.
      * @return the globalVariables
      */
-    public Map<String, String> getGlobalVariables() {
+    public Map<String, Object> getGlobalVariables() {
         return globalVariables.getVariables();
     }
     

@@ -155,7 +155,7 @@ public class TestContextTest extends AbstractBaseTest {
     
     @Test
     public void testAddVariables() {
-        Map<String, String> vars = new HashMap<String, String>();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("${test1}", "123");
         vars.put("${test2}", "");
         

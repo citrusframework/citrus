@@ -26,13 +26,13 @@ import java.util.Map;
  */
 public class GlobalVariables {
 	/** Variables name value pair map */
-    private Map<String, String> variables = new LinkedHashMap<String, String>();
+    private Map<String, Object> variables = new LinkedHashMap<String, Object>();
 	
 	/**
 	 * Set the global variables.
 	 * @param variables the variables to set
 	 */
-	public void setVariables(Map<String, String> variables) {
+	public void setVariables(Map<String, Object> variables) {
 		this.variables = variables;
 	}
 
@@ -40,7 +40,7 @@ public class GlobalVariables {
 	 * Get the global variables.
 	 * @return the variables
 	 */
-	public Map<String, String> getVariables() {
+	public Map<String, Object> getVariables() {
 		return variables;
 	}
 }
