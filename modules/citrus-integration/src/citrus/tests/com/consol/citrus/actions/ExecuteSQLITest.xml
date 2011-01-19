@@ -82,6 +82,14 @@
             	<statement>select DESCRIPTION as desc from ORDERS where ORDER_ID = 2</statement>
             	<validate column="DESC" value=""/>
             </sql>
+            <sql datasource="testDataSource">
+                <statement>select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS</statement>
+                <validate-script type="groovy">
+                    assert rows.size == 2
+                    assert rows[0].RTAG == 'requestTag'
+                    assert rows[0].DESC == 'Migrate'          
+                </validate-script>
+            </sql>
         </actions>
     </testcase>
 </spring:beans>
