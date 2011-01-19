@@ -354,21 +354,24 @@
                     </xs:element>
                     <xs:element name="statement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:choice>
-                <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="values" minOccurs="0">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                        <xs:attribute name="column" type="xs:string" use="required"/>
-                        <xs:attribute name="value" type="xs:string"/>
-                    </xs:complexType>
-                </xs:element>
+                <xs:choice>
+                    <xs:element name="validate-script" minOccurs="0" maxOccurs="1" type="scriptDefinitionType"/>
+                    <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="values" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="column" type="xs:string" use="required"/>
+                            <xs:attribute name="value" type="xs:string"/>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
                 <xs:element name="extract" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:attribute name="column" type="xs:string" use="required"/>

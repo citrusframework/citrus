@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.CollectionUtils;
 
@@ -28,6 +29,9 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
+import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
@@ -58,7 +62,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     
     /** Map of test variables to be created from database values, keys are column names, values are variable names */
     private Map<String, String> extractVariables = new HashMap<String, String>();
-
+    
+    /** Script validation context */
+    private ScriptValidationContext scriptValidationContext;
+    
+    /** SQL result set script validator */
+    @Autowired(required = false)
+    private SqlResultSetScriptValidator validator;
+    
     /**
      * Logger
      */
@@ -77,6 +88,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             }
 
             Map<String, List<String>> resultSet = new HashMap<String, List<String>>();
+            List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
             int countRetries = 0;
             boolean retry = true;
             while (retry) {
@@ -92,6 +104,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                         if (results.size() == 0) {
                             throw new CitrusRuntimeException("Validation not possible. SQL result set is empty for statement: " + stmt);
                         }
+                        
+                        rows.addAll(results);
                         
                         //form a Map object which contains all columns of the result as keys
                         //and a List of row values as values of the Map
@@ -109,6 +123,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                         }
                     }
                     
+                    // apply script validation if specified
+                    if (scriptValidationContext != null) {
+                        getScriptValidator().validateSqlResultSet(rows, scriptValidationContext, context);
+                    }
+                    
+                    // usual sql result set validation
                 	validate(resultSet, context);
 
                     retry = false;
@@ -146,6 +166,18 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         } catch (DataAccessException e) {
             log.error("Failed to execute SQL statement", e);
             throw new CitrusRuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets the script validator implementation either autowired from application context
+     * or if not set here a default implementation.
+     */
+    private SqlResultSetScriptValidator getScriptValidator() {
+        if (validator != null) {
+            return validator;
+        } else {
+            return new GroovySqlResultSetValidator();
         }
     }
 
@@ -303,5 +335,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     public void setExtractVariables(Map<String, String> variablesMap) {
         this.extractVariables = variablesMap;
+    }
+
+    /**
+     * Sets the script validation context.
+     * @param scriptValidationContext the scriptValidationContext to set
+     */
+    public void setScriptValidationContext(
+            ScriptValidationContext scriptValidationContext) {
+        this.scriptValidationContext = scriptValidationContext;
     }
 }

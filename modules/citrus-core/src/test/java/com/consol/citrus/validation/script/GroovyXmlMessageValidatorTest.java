@@ -52,7 +52,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text.text() == 'Hello TestFramework'";
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -68,7 +68,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")";
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -81,7 +81,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text == 'Hello Citrus'"; //should fail
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         try {
             validator.validateMessage(message, context, validationContext);
@@ -99,7 +99,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
     public void testEmptyValidationScript() {
         String validationScript = "";
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         validator.validateMessage(message, context, validationContext);
     }

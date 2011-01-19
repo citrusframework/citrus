@@ -23,12 +23,14 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
  * Bean definition parser for sql action in test case.
@@ -48,14 +50,22 @@ public class SQLActionParser implements BeanDefinitionParser {
         List<?> validateElements = DomUtils.getChildElementsByTagName(element, "validate");
         List<?> extractElements = DomUtils.getChildElementsByTagName(element, "extract");
         
-        if (!validateElements.isEmpty() || !extractElements.isEmpty()) {
+        Element scriptValidationElement = DomUtils.getChildElementByTagName(element, "validate-script");
+        
+        if (!validateElements.isEmpty() || !extractElements.isEmpty() || scriptValidationElement != null) {
             beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
             beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
+            
+            // check for script validation
+            if(scriptValidationElement != null) {
+                beanDefinition.addPropertyValue("scriptValidationContext", getScriptValidationContext(scriptValidationElement));
+            }
             
             Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
             for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                 Element validateElement = (Element) iter.next();
                 Element valueListElement = DomUtils.getChildElementByTagName(validateElement, "values");
+                
                 if (valueListElement != null) {
                 	List<String> valueList = new ArrayList<String>();
                 	List<?> valueElements = DomUtils.getChildElementsByTagName(valueListElement, "value");
@@ -110,5 +120,25 @@ public class SQLActionParser implements BeanDefinitionParser {
         }
 
         return beanDefinition.getBeanDefinition();
+    }
+    
+    /**
+     * Constructs the script validation context.
+     * @param scriptElement
+     * @return
+     */
+    private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
+        ScriptValidationContext validationContext;
+        
+        String type = scriptElement.getAttribute("type");
+        
+        String filePath = scriptElement.getAttribute("file");
+        if (StringUtils.hasText(filePath)) {
+            validationContext = new ScriptValidationContext(FileUtils.getResourceFromFilePath(filePath), type);
+        } else {
+            validationContext = new ScriptValidationContext(DomUtils.getTextValue(scriptElement), type);
+        }
+        
+        return validationContext;
     }
 }

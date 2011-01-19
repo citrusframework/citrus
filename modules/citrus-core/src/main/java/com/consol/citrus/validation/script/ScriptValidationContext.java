@@ -38,10 +38,7 @@ public class ScriptValidationContext implements ValidationContext {
     /** Validation script code */
     private String validationScript = "";
     
-    /** The current test context */
-    private TestContext context;
-    
-    /** Type indicating which type of script was used to builde this context (e.g. groovy, scala etc.) */
+    /** Type indicating which type of script we use (e.g. groovy, scala etc.) */
     private String scriptType;
 
     /**
@@ -49,8 +46,7 @@ public class ScriptValidationContext implements ValidationContext {
      * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(TestContext context, String scriptType) {
-        this.context = context;
+    public ScriptValidationContext(String scriptType) {
         this.scriptType = scriptType;
     }
     
@@ -60,10 +56,9 @@ public class ScriptValidationContext implements ValidationContext {
      * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(Resource validationScriptResource, String scriptType, TestContext context) {
+    public ScriptValidationContext(Resource validationScriptResource, String scriptType) {
         super();
         this.validationScriptResource = validationScriptResource;
-        this.context = context;
         this.scriptType = scriptType;
     }
     
@@ -73,18 +68,19 @@ public class ScriptValidationContext implements ValidationContext {
      * @param scriptType
      * @param context
      */
-    public ScriptValidationContext(String validationScript, String scriptType, TestContext context) {
+    public ScriptValidationContext(String validationScript, String scriptType) {
         super();
         this.validationScript = validationScript;
-        this.context = context;
         this.scriptType = scriptType;
     }
 
     /**
+     * Constructs the actual validation script either from data or external resource.
+     * @param context the current TestContext.
      * @return the validationScript
      * @throws CitrusRuntimeException
      */
-    public String getValidationScript() throws CitrusRuntimeException {
+    public String getValidationScript(TestContext context) throws CitrusRuntimeException {
         try {
             if (validationScriptResource != null) {
                 return context.replaceDynamicContentInString(FileUtils.readToString(validationScriptResource));
@@ -104,13 +100,5 @@ public class ScriptValidationContext implements ValidationContext {
      */
     public String getScriptType() {
         return scriptType;
-    }
-
-    /**
-     * Sets the script type for this validation context.
-     * @param scriptType the scriptType to set
-     */
-    public void setScriptType(String scriptType) {
-        this.scriptType = scriptType;
     }
 }

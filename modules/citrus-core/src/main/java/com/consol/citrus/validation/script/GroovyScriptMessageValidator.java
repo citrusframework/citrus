@@ -79,7 +79,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     public void validateMessage(Message<?> receivedMessage, TestContext context, ScriptValidationContext validationContext) 
         throws ValidationException {
         try {
-            String validationScript = validationContext.getValidationScript();
+            String validationScript = validationContext.getValidationScript(context);
             
             if (StringUtils.hasText(validationScript)) {
                 log.info("Start groovy message validation");

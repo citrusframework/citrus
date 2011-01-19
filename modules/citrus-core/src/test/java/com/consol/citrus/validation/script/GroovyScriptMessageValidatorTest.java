@@ -46,7 +46,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
         		"assert payload.contains('!')";
         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -60,7 +60,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
         context.setVariable("plainText", "This is plain text!");
         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -72,7 +72,7 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
                 "assert payload.contains('!')";
         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE, context);
+        GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
         
         try {
             validator.validateMessage(message, context, validationContext);

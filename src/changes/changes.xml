@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="18.01.2011" description="Latest snapshot release">
         <action dev="christophd" type="add">
+          #330 Groovy SQL result set validation
+        </action>
+        <action dev="christophd" type="add">
           #347 Custom imports in Groovy scripts
         </action>
         <action dev="christophd" type="add">

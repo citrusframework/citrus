@@ -44,13 +44,13 @@ public class ScriptValidationContextBuilder implements ValidationContextBuilder<
      */
     public ScriptValidationContext buildValidationContext(TestContext context) {
         if (validationScript != null) {
-            return new ScriptValidationContext(validationScript, scriptType, context);
+            return new ScriptValidationContext(validationScript, scriptType);
         } else if (validationScriptResource != null) {
-            return new ScriptValidationContext(validationScriptResource, scriptType, context);
+            return new ScriptValidationContext(validationScriptResource, scriptType);
         }
         
         // return empty script validation context
-        return new ScriptValidationContext(context, scriptType);
+        return new ScriptValidationContext(scriptType);
     }
 
     /**

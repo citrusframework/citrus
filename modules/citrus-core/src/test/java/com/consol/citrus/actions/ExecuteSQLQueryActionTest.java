@@ -34,6 +34,8 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -636,5 +638,137 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         Assert.assertEquals(context.getVariable("${NAME}"), "Mickey Mouse");
         Assert.assertNotNull(context.getVariable("${HEIGHT}"));
         Assert.assertEquals(context.getVariable("${HEIGHT}"), "0,3");
+    }
+    
+    @Test
+    public void testResultSetScriptValidation() {
+        String sql = "select ORDERTYPES, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
+        		"assert rows[0].ORDERTYPE == 'small'\n" +
+        		"assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
+        
+        executeSQLQueryAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
+        Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
+        Assert.assertNotNull(context.getVariable("${STATUS}"));
+        Assert.assertEquals(context.getVariable("${STATUS}"), "in_progress");
+    }
+    
+    @Test
+    public void testResultSetScriptValidationMultipleStmts() {
+        String sql1 = "select ORDERTYPES, STATUS from orders where ID=5";
+        String sql2 = "select ERRORTYPES from types";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        List<Map<String, String>> results = new ArrayList<Map<String,String>>();
+        for (int i = 1; i < 4; i++) {
+            Map<String, String> columnMap = new HashMap<String, String>();
+            columnMap.put("ID", String.valueOf(i));
+            columnMap.put("NAME", "error" + i);
+            
+            results.add(columnMap);
+        }
+        
+        expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap)).once();
+        expect(jdbcTemplate.queryForList(sql2)).andReturn(results).once();
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = new ArrayList<String>();
+        stmts.add(sql1);
+        stmts.add(sql2);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 4\n" +
+                "assert rows[0].ORDERTYPE == 'small'\n" +
+                "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']\n" +
+                "assert rows[1].ID == '1'\n" +
+                "assert rows[3].NAME == 'error3'\n",
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
+        
+        executeSQLQueryAction.execute(context);
+    }
+    
+    @Test
+    public void testResultSetScriptValidationWrongValue() {
+        String sql = "select ORDERTYPES, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
+                "assert rows[0] == [ORDERTYPE:'big', STATUS:'in_progress']",
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
+        
+        try {
+            executeSQLQueryAction.execute(context);
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getCause() instanceof AssertionError);
+            return;
+        }
+        
+        Assert.fail("Missing validation exception due to script validation error");
+    }
+    
+    @Test
+    public void testResultSetScriptValidationCombination() {
+        String sql = "select ORDERTYPES, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+        
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("ORDERTYPE", "small");
+        resultMap.put("STATUS", "in_progress");
+        
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+        
+        replay(jdbcTemplate);
+        
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+        
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("small"));
+        controlResultSet.put("STATUS", Collections.singletonList("in_progress"));
+        
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+        
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
+                "assert rows[0].ORDERTYPE == 'small'\n" +
+                "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
+                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
+        
+        executeSQLQueryAction.execute(context);
     }
 }
