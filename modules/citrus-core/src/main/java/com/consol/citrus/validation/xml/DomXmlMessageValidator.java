@@ -42,6 +42,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ControlMessageValidator;
@@ -725,7 +726,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Checks if the message type is supported.
      */
     public boolean supportsMessageType(String messageType) {
-        return messageType.equalsIgnoreCase("xml");
+        return messageType.equalsIgnoreCase(MessageType.XML.toString());
     }
     
     /**

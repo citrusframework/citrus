@@ -30,6 +30,7 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidator;
 
 /**
@@ -141,6 +142,6 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
     
     @Override
     public boolean supportsMessageType(String messageType) {
-        return messageType.equalsIgnoreCase("json");
+        return messageType.equalsIgnoreCase(MessageType.JSON.toString());
     }
 }

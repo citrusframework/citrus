@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidator;
 
 /**
@@ -65,6 +66,6 @@ public class PlainTextMessageValidator extends ControlMessageValidator {
 
     @Override
     public boolean supportsMessageType(String messageType) {
-        return messageType.equalsIgnoreCase("plaintext");
+        return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
     }
 }

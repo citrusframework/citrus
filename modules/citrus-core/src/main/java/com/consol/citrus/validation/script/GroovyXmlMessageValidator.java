@@ -18,6 +18,8 @@ package com.consol.citrus.validation.script;
 
 import org.springframework.core.io.ClassPathResource;
 
+import com.consol.citrus.message.MessageType;
+
 /**
  * Extended groovy message validator providing specific XML slurper support.
  * With XML slurper the tester can validate the message payload with closures and without having
@@ -39,6 +41,6 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
      */
     public boolean supportsMessageType(String messageType) {
         // only support xml message type
-        return messageType.equalsIgnoreCase("xml");
+        return messageType.equalsIgnoreCase(MessageType.XML.toString());
     }
 }

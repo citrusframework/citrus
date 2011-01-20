@@ -16,6 +16,8 @@
 
 package com.consol.citrus;
 
+import com.consol.citrus.message.MessageType;
+
 /**
  * Constants used throughout Citrus.
  * 
@@ -54,5 +56,5 @@ public final class CitrusConstants {
     public static final String IGNORE_PLACEHOLDER = "@ignore@";
     
     /** Default message type used in message validation mechanism */
-    public static final String DEFAULT_MESSAGE_TYPE = "xml";
+    public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
 }

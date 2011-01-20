@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -133,6 +134,6 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      */
     public boolean supportsMessageType(String messageType) {
         // support all message types other than xml
-        return !messageType.equalsIgnoreCase("xml");
+        return !messageType.equalsIgnoreCase(MessageType.XML.toString());
     }
 }
