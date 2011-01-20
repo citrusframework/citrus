@@ -59,7 +59,7 @@
         </ul>
     </section>
      
-    <section name="News">
+    <section name="News &amp; Blog">
       <div id="newsfeed"></div>
       <noscript>Latest <a href="http://labs.consol.de/tags/citrus/">news</a> for Citrus are available at Labs: <a href="http://labs.consol.de/tags/citrus/">http://labs.consol.de/citrus</a></noscript>
     </section>

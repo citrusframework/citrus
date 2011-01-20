@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+  <properties>
+    <title>Citrus News &amp; Blog</title>
+  </properties>
+  <head>
+    <script type="text/javascript" src="js/jquery.zrssfeed.min.js"></script>
+    <script type="text/javascript" src="js/newsarchive.js"></script>
+  </head>
+  <body>
+    <section name="News &amp; Blog">
+      <div id="newsfeed"></div>
+      <noscript>Latest <a href="http://labs.consol.de/tags/citrus/">news</a> for Citrus are available at Labs: <a href="http://labs.consol.de/tags/citrus/">http://labs.consol.de/citrus</a></noscript>
+      
+      <div id="newsarchive" class="rssFeed">
+        <div class="rssBody">
+            <ul>
+                <li class="rssRow odd">
+                    <div class="rssTitle"><a title="Featured Citrus article on JAXenter.de" href="http://it-republik.de/jaxenter/artikel/Automatisierte-Integrationstests-mit-Citrus-2826.html">Featured Citrus article on JAXenter.de</a></div>
+                    <div>01/20/2010 10:15:19</div>
+                    <p>We are happy to present an article about Citrus on the German Java portal site <a href="http://it-republik.de/jaxenter/">JAXenter.de</a>. The article gives a detailed introduction to the framework 
+                    and describes how Citrus can ease the trouble of integration testing in SOA projects. Read the <a href="http://it-republik.de/jaxenter/artikel/Automatisierte-Integrationstests-mit-Citrus-2826.html">full article</a> 
+                    on JAXenter.</p>
+                </li>
+                <li class="rssRow even">
+                    <div class="rssTitle"><a title="Citrus article in German Java magazine" href="http://labs.consol.de/lang/de/blog/maven/citrus-and-testng-groups">Citrus article in German Java magazine</a></div>
+                    <div>01/10/2010 10:57:54</div>
+                    <p>The German JavaMagazin (<a href="http://www.javamagazin.de/">http://www.javamagazin.de</a>) gives a short introduction to the Citrus test framework in its latest issue 
+                    <a href="http://it-republik.de/jaxenter/java-magazin-ausgaben/Cloud-Computing-000338.html">JavaMagazin 02/2010</a>.</p>
+                </li>
+            </ul>
+         </div>
+      </div>
+    </section>
+    
+    <div id="twtr_slider_out" style="display:none;"></div>
+    <div id="twtr_widget_content">
+        <div id="twtr_slider_in" style="display:none;"></div>
+        <div id="twtr_widget">
+          <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+          <script src="js/twtr-widget.js"/>
+        </div>
+    </div>
+    
+  </body>
+</document>

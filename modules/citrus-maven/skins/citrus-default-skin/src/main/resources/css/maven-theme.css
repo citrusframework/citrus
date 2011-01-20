@@ -340,3 +340,31 @@ span#download_more a {
   margin-top: -2em;
   color: #B8B9BC;
 }
+
+#newsarchive .rssBody ul {
+  padding: 0;
+  margin: 0;
+}
+#newsarchive .rssRow div.rssTitle {
+  border-bottom: 1px solid #B8B9BC;
+  font-size: 1.2em;
+  font-weight: normal;
+  margin-bottom: 5px;
+  margin-top: 0em;
+  width: 100%;
+  display: block;
+}
+#newsarchive .rssRow div.rssTitle a {
+  color: #FF8805;
+}
+#newsarchive .rssRow div.rssTitle a:hover {
+  color: #FEAB00;
+}
+#newsarchive li {
+  list-style: none;
+}
+#newsarchive li div {
+  float: right;
+  margin-top: -2em;
+  color: #B8B9BC;
+}
