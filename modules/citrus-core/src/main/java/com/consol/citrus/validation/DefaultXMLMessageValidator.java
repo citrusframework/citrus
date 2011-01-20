@@ -23,7 +23,6 @@ import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
@@ -43,8 +42,8 @@ public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageVa
     /**
      * Delegate to new dom tree xml validator
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, List<ValidationContextBuilder<? extends ValidationContext>> builders) {
-        domXmlMessageValidatorDelegate.validateMessage(receivedMessage, context, builders);
+    public void validateMessage(Message<?> receivedMessage, TestContext context, List<ValidationContext> validationContexts) {
+        domXmlMessageValidatorDelegate.validateMessage(receivedMessage, context, validationContexts);
     }
     
     /**
@@ -53,12 +52,12 @@ public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageVa
     public void validateMessage(Message<?> receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
         domXmlMessageValidatorDelegate.validateMessage(receivedMessage, context, validationContext);
     }
-
+    
     /**
      * Delegate to new dom tree xml validator
      */
-    public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
-        return domXmlMessageValidatorDelegate.createValidationContext(builders, context);
+    public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        return domXmlMessageValidatorDelegate.findValidationContext(validationContexts);
     }
 
     /**

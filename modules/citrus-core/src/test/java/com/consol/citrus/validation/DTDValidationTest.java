@@ -35,8 +35,7 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -80,8 +79,8 @@ public class DTDValidationTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
@@ -93,10 +92,9 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>");
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -116,8 +114,8 @@ public class DTDValidationTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
@@ -125,10 +123,9 @@ public class DTDValidationTest extends AbstractBaseTest {
                             + "</message>"
                         + "</root>");
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     

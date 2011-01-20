@@ -16,7 +16,9 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.*;
 
@@ -33,8 +35,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -75,8 +76,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreElements() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -88,12 +89,11 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -101,8 +101,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreAttributes() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -114,12 +114,11 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA/@attribute");
         ignoreMessageElements.add("//sub-elementB/@attribute");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -127,8 +126,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreAttributesAll() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -139,12 +138,11 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//@attribute");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -166,8 +164,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-element attribute='no validation'>text-value</sub-element>"
@@ -179,12 +177,11 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//sub-element[1]/@attribute");
         ignoreMessageElements.add("//sub-element[2]/@attribute");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -202,20 +199,19 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element additonal-attribute='some'>Wrong text</element>" 
                         + "</root>");
         
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -223,8 +219,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreElementsAndValidate() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -236,17 +232,16 @@ public class IgnoreElementsTest extends AbstractBaseTest {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        contextBuilder.setIgnoreExpressions(ignoreMessageElements);
+        validationContext.setIgnoreExpressions(ignoreMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         Map<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("//root/element/sub-elementA", "wrong value");
         validateElements.put("//sub-elementB", "wrong value");
-        contextBuilder.setPathValidationExpressions(validateElements);
+        validationContext.setPathValidationExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }
@@ -254,8 +249,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreElementsByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>@ignore@</sub-elementA>"
@@ -264,10 +259,9 @@ public class IgnoreElementsTest extends AbstractBaseTest {
             + "</element>" 
             + "</root>");
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -275,16 +269,15 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreSubElementsByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >@ignore@</element>" 
             + "</root>");
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -292,8 +285,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Test
     public void testIgnoreAttributesByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='@ignore@'>text-value</sub-elementA>"
@@ -302,10 +295,9 @@ public class IgnoreElementsTest extends AbstractBaseTest {
             + "</element>" 
             + "</root>");
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }

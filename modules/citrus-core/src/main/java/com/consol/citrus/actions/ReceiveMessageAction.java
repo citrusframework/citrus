@@ -32,7 +32,6 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 
 /**
@@ -61,9 +60,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** MessageValidator responsible for message validation */
     private MessageValidator<? extends ValidationContext> validator;
     
-    /** Context builder implementations */
-    private List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders =
-        new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+    /** List of validation contexts for this receive action */
+    private List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
     
     /** List of variable extractors responsible for creating variables from received message content */
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
@@ -144,13 +142,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws IOException {
         if (validator != null) {
-            validator.validateMessage(receivedMessage, context, validationContextBuilders);
+            validator.validateMessage(receivedMessage, context, validationContexts);
         } else {
             List<MessageValidator<? extends ValidationContext>> validators = 
                                 context.getMessageValidatorRegistry().findMessageValidators(messageType);
             
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                messageValidator.validateMessage(receivedMessage, context, validationContextBuilders);
+                messageValidator.validateMessage(receivedMessage, context, validationContexts);
             }
         }
     }
@@ -220,12 +218,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the list of available validation context builders for this action.
-     * @param validationContextBuilders the validationContextBuilders to set
+     * Sets the list of available validation contexts for this action.
+     * @param validationContexts the validationContexts to set
      */
-    public void setValidationContextBuilders(
-            List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) {
-        this.validationContextBuilders = validationContextBuilders;
+    public void setValidationContexts(
+            List<ValidationContext> validationContexts) {
+        this.validationContexts = validationContexts;
     }
 
     /**

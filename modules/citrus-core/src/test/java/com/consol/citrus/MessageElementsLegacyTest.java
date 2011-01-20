@@ -35,12 +35,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
@@ -86,14 +85,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -118,14 +116,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB", "");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -150,14 +147,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB.attribute", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -182,14 +178,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-element-wrong", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         
         receiveMessageBean.execute(context);
     }
@@ -215,14 +210,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB", "text-value-wrong");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -247,14 +241,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -279,14 +272,13 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -307,8 +299,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -324,10 +316,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -348,8 +339,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -365,10 +356,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -389,8 +379,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -410,12 +400,11 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         validateElements.put("root.element.sub-elementA", "text-value");
         validateElements.put("sub-elementB", "text-value");
         
-        contextBuilder.setPathValidationExpressions(validateElements);
+        validationContext.setPathValidationExpressions(validateElements);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -436,8 +425,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -453,10 +442,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -477,8 +465,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -494,10 +482,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -518,8 +505,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -535,10 +522,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -559,8 +545,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -576,10 +562,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }    
 
@@ -600,8 +585,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -619,10 +604,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
         
         Assert.assertTrue(context.getVariables().containsKey("valueA"));
@@ -648,8 +632,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -667,10 +651,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
         
         Assert.assertTrue(context.getVariables().containsKey("valueA"));
@@ -696,8 +679,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -715,10 +698,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
         
         Assert.assertFalse(context.getVariables().containsKey("valueA"));
@@ -742,8 +724,8 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -760,10 +742,9 @@ public class MessageElementsLegacyTest extends AbstractBaseTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
         
         Assert.assertFalse(context.getVariables().containsKey("attributeA"));

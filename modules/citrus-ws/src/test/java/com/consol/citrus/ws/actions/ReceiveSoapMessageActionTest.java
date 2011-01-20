@@ -32,9 +32,8 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
@@ -56,8 +55,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
 
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setAttachmentData("TestAttachment!");
@@ -84,10 +83,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -101,8 +99,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
 
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -133,10 +131,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -151,8 +148,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -181,10 +178,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -198,8 +194,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
@@ -213,10 +209,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -230,8 +225,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
 
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setContentId("myAttachment");
@@ -261,10 +256,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -278,8 +272,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
 
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -311,10 +305,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);
@@ -328,8 +321,8 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
 
         soapMessageAction.setValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
@@ -361,10 +354,9 @@ public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
         
         replay(messageReceiver, attachmentValidator);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        soapMessageAction.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        soapMessageAction.setValidationContexts(validationContexts);
         soapMessageAction.execute(context);
         
         verify(messageReceiver, attachmentValidator);

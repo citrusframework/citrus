@@ -33,7 +33,7 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     private Map<String, String> pathValidationExpressions;
     
     /** Map holding xpath expressions to identify the ignored message elements */
-    private Set<String> ignoreMessageElements;
+    private Set<String> ignoreExpressions;
 
     /** Namespace definitions resolving namespaces in XML message validation */
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -66,18 +66,18 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
 
     /**
      * Get ignored message elements.
-     * @return the ignoreMessageElements
+     * @return the ignoreExpressions
      */
-    public Set<String> getIgnoreMessageElements() {
-        return ignoreMessageElements;
+    public Set<String> getIgnoreExpressions() {
+        return ignoreExpressions;
     }
 
     /**
      * Set ignored message elements.
-     * @param ignoreMessageElements the ignoreMessageElements to set
+     * @param ignoreExpressions the ignoreExpressions to set
      */
-    public void setIgnoreMessageElements(Set<String> ignoreMessageElements) {
-        this.ignoreMessageElements = ignoreMessageElements;
+    public void setIgnoreExpressions(Set<String> ignoreExpressions) {
+        this.ignoreExpressions = ignoreExpressions;
     }
 
     /**

@@ -31,11 +31,10 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.script.ScriptValidationContextBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.*;
 
 /**
@@ -85,12 +84,12 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             builder.addPropertyValue("messageSelector", messageSelector);
         }
 
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         
-        validationContextBuilders.add(getXmlMessageValidationContextBuilder(element));
-        validationContextBuilders.add(getScriptValidationContextBuilder(element));
+        validationContexts.add(getXmlMessageValidationContext(element));
+        validationContexts.add(getScriptValidationContext(element));
         
-        builder.addPropertyValue("validationContextBuilders", validationContextBuilders);
+        builder.addPropertyValue("validationContexts", validationContexts);
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
@@ -172,8 +171,8 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
      * @param messageElement
      * @return
      */
-    private XmlMessageValidationContextBuilder getXmlMessageValidationContextBuilder(Element element) {
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
+    private XmlMessageValidationContext getXmlMessageValidationContext(Element element) {
+        XmlMessageValidationContext context = new XmlMessageValidationContext();
         
         PayloadTemplateMessageBuilder payloadTemplateMessageBuilder = null;
         GroovyScriptMessageBuilder scriptMessageBuilder = null;
@@ -183,7 +182,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         if (messageElement != null) {
             String schemaValidation = messageElement.getAttribute("schema-validation");
             if(StringUtils.hasText(schemaValidation)) {
-                contextBuilder.setSchemaValidation(Boolean.valueOf(schemaValidation));
+                context.setSchemaValidation(Boolean.valueOf(schemaValidation));
             }
             
             Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
@@ -246,7 +245,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 Element ignoreValue = (Element) iter.next();
                 ignoreExpressions.add(ignoreValue.getAttribute("path"));
             }
-            contextBuilder.setIgnoreExpressions(ignoreExpressions);
+            context.setIgnoreExpressions(ignoreExpressions);
             
             //check for validate elements, these elements can either have script, xpath or namespace validation information
             //script validation is handled separately for now we only handle xpath and namepsace validation
@@ -294,8 +293,8 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                         }
                     }
                 }
-                contextBuilder.setPathValidationExpressions(validateXpathExpressions);
-                contextBuilder.setControlNamespaces(validateNamespaces);
+                context.setPathValidationExpressions(validateXpathExpressions);
+                context.setControlNamespaces(validateNamespaces);
             }
             
             //Catch namespace declarations for namespace context
@@ -306,7 +305,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                     Element namespaceElement = (Element) iter.next();
                     namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                 }
-                contextBuilder.setNamespaces(namespaces);
+                context.setNamespaces(namespaces);
             }
         }
         
@@ -332,18 +331,18 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
             messageBuilder.setMessageHeaders(controlMessageHeaders);
         }
         
-        contextBuilder.setMessageBuilder(messageBuilder);
+        context.setMessageBuilder(messageBuilder);
         
-        return contextBuilder;
+        return context;
     }
 
     /**
-     * Construct the message validation context builder.
-     * @param messageElement
+     * Construct the message validation context.
+     * @param element
      * @return
      */
-    private ScriptValidationContextBuilder getScriptValidationContextBuilder(Element element) {
-        ScriptValidationContextBuilder contextBuilder = new ScriptValidationContextBuilder();
+    private ScriptValidationContext getScriptValidationContext(Element element) {
+        ScriptValidationContext context = null;
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         
@@ -366,20 +365,19 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                         }
     
                         String type = scriptElement.getAttribute("type");
-                        contextBuilder.setScriptType(type);
                         
                         String filePath = scriptElement.getAttribute("file");
                         if (StringUtils.hasText(filePath)) {
-                            contextBuilder.setValidationScriptResource(FileUtils.getResourceFromFilePath(filePath));
+                            context = new ScriptValidationContext(FileUtils.getResourceFromFilePath(filePath), type);
                         } else {
-                            contextBuilder.setValidationScript(DomUtils.getTextValue(scriptElement));
+                            context = new ScriptValidationContext(DomUtils.getTextValue(scriptElement), type);
                         }
                     }
                 }
             }
         }
         
-        return contextBuilder;
+        return context;
     }
 
     /**

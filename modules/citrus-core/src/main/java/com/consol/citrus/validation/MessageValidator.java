@@ -23,7 +23,6 @@ import org.springframework.integration.core.Message;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 
 /**
  * Message validator interface. Message validation need specific information like
@@ -36,12 +35,12 @@ public interface MessageValidator<T extends ValidationContext> {
     /**
      * Validates a message with given test context and validation context.
      * @param receivedMessage the message to validate.
-     * @param context the current test context
-     * @param validationContextBuilders validation context builders.
+     * @param context the current test context.
+     * @param validationContexts list of available validation contexts.
      */
     public void validateMessage(Message<?> receivedMessage, 
                                 TestContext context, 
-                                List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders) 
+                                List<ValidationContext> validationContexts) 
                                 throws ValidationException;
     
     /**
@@ -56,11 +55,10 @@ public interface MessageValidator<T extends ValidationContext> {
                                 throws ValidationException;
     
     /**
-     * Returns the validation context required for this validators validation mechanism.
-     * @return the validation context type.
+     * Returns the validation context required for this validator implementation.
+     * @return the validation context.
      */
-    public T createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, 
-                                     TestContext context);
+    public T findValidationContext(List<ValidationContext> validationContexts);
     
     /**
      * Checks if this message validator is capable of this message type. XML message validators may only apply to this message

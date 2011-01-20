@@ -18,6 +18,9 @@ package com.consol.citrus.validation;
 
 import org.springframework.integration.core.Message;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 
 
@@ -29,6 +32,9 @@ import com.consol.citrus.validation.context.ValidationContext;
  * @author Christoph Deppisch
  */
 public class ControlMessageValidationContext implements ValidationContext {
+    /** Builder constructing a control message */
+    private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
+    
     /** Control message */
     private Message<?> controlMessage;
     
@@ -41,9 +47,23 @@ public class ControlMessageValidationContext implements ValidationContext {
 
     /**
      * Get the control message.
+     * @param context the current test context.
      * @return the controlMessage
      */
-    public Message<?> getControlMessage() {
+    public Message<?> getControlMessage(TestContext context) {
+        if (controlMessage == null) {
+            controlMessage = messageBuilder.buildMessageContent(context);
+        }
+        
         return controlMessage;
     }
+    
+    /**
+     * Sets the control message builder.
+     * @param messageBuilder the messageBuilder to set
+     */
+    public void setMessageBuilder(MessageContentBuilder<?> messageBuilder) {
+        this.messageBuilder = messageBuilder;
+    }
+   
 }

@@ -31,7 +31,6 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
@@ -53,11 +52,12 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      */
     public void validateMessage(Message<?> receivedMessage, TestContext context,
             ControlMessageValidationContext validationContext) {
+        
         // validate message payload first
-        validateMessagePayload(receivedMessage, validationContext.getControlMessage(), context);
+        validateMessagePayload(receivedMessage, validationContext.getControlMessage(context), context);
         
         // validate message headers
-        validateMessageHeader(validationContext.getControlMessage().getHeaders(), 
+        validateMessageHeader(validationContext.getControlMessage(context).getHeaders(), 
                 receivedMessage.getHeaders(), 
                 context);
     }
@@ -153,16 +153,14 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * available context builder implementations searching for an accountable builder supporting
      * {@link ControlMessageValidationContext}. 
      */
-    public ControlMessageValidationContext createValidationContext(
-            List<ValidationContextBuilder<? extends ValidationContext>> builders,
-            TestContext context) {
-        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
-            if (validationContextBuilder.supportsValidationContextType(ControlMessageValidationContext.class)) {
-                return (ControlMessageValidationContext) validationContextBuilder.buildValidationContext(context);
+    public ControlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        for (ValidationContext validationContext : validationContexts) {
+            if (validationContext instanceof ControlMessageValidationContext) {
+                return (ControlMessageValidationContext) validationContext;
             }
         }
         
-        return new ControlMessageValidationContext();
+        return null;
     }
     
     /**

@@ -46,7 +46,6 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -92,17 +91,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
                 validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
                 
-                if (validationContext.getControlMessage() != null) {
-                    validateMessagePayload(receivedMessage, validationContext);
+                if (validationContext.getControlMessage(context) != null) {
+                    validateMessagePayload(receivedMessage, validationContext, context);
                 }
                 
                 validateMessageElements(receivedMessage, validationContext, context);
             } else {
-                Assert.isTrue(!StringUtils.hasText(validationContext.getControlMessage().getPayload().toString()),
+                Assert.isTrue(!StringUtils.hasText(validationContext.getControlMessage(context).getPayload().toString()),
                         "Missing message payload data but was empty");
             }
             
-            validateMessageHeader(validationContext.getControlMessage().getHeaders(), 
+            validateMessageHeader(validationContext.getControlMessage(context).getHeaders(), 
                     receivedMessage.getHeaders(), context);
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
@@ -324,13 +323,13 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext) {
-        if(!(validationContext.getControlMessage().getPayload() instanceof String)) {
+    private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext, TestContext context) {
+        if(!(validationContext.getControlMessage(context).getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
-                    "but was " + validationContext.getControlMessage().getPayload().getClass());
+                    "but was " + validationContext.getControlMessage(context).getPayload().getClass());
         }
         
-        String controlMessagePayload = validationContext.getControlMessage().getPayload().toString();
+        String controlMessagePayload = validationContext.getControlMessage(context).getPayload().toString();
 
         if(!StringUtils.hasText(controlMessagePayload)) { return; }
 
@@ -606,7 +605,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private boolean isAttributeIgnored(Node elementNode, Node attributeNode, 
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
-        Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
+        Set<String> ignoreMessageElements = validationContext.getIgnoreExpressions();
 
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
@@ -662,7 +661,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private boolean isNodeIgnored(final Node node, XmlMessageValidationContext validationContext,
             NamespaceContext namespaceContext) {
-        Set<String> ignoreMessageElements = validationContext.getIgnoreMessageElements();
+        Set<String> ignoreMessageElements = validationContext.getIgnoreExpressions();
 
         if (CollectionUtils.isEmpty(ignoreMessageElements)) {
             return false;
@@ -712,10 +711,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /**
      * Returns the needed validation context for this validation mechanism.
      */
-    public XmlMessageValidationContext createValidationContext(List<ValidationContextBuilder<? extends ValidationContext>> builders, TestContext context) {
-        for (ValidationContextBuilder<? extends ValidationContext> validationContextBuilder : builders) {
-            if (validationContextBuilder.supportsValidationContextType(XmlMessageValidationContext.class)) {
-                return (XmlMessageValidationContext)validationContextBuilder.buildValidationContext(context);
+    public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        for (ValidationContext validationContext : validationContexts) {
+            if (validationContext instanceof XmlMessageValidationContext) {
+                return (XmlMessageValidationContext) validationContext;
             }
         }
         

@@ -16,7 +16,9 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
 
 import java.util.*;
 
@@ -35,8 +37,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.context.ValidationContextBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContextBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -75,20 +76,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -107,20 +107,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://testsuite'>"
                         + "<ns2:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns2:sub-element attribute='A'>text-value</ns2:sub-element>"
                         + "</ns2:element>" 
                     + "</ns2:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -139,20 +138,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -171,20 +169,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -203,20 +200,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
 
@@ -235,20 +231,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -267,20 +262,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
                     + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                     + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                     + "</ns1:element>" 
                 + "</ns1:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -299,20 +293,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<sub-element attribute='A'>text-value</sub-element>"
                             + "</element>" 
                         + "</root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -331,20 +324,19 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/wrong'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
                         + "</ns1:root>");
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -363,8 +355,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -374,14 +366,13 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -400,8 +391,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
@@ -411,14 +402,13 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -437,8 +427,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -449,14 +439,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -475,8 +464,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -488,14 +477,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -514,8 +502,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -525,14 +513,13 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://testsuite/wrong");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -551,8 +538,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
@@ -562,14 +549,13 @@ public class NamespaceTest extends AbstractBaseTest {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -588,8 +574,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -600,14 +586,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("", "http://testsuite/default/wrong");
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -626,8 +611,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -639,14 +624,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -665,8 +649,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -678,14 +662,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("nswrong", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -704,8 +687,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
@@ -717,14 +700,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -743,8 +725,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -756,14 +738,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -782,8 +763,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -796,14 +777,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         expectedNamespaces.put("ns4", "http://testsuite/ns4");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -822,8 +802,8 @@ public class NamespaceTest extends AbstractBaseTest {
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -835,14 +815,13 @@ public class NamespaceTest extends AbstractBaseTest {
         expectedNamespaces.put("ns1", "http://testsuite/ns1");
         expectedNamespaces.put("ns2", "http://testsuite/ns2");
         
-        contextBuilder.setControlNamespaces(expectedNamespaces);
+        validationContext.setControlNamespaces(expectedNamespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -867,21 +846,20 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://testsuite/default");
         
-        contextBuilder.setNamespaces(namespaces);
+        validationContext.setNamespaces(namespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -906,21 +884,20 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://testsuite/default");
         
-        contextBuilder.setNamespaces(namespaces);
+        validationContext.setNamespaces(namespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
     
@@ -945,21 +922,20 @@ public class NamespaceTest extends AbstractBaseTest {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContextBuilder contextBuilder = new XmlMessageValidationContextBuilder();
-        contextBuilder.setMessageBuilder(controlMessageBuilder);
-        contextBuilder.setPathValidationExpressions(validateMessageElements);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://testsuite/wrong");
         
-        contextBuilder.setNamespaces(namespaces);
+        validationContext.setNamespaces(namespaces);
         
-        contextBuilder.setSchemaValidation(false);
+        validationContext.setSchemaValidation(false);
         
-        List<ValidationContextBuilder<? extends ValidationContext>> validationContextBuilders = 
-            new ArrayList<ValidationContextBuilder<? extends ValidationContext>>();
-        validationContextBuilders.add(contextBuilder);
-        receiveMessageBean.setValidationContextBuilders(validationContextBuilders);
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
     }
 }
