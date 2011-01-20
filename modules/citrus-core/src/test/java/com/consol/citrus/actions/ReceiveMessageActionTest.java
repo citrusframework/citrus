@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractBaseTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -1374,7 +1375,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         receiveAction.setValidator(new GroovyXmlMessageValidator());
         
         ScriptValidationContext validationContext = new ScriptValidationContext("assert root.Message.name() == 'Message'\n" + 
-                "assert root.Message.text() == 'Hello World!'", GroovyXmlMessageValidator.GROOVY_SCRIPT_TYPE);
+                "assert root.Message.text() == 'Hello World!'", ScriptTypes.GROOVY);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1401,7 +1402,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 
         receiveAction.setValidator(new GroovyXmlMessageValidator());
         ScriptValidationContext validationContext = new ScriptValidationContext(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class), 
-                GroovyXmlMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1458,7 +1459,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         
         validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(GroovyXmlMessageValidator.GROOVY_SCRIPT_TYPE);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext();
         validationContexts.add(scriptValidationContext);
 
         receiveAction.setValidationContexts(validationContexts);

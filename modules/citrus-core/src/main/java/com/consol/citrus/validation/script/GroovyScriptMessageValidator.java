@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 
@@ -53,9 +54,6 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     
     /** Static code snippet for groovy script validation */
     private Resource scriptTemplateResource;
-    
-    /** This is the supported script type for this message validator */
-    public static final String GROOVY_SCRIPT_TYPE = "groovy";
     
     /**
      * Default constructor using default script template.
@@ -121,7 +119,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     public ScriptValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (validationContext instanceof ScriptValidationContext) {
-                if (((ScriptValidationContext)validationContext).getScriptType().equals(GROOVY_SCRIPT_TYPE)) {
+                if (((ScriptValidationContext)validationContext).getScriptType().equals(ScriptTypes.GROOVY)) {
                     return (ScriptValidationContext) validationContext;
                 }
             }

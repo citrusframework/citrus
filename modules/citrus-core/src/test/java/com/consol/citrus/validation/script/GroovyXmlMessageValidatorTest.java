@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
@@ -52,7 +53,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text.text() == 'Hello TestFramework'";
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -68,7 +69,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")";
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -81,7 +82,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
                         "assert root.Text == 'Hello Citrus'"; //should fail
                         
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         
         try {
             validator.validateMessage(message, context, validationContext);
@@ -99,7 +100,7 @@ public class GroovyXmlMessageValidatorTest extends AbstractBaseTest {
     public void testEmptyValidationScript() {
         String validationScript = "";
         ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         
         validator.validateMessage(message, context, validationContext);
     }

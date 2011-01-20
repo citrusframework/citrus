@@ -33,8 +33,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractBaseTest;
-import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
@@ -659,7 +659,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
         		"assert rows[0].ORDERTYPE == 'small'\n" +
         		"assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+        		ScriptTypes.GROOVY);
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
@@ -704,7 +704,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
                 "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']\n" +
                 "assert rows[1].ID == '1'\n" +
                 "assert rows[3].NAME == 'error3'\n",
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
@@ -728,7 +728,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         
         ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
                 "assert rows[0] == [ORDERTYPE:'big', STATUS:'in_progress']",
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         try {
@@ -766,7 +766,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
                 "assert rows[0].ORDERTYPE == 'small'\n" +
                 "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
-                GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE);
+                ScriptTypes.GROOVY);
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);

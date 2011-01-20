@@ -25,21 +25,21 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
 
 /**
- * Base abstract implementation for message validators.
+ * Base abstract implementation for message validators. Calls method to finds a proper validation context
+ * in the list of available validation contexts and performs validation.
  * 
  * @author Christoph Deppisch
  */
 public abstract class AbstractMessageValidator<T extends ValidationContext> implements MessageValidator<T> {
 
     /**
-     * Try to build proper validation context and perform message validation.
+     * Try to find proper validation context in list and perform message validation.
      */
     public void validateMessage(Message<?> receivedMessage, TestContext context,
-            List<ValidationContext> validationContexts)
-            throws ValidationException {
+            List<ValidationContext> validationContexts) throws ValidationException {
         T validationContext = findValidationContext(validationContexts);
         
-        // check if we were able to construct a proper validation context
+        // check if we were able to find a proper validation context
         if (validationContext != null) {
             validateMessage(receivedMessage, context, validationContext);
         }

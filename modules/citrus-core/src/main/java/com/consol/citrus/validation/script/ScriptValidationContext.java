@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 
@@ -39,22 +40,18 @@ public class ScriptValidationContext implements ValidationContext {
     private String validationScript = "";
     
     /** Type indicating which type of script we use (e.g. groovy, scala etc.) */
-    private String scriptType;
+    private String scriptType = ScriptTypes.GROOVY;
 
     /**
-     * Constructor just using test context as field.
-     * @param scriptType
-     * @param context
+     * Default constructor.
      */
-    public ScriptValidationContext(String scriptType) {
-        this.scriptType = scriptType;
+    public ScriptValidationContext() {
     }
     
     /**
      * Constructor using validation script resource.
      * @param validationScriptResource
      * @param scriptType
-     * @param context
      */
     public ScriptValidationContext(Resource validationScriptResource, String scriptType) {
         super();
@@ -66,7 +63,6 @@ public class ScriptValidationContext implements ValidationContext {
      * Constructor using validation script.
      * @param validationScript
      * @param scriptType
-     * @param context
      */
     public ScriptValidationContext(String validationScript, String scriptType) {
         super();

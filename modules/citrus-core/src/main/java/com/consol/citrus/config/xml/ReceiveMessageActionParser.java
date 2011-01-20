@@ -342,7 +342,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
      * @return
      */
     private ScriptValidationContext getScriptValidationContext(Element element) {
-        ScriptValidationContext context = null;
+        ScriptValidationContext context = new ScriptValidationContext();
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         

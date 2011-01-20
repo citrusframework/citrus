@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.script.*;
 
 /**
@@ -68,7 +69,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
             ScriptValidationContext validationContext, TestContext context)
             throws ValidationException {
         // only validate if groovy script type is set
-        if (validationContext.getScriptType().equals(GroovyScriptMessageValidator.GROOVY_SCRIPT_TYPE)) {
+        if (validationContext.getScriptType().equals(ScriptTypes.GROOVY)) {
             try {
                 String validationScript = validationContext.getValidationScript(context);
                 
