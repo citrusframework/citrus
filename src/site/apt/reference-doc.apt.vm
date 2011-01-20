@@ -10,23 +10,15 @@ Documentation
     
     * {{{./tutorials.html}Tutorials}}
     
+    * {{{./apidocs/index.html}Java API}}
+    
+    * {{{./xref/index.html}Java Xref Sources}}
+    
     []
     
     <<Latest snapshot release>>: ${project.version}
     
     * Reference: {{{./reference/html_single/index.html}HTML}} | {{{./reference/html/index.html}HTML (multipage)}} | {{{./reference/pdf/citrus-reference.pdf}PDF}}
-        
-    * API (Javadoc)
-        
-        * {{{./modules/citrus-core/apidocs/index.html}citrus-core}}
-        
-        * {{{./modules/citrus-http/apidocs/index.html}citrus-http}}
-        
-        * {{{./modules/citrus-adapter/apidocs/index.html}citrus-adapter}}
-        
-        * {{{./modules/citrus-ws/apidocs/index.html}citrus-ws}}
-        
-        * {{{./modules/citrus-tibco/apidocs/index.html}citrus-tibco}}
     
     []
     

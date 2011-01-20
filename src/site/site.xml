@@ -24,8 +24,6 @@
     <menu name="Citrus">
       <item name="Welcome" href="${site.url}/index.html"/>
       <item name="Introduction" href="${site.url}/introduction.html"/>
-      <item name="Project Information" href="${site.url}/project-info.html"/>
-      <item name="Project Reports" href="${site.url}/project-reports.html"/>
       <item name="Changes" href="${site.url}/changes-report.html"/>
     </menu>
     
@@ -60,16 +58,12 @@
     </menu>
 
     <menu name="Development">
+      <item name="Team" href="${site.url}/team-list.html"/>
       <item name="Quickstart" href="${site.url}/quickstart.html"/>
-      <item name="Sources" href="http://github.com/christophd/citrus"/>
+      <item name="Sources" href="${site.url}/source-repository.html"/>
       <item name="Contributing" href="${site.url}/contributing.html"/>
       <item name="Conventions" href="${site.url}/conventions.html"/>
-      <item name="Modules" href="${site.url}/modules-introduction.html">
-        <item name="Core" href="${site.url}/modules/citrus-core/project-reports.html"/>
-        <item name="Http" href="${site.url}/modules/citrus-http/project-reports.html"/>
-        <item name="SOAP" href="${site.url}/modules/citrus-ws/project-reports.html"/>
-        <item name="TIBCO" href="${site.url}/modules/citrus-tibco/project-reports.html"/>
-      </item>
+      <item name="Modules" href="${site.url}/modules-introduction.html"/>
     </menu>
     
     <menu name="Commercial services">
