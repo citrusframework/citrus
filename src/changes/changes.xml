@@ -59,9 +59,6 @@
           #308 Maven plugin for test generation from WSDL and XSD
         </action>
         <action dev="christophd" type="add">
-          #333 Dynamic SOAP endpoint uri resolver
-        </action>
-        <action dev="christophd" type="add">
           #334 Dynamic Http endpoint uri resolver
         </action>
         <action dev="christophd" type="add">

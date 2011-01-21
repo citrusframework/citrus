@@ -45,6 +45,12 @@ INSTALLATION
   * Read the Maven2 tutorial to find out how to integrate the Citrus tests 
     into the Maven2 build lifecycle
 
+RELEASE NOTES
+
+Each release comes with a complete reference documentation. At the beginning of
+the reference you will find a section about the changes and notes for this release. For detailed 
+description of changed packages and classes do also consult the provided javadoc.
+
 RESOURCES
 
   * Citrus's source repository is hosted on github.com. You can clone the

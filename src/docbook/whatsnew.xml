@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="whatsnew">
+  <title>What's new?!</title>
+
+  <para>With this release Citrus introduces some new features and changes that will be part of the following sections. You
+  will get a short overview and particularly get the impression what new stuff you can add to your testing with this release.</para>
+  
+  <section id="whatsnew-groovy">
+    <title>New groovy features</title>
+
+    <para>Citrus extended the possibilities to work with script languages like Groovy. You can use Groovy's MarkupBuilder to create 
+    XML message payloads. Your Groovy code goes right into the test case or comes from external file. With MarkupBuilder you
+    do not need to care about XML message syntax and overhead. Just focus on the pure message content. You can read the details in 
+    <xref linkend="groovy-markupbuilder"/>.</para>
+    
+    <para>Further Groovy feature goes to the validation capabilities. Instead of working with XML DOM tree comparison and XPath expression validation you
+    can use Groovy XMLSlurper. This is very useful for those of you who need to do complex message validation and do not like the XML/XPath syntax at all. With
+    XMLSlurper you can access the XML DOM tree via named closure operations which feels great. This especially comes in handy for complex generic XML structures
+    as you can search for elements, sort element list and use the powerful contains operation. This is all described in <xref linkend="groovy-xmlslurper"/>.</para>
+    
+    <para>Some other Groovy support extension comes in SQL result set validation (<xref linkend="actions-database-groovy"/>). When reading data from the database someone is able to validation the
+    resulting data row set with Groovy script. The script code easily accesses the rows and columns with Groovy's out-of-the-box list and map handling. This
+    adds very powerful validation to multi-row data sets from the database.</para>
+  </section>
+  
+  <section id="whatsnew-sql">
+    <title>SQL multi-line result set validation</title>
+    
+    <para>In this new Citrus version the tester can validate SQL Query results that have multiple rows. In the past Citrus could only handle a single row in the
+    result set. Now this new release brings light into the dark. See also the new Groovy SQL result set validation which fits brilliant for complex multi-row 
+    SQL result set validation. The details can be found in <xref linkend="actions-database-query"/></para>
+  </section>
+  
+  <section id="whatsnew-message-types">
+    <title>Extended message format support</title>
+    
+    <para>In previous versions Citrus was primary designed to handle XML message payloads. With this new release Citrus is also able to work with other message formats
+    such as JSON, CSV, PLAINTEXT. This applies to sending messages as well as receiving and particularly validating message payloads. The tester can specify several message
+    validators in Citrus for different message formats. According to the expected message format the proper validator is chosen to perform the message validation.</para>
+    
+    <para>We have implemented a JSON message validator capable of ignoring specific JSON entries and handling JSONArrays. We also provide a plain text message validator which
+    is very basic to be honest. The framework is ready to receive new validator implementations so you can add custom validators for your specific needs.</para>
+  </section>
+  
+  <section id="whatsnew-xml">
+    <title>New XML features</title>
+    
+    <para>XML namespace handling is tedious expecially if you have to deal with a lot of XPath expressions in your tests. Before you had need to specify a namespace
+    context for the XPath expression every time you use them in your test - now you can have a central namespace context which declares namespaces you use in your project.
+    These namespaces identified by some prefix are available throughout the test project which is much more maintainable and easy to use. See how it works in 
+    <xref linkend="xpath-namespace"/>.</para>
+  </section>
+  
+  <section id="whatsnew-soap">
+    <title>SOAP support improvements</title>
+    
+    <para>WsAddressing standard is now supported in Citrus (<xref linkend="soap-ws-adressing"/>). This means you can declare the specific WsAddressing message headers on message 
+    sender level in order to send messages with WsAddressing feature. The header is constructed automatically for all SOAP messages that are sent over the message sender.</para>
+    
+    <para>Dynamic SOAP endpoint uri resolver enables you to dynamically address SOAP endpoints during a test. Sometimes a message sender may dynamically have to change the SOAP
+    url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for 
+    dynamic endpoint resolving was added to <xref linkend="soap-sender"/></para>
+    
+    <para>Some really small change introduced with this release is the fact that Citrus now logs SOAP messages in their pure nature. This means that you can see the complete SOAP 
+    envelope of messages in the Citrus log files. This is more than helpful when searching for errors inside your test case.</para>
+  </section>
+  
+  <section id="whatsnew-bugfixes">
+    <title>Bugfixes</title>
+    
+    <para>As usual we have some bugs fixed during the daily work. So we are proud that we have found some issues and resolved them to make the framework a little bit better. For detailed
+    bugfix listings refer to the complete changes log.</para>
+  </section>
+  
+  <section id="whatsnew-upgrading">
+    <title>Upgrading from version 1.1</title>
+    
+    <para>If you are coming from Citrus 1.1 final you may have to look at the following points.</para>
+    
+    <itemizedlist mark="opencircle">
+        <listitem>
+            <para>Renamed packages and classes: We try to keep rename operations to a minimum, as we know that this may cause some adjustments in your code that directly uses the Citrus
+            classes. But sometimes names do change in order to reach consistency and avoid cyclic dependencies. So with this release some classes have moved some were renamed. This mostly applies
+            to the validation classes as we have changed the model here in order to enable validation of message formats other than pure XML.</para>
+        </listitem>
+        <listitem>
+            <para>Message validator: You need to specify at least one message validator in the citrus-context.xml. Before this was internally a static XML message validator, but now we offer
+            different validators for several message formats like XML and JSON. Please see the Java API doc on MessageValidator interface for available implementations. If you just like to 
+            keep it as it was before add this bean to the citrus-context.xml:</para>
+            
+            <programlisting>&lt;bean id=&quot;xmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;/&gt;</programlisting>
+        </listitem>
+        <listitem>
+            <para>JUnit vs. TestNG: We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add
+            either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies
+            are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your 
+            project if you use ANT instead.</para>
+        </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

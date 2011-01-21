@@ -4,12 +4,20 @@
  
 Download Citrus
 
-  Citrus ${project.version} is the latest stable release. Citrus may also come as snapshot version that is always kept up to date with the latest changes and bugfixes.
-  Have a look at those snapshot releases and help us test and verify the latest changes!
+  Citrus 1.2.M1 is the latest stable release representing the first milestone of version 1.2. You may also go for the snapshot version 
+  which is always up to date with the latest changes and bugfixes. All available versions and production releases are listed below:
   
-  <<Latest snapshot release>>: ${project.version}
+  <<Upcoming production release>>: 1.2
   
-  The snapshot release keeps you up-to-date with the latest changes.
+  The milestone releases provide stable versions with the latest changes for the upcoming Citrus version.
+  
+  * citrus-1.2.M1-with-dependencies ({{{./dist/citrus-1.2.M1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2.M1-with-dependencies.tar.gz}tar.gz}})
+  
+  * citrus-1.2.M1-src ({{{./dist/citrus-1.2.M1-src.zip}zip}}/{{{./dist/citrus-1.2.M1-src.tar.gz}tar.gz}})
+  
+  []
+  
+  The frequent snapshot release keeps you up-to-date with the latest changes and bufixes.
   
   * citrus-${project.version}-with-dependencies ({{{./dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{./dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
   
@@ -17,7 +25,7 @@ Download Citrus
   
   []
 
-  <<Latest stable release>>: 1.1
+  <<Latest production release>>: 1.1
   
   Version 1.1 is the current stable release.
   
