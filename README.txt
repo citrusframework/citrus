@@ -66,7 +66,7 @@ SAMPLES
 
 LICENSING
   
-  Copyright 2006-2010 ConSol* Software GmbH.
+  Copyright 2006-2011 ConSol* Software GmbH.
  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
