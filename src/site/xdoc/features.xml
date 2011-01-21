@@ -3,6 +3,10 @@
   <properties>
     <title>Features</title>
   </properties>
+  <head>
+    <script type="text/javascript" src="js/idea.js"></script>
+    <script type="text/javascript" language="JavaScript" src="http://idea.informer.com/tabn2v3.js"></script>
+  </head>
   <body>
     <section name="Features">
       <p>
