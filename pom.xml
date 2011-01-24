@@ -608,7 +608,7 @@
         </site>
       </distributionManagement>
       <properties>
-        <site.url></site.url>
+        <site.url>http://www.citrusframework.org</site.url>
       </properties>
     </profile>
     
@@ -630,7 +630,7 @@
       <distributionManagement>
         <site>
           <id>site-citrus</id>
-          <url>scpexe://labs.consol.de/home/citrus/www/htdocs</url>
+          <url>scpexe://labs.consol.de/home/citrus/www/stage</url>
         </site>
       </distributionManagement>
       <properties>
