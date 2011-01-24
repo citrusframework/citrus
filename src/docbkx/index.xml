@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding="iso-8859-1" ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<book xmlns:xi="http://www.w3.org/2001/XInclude">
+    <bookinfo>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="citrus_logo.png" format="PNG" />
+            </imageobject>
+        </mediaobject>
+        <title>Citrus Framework - Reference Documentation</title>
+        <releaseinfo>1.2-SNAPSHOT</releaseinfo>
+        <authorgroup>
+            <author>
+                <firstname>Christoph</firstname>
+                <surname>Deppisch</surname>
+            </author>
+        </authorgroup>
+        <copyright>
+            <year>2010</year>
+            <holder>ConSol* Software GmbH</holder>
+        </copyright>
+    </bookinfo>
+    <toc/>
+    <xi:include href='preface.xml'/>
+    <xi:include href='whatsnew.xml'/>
+    <xi:include href='introduction.xml'/>
+    <xi:include href='setup.xml'/>
+    
+    <xi:include href='testcase.xml'/>
+    <xi:include href='run-config.xml'/>
+    <xi:include href='messaging.xml'/>
+    <xi:include href='actions.xml'/>
+    <xi:include href='templates.xml'/>
+    <xi:include href='containers.xml'/>
+    <xi:include href='finally-section.xml'/>
+    <xi:include href='xpath.xml'/>
+    <xi:include href='jms.xml'/>
+    <xi:include href='http.xml'/>
+    <xi:include href='soap-webservices.xml'/>
+    <xi:include href='message-channel.xml'/>
+    <xi:include href='functions.xml'/>
+    <xi:include href='testsuite.xml'/>
+    <xi:include href='tibco.xml'/>
+    <xi:include href='schema-validation.xml'/>
+    <xi:include href='meta-info.xml'/>
+    <xi:include href='debug-messages.xml'/>
+    <xi:include href='reporting.xml'/>
+    
+    <appendix id="samples">
+        <title>Citrus Samples</title>
+        
+        <para>This part will show you some sample applications that are tested using Citrus integration tests. 
+        See below a list of all samples.</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para><xref linkend="samples-flightbooking"/></para>
+            </listitem>
+        </itemizedlist>
+            
+        <xi:include href='samples-flightbooking.xml'/>
+    </appendix>
+</book>

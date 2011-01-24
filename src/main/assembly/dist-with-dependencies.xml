@@ -260,10 +260,6 @@
       <directory>target/doc/html</directory>
       <outputDirectory>docs/reference/html</outputDirectory>
     </fileSet>
-    <fileSet>
-      <directory>target/doc/html_single</directory>
-      <outputDirectory>docs/reference/htmlsingle</outputDirectory>
-    </fileSet>
     
     <!-- Source archives -->
     <fileSet>

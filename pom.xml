@@ -527,6 +527,47 @@
             <excludeSubProjects>false</excludeSubProjects>
           </configuration>
         </plugin>
+        
+        <plugin>
+          <groupId>com.agilejava.docbkx</groupId>
+          <artifactId>docbkx-maven-plugin</artifactId>
+          <version>2.0.7</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.docbook</groupId>
+              <artifactId>docbook-xml</artifactId>
+              <version>4.4</version>
+              <scope>runtime</scope>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate-html</goal>
+                <goal>generate-pdf</goal>
+              </goals>
+              <phase>process-resources</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <includes>index.xml</includes>
+            <xincludeSupported>true</xincludeSupported>
+            <tableBordersWithCss>true</tableBordersWithCss>
+            <imgSrcPath>images/</imgSrcPath>
+            <foCustomization>src/docbkx/styles/reference-pdf.xsl</foCustomization>
+            <htmlCustomization>src/docbkx/styles/reference-html.xsl</htmlCustomization>
+            <htmlStylesheet>css/reference.css</htmlStylesheet>
+            <!-- produce single-page html output -->
+            <chunkedOutput>false</chunkedOutput>
+            <highlightSource>1</highlightSource>
+            <entities>
+              <entity>
+                <name>version</name>
+                <value>${project.version}</value>
+              </entity>
+            </entities>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
@@ -572,7 +613,7 @@
     
     <!-- Distribution Management -->
     <profile>
-      <id>release-build</id>
+      <id>release-inhouse</id>
       <distributionManagement>
         <repository>
           <id>repository-consol-releases</id>
@@ -613,7 +654,7 @@
     </profile>
     
     <profile>
-      <id>site-build</id>
+      <id>site-inhouse</id>
       <distributionManagement>
         <site>
           <id>site-citrus</id>
@@ -639,62 +680,43 @@
     </profile>
     
     <profile>
-      <id>site-doc</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <id>generate-reference-doc</id>
-                <phase>pre-site</phase>
-                <configuration>
-                  <tasks>
-                    <ant antfile="${basedir}/build.xml">
-                      <target name="doc.all"/>
-                    </ant>
-                  </tasks>
-                </configuration>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>2.3</version>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <id>copy-doc-resources</id>
-                <phase>post-site</phase>
-                <configuration>
-                  <outputDirectory>${basedir}/target/site/reference</outputDirectory>
-                  <resources>          
-                    <resource>
-                      <directory>target/doc</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <profile>
       <id>site</id>
       <build>
         <plugins>
           <plugin>
+            <groupId>com.agilejava.docbkx</groupId>
+            <artifactId>docbkx-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>generate-html</goal>
+                  <goal>generate-pdf</goal>
+                </goals>
+                <phase>pre-site</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <postProcess>
+                <copy todir="${project.basedir}/target/site/reference">
+                  <fileset dir="${project.basedir}/target/docbkx">
+                    <include name="**/*.html" />
+                  </fileset>
+                </copy>
+                <copy todir="${project.basedir}/target/site/reference/html">
+                  <fileset dir="${project.basedir}/src/docbkx">
+                    <include name="**/*.css" />
+                    <include name="**/*.png" />
+                    <include name="**/*.gif" />
+                    <include name="**/*.jpg" />
+                  </fileset>
+                </copy>
+                <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" tofile="${project.basedir}/target/site/reference/pdf/citrus-reference.pdf" failonerror="false" />
+              </postProcess>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
+            <version>2.2</version>
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -919,24 +941,26 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <inherited>false</inherited>
-            <executions>
-              <execution>
-                <id>generate-reference-doc</id>
-                <phase>process-resources</phase>
-                <configuration>
-                  <tasks>
-                    <ant antfile="${basedir}/build.xml">
-                      <target name="doc.all"/>
-                    </ant>
-                  </tasks>
-                </configuration>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
+            <groupId>com.agilejava.docbkx</groupId>
+            <artifactId>docbkx-maven-plugin</artifactId>
+            <configuration>
+              <postProcess>
+                <copy todir="${project.basedir}/target/doc">
+                  <fileset dir="${project.basedir}/target/docbkx">
+                    <include name="**/*.html" />
+                  </fileset>
+                </copy>
+                <copy todir="${project.basedir}/target/doc/html">
+                  <fileset dir="${project.basedir}/src/docbkx">
+                    <include name="**/*.css" />
+                    <include name="**/*.png" />
+                    <include name="**/*.gif" />
+                    <include name="**/*.jpg" />
+                  </fileset>
+                </copy>
+                <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" tofile="${project.basedir}/target/doc/pdf/citrus-reference.pdf" failonerror="false" />
+              </postProcess>
+            </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
