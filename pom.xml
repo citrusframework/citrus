@@ -681,6 +681,8 @@
                 <id>html-reference-doc</id>
                 <configuration>
                   <imgSrcPath>images/</imgSrcPath>
+                  <admonGraphicsPath>images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy todir="${project.basedir}/target/site/reference">
                       <fileset dir="${project.basedir}/target/docbkx">
@@ -705,7 +707,9 @@
               <execution>
                 <id>pdf-reference-doc</id>
                 <configuration>
-                  <imgSrcPath>file:${basedir}/src/docbkx/images/</imgSrcPath>
+                  <imgSrcPath>file:///${basedir}/src/docbkx/images/</imgSrcPath>
+                  <admonGraphicsPath>file:///${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>file:///${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
                           tofile="${project.basedir}/target/site/reference/pdf/citrus-reference.pdf" failonerror="true" />
@@ -952,6 +956,8 @@
                 <id>html-reference-doc</id>
                 <configuration>
                   <imgSrcPath>images/</imgSrcPath>
+                  <admonGraphicsPath>images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy todir="${project.basedir}/target/doc">
                       <fileset dir="${project.basedir}/target/docbkx">
@@ -976,7 +982,9 @@
               <execution>
                 <id>pdf-reference-doc</id>
                 <configuration>
-                  <imgSrcPath>file:${basedir}/src/docbkx/images/</imgSrcPath>
+                  <imgSrcPath>file:///${basedir}/src/docbkx/images/</imgSrcPath>
+                  <admonGraphicsPath>file:///${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>file:///${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
                           tofile="${project.basedir}/target/doc/pdf/citrus-reference.pdf" failonerror="true" />

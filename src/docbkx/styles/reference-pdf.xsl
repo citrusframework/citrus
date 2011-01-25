@@ -35,7 +35,7 @@
                     <fo:table-row>
                         <fo:table-cell text-align="center">
                             <fo:block  padding-before="25mm">
-                                <fo:external-graphic src="file:src/docbkx/images/citrus_logo.png"/>
+                                <fo:external-graphic src="file:///home/citrus/citrus/src/docbkx/images/citrus_logo.png"/>
                             </fo:block>
                             <fo:block font-family="Helvetica" font-size="28pt" padding-before="30mm">
                                 <xsl:value-of select="bookinfo/subtitle"/> 
@@ -419,8 +419,6 @@
 
     <!-- Use images for callouts instead of (1) (2) (3) -->
     <xsl:param name="callout.graphics">1</xsl:param>
-    <xsl:param name="callout.graphics.path">src/docbkx/images/callouts/</xsl:param>
-    
     <!-- Place callout marks at this column in annotated areas -->
     <xsl:param name="callout.defaultcolumn">90</xsl:param>
 
@@ -430,7 +428,6 @@
 
     <!-- Use nice graphics for admonitions -->
     <xsl:param name="admon.graphics">'1'</xsl:param>
-    <xsl:param name="admon.graphics.path">src/docbkx/images/admons/</xsl:param>
                         
 <!--###################################################
                           Misc
