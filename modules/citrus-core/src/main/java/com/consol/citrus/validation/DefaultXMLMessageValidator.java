@@ -27,7 +27,7 @@ import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
- * Deprecated since version 1.2-SNAPSHOT
+ * Deprecated since version 1.2
  * TODO: Remove this class in major version update
  *
  * @author Christoph Deppisch
