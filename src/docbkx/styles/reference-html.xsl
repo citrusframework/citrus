@@ -89,7 +89,7 @@
     
     <xsl:template name="book.titlepage.separator">
         <hr/>
-        <img src="images/citrus_logo.png" style="width:25%;float:right;"/>
+        <img src="images/citrus_logo.jpg" style="width:25%;float:right;"/>
     </xsl:template>
     
     <xsl:template match="author" mode="titlepage.mode">
