@@ -16,7 +16,7 @@ Documentation
     
     []
     
-    <<Latest snapshot release>>: ${project.version}
+    <<Upcoming release>>: 1.2
     
     * Reference: {{{./reference/html/index.html}HTML}} | {{{./reference/pdf/citrus-reference.pdf}PDF}}
     
