@@ -103,11 +103,11 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" width="450px" scale="100" fileref="figure_006.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="figure_006.jpg" format="JPG" />
           </imageobject>
           
           <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_006.png" format="PNG" />
+            <imagedata align="center" display="block" fileref="figure_006.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
         
@@ -130,11 +130,11 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" width="450px" scale="100" fileref="figure_007.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="figure_007.jpg" format="JPG" />
           </imageobject>
           
           <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_007.png" format="PNG" />
+            <imagedata align="center" display="block" fileref="figure_007.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
         
@@ -193,11 +193,11 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" width="450px" scale="100" fileref="figure_008.png" format="PNG" />
+            <imagedata align="center" width="450px" scale="100" fileref="figure_008.jpg" format="JPG" />
           </imageobject>
           
           <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_008.png" format="PNG" />
+            <imagedata align="center" display="block" fileref="figure_008.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
         

@@ -72,11 +72,11 @@
         
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" display="block" fileref="figure_009.png" format="PNG" />
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
           </imageobject>
           
           <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_009.png" format="PNG" />
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
         

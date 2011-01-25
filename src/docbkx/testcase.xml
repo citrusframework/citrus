@@ -10,11 +10,11 @@
 
   <mediaobject>
     <imageobject role="fo">
-      <imagedata align="center" width="450px" scale="100" fileref="figure_004.png" format="PNG" />
+      <imagedata align="center" width="450px" scale="100" fileref="figure_004.jpg" format="JPG" />
     </imageobject>
     
     <imageobject role="html">
-      <imagedata align="center" display="block" fileref="figure_004.png" format="PNG" />
+      <imagedata align="center" display="block" fileref="figure_004.jpg" format="JPG" />
     </imageobject>
   </mediaobject>
     

@@ -547,6 +547,8 @@
             <foCustomization>src/docbkx/styles/reference-pdf.xsl</foCustomization>
             <htmlCustomization>src/docbkx/styles/reference-html.xsl</htmlCustomization>
             <htmlStylesheet>css/reference.css</htmlStylesheet>
+            <admonGraphicsExtension>jpg</admonGraphicsExtension>
+            <calloutGraphicsExtension>jpg</calloutGraphicsExtension>
             <!-- produce single-page html output -->
             <chunkedOutput>false</chunkedOutput>
             <highlightSource>1</highlightSource>
@@ -707,9 +709,9 @@
               <execution>
                 <id>pdf-reference-doc</id>
                 <configuration>
-                  <imgSrcPath>file:///${basedir}/src/docbkx/images/</imgSrcPath>
-                  <admonGraphicsPath>file:///${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
-                  <calloutGraphicsPath>file:///${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
+                  <imgSrcPath>${basedir}/src/docbkx/images/</imgSrcPath>
+                  <admonGraphicsPath>${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
                           tofile="${project.basedir}/target/site/reference/pdf/citrus-reference.pdf" failonerror="true" />
@@ -982,9 +984,9 @@
               <execution>
                 <id>pdf-reference-doc</id>
                 <configuration>
-                  <imgSrcPath>file:///${basedir}/src/docbkx/images/</imgSrcPath>
-                  <admonGraphicsPath>file:///${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
-                  <calloutGraphicsPath>file:///${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
+                  <imgSrcPath>${basedir}/src/docbkx/images/</imgSrcPath>
+                  <admonGraphicsPath>${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
+                  <calloutGraphicsPath>${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
                           tofile="${project.basedir}/target/doc/pdf/citrus-reference.pdf" failonerror="true" />

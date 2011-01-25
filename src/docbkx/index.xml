@@ -4,7 +4,7 @@
     <bookinfo>
         <mediaobject>
             <imageobject>
-                <imagedata fileref="citrus_logo.png" format="PNG" />
+                <imagedata fileref="citrus_logo.jpg" format="JPG" />
             </imageobject>
         </mediaobject>
         <title>Citrus Framework - Reference Documentation</title>

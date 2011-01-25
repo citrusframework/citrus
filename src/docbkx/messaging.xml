@@ -12,11 +12,11 @@
   
   <mediaobject>
     <imageobject role="fo">
-      <imagedata align="center" width="200px" scale="100" fileref="figure_001.png" format="PNG" />
+      <imagedata align="center" width="200px" scale="100" fileref="figure_001.jpg" format="JPG" />
     </imageobject>
     
     <imageobject role="html">
-      <imagedata align="center" display="block" fileref="figure_001.png" format="PNG" />
+      <imagedata align="center" display="block" fileref="figure_001.jpg" format="JPG" />
     </imageobject>
   </mediaobject>
   
@@ -27,11 +27,11 @@
   
   <mediaobject>
     <imageobject role="fo">
-      <imagedata align="center" width="450px" scale="100" fileref="figure_002.png" format="PNG" />
+      <imagedata align="center" width="450px" scale="100" fileref="figure_002.jpg" format="JPG" />
     </imageobject>
     
     <imageobject role="html">
-      <imagedata align="center" display="block" fileref="figure_002.png" format="PNG" />
+      <imagedata align="center" display="block" fileref="figure_002.jpg" format="JPG" />
     </imageobject>
   </mediaobject>
 
@@ -45,11 +45,11 @@
   
   <mediaobject>
     <imageobject role="fo">
-      <imagedata align="center" width="450px" scale="100" fileref="figure_003.png" format="PNG" />
+      <imagedata align="center" width="450px" scale="100" fileref="figure_003.jpg" format="JPG" />
     </imageobject>
     
     <imageobject role="html">
-      <imagedata align="center" display="block" fileref="figure_003.png" format="PNG" />
+      <imagedata align="center" display="block" fileref="figure_003.jpg" format="JPG" />
     </imageobject>
   </mediaobject>
   
@@ -279,11 +279,11 @@
     
     <mediaobject>
       <imageobject role="fo">
-        <imagedata align="center" display="block" fileref="figure_005.png" format="PNG" />
+        <imagedata align="center" display="block" fileref="figure_005.jpg" format="JPG" />
       </imageobject>
       
       <imageobject role="html">
-        <imagedata align="center" display="block" fileref="figure_005.png" format="PNG" />
+        <imagedata align="center" display="block" fileref="figure_005.jpg" format="JPG" />
       </imageobject>
     </mediaobject>
    

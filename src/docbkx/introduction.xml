@@ -43,11 +43,11 @@
     <para>
       <mediaobject>
         <imageobject role="fo">
-          <imagedata align="center" display="block" fileref="usage_sample.png" format="PNG" />
+          <imagedata align="center" display="block" fileref="usage_sample.jpg" format="JPG" />
         </imageobject>
         
         <imageobject role="html">
-          <imagedata align="center" display="block" fileref="usage_sample.png" format="PNG" />
+          <imagedata align="center" display="block" fileref="usage_sample.jpg" format="JPG" />
         </imageobject>
       </mediaobject>
     </para>
