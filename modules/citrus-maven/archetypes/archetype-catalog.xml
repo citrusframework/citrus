@@ -1,0 +1,12 @@
+<archetype-catalog xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0 http://maven.apache.org/xsd/archetype-catalog-1.0.0.xsd">
+  <archetypes>
+    <archetype>
+      <groupId>com.consol.citrus.mvn</groupId>
+      <artifactId>citrus-archetype</artifactId>
+      <version>1.2.M1</version>
+      <repository>http://labs.consol.de/maven/repository/</repository>
+      <description>Basic archetype for Citrus integration test project</description>
+    </archetype>
+  </archetypes>
+</archetype-catalog>
