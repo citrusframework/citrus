@@ -15,7 +15,7 @@
   </properties>
   
   <body>
-    <release version="1.2.M1" date="25.01.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="25.01.2011" description="Latest snapshot release">
         <action dev="christophd" type="add">
           #330 Groovy SQL result set validation
         </action>
