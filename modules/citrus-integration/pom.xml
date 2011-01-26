@@ -16,6 +16,14 @@
   <build>
     <plugins>
         <plugin>
+          <groupId>com.consol.citrus.mvn</groupId>
+          <artifactId>citrus-maven-plugin</artifactId>
+          <version>${project.version}</version>
+          <configuration>
+            <targetPackage>com.consol.citrus</targetPackage>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.5</version>
           <configuration>
