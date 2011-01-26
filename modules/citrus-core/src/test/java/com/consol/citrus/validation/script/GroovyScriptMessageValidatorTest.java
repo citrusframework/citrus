@@ -84,4 +84,23 @@ public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
         
         Assert.fail("Missing validation exception due to wrong value");
     }
+    
+    @Test
+    public void testTestContextSupport() throws ValidationException {
+        String validationScript = "context.setVariable('operation', 'unitTesting')\n" +
+                "context.setVariable('text', 'This is plain text!')";
+        
+        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
+                ScriptTypes.GROOVY);
+        
+        Assert.assertNull(context.getVariables().get("operation"));
+        Assert.assertNull(context.getVariables().get("text"));
+        
+        validator.validateMessage(message, context, validationContext);
+        
+        Assert.assertNotNull(context.getVariables().get("operation"));
+        Assert.assertNotNull(context.getVariables().get("text"));
+        Assert.assertTrue(context.getVariable("operation").equals("unitTesting"));
+        Assert.assertTrue(context.getVariable("text").equals("This is plain text!"));
+    }
 }
