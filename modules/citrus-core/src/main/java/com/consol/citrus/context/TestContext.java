@@ -74,13 +74,25 @@ public class TestContext {
      * @return value of the variable
      */
     public String getVariable(final String variableExpression) {
+        return getVariableObject(variableExpression).toString();
+    }
+    
+    /**
+     * Gets the value for the given variable as object representation.
+     * Use this method if you seek for test objects stored in the context.
+     * 
+     * @param variableExpression expression to search for.
+     * @throws CitrusRuntimeException
+     * @return value of the variable as object
+     */
+    public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
         
         if (!variables.containsKey(variableName)) {
             throw new CitrusRuntimeException("Unknown variable '" + variableName + "'");
         }
 
-        return (String)variables.get(variableName);
+        return variables.get(variableName);
     }
     
     /**
@@ -157,7 +169,7 @@ public class TestContext {
      * @param list having optional variable entries.
      * @return the constructed list without variable entries.
      */
-    public List<String> replaceVariablesInList(List<String> list) {
+    public List<String> replaceVariablesInList(final List<String> list) {
         List<String> variableFreeList = new ArrayList<String>(list.size());
 
         for (String entry : list) {
@@ -208,10 +220,12 @@ public class TestContext {
      * @param enableQuoting flag marking surrounding quotes should be added or not.
      * @return resulting string without any variable place holders.
      */
-    public String replaceDynamicContentInString(String str, boolean enableQuoting) {
-        str = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
-        str = FunctionUtils.replaceFunctionsInString(str, this, enableQuoting);
-        return str;
+    public String replaceDynamicContentInString(final String str, boolean enableQuoting) {
+        String result;
+        result = VariableUtils.replaceVariablesInString(str, this, enableQuoting);
+        result = FunctionUtils.replaceFunctionsInString(result, this, enableQuoting);
+        
+        return result;
     }
     
     /**
