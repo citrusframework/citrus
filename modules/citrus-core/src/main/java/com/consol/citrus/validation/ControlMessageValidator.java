@@ -53,11 +53,13 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
     public void validateMessage(Message<?> receivedMessage, TestContext context,
             ControlMessageValidationContext validationContext) {
         
+        Message<?> controlMessage = validationContext.getControlMessage(context);
+        
         // validate message payload first
-        validateMessagePayload(receivedMessage, validationContext.getControlMessage(context), context);
+        validateMessagePayload(receivedMessage, controlMessage, context);
         
         // validate message headers
-        validateMessageHeader(validationContext.getControlMessage(context).getHeaders(), 
+        validateMessageHeader(controlMessage.getHeaders(), 
                 receivedMessage.getHeaders(), 
                 context);
     }

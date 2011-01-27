@@ -19,8 +19,7 @@ package com.consol.citrus.validation;
 import org.springframework.integration.core.Message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.context.ValidationContext;
 
 
@@ -35,29 +34,25 @@ public class ControlMessageValidationContext implements ValidationContext {
     /** Builder constructing a control message */
     private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
     
-    /** Control message */
-    private Message<?> controlMessage;
-    
     /**
-     * @param controlMessage the controlMessage to set
-     */
-    public void setControlMessage(Message<?> controlMessage) {
-        this.controlMessage = controlMessage;
-    }
-
-    /**
-     * Get the control message.
+     * Gets the control message in particular builds the control message with 
+     * defined message builder implementation.
+     * 
      * @param context the current test context.
      * @return the controlMessage
      */
     public Message<?> getControlMessage(TestContext context) {
-        if (controlMessage == null) {
-            controlMessage = messageBuilder.buildMessageContent(context);
-        }
-        
-        return controlMessage;
+        return messageBuilder.buildMessageContent(context);
     }
     
+    /**
+     * Sets a static control message for this validation context.
+     * @param controlMessage the static control message.
+     */
+    public void setControlMessage(Message<?> controlMessage) {
+        messageBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
+    }
+
     /**
      * Sets the control message builder.
      * @param messageBuilder the messageBuilder to set

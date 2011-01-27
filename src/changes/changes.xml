@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="25.01.2011" description="Latest snapshot release">
+        <action dev="christophd" type="fix">
+          #350 Variable support in templates
+        </action>
         <action dev="christophd" type="add">
           #330 Groovy SQL result set validation
         </action>

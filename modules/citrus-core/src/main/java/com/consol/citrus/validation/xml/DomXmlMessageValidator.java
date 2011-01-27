@@ -83,6 +83,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         log.info("Start XML message validation");
         
         try {
+            Message<?> controlMessage = validationContext.getControlMessage(context);
+            
             // first check if payload is empty
             if (StringUtils.hasText(receivedMessage.getPayload().toString())) {
                 if(validationContext.isSchemaValidationEnabled()) {
@@ -92,17 +94,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
                 validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
                 
-                if (validationContext.getControlMessage(context) != null) {
+                if (controlMessage != null) {
                     validateMessagePayload(receivedMessage, validationContext, context);
                 }
                 
                 validateMessageElements(receivedMessage, validationContext, context);
             } else {
-                Assert.isTrue(!StringUtils.hasText(validationContext.getControlMessage(context).getPayload().toString()),
+                Assert.isTrue(!StringUtils.hasText(controlMessage.getPayload().toString()),
                         "Missing message payload data but was empty");
             }
             
-            validateMessageHeader(validationContext.getControlMessage(context).getHeaders(), 
+            validateMessageHeader(controlMessage.getHeaders(), 
                     receivedMessage.getHeaders(), context);
             log.info("XML tree validation finished successfully: All values OK");
         } catch (ClassCastException e) {
@@ -325,12 +327,14 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param context
      */
     private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext, TestContext context) {
-        if(!(validationContext.getControlMessage(context).getPayload() instanceof String)) {
+        Message<?> controlMessage = validationContext.getControlMessage(context);
+        
+        if(!(controlMessage.getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
-                    "but was " + validationContext.getControlMessage(context).getPayload().getClass());
+                    "but was " + controlMessage.getPayload().getClass());
         }
         
-        String controlMessagePayload = validationContext.getControlMessage(context).getPayload().toString();
+        String controlMessagePayload = controlMessage.getPayload().toString();
 
         if(!StringUtils.hasText(controlMessagePayload)) { return; }
 
