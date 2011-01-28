@@ -66,7 +66,7 @@ public final class PropertyUtils {
      * @param properties
      * @return
      */
-    public static String replacePropertiesInString(String line, Properties properties) {
+    public static String replacePropertiesInString(final String line, Properties properties) {
         StringBuffer newStr = new StringBuffer();
 
         boolean isVarComplete = false;

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Citrus Test Report</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <style type="text/css">
+            body { font-family: Verdana,Helvetica,Arial,sans-serif; font-size: 12px; text-align: left; margin-left: auto;
+            margin-right: auto; padding: 1% 1%; }
+            
+            table th { background-color: #EEEEEE; color: #555555; font-weight: bold; text-align: left; padding: 2px 4px; }
+            table td { background-color: #EEEEEE; width: 80px; padding: 2px 4px; }
+            
+            img#citrus-logo { width: 450px; }
+            div#report-content { margin-top: 5px; margin-left: 30px; width: 100%; }
+            
+            table#report-summary { margin-top: 20px; width: 600px; margin-left: 10px; }
+            table#report-summary th.title { background-color: #CCCCCC; font-size: 14px; font-weight: bold; }
+            table#report-summary tr.even th { background-color: #DDDDDD; }
+            table#report-summary tr.odd th { background-color: #EAEAEA; }
+            table#report-summary tr.even td { background-color: #DDDDDD; }
+            table#report-summary tr.odd td { background-color: #EAEAEA; }
+            
+            table#test-details { margin-left: 10px; margin-bottom: 20px; width: 95%; }
+            table#test-details tr th { padding: 2px 0 2px 10px; cursor: pointer; }
+            
+            span.tooltip { color: #555555; display: none; width: 350px; position: absolute;
+            background-color: #EAEAEA; border: 1px solid #333333; font-size: 11px; font-weight: normal; padding: 3px; }
+            span.tooltip i { display: block; text-decoration: underline; }
+            
+            table#test-details tr.success th { color: #009900; }
+            table#test-details tr.success td { color: #009900; }
+            table#test-details tr.skip th { color: #999999; text-decoration: line-through; }
+            table#test-details tr.skip td { color: #555555; }
+            table#test-details tr.failure th { color: #FF0000; }
+            table#test-details tr.failure td { color: #FF0000; }
+            div.error-detail { padding-left: 25px; color: #FF0000; }
+        </style>
+        <script type="text/javascript">            
+            var tooltipElement;
+            var delayer;
+            var delayTimeInMs = 800;
+            var cursorX;
+            var cursorY;
+            
+            function showTooltip(elementId, event) {
+                tooltipElement = document.getElementById(elementId);
+                cursorX = event.pageX ? event.pageX : window.event.clientX + document.documentElement.scrollLeft;
+                cursorY = event.pageY ? event.pageY : window.event.clientY + document.documentElement.scrollTop;
+                delayer = setTimeout('showTooltipDelayed();', delayTimeInMs);
+            }
+            
+            function showTooltipDelayed() {
+                tooltipElement.style.display = "block";
+                setTooltipPosition();
+            }
+            
+            function hideTooltip() {
+                clearTimeout(delayer);
+                tooltipElement.style.display = "none";
+            }
+            
+            function setTooltipPosition() {
+                if (tooltipElement != null && tooltipElement.style.display == "block") {
+                    var cursorPosLeft = cursorX + tooltipElement.offsetParent.scrollLeft - tooltipElement.offsetParent.offsetLeft;
+                    var cursorPosTop = cursorY + tooltipElement.offsetParent.scrollTop - tooltipElement.offsetParent.offsetTop;
+                    var tooltipCursorDistLeft = 20;
+                    var tooltipCursorDistTop = 10;
+                    var tooltipPosLeft = cursorPosLeft + tooltipCursorDistLeft;
+                    var tooltipPosTop = cursorPosTop + tooltipCursorDistTop
+                    var tooltipPosRight = tooltipPosLeft + tooltipElement.offsetWidth;
+                    var tooltipPosBottom = tooltipPosTop  + tooltipElement.offsetHeight;
+                    var windowWidth = window.innerWidth ? window.innerWidth + window.pageXOffset - 60 : document.documentElement.clientWidth + document.documentElement.scrollLeft - 40;
+                    var windowHeight = window.innerHeight ? window.innerHeight + window.pageYOffset - 150 : document.documentElement.clientHeight + document.documentElement.scrollTop -150;
+                    var newTooltipPosLeft = (tooltipPosRight > windowWidth) ? (tooltipPosLeft - (tooltipPosRight - windowWidth)) : tooltipPosLeft;
+                    var newTooltipPosTop = (tooltipPosBottom > windowHeight) ? (tooltipPosTop - (tooltipPosBottom - windowHeight)) : tooltipPosTop;
+                    tooltipElement.style.left = newTooltipPosLeft + "px";
+                    tooltipElement.style.top = newTooltipPosTop + "px";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="report-content">
+            <div><img id="citrus-logo" src="resources/citrus_logo.png" alt="Citrus"/></div>
+            <table id="report-summary">
+                <thead>
+                    <tr>
+                        <th class="title" colspan="2">Test summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="even">
+                        <th>Total Tests</th>
+                        <td>@test.cnt@</td>
+                    </tr>
+                    <tr class="odd">
+                        <th>Skipped Tests</th>
+                        <td>@skipped.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@skipped.test.pct@%</td>
+                    </tr>
+                    <tr class="even">
+                        <th>Failed Tests</th>
+                        <td>@failed.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@failed.test.pct@%</td>
+                    </tr>
+                    <tr class="odd">
+                        <th>Successful Tests</th>
+                        <td>@success.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@success.test.pct@%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h1>Tests results (@test.cnt@ Tests)</h1>
+            <table id="test-details"> 
+                <tbody> 
+                    @test.details@
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

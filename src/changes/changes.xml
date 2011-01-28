@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="25.01.2011" description="Latest snapshot release">
+        <action dev="philkom" type="add">
+          #314 HTML test report
+        </action>
         <action dev="christophd" type="add">
           #323 Citrus Maven archetype
         </action>

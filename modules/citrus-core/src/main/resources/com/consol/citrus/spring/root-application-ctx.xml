@@ -28,13 +28,14 @@
     <!-- Used for autowiring -->
     <context:annotation-config/>
     
+    <!-- Test listeners -->
     <bean class="com.consol.citrus.report.TestListeners"/>
-    
     <bean class="com.consol.citrus.report.TestSuiteListeners"/>
-    
-    <bean class="com.consol.citrus.report.LoggingReporter"/>
-    
     <bean class="com.consol.citrus.report.FailureStackTestListener"/>
+    
+    <!-- Default logging reporters -->    
+    <bean class="com.consol.citrus.report.LoggingReporter"/>
+    <bean class="com.consol.citrus.report.HtmlReporter"/>
     
     <bean class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
     
