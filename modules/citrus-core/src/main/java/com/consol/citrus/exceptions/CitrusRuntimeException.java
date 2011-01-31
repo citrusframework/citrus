@@ -16,7 +16,9 @@
 
 package com.consol.citrus.exceptions;
 
-import java.util.Stack;
+import java.util.*;
+
+import com.consol.citrus.report.FailureStackElement;
 
 /**
  * Basic custom runtime exception for all errors in Citrus
@@ -27,7 +29,7 @@ public class CitrusRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private Stack<String> failureStack = new Stack<String>();
+    private List<FailureStackElement> failureStack = new ArrayList<FailureStackElement>();
     
     /**
      * Default constructor.
@@ -72,8 +74,8 @@ public class CitrusRuntimeException extends RuntimeException {
     public String getFailureStackAsString() {
         StringBuilder builder = new StringBuilder();
         
-        for (String failureStackElement : getFailureStack()) {
-            builder.append("\n\t" + failureStackElement);
+        for (FailureStackElement failureStackElement : getFailureStack()) {
+            builder.append("\n\t" + failureStackElement.getStackMessage());
         }
         
         return builder.toString();
@@ -83,7 +85,7 @@ public class CitrusRuntimeException extends RuntimeException {
      * Sets the custom failure stack holding line number information inside test case.
      * @param failureStack
      */
-    public void setFailureStack(Stack<String> failureStack) {
+    public void setFailureStack(List<FailureStackElement> failureStack) {
         this.failureStack = failureStack;
     }
 
@@ -91,8 +93,14 @@ public class CitrusRuntimeException extends RuntimeException {
      * Gets the custom failure stack with line number information where the testcase failed.
      * @return the failureStack
      */
-    public Stack<String> getFailureStack() {
-        return failureStack;
+    public Stack<FailureStackElement> getFailureStack() {
+        Stack<FailureStackElement> stack = new Stack<FailureStackElement>();
+        
+        for (FailureStackElement failureStackElement : failureStack) {
+            stack.push(failureStackElement);
+        }
+        
+        return stack;
     }
 
 }

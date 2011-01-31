@@ -16,7 +16,7 @@
 
 package com.consol.citrus.util;
 
-import java.util.Stack;
+import java.util.*;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -30,6 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.report.FailureStackElement;
 
 /**
  * Utility class for test cases providing several utility 
@@ -55,15 +56,15 @@ public abstract class TestUtils {
      * @param test
      * @return
      */
-    public static Stack<String> getFailureStack(final TestCase test) {
-        final Stack<String> failureStack = new Stack<String>();
+    public static List<FailureStackElement> getFailureStack(final TestCase test) {
+        final List<FailureStackElement> failureStack = new ArrayList<FailureStackElement>();
         
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
             // first check if test failed during setup
             if (test.getLastExecutedAction() == null) {
-                failureStack.push("at " + testFilePath + "(init:0)");
+                failureStack.add(new FailureStackElement(testFilePath, "init", 0L));
                 // no actions were executed yet failure caused by test setup: abort
                 return failureStack;
             }
@@ -74,10 +75,17 @@ public abstract class TestUtils {
             XMLReader reader = factory.newSAXParser().getXMLReader();
             
             reader.setContentHandler(new DefaultHandler() {
-                //Locator providing actual line number information
+                /** Locator providing actual line number information */
                 private Locator locator;
-                //Failure stack finder
+                
+                /** Failure stack finder */
                 private FailureStackFinder stackFinder;
+                
+                /** Start/stop to listen for error line ending */
+                private boolean findLineEnding = false;
+                
+                /** The name of action which caused the error */
+                private String failedActionName;
                 
                 @Override
                 public void startElement(String uri, String localName,
@@ -92,7 +100,7 @@ public abstract class TestUtils {
                     
                     if(stackFinder != null) {
                         if(stackFinder.isFailureStackElement(qName)) {
-                            failureStack.push("at " + testFilePath + "(" + qName + ":" + locator.getLineNumber() + ")");
+                            failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
                             
                             if(stackFinder.getNestedActionContainer() != null && 
                                     stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
@@ -101,11 +109,26 @@ public abstract class TestUtils {
                             } else {
                                 //stop failure stack evaluation as failure-causing action was found
                                 stackFinder = null;
+                                
+                                //now start to find ending line number
+                                findLineEnding = true;
+                                failedActionName = qName;
                             }
                         }
                     }
                     
                     super.startElement(uri, localName, qName, attributes);
+                }
+                
+                @Override
+                public void endElement(String uri, String localName, String qName) throws SAXException {
+                    if (findLineEnding && qName.equals(failedActionName)) {
+                        // get last failure stack element
+                        FailureStackElement failureStackElement = failureStack.get(failureStack.size()-1);
+                        failureStackElement.setLineNumberEnd(Long.valueOf(locator.getLineNumber()));
+                        findLineEnding = false;
+                    }
+                    super.endElement(uri, localName, qName);
                 }
                 
                 @Override

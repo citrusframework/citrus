@@ -106,7 +106,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
                 reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
                 
                 if (result.getResult().equals(RESULT.FAILURE)) {
-                    if(result.getCause() != null && StringUtils.hasText(result.getCause().getMessage())) {
+                    if(result.getCause() != null) {
                         reportDetails.append(getStackTraceHtml(result.getCause()));
                     }
                 }
@@ -131,6 +131,73 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     }
 
     /**
+     * Gets the code section from test case XML which is responsible for the
+     * error.
+     * @param cause the error cause.
+     * @return
+     */
+    private String getCodeSnippetHtml(Throwable cause) {
+        StringBuilder codeSnippet = new StringBuilder();
+        BufferedReader reader = null;
+        
+        try {
+            if (cause instanceof CitrusRuntimeException) {
+                CitrusRuntimeException ex = (CitrusRuntimeException) cause;
+                if (!ex.getFailureStack().isEmpty()) {
+                    FailureStackElement stackElement = ex.getFailureStack().pop();
+                    if (stackElement.getLineNumberStart() > 0) {
+                        reader = new BufferedReader(new FileReader(
+                                new ClassPathResource(stackElement.getTestFilePath() + ".xml").getFile()));
+                        
+                        codeSnippet.append("<div class=\"code-snippet\">");
+                        codeSnippet.append("<h2 class=\"code-title\">" + stackElement.getTestFilePath() + ".xml</h2>");
+                        
+                        String line;
+                        String codeStyle;
+                        int lineIndex = 1;
+                        int snippetOffset = 5;
+                        while ((line = reader.readLine()) != null) {
+                            if (lineIndex >= stackElement.getLineNumberStart() - snippetOffset && 
+                                    lineIndex < stackElement.getLineNumberStart() || 
+                                    lineIndex > stackElement.getLineNumberEnd() && 
+                                    lineIndex <= stackElement.getLineNumberEnd() + snippetOffset) {
+                                codeStyle = "code";
+                            } else if (lineIndex >= stackElement.getLineNumberStart() && 
+                                    lineIndex <= stackElement.getLineNumberEnd()) {
+                                codeStyle = "code-failed";
+                            } else {
+                                codeStyle = "";
+                            }
+                            
+                            if (StringUtils.hasText(codeStyle)) {
+                                codeSnippet.append("<pre class=\"" + codeStyle +"\"><span class=\"line-number\">" + lineIndex + ":</span>" + 
+                                        line.replaceAll(">", "&gt;").replaceAll("<", "&lt;") + "</pre>");
+                            }
+                            
+                            lineIndex++;
+                            
+                        }
+                        
+                        codeSnippet.append("</div>");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("Failed to construct HTML code snippet", e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close test file", e);
+                }
+            }
+        }
+        
+        return codeSnippet.toString();
+    }
+
+    /**
      * Construct HTML code snippet for stack trace information.
      * @param cause the causing error.
      * @return
@@ -142,7 +209,9 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             stackTraceBuilder.append("\n\t at " + cause.getStackTrace()[i]);
         }
         
-        return "<tr><td colspan=\"2\"><div class=\"error-detail\"><pre>" + stackTraceBuilder.toString() + "</pre></div></td></tr>";
+        return "<tr><td colspan=\"2\">" +
+        		"<div class=\"error-detail\"><pre>" + stackTraceBuilder.toString() + 
+        		"</pre>" + getCodeSnippetHtml(cause) + "</div></td></tr>";
     }
 
 
