@@ -114,6 +114,39 @@
         <para>The advantage of variables is obvious. Once declared the variables can be referenced many times in
         the test. This makes it very easy to vary different test cases by adjusting the variables for different means (e.g. use different 
         error codes in test cases).</para>
+        
+        <para>You can also use a script to create variable values. This is extremely handy when you have very complex variable values.
+        Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the idea how that
+        works:</para>
+        
+        <programlisting>&lt;variables&gt;
+    &lt;variable name=&quot;avg&quot;&gt;
+        &lt;value&gt;
+            &lt;script type=&quot;groovy&quot;&gt;
+                &lt;![CDATA[
+                    a = 4
+                    b = 6
+                    return (a + b) / 2
+                ]]&gt;
+            &lt;/script&gt;
+        &lt;/value&gt;
+    &lt;/variable&gt;
+    &lt;variable name=&quot;sum&quot;&gt;
+        &lt;value&gt;
+            &lt;script type=&quot;groovy&quot;&gt;
+                &lt;![CDATA[
+                    5 + 5
+                ]]&gt;
+            &lt;/script&gt;
+        &lt;/value&gt;
+    &lt;/variable&gt;
+&lt;/variables&gt;</programlisting>
+        
+        <para>We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed 
+        within the script. For longer script code the use of <literal>&lt;![CDATA[ ]]&gt;</literal> sections is recommended.</para>
+        
+        <para>Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project. 
+        So you can add additional ScriptEngine implementations to your project and support other script types, too.</para>
     </section>
     
     <section id="testcase-global-variables">
@@ -159,7 +192,6 @@
         <programlisting>user=Citrus
 greeting=Hello ${user}!
 date=citrus:currentDate('yyyy-MM-dd')</programlisting>
-        
     </section>
     
     <section id="testcase-actions">

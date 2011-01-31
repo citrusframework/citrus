@@ -16,8 +16,11 @@
 
 package com.consol.citrus.variable;
 
+import javax.script.*;
+
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchVariableException;
 
 /**
@@ -31,6 +34,27 @@ public final class VariableUtils {
      * Prevent instantiation.
      */
     private VariableUtils() {
+    }
+    
+    /**
+     * Evaluates script code and returns a variable value as result.
+     *
+     * @param scriptEngine the name of the scripting engine.
+     * @param code the script code.
+     * @return the variable value as String.
+     */
+    public static String getValueFromScript(String scriptEngine, String code) {
+        try {
+            ScriptEngine engine = new ScriptEngineManager().getEngineByName(scriptEngine);
+            
+            if (engine == null) {
+                throw new CitrusRuntimeException("Unable to find script engine with name '" + scriptEngine + "'");
+            }
+            
+            return engine.eval(code).toString();
+        } catch (ScriptException e) {
+            throw new CitrusRuntimeException("Failed to evaluate " + scriptEngine + " script", e);
+        }
     }
     
     /**

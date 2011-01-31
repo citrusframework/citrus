@@ -27,16 +27,32 @@
             <echo>
                 <message>Current variable value: ${myVariable} </message>
             </echo>
+            
             <create-variables>
                 <variable name="myVariable" value="${newValue}"/>
                 <variable name="new" value="'this is a test'"/>
             </create-variables>
+            
             <echo>
                 <message>Current variable value: ${myVariable}</message>
             </echo>
             <echo>
                 <message>New variable 'new' has the value: ${new} </message>
             </echo>
+            
+            <create-variables>
+                <variable name="scriptVariable">
+                    <value>
+                        <script type="groovy">
+                            ${newValue} + 5
+                        </script>
+                    </value>
+                </variable>
+            </create-variables>
+            
+            <groovy>
+                assert ${scriptVariable} == 54326
+            </groovy>
         </actions>
     </testcase>
 </spring:beans>

@@ -16,10 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -49,7 +46,14 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
         List<?> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
         for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
             Element variable = (Element) iter.next();
-            variables.put(variable.getAttribute("name"), variable.getAttribute("value"));
+            Element variableValueElement = DomUtils.getChildElementByTagName(variable, "value");
+            if (variableValueElement == null) {
+                variables.put(variable.getAttribute("name"), variable.getAttribute("value"));
+            } else {
+                Element variableScript = DomUtils.getChildElementByTagName(variableValueElement, "script");
+                String scriptEngine = variableScript.getAttribute("type");
+                variables.put(variable.getAttribute("name"), "script:<" + scriptEngine + ">"  + variableScript.getTextContent());
+            }
         }
         beanDefinition.addPropertyValue("variables", variables);
 

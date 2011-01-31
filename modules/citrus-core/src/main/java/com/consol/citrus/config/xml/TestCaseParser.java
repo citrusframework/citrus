@@ -18,10 +18,7 @@ package com.consol.citrus.config.xml;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -35,6 +32,7 @@ import org.w3c.dom.Element;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Bean definition parser for test case.
@@ -111,7 +109,15 @@ public class TestCaseParser implements BeanDefinitionParser {
             List<?> variableElements = DomUtils.getChildElementsByTagName(testVariablesElement, "variable");
             for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
                 Element variableDefinition = (Element) iter.next();
-                testVariables.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
+                Element variableValueElement = DomUtils.getChildElementByTagName(variableDefinition, "value");
+                if (variableValueElement == null) {
+                	testVariables.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
+                } else {
+                	Element variableScript = DomUtils.getChildElementByTagName(variableValueElement, "script");
+                	String scriptEngine = variableScript.getAttribute("type");
+                	testVariables.put(variableDefinition.getAttribute("name"), VariableUtils.getValueFromScript(scriptEngine, 
+                	        variableScript.getTextContent()));
+                }
             }
             testcase.addPropertyValue("variableDefinitions", testVariables);
         }

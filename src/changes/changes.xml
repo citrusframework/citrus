@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="25.01.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="01.02.2011" description="Latest snapshot release">
+        <action dev="jblipphaus, christophd" type="add">
+          #317 Create variable from Groovy script
+        </action>
         <action dev="philkom" type="add">
           #314 HTML test report
         </action>

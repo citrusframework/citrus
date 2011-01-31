@@ -49,6 +49,12 @@ public class CreateVariablesAction extends AbstractTestAction {
         for (Entry<String, String> entry : newVariables.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
+            
+            if (value.startsWith("script:<")) {
+                String scriptEngine = value.substring("script:<".length(), value.indexOf('>'));
+                value = VariableUtils.getValueFromScript(scriptEngine, 
+                        context.replaceDynamicContentInString(value.substring(value.indexOf('>') + 1)));
+            }
 
             log.info("Try to set variable: " +  key + " to value " + value);
 

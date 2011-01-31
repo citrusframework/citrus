@@ -18,9 +18,12 @@ package com.consol.citrus.actions;
 
 import java.util.*;
 
-import org.springframework.util.Assert;
+import javax.script.ScriptException;
+
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
@@ -36,8 +39,8 @@ public class CreateVariablesActionTest extends AbstractBaseTest {
 		
 		createVariablesAction.execute(context);
 		
-		Assert.notNull(context.getVariable("${myVariable}"));
-		Assert.isTrue(context.getVariable("${myVariable}").equals("value"));
+		Assert.assertNotNull(context.getVariable("${myVariable}"));
+		Assert.assertTrue(context.getVariable("${myVariable}").equals("value"));
 	}
 	
 	@Test
@@ -51,10 +54,10 @@ public class CreateVariablesActionTest extends AbstractBaseTest {
         
         createVariablesAction.execute(context);
         
-        Assert.notNull(context.getVariable("${myVariable}"));
-        Assert.isTrue(context.getVariable("${myVariable}").equals("value1"));
-        Assert.notNull(context.getVariable("${anotherVariable}"));
-        Assert.isTrue(context.getVariable("${anotherVariable}").equals("value2"));
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertTrue(context.getVariable("${myVariable}").equals("value1"));
+        Assert.assertNotNull(context.getVariable("${anotherVariable}"));
+        Assert.assertTrue(context.getVariable("${anotherVariable}").equals("value2"));
     }
 	
 	@Test
@@ -67,8 +70,8 @@ public class CreateVariablesActionTest extends AbstractBaseTest {
         
         createVariablesAction.execute(context);
         
-        Assert.notNull(context.getVariable("${myVariable}"));
-        Assert.isTrue(context.getVariable("${myVariable}").equals("newValue"));
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertTrue(context.getVariable("${myVariable}").equals("newValue"));
     }
 	
 	@Test
@@ -79,7 +82,65 @@ public class CreateVariablesActionTest extends AbstractBaseTest {
         
         createVariablesAction.execute(context);
         
-        Assert.notNull(context.getVariable("${myVariable}"));
-        Assert.isTrue(context.getVariable("${myVariable}").equals("Hello Citrus"));
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertTrue(context.getVariable("${myVariable}").equals("Hello Citrus"));
+    }
+	
+	@Test
+    public void testCreateVariableFromScript() {
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
+        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>5+5");
+        createVariablesAction.setVariables(variables);
+        
+        createVariablesAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertTrue(context.getVariable("${myVariable}").equals("10"));
+    }
+	
+	@Test
+    public void testCreateVariableFromScriptVariableSupport() {
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
+        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>${number}+${number}");
+        createVariablesAction.setVariables(variables);
+        
+        context.setVariable("number", "5");
+        
+        createVariablesAction.execute(context);
+        
+        Assert.assertNotNull(context.getVariable("${myVariable}"));
+        Assert.assertTrue(context.getVariable("${myVariable}").equals("10"));
+    }
+	
+	@Test
+    public void testCreateVariableFromScriptInvalidScriptEngine() {
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
+        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<invalidScriptEngine>5+5");
+        createVariablesAction.setVariables(variables);
+        
+        try {
+            createVariablesAction.execute(context);
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("invalidScriptEngine"));
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException because of invalid script engine");
+    }
+	
+    @Test
+    public void testInvalidScript() {
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
+        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>a");
+        createVariablesAction.setVariables(variables);
+        
+        try {
+            createVariablesAction.execute(context);
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getCause() instanceof ScriptException);
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException because of invalid groovy script");
     }
 }
