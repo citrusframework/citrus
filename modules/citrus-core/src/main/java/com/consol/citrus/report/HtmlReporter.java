@@ -88,6 +88,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         
         try {
             String testDetails = FileUtils.readToString(TEST_DETAIL_TEMPLATE);
+            String unknown = "N/A";
             
             for (TestResult result : testResults) {
                 ResultDetail detail = details.get(result.getTestName());
@@ -95,12 +96,12 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
                 Properties detailProps = new Properties();
                 detailProps.put("test.style.class", result.getResult().toString().toLowerCase());
                 detailProps.put("test.case.name", result.getTestName());
-                detailProps.put("test.author", detail.getMetaInfo().getAuthor());
+                detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? unknown : detail.getMetaInfo().getAuthor());
                 detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
-                detailProps.put("test.creation.date", dateFormat.format(detail.getMetaInfo().getCreationDate()));
-                detailProps.put("test.updater", detail.getMetaInfo().getLastUpdatedBy());
-                detailProps.put("test.update.date", dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
-                detailProps.put("test.description", (detail.getDescription() == null) ? "N/A" : detail.getDescription());
+                detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? unknown : dateFormat.format(detail.getMetaInfo().getCreationDate()));
+                detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
+                detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
+                detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
                 detailProps.put("test.result", result.getResult().toString().toUpperCase());
                 
                 reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
