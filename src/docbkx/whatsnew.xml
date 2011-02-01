@@ -61,8 +61,19 @@
     url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for 
     dynamic endpoint resolving was added to <xref linkend="soap-sender"/></para>
     
+    <para>We also simplified the synchronous SOAP HTTP communication within test cases. In previous versions you had to build complex parallel and sequential container constructs
+    in order to continue with test execution while the SOAP message sender is waiting for the synchronous response to arrive. Now you can simply fork the message sending action and
+    continue with further test actions while synchronous SOAP communication takes place. See the <xref linkend="soap-fork-mode"/> for details</para>
+    
     <para>Some really small change introduced with this release is the fact that Citrus now logs SOAP messages in their pure nature. This means that you can see the complete SOAP 
     envelope of messages in the Citrus log files. This is more than helpful when searching for errors inside your test case.</para>
+  </section>
+  
+  <section id="whatsnew-html-report">
+    <title>HTML reporting</title>
+    
+    <para>Citrus provides HTML reports after each test run with detailed information on the failed tests. You can immediately see which tests failed in execution and where the test
+    stopped. <xref linkend="reporting-html"/> provides details on this new feature.</para>
   </section>
   
   <section id="whatsnew-bugfixes">

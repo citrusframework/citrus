@@ -64,18 +64,18 @@ TEST RESULTS citrus-default-testsuite
         <title>HTML reports</title>
         
         <para>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all
-        tests and their status. You can find the report in the target directory of your project.</para>
+        test results. You can find the report after a test run in the <literal>target/test-output/citrus-reports</literal> directory.</para>
         
-        <para>The report consists of two parts. The test summary on top shows the total number executed tests and the main part
-        lists the test cases in detail. With this report you immediately see all tests which ended in success and those which failed to do so. 
-        Each test case is marked in color according to its result outcome.</para>
+        <para>The report consists of two parts. The test summary on top shows the total number executed tests. The main part lists all test cases 
+        with detailed information. With this report you immediately identify all tests that were failing. Each test case is marked in color 
+        according to its result outcome.</para>
         
-        <para>Just click on a test and the report reveals all actions of a test case. The failed tests mark those actions that failed in execution 
-        so you can see where the test stopped. The causing error message is also shown in the detailed action view.</para>
+        <para>The failed tests give detailed error information with error messages and Java StackTrace information. In addition to that the report 
+        tries to find the test action inside the XML test part that failed in execution. With the failing code snippet you can see where the test stopped.</para>
         
         <note>
             <para>JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips
-            like test author or description. If you want to access these tooltips JavaScript should be enabled.</para>
+            like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.</para>
         </note>
     </section>
     

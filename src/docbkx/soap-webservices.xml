@@ -682,5 +682,55 @@ Server: Jetty(7.0.0.pre5)
                 id you can do so in citrus-context message sender configuration.</para>
             </important>
         </section>
-    </section>    
+    </section>
+    
+    <section id="soap-fork-mode">
+        <title>Handle synchronous SOAP responses</title>
+        
+        <para>SOAP over HTTP uses synchronous communictaion by nature. This means that sending a SOAP message in Citrus over HTTP will automatically 
+        block further test actions until the synchronous HTTP response from the server arrives. In test cases you may want to avoid this synchronous blocking
+        for several reasons. A simple reason would be that you need to do further test actions in parallel to the synchronous HTTP SOAP communication (e.g. simulate another
+        backend system in the test case).</para>
+        
+        <para>You can separate the SOAP send action from the rest of the test case by using the <emphasis>&quot;fork&quot;</emphasis> mode. The SOAP
+        message sender will automatically open a new Java Thread for the synchronous communication and the test is able to continue with execution although the
+        synchronous HTTP SOAP response has not arrived yet.</para>
+        
+        <programlisting>&lt;ws:send with=&quot;webServiceRequestSender&quot; fork=&quot;true&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+          &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
+        &lt;/ns0:SoapMessageWithAttachmentRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/ws:send&gt;</programlisting>
+        
+        <para>With the <emphasis>&quot;fork&quot;</emphasis> mode enabled the test continues with execution while the sending action waits for the synchronous response in 
+        a separate Java Thread. You could reach the same behaviour with a complex &lt;parallel&gt;/&lt;sequential&gt; container construct, but forking the send action is much more
+        straight forward.</para>
+         
+        <important>It is higly recommended to use a proper <emphasis>&quot;timeout&quot;</emphasis> in the corresponding receive action for the synchronous SOAP response. As the sending 
+        action is forked it is possible that the receive action in the test asks for the response before the message actually was sent by the server. The result would be a broken test case 
+        whith a failing receive action, because of the missing response message. The <emphasis>&quot;timeout&quot;</emphasis> solves this problem as the receive action will wait for this 
+        time period and occasionally repeats to ask for the SOAP response message. The following sample receive action asks several times within the 10 second timeout period to receive the 
+        SOAP response.
+            <programlisting>
+&lt;ws:receive with=&quot;webServiceReplyHandler&quot; timeout=&quot;10000&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;ns0:SoapMessageWithAttachmentResponse xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+          &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
+          &lt;ns0:Success&gt;true&lt;/ns0:Success&gt;
+        &lt;/ns0:SoapMessageWithAttachmentResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/ws:receive&gt;
+            </programlisting>
+        </important>
+    </section>     
 </chapter>

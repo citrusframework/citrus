@@ -19,6 +19,8 @@ package com.consol.citrus.message;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.Message;
 
 /**
@@ -36,18 +38,26 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
     
+    /** Maximum number of retries when waiting for synchronous reply message to arrive */
+    private int maxRetries = 5;
+    
+    /**
+     * Logger
+     */
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return getReplyMessage("");
+        return receiveSelected("");
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      */
     public Message<?> receive(long timeout) {
-        return receive();
+        return receiveSelected("", timeout);
     }
 
     /**
@@ -61,7 +71,29 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        return receiveSelected(selector);
+        Message<?> message = null;
+        
+        long timeoutInterval = timeout / maxRetries;
+        int retryIndex = 1;
+        while ((message = receiveSelected(selector)) == null) {
+            if (retryIndex == maxRetries) {
+                break;
+            }
+            
+            if (log.isDebugEnabled()) {
+                log.debug("Reply message did not arrive yet - waiting " + timeoutInterval + " ms before next try");
+            }
+            
+            try {
+                Thread.sleep(timeoutInterval);
+            } catch (InterruptedException e) {
+                log.warn("Thread interrupted while waiting for synchronous reply", e);
+            }
+            
+            retryIndex++;
+        }
+        
+        return message;
     }
 
     /**
@@ -86,5 +118,13 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
      */
     public Message<?> getReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Sets the maximum number of retries while asking for the response message.
+     * @param maxRetries the maxRetries to set
+     */
+    public void setMaxRetries(int maxRetries) {
+        this.maxRetries = maxRetries;
     }
 }
