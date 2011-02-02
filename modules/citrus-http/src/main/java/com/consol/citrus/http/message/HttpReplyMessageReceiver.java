@@ -16,12 +16,8 @@
 
 package com.consol.citrus.http.message;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,23 +40,11 @@ public class HttpReplyMessageReceiver extends AbstractReplyMessageReceiver {
      */
     private static final Logger log = LoggerFactory.getLogger(HttpReplyMessageReceiver.class);
     
-    /**
-     * @see com.consol.citrus.message.AbstractReplyMessageReceiver#receive()
-     * @throws CitrusRuntimeException
-     */
     @Override
-    public Message<?> receive() {
-        return buildMessage(super.receive());
+    public Message<?> getReplyMessage(String selector) {
+        return buildMessage(super.getReplyMessage(selector));
     }
     
-    /**
-     * @see com.consol.citrus.message.AbstractReplyMessageReceiver#receiveSelected(java.lang.String)
-     */
-    @Override
-    public Message<?> receiveSelected(String selector) {
-        return buildMessage(super.receiveSelected(selector));
-    }
-
     /**
      * Build the response message.
      * @param receivedMessage

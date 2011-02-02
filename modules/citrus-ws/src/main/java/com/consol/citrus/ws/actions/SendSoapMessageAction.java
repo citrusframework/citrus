@@ -19,6 +19,7 @@ package com.consol.citrus.ws.actions;
 import java.io.IOException;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.core.Message;
 import org.springframework.util.StringUtils;
 
@@ -49,9 +50,13 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
     
+    /** Forks the message sending action so other actions can take place while this
+     * message sender is waiting for the synchronous response */
+    private boolean forkMode = false;
+    
     @Override
     public void doExecute(final TestContext context) {
-        Message<?> message = createMessage(context);
+        final Message<?> message = createMessage(context);
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : getVariableExtractors()) {
@@ -63,27 +68,48 @@ public class SendSoapMessageAction extends SendMessageAction {
             		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + messageSender.getClass().getName() + "'");
         }
         
-        String attachmentContent = null;
+        final String attachmentContent;
         try {
             if(StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
             } else if(attachmentResource != null) {
                 attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
+            } else {
+                attachmentContent = null;
             }
         
-            WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
-            if(attachmentContent != null) {
-                attachment.setContent(attachmentContent);
-                
-                webServiceMessageSender.send(message, attachment);
+            if (forkMode) {
+                SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+                taskExecutor.execute(new Runnable() {
+                    public void run() {
+                        sendSoapMessage(message, attachmentContent);
+                    }
+                });
             } else {
-                webServiceMessageSender.send(message);
+                sendSoapMessage(message, attachmentContent);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }
     
+    /**
+     * Sends the SOAP message with the {@link WebServiceMessageSender}.
+     * 
+     * @param message the message to send.
+     * @param attachmentContent the optional attachmentContent.
+     */
+    private void sendSoapMessage(Message<?> message, String attachmentContent) {
+        WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
+        if(attachmentContent != null) {
+            attachment.setContent(attachmentContent);
+            
+            webServiceMessageSender.send(message, attachment);
+        } else {
+            webServiceMessageSender.send(message);
+        }
+    }
+
     /**
      * Set the Attachment data file resource.
      * @param attachment the attachment to set
@@ -122,5 +148,13 @@ public class SendSoapMessageAction extends SendMessageAction {
      */
     public void setAttachmentData(String attachmentData) {
         this.attachmentData = attachmentData;
+    }
+
+    /**
+     * Enables fork mode for this message sender.
+     * @param fork the fork to set.
+     */
+    public void setForkMode(boolean fork) {
+        this.forkMode = fork;
     }
 }

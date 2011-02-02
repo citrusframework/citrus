@@ -106,9 +106,7 @@
           		</header>
             </send>
             
-            <sleep time="2"/>
-            
-            <receive with="httpResponseReceiver">
+            <receive with="httpResponseReceiver" timeout="2000">
             	<message/>
             	<header>
            			<element name="HTTPStatusCode" value="200"/>
