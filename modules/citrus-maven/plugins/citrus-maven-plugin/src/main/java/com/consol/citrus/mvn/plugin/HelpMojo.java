@@ -90,7 +90,7 @@ public class HelpMojo
 
         if ( goal == null || goal.length() <= 0 )
         {
-            append( sb, "This plugin has 4 goals:", 0 );
+            append( sb, "This plugin has 6 goals:", 0 );
             append( sb, "", 0 );
         }
 
@@ -209,7 +209,99 @@ public class HelpMojo
                 append( sb, "", 0 );
             }
         }
+        
+        if ( goal == null || goal.length() <= 0 || "create-test-from-xsd".equals( goal ) )
+        {
+            append( sb, "citrus:create-test-from-xsd", 0 );
+            append( sb, "Goal which creates a new test case prefilled with a sample request and response using test case creator.", 1 );
+            append( sb, "", 0 );
+            if ( detail )
+            {
+                append( sb, "Available parameters:", 1 );
+                append( sb, "", 0 );
 
+                append( sb, "pathToXsd (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "xsdRequestElem (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "xsdResponseElem (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "name", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "author (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+
+                append( sb, "description (Default: TODO: Description)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+
+                append( sb, "framework (Default: testng)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+
+                append( sb, "interactiveMode (Default: true)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+
+                append( sb, "targetPackage (Default: com.consol.citrus)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+            }
+        }
+
+        if ( goal == null || goal.length() <= 0 || "create-test-from-wsdl".equals( goal ) )
+        {
+            append( sb, "citrus:create-test-from-wsdl", 0 );
+            append( sb, "Goal which creates a new test suite from a WSDL. For each webservice operation a testcase is created prefilled with a sample request and response.", 1 );
+            append( sb, "", 0 );
+            if ( detail )
+            {
+                append( sb, "Available parameters:", 1 );
+                append( sb, "", 0 );
+                
+                append( sb, "pathToWsdl (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "namePrefix (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "nameSuffix (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "author (Default: Unknown)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "description (Default: TODO: Description)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "framework (Default: testng)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "interactiveMode (Default: true)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+                
+                append( sb, "targetPackage (Default: com.consol.citrus)", 2 );
+                append( sb, "(no description available)", 3 );
+                append( sb, "", 0 );
+            }
+        }
+        
         if ( goal == null || goal.length() <= 0 || "help".equals( goal ) )
         {
             append( sb, "citrus:help", 0 );
