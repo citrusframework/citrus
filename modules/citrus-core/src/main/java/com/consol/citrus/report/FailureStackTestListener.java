@@ -29,7 +29,7 @@ public class FailureStackTestListener extends AbstractTestListener {
      * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
      */
     public void onTestFailure(TestCase test, Throwable cause) {
-       if(cause instanceof CitrusRuntimeException) {
+       if (cause instanceof CitrusRuntimeException) {
            ((CitrusRuntimeException)cause).setFailureStack(TestUtils.getFailureStack(test));
        }
     }
