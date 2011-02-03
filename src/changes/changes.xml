@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="01.02.2011" description="Latest snapshot release">
         <action dev="christophd" type="add">
+          #316 Mime headers in SOAP client
+        </action>
+        <action dev="christophd" type="add">
           #303 Fork mode for SOAP message sending
         </action>
         <action dev="jblipphaus, christophd" type="add">

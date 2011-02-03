@@ -36,6 +36,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinitionEditor;
@@ -232,15 +233,21 @@ public class WebServiceEndpoint implements MessageEndpoint {
             }
             
             // take care of mime headers in message
-            if(handleMimeHeaders) {
+            if (handleMimeHeaders) {
                 addMimeHeaders(soapMessage, requestMessageBuilder);
             }
             
-            if (StringUtils.hasText(soapMessage.getSoapAction())) {
-                if (soapMessage.getSoapAction().equals("\"\"")) {
+            String soapAction = soapMessage.getSoapAction();
+            if (StringUtils.hasText(soapAction)) {
+                if (soapAction.equals("\"\"")) {
                     requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
                 } else {
-                    requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
+                    if (soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
+                        soapAction = soapAction.substring(1);
+                        soapAction = soapAction.substring(0, soapAction.length()-1);
+                    }
+                    
+                    requestMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapAction);
                 }
             }
             
@@ -279,7 +286,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
         // to get access to mime headers we need to get implementation specific here
         if (soapMessage instanceof SaajSoapMessage) {
             messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
-        } // we do not handle axiom message implementations as it is very difficult to get access to the mime headers there
+        } else if (soapMessage instanceof AxiomSoapMessage) {
+            // we do not handle axiom message implementations as it is very difficult to get access to the mime headers there
+            log.warn("Skip mime headers for AxiomSoapMessage - unsupported");
+        } else {
+            log.warn("Unsupported SOAP message implementation - skipping mime headers");
+        }
         
         if (messageMimeHeaders != null) {
             Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();

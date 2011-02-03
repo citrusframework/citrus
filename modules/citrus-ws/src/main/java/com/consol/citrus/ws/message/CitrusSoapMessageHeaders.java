@@ -32,6 +32,9 @@ public abstract class CitrusSoapMessageHeaders {
     /** Citrus ws specific header prefix */
     public static final String SOAP_PREFIX = CitrusMessageHeaders.PREFIX + "soap_";
 
+    /** Special header prefix for http transport headers in SOAP message sender */
+    public static final String HTTP_PREFIX = CitrusMessageHeaders.PREFIX + "http_";
+    
     /** SOAP action header name */
     public static final String SOAP_ACTION = SOAP_PREFIX + "action";
     
@@ -52,4 +55,5 @@ public abstract class CitrusSoapMessageHeaders {
     
     /** Charset header name*/
     public static final String CHARSET_NAME = SOAP_ATTACHMENT_PREFIX + "charset";
+    
 }

@@ -256,21 +256,24 @@
         <programlisting>&lt;header&gt;
     &lt;resource file=&quot;classpath:request-soap-header.xml&quot;/&gt;
 &lt;/header&gt;</programlisting>
-
-        <note>
-            <para>When speaking of message headers we might also be interested in special mime headers. As an example SOAP over Http provides several
-            Http headers that might be candidates for validation (e.g. Content-Type, Content-Length, Authorization). These Http headers 
-            outside of the SOAP envelope are not handled in SOAP request processing by default. In order to receive and validate those in a test case we 
-            must enable a special feature in the SOAP WebService endpoint.</para>
-            
-            <programlisting>&lt;bean id=&quot;webServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+    </section>
+    
+    <section id="soap-mime-headers">
+      <title>Http mime headers</title>
+      
+      <para>Besides the SOAP specific header elements the Http mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too. 
+      When using Http as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these 
+      Http headers are located outside of the SOAP envelope. Let us first of all speak about validating the Http mime headers. This feature is not enabled by default. We 
+      have to set a special flag in our SOAP WebService endpoint.</para>
+      
+      <programlisting>&lt;bean id=&quot;webServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
     &lt;property name=&quot;handleMimeHeaders&quot; value=&quot;true&quot;/&gt;
     [...]
 &lt;/bean&gt;</programlisting>
 
-             <para>With this configuration Citrus will handle all available mime headers passing those to the test case for normal header validation.</para>
-             
-             <programlisting>&lt;ws:receive with=&quot;webServiceRequestReceiver&quot;&gt;
+      <para>With this configuration Citrus will handle all available mime headers passing those to the test case for normal header validation.</para>
+      
+      <programlisting>&lt;ws:receive with=&quot;webServiceRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;
             &lt;![CDATA[
@@ -284,8 +287,25 @@
         &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml; charset=utf-8&quot;/&gt;
     &lt;/header&gt;
 &lt;/ws:receive&gt;
-             </programlisting>
-        </note>
+      </programlisting>
+      
+      <para>As you can see the validation is quite simple as soon as we have enabled the mime header handling in the WebService endpoint. The transport (http) headers go into the header
+      list just like the normal SOAP header elements do. So you can validate the headers as usual.</para>
+
+      <para>So much for receiving and validating Http messsage headers with SOAP communication. Now we want to send special mime headers on client side. We overwrite or add mime 
+      headers to our sending action. We mark some headers with following prefix <literal>&quot;citrus_http_&quot;</literal>. This tells the SOAP message sender to add these headers to the 
+      Http header section outside the SOAP envelope. Keep in mind that header elements without this prefix go right into the SOAP header section by default.</para>
+      
+      <programlisting>&lt;ws:send with=&quot;webServiceRequestSender&quot;&gt;
+  [...]
+  &lt;header&gt;
+    &lt;element name=&quot;citrus_http_operation&quot; value=&quot;foo&quot;/&gt;
+  &lt;/header&gt;
+  [...]
+&lt;/ws:send&gt;</programlisting>
+
+      <para>The listing above defines a Http mime header <emphasis>operation</emphasis>. The header prefix <literal>citrus_http_</literal> is cut off before the header goes into the Http 
+      header section. With this feature we can decide where exactly our header information is located in our resulting client message.</para>
     </section>
     
     <section id="soap-faults">

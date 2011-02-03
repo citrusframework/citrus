@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
+import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
 
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringSource;
 
@@ -71,7 +74,6 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
      * Callback method called before request message  is sent.
      */
     public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-
         SoapMessage soapRequest = ((SoapMessage)requestMessage);
         
         // Copy payload into soap-body: 
@@ -90,6 +92,10 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
             } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         soapRequest.getSoapHeader().getResult());
+            } else if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
+                addMimeMessageHeader(soapRequest, 
+                        headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length()), 
+                        headerEntry.getValue());
             } else {
                 SoapHeaderElement headerElement;
                 if(QNameUtils.validateQName(headerEntry.getKey())) {
@@ -115,6 +121,25 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
         }
         
         doWithSoapRequest(soapRequest);
+    }
+
+    /**
+     * Adds a HTTP message header to the SOAP message.
+     * 
+     * @param message the SOAP request message.
+     * @param name the header name.
+     * @param value the header value.
+     */
+    private void addMimeMessageHeader(SoapMessage message, String name, Object value) {
+        if (message instanceof SaajSoapMessage) {
+            SaajSoapMessage soapMsg = (SaajSoapMessage) message;
+            MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
+            headers.setHeader(name, value.toString());
+        } else if (message instanceof AxiomSoapMessage) {
+            log.warn("Unable to set mime message header '" + name + "' on AxiomSoapMessage - unsupported");
+        } else {
+            log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
+        }
     }
 
     /**

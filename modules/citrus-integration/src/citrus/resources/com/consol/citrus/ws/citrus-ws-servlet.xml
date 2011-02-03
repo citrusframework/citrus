@@ -80,6 +80,7 @@
                 <property name="replyTimeout" value="5000"/>
             </bean>
         </property>
+        <property name="handleMimeHeaders" value="true"/>
     </bean>
     
 </beans>
