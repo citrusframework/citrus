@@ -66,12 +66,15 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private static final String REPORT_FILE_NAME = "citrus-test-results.html";
     
     /** Format for creation and update date of TestCases */
-    private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
     
     /** Common decimal format for percentage calculation in report */
-    private static DecimalFormat decFormat = new DecimalFormat("0.0");
+    private DecimalFormat decFormat = new DecimalFormat("0.0");
     
-    static {
+    /**
+     * Default constructor.
+     */
+    public HtmlReporter() {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');
         decFormat.setDecimalFormatSymbols(symbol);

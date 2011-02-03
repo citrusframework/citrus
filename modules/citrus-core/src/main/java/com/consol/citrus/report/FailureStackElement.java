@@ -52,7 +52,7 @@ public class FailureStackElement {
      * @return the stack trace message.
      */
     public String getStackMessage() {
-        if (lineNumberEnd > 0 && lineNumberStart != lineNumberEnd) {
+        if (lineNumberEnd.longValue() > 0 && !lineNumberStart.equals(lineNumberEnd)) {
             return "at " + testFilePath + "(" + actionName + ":" + lineNumberStart + "-" + lineNumberEnd + ")";
         } else {
             return "at " + testFilePath + "(" + actionName + ":" + lineNumberStart + ")";

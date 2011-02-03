@@ -83,30 +83,21 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         log.info("Start XML message validation");
         
         try {
-            Message<?> controlMessage = validationContext.getControlMessage(context);
-            
-            // first check if payload is empty
-            if (StringUtils.hasText(receivedMessage.getPayload().toString())) {
-                if(validationContext.isSchemaValidationEnabled()) {
-                    validateXMLSchema(receivedMessage);
-                    validateDTD(validationContext.getDTDResource(), receivedMessage);
-                }
+            if (validationContext.isSchemaValidationEnabled()) {
+                validateXMLSchema(receivedMessage);
+                validateDTD(validationContext.getDTDResource(), receivedMessage);
+            }
 
-                validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
-                
-                if (controlMessage != null) {
-                    validateMessagePayload(receivedMessage, validationContext, context);
-                }
-                
-                validateMessageElements(receivedMessage, validationContext, context);
-            } else {
-                Assert.isTrue(!StringUtils.hasText(controlMessage.getPayload().toString()),
-                        "Missing message payload data but was empty");
+            validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
+            validateMessagePayload(receivedMessage, validationContext, context);
+            validateMessageElements(receivedMessage, validationContext, context);
+
+            Message<?> controlMessage = validationContext.getControlMessage(context);
+            if (controlMessage != null) {
+                validateMessageHeader(controlMessage.getHeaders(), receivedMessage.getHeaders(), context);
             }
             
-            validateMessageHeader(controlMessage.getHeaders(), 
-                    receivedMessage.getHeaders(), context);
-            log.info("XML tree validation finished successfully: All values OK");
+            log.info("XML message validation successful: All values OK");
         } catch (ClassCastException e) {
             throw new CitrusRuntimeException(e);
         } catch (DOMException e) {
@@ -149,8 +140,15 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             TestContext context) throws CitrusRuntimeException {
         if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
 
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+            throw new ValidationException("Unable to validate message elements - receive message payload was empty");
+        }
+        
         log.info("Start XML elements validation");
 
+        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
+        NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces());
+        
         for (Entry<String, String> entry : validationContext.getPathValidationExpressions().entrySet()) {
             String elementPathExpression = entry.getKey();
             String expectedValue = entry.getValue();
@@ -158,8 +156,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
 
-            Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-            NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces());
             if (XPathUtils.isXPathExpression(elementPathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(elementPathExpression, XPathExpressionResult.NODE);
                 elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
@@ -250,6 +246,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param receivedMessage
      */
     public void validateXMLSchema(Message<?> receivedMessage) {
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+            return;
+        }
+        
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
 
@@ -291,6 +291,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     public void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
         if (CollectionUtils.isEmpty(expectedNamespaces)) { return; }
 
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+            throw new ValidationException("Unable to validate message namespaces - receive message payload was empty");
+        }
+        
         log.info("Start XML namespace validation");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
@@ -329,14 +333,25 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext, TestContext context) {
         Message<?> controlMessage = validationContext.getControlMessage(context);
         
-        if(!(controlMessage.getPayload() instanceof String)) {
+        if (controlMessage == null || controlMessage.getPayload() == null) {
+            log.info("Skip message payload validation as no control message was defined");
+            return;
+        }
+        
+        if (!(controlMessage.getPayload() instanceof String)) {
             throw new IllegalArgumentException("DomXmlMessageValidator does only support message payload of type String, " +
                     "but was " + controlMessage.getPayload().getClass());
         }
         
         String controlMessagePayload = controlMessage.getPayload().toString();
 
-        if(!StringUtils.hasText(controlMessagePayload)) { return; }
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+            Assert.isTrue(!StringUtils.hasText(controlMessagePayload), 
+                    "Unable to validate message payload - received message payload was empty, control message payload is not");
+            return;
+        } else if (!StringUtils.hasText(controlMessagePayload)) { 
+            return; 
+        }
 
         log.info("Start XML tree validation ...");
 

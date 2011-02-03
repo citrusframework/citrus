@@ -1358,7 +1358,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Validation failed: Missing message payload data but was empty");
+            Assert.assertEquals(e.getMessage(), "Validation failed: Unable to validate message payload - received message payload was empty, control message payload is not");
             verify(messageReceiver);
             return;
         }
