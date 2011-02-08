@@ -80,7 +80,6 @@ public class TestCaseCreator {
             } else {
                 throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
             }
-            
         }
     };
     
@@ -125,21 +124,7 @@ public class TestCaseCreator {
             throw new CitrusRuntimeException("Test name must start with an uppercase letter");
         }
         
-        Properties properties = new Properties();
-        properties.put("test.name", name);
-        properties.put("test.author", author);
-        properties.put("test.description", description);
-        
-        properties.put("test.updatedon.datetime", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime()));
-        properties.put("test.creation.date", new SimpleDateFormat("yyyy-MM-dd").format(GregorianCalendar.getInstance().getTime()));
-        
-        properties.put("test.method.name", name.substring(0,1).toLowerCase() + name.substring(1));
-        properties.put("test.package", targetPackage);
-        
-        if (xmlRequest != null && xmlResponse != null) {
-        	properties.put("test.request", xmlRequest);
-        	properties.put("test.response", xmlResponse);
-        }
+        Properties properties = prepareTestCasePoroperties();
         
         targetPackage = targetPackage.replace('.', '/');
         
@@ -153,6 +138,85 @@ public class TestCaseCreator {
     }
     
     /**
+     * Prepares the test case properties for dynamic property replacement in
+     * test case templates.
+     * 
+     * @return the prepared property set.
+     */
+    private Properties prepareTestCasePoroperties() {
+        Properties properties = new Properties();
+        properties.put("test.name", name);
+        properties.put("test.author", author);
+        properties.put("test.description", description);
+        
+        properties.put("test.updatedon.datetime", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(GregorianCalendar.getInstance().getTime()));
+        properties.put("test.creation.date", new SimpleDateFormat("yyyy-MM-dd").format(GregorianCalendar.getInstance().getTime()));
+        
+        properties.put("test.method.name", name.substring(0,1).toLowerCase() + name.substring(1));
+        properties.put("test.package", targetPackage);
+        
+        if (xmlRequest != null && xmlResponse != null) {
+            properties.put("test.request", xmlRequest);
+            properties.put("test.response", xmlResponse);
+        }
+        
+        return properties;
+    }
+
+    /**
+     * Builds the Java file content based on a template file.
+     * 
+     * @return the Java test file content.
+     */
+    public String buildJavaFileContent() {
+        return buildFileContentFromTemplate(prepareTestCasePoroperties(), getTemplateFileForJavaClass());
+    }
+    
+    /**
+     * Builds ther XML file content based on a template file.
+     * 
+     * @return the XML test file content.
+     */
+    public String buildXmlFileContent() {
+        return buildFileContentFromTemplate(prepareTestCasePoroperties(), getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
+    }
+    
+    /**
+     * Read the given template file and replace all test case properties.
+     * 
+     * @param properties the dynamic test case properties.
+     * @param templateFilePath the template file to use as base.
+     * @return the final rest file content.
+     */
+    private String buildFileContentFromTemplate(Properties properties, String templateFilePath) {
+        BufferedReader reader = null;
+        StringBuilder contentBuilder = new StringBuilder();
+        
+        try {
+            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(templateFilePath)));
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(PropertyUtils.replacePropertiesInString(line, properties) + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            throw new CitrusRuntimeException("Failed to create test case, unable to find test case template", e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to create test case, error while accessing test case template file", e);
+        } finally {
+            try {
+                if(reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                log.error("Error while closing test case template file", e);
+            }
+        }
+        
+        return contentBuilder.toString();
+    }
+    
+    /**
      * Creates test case files from template files replacing
      * properties in template file.
      * @param properties to replace placeholders in template file
@@ -160,7 +224,6 @@ public class TestCaseCreator {
      * @param templateFilePath template file path
      */
     private void createFileFromTemplate(Properties properties, String filePath, String templateFilePath) {
-        BufferedReader reader = null;
         OutputStream buffered = null;
         
         try {
@@ -170,36 +233,19 @@ public class TestCaseCreator {
             }
                 
             buffered = new BufferedOutputStream(new FileOutputStream(file));
-            reader = new BufferedReader(new InputStreamReader(TestCaseCreator.class.getResourceAsStream(templateFilePath)));
-            
-            StringWriter sWriter = new StringWriter();
-            
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sWriter.append(PropertyUtils.replacePropertiesInString(line, properties) + "\n");
-            }
-    
-            buffered.write(sWriter.toString().getBytes());
+            buffered.write(buildFileContentFromTemplate(properties, templateFilePath).getBytes());
             buffered.flush();
         } catch (FileNotFoundException e) {
-            throw new CitrusRuntimeException("Failed to generate test documentation, file not found", e);
+            throw new CitrusRuntimeException("Failed to create test case", e);
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to generate test documentation, IO error", e);
+            throw new CitrusRuntimeException("Failed to create test case, unable to access test file", e);
         } finally {
             try {
                 if(buffered != null) {
                     buffered.close();
                 }
             } catch (IOException e) {
-                log.error("Failed to close file", e);
-            }
-            
-            try {
-                if(reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                log.error("Failed to close reader", e);
+                log.error("Error while closing test case file", e);
             }
         }
     }
