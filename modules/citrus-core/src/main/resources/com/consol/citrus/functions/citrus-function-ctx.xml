@@ -80,6 +80,9 @@
 				<entry key="absolute">
 					<bean class="com.consol.citrus.functions.core.AbsoluteFunction"/>
 				</entry>
+                <entry key="randomEnumValue">
+                    <bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"/>
+                </entry>
 			</map>
 		</property>
 	</bean>
