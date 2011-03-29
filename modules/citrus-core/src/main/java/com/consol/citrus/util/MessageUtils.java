@@ -42,7 +42,6 @@ public final class MessageUtils {
      * @return
      */
     public static boolean isSpringInternalHeader(String headerName) {
-        // '$' makes Citrus work with Spring Integration 2.0.x 
         // "springintegration_" makes Citrus work with Spring Integration 1.x release
         if (headerName.startsWith("springintegration_")) {
             return true;
