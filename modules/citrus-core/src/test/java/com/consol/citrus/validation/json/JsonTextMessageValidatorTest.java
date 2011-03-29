@@ -17,8 +17,8 @@
 package com.consol.citrus.validation.json;
 
 import org.json.simple.parser.ParseException;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

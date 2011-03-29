@@ -18,10 +18,11 @@ package com.consol.citrus.samples.flightbooking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.integration.Message;
 import org.springframework.integration.annotation.Splitter;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.samples.flightbooking.model.*;
 import com.consol.citrus.samples.flightbooking.persistence.CustomerDao;
@@ -35,7 +36,7 @@ public class BookingSplitter {
     
     private FlightDao flightDao;
     
-    private FlightCompletionStrategy flightCompletionStrategy;
+    private static AtomicInteger bookingIndex = new AtomicInteger(10000);
     
     @Splitter
     public Object splitMessage(Message<?> message) {
@@ -62,15 +63,13 @@ public class BookingSplitter {
             flightRequest.setFlight(flight);
             flightRequest.setCorrelationId(request.getCorrelationId());
             flightRequest.setCustomer(request.getCustomer());
-            flightRequest.setBookingId("myBookingId");
+            flightRequest.setBookingId("Bx" + bookingIndex.incrementAndGet());
             
             MessageBuilder<FlightBookingRequestMessage> messageBuilder = MessageBuilder.withPayload(flightRequest);
             messageBuilder.copyHeaders(message.getHeaders());
             
             flightRequests.add(messageBuilder.build());
         }
-        
-        flightCompletionStrategy.addCompletionRule(request.getCorrelationId(), request.getFlights().size());
         
         return flightRequests;
     }
@@ -87,13 +86,5 @@ public class BookingSplitter {
      */
     public void setFlightDao(FlightDao flightDao) {
         this.flightDao = flightDao;
-    }
-
-    /**
-     * @param flightCompletionStrategy the flightCompletionStrategy to set
-     */
-    public void setFlightCompletionStrategy(
-            FlightCompletionStrategy flightCompletionStrategy) {
-        this.flightCompletionStrategy = flightCompletionStrategy;
     }
 }

@@ -52,7 +52,7 @@
                     </data>
                 </message>
                 <header>
-                    <element name="correlationId" value="${correlationId}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
             </send>
             
@@ -83,9 +83,11 @@
                     <ignore path="//fbs:FlightBookingRequestMessage/fbs:bookingId"/>
                 </message>
                 <header>
-                    <element name="correlationId" value="${correlationId}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
                 <extract>
+                    <header name="sequenceNumber" variable="${sequenceNumber}"/>
+                    <header name="sequenceSize" variable="${sequenceSize}"/>
                     <message path="//fbs:FlightBookingRequestMessage/fbs:bookingId" variable="${smartAirlineBookingId}"/>
                 </extract>
             </receive>
@@ -112,7 +114,9 @@
                     </data>
                 </message>
                 <header>
-                    <element name="correlationId" value="${correlationId}"/>
+                    <element name="sequenceNumber" value="${sequenceNumber}"/>
+                    <element name="sequenceSize" value="${sequenceSize}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
             </send>
             
@@ -143,9 +147,11 @@
                     <ignore path="//fbs:FlightBookingRequestMessage/fbs:bookingId"/>
                 </message>
                 <header>
-                    <element name="correlationId" value="${correlationId}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
                 <extract>
+                    <header name="sequenceNumber" variable="${sequenceNumber}"/>
+                    <header name="sequenceSize" variable="${sequenceSize}"/>
                     <message path="//fbs:FlightBookingRequestMessage/fbs:bookingId" variable="${royalAirlineBookingId}"/>
                 </extract>
             </receive>
@@ -172,7 +178,9 @@
                     </data>
                 </message>
                 <header>
-                    <element name="correlationid" value="${correlationId}"/>
+                    <element name="sequenceNumber" value="${sequenceNumber}"/>
+                    <element name="sequenceSize" value="${sequenceSize}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
             </send>
             
@@ -208,7 +216,7 @@
                     </data>
                 </message>
                 <header>
-                    <element name="correlationId" value="${correlationId}"/>
+                    <element name="bookingCorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
         </actions>

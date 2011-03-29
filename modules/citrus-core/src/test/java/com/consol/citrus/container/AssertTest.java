@@ -38,7 +38,7 @@ public class AssertTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertException() {
         Assert assertAction = new Assert();
         
@@ -51,7 +51,7 @@ public class AssertTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionMessageCheck() {
         Assert assertAction = new Assert();
         
@@ -68,7 +68,7 @@ public class AssertTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions=CitrusRuntimeException.class)
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionWrongMessageCheck() {
         Assert assertAction = new Assert();
         
@@ -85,7 +85,7 @@ public class AssertTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions=CitrusRuntimeException.class)
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingException() {
         Assert assertAction = new Assert();
         

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.samples.bookregistry.exceptions;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageHandlingException;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHandlingException;
 
 import com.consol.citrus.samples.bookregistry.model.AddBookRequestMessage;
 

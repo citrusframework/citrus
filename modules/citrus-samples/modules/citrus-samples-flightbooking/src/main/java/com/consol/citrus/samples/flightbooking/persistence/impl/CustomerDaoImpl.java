@@ -38,8 +38,7 @@ public class CustomerDaoImpl implements CustomerDao {
         return em.find(Customer.class, customerId);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Customer> findAll() {
+    @SuppressWarnings("unchecked") public List<Customer> findAll() {
         Query query = em.createQuery("from Customer c");
         
         return query.getResultList();

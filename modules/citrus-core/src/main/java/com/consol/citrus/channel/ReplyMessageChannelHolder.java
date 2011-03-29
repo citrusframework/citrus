@@ -16,7 +16,7 @@
 
 package com.consol.citrus.channel;
 
-import org.springframework.integration.core.MessageChannel;
+import org.springframework.integration.MessageChannel;
 
 /**
  * Interface defines methods for reply message holders to return message

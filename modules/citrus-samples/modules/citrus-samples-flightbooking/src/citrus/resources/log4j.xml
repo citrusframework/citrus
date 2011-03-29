@@ -32,7 +32,7 @@
   </logger>
 
   <logger name="org.springframework">
-    <level value="WARN"/>
+    <level value="DEGUG"/>
   </logger>
   
   <logger name="org.mortbay">
@@ -40,6 +40,10 @@
   </logger>
 
   <logger name="org.apache">
+    <level value="WARN"/>
+  </logger>
+  
+  <logger name="org.codehaus">
     <level value="WARN"/>
   </logger>
 

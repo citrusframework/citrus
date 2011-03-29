@@ -19,8 +19,8 @@ package com.consol.citrus.ws.message;
 import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.client.core.*;
 import org.testng.annotations.Test;
 

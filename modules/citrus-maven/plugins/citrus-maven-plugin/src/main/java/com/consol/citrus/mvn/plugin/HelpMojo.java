@@ -31,7 +31,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @goal help
  * @requiresProject false
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class HelpMojo
     extends AbstractMojo
 {

@@ -24,8 +24,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -63,7 +63,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsVariablesSupport() {
         reset(messageReceiver);
         
@@ -97,7 +97,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsFunctionSupport() {
         reset(messageReceiver);
         
@@ -132,7 +132,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsVariableSupportInExpression() {
         reset(messageReceiver);
         
@@ -165,7 +165,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsFunctionSupportInExpression() {
         reset(messageReceiver);
         
@@ -199,7 +199,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesVariablesSupport() {
         reset(messageReceiver);
         
@@ -247,7 +247,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesFunctionSupport() {
         reset(messageReceiver);
         
@@ -293,7 +293,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testHeaderNameVariablesSupport() {
         reset(messageReceiver);
         
@@ -341,7 +341,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testHeaderNameFunctionSupport() {
         reset(messageReceiver);
         
@@ -385,7 +385,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsVariablesSupport() {
         reset(messageReceiver);
         
@@ -436,7 +436,7 @@ public class VariableSupportTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractHeaderValuesVariablesSupport() {
         reset(messageReceiver);
         

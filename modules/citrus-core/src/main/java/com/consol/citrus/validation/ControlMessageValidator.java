@@ -21,8 +21,8 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 

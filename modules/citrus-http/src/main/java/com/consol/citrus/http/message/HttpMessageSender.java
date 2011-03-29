@@ -25,8 +25,8 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -70,7 +70,7 @@ public class HttpMessageSender implements MessageSender {
     private static final Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {

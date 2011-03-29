@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.actions.SendMessageAction;

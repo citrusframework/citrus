@@ -24,8 +24,8 @@ import java.util.Map;
 import javax.jms.*;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;

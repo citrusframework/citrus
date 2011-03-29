@@ -21,8 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.core.io.Resource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -70,9 +71,11 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
                 headerContent = context.replaceDynamicContentInString(messageHeaderData.trim());
             }
             
-            if(StringUtils.hasText(headerContent)) {
+            if (StringUtils.hasText(headerContent)) {
                 headers.put(CitrusMessageHeaders.HEADER_CONTENT, headerContent);
             }
+            
+            checkHeaderTypes(headers);
             
             return headers;
         } catch (IOException e) {
@@ -80,6 +83,24 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
         }
     }
     
+    /**
+     * Method checks all header types to meet Spring Integration type requirements. For instance
+     * sequence number must be of type {@link Integer}.
+     * 
+     * @param headers the headers to check.
+     */
+    private void checkHeaderTypes(Map<String, Object> headers) {
+        if (headers.containsKey(MessageHeaders.SEQUENCE_NUMBER)) {
+            String number = headers.get(MessageHeaders.SEQUENCE_NUMBER).toString();
+            headers.put(MessageHeaders.SEQUENCE_NUMBER, Integer.valueOf(number));
+        }
+        
+        if (headers.containsKey(MessageHeaders.SEQUENCE_SIZE)) {
+            String size = headers.get(MessageHeaders.SEQUENCE_SIZE).toString();
+            headers.put(MessageHeaders.SEQUENCE_SIZE, Integer.valueOf(size));
+        }
+    }
+
     /**
      * Sets the message headers for this control message.
      * @param messageHeaders the controlMessageHeaders to set

@@ -24,8 +24,8 @@ import java.util.Map;
 import javax.jms.*;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -170,7 +170,7 @@ public class JmsSyncMessageSenderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithReplyHandler() throws JMSException {
         JmsSyncMessageSender sender = new JmsSyncMessageSender();
         sender.setConnectionFactory(connectionFactory);
@@ -220,7 +220,7 @@ public class JmsSyncMessageSenderTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
         JmsSyncMessageSender sender = new JmsSyncMessageSender();
         sender.setConnectionFactory(connectionFactory);

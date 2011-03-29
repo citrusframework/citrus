@@ -21,9 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.integration.channel.*;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -51,7 +52,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
     private long replyTimeout = 5000L;
     
     /** Spring's messasge channel template */
-    private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
+    private MessagingTemplate messagingTemplate = new MessagingTemplate();
     
     /** Fallback message handler */
     private MessageHandler fallbackMessageHandlerDelegate = null;
@@ -65,7 +66,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
     private static final Logger log = LoggerFactory.getLogger(MessageChannelConnectingMessageHandler.class);
 
     /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(final Message<?> request) {
@@ -77,8 +78,8 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
 
         Message<?> replyMessage = null;
         
-        messageChannelTemplate.setReceiveTimeout(replyTimeout);
-        replyMessage = messageChannelTemplate.sendAndReceive(request, getChannel());
+        messagingTemplate.setReceiveTimeout(replyTimeout);
+        replyMessage = messagingTemplate.sendAndReceive(getChannel(), request);
         
         if((replyMessage == null || replyMessage.getPayload() == null)) {
             if(fallbackMessageHandlerDelegate != null) {
@@ -100,7 +101,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      */
     protected String getChannelName() {
         if(channel != null) {
-            return channel.getName();
+            return channel.toString();
         } else {
             return channelName;
         }
@@ -154,11 +155,11 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
     }
 
     /**
-     * Set the message channel template.
-     * @param messageChannelTemplate the messageChannelTemplate to set
+     * Set the messaging template.
+     * @param messagingTemplate the messagingTemplate to set
      */
-    public void setMessageChannelTemplate(MessageChannelTemplate messageChannelTemplate) {
-        this.messageChannelTemplate = messageChannelTemplate;
+    public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
     }
 
     /**

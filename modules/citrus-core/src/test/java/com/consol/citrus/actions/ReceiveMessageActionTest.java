@@ -25,8 +25,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -55,7 +55,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     private DomXmlMessageValidator validator = new DomXmlMessageValidator();
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testReceiveMessageWithMessagePayloadData() {
 		ReceiveMessageAction receiveAction = new ReceiveMessageAction();
 		receiveAction.setMessageReceiver(messageReceiver);
@@ -84,7 +84,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
 	}
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResource() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -113,7 +113,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptData() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -148,7 +148,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
         context.setVariable("text", "Hello World!");
         
@@ -185,7 +185,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -215,7 +215,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -246,7 +246,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -278,7 +278,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -308,7 +308,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -343,7 +343,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsDotNotation() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -378,7 +378,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -418,7 +418,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -458,7 +458,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithDefaultNamespaces() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -497,7 +497,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -533,7 +533,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -571,7 +571,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -612,7 +612,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -646,7 +646,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -690,7 +690,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -724,7 +724,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -761,7 +761,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -798,7 +798,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -835,7 +835,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -876,7 +876,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -917,7 +917,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -963,7 +963,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1009,7 +1009,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1055,7 +1055,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1105,7 +1105,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1136,7 +1136,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorString() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1169,7 +1169,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorStringAndTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1204,7 +1204,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMap() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1238,7 +1238,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1303,7 +1303,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1332,7 +1332,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1367,7 +1367,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScript() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1395,7 +1395,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScriptResource() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
@@ -1422,7 +1422,7 @@ public class ReceiveMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testInjectedMessageValidators() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);

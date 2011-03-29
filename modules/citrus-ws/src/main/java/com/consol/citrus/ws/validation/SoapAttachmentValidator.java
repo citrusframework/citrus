@@ -18,7 +18,7 @@ package com.consol.citrus.ws.validation;
 
 import java.io.IOException;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 
 import com.consol.citrus.ws.SoapAttachment;

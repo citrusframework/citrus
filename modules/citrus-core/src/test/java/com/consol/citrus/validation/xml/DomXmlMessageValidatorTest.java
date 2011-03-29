@@ -24,8 +24,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;

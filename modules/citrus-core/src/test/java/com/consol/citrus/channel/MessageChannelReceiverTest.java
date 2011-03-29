@@ -22,9 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.channel.*;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.core.PollableChannel;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,17 +37,17 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
  */
 public class MessageChannelReceiverTest {
 
-    private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
+    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
     private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
     
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessage() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         
@@ -54,29 +56,27 @@ public class MessageChannelReceiverTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
         
         Message receivedMessage = messageChannelReceiver.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
-        verify(messageChannelTemplate, channel);
+        verify(messagingTemplate, channel);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageChannelNameResolver() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannelName("testChannel");
         
@@ -87,29 +87,29 @@ public class MessageChannelReceiverTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel, channelResolver);
+        reset(messagingTemplate, channel, channelResolver);
         
         expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
         
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        replay(messageChannelTemplate, channel, channelResolver);
+        replay(messagingTemplate, channel, channelResolver);
         
         Message receivedMessage = messageChannelReceiver.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
-        verify(messageChannelTemplate, channel, channelResolver);
+        verify(messagingTemplate, channel, channelResolver);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithCustomTimeout() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         messageChannelReceiver.setReceiveTimeout(10000L);
@@ -119,29 +119,27 @@ public class MessageChannelReceiverTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
-        
-        messageChannelTemplate.setReceiveTimeout(10000L);
+        messagingTemplate.setReceiveTimeout(10000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
         
         Message receivedMessage = messageChannelReceiver.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
-        verify(messageChannelTemplate, channel);
+        verify(messagingTemplate, channel);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageTimeoutOverride() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         messageChannelReceiver.setReceiveTimeout(10000L);
@@ -151,47 +149,43 @@ public class MessageChannelReceiverTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
-        
-        messageChannelTemplate.setReceiveTimeout(25000L);
+        messagingTemplate.setReceiveTimeout(25000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.receive(channel)).andReturn(message).once();
+        expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
         
         Message receivedMessage = messageChannelReceiver.receive(25000L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
-        verify(messageChannelTemplate, channel);
+        verify(messagingTemplate, channel);
     }
     
     @Test
     public void testReceiveTimeout() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.receive(channel)).andReturn(null).once();
+        expect(messagingTemplate.receive(channel)).andReturn(null).once();
         
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
         
         try {
             messageChannelReceiver.receive();
         } catch(ActionTimeoutException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Action timeout while receiving message from channel 'testChannel'");
-            verify(messageChannelTemplate, channel);
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
+            verify(messagingTemplate, channel);
             return;
         }
         
@@ -201,7 +195,7 @@ public class MessageChannelReceiverTest {
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testReceiveSelected() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         
@@ -211,7 +205,7 @@ public class MessageChannelReceiverTest {
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testReceiveSelectedWithTimeout() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         

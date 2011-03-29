@@ -24,8 +24,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -51,7 +51,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     ReceiveMessageAction receiveMessageBean;
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValues() {
         reset(messageReceiver);
         
@@ -98,7 +98,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesComplete() {
         reset(messageReceiver);
         
@@ -147,7 +147,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesWrongExpectedValue() {
         reset(messageReceiver);
         
@@ -196,7 +196,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesForWrongElement() {
         reset(messageReceiver);
         
@@ -244,7 +244,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyHeaderValues() {
         reset(messageReceiver);
         
@@ -293,7 +293,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesNullComparison() {
         reset(messageReceiver);
         
@@ -342,7 +342,7 @@ public class HeaderValuesTest extends AbstractBaseTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractHeaderValues() {
         reset(messageReceiver);
         

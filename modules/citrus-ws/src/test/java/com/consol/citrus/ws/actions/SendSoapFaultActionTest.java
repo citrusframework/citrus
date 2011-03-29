@@ -20,7 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,7 +39,7 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendSoapFault() {
         SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
@@ -71,7 +71,7 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendSoapFaultMissingFaultString() {
         SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);
@@ -102,7 +102,7 @@ public class SendSoapFaultActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendSoapFaultWithVariableSupport() {
         SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);

@@ -57,7 +57,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	    String sql = "select ORDERTYPE, STATUS from orders where ID=5";
 	    reset(jdbcTemplate);
 	    
-	    Map<String, String> resultMap = new HashMap<String, String>();
+	    Map<String, Object> resultMap = new HashMap<String, Object>();
 	    resultMap.put("ORDERTYPE", "small");
 	    resultMap.put("STATUS", "in_progress");
 	    
@@ -82,13 +82,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql2 = "select NAME, HEIGHT from customers where ID=1";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap1 = new HashMap<String, String>();
+        Map<String, Object> resultMap1 = new HashMap<String, Object>();
         resultMap1.put("ORDERTYPE", "small");
         resultMap1.put("STATUS", "in_progress");
         
         expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
         
-        Map<String, String> resultMap2 = new HashMap<String, String>();
+        Map<String, Object> resultMap2 = new HashMap<String, Object>();
         resultMap2.put("NAME", "Mickey Mouse");
         resultMap2.put("HEIGHT", "0,3");
         
@@ -122,13 +122,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql2 = "SELECT NAME, HEIGHT FROM customers WHERE ID=1;";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap1 = new HashMap<String, String>();
+        Map<String, Object> resultMap1 = new HashMap<String, Object>();
         resultMap1.put("ORDERTYPE", "small");
         resultMap1.put("STATUS", "in_progress");
         
         expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
         
-        Map<String, String> resultMap2 = new HashMap<String, String>();
+        Map<String, Object> resultMap2 = new HashMap<String, Object>();
         resultMap2.put("NAME", "Mickey Mouse");
         resultMap2.put("HEIGHT", "0,3");
         
@@ -155,7 +155,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", null);
         
@@ -181,7 +181,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID=${orderId}";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -205,7 +205,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
 	    String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -235,7 +235,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -258,7 +258,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -288,7 +288,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE AS TYPE, STATUS AS STATE from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("TYPE", "small");
         resultMap.put("STATE", "in_progress");
         
@@ -318,7 +318,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -352,10 +352,10 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
         reset(jdbcTemplate);
         
-        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
-        Map<String, String> resultRow1 = new HashMap<String, String>();
-        Map<String, String> resultRow2 = new HashMap<String, String>();
-        Map<String, String> resultRow3 = new HashMap<String, String>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> resultRow1 = new HashMap<String, Object>();
+        Map<String, Object> resultRow2 = new HashMap<String, Object>();
+        Map<String, Object> resultRow3 = new HashMap<String, Object>();
 
         resultRow1.put("ORDERTYPE", "small");
         resultRow1.put("STATUS", "started");
@@ -402,10 +402,10 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
         reset(jdbcTemplate);
         
-        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
-        Map<String, String> resultRow1 = new HashMap<String, String>();
-        Map<String, String> resultRow2 = new HashMap<String, String>();
-        Map<String, String> resultRow3 = new HashMap<String, String>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> resultRow1 = new HashMap<String, Object>();
+        Map<String, Object> resultRow2 = new HashMap<String, Object>();
+        Map<String, Object> resultRow3 = new HashMap<String, Object>();
 
         resultRow1.put("ORDERTYPE", "small");
         resultRow1.put("STATUS", null);
@@ -452,10 +452,10 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPE, STATUS from orders where ID < 5";
         reset(jdbcTemplate);
         
-        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
-        Map<String, String> resultRow1 = new HashMap<String, String>();
-        Map<String, String> resultRow2 = new HashMap<String, String>();
-        Map<String, String> resultRow3 = new HashMap<String, String>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> resultRow1 = new HashMap<String, Object>();
+        Map<String, Object> resultRow2 = new HashMap<String, Object>();
+        Map<String, Object> resultRow3 = new HashMap<String, Object>();
 
         resultRow1.put("ORDERTYPE", "small");
         resultRow1.put("STATUS", "started");
@@ -503,10 +503,10 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select distinct STATUS from orders";
         reset(jdbcTemplate);
         
-        List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
-        Map<String, String> resultRow1 = new HashMap<String, String>();
-        Map<String, String> resultRow2 = new HashMap<String, String>();
-        Map<String, String> resultRow3 = new HashMap<String, String>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> resultRow1 = new HashMap<String, Object>();
+        Map<String, Object> resultRow2 = new HashMap<String, Object>();
+        Map<String, Object> resultRow3 = new HashMap<String, Object>();
 
         resultRow1.put("ORDERTYPE", "small");
         resultRow1.put("STATUS", "started");
@@ -564,13 +564,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql2 = "select NAME, HEIGHT from customers where ID=1";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap1 = new HashMap<String, String>();
+        Map<String, Object> resultMap1 = new HashMap<String, Object>();
         resultMap1.put("ORDERTYPE", "small");
         resultMap1.put("STATUS", "in_progress");
         
         expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
         
-        Map<String, String> resultMap2 = new HashMap<String, String>();
+        Map<String, Object> resultMap2 = new HashMap<String, Object>();
         resultMap2.put("NAME", "Mickey Mouse");
         resultMap2.put("HEIGHT", "0,3");
         
@@ -612,13 +612,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql2 = "select NAME, HEIGHT\nfrom customers\nwhere ID=1;";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap1 = new HashMap<String, String>();
+        Map<String, Object> resultMap1 = new HashMap<String, Object>();
         resultMap1.put("ORDERTYPE", "small");
         resultMap1.put("STATUS", "in_progress");
         
         expect(jdbcTemplate.queryForList(sql1)).andReturn(Collections.singletonList(resultMap1));
         
-        Map<String, String> resultMap2 = new HashMap<String, String>();
+        Map<String, Object> resultMap2 = new HashMap<String, Object>();
         resultMap2.put("NAME", "Mickey Mouse");
         resultMap2.put("HEIGHT", "0,3");
         
@@ -645,7 +645,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -676,13 +676,13 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql2 = "select ERRORTYPES from types";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
-        List<Map<String, String>> results = new ArrayList<Map<String,String>>();
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
         for (int i = 1; i < 4; i++) {
-            Map<String, String> columnMap = new HashMap<String, String>();
+            Map<String, Object> columnMap = new HashMap<String, Object>();
             columnMap.put("ID", String.valueOf(i));
             columnMap.put("NAME", "error" + i);
             
@@ -715,7 +715,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         
@@ -746,7 +746,7 @@ public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
         String sql = "select ORDERTYPES, STATUS from orders where ID=5";
         reset(jdbcTemplate);
         
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ORDERTYPE", "small");
         resultMap.put("STATUS", "in_progress");
         

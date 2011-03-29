@@ -18,7 +18,7 @@ package com.consol.citrus.actions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;

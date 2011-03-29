@@ -17,6 +17,7 @@
 package com.consol.citrus.ws;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.Locale;
 import java.util.Map;
 
@@ -227,11 +228,6 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         public boolean containsLocalBean(String name) {
             return applicationContext.containsBean(name);
         }
-        @SuppressWarnings("unchecked")
-        public boolean isTypeMatch(String name, Class targetType)
-                throws NoSuchBeanDefinitionException {
-            return applicationContext.isTypeMatch(name, targetType);
-        }
         public boolean isSingleton(String name)
                 throws NoSuchBeanDefinitionException {
             return applicationContext.isSingleton(name);
@@ -239,18 +235,6 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         public boolean isPrototype(String name)
                 throws NoSuchBeanDefinitionException {
             return applicationContext.isPrototype(name);
-        }
-        @SuppressWarnings("unchecked")
-        public Class getType(String name) throws NoSuchBeanDefinitionException {
-            return applicationContext.getType(name);
-        }
-        public Object getBean(String name, Object[] args) throws BeansException {
-            return applicationContext.getBean(name, args);
-        }
-        @SuppressWarnings("unchecked")
-        public Object getBean(String name, Class requiredType)
-                throws BeansException {
-            return applicationContext.getBean(name, requiredType);
         }
         public Object getBean(String name) throws BeansException {
             return applicationContext.getBean(name);
@@ -260,24 +244,6 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         }
         public boolean containsBean(String name) {
             return applicationContext.containsBean(name);
-        }
-        @SuppressWarnings("unchecked")
-        public Map getBeansOfType(Class type, boolean includeNonSingletons,
-                boolean allowEagerInit) throws BeansException {
-            return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
-        }
-        @SuppressWarnings("unchecked")
-        public Map getBeansOfType(Class type) throws BeansException {
-            return applicationContext.getBeansOfType(type);
-        }
-        @SuppressWarnings("unchecked")
-        public String[] getBeanNamesForType(Class type,
-                boolean includeNonSingletons, boolean allowEagerInit) {
-            return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-        }
-        @SuppressWarnings("unchecked")
-        public String[] getBeanNamesForType(Class type) {
-            return applicationContext.getBeanNamesForType(type);
         }
         public String[] getBeanDefinitionNames() {
             return applicationContext.getBeanDefinitionNames();
@@ -303,6 +269,50 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
                 throws IllegalStateException {
             return applicationContext.getAutowireCapableBeanFactory();
+        }
+        public <T> Map<String, T> getBeansOfType(Class<T> type)
+                throws BeansException {
+            return applicationContext.getBeansOfType(type);
+        }
+        public <T> Map<String, T> getBeansOfType(Class<T> type,
+                boolean includeNonSingletons, boolean allowEagerInit)
+                throws BeansException {
+            return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
+        }
+        public Map<String, Object> getBeansWithAnnotation(
+                Class<? extends Annotation> annotationType)
+                throws BeansException {
+            return applicationContext.getBeansWithAnnotation(annotationType);
+        }
+        public <A extends Annotation> A findAnnotationOnBean(String beanName,
+                Class<A> annotationType) {
+            return applicationContext.findAnnotationOnBean(beanName, annotationType);
+        }
+        public <T> T getBean(String name, Class<T> requiredType)
+                throws BeansException {
+            return applicationContext.getBean(name, requiredType);
+        }
+        public <T> T getBean(Class<T> requiredType) throws BeansException {
+            return applicationContext.getBean(requiredType);
+        }
+        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type) {
+            return applicationContext.getBeanNamesForType(type);
+        }
+        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type,
+                boolean includeNonSingletons, boolean allowEagerInit) {
+            return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+        }
+        public Object getBean(String name, Object... args)
+                throws BeansException {
+            return applicationContext.getBean(name, args);
+        }
+        public boolean isTypeMatch(String name, @SuppressWarnings("rawtypes") Class targetType)
+                throws NoSuchBeanDefinitionException {
+            return false;
+        }
+        public Class<?> getType(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.getType(name);
         }
         public ServletContext getServletContext() {
             return null;

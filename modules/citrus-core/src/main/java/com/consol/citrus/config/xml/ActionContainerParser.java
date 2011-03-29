@@ -43,7 +43,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();

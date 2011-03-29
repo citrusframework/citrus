@@ -34,7 +34,7 @@ import com.consol.citrus.testng.AbstractBaseTest;
 public class CatchTest extends AbstractBaseTest {
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testCatchDefaultException() {
         Catch catchAction = new Catch();
         
@@ -45,7 +45,7 @@ public class CatchTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testCatchException() {
         Catch catchAction = new Catch();
         
@@ -58,7 +58,7 @@ public class CatchTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testNothingToCatch() {
         Catch catchAction = new Catch();
         

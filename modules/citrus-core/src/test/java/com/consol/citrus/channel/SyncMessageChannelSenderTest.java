@@ -25,11 +25,10 @@ import javax.jms.JMSException;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.channel.ChannelResolver;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.*;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +41,7 @@ import com.consol.citrus.message.ReplyMessageHandler;
  */
 public class SyncMessageChannelSenderTest {
 
-    private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
+    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
     private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
 
@@ -53,10 +52,10 @@ public class SyncMessageChannelSenderTest {
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -69,27 +68,25 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        reset(messageChannelTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel, replyMessageHandler);
         
-        expect(channel.getName()).andReturn("testChannel").atLeastOnce();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel, replyMessageHandler);
         
         sender.send(message);
         
-        verify(messageChannelTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel, replyMessageHandler);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannelName("testChannel");
         
         sender.setChannelResolver(channelResolver);
@@ -104,27 +101,27 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        reset(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
+        reset(messagingTemplate, channel, replyMessageHandler, channelResolver);
         
         expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
         
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
+        replay(messagingTemplate, channel, replyMessageHandler, channelResolver);
         
         sender.send(message);
         
-        verify(messageChannelTemplate, channel, replyMessageHandler, channelResolver);
+        verify(messagingTemplate, channel, replyMessageHandler, channelResolver);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyHandler() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -139,14 +136,12 @@ public class SyncMessageChannelSenderTest {
 
         sender.setReplyMessageHandler(replyMessageHandler);
         
-        reset(messageChannelTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel, replyMessageHandler);
         
-        expect(channel.getName()).andReturn("testChannel").atLeastOnce();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
         replyMessageHandler.onReplyMessage((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -158,18 +153,18 @@ public class SyncMessageChannelSenderTest {
             }
         }).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel, replyMessageHandler);
         
         sender.send(message);
         
-        verify(messageChannelTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel, replyMessageHandler);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyTimeout() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
         
         sender.setReplyTimeout(10000L);
@@ -186,14 +181,12 @@ public class SyncMessageChannelSenderTest {
 
         sender.setReplyMessageHandler(replyMessageHandler);
         
-        reset(messageChannelTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel, replyMessageHandler);
         
-        expect(channel.getName()).andReturn("testChannel").atLeastOnce();
-        
-        messageChannelTemplate.setReceiveTimeout(10000L);
+        messagingTemplate.setReceiveTimeout(10000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
         replyMessageHandler.onReplyMessage((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -205,18 +198,18 @@ public class SyncMessageChannelSenderTest {
             }
         }).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel, replyMessageHandler);
         
         sender.send(message);
         
-        verify(messageChannelTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel, replyMessageHandler);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -233,16 +226,14 @@ public class SyncMessageChannelSenderTest {
 
         sender.setCorrelator(replyMessageCorrelator);
         
-        reset(messageChannelTemplate, channel, replyMessageHandler, replyMessageCorrelator);
+        reset(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
         
-        expect(channel.getName()).andReturn("testChannel").atLeastOnce();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn("springintegration_id = '123456789'").once();
+        expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
         replyMessageHandler.onReplyMessage((Message)anyObject(), (String)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -252,22 +243,22 @@ public class SyncMessageChannelSenderTest {
                 Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
                 
                 Assert.assertEquals(org.easymock.EasyMock.getCurrentArguments()[1].toString(), 
-                        "springintegration_id = '123456789'");
+                        MessageHeaders.ID + " = '123456789'");
                 return null;
             }
         }).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler, replyMessageCorrelator);
+        replay(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
         
         sender.send(message);
         
-        verify(messageChannelTemplate, channel, replyMessageHandler, replyMessageCorrelator);
+        verify(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
     }
     
     @Test
     public void testSendMessageNoResponse() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessageChannelTemplate(messageChannelTemplate);
+        sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -277,22 +268,20 @@ public class SyncMessageChannelSenderTest {
         
         sender.setReplyMessageHandler(replyMessageHandler);
         
-        reset(messageChannelTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel, replyMessageHandler);
         
-        expect(channel.getName()).andReturn("testChannel").atLeastOnce();
-        
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannelTemplate.sendAndReceive(message, channel)).andReturn(null).once();
+        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(null).once();
         
-        replay(messageChannelTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel, replyMessageHandler);
 
         try {
             sender.send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
-            verify(messageChannelTemplate, channel, replyMessageHandler);
+            verify(messagingTemplate, channel, replyMessageHandler);
             return;
         }
         

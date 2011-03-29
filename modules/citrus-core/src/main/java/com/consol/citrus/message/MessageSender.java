@@ -16,7 +16,7 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 /**
  * Basic message sender interface. Message senders are capable of publishing messages to a 

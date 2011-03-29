@@ -24,8 +24,8 @@ import javax.jms.*;
 import javax.jms.Queue;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -306,7 +306,7 @@ public class JmsConnectingMessageHandlerTest {
         public boolean propertyExists(String name) throws JMSException {return false;}
         public String getStringProperty(String name) throws JMSException {return headers.get(name);}
         public short getShortProperty(String name) throws JMSException {return 0;}
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("rawtypes")
         public Enumeration getPropertyNames() throws JMSException {return null;}
         public Object getObjectProperty(String name) throws JMSException {return null;}
         public long getLongProperty(String name) throws JMSException {return 0;}

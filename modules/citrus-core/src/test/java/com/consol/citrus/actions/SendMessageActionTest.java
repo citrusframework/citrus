@@ -24,8 +24,9 @@ import java.util.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -48,7 +49,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
 	public void testSendMessageWithMessagePayloadData() {
 		SendMessageAction sendAction = new SendMessageAction();
 		sendAction.setMessageSender(messageSender);
@@ -85,7 +86,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
 	}
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResource() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -122,7 +123,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
 	public void testSendMessageWithMessageBuilderScriptData() {
 		SendMessageAction sendAction = new SendMessageAction();
 		sendAction.setMessageSender(messageSender);
@@ -163,7 +164,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
 	}
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageBuilderScriptDataVariableSupport() {
         context.setVariable("text", "Hello World!");
         
@@ -206,7 +207,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageBuilderScriptResource() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -243,7 +244,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadDataVariablesSupport() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -282,7 +283,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceVariablesSupport() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -321,7 +322,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceFunctionsSupport() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -358,7 +359,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPath() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -401,7 +402,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsDotNotation() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -444,7 +445,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithNamespace() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -489,7 +490,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithDefaultNamespace() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -534,7 +535,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageHeaders() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -577,7 +578,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithHeaderValuesVariableSupport() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -672,7 +673,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithExtractHeaderValues() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -694,7 +695,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
         
         Map<String, String> extractVars = new HashMap<String, String>();
         extractVars.put("Operation", "myOperation");
-        extractVars.put("springintegration_id", "correlationId");
+        extractVars.put(MessageHeaders.ID, "correlationId");
         
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
@@ -729,7 +730,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testMissingMessagePayload() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -757,7 +758,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithXmlDeclaration() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -794,7 +795,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithUTF16Encoding() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -831,7 +832,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithISOEncoding() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -868,7 +869,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithUnsupportedEncoding() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
@@ -895,7 +896,7 @@ public class SendMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceISOEncoding() {
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);

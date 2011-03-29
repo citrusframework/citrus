@@ -24,8 +24,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -62,7 +62,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testNamespaces() {
         reset(messageReceiver);
         
@@ -93,7 +93,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDifferentNamespacePrefix() {
         reset(messageReceiver);
         
@@ -124,7 +124,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAdditionalNamespace() {
         reset(messageReceiver);
         
@@ -155,7 +155,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespaceDeclaration() {
         reset(messageReceiver);
         
@@ -186,7 +186,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespaces() {
         reset(messageReceiver);
         
@@ -217,7 +217,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespacesInExpectedMessage() {
         reset(messageReceiver);
         
@@ -248,7 +248,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespacesInSourceMessage() {
         reset(messageReceiver);
         
@@ -279,7 +279,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespace() {
         reset(messageReceiver);
         
@@ -310,7 +310,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespace() {
         reset(messageReceiver);
         
@@ -341,7 +341,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespace() {
         reset(messageReceiver);
         
@@ -377,7 +377,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespace() {
         reset(messageReceiver);
         
@@ -413,7 +413,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespaces() {
         reset(messageReceiver);
         
@@ -450,7 +450,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespaces() {
         reset(messageReceiver);
         
@@ -488,7 +488,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceError() {
         reset(messageReceiver);
         
@@ -524,7 +524,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceError() {
         reset(messageReceiver);
         
@@ -560,7 +560,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespacesError() {
         reset(messageReceiver);
         
@@ -597,7 +597,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespacesError() {
         reset(messageReceiver);
         
@@ -635,7 +635,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectWrongNamespacePrefix() {
         reset(messageReceiver);
         
@@ -673,7 +673,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceButNamespace() {
         reset(messageReceiver);
         
@@ -711,7 +711,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButDefaultNamespace() {
         reset(messageReceiver);
         
@@ -749,7 +749,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectAdditionalNamespace() {
         reset(messageReceiver);
         
@@ -788,7 +788,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButNamespaceMissing() {
         reset(messageReceiver);
         
@@ -826,7 +826,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithAdditionalNamespacePrefix() {
         reset(messageReceiver);
         
@@ -864,7 +864,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithDifferentNamespacePrefix() {
         reset(messageReceiver);
         
@@ -902,7 +902,7 @@ public class NamespaceTest extends AbstractBaseTest {
     }
     
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespaceContext() {
         reset(messageReceiver);
         

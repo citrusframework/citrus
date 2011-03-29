@@ -16,7 +16,7 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 /**
  * Message handler is invoked when a reply message is received.

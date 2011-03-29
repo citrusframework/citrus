@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.context.TestContext;

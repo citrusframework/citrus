@@ -24,8 +24,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -62,7 +62,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPath() {
         reset(messageReceiver);
         
@@ -102,7 +102,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithDefaultNamespace() {
         reset(messageReceiver);
         
@@ -142,7 +142,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithExplicitNamespace() {
         reset(messageReceiver);
         
@@ -178,7 +178,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithExplicitNamespaceInElementDefinition() {
         reset(messageReceiver);
         
@@ -219,7 +219,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsUsingXPathWithResultTypes() {
         reset(messageReceiver);
         
@@ -266,7 +266,7 @@ public class XPathTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageValuesUsingXPathWithResultTypes() {
         reset(messageReceiver);
         

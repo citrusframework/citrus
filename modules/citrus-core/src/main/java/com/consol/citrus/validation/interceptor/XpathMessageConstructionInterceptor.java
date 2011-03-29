@@ -22,8 +22,8 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

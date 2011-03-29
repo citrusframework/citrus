@@ -18,8 +18,8 @@ package com.consol.citrus.samples.common.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageHandlingException;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHandlingException;
 
 /**
  * @author Christoph Deppisch

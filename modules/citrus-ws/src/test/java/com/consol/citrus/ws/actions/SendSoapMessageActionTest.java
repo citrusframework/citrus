@@ -21,7 +21,7 @@ import static org.easymock.EasyMock.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -43,7 +43,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     private WebServiceMessageSender messageSender = EasyMock.createMock(WebServiceMessageSender.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -78,7 +78,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -116,7 +116,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -139,7 +139,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -174,7 +174,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -211,7 +211,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -248,7 +248,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -283,7 +283,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -318,7 +318,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);
@@ -355,7 +355,7 @@ public class SendSoapMessageActionTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         soapMessageAction.setMessageSender(messageSender);

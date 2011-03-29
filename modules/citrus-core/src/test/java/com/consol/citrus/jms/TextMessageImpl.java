@@ -58,7 +58,7 @@ public class TextMessageImpl implements TextMessage {
     public boolean propertyExists(String name) throws JMSException {return false;}
     public String getStringProperty(String name) throws JMSException {return headers.get(name);}
     public short getShortProperty(String name) throws JMSException {return 0;}
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public Enumeration getPropertyNames() throws JMSException {return null;}
     public Object getObjectProperty(String name) throws JMSException {return null;}
     public long getLongProperty(String name) throws JMSException {return 0;}

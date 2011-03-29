@@ -23,8 +23,8 @@ import java.util.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,7 +40,7 @@ import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 /**
  * @author Christoph Deppisch
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);

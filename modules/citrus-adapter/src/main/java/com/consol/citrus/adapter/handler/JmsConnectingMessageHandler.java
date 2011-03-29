@@ -22,16 +22,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.HeaderMappingMessageConverter;
+import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jms.JmsMessageConverter;
 import com.consol.citrus.message.MessageHandler;
 
 /**
@@ -80,6 +82,12 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     /** Fallback message handler in case no reply message was received */
     private MessageHandler fallbackMessageHandlerDelegate = null;
     
+    /** Jms header mapper */
+    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
+    
+    /** Jms message converter */
+    private MessageConverter messageConverter = new SimpleMessageConverter();
+    
     /**
      * Logger
      */
@@ -94,7 +102,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     }
 
     /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(final Message<?> request) {
@@ -103,7 +111,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         if(log.isDebugEnabled()) {
             log.debug("Message is: " + request.getPayload());
         }
-
+        
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
         Destination replyDestination = null;
@@ -118,7 +126,8 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
                 session = createSession(connection);
             }
             
-            javax.jms.Message jmsRequest = getMessageConverter().toMessage(request, session);
+            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
+            javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(request, session);
             
             messageProducer = session.createProducer(getDestination(session));
 
@@ -141,7 +150,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             if(jmsReplyMessage != null) {
-                replyMessage = (Message<?>)getMessageConverter().fromMessage(jmsReplyMessage);
+                replyMessage = (Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage);
             } else if(fallbackMessageHandlerDelegate != null) {
                 log.info("Did not receive reply message from destination '"
                         + getReplyDestination(session, request)
@@ -300,17 +309,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         if(connection != null) {
             ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
         }
-    }
-    
-    /**
-     * Get the JMS message converter.
-     * @return
-     */
-    protected MessageConverter getMessageConverter() {
-        HeaderMappingMessageConverter hmmc = new HeaderMappingMessageConverter(new DefaultJmsHeaderMapper());
-        hmmc.setExtractIntegrationMessagePayload(true);
-
-        return hmmc;
     }
     
     /**

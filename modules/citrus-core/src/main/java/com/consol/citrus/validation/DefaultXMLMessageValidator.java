@@ -19,7 +19,7 @@ package com.consol.citrus.validation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.context.ValidationContext;

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.demo;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 /**
  * @author Christoph Deppisch

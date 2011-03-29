@@ -17,21 +17,21 @@
 package com.consol.citrus.samples.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.Message;
 import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
-import org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer;
-import org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.xml.transformer.MarshallingTransformer;
+import org.springframework.integration.xml.transformer.UnmarshallingTransformer;
 
 /**
  * @author Christoph Deppisch
  */
 public abstract class AbstractMarshallingMessageService<T, K> {
     @Autowired
-    private XmlPayloadUnmarshallingTransformer unmarshallingTransformer;
+    private UnmarshallingTransformer unmarshallingTransformer;
     
     @Autowired
-    private XmlPayloadMarshallingTransformer marshallingTransformer;
+    private MarshallingTransformer marshallingTransformer;
     
     @ServiceActivator
     public Message<?> processMessageInternal(Message<?> message) {
@@ -48,8 +48,7 @@ public abstract class AbstractMarshallingMessageService<T, K> {
      * @param message
      * @return
      */
-    @SuppressWarnings("unchecked")
-    private Message<T> unmarshalMessage(Message<?> message) {
+    @SuppressWarnings("unchecked") private Message<T> unmarshalMessage(Message<?> message) {
         T payload = (T) unmarshallingTransformer.transformPayload(message.getPayload());
         MessageBuilder<T> builder = MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders());
         
@@ -57,18 +56,12 @@ public abstract class AbstractMarshallingMessageService<T, K> {
     }
     
     /**
-     * Marshal message message payload. 
+     * Marshal message payload. 
      * 
      * @param message
      * @return
      */
     private Message<?> marshalMessage(Message<K> message) {
-        String payload = marshallingTransformer.transformPayload(
-                message.getPayload()).toString();
-
-        MessageBuilder<String> builder = MessageBuilder.withPayload(payload)
-                .copyHeaders(message.getHeaders());
-        
-        return builder.build();
+        return marshallingTransformer.transform(message);
     }
 }

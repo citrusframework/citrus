@@ -38,8 +38,7 @@ public class FlightDaoImpl implements FlightDao {
         return em.find(Flight.class, flightId);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Flight> findAll() {
+    @SuppressWarnings("unchecked") public List<Flight> findAll() {
         Query query = em.createQuery("from Flight f");
         
         return query.getResultList();

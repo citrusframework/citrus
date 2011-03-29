@@ -73,7 +73,7 @@
         </property>
     </bean>
         
-    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.MarshallingTransformer">
         <constructor-arg>
             <ref bean="xmlMarshaller"/>
         </constructor-arg>
@@ -82,7 +82,7 @@
         </constructor-arg>
     </bean>
     
-    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.UnmarshallingTransformer">
         <constructor-arg>
             <ref bean="xmlMarshaller"/>
         </constructor-arg>

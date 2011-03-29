@@ -24,8 +24,8 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -50,7 +50,7 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void setup() {
         super.setup();
         
@@ -124,7 +124,7 @@ public class IgnoreElementsLegacyTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testIgnoreRootElement() {
         reset(messageReceiver);
         

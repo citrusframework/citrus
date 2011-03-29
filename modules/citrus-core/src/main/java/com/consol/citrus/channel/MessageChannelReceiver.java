@@ -21,9 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.integration.channel.*;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.core.PollableChannel;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -49,7 +52,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     private String channelName;
     
     /** Message channel template */
-    private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
+    private MessagingTemplate messagingTemplate = new MessagingTemplate();
     
     /** The parent bean factory used for channel name resolving */
     private BeanFactory beanFactory;
@@ -67,8 +70,8 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         
         log.info("Receiving message from: " + channelName);
         
-        messageChannelTemplate.setReceiveTimeout(timeout);
-        Message<?> received = messageChannelTemplate.receive(getDestinationChannel());
+        messagingTemplate.setReceiveTimeout(timeout);
+        Message<?> received = messagingTemplate.receive(getDestinationChannel());
         
         if(received == null) {
             throw new ActionTimeoutException("Action timeout while receiving message from channel '"
@@ -83,7 +86,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        throw new UnsupportedOperationException("MessageChannelTemplate " +
+        throw new UnsupportedOperationException("MessagingTemplate " +
         		"does not support selected receiving.");
     }
     
@@ -119,7 +122,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     private String getDestinationChannelName() {
         if (channel != null) {
-            return channel.getName();
+            return channel.toString();
         } else if (StringUtils.hasText(channelName)) {
             return channelName;
         } else {
@@ -150,12 +153,11 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     }
 
     /**
-     * Set the message channel template.
-     * @param messageChannelTemplate the messageChannelTemplate to set
+     * Set the messaging template.
+     * @param messagingTemplate the messagingTemplate to set
      */
-    public void setMessageChannelTemplate(
-            MessageChannelTemplate messageChannelTemplate) {
-        this.messageChannelTemplate = messageChannelTemplate;
+    public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
     }
     
     /**

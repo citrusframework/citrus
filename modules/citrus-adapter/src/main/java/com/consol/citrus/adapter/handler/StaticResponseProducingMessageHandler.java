@@ -19,8 +19,8 @@ package com.consol.citrus.adapter.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.message.MessageHandler;
 
@@ -38,7 +38,7 @@ public class StaticResponseProducingMessageHandler implements MessageHandler {
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
     
     /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      */
     public Message<?> handleMessage(Message<?> message) {
         return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();

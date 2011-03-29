@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -54,7 +54,7 @@ public class StoreMessageInterceptorAspect {
     /** Count messages */
     private static final AtomicInteger count = new AtomicInteger(1);
     
-    @Pointcut("execution(org.springframework.integration.core.Message com.consol.citrus.message.MessageReceiver.receive*(..))")
+    @Pointcut("execution(org.springframework.integration.Message com.consol.citrus.message.MessageReceiver.receive*(..))")
     public void inReceivingMessage() {}
 
     @AfterReturning(pointcut="com.consol.citrus.aop.StoreMessageInterceptorAspect.inReceivingMessage()",

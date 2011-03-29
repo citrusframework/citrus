@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.jms.Destination;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.integration.jms.JmsHeaders;
 
 import com.consol.citrus.message.ReplyMessageCorrelator;

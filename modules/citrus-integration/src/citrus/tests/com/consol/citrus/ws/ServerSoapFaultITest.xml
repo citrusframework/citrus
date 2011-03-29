@@ -56,7 +56,7 @@
                   		</data>
                   	</message>
                     <extract>
-                        <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                        <header name="jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -76,7 +76,7 @@
                   		</ws:fault-detail>
                   	</ws:fault>
                     <ws:header>
-                        <ws:element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -126,7 +126,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                        <header name="jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -146,7 +146,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>

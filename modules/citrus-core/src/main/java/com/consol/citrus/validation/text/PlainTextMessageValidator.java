@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.text;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.context.TestContext;

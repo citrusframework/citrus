@@ -18,10 +18,9 @@ package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.*;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -38,7 +37,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     private ReplyMessageChannelHolder replyMessageChannelHolder;
 
     /** Message channel template */
-    private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
+    private MessagingTemplate messagingTemplate = new MessagingTemplate();
 
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
@@ -49,7 +48,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     private static final Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Can not send empty message");
@@ -71,17 +70,19 @@ public class ReplyMessageChannelSender implements MessageSender {
             Assert.notNull(replyChannel, "Unable to locate reply channel");
         }
         
-        log.info("Sending message to reply channel: '" + replyChannel.getName() + "'");
+        log.info("Sending message to reply channel: '" + replyChannel + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
         }
         
-        if(!messageChannelTemplate.send(message, replyChannel)) {
-            throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel.getName() + "'");
+        try {
+            messagingTemplate.send(replyChannel, message);
+        } catch (MessageDeliveryException e) {
+            throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }
         
-        log.info("Message was successfully sent to reply channel: '" + replyChannel.getName() + "'");
+        log.info("Message was successfully sent to reply channel: '" + replyChannel + "'");
     }
     
     /**
@@ -109,11 +110,10 @@ public class ReplyMessageChannelSender implements MessageSender {
     }
 
     /**
-     * Set the message channel template.
-     * @param messageChannelTemplate the messageChannelTemplate to set
+     * Set the messaging template.
+     * @param messagingTemplate the messagingTemplate to set
      */
-    public void setMessageChannelTemplate(
-            MessageChannelTemplate messageChannelTemplate) {
-        this.messageChannelTemplate = messageChannelTemplate;
+    public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
     }
 }

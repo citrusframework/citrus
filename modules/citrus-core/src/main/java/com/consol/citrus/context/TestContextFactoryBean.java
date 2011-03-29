@@ -30,7 +30,7 @@ import com.consol.citrus.variable.GlobalVariables;
  * 
  * @author Christoph Deppisch
  */
-public class TestContextFactoryBean implements FactoryBean {
+public class TestContextFactoryBean implements FactoryBean<TestContext> {
     
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -49,7 +49,7 @@ public class TestContextFactoryBean implements FactoryBean {
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
-    public Object getObject() throws Exception {
+    public TestContext getObject() throws Exception {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
         context.setGlobalVariables(globalVariables);
@@ -67,7 +67,7 @@ public class TestContextFactoryBean implements FactoryBean {
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     public Class getObjectType() {
         return TestContext.class;
     }

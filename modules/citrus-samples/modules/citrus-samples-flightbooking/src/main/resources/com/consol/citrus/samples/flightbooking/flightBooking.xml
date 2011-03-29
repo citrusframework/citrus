@@ -5,13 +5,13 @@
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.springframework.org/schema/context 
-            http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
 			http://www.springframework.org/schema/integration
-			http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+			http://www.springframework.org/schema/integration/spring-integration-2.0.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms-1.0.xsd">
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.0.xsd">
     
     <context:annotation-config />
     
@@ -24,7 +24,7 @@
     <int:channel id="bookingsXML"/>
     <int:transformer input-channel="bookingsXML" ref="unmarshallingTransformer" output-channel="bookings"/>
     
-    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.UnmarshallingTransformer">
         <constructor-arg>
             <ref bean="bookingMarshaller"/>
         </constructor-arg>
@@ -49,22 +49,17 @@
     <bean id="bookingSplitter" class="com.consol.citrus.samples.flightbooking.BookingSplitter">
         <property name="customerDao" ref="customerDao"/>
         <property name="flightDao" ref="flightDao"/>
-        <property name="flightCompletionStrategy" ref="flightCompletionStrategy"/>
     </bean>
 
 	<int:channel id="flights"/>
 	<int:router input-channel="flights" ref="flightRouter"/>
   
     <bean id="flightRouter" class="com.consol.citrus.samples.flightbooking.FlightRouter">
-        <property name="channelResolver">
-            <bean class="org.springframework.integration.channel.MapBasedChannelResolver">
-                <property name="channelMap">
-                    <map>
-                        <entry key="RoyalAirline" value-ref="royalAirlineFlights"/>
-                        <entry key="SmartAirline" value-ref="smartAirlineFlights"/>
-                    </map>
-                </property>
-            </bean>
+        <property name="airlineMappings">
+            <map>
+                <entry key="RoyalAirline" value-ref="royalAirlineFlights"/>
+                <entry key="SmartAirline" value-ref="smartAirlineFlights"/>            
+            </map>
         </property>
     </bean>
 
@@ -79,7 +74,7 @@
     <jms:outbound-gateway id="royalAirlineGateway" 
                           request-channel="royalAirlineFlightsXML" 
                           request-destination-name="Royal.Airline.Request.Queue"
-                          reply-channel="confirmedFlightsXML"/>
+                          reply-channel="confirmedFlightsXML" reply-timeout="1000"/>
     
 	<int:channel id="smartAirlineFlights"/>
     <int:channel id="smartAirlineFlightsXML">
@@ -107,15 +102,14 @@
             ref="flightAggregator" 
             method="processFlights" 
             output-channel="bookingResults"
-            completion-strategy="flightCompletionStrategy"
-            completion-strategy-method="isComplete"
+            message-store="simpleMessageStore"
             correlation-strategy="flightCorrelationStrategy"
             correlation-strategy-method="getCorrelationKey"
-            timeout="2000"
-            send-partial-result-on-timeout="true"/>
+            send-timeout="5000"
+            send-partial-result-on-expiry="false"/>
             
+    <bean id="simpleMessageStore" class="org.springframework.integration.store.SimpleMessageStore"/>
     <bean id="flightAggregator" class="com.consol.citrus.samples.flightbooking.FlightAggregator"/>
-    <bean id="flightCompletionStrategy" class="com.consol.citrus.samples.flightbooking.FlightCompletionStrategy"/>
     <bean id="flightCorrelationStrategy" class="com.consol.citrus.samples.flightbooking.FlightCorrelationStrategy"/>
 
     <int:channel id="bookingResultsXML">
@@ -124,7 +118,7 @@
         </int:interceptors>
     </int:channel>
     <int:transformer input-channel="bookingResults" ref="marshallingTransformer" output-channel="bookingResultsXML"/>
-    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.MarshallingTransformer">
         <constructor-arg>
             <ref bean="bookingMarshaller"/>
         </constructor-arg>

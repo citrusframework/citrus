@@ -27,8 +27,8 @@ import javax.xml.transform.TransformerException;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -198,7 +198,7 @@ public class SoapRequestMessageCallbackTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testSoapMimeHeader() throws TransformerException, IOException {
         Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
                                                     .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "operation", "unitTest")

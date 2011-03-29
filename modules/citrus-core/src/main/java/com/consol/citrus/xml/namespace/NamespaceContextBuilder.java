@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
 

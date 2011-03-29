@@ -16,7 +16,7 @@
 
 package com.consol.citrus.adapter.common.endpoint;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;

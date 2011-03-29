@@ -16,16 +16,10 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.jms.HeaderMappingMessageConverter;
-import org.springframework.integration.jms.JmsHeaderMapper;
+import org.springframework.integration.Message;
 import org.springframework.integration.message.GenericMessage;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessageConverter;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
@@ -50,16 +44,16 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @throws ActionTimeoutException
      */
     public Message<?> receive(long timeout) {
-        log.info("Waiting for JMS message on destination: '" + getDestinationName() + "'");
+        log.info("Waiting for JMS message on destination: '" + getDefaultDestinationName() + "'");
         
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveAndConvert();
         
         if(receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDestinationName() + "'");
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName() + "'");
         }
         
-        log.info("Received JMS message on destination: '" + getDestinationName() + "'");
+        log.info("Received JMS message on destination: '" + getDefaultDestinationName() + "'");
         
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
@@ -80,16 +74,16 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @throws ActionTimeoutException
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        log.info("Waiting for JMS message on destination: '" + getDestinationName() + "(" + selector + ")'");
+        log.info("Waiting for JMS message on destination: '" + getDefaultDestinationName() + "(" + selector + ")'");
         
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
         
         if(receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDestinationName()  + "(" + selector + ")'");
+            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName()  + "(" + selector + ")'");
         }
         
-        log.info("Received JMS message on destination: '" + getDestinationName()  + "(" + selector + ")'");
+        log.info("Received JMS message on destination: '" + getDefaultDestinationName()  + "(" + selector + ")'");
         
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
@@ -106,29 +100,6 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     }
 
     /**
-     * Retrieves the destination name (either a queue name or a topic name).
-     * @return the destinationName
-     */
-    protected String getDestinationName() {
-        try {
-            if(getJmsTemplate().getDefaultDestination() != null) {
-                if(getJmsTemplate().getDefaultDestination() instanceof Queue) {
-                    return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if(getJmsTemplate().getDefaultDestination() instanceof Topic) {
-                    return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
-                } else {
-                    return getJmsTemplate().getDefaultDestination().toString();
-                }
-            } else {
-                return getJmsTemplate().getDefaultDestinationName();
-            }
-        } catch (JMSException e) {
-            log.error("Error while getting destination name", e);
-            return "";
-        }
-    }
-    
-    /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
@@ -140,19 +111,6 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      */
     public Message<?> receiveSelected(String selector) {
         return receiveSelected(selector, receiveTimeout);
-    }
-
-    /**
-     * @see org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter#configureMessageConverter(org.springframework.jms.core.JmsTemplate, org.springframework.integration.jms.JmsHeaderMapper)
-     */
-    @Override
-    protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
-        MessageConverter converter = jmsTemplate.getMessageConverter();
-        if (converter == null || !(converter instanceof HeaderMappingMessageConverter)) {
-            HeaderMappingMessageConverter hmmc = new HeaderMappingMessageConverter(converter, headerMapper);
-            hmmc.setExtractIntegrationMessagePayload(true);
-            jmsTemplate.setMessageConverter(hmmc);
-        }
     }
 
     /**

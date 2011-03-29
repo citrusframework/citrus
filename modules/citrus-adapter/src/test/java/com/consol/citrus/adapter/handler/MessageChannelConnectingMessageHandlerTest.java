@@ -25,10 +25,10 @@ import javax.jms.JMSException;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,14 +37,14 @@ import org.testng.annotations.Test;
  */
 public class MessageChannelConnectingMessageHandlerTest {
 
-    private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
+    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     private MessageChannel messageChannel = EasyMock.createMock(MessageChannel.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMessageHandler() throws JMSException {
         MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-        messageHandler.setMessageChannelTemplate(messageChannelTemplate);
+        messageHandler.setMessagingTemplate(messagingTemplate);
         messageHandler.setChannel(messageChannel);
         
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
@@ -58,28 +58,26 @@ public class MessageChannelConnectingMessageHandlerTest {
                                 .copyHeaders(requestHeaders)
                                 .build();
         
-        reset(messageChannel, messageChannelTemplate);
+        reset(messageChannel, messagingTemplate);
         
-        expect(messageChannelTemplate.sendAndReceive(request, messageChannel)).andReturn(response).once();
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        expect(messagingTemplate.sendAndReceive(messageChannel, request)).andReturn(response).once();
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannel.getName()).andReturn("sendChannel").once();
-        
-        replay(messageChannel, messageChannelTemplate);
+        replay(messageChannel, messagingTemplate);
         
         Message<?> responseMessage = messageHandler.handleMessage(request);
         
         Assert.assertEquals(responseMessage.getPayload(), response.getPayload());
         
-        verify(messageChannel, messageChannelTemplate);
+        verify(messageChannel, messagingTemplate);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMessageHandlerWithChannelName() throws JMSException {
         MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-        messageHandler.setMessageChannelTemplate(messageChannelTemplate);
+        messageHandler.setMessagingTemplate(messagingTemplate);
         messageHandler.setChannelName("sendMessageChannel");
         
         BeanFactory beanFactory = EasyMock.createMock(BeanFactory.class);
@@ -97,28 +95,28 @@ public class MessageChannelConnectingMessageHandlerTest {
                                 .copyHeaders(requestHeaders)
                                 .build();
         
-        reset(messageChannel, beanFactory, messageChannelTemplate);
+        reset(messageChannel, beanFactory, messagingTemplate);
 
         expect(beanFactory.getBean("sendMessageChannel", MessageChannel.class)).andReturn(messageChannel).once();
         
-        expect(messageChannelTemplate.sendAndReceive(request, messageChannel)).andReturn(response).once();
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        expect(messagingTemplate.sendAndReceive(messageChannel, request)).andReturn(response).once();
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        replay(messageChannel, beanFactory, messageChannelTemplate);
+        replay(messageChannel, beanFactory, messagingTemplate);
         
         Message<?> responseMessage = messageHandler.handleMessage(request);
         
         Assert.assertEquals(responseMessage.getPayload(), response.getPayload());
         
-        verify(messageChannel, beanFactory, messageChannelTemplate);
+        verify(messageChannel, beanFactory, messagingTemplate);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMessageHandlerCustomReplyTimeout() throws JMSException {
         MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-        messageHandler.setMessageChannelTemplate(messageChannelTemplate);
+        messageHandler.setMessagingTemplate(messagingTemplate);
         messageHandler.setChannel(messageChannel);
         messageHandler.setReplyTimeout(10000L);
         
@@ -133,28 +131,26 @@ public class MessageChannelConnectingMessageHandlerTest {
                                 .copyHeaders(requestHeaders)
                                 .build();
         
-        reset(messageChannel, messageChannelTemplate);
+        reset(messageChannel, messagingTemplate);
         
-        expect(messageChannelTemplate.sendAndReceive(request, messageChannel)).andReturn(response).once();
-        messageChannelTemplate.setReceiveTimeout(10000L);
+        expect(messagingTemplate.sendAndReceive(messageChannel, request)).andReturn(response).once();
+        messagingTemplate.setReceiveTimeout(10000L);
         expectLastCall().once();
         
-        expect(messageChannel.getName()).andReturn("sendChannel").once();
-        
-        replay(messageChannel, messageChannelTemplate);
+        replay(messageChannel, messagingTemplate);
         
         Message<?> responseMessage = messageHandler.handleMessage(request);
         
         Assert.assertEquals(responseMessage.getPayload(), response.getPayload());
         
-        verify(messageChannel, messageChannelTemplate);
+        verify(messageChannel, messagingTemplate);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testMessageHandlerNoReplyMessage() throws JMSException {
         MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-        messageHandler.setMessageChannelTemplate(messageChannelTemplate);
+        messageHandler.setMessagingTemplate(messagingTemplate);
         messageHandler.setChannel(messageChannel);
         
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
@@ -163,28 +159,26 @@ public class MessageChannelConnectingMessageHandlerTest {
                                 .copyHeaders(requestHeaders)
                                 .build();
 
-        reset(messageChannel, messageChannelTemplate);
+        reset(messageChannel, messagingTemplate);
         
-        expect(messageChannelTemplate.sendAndReceive(request, messageChannel)).andReturn(null).once();
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        expect(messagingTemplate.sendAndReceive(messageChannel, request)).andReturn(null).once();
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannel.getName()).andReturn("sendChannel").once();
-        
-        replay(messageChannel, messageChannelTemplate);
+        replay(messageChannel, messagingTemplate);
         
         Message<?> responseMessage = messageHandler.handleMessage(request);
         
         Assert.assertNull(responseMessage);
         
-        verify(messageChannel, messageChannelTemplate);
+        verify(messageChannel, messagingTemplate);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void testMessageHandlerWithFallbackMessageHandler() throws JMSException {
         MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-        messageHandler.setMessageChannelTemplate(messageChannelTemplate);
+        messageHandler.setMessagingTemplate(messagingTemplate);
         messageHandler.setChannel(messageChannel);
         
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
@@ -199,20 +193,18 @@ public class MessageChannelConnectingMessageHandlerTest {
         fallbackMessageHandler.setMessagePayload("<StaticTestResponse>Hello World!</StaticTestResponse>");
         messageHandler.setFallbackMessageHandlerDelegate(fallbackMessageHandler);
         
-        reset(messageChannel, messageChannelTemplate);
+        reset(messageChannel, messagingTemplate);
         
-        expect(messageChannelTemplate.sendAndReceive(request, messageChannel)).andReturn(null).once();
-        messageChannelTemplate.setReceiveTimeout(5000L);
+        expect(messagingTemplate.sendAndReceive(messageChannel, request)).andReturn(null).once();
+        messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messageChannel.getName()).andReturn("sendChannel").once();
-        
-        replay(messageChannel, messageChannelTemplate);
+        replay(messageChannel, messagingTemplate);
         
         Message<?> responseMessage = messageHandler.handleMessage(request);
         
         Assert.assertEquals(responseMessage.getPayload(), "<StaticTestResponse>Hello World!</StaticTestResponse>");
         
-        verify(messageChannel, messageChannelTemplate);
+        verify(messageChannel, messagingTemplate);
     }
 }

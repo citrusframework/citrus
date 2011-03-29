@@ -21,12 +21,13 @@ import javax.jms.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.*;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.HeaderMappingMessageConverter;
+import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -68,6 +69,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
     
+    /** The message converter */
+    private MessageConverter messageConverter = new SimpleMessageConverter();
+
+    /** The header mapper */
+    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
+    
     /** Time to synchronously wait for reply */
     private long replyTimeout = 5000L;
     
@@ -86,7 +93,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     private static final Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
@@ -113,7 +120,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
                 session = createSession(connection);
             }
             
-            javax.jms.Message jmsRequest = getMessageConverter().toMessage(message, session);
+            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
+            javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(message, session);
             
             messageProducer = session.createProducer(getDefaultDestination(session));
 
@@ -140,10 +148,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             
             if(replyMessageHandler != null) {
                 if(correlator != null) {
-                    replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage),
+                    replyMessageHandler.onReplyMessage((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage),
                         correlator.getCorrelationKey(message));
                 } else {
-                    replyMessageHandler.onReplyMessage((Message<?>)getMessageConverter().fromMessage(jmsReplyMessage));
+                    replyMessageHandler.onReplyMessage((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage));
                 }
             }
         } catch (JMSException e) {
@@ -315,17 +323,6 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         }
     }
     
-    /**
-     * Get the message converter converting messages from internal format to JMS.
-     * @return
-     */
-    protected MessageConverter getMessageConverter() {
-        HeaderMappingMessageConverter hmmc = new HeaderMappingMessageConverter(new DefaultJmsHeaderMapper());
-        hmmc.setExtractIntegrationMessagePayload(true);
-
-        return hmmc;
-    }
-
     /**
      * Set the connection factory.
      * @param connectionFactory the connectionFactory to set

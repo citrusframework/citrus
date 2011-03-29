@@ -16,8 +16,8 @@
 
 package com.consol.citrus.adapter.handler;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.message.MessageHandler;
 
@@ -29,7 +29,7 @@ import com.consol.citrus.message.MessageHandler;
 public class EmptyResponseProducingMessageHandler implements MessageHandler {
 
     /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      */
     public Message<?> handleMessage(Message<?> message) {
         return MessageBuilder.withPayload("").build();

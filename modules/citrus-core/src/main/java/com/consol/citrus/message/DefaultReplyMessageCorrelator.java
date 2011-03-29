@@ -16,8 +16,8 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageHeaders;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
 
 /**
  * Default message correlator implementation using the Spring integration message id
@@ -28,7 +28,7 @@ import org.springframework.integration.core.MessageHeaders;
 public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
 
     /**
-     * @see com.consol.citrus.message.ReplyMessageCorrelator#getCorrelationKey(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.ReplyMessageCorrelator#getCorrelationKey(org.springframework.integration.Message)
      */
     public String getCorrelationKey(Message<?> request) {
         return MessageHeaders.ID + " = '" + request.getHeaders().getId().toString() + "'";

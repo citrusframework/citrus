@@ -19,8 +19,8 @@ package com.consol.citrus.samples.bookregistry;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.samples.bookregistry.exceptions.DuplicateIsbnException;
 import com.consol.citrus.samples.bookregistry.exceptions.UnknownBookException;

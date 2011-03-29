@@ -28,7 +28,7 @@ import com.consol.citrus.TestCase;
  * 
  * @author Christoph Deppisch
  */
-public class TestCaseFactory implements FactoryBean {
+public class TestCaseFactory implements FactoryBean<TestCase> {
     /** Result test case object */
     private TestCase testCase;
 
@@ -40,7 +40,7 @@ public class TestCaseFactory implements FactoryBean {
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
-    public Object getObject() throws Exception {
+    public TestCase getObject() throws Exception {
         if (this.testChain != null && this.testChain.size() > 0) {
             for (int i = 0; i < testChain.size(); i++) {
                 TestAction action = testChain.get(i);
@@ -61,7 +61,7 @@ public class TestCaseFactory implements FactoryBean {
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     public Class getObjectType() {
         return TestCase.class;
     }

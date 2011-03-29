@@ -18,7 +18,7 @@ package com.consol.citrus.message;
 
 import java.util.List;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 /**
  * Message processor having 0-n message handlers. According to a dispatching message element

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 /**
  * Abstract base class for reply message receiver implementations. In addition to the usual
@@ -97,14 +97,14 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
     }
 
     /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.core.Message, java.lang.String)
+     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
         replyMessages.put(correlationKey, replyMessage);
     }
     
     /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
         onReplyMessage(replyMessage, "");

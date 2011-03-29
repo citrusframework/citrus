@@ -19,7 +19,7 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;

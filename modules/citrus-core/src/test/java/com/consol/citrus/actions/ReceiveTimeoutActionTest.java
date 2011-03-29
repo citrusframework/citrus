@@ -19,8 +19,8 @@ package com.consol.citrus.actions;
 import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -66,7 +66,7 @@ public class ReceiveTimeoutActionTest extends AbstractBaseTest {
     }
 	
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveTimeoutFail() {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
         receiveTimeout.setMessageReceiver(messageReceiver);

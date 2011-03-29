@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Required;
 /**
  * @author Christoph Deppisch
  */
-public class EasyMockFactoryBean implements FactoryBean {
+public class EasyMockFactoryBean implements FactoryBean<Object> {
 
     boolean singleton = true;
     Class<?> type;

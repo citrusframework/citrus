@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

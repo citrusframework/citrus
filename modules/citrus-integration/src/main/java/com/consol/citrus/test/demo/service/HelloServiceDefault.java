@@ -16,8 +16,8 @@
 
 package com.consol.citrus.test.demo.service;
 
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.test.demo.model.HelloRequest;
 import com.consol.citrus.test.demo.model.HelloResponse;

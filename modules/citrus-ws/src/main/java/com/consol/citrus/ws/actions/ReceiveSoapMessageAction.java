@@ -19,7 +19,7 @@ package com.consol.citrus.ws.actions;
 import java.io.IOException;
 
 import org.springframework.core.io.Resource;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
@@ -50,7 +50,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private SoapAttachmentValidator attachmentValidator;
     
     /**
-     * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.core.Message, com.consol.citrus.context.TestContext)
+     * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.Message, com.consol.citrus.context.TestContext)
      */
     @Override
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {

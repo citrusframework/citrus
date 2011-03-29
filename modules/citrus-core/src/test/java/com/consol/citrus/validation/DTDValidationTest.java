@@ -25,8 +25,8 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -60,7 +60,7 @@ public class DTDValidationTest extends AbstractBaseTest {
     }
     
 	@Test
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     public void testInlineDTD() {
         reset(messageReceiver);
         
@@ -99,7 +99,7 @@ public class DTDValidationTest extends AbstractBaseTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExternalDTD() {
         reset(messageReceiver);
         

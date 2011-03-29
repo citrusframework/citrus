@@ -24,8 +24,9 @@ import java.util.Map;
 import javax.jms.*;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -130,7 +131,7 @@ public class JmsReplyMessageSenderTest {
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
-        expect(replyDestinationHolder.getReplyDestination("springintegration_id = '123456789'")).andReturn(replyDestination).once();
+        expect(replyDestinationHolder.getReplyDestination(MessageHeaders.ID + " = '123456789'")).andReturn(replyDestination).once();
         
         expect(session.createProducer(replyDestination)).andReturn(messageProducer).once();
         messageProducer.send((TextMessage)anyObject());
@@ -193,7 +194,7 @@ public class JmsReplyMessageSenderTest {
         
         reset(replyDestinationHolder);
 
-        expect(replyDestinationHolder.getReplyDestination("springintegration_id = '123456789'")).andReturn(null).once();
+        expect(replyDestinationHolder.getReplyDestination(MessageHeaders.ID + " = '123456789'")).andReturn(null).once();
 
         replay(replyDestinationHolder);
         

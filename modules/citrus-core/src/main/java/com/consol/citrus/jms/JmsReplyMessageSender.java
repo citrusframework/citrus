@@ -20,13 +20,8 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.jms.HeaderMappingMessageConverter;
-import org.springframework.integration.jms.JmsHeaderMapper;
-import org.springframework.integration.message.MessageBuilder;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.*;
@@ -41,25 +36,10 @@ import com.consol.citrus.message.*;
  * 
  * @author Christoph Deppisch
  */
-public class JmsReplyMessageSender implements MessageSender, InitializingBean {
+public class JmsReplyMessageSender extends AbstractJmsAdapter implements MessageSender {
     /** Reply destination holder */
     private JmsReplyDestinationHolder replyDestinationHolder;
 
-    /** JMS connection factory */
-    private ConnectionFactory connectionFactory;
-
-    /** JMS template */
-    private JmsTemplate jmsTemplate;
-
-    /** JMS header mapper */
-    private JmsHeaderMapper headerMapper;
-
-    /** Initialized flag */
-    private boolean initialized;
-
-    /** Monitor initialization */
-    private final Object initializationMonitor = new Object();
-    
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
@@ -69,21 +49,7 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(JmsReplyMessageSender.class);
 
     /**
-     * Constructor using custom {@link JmsTemplate}.
-     * @param jmsTemplate
-     */
-    public JmsReplyMessageSender(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    /**
-     * Default constructor.
-     */
-    public JmsReplyMessageSender() {
-    }
-
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
@@ -117,30 +83,6 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     }
     
     /**
-     * Set the JMS connection factory.
-     * @param connectionFactory
-     */
-    public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
-    /**
-     * Set the JMS template.
-     * @param jmsTemplate
-     */
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    /**
-     * Set the JMS header mapper.
-     * @param headerMapper
-     */
-    public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        this.headerMapper = headerMapper;
-    }
-    
-    /**
      * Set the reply destination.
      * @param replyDestinationHolder the replyDestinationHolder to set
      */
@@ -149,17 +91,6 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
         this.replyDestinationHolder = replyDestinationHolder;
     }
 
-    /**
-     * Get JMS template.
-     * @return
-     */
-    protected JmsTemplate getJmsTemplate() {
-        if (this.jmsTemplate == null) {
-            this.afterPropertiesSet();
-        }
-        return this.jmsTemplate;
-    }
-    
     /**
      * Get the destination name (either a queue name or a topic name).
      * @return the destinationName
@@ -184,41 +115,14 @@ public class JmsReplyMessageSender implements MessageSender, InitializingBean {
     }
 
     /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     * In addition to usual initializing steps check that replySestinationHolder is set correctly.
      */
     public void afterPropertiesSet() {
-        synchronized (this.initializationMonitor) {
-            if (this.initialized) {
-                return;
-            }
-            
-            Assert.notNull(replyDestinationHolder, "'replyDestinationHolder' is required");
-            
-            if (this.jmsTemplate == null) {
-                Assert.isTrue(this.connectionFactory != null, "'connectionFactory'is required.");
-                this.jmsTemplate = new JmsTemplate();
-                jmsTemplate.setConnectionFactory(this.connectionFactory);
-            }
-            
-            this.configureMessageConverter(this.jmsTemplate, this.headerMapper);
-            this.initialized = true;
-        }
+        super.afterPropertiesSet();
+        
+        Assert.notNull(replyDestinationHolder, "Missing required property 'replyDestinationHolder'");
     }
     
-    /**
-     * Configures the message converter.
-     * @param jmsTemplate
-     * @param headerMapper
-     */
-    protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
-        MessageConverter converter = jmsTemplate.getMessageConverter();
-        if (converter == null || !(converter instanceof HeaderMappingMessageConverter)) {
-            HeaderMappingMessageConverter hmmc = new HeaderMappingMessageConverter(converter, headerMapper);
-            hmmc.setExtractIntegrationMessagePayload(true);
-            jmsTemplate.setMessageConverter(hmmc);
-        }
-    }
-
     /**
      * Set the message correlator.
      * @param correlator the correlator to set

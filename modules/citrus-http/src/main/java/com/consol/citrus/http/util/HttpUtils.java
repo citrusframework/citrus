@@ -18,7 +18,7 @@ package com.consol.citrus.http.util;
 
 import java.util.Map.Entry;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.util.MessageUtils;

@@ -35,7 +35,6 @@ public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
      */
     private static final Logger log = LoggerFactory.getLogger(SoapAttachmentHandlingEndpoint.class);
     
-	@SuppressWarnings("unchecked")
     public void invoke(MessageContext messageContext) throws Exception {
 	    Iterator<Attachment> it = ((SoapMessage)messageContext.getRequest()).getAttachments();
 	    while(it.hasNext()) {

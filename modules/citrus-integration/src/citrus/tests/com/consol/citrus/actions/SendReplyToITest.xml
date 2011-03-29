@@ -66,7 +66,7 @@
                       <element name="ConversationId" value="${conversationId}"/>
                   </header>
                   <extract>
-                      <header name="springintegration_id" variable="syncRequestCorrelatorId"></header>
+                      <header name="id" variable="syncRequestCorrelatorId"></header>
                   </extract>
               </send>
               
@@ -92,7 +92,7 @@
                         <element name="ConversationId" value="${conversationId}"/>
                     </header>
                     <extract>
-                        <header name="springintegration_id" variable="syncMessageCorrelatorId"></header>
+                        <header name="id" variable="syncMessageCorrelatorId"></header>
                     </extract>
                 </receive>
                 <send with="getDateRequestReplySender">
@@ -123,7 +123,7 @@
                  
                 <receive with="syncGetDateResponseHandler">
                     <selector>
-                        <element name="springintegration_id" value="${syncRequestCorrelatorId}"/>
+                        <element name="id" value="${syncRequestCorrelatorId}"/>
                     </selector>
                     <message>
                         <data>

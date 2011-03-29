@@ -16,7 +16,8 @@
 
 package com.consol.citrus.util;
 
-import org.springframework.integration.core.MessageHeaders;
+import org.springframework.integration.MessageHeaders;
+
 
 /**
  * Message utility class.
@@ -33,13 +34,26 @@ public final class MessageUtils {
     
     /**
      * Check if given header name belongs to Spring Integration internal headers.
-     * Means that header name starts with internal header prefix.
-     * @param header
+     * 
+     * This is given if header name starts with internal header prefix or 
+     * matches one of Spring's internal header names.
+     * 
+     * @param headerName
      * @return
      */
-    public static boolean isSpringInternalHeader(String header) {
-        // '$' makes Citrus work with Spring Integration 2.0.x release as 
-        // MessageHeader prefix has changed in this version
-        return header.startsWith(MessageHeaders.PREFIX) || header.startsWith("$");
+    public static boolean isSpringInternalHeader(String headerName) {
+        // '$' makes Citrus work with Spring Integration 2.0.x 
+        // "springintegration_" makes Citrus work with Spring Integration 1.x release
+        if (headerName.startsWith("springintegration_") || headerName.startsWith("$")) {
+            return true;
+        } else if (headerName.equals(MessageHeaders.ID)) {
+            return true;
+        } else if (headerName.equals(MessageHeaders.EXPIRATION_DATE)) {
+            return true;
+        } else if (headerName.equals(MessageHeaders.TIMESTAMP)) {
+            return true;
+        }
+        
+        return false;
     }
 }

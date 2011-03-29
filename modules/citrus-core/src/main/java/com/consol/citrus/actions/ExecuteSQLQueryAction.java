@@ -75,7 +75,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
-    @SuppressWarnings("unchecked")
 	@Override
     public void doExecute(TestContext context) {
         try {

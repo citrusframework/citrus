@@ -18,8 +18,8 @@ package com.consol.citrus.ws.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.MessageValidator;

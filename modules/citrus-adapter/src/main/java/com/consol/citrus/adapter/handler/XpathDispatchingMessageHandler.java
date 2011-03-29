@@ -26,7 +26,7 @@ import org.apache.xerces.parsers.DOMParser;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.*;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
@@ -61,7 +61,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
     private Map<String, String> namespaceBindings = new HashMap<String, String>();
     
     /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(Message<?> request) {

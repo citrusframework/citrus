@@ -22,7 +22,7 @@
                       
     <int:channel id="helloRequestsXML"/>
     <int:transformer input-channel="helloRequestsXML" ref="unmarshallingTransformer" output-channel="helloRequests"/>
-    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadUnmarshallingTransformer">
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.UnmarshallingTransformer">
         <constructor-arg>
             <ref bean="helloMarshaller"/>
         </constructor-arg>
@@ -67,7 +67,7 @@
     </int:channel>
     
     <int:transformer input-channel="helloResponses" ref="marshallingTransformer" output-channel="helloResponsesXML"/>
-    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.XmlPayloadMarshallingTransformer">
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.MarshallingTransformer">
         <constructor-arg>
             <ref bean="helloMarshaller"/>
         </constructor-arg>

@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 
 import javax.jms.JMSException;
 
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 
 import com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback;
@@ -37,7 +37,7 @@ import com.consol.citrus.util.FileUtils;
 public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback {
 
     /**
-     * @see com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback#doWithMessage(javax.jms.Message, org.springframework.integration.core.Message)
+     * @see com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback#doWithMessage(javax.jms.Message, org.springframework.integration.Message)
      */
     public void doWithMessage(javax.jms.Message jmsMessage, Message<?> request) throws JMSException {
         try {

@@ -16,20 +16,16 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.springframework.integration.channel.ChannelResolver;
-import org.springframework.integration.channel.MessageChannelTemplate;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.message.MessageBuilder;
+import org.springframework.integration.*;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,17 +36,17 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class MessageChannelSenderTest {
 
-    private MessageChannelTemplate messageChannelTemplate = EasyMock.createMock(MessageChannelTemplate.class);
+    private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
     private MessageChannel channel = EasyMock.createMock(MessageChannel.class);
     
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() {
         MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelSender.setMessagingTemplate(messagingTemplate);
         
         messageChannelSender.setChannel(channel);
         
@@ -59,24 +55,23 @@ public class MessageChannelSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
+        messagingTemplate.send(channel, message);
+        expectLastCall().once();
         
-        expect(messageChannelTemplate.send(message, channel)).andReturn(true).once();
-        
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
         
         messageChannelSender.send(message);
         
-        verify(messageChannelTemplate, channel);
+        verify(messagingTemplate, channel);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() {
         MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelSender.setMessagingTemplate(messagingTemplate);
         
         messageChannelSender.setChannelName("testChannel");
         
@@ -87,24 +82,25 @@ public class MessageChannelSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel, channelResolver);
+        reset(messagingTemplate, channel, channelResolver);
         
         expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
         
-        expect(messageChannelTemplate.send(message, channel)).andReturn(true).once();
+        messagingTemplate.send(channel, message);
+        expectLastCall().once();
         
-        replay(messageChannelTemplate, channel, channelResolver);
+        replay(messagingTemplate, channel, channelResolver);
         
         messageChannelSender.send(message);
         
-        verify(messageChannelTemplate, channel, channelResolver);
+        verify(messagingTemplate, channel, channelResolver);
     }
     
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageFailed() {
         MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessageChannelTemplate(messageChannelTemplate);
+        messageChannelSender.setMessagingTemplate(messagingTemplate);
         
         messageChannelSender.setChannel(channel);
         
@@ -113,19 +109,21 @@ public class MessageChannelSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messageChannelTemplate, channel);
+        reset(messagingTemplate, channel);
         
-        expect(channel.getName()).andReturn("testChannel").anyTimes();
+        messagingTemplate.send(channel, message);
+        expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
         
-        expect(messageChannelTemplate.send(message, channel)).andReturn(false).once();
-        
-        replay(messageChannelTemplate, channel);
+        replay(messagingTemplate, channel);
 
         try {
             messageChannelSender.send(message);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Failed to send message to channel: 'testChannel'");
-            verify(messageChannelTemplate, channel);
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to channel: "));
+            Assert.assertNotNull(e.getCause());
+            Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
+            Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
+            verify(messagingTemplate, channel);
             return;
         }
         

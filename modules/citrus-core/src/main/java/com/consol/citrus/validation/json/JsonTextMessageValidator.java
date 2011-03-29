@@ -23,7 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.CitrusConstants;
@@ -81,7 +81,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
      * @param controlJson the expected control JSON text.
      * @param context the current test context.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void validateJson(JSONObject receivedJson, JSONObject controlJson, TestContext context) {
         Assert.isTrue(controlJson.size() == receivedJson.size(), 
                 "Number of JSON entries not equal, expected '" + controlJson.size() + 

@@ -16,13 +16,11 @@
 
 package com.consol.citrus.samples.flightbooking;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
 import org.springframework.integration.annotation.Router;
-import org.springframework.integration.channel.ChannelResolver;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
 
 import com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage;
 
@@ -31,27 +29,20 @@ import com.consol.citrus.samples.flightbooking.model.FlightBookingRequestMessage
  */
 public class FlightRouter {
     
-    private ChannelResolver channelResolver;
+    private Map<String, MessageChannel> airlineMappings = new HashMap<String, MessageChannel>();
     
     @Router
     public Collection<MessageChannel> determineTargetChannels(Message<?> message) {
         
         FlightBookingRequestMessage request = (FlightBookingRequestMessage)message.getPayload();
         
-        return Collections.singletonList(channelResolver.resolveChannelName(request.getFlight().getAirline()));
+        return Collections.singletonList(airlineMappings.get(request.getFlight().getAirline()));
     }
 
     /**
-     * @return the channelResolver
+     * @param airlineMappings the airlineMappings to set
      */
-    public ChannelResolver getChannelResolver() {
-        return channelResolver;
-    }
-
-    /**
-     * @param channelResolver the channelResolver to set
-     */
-    public void setChannelResolver(ChannelResolver channelResolver) {
-        this.channelResolver = channelResolver;
+    public void setAirlineMappings(Map<String, MessageChannel> airlineMappings) {
+        this.airlineMappings = airlineMappings;
     }
 }

@@ -46,7 +46,7 @@
                             </data>
                         </message>
                         <extract>
-                            <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                            <header name="jms_messageId" variable="internal_correlation_id"/>
                         </extract>
                         <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
                             <ws:resource file="classpath:com/consol/citrus/ws/soapAttachment.txt"/>
@@ -65,7 +65,7 @@
                             </data>
                         </message>
                         <header>
-                            <element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                            <element name="jms_correlationId" value="${internal_correlation_id}"/>
                         </header>
                       </send>
                 </sequential>
@@ -116,7 +116,7 @@
                             </data>
                         </message>
                         <extract>
-                            <header name="springintegration_jms_messageId" variable="internal_correlation_id"/>
+                            <header name="jms_messageId" variable="internal_correlation_id"/>
                         </extract>
                         <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
                             <ws:data>
@@ -139,7 +139,7 @@
                             </data>
                         </message>
                         <header>
-                            <element name="springintegration_jms_correlationId" value="${internal_correlation_id}"/>
+                            <element name="jms_correlationId" value="${internal_correlation_id}"/>
                         </header>
                       </send>
                 </sequential>

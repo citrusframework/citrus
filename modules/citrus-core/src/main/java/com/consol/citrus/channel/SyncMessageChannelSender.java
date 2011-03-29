@@ -21,9 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.integration.channel.*;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.core.MessageChannel;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -49,7 +51,7 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     private String channelName;
     
     /** Message channel template */
-    private MessageChannelTemplate messageChannelTemplate = new MessageChannelTemplate();
+    private MessagingTemplate messagingTemplate = new MessagingTemplate();
     
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
@@ -67,7 +69,7 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     private ChannelResolver channelResolver;
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
@@ -79,10 +81,10 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
             log.debug("Message to sent is:\n" + message.toString());
         }
 
-        messageChannelTemplate.setReceiveTimeout(replyTimeout);
+        messagingTemplate.setReceiveTimeout(replyTimeout);
         Message<?> replyMessage;
         
-        replyMessage = messageChannelTemplate.sendAndReceive(message, getDestinationChannel());
+        replyMessage = messagingTemplate.sendAndReceive(getDestinationChannel(), message);
         
         if(replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + 
@@ -127,7 +129,7 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
      */
     private String getDestinationChannelName() {
         if (channel != null) {
-            return channel.getName();
+            return channel.toString();
         } else if (StringUtils.hasText(channelName)) {
             return channelName;
         } else {
@@ -206,12 +208,11 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     }
 
     /**
-     * Set the message channel template.
-     * @param messageChannelTemplate the messageChannelTemplate to set
+     * Set the messaging template.
+     * @param messagingTemplate the messagingTemplate to set
      */
-    public void setMessageChannelTemplate(
-            MessageChannelTemplate messageChannelTemplate) {
-        this.messageChannelTemplate = messageChannelTemplate;
+    public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
     }
     
     /**

@@ -16,15 +16,9 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.core.Message;
-import org.springframework.integration.jms.HeaderMappingMessageConverter;
-import org.springframework.integration.jms.JmsHeaderMapper;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.MessageSender;
@@ -42,7 +36,7 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
     private static final Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
     
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.core.Message)
+     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
@@ -58,41 +52,5 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
         getJmsTemplate().convertAndSend(message);
         
         log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
-    }
-    
-    /**
-     * Retrieve the destination name (either a queue name or a topic name).
-     * @return the destinationName
-     */
-    protected String getDefaultDestinationName() {
-        try {
-            if (getJmsTemplate().getDefaultDestination() != null) {
-                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
-                    return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if(getJmsTemplate().getDefaultDestination() instanceof Topic) {
-                    return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
-                } else {
-                    return getJmsTemplate().getDefaultDestination().toString();
-                }
-            } else {
-                return getJmsTemplate().getDefaultDestinationName();
-            }
-        } catch (JMSException e) {
-            log.error("Error while getting destination name", e);
-            return "";
-        }
-    }
-    
-    /**
-     * @see org.springframework.integration.jms.AbstractJmsTemplateBasedAdapter#configureMessageConverter(org.springframework.jms.core.JmsTemplate, org.springframework.integration.jms.JmsHeaderMapper)
-     */
-    @Override
-    protected void configureMessageConverter(JmsTemplate jmsTemplate, JmsHeaderMapper headerMapper) {
-        MessageConverter converter = jmsTemplate.getMessageConverter();
-        if (converter == null || !(converter instanceof HeaderMappingMessageConverter)) {
-            HeaderMappingMessageConverter hmmc = new HeaderMappingMessageConverter(converter, headerMapper);
-            hmmc.setExtractIntegrationMessagePayload(true);
-            jmsTemplate.setMessageConverter(hmmc);
-        }
     }
 }
