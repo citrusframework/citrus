@@ -35,6 +35,11 @@ public class HttpServerParser extends AbstractBeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.http.HttpServer");
         
+        String host = element.getAttribute(HttpParserConstants.HOST_ATTRIBUTE);
+        
+        if (StringUtils.hasText(host)) {
+            builder.addPropertyValue(HttpParserConstants.HOST_PROPERTY, host);
+        }
         
         String port = element.getAttribute(HttpParserConstants.PORT_ATTRIBUTE);
         

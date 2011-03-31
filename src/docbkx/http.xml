@@ -57,6 +57,7 @@
         implementation that listens on a port for client connections.</para>
         
         <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
+               host="localhost"
                port=&quot;8090&quot; 
                uri=&quot;/test&quot; 
                deamon=&quot;false&quot; 
@@ -66,9 +67,13 @@
 &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
  class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
         
-        <para>The Http server implementation in the example will automatically startup on application loading and will listen on
-        the URL <literal>'http://localhost:8090/test'</literal> for requests. What also is very important is the message handler definition.
-        Once a client request was accepted the message handler is responsible for generating a proper response to the client.</para>
+        <para>The Http server implementation in the example will automatically start when the Spring application context is loaded. The connector is listening on
+        port 8090 for requests. The URL <literal>'http://localhost:8090/test'</literal> for instance is handled by the Http server. At the moment the server is only accepting connections
+        from the local address <emphasis>'localhost'</emphasis> meaning your local machine. If you want to access the server from another machine in your network using your local ip address 
+        you have to remove the host attribute or set it to an empty string &quot;&quot;.</para>
+        
+        <para>Another very important part is the message handler definition. Once a client request was accepted the message handler is responsible for generating a 
+        proper response to the client.</para>
         
         <mediaobject>
           <imageobject role="fo">

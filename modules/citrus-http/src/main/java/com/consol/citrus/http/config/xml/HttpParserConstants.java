@@ -68,4 +68,8 @@ public final class HttpParserConstants {
     public static final String ENDPOINT_RESOLVER_ATTRIBUTE = "endpoint-resolver";
 
     public static final String ENDPOINT_RESOLVER_PROPERTY = "endpointResolver";
+
+    public static final String HOST_ATTRIBUTE = "host";
+
+    public static final String HOST_PROPERTY = "host";
 }

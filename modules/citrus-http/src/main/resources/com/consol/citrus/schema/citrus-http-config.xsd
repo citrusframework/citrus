@@ -22,6 +22,7 @@
     <xs:element name="server">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="host" type="xs:string"/>
             <xs:attribute name="port" type="xs:string"/>
             <xs:attribute name="uri" type="xs:string"/>
             <xs:attribute name="deamon" type="xs:boolean"/>

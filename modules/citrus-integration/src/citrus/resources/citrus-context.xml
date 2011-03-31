@@ -141,6 +141,7 @@
     
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer" 
+                        host="localhost"
                         port="8072" uri="/test" 
                         deamon="false" 
                         message-handler="jmsForwardingMessageHandler"

@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -60,8 +61,8 @@ public class HttpServer extends AbstractServer {
     /** Server socket accepting client conections */
     private ServerSocket serverSocket;
 
-    /** Host */
-    private String host = "localhost";
+    /** Host - if empty accept connections on all local addresses */
+    private String host = "";
 
     /** Port to listen on */
     private int port = 8080;
@@ -216,8 +217,12 @@ public class HttpServer extends AbstractServer {
     protected void startup() {
         log.info("[HttpServer] Starting ...");
         try {
-            InetAddress addr = InetAddress.getByName(host);
-            this.serverSocket = new ServerSocket(port, 0, addr);
+            if (StringUtils.hasText(host)) {
+                InetAddress addr = InetAddress.getByName(host);
+                this.serverSocket = new ServerSocket(port, 0, addr);
+            } else {
+                this.serverSocket = new ServerSocket(port, 0);
+            }
 
             if(!deamon) {
                 new ServerShutdownThread(this);
@@ -323,8 +328,7 @@ public class HttpServer extends AbstractServer {
         Writer writer = null;
 
         try {
-            InetAddress addr = InetAddress.getByName(host);
-
+            InetAddress addr = InetAddress.getByName("localhost");
             Socket socket = new Socket(addr, port);
 
             Message<?> httpRequest;
@@ -332,8 +336,8 @@ public class HttpServer extends AbstractServer {
             httpRequest = MessageBuilder.withPayload("quit")
                             .setHeader("HTTPVersion", HttpConstants.HTTP_VERSION)
                             .setHeader("HTTPMethod", HttpConstants.HTTP_POST)
-                            .setHeader("HTTPUri", host + ":" + port + uri)
-                            .setHeader("HTTPHost", host)
+                            .setHeader("HTTPUri", "localhost:" + port + uri)
+                            .setHeader("HTTPHost", "localhost")
                             .setHeader("HTTPPort", Integer.valueOf(port).toString())
                             .build();
 
