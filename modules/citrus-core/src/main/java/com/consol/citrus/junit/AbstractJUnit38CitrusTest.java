@@ -19,6 +19,8 @@ package com.consol.citrus.junit;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import junit.framework.Assert;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -125,7 +127,8 @@ public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringCon
             testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
             testCase.setPackageName(this.getClass().getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
-            org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            log.error("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'");
         }
         return testCase;
     }
