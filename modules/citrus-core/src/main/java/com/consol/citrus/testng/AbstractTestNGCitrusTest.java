@@ -25,6 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
 import org.testng.ITestContext;
+import org.testng.Reporter;
 import org.testng.annotations.*;
 
 import com.consol.citrus.*;
@@ -56,6 +57,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     @Autowired
     private TestContextFactoryBean testContextFactory;
+    
+    /** Parameter values provided from external logic */
+    private Object[][] allParameters;
 
     /**
      * Runs tasks before test suite.
@@ -89,7 +93,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         TestSuite suite = getTestSuite(testContext.getSuite().getName());
         suite.beforeTest();
     }
-
+    
     /**
      * Executes the test case.
      */
@@ -108,7 +112,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             testListener.onTestStart(testCase);
 
             try {
-                testCase.execute(prepareTestContext(createTestContext()));
+                TestContext ctx = prepareTestContext(createTestContext());
+                handleTestParameters(testCase, ctx);
+                
+                testCase.execute(ctx);
                 testListener.onTestSuccess(testCase);
             } catch (Exception e) {
                 testListener.onTestFailure(testCase, e);
@@ -120,6 +127,38 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             }
         } else {
             testListener.onTestSkipped(testCase);
+        }
+    }
+
+    /**
+     * Methods adds optional TestNG parameters as variables to the test case.
+     * 
+     * @param testCase the constructed Citrus test.
+     * @param ctx the Citrus test context.
+     */
+    private void handleTestParameters(TestCase testCase, TestContext ctx) {
+        if (allParameters != null) {
+            Parameters parametersAnnotation = Reporter.getCurrentTestResult().getMethod().getMethod().getAnnotation(Parameters.class);
+            if (parametersAnnotation == null) {
+                throw new CitrusRuntimeException("Missing Parameters annotation, " +
+                        "please provide parameter names with this annotation when using Citrus data provider!");
+            }
+            
+            String[] parameterNames = parametersAnnotation.value();
+            Object[] parameterValues = allParameters[Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount()];
+            
+            if (parameterValues.length != parameterNames.length) {
+                throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length + 
+                        " parameter names defined with " + parameterValues.length + " parameter values available");
+            }
+            
+            String[] parameters = new String[parameterValues.length];
+            for (int k = 0; k < parameterValues.length; k++) {
+                ctx.setVariable(parameterNames[k], parameterValues[k]);
+                parameters[k] = "'" + parameterValues[k].toString() + "'";
+            }
+            
+            testCase.setParameters(parameters);
         }
     }
 
@@ -200,6 +239,28 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         if(!suite.afterSuite()) {
             org.testng.Assert.fail("After suite failed with errors");
         }
+    }
+    
+    /**
+     * Default data provider automatically adding parameters 
+     * as variables to test case.
+     * 
+     * @param testContext the current TestNG test context.
+     * @return
+     */
+    @DataProvider(name = "citrusDataProvider")
+    protected Object[][] provideTestParameters() {
+      allParameters = getParameterValues();
+      return allParameters;
+    }
+    
+    /**
+     * Hook for subclasses to provide individual test parameters.
+     * 
+     * @return
+     */
+    protected Object[][] getParameterValues() {
+        return new Object[][] { {} };
     }
 
     /**

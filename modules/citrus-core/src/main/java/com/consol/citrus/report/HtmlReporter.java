@@ -292,7 +292,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     public void onTestSuccess(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));        
+        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));        
     }
     
     @Override
@@ -300,9 +300,9 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         details.put(test.getName(), ResultDetail.build(test));
         
         if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
         } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, null));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, null, test.getParameters()));
         }
     }
     
@@ -310,7 +310,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     public void onTestSkipped(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
+        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
     }
     
     /**

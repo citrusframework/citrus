@@ -16,6 +16,15 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="31.03.2011" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #248 TestNG parameter as variables
+        </action>
+        <action dev="christophd" type="add">
+          #299 Maven3 support
+        </action>
+        <action dev="christophd" type="add">
+          #300 Update Maven plugin versions
+        </action>
         <action dev="christophd" type="fix">
           #361 Fixed Http server connections from other machines
         </action>

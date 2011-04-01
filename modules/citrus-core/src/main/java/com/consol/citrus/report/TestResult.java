@@ -16,6 +16,8 @@
 
 package com.consol.citrus.report;
 
+import java.util.Arrays;
+
 import org.springframework.util.StringUtils;
 
 
@@ -35,6 +37,9 @@ public class TestResult {
     /** Name of the test */
     private String testName;
     
+    /** Optional test parameters */
+    private String[] parameters;
+    
     /** Failure cause */
     private Throwable cause;
     
@@ -43,9 +48,10 @@ public class TestResult {
      * @param name
      * @param result
      */
-    public TestResult(String name, RESULT result) {
+    public TestResult(String name, RESULT result, String[] parameters) {
         this.testName = name;
         this.result = result;
+        this.parameters = parameters;
     }
 
     /**
@@ -54,19 +60,24 @@ public class TestResult {
      * @param result
      * @param cause
      */
-    public TestResult(String name, RESULT result, Throwable cause) {
+    public TestResult(String name, RESULT result, Throwable cause, String[] parameters) {
         this.testName = name;
         this.result = result;
         this.cause = cause;
+        this.parameters = parameters;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(" " + testName + " ");
+        if (parameters != null && parameters.length > 0) {
+            builder.append(" " + testName + "(" + StringUtils.collectionToCommaDelimitedString(Arrays.asList(parameters)) + ") ");
+        } else {
+            builder.append(" " + testName + " ");
+        }
 
-        int spaces = 62 - testName.length();
+        int spaces = 65 - builder.length();
         for (int i = 0; i < spaces; i++) {
             builder.append(".");
         }
@@ -143,5 +154,21 @@ public class TestResult {
      */
     public void setResult(RESULT result) {
         this.result = result;
+    }
+
+    /**
+     * Sets the parameters.
+     * @param parameters the parameters to set
+     */
+    public void setParameters(String[] parameters) {
+        this.parameters = parameters;
+    }
+
+    /**
+     * Gets the parameters.
+     * @return the parameters
+     */
+    public String[] getParameters() {
+        return parameters;
     }
 }

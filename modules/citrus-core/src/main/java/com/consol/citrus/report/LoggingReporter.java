@@ -84,9 +84,9 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
      */
     public void onTestFailure(TestCase test, Throwable cause) {
         if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
         } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, test.getParameters()));
         }
 
         log.error("Execution of test: " + test.getName() + " failed! Nested exception is: ", cause);
@@ -103,7 +103,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
             log.debug(seperator());
         }
 
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
+        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
     }
 
     /**
@@ -127,7 +127,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
      * @see com.consol.citrus.report.TestListener#onTestSuccess(com.consol.citrus.TestCase)
      */
     public void onTestSuccess(TestCase test) {
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
+        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
     }
 
     /**

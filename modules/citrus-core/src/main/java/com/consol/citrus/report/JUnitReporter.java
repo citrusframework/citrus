@@ -187,9 +187,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testSuiteElement.appendChild(testCaseElement);
         
         if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
         } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE));
+            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, test.getParameters()));
         }
     }
 
@@ -212,7 +212,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         //
         //		testSuiteElement.appendChild(testCaseElement);
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP));
+        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
     }
 
     /**
@@ -234,7 +234,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
 
         testSuiteElement.appendChild(testCaseElement);
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS));
+        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
     }
 
     /**

@@ -52,6 +52,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /** Test package name */
     private String packageName;
     
+    /** In case test was called with parameters from outside */
+    private String[] parameters;
+    
     /**
      * Logger
      */
@@ -228,5 +231,21 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public String getPackageName() {
         return packageName;
+    }
+
+    /**
+     * Sets the parameters.
+     * @param parameters the parameters to set
+     */
+    public void setParameters(String[] parameters) {
+        this.parameters = parameters;
+    }
+
+    /**
+     * Gets the parameters.
+     * @return the parameters
+     */
+    public String[] getParameters() {
+        return parameters;
     }
 }
