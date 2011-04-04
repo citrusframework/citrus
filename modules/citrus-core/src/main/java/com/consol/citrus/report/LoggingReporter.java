@@ -21,8 +21,11 @@ import java.text.DecimalFormatSymbols;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.container.SequenceAfterSuite;
+import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
 /**
@@ -37,6 +40,12 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     
     /** Common decimal format for percentage calculation in report **/
     private static DecimalFormat decFormat = new DecimalFormat("0.0");
+    
+    @Autowired(required = false)
+    private SequenceBeforeSuite beforeSuite;
+    
+    @Autowired(required = false)
+    private SequenceAfterSuite afterSuite;
     
     /**
      * Logger
@@ -136,9 +145,11 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.info("FINISHED CITRUS TESTS");
         log.info("");
         
-        log.info(seperator());
-        log.info("STARTING AFTER SUITE");
-        log.info("");
+        if (afterSuite != null) {
+            log.info(seperator());
+            log.info("STARTING AFTER SUITE");
+            log.info("");
+        }
     }
 
     /**
@@ -149,45 +160,55 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.info("RUNNING CITRUS TESTS");
         log.info("");
 
-        log.info(seperator());
-        log.info("STARTING BEFORE SUITE");
-        log.info("");
+        if (beforeSuite != null) {
+            log.info(seperator());
+            log.info("STARTING BEFORE SUITE");
+            log.info("");
+        }
     }
 
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
      */
     public void onFinishFailure(Throwable cause) {
-        log.info(seperator());
-        log.info("AFTER SUITE: failed");
-        log.info("");
+        if (afterSuite != null) {
+            log.info(seperator());
+            log.info("AFTER SUITE: failed");
+            log.info("");
+        }
     }
 
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
      */
     public void onFinishSuccess() {
-        log.info(seperator());
-        log.info("AFTER SUITE: successfully");
-        log.info("");
+        if (afterSuite != null) {
+            log.info(seperator());
+            log.info("AFTER SUITE: successfully");
+            log.info("");
+        }
     }
 
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
      */
     public void onStartFailure(Throwable cause) {
-        log.info(seperator());
-        log.info("BEFORE SUITE: failed");
-        log.info("");
+        if (beforeSuite != null) {
+            log.info(seperator());
+            log.info("BEFORE SUITE: failed");
+            log.info("");
+        }
     }
 
     /**
      * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
      */
     public void onStartSuccess() {
-        log.info(seperator());
-        log.info("BEFORE SUITE: successfully");
-        log.info("");
+        if (beforeSuite != null) {
+            log.info(seperator());
+            log.info("BEFORE SUITE: successfully");
+            log.info("");
+        }
     }
 
     /**

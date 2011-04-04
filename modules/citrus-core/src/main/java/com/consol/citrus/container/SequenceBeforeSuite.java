@@ -45,7 +45,8 @@ public class SequenceBeforeSuite extends AbstractActionContainer {
     public void doExecute(TestContext context) {
         testSuiteListener.onStart();
         
-        log.info("Found " + actions.size() + " actions before suite");
+        log.info("Executing " + actions.size() + " actions before suite");
+        log.info("");
         
         for(TestAction action: actions)  {
             try {

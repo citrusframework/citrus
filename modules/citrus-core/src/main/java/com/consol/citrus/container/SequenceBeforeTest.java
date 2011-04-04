@@ -39,7 +39,8 @@ public class SequenceBeforeTest extends AbstractActionContainer {
             return;
         }
         
-        log.info("Found " + actions.size() + " actions before test");
+        log.info("Executing " + actions.size() + " actions before test");
+        log.info("");
 
         for(TestAction action: actions)  {
             action.execute(context);

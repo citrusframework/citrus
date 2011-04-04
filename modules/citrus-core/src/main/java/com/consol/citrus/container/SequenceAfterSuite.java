@@ -44,7 +44,8 @@ public class SequenceAfterSuite extends AbstractActionContainer {
 
         testSuiteListener.onFinish();
 
-        log.info("Found " + actions.size() + " actions after suite");
+        log.info("Executing " + actions.size() + " actions after suite");
+        log.info("");
 
         for(TestAction action: actions)  {
             try {
