@@ -42,7 +42,7 @@ public class EchoAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         if (message == null) {
-            log.info("TestSuite " + new Date(System.currentTimeMillis()));
+            log.info("Citrus test " + new Date(System.currentTimeMillis()));
         } else {
             log.info("echo " + context.replaceDynamicContentInString(message));
 

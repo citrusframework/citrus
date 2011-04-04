@@ -24,7 +24,7 @@ Modules
 
   The <<citrus-core>> module builds the core functionality such as
   
-  * domain model (TestCase, TestSuite, CitrusApplication, ...)
+  * domain model (TestCase, TestAction, CitrusApplication, ...)
   
   * test actions (send, receive, sleep, sql, ...)
   

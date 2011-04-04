@@ -26,14 +26,6 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.5</version>
-          <configuration>
-            <properties>
-                <property>
-                    <name>suitename</name>
-                    <value>citrus-integration</value>
-                </property>
-            </properties>
-          </configuration>
         </plugin>
     </plugins>
   	<testSourceDirectory>src/citrus/java</testSourceDirectory>

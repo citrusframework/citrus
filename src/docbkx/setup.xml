@@ -212,7 +212,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
   &lt;/target&gt;
   
   &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
-    &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
+    &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
   &lt;/target&gt;
   
   &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
@@ -227,7 +227,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
         &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
     &lt;/propertyfile&gt;
 
-    &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;${testclass}&quot;/&gt;
+    &lt;citrus test=&quot;${testclass}&quot;/&gt;
   &lt;/target&gt;
     
 &lt;/project&gt;</programlisting>

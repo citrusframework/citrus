@@ -102,6 +102,48 @@
             <programlisting>&lt;bean id=&quot;xmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;/&gt;</programlisting>
         </listitem>
         <listitem>
+            <para>Test suite: We have eliminated/changed the Citrus test suite logic because it duplicates those test suites defined in TestNG or JUnit. In older versions the tester had to define a 
+            Citrus test suite in Spring application context in order to execute test actions before/after the test run. Now these tasks before and after the test run are decoupled from a test suite.
+            You define test suites exclusively in TestNG or JUnit. The test actions before/after the test run are seperately defined in citrus-context.xml so you have to change this configuration 
+            in your Citrus project.</para>
+            
+            <para>For example where you had a Citrus test suite before</para>
+            
+            <programlisting>&lt;bean id="myTestSuite" class=&quot;com.consol.citrus.TestSuite&quot;&gt;
+      &lt;property name=&quot;tasksBefore&quot;&gt;
+          &lt;list&gt;
+              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
+                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
+                  &lt;property name=&quot;statements&quot;&gt;
+                      &lt;list&gt;
+                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250), DESCRIPTION char(250))&lt;/value&gt;
+                      &lt;/list&gt;
+                  &lt;/property&gt;
+              &lt;/bean&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;</programlisting>
+            
+            <para>you can now just use this Spring bean explicitly to define a sequence of actions before the test suite:</para>
+            
+            <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeSuite&quot;&gt;
+      &lt;property name=&quot;actions&quot;&gt;
+          &lt;list&gt;
+              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
+                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
+                  &lt;property name=&quot;statements&quot;&gt;
+                      &lt;list&gt;
+                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250), DESCRIPTION char(250))&lt;/value&gt;
+                      &lt;/list&gt;
+                  &lt;/property&gt;
+              &lt;/bean&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;</programlisting>
+            
+            <para>See <xref linkend="testsuite"/> for details on this configuration changes.</para>
+        </listitem>
+        <listitem>
             <para>JUnit vs. TestNG: We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add
             either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies
             are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your 

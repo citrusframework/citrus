@@ -28,7 +28,7 @@ Writing simple functions
   
 +---
     public interface Function {
-        public String execute(List<String> parameterList) throws TestSuiteException;
+        public String execute(List<String> parameterList) throws CitrusRuntimeException;
     }
 +---
 
@@ -40,11 +40,11 @@ Writing simple functions
     import java.util.Collections;
     import java.util.List;
     
-    import com.consol.citrus.exceptions.TestSuiteException;
+    import com.consol.citrus.exceptions.CitrusRuntimeException;
     import com.consol.citrus.functions.core.RandomNumberFunction;
     
     public class IdGeneratingFunction implements Function {
-        public String execute(List<String> parameterList) throws TestSuiteException {
+        public String execute(List<String> parameterList) throws CitrusRuntimeException {
             StringBuffer idBuffer = new StringBuffer();
             
             idBuffer.append("Lx0x");
@@ -106,7 +106,7 @@ Writing functions with parameters
 +---
     public class GreetingFunction implements Function {
         
-        public String execute(List<String> parameterList) throws TestSuiteException {
+        public String execute(List<String> parameterList) throws CitrusRuntimeException {
             if(parameterList.isEmpty()) {
                 throw new InvalidFunctionUsageException("Function parameters must not be empty. Specify language as parameter (US, GERMAN, SPANISH)!");
             }

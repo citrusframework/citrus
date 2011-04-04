@@ -10,7 +10,7 @@
 		</meta-info>
 		
         <description>
-			The TestSuite offers several beans for database access. To prepare or clean
+			Citrus offers several beans for database access. To prepare or clean
 			the database before the test the service bean "databaseAccess" can be used.
 			
 			The bean executes a given list of sql statements either specified by inline

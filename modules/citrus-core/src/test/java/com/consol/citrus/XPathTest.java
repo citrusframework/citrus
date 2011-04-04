@@ -66,7 +66,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPath() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -146,7 +146,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testUsingXPathWithExplicitNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -188,7 +188,7 @@ public class XPathTest extends AbstractBaseTest {
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                             + "</element>"
-                            + "<ns1:ns-element xmlns:ns1='http://testsuite'>namespace</ns1:ns-element>"
+                            + "<ns1:ns-element xmlns:ns1='http://citrus'>namespace</ns1:ns-element>"
                             + "<search-element>search-for</search-element>"
                         + "</root>")
                         .build();
@@ -206,7 +206,7 @@ public class XPathTest extends AbstractBaseTest {
         validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("ns1", "http://testsuite");
+        namespaces.put("ns1", "http://citrus");
         
         validationContext.setNamespaces(namespaces);
         
@@ -223,7 +223,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testValidateMessageElementsUsingXPathWithResultTypes() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -247,7 +247,7 @@ public class XPathTest extends AbstractBaseTest {
         validateMessageElements.put("number:count(/ns1:root/:element/*)", "3.0");
         validateMessageElements.put("string:concat(/ns1:root/ns1:ns-element, ' is the value')", "namespace is the value");
         validateMessageElements.put("string:local-name(/*)", "root");
-        validateMessageElements.put("string:namespace-uri(/*)", "http://testsuite");
+        validateMessageElements.put("string:namespace-uri(/*)", "http://citrus");
         validateMessageElements.put("boolean:contains(/ns1:root/:search-element, 'search')", "true");
         validateMessageElements.put("boolean:/ns1:root/:element", "true");
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
@@ -270,7 +270,7 @@ public class XPathTest extends AbstractBaseTest {
     public void testExtractMessageValuesUsingXPathWithResultTypes() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -325,7 +325,7 @@ public class XPathTest extends AbstractBaseTest {
         Assert.assertNotNull(context.getVariable("localName"));
         Assert.assertEquals(context.getVariable("localName"), "root");
         Assert.assertNotNull(context.getVariable("namespaceUri"));
-        Assert.assertEquals(context.getVariable("namespaceUri"), "http://testsuite");
+        Assert.assertEquals(context.getVariable("namespaceUri"), "http://citrus");
         Assert.assertNotNull(context.getVariable("contains"));
         Assert.assertEquals(context.getVariable("contains"), "true");
         Assert.assertNotNull(context.getVariable("exists"));

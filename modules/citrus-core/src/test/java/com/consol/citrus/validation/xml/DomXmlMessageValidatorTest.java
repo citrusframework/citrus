@@ -41,7 +41,7 @@ import com.consol.citrus.xml.XsdSchemaRepository;
 public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
-        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -63,7 +63,7 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void validateXMLSchemaError() throws SAXException, IOException, ParserConfigurationException {
-        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -86,14 +86,14 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectDefaultNamespace() {
-        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite");
+        expectedNamespaces.put("", "http://citrus");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -101,14 +101,14 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectNamespace() {
-    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -116,15 +116,15 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectMixedNamespaces() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -132,16 +132,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test
     public void testExpectMultipleNamespaces() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -149,14 +149,14 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceError() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/wrong");
+        expectedNamespaces.put("", "http://citrus/wrong");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -164,14 +164,14 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceError() {
-    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
+        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -179,15 +179,15 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMixedNamespacesError() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default/wrong");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://citrus/default/wrong");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -195,16 +195,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMultipleNamespacesError() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
      
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -212,16 +212,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectWrongNamespacePrefix() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("nswrong", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("nswrong", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -229,16 +229,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceButNamespace() {
-    	Message<?> message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
                     + "</ns0:root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -246,16 +246,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButDefaultNamespace() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns0", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("ns0", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -263,17 +263,17 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectAdditionalNamespace() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
-        expectedNamespaces.put("ns4", "http://testsuite/ns4");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("ns4", "http://citrus/ns4");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -281,16 +281,16 @@ public class DomXmlMessageValidatorTest extends AbstractBaseTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButNamespaceMissing() {
-    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
+    	Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>").build();
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);

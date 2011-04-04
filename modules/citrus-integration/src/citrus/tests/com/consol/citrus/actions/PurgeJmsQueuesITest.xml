@@ -30,37 +30,37 @@
 			
 			Note that usually all jms queues are cleaned at the beginning of the test suite by default.
 			It is also possible to clean all queues by default before every test case is started. All these basic 
-			configurations are done in the testSuiteContext.xml, where the test suite itself is configured.
+			configurations are done in the citrus-context.xml, where the test suite itself is configured.
 		</description>
         <actions>
             <purge-jms-queues>
-                <queue name="TestSuite.Queue.Dummy"/>
-                <queue name="TestSuite.Queue.Dummy.One.In"/>
-                <queue name="TestSuite.Queue.Dummy.One.Out"/>
-                <queue name="TestSuite.Queue.Dummy.One.In"/>
-                <queue name="TestSuite.Queue.Dummy.One.Out"/>
-                <queue name="TestSuite.Queue.Dummy.Three.In"/>
-                <queue name="TestSuite.Queue.Dummy.Three.Out"/>
+                <queue name="Citrus.Queue.Dummy"/>
+                <queue name="Citrus.Queue.Dummy.One.In"/>
+                <queue name="Citrus.Queue.Dummy.One.Out"/>
+                <queue name="Citrus.Queue.Dummy.One.In"/>
+                <queue name="Citrus.Queue.Dummy.One.Out"/>
+                <queue name="Citrus.Queue.Dummy.Three.In"/>
+                <queue name="Citrus.Queue.Dummy.Three.Out"/>
             </purge-jms-queues>
             
             <purge-jms-queues connection-factory="connectionFactory" receive-timeout="150">
-                <queue name="TestSuite.Queue.Dummy"/>
-                <queue name="TestSuite.Queue.Dummy.One.In"/>
-                <queue name="TestSuite.Queue.Dummy.One.Out"/>
-                <queue name="TestSuite.Queue.Dummy.One.In"/>
-                <queue name="TestSuite.Queue.Dummy.One.Out"/>
-                <queue name="TestSuite.Queue.Dummy.Three.In"/>
-                <queue name="TestSuite.Queue.Dummy.Three.Out"/>
+                <queue name="Citrus.Queue.Dummy"/>
+                <queue name="Citrus.Queue.Dummy.One.In"/>
+                <queue name="Citrus.Queue.Dummy.One.Out"/>
+                <queue name="Citrus.Queue.Dummy.One.In"/>
+                <queue name="Citrus.Queue.Dummy.One.Out"/>
+                <queue name="Citrus.Queue.Dummy.Three.In"/>
+                <queue name="Citrus.Queue.Dummy.Three.Out"/>
             </purge-jms-queues>
             
             <purge-jms-queues>
                 <queue ref="testQueue1"/>
                 <queue ref="testQueue2"/>
                 <queue ref="testQueue3"/>
-                <queue name="TestSuite.Queue.Dummy.One.In"/>
-                <queue name="TestSuite.Queue.Dummy.One.Out"/>
-                <queue name="TestSuite.Queue.Dummy.Three.In"/>
-                <queue name="TestSuite.Queue.Dummy.Three.Out"/>
+                <queue name="Citrus.Queue.Dummy.One.In"/>
+                <queue name="Citrus.Queue.Dummy.One.Out"/>
+                <queue name="Citrus.Queue.Dummy.Three.In"/>
+                <queue name="Citrus.Queue.Dummy.Three.Out"/>
             </purge-jms-queues>
         </actions>
     </testcase>

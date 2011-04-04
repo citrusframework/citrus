@@ -10,7 +10,7 @@
 		</meta-info>
 		
         <description>
-			This test shows how to make the whole TestSuite sleep 
+			This test shows how to make the whole Citrus test run sleep 
 			for a given amount of time. The service bean "waitDelay" 
 			offers the property delay, to define the amount of time in seconds.
 			

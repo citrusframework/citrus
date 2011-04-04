@@ -19,7 +19,7 @@
         </variables>
         <actions>
             <groovy>
-                println 'Hello TestSuite'
+                println 'Hello Citrus'
             </groovy>
             <groovy>
                 println 'Current date is ${date}!'
@@ -46,7 +46,7 @@
                 assert context.getVariable("greetingText").equals("${greetingText}")
             </groovy>
             <groovy use-script-template="false">
-                println 'Hello TestSuite'
+                println 'Hello Citrus'
             </groovy>
             <groovy script-template="classpath:com/consol/citrus/script/custom-script-template.groovy">
                 <![CDATA[

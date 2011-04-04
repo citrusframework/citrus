@@ -66,7 +66,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testNamespaces() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -78,7 +78,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -97,7 +97,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDifferentNamespacePrefix() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -109,7 +109,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://citrus'>"
                         + "<ns2:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns2:sub-element attribute='A'>text-value</ns2:sub-element>"
                         + "</ns2:element>" 
@@ -128,7 +128,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testAdditionalNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -140,7 +140,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -159,7 +159,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testMissingNamespaceDeclaration() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite' xmlns:ns2='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -171,7 +171,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -190,7 +190,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespaces() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -202,7 +202,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -221,7 +221,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespacesInExpectedMessage() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -233,7 +233,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -252,7 +252,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testDefaultNamespacesInSourceMessage() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -264,7 +264,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                     + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                     + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                     + "</ns1:element>" 
@@ -283,7 +283,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testMissingNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -314,7 +314,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testWrongNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -326,7 +326,7 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/wrong'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/wrong'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
@@ -345,7 +345,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -357,14 +357,14 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite");
+        expectedNamespaces.put("", "http://citrus");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -381,7 +381,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -393,14 +393,14 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -417,7 +417,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMixedNamespaces() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -429,15 +429,15 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -454,7 +454,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMultipleNamespaces() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -466,16 +466,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -492,7 +492,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespaceError() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -504,14 +504,14 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/wrong");
+        expectedNamespaces.put("", "http://citrus/wrong");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -528,7 +528,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceError() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
@@ -540,14 +540,14 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://testsuite/ns1'>"
+        controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
+        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -564,7 +564,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMixedNamespacesError() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -576,15 +576,15 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default/wrong");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
+        expectedNamespaces.put("", "http://citrus/default/wrong");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -601,7 +601,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectMultipleNamespacesError() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -613,16 +613,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1/wrong");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -639,7 +639,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectWrongNamespacePrefix() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -651,16 +651,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("nswrong", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("nswrong", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -677,7 +677,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectDefaultNamespaceButNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
@@ -689,16 +689,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
                     + "</ns0:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -715,7 +715,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceButDefaultNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -727,16 +727,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns0", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("ns0", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -753,7 +753,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectAdditionalNamespace() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -765,17 +765,17 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
-        expectedNamespaces.put("ns4", "http://testsuite/ns4");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("ns4", "http://citrus/ns4");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -792,7 +792,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testExpectNamespaceButNamespaceMissing() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
@@ -804,16 +804,16 @@ public class NamespaceTest extends AbstractBaseTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadData("<root xmlns='http://testsuite/default' xmlns:ns1='http://testsuite/ns1' xmlns:ns2='http://testsuite/ns2' xmlns:ns4='http://testsuite/ns4'>"
+        controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://testsuite/default");
-        expectedNamespaces.put("ns1", "http://testsuite/ns1");
-        expectedNamespaces.put("ns2", "http://testsuite/ns2");
+        expectedNamespaces.put("", "http://citrus/default");
+        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns2", "http://citrus/ns2");
         
         validationContext.setControlNamespaces(expectedNamespaces);
         
@@ -830,7 +830,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testValidateMessageElementsWithAdditionalNamespacePrefix() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -851,7 +851,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("ns1", "http://testsuite/default");
+        namespaces.put("ns1", "http://citrus/default");
         
         validationContext.setNamespaces(namespaces);
         
@@ -868,7 +868,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testValidateMessageElementsWithDifferentNamespacePrefix() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
@@ -889,7 +889,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("pfx", "http://testsuite/default");
+        namespaces.put("pfx", "http://citrus/default");
         
         validationContext.setNamespaces(namespaces);
         
@@ -906,7 +906,7 @@ public class NamespaceTest extends AbstractBaseTest {
     public void testWrongNamespaceContext() {
         reset(messageReceiver);
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://testsuite/default'>"
+        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
@@ -927,7 +927,7 @@ public class NamespaceTest extends AbstractBaseTest {
         validationContext.setPathValidationExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("pfx", "http://testsuite/wrong");
+        namespaces.put("pfx", "http://citrus/wrong");
         
         validationContext.setNamespaces(namespaces);
         

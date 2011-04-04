@@ -28,7 +28,7 @@
     <para>Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the 
     very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which 
     should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. 
-    See <xref linkend="testsuite-tasks"/> for more information about this.</para>
+    See <xref linkend="testsuite-before-test"/> for more information about this.</para>
         
     <para>When using the special tasks between a test case you might define a normal Spring bean definition that is referenced then. The 
     'com.consol.citrus.actions.PurgeJmsQueuesAction' action offers the property "queueNames" to hold all destination names 

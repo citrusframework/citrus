@@ -20,7 +20,7 @@
   &lt;/variables&gt;
   &lt;actions&gt;
     &lt;groovy&gt;
-        println 'Hello TestSuite'
+        println 'Hello Citrus'
     &lt;/groovy&gt;
     &lt;groovy&gt;
         println 'The variable is: ${time}'

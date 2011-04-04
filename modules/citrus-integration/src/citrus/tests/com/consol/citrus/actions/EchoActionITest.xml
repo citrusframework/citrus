@@ -23,7 +23,7 @@
         <actions>
             <echo/>
             <echo>
-                <message>Hello TestSuite</message>
+                <message>Hello Citrus!</message>
             </echo>
             <echo>
                 <message>CurrentTime is: ${time}</message>

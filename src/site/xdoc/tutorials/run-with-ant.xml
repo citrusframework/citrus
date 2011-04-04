@@ -72,7 +72,7 @@
       &lt;/target&gt;
       
       &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
-          &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
+          &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
       &lt;/target&gt;
       
       &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
@@ -86,7 +86,7 @@
               &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
           &lt;/propertyfile&gt;
   
-          &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;${testclass}&quot;/&gt;
+          &lt;citrus test=&quot;${testclass}&quot;/&gt;
       &lt;/target&gt;
       
   &lt;/project&gt;
@@ -209,7 +209,7 @@
 
   Found test 'com.consol.citrus.ant.sample.MyFirstTest'
   
-  RUNNING TESTSUITE citrus-default-testsuite
+  RUNNING CITRUS TESTS
 
   ------------------------------------------------------------------------
   INIT
@@ -229,13 +229,13 @@
   
   TEST FINISHED: MyFirstTest
   ------------------------------------------------------------------------
-  FINISH TESTSUITE citrus-default-testsuite
+  FINISH CITRUS TEST
   ------------------------------------------------------------------------
   ________________________________________________________________________
   
   CITRUS TEST RESULTS
   
-    MyFirstTest                                       : successful
+    MyFirstTest                                       : SUCCESS
   
   Found 1 test cases to execute
   Skipped 0 test cases (0.0%)
@@ -253,7 +253,7 @@
       </p>
       
       <source>
-  &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;MyFirstTest&quot;/&gt;
+  &lt;citrus test=&quot;MyFirstTest&quot;/&gt;
       </source>
       
       <p>
@@ -262,7 +262,7 @@
       </p>
       
       <source>
-  &lt;citrus suitename=&quot;citrus-samples&quot; test=&quot;MyFirstTest AnotherTest SomeOtherTest&quot;/&gt;
+  &lt;citrus test=&quot;MyFirstTest AnotherTest SomeOtherTest&quot;/&gt;
       </source>
       
       <p>
@@ -271,7 +271,7 @@
       </p>
       
       <source>
-  &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.*&quot;/&gt;
+  &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
       </source>
       
       <p>
@@ -280,7 +280,7 @@
       </p>
       
       <source>
-  &lt;citrus suitename=&quot;citrus-samples&quot; package=&quot;com.consol.citrus.package 
+  &lt;citrus package=&quot;com.consol.citrus.package 
                                                                 com.consol.citrus.someotherpackage&quot;/&gt;
       </source>
       
@@ -306,7 +306,7 @@
       </p>
       
       <source>
-  &lt;citrus suitename=&quot;citrus-samples&quot; testngxml=&quot;src/citrus/resources/testng.xml&quot;/&gt;      
+  &lt;citrus testngxml=&quot;src/citrus/resources/testng.xml&quot;/&gt;      
       </source>
       
       <p>

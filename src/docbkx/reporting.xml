@@ -24,15 +24,15 @@
         and log file. The overall test results look like following example:</para>
         
         <programlisting><literal>
-TEST RESULTS citrus-default-testsuite
+CITRUS TEST RESULTS
 
   [...]
-  HelloService_Ok_1             : successfull
-  HelloService_Ok_2             : successfull
-  EchoService_Ok_1              : successfull
-  EchoService_Ok_2              : successfull
-  EchoService_TempError_1       : successfull
-  EchoService_AutomacticRetry_1 : successfull
+  HelloService_Ok_1             : SUCCESS
+  HelloService_Ok_2             : SUCCESS
+  EchoService_Ok_1              : SUCCESS
+  EchoService_Ok_2              : SUCCESS
+  EchoService_TempError_1       : SUCCESS
+  EchoService_AutomacticRetry_1 : SUCCESS
   [...]
   
   Found 175 test cases to execute

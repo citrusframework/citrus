@@ -44,7 +44,7 @@ Citrus ANT tasks
   <typedef resource="citrustasks" classpath="lib/citrus-ant-tasks-${project.version}.jar"/>
   
   <target name="citrus.run.tests" description="Runs all Citrus tests">
-      <citrus suitename="citrus-samples" package="com.consol.citrus.*"/>
+      <citrus package="com.consol.citrus.*"/>
   </target>
 +---
   

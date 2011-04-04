@@ -17,12 +17,12 @@
     <para>Test results:</para>
     
     <programlisting>Execution of test: failTest failed! Nested exception is: 
-com.consol.citrus.exceptions.TestSuiteException: 
+com.consol.citrus.exceptions.CitrusRuntimeException: 
 Test will fail with custom message
 
 [...]
 
-TEST RESULTS coreTestSuite
+CITRUS TEST RESULTS
 
 failTest          : failed - Exception is: Test will fail with custom message
 

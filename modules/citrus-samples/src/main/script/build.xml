@@ -26,7 +26,7 @@
 	</target>
 	
 	<target name="citrus.run.tests" depends="compile.tests" description="Runs all Citrus tests">
-		<citrus suitename="${testsuite.name}" package="com.consol.citrus.samples.*"/>
+		<citrus package="com.consol.citrus.samples.*"/>
 	</target>
 	
 	<target name="citrus.run.single.test" depends="compile.tests" description="Runs a single test by name">
@@ -42,7 +42,7 @@
 			<entry key="last.test.executed" type="string" value="${testclass}"/>
 		</propertyfile>
 
-		<citrus suitename="citrus-samples" test="${testclass}"/>
+		<citrus test="${testclass}"/>
     </target>
 	
 	<target name="create.test" description="Creates a new empty test case">

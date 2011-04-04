@@ -94,12 +94,6 @@
                   </goals>
                   <configuration>
                       <skip>false</skip>
-                      <properties>
-                        <property>
-                          <name>suitename</name>
-                          <value>${artifactId}</value>
-                        </property>
-                      </properties>
                   </configuration>
               </execution>
             </executions>

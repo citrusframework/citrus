@@ -52,7 +52,7 @@
              value=&quot;${requestTag}&quot;/&gt;
         &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
              value=&quot;${correlationId}&quot;/&gt;
-        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://testsuite/default&quot;/&gt;
+        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;

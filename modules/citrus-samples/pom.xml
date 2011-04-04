@@ -41,14 +41,6 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.5</version>
-          <configuration>
-            <properties>
-                <property>
-                    <name>suitename</name>
-                    <value>citrus-samples</value>
-                </property>
-            </properties>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>

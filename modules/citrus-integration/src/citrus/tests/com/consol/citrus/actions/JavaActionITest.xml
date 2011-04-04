@@ -10,7 +10,7 @@
 		</meta-info>
 		
         <description>
-			The TestSuite offers a service bean to instantiate any class
+			Citrus offers a service bean to instantiate any class
 			and run any method through Java reflection.
 			
 			The class can be specified either by fully qualified class name (first example)

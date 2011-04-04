@@ -67,8 +67,8 @@
         <property name="defaultPrefix" value="ns0"/>
         <property name="messageHandler">
             <bean class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-                <property name="destinationName" value="TestSuite.Ws.Stub.RequestQueue"/>
-                <property name="replyDestinationName" value="TestSuite.Ws.Stub.ResponseQueue"/>
+                <property name="destinationName" value="Citrus.Ws.Stub.RequestQueue"/>
+                <property name="replyDestinationName" value="Citrus.Ws.Stub.ResponseQueue"/>
                 <property name="connectionFactory">
                     <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                         <property name="brokerURL" value="tcp://localhost:61616" />
