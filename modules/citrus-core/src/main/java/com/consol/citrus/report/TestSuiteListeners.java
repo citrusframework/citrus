@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.TestSuite;
-
 /**
  * Class managing a list of injected test suite listeners. Each event is spread to all
  * managed listeners.
@@ -30,14 +28,6 @@ import com.consol.citrus.TestSuite;
  * @author Christoph Deppisch
  */
 public class TestSuiteListeners implements TestSuiteListener {
-    
-    /** Track number of startet test suites */
-    private int testSuitesStarted = 0;
-    /** Track number of finished test suites */
-    private int testSuitesFinished = 0;
-    
-    /** List of test suites */
-    private ArrayList<TestSuite> suites = new ArrayList<TestSuite>();
     
     /** List of testsuite listeners **/
     @Autowired
@@ -48,67 +38,72 @@ public class TestSuiteListeners implements TestSuiteListener {
     private List<TestReporter> testReporters = new ArrayList<TestReporter>();
     
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     * Adds a new test suite listener. 
+     * @param testSuiteListener the listener.
      */
-    public void onFinish(TestSuite testsuite) {
+    public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
+        testSuiteListeners.add(testSuiteListener);
+    }
+    
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
+     */
+    public void onFinish() {
         for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onFinish(testsuite);
+            listener.onFinish();
         }
-            
-        suites.add(testsuite);
+    }
+
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
+     */
+    public void onFinishFailure(Throwable cause) {
+        for (TestSuiteListener listener : testSuiteListeners) {
+            listener.onFinishFailure(cause);
+        }
         
-        //in case last testsuite has finished
-        if(++testSuitesFinished == testSuitesStarted) {
-            for (TestReporter reporter : testReporters) {
-                reporter.generateTestResults(suites);
-            }
+        for (TestReporter reporter : testReporters) {
+            reporter.generateTestResults();
         }
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
      */
-    public void onFinishFailure(TestSuite testsuite, Throwable cause) {
+    public void onFinishSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onFinishFailure(testsuite, cause);
+            listener.onFinishSuccess();
         }
-    }
-
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
-     */
-    public void onFinishSuccess(TestSuite testsuite) {
-        for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onFinishSuccess(testsuite);
-        }
-    }
-
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
-     */
-    public void onStart(TestSuite testsuite) {
-        testSuitesStarted++;
         
-        for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onStart(testsuite);
+        for (TestReporter reporter : testReporters) {
+            reporter.generateTestResults();
         }
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onStart()
      */
-    public void onStartFailure(TestSuite testsuite, Throwable cause) {
+    public void onStart() {
         for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onStartFailure(testsuite, cause);
+            listener.onStart();
         }
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
      */
-    public void onStartSuccess(TestSuite testsuite) {
+    public void onStartFailure(Throwable cause) {
         for (TestSuiteListener listener : testSuiteListeners) {
-            listener.onStartSuccess(testsuite);
+            listener.onStartFailure(cause);
+        }
+    }
+
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
+     */
+    public void onStartSuccess() {
+        for (TestSuiteListener listener : testSuiteListeners) {
+            listener.onStartSuccess();
         }
     }
 }

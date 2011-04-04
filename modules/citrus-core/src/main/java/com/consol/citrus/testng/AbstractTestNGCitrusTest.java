@@ -28,13 +28,15 @@ import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.*;
 
-import com.consol.citrus.*;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.report.TestSuiteListeners;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -51,12 +53,23 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Test listeners */
+    @Autowired
+    private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
+    
     @Autowired
     private TestListeners testListener;
 
     @Autowired
     private TestContextFactoryBean testContextFactory;
+    
+    @Autowired(required = false)
+    private SequenceBeforeSuite beforeSuite;
+    
+    @Autowired(required = false)
+    private SequenceAfterSuite afterSuite;
+    
+    @Autowired(required = false)
+    private SequenceBeforeTest beforeTest;
     
     /** Parameter values provided from external logic */
     private Object[][] allParameters;
@@ -77,10 +90,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         Assert.notNull(applicationContext);
 
-        TestSuite suite= getTestSuite(testContext.getSuite().getName());
-
-        if(!suite.beforeSuite()) {
-            org.testng.Assert.fail("Before suite failed with errors");
+        if (beforeSuite != null) {
+            try {
+                beforeSuite.execute(createTestContext());
+            } catch (Exception e) {
+                org.testng.Assert.fail("Before suite failed with errors", e);
+            }
+        } else {
+            testSuiteListener.onStart();
+            testSuiteListener.onStartSuccess();
         }
     }
 
@@ -90,8 +108,13 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     @BeforeClass(dependsOnMethods = "springTestContextPrepareTestInstance")
     public void beforeTest(ITestContext testContext) {
-        TestSuite suite = getTestSuite(testContext.getSuite().getName());
-        suite.beforeTest();
+        if (beforeTest != null) {
+            try {
+                beforeTest.execute(createTestContext());
+            } catch (Exception e) {
+                org.testng.Assert.fail("Before test failed with errors", e);
+            }
+        }
     }
     
     /**
@@ -234,10 +257,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     @AfterSuite(alwaysRun = true)
     public void afterSuite(ITestContext testContext) {
-        TestSuite suite= getTestSuite(testContext.getSuite().getName());
-
-        if(!suite.afterSuite()) {
-            org.testng.Assert.fail("After suite failed with errors");
+        if (afterSuite != null) {
+            try {
+                afterSuite.execute(createTestContext());
+            } catch (Exception e) {
+                org.testng.Assert.fail("After suite failed with errors", e);
+            }
+        } else {
+            testSuiteListener.onFinish();
+            testSuiteListener.onFinishSuccess();
         }
     }
     
@@ -261,27 +289,5 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected Object[][] getParameterValues() {
         return new Object[][] { {} };
-    }
-
-    /**
-     * Gets the test suite instance by its name from application context.
-     * @param name the name.
-     * @return the test suite.
-     */
-    private TestSuite getTestSuite(String name) {
-        if(name.endsWith(" by packages")) {
-            name = name.substring(0, name.length() - " by packages".length());
-        }
-
-        TestSuite suite;
-        try {
-            suite = (TestSuite)applicationContext.getBean(name, TestSuite.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            log.warn("Could not find test suite with name '" + name + "' using default test suite");
-
-            suite = (TestSuite)applicationContext.getBean(CitrusConstants.DEFAULT_SUITE_NAME, TestSuite.class);
-        }
-
-        return suite;
     }
 }

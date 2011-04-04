@@ -19,7 +19,8 @@ package com.consol.citrus.report;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
 /**
@@ -62,8 +62,8 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     /** Track test execution time */
     private Map<String, Long> testExecutionTime = new HashMap<String, Long>();
     
-    /** Track testsuite execution time */
-    private Map<String, Long> testSuiteExecutionTime = new HashMap<String, Long>();
+    /** Track overall execution time */
+    private Long overallExecutionTime = 0L;
 
     /** Common decimal format for percentage calculation in report **/
     private static DecimalFormat decFormat = new DecimalFormat("0.000");
@@ -75,9 +75,9 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     /**
-     * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
+     * @see com.consol.citrus.report.TestReporter#generateTestResults()
      */
-    public void generateTestResults(List<TestSuite> suites) {
+    public void generateTestResults() {
         try {
             log.info("Generating JUnit results");
 
@@ -204,14 +204,6 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
      * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
      */
     public void onTestSkipped(TestCase test) {
-        //		Element testCaseElement = doc.createElement("testcase");
-        //
-        //		testCaseElement.setAttribute("classname", test.getClass().getName());
-        //		testCaseElement.setAttribute("name", test.getName());
-        //		testCaseElement.setAttribute("time", test.getExecutionTime());
-        //
-        //		testSuiteElement.appendChild(testCaseElement);
-        
         testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
     }
 
@@ -238,32 +230,32 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
      */
-    public void onFinish(TestSuite testsuite) {
+    public void onFinish() {
         testSuiteElement.setAttribute("errors", "" + testResults.getFailed());
         testSuiteElement.setAttribute("failures", "0");
         testSuiteElement.setAttribute("tests", "" + (testResults.getSuccess() + testResults.getFailed()));
-        testSuiteElement.setAttribute("time", getTestSuiteExecutionTime(testsuite.getName()));
+        testSuiteElement.setAttribute("time", getExecutionTime());
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
      */
-    public void onFinishFailure(TestSuite testsuite, Throwable cause) {
+    public void onFinishFailure(Throwable cause) {
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
      */
-    public void onFinishSuccess(TestSuite testsuite) {
+    public void onFinishSuccess() {
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStart()
      */
-    public void onStart(TestSuite testsuite) {
-        startTestSuiteExecutionTime(testsuite.getName());
+    public void onStart() {
+        startExecutionTime();
 
         try {
             DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
@@ -274,7 +266,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
             testSuiteElement = doc.getDocumentElement();
             testSuiteElement.setAttribute("errors", "0");
             testSuiteElement.setAttribute("failures", "0");
-            testSuiteElement.setAttribute("name", testsuite.getName() + ".AllTests");
+            testSuiteElement.setAttribute("name", "citrus.AllTests");
             testSuiteElement.setAttribute("tests", "0");
             testSuiteElement.setAttribute("time", "0.0");
         } catch (Exception e) {
@@ -283,32 +275,31 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
      */
-    public void onStartFailure(TestSuite testsuite, Throwable cause) {
+    public void onStartFailure(Throwable cause) {
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
      */
-    public void onStartSuccess(TestSuite testsuite) {
+    public void onStartSuccess() {
     }
-
+    
     /**
      * Track time for test suite execution.
-     * @param testSuiteName
      */
-    private void startTestSuiteExecutionTime(String testSuiteName) {
-        testSuiteExecutionTime.put(testSuiteName, System.currentTimeMillis());
+    private void startExecutionTime() {
+        overallExecutionTime = System.currentTimeMillis();
     }
 
     /**
      * Get current execution time of test suite.
-     * @param testSuiteName
      * @return
      */
-    private String getTestSuiteExecutionTime(String testSuiteName) {
-        return decFormat.format(((double)(System.currentTimeMillis() - testSuiteExecutionTime.get(testSuiteName)))/1000);
+    private String getExecutionTime() {
+        overallExecutionTime = System.currentTimeMillis() - overallExecutionTime;
+        return decFormat.format(((double)(overallExecutionTime))/1000);
     }
 
     /**

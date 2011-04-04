@@ -16,17 +16,21 @@
 
 package com.consol.citrus;
 
-import java.util.Collections;
+import static org.easymock.EasyMock.*;
 
+import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.testng.AbstractBaseTest;
 
@@ -38,165 +42,175 @@ public class TestSuiteTest extends AbstractBaseTest {
     TestSuiteListeners testSuiteListeners;
     
     @Autowired
-    TestListeners testListeners;
+    @Qualifier("mockListener")
+    TestSuiteListener testSuiteListener;
+    
+    @BeforeClass
+    public void setupTest() {
+        testSuiteListeners.addTestSuiteListener(testSuiteListener);
+    }
     
     @Test
     public void testBeforeSuite() {
-        TestSuite testsuite = new TestSuite();
+        SequenceBeforeSuite beforeActions = new SequenceBeforeSuite();
         
-        TestCase testcase = new TestCase();
-        testcase.setTestContext(createTestContext());
-        testcase.setName("testBeforeSuite");
-        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
-        metaInfo.setStatus(Status.FINAL);
+        beforeActions.setTestSuiteListener(testSuiteListeners);
         
-        testcase.setMetaInfo(metaInfo);
+        reset(testSuiteListener);
         
-        TestAction echoAction = new EchoAction();
-        testcase.setActions(Collections.singletonList(echoAction));
+        testSuiteListener.onStart();
+        expectLastCall().once();
         
-        testsuite.setTestSuiteListeners(testSuiteListeners);
+        testSuiteListener.onStartSuccess();
+        expectLastCall().once();
         
-        TestAction beforeAction = new EchoAction();
-        testsuite.setTasksBefore(Collections.singletonList(beforeAction));
+        replay(testSuiteListener);
         
-        Assert.assertTrue(testsuite.beforeSuite());
+        beforeActions.addTestAction(new EchoAction());
+        
+        beforeActions.execute(createTestContext());
+        
+        verify(testSuiteListener);
     }
     
     @Test
     public void testFailBeforeSuite() {
-        TestSuite testsuite = new TestSuite();
+        SequenceBeforeSuite beforeActions = new SequenceBeforeSuite();
         
-        TestCase testcase = new TestCase();
-        testcase.setTestContext(createTestContext());
-        testcase.setName("testFailBeforeSuite");
-        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
-        metaInfo.setStatus(Status.FINAL);
+        beforeActions.setTestSuiteListener(testSuiteListeners);
         
-        testcase.setMetaInfo(metaInfo);
+        reset(testSuiteListener);
         
-        TestAction echoAction = new EchoAction();
-        testcase.setActions(Collections.singletonList(echoAction));
+        testSuiteListener.onStart();
+        expectLastCall().once();
         
-        testsuite.setTestSuiteListeners(testSuiteListeners);
+        testSuiteListener.onStartFailure((Throwable)anyObject());
+        expectLastCall().once();
         
-        TestAction failBean = new FailAction();
-        testsuite.setTasksBefore(Collections.singletonList(failBean));
+        replay(testSuiteListener);
         
-        Assert.assertFalse(testsuite.beforeSuite());
+        beforeActions.addTestAction(new FailAction());
+        
+        try {
+            beforeActions.execute(createTestContext());
+        } catch (CitrusRuntimeException e) {
+            verify(testSuiteListener);
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
+    }
+    
+    @Test
+    public void testFailBeforeSuiteWithAfterSuite() {
+        SequenceBeforeSuite beforeActions = new SequenceBeforeSuite();
+        SequenceAfterSuite afterActions = new SequenceAfterSuite();
+        
+        beforeActions.setTestSuiteListener(testSuiteListeners);
+        beforeActions.setAfterSuiteActions(afterActions);
+        
+        afterActions.setTestSuiteListener(testSuiteListeners);
+
+        TestAction afterSuiteAction = EasyMock.createMock(TestAction.class);
+        afterActions.addTestAction(afterSuiteAction);
+        
+        reset(testSuiteListener, afterSuiteAction);
+        
+        testSuiteListener.onStart();
+        expectLastCall().once();
+        
+        testSuiteListener.onStartFailure((Throwable)anyObject());
+        expectLastCall().once();
+        
+        testSuiteListener.onFinish();
+        expectLastCall().once();
+        
+        testSuiteListener.onFinishSuccess();
+        expectLastCall().once();
+        
+        afterSuiteAction.execute((TestContext)anyObject());
+        expectLastCall().once();
+        
+        replay(testSuiteListener, afterSuiteAction);
+        
+        beforeActions.addTestAction(new FailAction());
+        
+        try {
+            beforeActions.execute(createTestContext());
+        } catch (CitrusRuntimeException e) {
+            verify(testSuiteListener, afterSuiteAction);
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
     }
     
     @Test
     public void testAfterSuite() {
-        TestSuite testsuite = new TestSuite();
+        SequenceAfterSuite afterActions = new SequenceAfterSuite();
         
-        TestCase testcase = new TestCase();
-        testcase.setTestContext(createTestContext());
-        testcase.setName("testBeforeSuite");
-        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
-        metaInfo.setStatus(Status.FINAL);
+        afterActions.setTestSuiteListener(testSuiteListeners);
         
-        testcase.setMetaInfo(metaInfo);
+        reset(testSuiteListener);
         
-        TestAction echoAction = new EchoAction();
-        testcase.setActions(Collections.singletonList(echoAction));
+        testSuiteListener.onFinish();
+        expectLastCall().once();
         
-        testsuite.setTestSuiteListeners(testSuiteListeners);
+        testSuiteListener.onFinishSuccess();
+        expectLastCall().once();
         
-        TestAction afterAction = new EchoAction();
-        testsuite.setTasksAfter(Collections.singletonList(afterAction));
+        replay(testSuiteListener);
         
-        Assert.assertTrue(testsuite.afterSuite());
+        afterActions.addTestAction(new EchoAction());
+        
+        afterActions.execute(createTestContext());
+        
+        verify(testSuiteListener);
     }
     
     @Test
     public void testFailAfterSuite() {
-        TestSuite testsuite = new TestSuite();
+        SequenceAfterSuite afterActions = new SequenceAfterSuite();
         
-        TestCase testcase = new TestCase();
-        testcase.setTestContext(createTestContext());
-        testcase.setName("testFailAfterSuite");
-        TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
-        metaInfo.setStatus(Status.FINAL);
+        afterActions.setTestSuiteListener(testSuiteListeners);
         
-        testcase.setMetaInfo(metaInfo);
+        reset(testSuiteListener);
         
-        TestAction echoAction = new EchoAction();
-        testcase.setActions(Collections.singletonList(echoAction));
+        testSuiteListener.onFinish();
+        expectLastCall().once();
         
-        testsuite.setTestSuiteListeners(testSuiteListeners);
+        testSuiteListener.onFinishFailure((Throwable)anyObject());
+        expectLastCall().once();
         
-        TestAction failBean = new FailAction();
-        testsuite.setTasksAfter(Collections.singletonList(failBean));
+        replay(testSuiteListener);
         
-        Assert.assertFalse(testsuite.afterSuite());
+        afterActions.addTestAction(new FailAction());
+        
+        try {
+            afterActions.execute(createTestContext());
+        } catch (CitrusRuntimeException e) {
+            verify(testSuiteListener);
+            return;
+        }
+        
+        Assert.fail("Missing CitrusRuntimeException due to failing after suite action");
     }
     
     @Test
-    public void testTasksBetween() {
-        TestSuite testsuite = new TestSuite();
+    public void testBeforeTest() {
+        SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
         
-        TestCase testcase1 = new TestCase();
-        testcase1.setTestContext(createTestContext());
-        testcase1.setName("TestCase1");
-        TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
-        metaInfo1.setStatus(Status.FINAL);
+        beforeTestActions.addTestAction(new EchoAction());
         
-        testcase1.setMetaInfo(metaInfo1);
-        
-        TestAction echoAction = new EchoAction();
-        testcase1.setActions(Collections.singletonList(echoAction));
-        
-        TestCase testcase2 = new TestCase();
-        testcase2.setTestContext(createTestContext());
-        testcase2.setName("TestCase2");
-        TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
-        metaInfo2.setStatus(Status.FINAL);
-        
-        testcase2.setMetaInfo(metaInfo2);
-        
-        TestAction echoAction2 = new EchoAction();
-        testcase2.setActions(Collections.singletonList(echoAction2));
-        
-        testsuite.setTestSuiteListeners(testSuiteListeners);
-        
-        TestAction betweenAction = new EchoAction();
-        testsuite.setTasksBetween(Collections.singletonList(betweenAction));
-        
-        testsuite.beforeTest();
+        beforeTestActions.execute(createTestContext());
     }
     
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFailTasksBetween() {
-        TestSuite testsuite = new TestSuite();
+        SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
         
-        TestCase testcase1 = new TestCase();
-        testcase1.setTestContext(createTestContext());
-        testcase1.setName("TestCase1");
-        TestCaseMetaInfo metaInfo1 = new TestCaseMetaInfo();
-        metaInfo1.setStatus(Status.FINAL);
+        beforeTestActions.addTestAction(new FailAction());
         
-        testcase1.setMetaInfo(metaInfo1);
-        
-        TestAction echoAction = new EchoAction();
-        testcase1.setActions(Collections.singletonList(echoAction));
-        
-        TestCase testcase2 = new TestCase();
-        testcase2.setTestContext(createTestContext());
-        testcase2.setName("TestCase2");
-        TestCaseMetaInfo metaInfo2 = new TestCaseMetaInfo();
-        metaInfo2.setStatus(Status.FINAL);
-        
-        testcase2.setMetaInfo(metaInfo2);
-        
-        TestAction echoAction2 = new EchoAction();
-        testcase2.setActions(Collections.singletonList(echoAction2));
-        
-        testsuite.setTestSuiteListeners(testSuiteListeners);
-        
-        TestAction failBean = new FailAction();
-        testsuite.setTasksBetween(Collections.singletonList(failBean));
-
-        testsuite.beforeTest();
+        beforeTestActions.execute(createTestContext());
     }
 }

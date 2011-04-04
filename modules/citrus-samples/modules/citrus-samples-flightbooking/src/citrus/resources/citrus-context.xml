@@ -105,6 +105,4 @@
         </property>
     </bean>
     
-    <!-- TestSuite definition -->
-    <bean name="citrus-samples-flightbooking" class="com.consol.citrus.TestSuite"/>
 </beans>

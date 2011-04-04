@@ -71,6 +71,4 @@
         </property>
     </bean>
     
-    <!-- TestSuite definition -->
-    <bean name="citrus-samples-greeting" class="com.consol.citrus.TestSuite"/>
 </beans>

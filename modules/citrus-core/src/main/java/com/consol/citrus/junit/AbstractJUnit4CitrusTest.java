@@ -16,9 +16,6 @@
 
 package com.consol.citrus.junit;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -31,8 +28,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.consol.citrus.*;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -62,14 +60,21 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     @Autowired
     private TestContextFactoryBean testContextFactory;
     
+    @Autowired(required = false)
+    private SequenceBeforeTest beforeTest;
+    
     /**
      * Run tasks before each test case.
      */
     @Before
     public void beforeTest() {
-        TestSuite suite= getTestSuite();
-        
-        suite.beforeTest();
+        if (beforeTest != null) {
+            try {
+                beforeTest.execute(createTestContext());
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Before test failed with errors", e);
+            }
+        }
     }
     
     /**
@@ -163,32 +168,5 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
             
             throw cause;
         }
-    }
-    
-    /**
-     * Get the test suite instance by its type from 
-     * application context. If none is found default test suite
-     * is used instead.
-     * 
-     * @return the test suite
-     */
-    private TestSuite getTestSuite() {
-        TestSuite suite = null;
-        
-        Map<?, ?> suites = applicationContext.getBeansOfType(TestSuite.class);
-
-        if(suites.keySet().size() > 1) {
-            for (Entry<?, ?> entry : suites.entrySet()) {
-                if(!entry.getKey().toString().equals(CitrusConstants.DEFAULT_SUITE_NAME)) {
-                    suite = (TestSuite)entry.getValue();
-                }
-            }
-        } else {
-            log.warn("Could not find custom test suite - using default test suite");
-            
-            suite = (TestSuite)applicationContext.getBean(CitrusConstants.DEFAULT_SUITE_NAME, TestSuite.class);
-        }
-        
-        return suite;
     }
 }

@@ -32,6 +32,4 @@
     <!-- Message Validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     
-    <!-- TestSuite -->
-    <bean name="${artifactId}" class="com.consol.citrus.TestSuite"/>
 </beans>

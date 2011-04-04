@@ -77,7 +77,7 @@ public final class Citrus {
             TestNG testNG = new TestNG(true);
             
             XmlSuite suite = new XmlSuite();
-            suite.setName(cmd.getOptionValue("suitename", CitrusConstants.DEFAULT_SUITE_NAME));
+            suite.setName(cmd.getOptionValue("suitename", "citrus-test-suite"));
             
             if(cmd.hasOption("test")) {
                 for (String testName : cmd.getOptionValues("test")) {

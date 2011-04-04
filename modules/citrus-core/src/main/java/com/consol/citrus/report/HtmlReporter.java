@@ -81,9 +81,9 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     }
 
     /**
-     * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
+     * @see com.consol.citrus.report.TestReporter#generateTestResults()
      */
-    public void generateTestResults(List<TestSuite> suites) {
+    public void generateTestResults() {
         String report = "";
         StringBuilder reportDetails = new StringBuilder();
         

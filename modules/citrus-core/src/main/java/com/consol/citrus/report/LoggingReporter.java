@@ -18,13 +18,11 @@ package com.consol.citrus.report;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestSuite;
 import com.consol.citrus.report.TestResult.RESULT;
 
 /**
@@ -52,11 +50,11 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     }
 
     /**
-     * @see com.consol.citrus.report.TestReporter#generateTestResults(com.consol.citrus.TestSuite[])
+     * @see com.consol.citrus.report.TestReporter#generateTestResults()
      */
-    public void generateTestResults(List<TestSuite> suites) {
+    public void generateTestResults() {
         if (log.isInfoEnabled()) {
-            log.info("________________________________________________________________________");
+            log.info(seperator());
             log.info("");
             log.info("CITRUS TEST RESULTS");
             log.info("");
@@ -76,7 +74,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         log.info("Failed:\t" + testResults.getFailed() + " (" + decFormat.format((double)testResults.getFailed() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
         log.info("Success:\t" + testResults.getSuccess() + " (" + decFormat.format((double)testResults.getSuccess() / (testResults.getFailed() + testResults.getSuccess()) * 100) + "%)");
 
-        log.info("________________________________________________________________________");
+        log.info(seperator());
     }
 
     /**
@@ -131,59 +129,64 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
      */
-    public void onFinish(TestSuite testsuite) {
-        log.info("FINISH TESTSUITE " + testsuite.getName());
+    public void onFinish() {
         log.info(seperator());
-    }
-
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
-     */
-    public void onStart(TestSuite testsuite) {
-        log.info("________________________________________________________________________");
-        log.info("RUNNING TESTSUITE " + testsuite.getName());
+        log.info("FINISHED CITRUS TESTS");
         log.info("");
-
+        
         log.info(seperator());
-        log.info("INIT");
+        log.info("STARTING AFTER SUITE");
         log.info("");
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onStart()
      */
-    public void onFinishFailure(TestSuite testsuite, Throwable cause) {
+    public void onStart() {
         log.info(seperator());
-        log.info("FINISH failed");
+        log.info("RUNNING CITRUS TESTS");
+        log.info("");
+
+        log.info(seperator());
+        log.info("STARTING BEFORE SUITE");
         log.info("");
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
      */
-    public void onFinishSuccess(TestSuite testsuite) {
+    public void onFinishFailure(Throwable cause) {
         log.info(seperator());
-        log.info("FINISH successfully");
+        log.info("AFTER SUITE: failed");
         log.info("");
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
      */
-    public void onStartFailure(TestSuite testsuite, Throwable cause) {
+    public void onFinishSuccess() {
         log.info(seperator());
-        log.info("INIT failed");
+        log.info("AFTER SUITE: successfully");
         log.info("");
     }
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
      */
-    public void onStartSuccess(TestSuite testsuite) {
+    public void onStartFailure(Throwable cause) {
         log.info(seperator());
-        log.info("INIT successfully");
+        log.info("BEFORE SUITE: failed");
+        log.info("");
+    }
+
+    /**
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
+     */
+    public void onStartSuccess() {
+        log.info(seperator());
+        log.info("BEFORE SUITE: successfully");
         log.info("");
     }
 

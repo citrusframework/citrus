@@ -55,6 +55,4 @@
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
         
-    <!-- TestSuite definition -->
-    <bean name="citrus-samples-bookregistry" class="com.consol.citrus.TestSuite"/>
 </beans>

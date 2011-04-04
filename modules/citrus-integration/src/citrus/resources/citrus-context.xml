@@ -318,9 +318,8 @@
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
     
-    <!-- TestSuite definition -->
-    <bean name="citrus-integration" class="com.consol.citrus.TestSuite">
-        <property name="tasksBefore">
+    <bean class="com.consol.citrus.container.SequenceBeforeSuite">
+        <property name="actions">
             <list>
                 <bean id="initDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
                     <property name="dataSource" ref="testDataSource"/>
@@ -334,12 +333,18 @@
                 </bean>
             </list>
         </property>
-        <property name="tasksBetween">
+    </bean>
+    
+    <bean class="com.consol.citrus.container.SequenceBeforeTest">
+        <property name="actions">
             <list>
                 <ref bean="purgeJmsQueues"/>
             </list>
         </property>
-        <property name="tasksAfter">
+    </bean>
+    
+    <bean class="com.consol.citrus.container.SequenceAfterSuite">
+        <property name="actions">
             <list>
                 <bean id="destroyDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
                     <property name="dataSource" ref="testDataSource"/>
@@ -355,4 +360,5 @@
             </list>
         </property>
     </bean>
+    
 </beans>

@@ -16,8 +16,6 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestSuite;
-
 /**
  * Basic implementation of {@link TestSuiteListener} interface so that subclasses must not implement
  * all methods but only overwrite some listener methods.
@@ -27,32 +25,32 @@ import com.consol.citrus.TestSuite;
 public abstract class AbstractTestSuiteListener implements TestSuiteListener {
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
      */
-    public void onFinish(TestSuite testsuite) {}
+    public void onFinish() {}
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
      */
-    public void onFinishFailure(TestSuite testsuite, Throwable cause) {}
+    public void onFinishFailure(Throwable cause) {}
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
      */
-    public void onFinishSuccess(TestSuite testsuite) {}
+    public void onFinishSuccess() {}
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStart()
      */
-    public void onStart(TestSuite testsuite) {}
+    public void onStart() {}
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(com.consol.citrus.TestSuite, java.lang.Throwable)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
      */
-    public void onStartFailure(TestSuite testsuite, Throwable cause) {}
+    public void onStartFailure(Throwable cause) {}
 
     /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess(com.consol.citrus.TestSuite)
+     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
      */
-    public void onStartSuccess(TestSuite testsuite) {}
+    public void onStartSuccess() {}
 }
