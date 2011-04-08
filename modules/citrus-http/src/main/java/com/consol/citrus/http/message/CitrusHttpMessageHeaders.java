@@ -16,13 +16,26 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.message.AbstractReplyMessageReceiver;
+import com.consol.citrus.message.CitrusMessageHeaders;
 
 /**
- * Message receiver handling Http reply responses.
- * 
  * @author Christoph Deppisch
  */
-public class HttpReplyMessageReceiver extends AbstractReplyMessageReceiver {
+public abstract class CitrusHttpMessageHeaders {
     
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusHttpMessageHeaders() {
+    }
+    
+    /** Special header prefix for http transport headers in SOAP message sender */
+    public static final String HTTP_PREFIX = CitrusMessageHeaders.PREFIX + "http_";
+    
+    /** SOAP action header name */
+    public static final String HTTP_STATUS_CODE = HTTP_PREFIX + "status_code";
+
+    public static final String HTTP_VERSION = HTTP_PREFIX + "version";
+    
+    public static final String HTTP_REASON_PHRASE = HTTP_PREFIX + "reason_phrase";
 }

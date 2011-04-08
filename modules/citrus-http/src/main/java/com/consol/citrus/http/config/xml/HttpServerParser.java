@@ -35,40 +35,39 @@ public class HttpServerParser extends AbstractBeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.http.HttpServer");
         
-        String host = element.getAttribute(HttpParserConstants.HOST_ATTRIBUTE);
-        
-        if (StringUtils.hasText(host)) {
-            builder.addPropertyValue(HttpParserConstants.HOST_PROPERTY, host);
-        }
-        
-        String port = element.getAttribute(HttpParserConstants.PORT_ATTRIBUTE);
-        
+        String port = element.getAttribute("port");
         if (StringUtils.hasText(port)) {
-            builder.addPropertyValue(HttpParserConstants.PORT_PROPERTY, port);
+            builder.addPropertyValue("port", port);
         }
         
-        String uri = element.getAttribute(HttpParserConstants.URI_ATTRIBUTE);
-        
-        if (StringUtils.hasText(uri)) {
-            builder.addPropertyValue(HttpParserConstants.URI_PROPERTY, uri);
-        }
-        
-        String deamon = element.getAttribute(HttpParserConstants.DEAMON_ATTRIBUTE);
-        
-        if (StringUtils.hasText(deamon)) {
-            builder.addPropertyValue(HttpParserConstants.DEAMON_PROPERTY, deamon);
-        }
-        
-        String autoStart = element.getAttribute(HttpParserConstants.AUTOSTART_ATTRIBUTE);
-        
+        String autoStart = element.getAttribute("auto-start");
         if (StringUtils.hasText(autoStart)) {
-            builder.addPropertyValue(HttpParserConstants.AUTOSTART_PROPERTY, autoStart);
+            builder.addPropertyValue("autoStart", autoStart);
+        }
+
+        String contextConfigLocation = element.getAttribute("context-config-location");
+        if (StringUtils.hasText(contextConfigLocation)) {
+            builder.addPropertyValue("contextConfigLocation", contextConfigLocation);
         }
         
-        String messageHandler = element.getAttribute(HttpParserConstants.MESSAGE_HANDLER_ATTRIBUTE);
+        String resourceBase = element.getAttribute("resource-base");
+        if (StringUtils.hasText(resourceBase)) {
+            builder.addPropertyValue("resourceBase", resourceBase);
+        }
         
-        if (StringUtils.hasText(messageHandler)) {
-            builder.addPropertyReference(HttpParserConstants.MESSAGE_HANDLER_PROPERTY, messageHandler);
+        String useRootContext = element.getAttribute("root-parent-context");
+        if (StringUtils.hasText(useRootContext)) {
+            builder.addPropertyValue("useRootContextAsParent", Boolean.valueOf(useRootContext));
+        }
+        
+        String connectors = element.getAttribute("connectors");
+        if (StringUtils.hasText(connectors)) {
+            builder.addPropertyReference("connectors", connectors);
+        }
+        
+        String connector = element.getAttribute("connector");
+        if (StringUtils.hasText(connector)) {
+            builder.addPropertyReference("connector", connector);
         }
         
         return builder.getBeanDefinition();

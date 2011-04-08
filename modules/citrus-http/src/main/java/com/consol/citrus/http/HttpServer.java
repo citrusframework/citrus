@@ -16,381 +16,327 @@
 
 package com.consol.citrus.http;
 
-import java.io.*;
-import java.net.*;
-import java.util.HashMap;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.StringUtils;
+import javax.servlet.ServletContext;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
+import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.*;
+import org.mortbay.jetty.servlet.*;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.*;
+import org.springframework.core.io.Resource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.util.HttpConstants;
-import com.consol.citrus.http.util.HttpUtils;
-import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
-import com.consol.citrus.server.ServerShutdownThread;
 
 /**
- * Simple Http server accepting client connections on a server URI and port. The
- * received messages are published to a configurable JMS queue, so the messages
- * can be consumed by any validating resource.
- * 
- * Server waits for reply message to arrive on a JMS reply destination. Response is sent
- * back as Http response to the calling client.
+ * Simple Http server implementation starting an embedded Jetty server instance with
+ * Spring Application context support. Incoming requests are handled with Spring MVC.
  *
  * @author Christoph Deppisch
  * @since 2007
  */
-public class HttpServer extends AbstractServer {
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(HttpServer.class);
-
-    /** Command to shutdown the server */
-    private static final String SHUTDOWN_COMMAND = "quit";
-
-    /** Server socket accepting client conections */
-    private ServerSocket serverSocket;
-
-    /** Host - if empty accept connections on all local addresses */
-    private String host = "";
-
-    /** Port to listen on */
+public class HttpServer extends AbstractServer implements ApplicationContextAware {
+    /** Server port */
     private int port = 8080;
-
-    /** URI to listen on */
-    private String uri;
-
-    /** Message handler for incoming requests, providing proper responses */
-    private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
     
-    /** Should server start in deamon mode */
-    private boolean deamon = false;
+    /** Server resource base */
+    private String resourceBase = "src/main/resources";
     
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run() {
-        log.info("[HttpServer] Listening for client connections on "
-                + serverSocket.getInetAddress().getHostName() + ":" + port + uri);
-
-        Socket clientSocket = null;
-
-        while (isRunning() && !serverSocket.isClosed()) {
-            BufferedReader in = null;
-            Writer out = null;
-            
-            try {
-                clientSocket = serverSocket.accept();
-
-                log.info("[HttpServer] Accepted client connection on " + serverSocket.getInetAddress().getHostName() + ":" + port + uri);
-
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new OutputStreamWriter(clientSocket.getOutputStream());
-
-                log.info("[HttpServer] parsing request ...");
-
-                final Message<?> request;
-                Map<String, Object> requestHeaders = new HashMap<String, Object>();
-                
-                // first line should give method, uri and version header
-                String line = in.readLine();
-                if (line == null || line.length() == 0) {
-                    throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
-                }
-
-                StringTokenizer st = new StringTokenizer(line);
-                if (!st.hasMoreTokens()) {
-                    throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
-                } else {
-                    requestHeaders.put("HTTPMethod", st.nextToken().toUpperCase());
-                }
-
-                if (!st.hasMoreTokens()) {
-                    throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
-                } else {
-                    requestHeaders.put("HTTPUri", st.nextToken());
-                }
-
-                if (!st.hasMoreTokens()) {
-                    throw new RuntimeException("HTTP request header not set properly. Usage: <METHOD> <URI> <HTTP VERSION>");
-                } else {
-                    requestHeaders.put("HTTPVersion", st.nextToken());
-                }
-
-                // further headers
-                do {
-                    line = in.readLine();
-                    
-                    int p = (line == null) ? -1: line.indexOf(':');
-                    if (p > 0) {
-                        requestHeaders.put(line.substring(0, p).trim().toLowerCase(), line.substring(p + 1).trim());
-                    }
-                } while (line != null && line.trim().length() > 0);
-
-                if (requestHeaders.get("HTTPMethod").equals(HttpConstants.HTTP_POST)) {
-                    long size = 0x7FFFFFFFFFFFFFFFl;
-                    String contentLength = (String) requestHeaders.get("content-length");
-                    if (contentLength != null) {
-                        try {
-                            size = Integer.parseInt(contentLength);
-                        } catch (NumberFormatException ex) {
-                        }
-                    }
-                    StringBuilder payloadBuilder = new StringBuilder();
-                    char buf[] = new char[512];
-                    int read = in.read(buf);
-                    while (read >= 0 && size > 0 && !payloadBuilder.toString().endsWith(HttpConstants.LINE_BREAK)) {
-                        size -= read;
-                        payloadBuilder.append(String.valueOf(buf, 0, read));
-                        if (size > 0) {
-                            read = in.read(buf);
-                        }
-                    }
-                    
-                    request = MessageBuilder.withPayload(payloadBuilder.toString().trim()).copyHeaders(requestHeaders).build();
-                } else {
-                    //TODO implement GET method
-                    request = MessageBuilder.withPayload("").copyHeaders(requestHeaders).build();
-                }
-
-                log.info("[HttpServer] received request " + HttpUtils.generateRequest(request));
-
-                if (request.getPayload() != null && request.getPayload().equals("quit")) {
-                    log.info("[HttpServer] received shuttdown call");
-                    stop();
-                    return;
-                }
-
-                Message<?> response = messageHandler.handleMessage(request);
-                
-                if(response != null) {
-                    String responseStr = HttpUtils.generateResponse(response);
+    /** Application context location for request controllers */
+    private String contextConfigLocation = "classpath:com/consol/citrus/http/citrus-http-servlet.xml";
     
-                    log.info("[HttpServer] sending response " + responseStr);
-                    
-                    out.write(responseStr);
-                    out.flush();
-                } else {
-                    log.error("Did not receive any reply from message handler '" + messageHandler + "'");
-                }
-            } catch(SocketException e) {
-                log.info("[HttpServer] ServerSocket was closed!");
-            } catch (Exception e) {
-                log.error("[HttpServer] ", e);
-            } finally {
-                try {
-                    if (clientSocket != null) {
-                        clientSocket.close();
-                        clientSocket = null;
-                    }
-                    
-                    if(in != null) {
-                        in.close();
-                        in = null;
-                    }
-                    
-                    if(out != null) {
-                        out.close();
-                        out = null;
-                    }
-                } catch (IOException e) {
-                    log.error("[HttpServer] ", e);
-                }
-            }
-        }
-    }
+    /** Server instance to be wrapped */
+    private Server jettyServer;
 
-    /**
-     * @see com.consol.citrus.server.AbstractServer#startup()
-     */
-    @Override
-    protected void startup() {
-        log.info("[HttpServer] Starting ...");
-        try {
-            if (StringUtils.hasText(host)) {
-                InetAddress addr = InetAddress.getByName(host);
-                this.serverSocket = new ServerSocket(port, 0, addr);
-            } else {
-                this.serverSocket = new ServerSocket(port, 0);
-            }
-
-            if(!deamon) {
-                new ServerShutdownThread(this);
-            }
-        } catch (IOException e) {
-            log.error("[HttpServer] failed to listen on port " + port, e);
-            log.info("[HttpServer] Startup failed");
-            throw new CitrusRuntimeException(e);
-        } catch (Exception e) {
-            log.info("[HttpServer] Startup failed");
-            throw new CitrusRuntimeException(e);
-        }
-        log.info("[HttpServer] Started sucessfully");
-    }
-
-    /**
-     * @see com.consol.citrus.server.AbstractServer#shutdown()
-     */
+    /** Application context used as delegate for parent WebApplicationContext in Jetty */
+    private ApplicationContext applicationContext;
+    
+    /** Use root application context as parent to build WebApplicationContext */
+    private boolean useRootContextAsParent = false;
+    
+    /** Do only start one instance after another so we need a static lock object */
+    private static Object serverLock = new Object();
+    
+    /** Set custom connector with custom idle time and other configuration options */
+    private Connector connector;
+    
+    /** Set list of custom connectors with custom configuration options */
+    private Connector[] connectors;
+    
     @Override
     protected void shutdown() {
-        synchronized (this) {
-            log.info("[HttpServer] Stopping Http server '" + getName() + "'");
+        if(jettyServer != null) {
             try {
-                if (!serverSocket.isClosed()) {
-                    serverSocket.close();
+                synchronized (serverLock) {
+                    jettyServer.stop();
                 }
             } catch (Exception e) {
-                log.error("Error while closing server socket", e);
+                throw new CitrusRuntimeException(e);
             }
-            
-            log.info("[HttpServer] Http server '" + getName() + "' was stopped sucessfully");
         }
     }
 
-    /**
-     * Main method starting new server instance
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        String command = "";
-
-        if (args.length > 0) {
-            command = args[0];
-        }
-
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("http-stub-context.xml");
-
-        HttpServer server;
-        if (ctx.containsBean("httpServer")) {
-            server = (HttpServer)ctx.getBean("httpServer");
-        } else {
-            server = new HttpServer();
-            server.setBeanName("httpServer");
-            server.setHost("localhost");
-            server.setPort(8080);
-            server.setUri("request");
+    @Override
+    protected void startup() {
+        synchronized (serverLock) {
+            if (connectors != null) {
+                jettyServer = new Server();
+                jettyServer.setConnectors(connectors);
+            } else if (connector != null) {
+                jettyServer = new Server();
+                jettyServer.addConnector(connector);
+            } else {
+                jettyServer = new Server(port);
+            }
             
-            server.setMessageHandler(new EmptyResponseProducingMessageHandler());
-            server.setDeamon(true);
-        }
-
-        if (command.equals(HttpServer.SHUTDOWN_COMMAND)) {
+            HandlerCollection handlers = new HandlerCollection();
+            
+            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            
+            Context context = new Context();
+            context.setContextPath("/");
+            context.setResourceBase(resourceBase);
+            
+            //add the root application context as parent to the constructed WebApplicationContext
+            if(useRootContextAsParent) {
+                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                        new SimpleDelegatingWebApplicationContext());
+            }
+            
+            ServletHandler servletHandler = new ServletHandler();
+            
+            ServletHolder servletHolder = new ServletHolder(new DispatcherServlet());
+            servletHolder.setName("spring-servlet");
+            servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+            
+            servletHandler.addServlet(servletHolder);
+            
+            ServletMapping servletMapping = new ServletMapping();
+            servletMapping.setServletName("spring-servlet");
+            servletMapping.setPathSpec("/*");
+            
+            servletHandler.addServletMapping(servletMapping);
+            
+            context.setServletHandler(servletHandler);
+            
+            contexts.addHandler(context);
+            
+            handlers.addHandler(contexts);
+            
+            handlers.addHandler(new DefaultHandler());
+            handlers.addHandler(new RequestLogHandler());
+            
+            jettyServer.setHandler(handlers);
+            
             try {
-                server.quit();
-            } catch (CitrusRuntimeException e) {
-                log.error("Error during shutdown", e);
-            }
-        } else {
-            try {
-                server.start();
-            } catch (CitrusRuntimeException e) {
-                log.error("Error during startup", e);
-            }
-            
-            if(!server.isDeamon()) {
-                server.join();
+                jettyServer.start();
+            } catch (Exception e) {
+                throw new CitrusRuntimeException(e);
             }
         }
     }
 
     /**
-     * Set server in deamon mode.
-     * @param deamon
+     * Get the server port.
+     * @return the port
      */
-    public void setDeamon(boolean deamon) {
-        this.deamon = deamon;
+    public int getPort() {
+        return port;
     }
 
     /**
-     * Is server in deamon mode.
-     * @return
-     */
-    public boolean isDeamon() {
-        return deamon;
-    }
-
-    /**
-     * Stop the server instance.
-     * @throws CitrusRuntimeException
-     */
-    public void quit() {
-        Writer writer = null;
-
-        try {
-            InetAddress addr = InetAddress.getByName("localhost");
-            Socket socket = new Socket(addr, port);
-
-            Message<?> httpRequest;
-            
-            httpRequest = MessageBuilder.withPayload("quit")
-                            .setHeader("HTTPVersion", HttpConstants.HTTP_VERSION)
-                            .setHeader("HTTPMethod", HttpConstants.HTTP_POST)
-                            .setHeader("HTTPUri", "localhost:" + port + uri)
-                            .setHeader("HTTPHost", "localhost")
-                            .setHeader("HTTPPort", Integer.valueOf(port).toString())
-                            .build();
-
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
-            writer.write(HttpUtils.generateRequest(httpRequest));
-            writer.flush();
-        } catch (UnknownHostException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ConnectException e) {
-            log.warn("Could not connect to HttpStub - maybe server is already stopped");
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    log.error("Error while closing output stream", e);
-                }
-            }
-        }
-    }
-    
-    /**
-     * Set the Http port.
-     * @param port
+     * Set the server port.
+     * @param port the port to set
      */
     public void setPort(int port) {
         this.port = port;
     }
-
+    
     /**
-     * Set the Http URI.
-     * @param uri
+     * Set the server resource base.
+     * @param resourceBase the resourceBase to set
      */
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setResourceBase(String resourceBase) {
+        this.resourceBase = resourceBase;
     }
 
     /**
-     * Set the message handler.
-     * @param messageHandler
+     * Set the context config location.
+     * @param contextConfigLocation the contextConfigLocation to set
      */
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public void setContextConfigLocation(String contextConfigLocation) {
+        this.contextConfigLocation = contextConfigLocation;
     }
 
-    /**
-     * Set the host.
-     * @param host the host to set
+    /** (non-Javadoc)
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
-    public void setHost(String host) {
-        this.host = host;
+    public void setApplicationContext(ApplicationContext applicationContext) 
+        throws BeansException {
+        this.applicationContext = applicationContext;
     }
     
+    /**
+     * @param useRootContextAsParent the useRootContextAsParent to set
+     */
+    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
+        this.useRootContextAsParent = useRootContextAsParent;
+    }
+    
+    /**
+     * WebApplicationContext implementation that delegates method calls to parent ApplicationContext.
+     */
+    private final class SimpleDelegatingWebApplicationContext implements WebApplicationContext {
+        public Resource getResource(String location) {
+            return applicationContext.getResource(location);
+        }
+        public ClassLoader getClassLoader() {
+            return applicationContext.getClassLoader();
+        }
+        public Resource[] getResources(String locationPattern) throws IOException {
+            return applicationContext.getResources(locationPattern);
+        }
+        public void publishEvent(ApplicationEvent event) {
+            applicationContext.publishEvent(event);
+        }
+        public String getMessage(String code, Object[] args, String defaultMessage,
+                Locale locale) {
+            return applicationContext.getMessage(code, args, defaultMessage, locale);
+        }
+        public String getMessage(String code, Object[] args, Locale locale)
+                throws NoSuchMessageException {
+            return applicationContext.getMessage(code, args, locale);
+        }
+        public String getMessage(MessageSourceResolvable resolvable, Locale locale)
+                throws NoSuchMessageException {
+            return applicationContext.getMessage(resolvable, locale);
+        }
+        public BeanFactory getParentBeanFactory() {
+            return applicationContext.getParentBeanFactory();
+        }
+        public boolean containsLocalBean(String name) {
+            return applicationContext.containsBean(name);
+        }
+        public boolean isSingleton(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.isSingleton(name);
+        }
+        public boolean isPrototype(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.isPrototype(name);
+        }
+        public Object getBean(String name) throws BeansException {
+            return applicationContext.getBean(name);
+        }
+        public String[] getAliases(String name) {
+            return applicationContext.getAliases(name);
+        }
+        public boolean containsBean(String name) {
+            return applicationContext.containsBean(name);
+        }
+        public String[] getBeanDefinitionNames() {
+            return applicationContext.getBeanDefinitionNames();
+        }
+        public int getBeanDefinitionCount() {
+            return applicationContext.getBeanDefinitionCount();
+        }
+        public boolean containsBeanDefinition(String beanName) {
+            return applicationContext.containsBeanDefinition(beanName);
+        }
+        public long getStartupDate() {
+            return applicationContext.getStartupDate();
+        }
+        public ApplicationContext getParent() {
+            return applicationContext.getParent();
+        }
+        public String getId() {
+            return applicationContext.getId();
+        }
+        public String getDisplayName() {
+            return applicationContext.getDisplayName();
+        }
+        public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
+                throws IllegalStateException {
+            return applicationContext.getAutowireCapableBeanFactory();
+        }
+        public <T> Map<String, T> getBeansOfType(Class<T> type)
+                throws BeansException {
+            return applicationContext.getBeansOfType(type);
+        }
+        public <T> Map<String, T> getBeansOfType(Class<T> type,
+                boolean includeNonSingletons, boolean allowEagerInit)
+                throws BeansException {
+            return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
+        }
+        public Map<String, Object> getBeansWithAnnotation(
+                Class<? extends Annotation> annotationType)
+                throws BeansException {
+            return applicationContext.getBeansWithAnnotation(annotationType);
+        }
+        public <A extends Annotation> A findAnnotationOnBean(String beanName,
+                Class<A> annotationType) {
+            return applicationContext.findAnnotationOnBean(beanName, annotationType);
+        }
+        public <T> T getBean(String name, Class<T> requiredType)
+                throws BeansException {
+            return applicationContext.getBean(name, requiredType);
+        }
+        public <T> T getBean(Class<T> requiredType) throws BeansException {
+            return applicationContext.getBean(requiredType);
+        }
+        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type) {
+            return applicationContext.getBeanNamesForType(type);
+        }
+        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type,
+                boolean includeNonSingletons, boolean allowEagerInit) {
+            return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+        }
+        public Object getBean(String name, Object... args)
+                throws BeansException {
+            return applicationContext.getBean(name, args);
+        }
+        public boolean isTypeMatch(String name, @SuppressWarnings("rawtypes") Class targetType)
+                throws NoSuchBeanDefinitionException {
+            return false;
+        }
+        public Class<?> getType(String name)
+                throws NoSuchBeanDefinitionException {
+            return applicationContext.getType(name);
+        }
+        public ServletContext getServletContext() {
+            return null;
+        }
+    }
+
+    /**
+     * Sets the custom connector.
+     * @param connector the connector to set
+     */
+    public void setConnector(Connector connector) {
+        this.connector = connector;
+    }
+
+    /**
+     * Sets a list of custom connectors.
+     * @param connectors the connectors to set
+     */
+    public void setConnectors(Connector[] connectors) {
+        Connector[] clone = new Connector[connectors.length];
+        for (int i = 0; i < connectors.length; i++) {
+            clone[i] = connectors[i];
+        }
+        
+        this.connectors = clone;
+    }
 }

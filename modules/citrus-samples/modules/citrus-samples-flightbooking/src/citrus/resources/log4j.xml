@@ -32,7 +32,7 @@
   </logger>
 
   <logger name="org.springframework">
-    <level value="DEGUG"/>
+    <level value="WARN"/>
   </logger>
   
   <logger name="org.mortbay">

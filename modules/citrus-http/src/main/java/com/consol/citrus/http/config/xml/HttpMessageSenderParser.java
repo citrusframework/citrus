@@ -16,10 +16,13 @@
 
 package com.consol.citrus.http.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -35,34 +38,54 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.http.message.HttpMessageSender");
         
-        String requestUrl = element.getAttribute(HttpParserConstants.REQUEST_URL_ATTRIBUTE);
+        String restTemplate = element.getAttribute("rest-template");
+        if (StringUtils.hasText(restTemplate)){
+            if (element.hasAttribute("request-factory")) {
+                throw new BeanCreationException("When providing a 'rest-template' property, " +
+                		"no 'request-factory' should be set!");
+            }
+            
+            builder.addConstructorArgReference("restTemplate");
+        } else {
+            String requestFactory = element.getAttribute("request-factory");
+            if (StringUtils.hasText(requestFactory)) {
+                builder.addPropertyReference("requestFactory", requestFactory);
+            }
+        }
         
+        String requestUrl = element.getAttribute("request-url");
         if (StringUtils.hasText(requestUrl)) {
-            builder.addPropertyValue(HttpParserConstants.REQUEST_URL_PROPERTY, requestUrl);
+            builder.addPropertyValue("requestUrl", requestUrl);
         }
     
-        String requestMethod = element.getAttribute(HttpParserConstants.REQUEST_METHOD_ATTRIBUTE);
-        
+        String requestMethod = element.getAttribute("request-method");
         if (StringUtils.hasText(requestMethod)) {
-            builder.addPropertyValue(HttpParserConstants.REQUEST_METHOD_PROPERTY, requestMethod);
+            builder.addPropertyValue("requestMethod", new TypedStringValue(requestMethod, HttpMethod.class));
         }
         
-        String replyHandler = element.getAttribute(HttpParserConstants.REPLY_HANDLER_ATTRIBUTE);
-        
+        String replyHandler = element.getAttribute("reply-handler");
         if (StringUtils.hasText(replyHandler)) {
-            builder.addPropertyReference(HttpParserConstants.REPLY_HANDLER_PROPERTY, replyHandler);
+            builder.addPropertyReference("replyMessageHandler", replyHandler);
         }
 
-        String replyMessageCorrelator = element.getAttribute(HttpParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
-        
+        String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
         if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference(HttpParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+            builder.addPropertyReference("correlator", replyMessageCorrelator);
         }
         
-        String endpointResolver = element.getAttribute(HttpParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE);
-        
+        String endpointResolver = element.getAttribute("endpoint-resolver");
         if (StringUtils.hasText(endpointResolver)) {
-            builder.addPropertyReference(HttpParserConstants.ENDPOINT_RESOLVER_PROPERTY, endpointResolver);
+            builder.addPropertyReference("endpointResolver", endpointResolver);
+        }
+        
+        String charset = element.getAttribute("charset");
+        if (StringUtils.hasText(charset)) {
+            builder.addPropertyValue("charset", charset);
+        }
+        
+        String contentType = element.getAttribute("content-type");
+        if (StringUtils.hasText(contentType)) {
+            builder.addPropertyValue("contentType", contentType);
         }
         
         return builder.getBeanDefinition();

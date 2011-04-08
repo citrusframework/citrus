@@ -17,6 +17,7 @@
 package com.consol.citrus.util;
 
 import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.jms.JmsHeaders;
 
 
 /**
@@ -48,6 +49,8 @@ public final class MessageUtils {
         } else if (headerName.equals(MessageHeaders.ID)) {
             return true;
         } else if (headerName.equals(MessageHeaders.TIMESTAMP)) {
+            return true;
+        } else if (headerName.startsWith(JmsHeaders.PREFIX)) {
             return true;
         }
         

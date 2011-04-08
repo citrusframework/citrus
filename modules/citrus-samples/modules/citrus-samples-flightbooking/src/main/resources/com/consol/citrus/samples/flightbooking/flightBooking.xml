@@ -4,6 +4,7 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xmlns:http="http://www.springframework.org/schema/integration/http"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.springframework.org/schema/context 
@@ -11,7 +12,9 @@
 			http://www.springframework.org/schema/integration
 			http://www.springframework.org/schema/integration/spring-integration-2.0.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.0.xsd">
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.0.xsd
+            http://www.springframework.org/schema/integration/http
+            http://www.springframework.org/schema/integration/http/spring-integration-http-2.0.xsd">
     
     <context:annotation-config />
     
@@ -71,10 +74,21 @@
     </int:channel>
     
     <int:transformer input-channel="royalAirlineFlights" ref="marshallingTransformer" output-channel="royalAirlineFlightsXML"/>
-    <jms:outbound-gateway id="royalAirlineGateway" 
-                          request-channel="royalAirlineFlightsXML" 
-                          request-destination-name="Royal.Airline.Request.Queue"
-                          reply-channel="confirmedFlightsXML" reply-timeout="1000"/>
+    <http:outbound-gateway id="royalAirlineGateway"
+                          request-channel="royalAirlineFlightsXML"
+                          url="http://localhost:8074/flight"
+                          http-method="POST"
+                          expected-response-type="java.lang.String"
+                          charset="UTF-8"
+                          request-timeout="1000"
+                          reply-channel="confirmedFlightsXML"
+                          header-mapper="httpHeaderMapper"/>
+    
+    <bean id="httpHeaderMapper" class="com.consol.citrus.samples.flightbooking.header.HttpHeaderMapper">
+        <property name="inboundHeaderNames" value ="X-*, HTTP_RESPONSE_HEADERS"/>
+        <property name="outboundHeaderNames" value="sequenceNumber, sequenceSize, bookingCorrelationId, HTTP_REQUEST_HEADERS"/>
+        <property name="userDefinedHeaderPrefix" value=""/>
+    </bean>
     
 	<int:channel id="smartAirlineFlights"/>
     <int:channel id="smartAirlineFlightsXML">

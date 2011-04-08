@@ -37,9 +37,9 @@
     	            		<data>Hello, Citrus!</data>
     	            	</message>
     	            	<header>
-    	           			<element name="HTTPStatusCode" value="200"/>
-    	           			<element name="HTTPVersion" value="HTTP/1.1"/>
-    	           			<element name="HTTPReasonPhrase" value="OK"/>
+    	           			<element name="citrus_http_status_code" value="200"/>
+    	           			<element name="citrus_http_version" value="HTTP/1.1"/>
+    	           			<element name="citrus_http_reason_phrase" value="OK"/>
                             <element name="jms_correlationId" value="${correlation_id}"/>
     	           		</header>
     	            </send>
@@ -51,9 +51,9 @@
                     <data>Hello, Citrus!</data>
             	</message>
             	<header>
-           			<element name="HTTPStatusCode" value="200"/>
-           			<element name="HTTPVersion" value="HTTP/1.1"/>
-           			<element name="HTTPReasonPhrase" value="OK"/>
+           			<element name="citrus_http_status_code" value="200"/>
+           			<element name="citrus_http_version" value="HTTP/1.1"/>
+           			<element name="citrus_http_reason_phrase" value="OK"/>
            		</header>
             </receive>
             
@@ -70,9 +70,9 @@
                     <data></data>
                 </message>
             	<header>
-           			<element name="HTTPStatusCode" value="200"/>
-           			<element name="HTTPVersion" value="HTTP/1.1"/>
-           			<element name="HTTPReasonPhrase" value="OK"/>
+           			<element name="citrus_http_status_code" value="200"/>
+           			<element name="citrus_http_version" value="HTTP/1.1"/>
+           			<element name="citrus_http_reason_phrase" value="OK"/>
            		</header>
             </receive>
         </actions>

@@ -54,9 +54,11 @@
 
     <!-- FlightBookingService Sample -->
     <citrus-http:server id="royalAirlineHttpServer" 
-                        port="8074" uri="/test" 
-                        message-handler="fbsForwardingMessageHandler"
-                        auto-start="true"/>
+                        port="8074" 
+                        auto-start="true"
+                        root-parent-context="true"
+                        context-config-location="classpath:com/consol/citrus/samples/flightbooking/fbs-http-servlet.xml"
+                        resource-base="src/citrus/resources"/>
             
     <bean id="fbsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
         <property name="destinationName" value="${royal.airline.request.queue}"/>

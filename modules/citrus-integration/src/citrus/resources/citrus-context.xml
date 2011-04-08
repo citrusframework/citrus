@@ -141,44 +141,28 @@
     
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer" 
-                        host="localhost"
-                        port="8072" uri="/test" 
-                        deamon="false" 
-                        message-handler="jmsForwardingMessageHandler"
-                        auto-start="true"/>
+                        port="8072"
+                        auto-start="true"
+                        root-parent-context="true"
+                        context-config-location="classpath:com/consol/citrus/http/citrus-http-servlet.xml"
+                        resource-base="src/citrus/resources"/>
 
-    <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-        <property name="destinationName" value="${jms.queue.http.request.forward}"/>
-        <property name="replyDestinationName" value="${jms.queue.http.request.ack}"/>
-        <property name="connectionFactory">
-            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-                <property name="brokerURL" value="${jms.server.url}" />
-            </bean>
-        </property>
-        <property name="fallbackMessageHandlerDelegate">
-            <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
-        </property>
-        <property name="replyTimeout" value="2000"/>
-    </bean>
-        
     <citrus-http:server id="httpStandaloneServer" 
-                        port="8073" uri="/test" 
-                        deamon="false" 
-                        message-handler="xpathDispatchingHandler"
-                        auto-start="true"/>
+                        port="8073"
+                        auto-start="true"
+                        context-config-location="classpath:com/consol/citrus/http/citrus-http-standalone-servlet.xml"
+                        resource-base="src/citrus/resources"/>
                         
-    <bean id="xpathDispatchingHandler" class="com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler">
-        <property name="messageHandlerContext" value="classpath:com/consol/citrus/http/message-handler-context.xml"/>
-    </bean>
-        
     <citrus-http:message-sender id="httpMessageSender" 
                                 request-url="http://localhost:8072/test" 
                                 request-method="POST"
+                                content-type="text/xml"
                                 reply-handler="httpResponseReceiver"/>
   
     <citrus-http:message-sender id="httpMessageSenderStandalone" 
                                 request-url="http://localhost:8073/test" 
                                 request-method="POST"
+                                content-type="text/xml"
                                 reply-handler="httpResponseReceiver"/>
   
     <citrus-http:reply-message-handler id="httpResponseReceiver"/>

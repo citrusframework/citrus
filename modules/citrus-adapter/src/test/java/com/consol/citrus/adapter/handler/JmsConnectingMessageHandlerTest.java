@@ -208,6 +208,7 @@ public class JmsConnectingMessageHandlerTest {
         messageHandler.setConnectionFactory(connectionFactory);
         messageHandler.setDestination(sendDestination);
         messageHandler.setReplyDestination(replyDestination);
+        messageHandler.setFallbackMessageHandlerDelegate(null);
 
         Map<String, String> requestHeaders = new HashMap<String, String>();
 

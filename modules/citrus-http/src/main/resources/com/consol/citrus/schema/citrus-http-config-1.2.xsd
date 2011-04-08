@@ -22,12 +22,13 @@
     <xs:element name="server">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
-            <xs:attribute name="host" type="xs:string"/>
             <xs:attribute name="port" type="xs:string"/>
-            <xs:attribute name="uri" type="xs:string"/>
-            <xs:attribute name="deamon" type="xs:boolean"/>
             <xs:attribute name="auto-start" type="xs:boolean"/>
-            <xs:attribute name="message-handler" type="xs:string"/>
+            <xs:attribute name="context-config-location" type="xs:string"/>
+            <xs:attribute name="resource-base" type="xs:string"/>
+            <xs:attribute name="root-parent-context" type="xs:boolean"/>
+            <xs:attribute name="connector" type="xs:string"/>
+            <xs:attribute name="connectors" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="message-sender">
@@ -38,6 +39,10 @@
             <xs:attribute name="reply-handler" type="xs:string"/>
             <xs:attribute name="reply-message-correlator" type="xs:string"/>
             <xs:attribute name="endpoint-resolver" type="xs:string"/>
+            <xs:attribute name="request-factory" type="xs:string"/>
+            <xs:attribute name="rest-template" type="xs:string"/>
+            <xs:attribute name="charset" type="xs:string"/>
+            <xs:attribute name="content-type" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="reply-message-handler">

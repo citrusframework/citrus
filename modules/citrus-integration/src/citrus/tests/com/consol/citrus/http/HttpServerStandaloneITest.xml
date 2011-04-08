@@ -14,8 +14,9 @@
 		</description>
 		
 		<variables>
-			<variable name="id" value="123456789"/>
+			<variable name="custom_header_id" value="123456789"/>
 		</variables>
+    
         <actions>
             <send with="httpMessageSenderStandalone">
             	<message>
@@ -28,7 +29,7 @@
             		</data>
             	</message>
             	<header>
-          			<element name="id" value="${id}"/>
+          			<element name="CustomHeaderId" value="${custom_header_id}"/>
           		</header>
             </send>
             
@@ -45,9 +46,9 @@
             		</data>
             	</message>
             	<header>
-           			<element name="HTTPStatusCode" value="200"/>
-           			<element name="HTTPVersion" value="HTTP/1.1"/>
-           			<element name="HTTPReasonPhrase" value="OK"/>
+           			<element name="citrus_http_status_code" value="200"/>
+           			<element name="citrus_http_version" value="HTTP/1.1"/>
+           			<element name="citrus_http_reason_phrase" value="OK"/>
            		</header>
             </receive>
             
@@ -62,7 +63,7 @@
             		</data>
             	</message>
             	<header>
-          			<element name="id" value="${id}"/>
+          			<element name="CustomHeaderId" value="${custom_header_id}"/>
           		</header>
             </send>
             
@@ -79,9 +80,9 @@
             		</data>            	
             	</message>
             	<header>
-           			<element name="HTTPStatusCode" value="200"/>
-           			<element name="HTTPVersion" value="HTTP/1.1"/>
-           			<element name="HTTPReasonPhrase" value="OK"/>
+           			<element name="citrus_http_status_code" value="200"/>
+           			<element name="citrus_http_version" value="HTTP/1.1"/>
+           			<element name="citrus_http_reason_phrase" value="OK"/>
            		</header>
             </receive>
             
