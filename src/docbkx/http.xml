@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="http">
-    <title>Http Support</title>
+    <title>Http support</title>
 
-    <para>Citrus is able to connect with Http services and simulate Http servers. In the next sections you will learn
-    how to invoke services using Http messaging. And you will see how to accept client requests and provide proper Http 
-    responses.</para>
+    <para>Citrus is able to connect with Http services and simulate RESTful WebServices servers. In the next sections you will learn
+    how to invoke Http services and how to handle REST Http requests in a test case. We deal with setting up a Http server in order to
+    accept client requests and provide proper Http responses with GET, PUT, DELETE or POST request method.</para>
     
     <note>
         <para>Similar to the JMS specific configuration schema, Citrus provides a customized Http configuration schema that
-        is used in Spring configuration files. Simply include the http-config namespace in the configuration XML as follows.</para>
+        is used in Spring configuration files. Simply include the http-config namespace in the configuration XML files as follows.</para>
         
         <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
@@ -16,7 +16,7 @@
    xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
    xsi:schemaLocation=&quot;
    http://www.springframework.org/schema/beans 
-   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+   http://www.springframework.org/schema/beans/spring-beans.xsd
    http://www.citrusframework.org/schema/config 
    http://www.citrusframework.org/schema/config/citrus-config.xsd
    http://www.citrusframework.org/schema/http/config 
@@ -26,54 +26,113 @@
     
 &lt;/beans&gt;</programlisting>
         
-        <para>Now you are ready to use the customized http configuration elements using the 
+        <para>Now you are ready to use the customized Http configuration elements with the 
         citrus-http namespace prefix.</para>
     </note>
     
     <section id="http-sender">
         <title>Http message sender</title>
         
-        <para>Citrus can invoke any Http service and wait for the response. After that the response goes 
+        <para>Citrus is able to invoke a Http service as client waiting for the response message from server. After that the response message goes 
         through the validation process as usual. Let us see how a message sender for Http works:</para>
         
         <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
                                request-url=&quot;http://localhost:8090/test&quot; 
                                request-method=&quot;POST&quot;
+                               content-type=&quot;application/xml&quot;
                                reply-handler=&quot;httpResponseHandler&quot;/&gt;
 
 &lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;/&gt;</programlisting>
         
-        <para>As Http communication is always synchronous we need a reply message handler besides the http message-sender. It is not
-        very surprising that the sender also needs the <emphasis>request-url</emphasis> and a <emphasis>request-method</emphasis>. The sender
-        will build a Http request and send it to the Http endpoint. The Http response is then provided to the reply handler.</para>
+        <para>As Http communication is always synchronous we need a reply message handler in combination with the Http message-sender. It is not
+        very surprising that the sender also needs the <emphasis>request-url</emphasis> and a <emphasis>request-method</emphasis> as parameter. In addition
+        to that we can specify the content-type of the request we are about to send. The message sender builds the Http request and sends it to the Http server. 
+        The Http response is then provided to the reply handler as soon as it has arrived.</para>
+        
+        <tip><para>Citrus uses Spring's REST template mechanism for sedning Http requests. This means you have great customizing opportunities with a special REST 
+        template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
+        attribute in message sender like this:</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
+                               request-url=&quot;http://localhost:8090/test&quot; 
+                               request-method=&quot;POST&quot;
+                               content-type=&quot;text/plain&quot;
+                               rest-template=&quot;customizedRestTemplate&quot;
+                               reply-handler=&quot;httpResponseHandler&quot;/&gt;
+                               
+  &lt;!-- Customized rest template --&gt;
+  &lt;bean name=&quot;customizedRestTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
+    &lt;property name=&quot;messageConverters&quot;&gt;
+      &lt;util:list id=&quot;converter&quot;&gt;
+        &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+          &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+            &lt;util:list id=&quot;types&quot;&gt;
+              &lt;value&gt;text/plain&lt;/value&gt;
+            &lt;/util:list&gt;
+          &lt;/property&gt;
+        &lt;/bean&gt;
+      &lt;/util:list&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;errorHandler&quot;&gt;
+      &lt;!-- Custom error handler --&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;requestFactory&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
+        &lt;property name=&quot;readTimeout&quot; value=&quot;9000&quot; /&gt;
+      &lt;/bean&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt;
+        </programlisting>
+        </tip>
     </section>
     
     <section id="http-server">
         <title>Http server</title>
         
-        <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is more complicated, because Citrus 
-        has to provide a Http server that is listening on a port for client connections. Once a client connection 
-        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server 
-        implementation that listens on a port for client connections.</para>
+        <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is a little bit more complicated, because Citrus 
+        has to provide server functionality listening on a local port for client connections. Once a client connection 
+        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a preconfigured Jetty  
+        server instance with Spring web application context support.</para>
         
-        <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
-               host="localhost"
-               port=&quot;8090&quot; 
-               uri=&quot;/test&quot; 
-               deamon=&quot;false&quot; 
-               message-handler=&quot;emptyResponseProducingMessageHandler&quot;
-               auto-start=&quot;true&quot;/&gt;
-                       
-&lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
- class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus-http:server id=&quot;sinpleHttpServer&quot; 
+                port=&quot;8090&quot;
+                auto-start=&quot;true&quot;
+                context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
+                resource-base=&quot;src/citrus/resources&quot;/&gt;
+        </programlisting>
         
-        <para>The Http server implementation in the example will automatically start when the Spring application context is loaded. The connector is listening on
-        port 8090 for requests. The URL <literal>'http://localhost:8090/test'</literal> for instance is handled by the Http server. At the moment the server is only accepting connections
-        from the local address <emphasis>'localhost'</emphasis> meaning your local machine. If you want to access the server from another machine in your network using your local ip address 
-        you have to remove the host attribute or set it to an empty string &quot;&quot;.</para>
+        <para>The Http Jetty server will automatically start when the Spring application context is loaded (auto-start=&quot;true&quot;). The basic connector is listening on
+        port 8090 for requests. The server automatically uses Spring application context loading on startup. The servlet context file is specified via classpath and hold all custom
+        configurations for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling
+        incoming requests (GET, PUT, DELETE, POST, etc.).</para>
         
-        <para>Another very important part is the message handler definition. Once a client request was accepted the message handler is responsible for generating a 
-        proper response to the client.</para>
+        <programlisting>&lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping&quot;/&gt;
+  
+  &lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;
+    &lt;property name=&quot;messageConverters&quot;&gt;
+      &lt;util:list id=&quot;converters&quot;&gt;
+        &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+          &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+            &lt;util:list&gt;
+              &lt;value&gt;text/xml&lt;/value&gt;
+            &lt;/util:list&gt;
+          &lt;/property&gt;
+        &lt;/bean&gt;
+      &lt;/util:list&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt;
+        
+  &lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
+    &lt;property name=&quot;messageHandler&quot;&gt;
+        &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+         class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
+    &lt;/property&gt;
+  &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The beans above are responsible for proper Http server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives 
+        us a great customization and extension points. The important part is the message handler definition inside the HttpMessageController. Once a client request was accepted the 
+        message handler is responsible for generating a proper response to the client.</para>
         
         <mediaobject>
           <imageobject role="fo">
@@ -85,7 +144,8 @@
           </imageobject>
         </mediaobject>
         
-        <para>Citrus provides several message handler implementations. Let's have a look at them in the following sections.</para>
+        <para>Citrus provides several message handler implementations for different simulation strategies. With these message handler implementations you should be able to generate
+        proper response messages for the client in a test case. Let's have a look at them in the following sections.</para>
         
         <section id="http-message-handler-empty">
             <title>Empty response producing message handler</title>
