@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="31.03.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="11.04.2011" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #312 REST support (client and server side)
+        </action>
         <action dev="christophd" type="add">
           #247 Autowired tasks before/after suite
         </action>
