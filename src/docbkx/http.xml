@@ -49,6 +49,24 @@
         to that we can specify the content-type of the request we are about to send. The message sender builds the Http request and sends it to the Http server. 
         The Http response is then provided to the reply handler as soon as it has arrived.</para>
         
+        <para>The request method is statically set to <emphasis>POST</emphasis> in the example above. You can also set/overwrite the Http request method inside the 
+        sending test action which gives more flexibility. Use something like this in your test:</para>
+        
+        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+      &lt;message&gt;
+          &lt;data&gt;
+              &lt;![CDATA[
+                  &lt;testRequestMessage&gt;
+                      &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                  &lt;/testRequestMessage&gt;
+              ]]&gt;
+          &lt;/data&gt;
+      &lt;/message&gt;
+      &lt;header&gt;
+          &lt;element name=&quot;citrus_http_method&quot; value=&quot;PUT&quot;/&gt;
+      &lt;/header&gt;
+  &lt;/send&gt;</programlisting>
+        
         <tip><para>Citrus uses Spring's REST template mechanism for sedning Http requests. This means you have great customizing opportunities with a special REST 
         template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
         attribute in message sender like this:</para>

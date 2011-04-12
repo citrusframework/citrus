@@ -53,9 +53,55 @@ public class HttpMessageController {
     /** Default content type for response generation */
     private String contentType = "text/plain";
     
-    @RequestMapping(method = { RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET, RequestMethod.DELETE })
+    @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public ResponseEntity<String> handleRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<String> handleGetRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.GET, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.POST })
+    @ResponseBody
+    public ResponseEntity<String> handlePostRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.POST, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.PUT })
+    @ResponseBody
+    public ResponseEntity<String> handlePutRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.PUT, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.DELETE })
+    @ResponseBody
+    public ResponseEntity<String> handleDeleteRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.DELETE, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.OPTIONS })
+    @ResponseBody
+    public ResponseEntity<String> handleOptionsRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.OPTIONS, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.HEAD })
+    @ResponseBody
+    public ResponseEntity<String> handleHeadRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.HEAD, requestEntity);
+    }
+    
+    @RequestMapping(method = { RequestMethod.TRACE })
+    @ResponseBody
+    public ResponseEntity<String> handleTraceRequest(HttpEntity<String> requestEntity) {
+        return handleRequestInternal(HttpMethod.TRACE, requestEntity);
+    }
+    
+    /**
+     * Handles requests with message handler implementation. Previously sets Http request method as header parameter.
+     * @param method
+     * @param requestEntity
+     * @return
+     */
+    private ResponseEntity<String> handleRequestInternal(HttpMethod method, HttpEntity<String> requestEntity) {
         Map<String, ?> httpRequestHeaders = headerMapper.toHeaders(requestEntity.getHeaders());
         Map<String, String> customHeaders = new HashMap<String, String>();
         for (Entry<String, List<String>> header : requestEntity.getHeaders().entrySet()) {
@@ -63,6 +109,8 @@ public class HttpMessageController {
                 customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
             }
         }
+        
+        customHeaders.put(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
         
         Message<?> response = messageHandler.handleMessage(MessageBuilder.withPayload(requestEntity.getBody())
                                             .copyHeaders(convertHeaderTypes(httpRequestHeaders))

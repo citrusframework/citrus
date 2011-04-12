@@ -38,4 +38,6 @@ public abstract class CitrusHttpMessageHeaders {
     public static final String HTTP_VERSION = HTTP_PREFIX + "version";
     
     public static final String HTTP_REASON_PHRASE = HTTP_PREFIX + "reason_phrase";
+    
+    public static final String HTTP_REQUEST_METHOD = HTTP_PREFIX + "method";
 }

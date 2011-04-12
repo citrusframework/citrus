@@ -33,6 +33,7 @@
 	          			<element name="CustomHeaderId" value="${custom_header_id}"/>
                         <element name="Content-Type" value="text/xml"/>
                         <element name="Accept" value="text/xml,*/*"/>
+                        <element name="citrus_http_method" value="POST"/>
 	          		</header>
 	            </send>
               
@@ -51,6 +52,7 @@
                             <element name="CustomHeaderId" value="${custom_header_id}"/>
                             <element name="Content-Type" value="text/xml"/>
                             <element name="Accept" value="text/xml,*/*"/>
+                            <element name="citrus_http_method" value="POST"/>
                         </header>
                         <extract>
                             <header name="jms_messageId" variable="correlation_id"/>

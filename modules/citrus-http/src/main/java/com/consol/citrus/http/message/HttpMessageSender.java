@@ -119,7 +119,13 @@ public class HttpMessageSender implements MessageSender {
         }
 
         HttpEntity<?> requestEntity = generateRequest(message);
-        ResponseEntity<?> response = restTemplate.exchange(getRequestUrl(), requestMethod, requestEntity, String.class);
+        
+        HttpMethod method = requestMethod;
+        if (message.getHeaders().containsKey(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD)) {
+            method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
+        }
+        
+        ResponseEntity<?> response = restTemplate.exchange(getRequestUrl(), method, requestEntity, String.class);
         
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
         
