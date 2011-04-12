@@ -5,7 +5,7 @@
   <parent>
     <artifactId>citrus-samples</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 

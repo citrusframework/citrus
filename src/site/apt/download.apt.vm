@@ -11,6 +11,10 @@ Download Citrus
   
   The milestone releases provide stable versions with the latest changes for the upcoming Citrus version.
   
+  * citrus-1.2.M2-with-dependencies ({{{./dist/citrus-1.2.M2-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2.M2-with-dependencies.tar.gz}tar.gz}})
+  
+  * citrus-1.2.M2-src ({{{./dist/citrus-1.2.M2-src.zip}zip}}/{{{./dist/citrus-1.2.M2-src.tar.gz}tar.gz}})
+  
   * citrus-1.2.M1-with-dependencies ({{{./dist/citrus-1.2.M1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2.M1-with-dependencies.tar.gz}tar.gz}})
   
   * citrus-1.2.M1-src ({{{./dist/citrus-1.2.M1-src.zip}zip}}/{{{./dist/citrus-1.2.M1-src.tar.gz}tar.gz}})
@@ -19,9 +23,9 @@ Download Citrus
   
   The frequent snapshot release keeps you up-to-date with the latest changes and bufixes.
   
-  * citrus-${project.version}-with-dependencies ({{{./dist/citrus-${project.version}-with-dependencies.zip}zip}}/{{{./dist/citrus-${project.version}-with-dependencies.tar.gz}tar.gz}})
+  * citrus-1.2-SNAPSHOT-with-dependencies ({{{./dist/citrus-1.2-SNAPSHOT-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2-SNAPSHOT-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-${project.version}-src ({{{./dist/citrus-${project.version}-src.zip}zip}}/{{{./dist/citrus-${project.version}-src.tar.gz}tar.gz}})
+  * citrus-1.2-SNAPSHOT-src ({{{./dist/citrus-1.2-SNAPSHOT-src.zip}zip}}/{{{./dist/citrus-1.2-SNAPSHOT-src.tar.gz}tar.gz}})
   
   []
 
