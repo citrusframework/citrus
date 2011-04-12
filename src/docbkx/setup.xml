@@ -190,7 +190,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     &lt;/fileset&gt;
   &lt;/path&gt;
   
-  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.0.jar&quot;/&gt;
+  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.2-SNAPSHOT.jar&quot;/&gt;
   
   &lt;target name=&quot;compile.tests&quot;>
     &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;

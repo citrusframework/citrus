@@ -36,11 +36,11 @@
     xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
     xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
     xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.citrusframework.org/schema/config 
             http://www.citrusframework.org/schema/config/citrus-config.xsd
             http://www.springframework.org/schema/integration
-            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd&quot;&gt;
+            http://www.springframework.org/schema/integration/spring-integration.xsd&quot;&gt;
 &lt;/beans&gt;</programlisting>
         </note>
         
@@ -160,13 +160,13 @@
     xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
     xmlns:file=&quot;http://www.springframework.org/schema/integration/file&quot;
     xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.citrusframework.org/schema/config 
             http://www.citrusframework.org/schema/config/citrus-config.xsd
             http://www.springframework.org/schema/integration
-            http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
+            http://www.springframework.org/schema/integration/spring-integration.xsd
             http://www.springframework.org/schema/integration/file
-            http://www.springframework.org/schema/integration/file/spring-integration-file-1.0.xsd&quot;&gt;
+            http://www.springframework.org/schema/integration/file/spring-integration-file.xsd&quot;&gt;
 &lt;/beans&gt;</programlisting>
         </note>
         
