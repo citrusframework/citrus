@@ -31,6 +31,8 @@
 	            	</message>
 	            	<header>
 	          			<element name="CustomHeaderId" value="${custom_header_id}"/>
+                        <element name="Content-Type" value="text/xml"/>
+                        <element name="Accept" value="text/xml,*/*"/>
 	          		</header>
 	            </send>
               
@@ -47,6 +49,8 @@
                         </message>
                         <header>
                             <element name="CustomHeaderId" value="${custom_header_id}"/>
+                            <element name="Content-Type" value="text/xml"/>
+                            <element name="Accept" value="text/xml,*/*"/>
                         </header>
                         <extract>
                             <header name="jms_messageId" variable="correlation_id"/>
@@ -68,7 +72,7 @@
     	           			<element name="citrus_http_status_code" value="200"/>
     	           			<element name="citrus_http_version" value="HTTP/1.1"/>
     	           			<element name="citrus_http_reason_phrase" value="OK"/>
-                            <element name="Content-Type" value="application/xml"/>
+                            <element name="Content-Type" value="text/xml"/>
                             <element name="jms_correlationId" value="${correlation_id}"/>
     	           		</header>
     	            </send>

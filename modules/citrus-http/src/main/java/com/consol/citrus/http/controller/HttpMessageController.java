@@ -65,14 +65,37 @@ public class HttpMessageController {
         }
         
         Message<?> response = messageHandler.handleMessage(MessageBuilder.withPayload(requestEntity.getBody())
-                                                                         .copyHeaders(httpRequestHeaders)
-                                                                         .copyHeaders(customHeaders)
-                                                                         .build());
+                                            .copyHeaders(convertHeaderTypes(httpRequestHeaders))
+                                            .copyHeaders(customHeaders)
+                                            .build());
         
         ResponseEntity<String> responseEntity = generateResponse(response);
         return responseEntity;
     }
     
+    /**
+     * Checks for collection typed header values and convert them to comma delimited String.
+     * We need this for further header processing e.g when forwarding headers to JMS queues.
+     * 
+     * @param headers the http request headers.
+     */
+    private Map<String, Object> convertHeaderTypes(Map<String, ?> headers) {
+        Map<String, Object> convertedHeaders = new HashMap<String, Object>();
+        
+        for (Entry<String, ?> header : headers.entrySet()) {
+            if (header.getValue() instanceof Collection<?>) {
+                Collection<?> value = (Collection<?>)header.getValue();
+                convertedHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(value));
+            } else if (header.getValue() instanceof MediaType) {
+                convertedHeaders.put(header.getKey(), header.getValue().toString());
+            } else {
+                convertedHeaders.put(header.getKey(), header.getValue());
+            }
+        }
+        
+        return convertedHeaders;
+    }
+
     /**
      * Generates the Http response message from given Spring Integration message.
      * @param response
