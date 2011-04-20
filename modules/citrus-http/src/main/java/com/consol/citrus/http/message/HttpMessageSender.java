@@ -28,7 +28,6 @@ import org.springframework.integration.Message;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,9 +73,6 @@ public class HttpMessageSender implements MessageSender {
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.outboundMapper();
     
-    /** Request factory */
-    private ClientHttpRequestFactory requestFactory = new CommonsClientHttpRequestFactory();
-    
     /**
      * Logger
      */
@@ -86,15 +82,22 @@ public class HttpMessageSender implements MessageSender {
      * Default constructor.
      */
     public HttpMessageSender() {
-        Assert.isTrue(requestFactory != null, "Neither a 'restTemplate' nor 'requestFactory' was set correctly.");
-        
+        restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());
+    }
+    
+    /**
+     * Constructor using custom client request factory.
+     * @param requestFactory the custom request factory.
+     */
+    public HttpMessageSender(ClientHttpRequestFactory requestFactory) {
         restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(requestFactory);
     }
     
     /**
-     * Constructor using fields.
-     * @param restTemplate
+     * Constructor using custom rest template.
+     * @param restTemplate the custom rest template.
      */
     public HttpMessageSender(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -125,7 +128,7 @@ public class HttpMessageSender implements MessageSender {
             method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
         }
         
-        ResponseEntity<?> response = restTemplate.exchange(getRequestUrl(), method, requestEntity, String.class);
+        ResponseEntity<?> response = restTemplate.exchange(endpointUri, method, requestEntity, String.class);
         
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
         
@@ -256,14 +259,6 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setHeaderMapper(HeaderMapper<HttpHeaders> headerMapper) {
         this.headerMapper = headerMapper;
-    }
-
-    /**
-     * Sets the requestFactory.
-     * @param requestFactory the requestFactory to set
-     */
-    public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
-        this.requestFactory = requestFactory;
     }
 
     /**

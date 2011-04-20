@@ -45,11 +45,11 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
                 		"no 'request-factory' should be set!");
             }
             
-            builder.addConstructorArgReference("restTemplate");
+            builder.addConstructorArgReference(restTemplate);
         } else {
             String requestFactory = element.getAttribute("request-factory");
             if (StringUtils.hasText(requestFactory)) {
-                builder.addPropertyReference("requestFactory", requestFactory);
+                builder.addConstructorArgReference(requestFactory);
             }
         }
         
