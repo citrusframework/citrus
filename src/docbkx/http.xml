@@ -376,4 +376,73 @@ Server: Jetty(7.0.0.pre5)
         
         <para>This completes the Http header processing within Citrus. On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
     </section>
+    
+    <section id="htp-basic-auth">
+        <title>Basic authentication</title>
+        
+        <para>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication 
+        where the credentials are transmtted in the request header section as base64 encoding. As Citrus uses Spring's REST support with the RestTemplate and ClientHttpRequestFactory the
+        basic authentication is already covered. You simply have to set the user credentials on the HttpClient which is used inside the RestTemplate.</para>
+        
+        <para>Citrus gives a even more comfortable way to configure the basic authentication credentials on the RestTemplate's ClientHttpRequestFactory. Just see the following
+        example and learn how to do that.</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;testHttpMessageSender&quot;
+                              request-method=&quot;POST&quot;
+                              request-url=&quot;http://localhost:8080/test&quot;
+                              reply-handler=&quot;testHttpReplyMessageHandler&quot;
+                              request-factory=&quot;userCredentialsClientRequestFactory&quot;/&gt;
+  
+  &lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
+
+  &lt;bean id=&quot;userCredentialsClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.UserCredentialsClientHttpRequestFactory&quot;&gt;
+    &lt;property name=&quot;targetRequestFactory&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
+          &lt;constructor-arg&gt;
+              &lt;bean id=&quot;httpClient&quot; class=&quot;org.apache.commons.httpclient.HttpClient&quot;&gt;
+                  &lt;constructor-arg&gt;
+                      &lt;bean id=&quot;httpClientParams&quot; class=&quot;org.apache.commons.httpclient.params.HttpClientParams&quot;&gt;
+                          &lt;property name=&quot;authenticationPreemptive&quot; value=&quot;true&quot;/&gt;
+                          &lt;property name=&quot;connectionManagerClass&quot;
+                                    value=&quot;org.apache.commons.httpclient.MultiThreadedHttpConnectionManager&quot;/&gt;
+                      &lt;/bean&gt;
+                  &lt;/constructor-arg&gt;
+              &lt;/bean&gt;
+          &lt;/constructor-arg&gt;
+      &lt;/bean&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;credentials&quot;&gt;
+      &lt;bean class=&quot;org.apache.commons.httpclient.UsernamePasswordCredentials&quot;&gt;
+          &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
+          &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
+      &lt;/bean&gt;      
+    &lt;/property&gt;  
+  &lt;/bean&gt;
+        </programlisting>
+        
+        <para>The above configuration results in Http client requests with authentication headers properly set for basic authentication. See the following example request and have a look
+        at the <emphasis>Authorization</emphasis> header which gets automatically set for all requsts.</para>
+        
+        <programlisting>POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+Accept-Charset: iso-8859-1, us-ascii, utf-8
+Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8080
+Content-Length: 175
+
+&lt;testRequestMessage&gt;
+  &lt;text&gt;Hello HttpServer&lt;/text&gt;
+&lt;/testRequestMessage&gt;
+</programlisting>
+    
+        <tip><para>Of course you can simple set the <emphasis>Authorization</emphasis> header on your own for each request. 
+        You just have to use base64 encoding for the username:password phrase.</para>
+        
+        <programlisting>&lt;header&gt;
+      &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
+  &lt;/header&gt;</programlisting>
+        </tip>
+    </section>
 </chapter>

@@ -52,6 +52,7 @@
                             <element name="CustomHeaderId" value="${custom_header_id}"/>
                             <element name="Content-Type" value="text/xml"/>
                             <element name="Accept" value="text/xml,*/*"/>
+                            <element name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
                             <element name="citrus_http_method" value="POST"/>
                         </header>
                         <extract>

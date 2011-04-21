@@ -157,8 +157,33 @@
                                 request-url="http://localhost:8072/test" 
                                 request-method="POST"
                                 content-type="text/xml"
-                                reply-handler="httpResponseReceiver"/>
+                                reply-handler="httpResponseReceiver"
+                                request-factory="userCredentialsRequestFactory"/>
   
+    <bean id="userCredentialsRequestFactory" class="com.consol.citrus.http.client.UserCredentialsClientHttpRequestFactory">
+      <property name="targetRequestFactory">
+        <bean class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+            <constructor-arg>
+                <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+                    <constructor-arg>
+                        <bean id="httpClientParams" class="org.apache.commons.httpclient.params.HttpClientParams">
+                            <property name="authenticationPreemptive" value="true"/>
+                            <property name="connectionManagerClass"
+                                      value="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager"/>
+                        </bean>
+                    </constructor-arg>
+                </bean>
+            </constructor-arg>
+        </bean>
+      </property>
+      <property name="credentials">
+        <bean class="org.apache.commons.httpclient.UsernamePasswordCredentials">
+            <constructor-arg value="someUsername"/>
+            <constructor-arg value="somePassword"/>
+        </bean>      
+      </property>  
+    </bean>
+    
     <citrus-http:message-sender id="httpMessageSenderStandalone" 
                                 request-url="http://localhost:8073/test" 
                                 request-method="POST"
