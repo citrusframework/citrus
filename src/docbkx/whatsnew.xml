@@ -5,6 +5,14 @@
   <para>With this release Citrus introduces some new features and changes that will be part of the following sections. You
   will get a short overview and particularly get the impression what new stuff you can add to your testing with this release.</para>
   
+  <section id="whatsnew-spring">
+    <title>Spring version update</title>
+    
+    <para>We have some major version upgrades in our Spring dependencies. We are now using Spring 3.0.x, Spring Integration 2.0.x and SpringWS 2.0.x. This upgrade 
+    was overdue for some time and is definitely worth it. With these upgrades we had to apply some changes in our API, too. This is because we are using the Spring classes a lot
+    in our code. See the upgrade guide in this chapter for all significant changes that might affect your project.</para>
+  </section>
+  
   <section id="whatsnew-groovy">
     <title>New groovy features</title>
 
@@ -76,7 +84,7 @@
     Http requests (GET, PUT, DELETE, POST, etc.). The server side has changed, too. The Http server now provides RESTful WebServices and is compliant to the existing SOAP Jetty server
     implementation in Citrus. If you want to upgrade existing projects to this version you may have to adjust the Spring application context configuration to some extent.</para>
     
-    <para>For details have a look at the upgrade guide in this chapter or find detailed explanations to the new Http components in <xref linkend="http"/>.</para>
+    <para>For details have a look at the upgrade guide (<xref linkend="whatsnew-upgrading"/>) in this chapter or find detailed explanations to the new Http components in <xref linkend="http"/>.</para>
   </section>
   
   <section id="whatsnew-html-report">
@@ -99,6 +107,15 @@
     <para>If you are coming from Citrus 1.1 final you may have to look at the following points.</para>
     
     <itemizedlist mark="opencircle">
+        <listitem>
+            <para><emphasis>Spring version update</emphasis> We did some major version upgrades on our Spring dependencies. We are now using Spring 3.0.x, Spring Integration 2.0.x and SpringWS 2.0.x.
+            These new major releases bring some code changes in our API which might take effect on your code, too. So be patient and update your code, it is definitely worth it!</para>
+        </listitem>
+        <listitem>
+            <para><emphasis>Spring Integration headers:</emphasis> With 2.0.x version Spring Integration has removed the internal header prefix (&quot;springintegration_&quot;).
+            So in some cases you might use those internal header names in your test cases in order to synchronize synchronous communication with internal message ids. Your test case 
+            will fail as long as you use the old Spring internal header prefix in the test. Simply remove the header prefix wherever used and your test is up and running again.</para>
+        </listitem>
         <listitem>
             <para><emphasis>Renamed packages and classes:</emphasis> We try to keep rename operations to a minimum, as we know that this may cause some adjustments in your code that directly uses the Citrus
             classes. But sometimes names do change in order to reach consistency and avoid cyclic dependencies. So with this release some classes have moved some were renamed. This mostly applies
