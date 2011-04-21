@@ -53,19 +53,19 @@
         sending test action which gives more flexibility. Use something like this in your test:</para>
         
         <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-                  &lt;testRequestMessage&gt;
-                      &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                  &lt;/testRequestMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;citrus_http_method&quot; value=&quot;PUT&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/send&gt;</programlisting>
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;citrus_http_method&quot; value=&quot;PUT&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
         
         <tip><para>Citrus uses Spring's REST template mechanism for sedning Http requests. This means you have great customizing opportunities with a special REST 
         template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
@@ -78,30 +78,42 @@
                                rest-template=&quot;customizedRestTemplate&quot;
                                reply-handler=&quot;httpResponseHandler&quot;/&gt;
                                
-  &lt;!-- Customized rest template --&gt;
-  &lt;bean name=&quot;customizedRestTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
-    &lt;property name=&quot;messageConverters&quot;&gt;
-      &lt;util:list id=&quot;converter&quot;&gt;
-        &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
-          &lt;property name=&quot;supportedMediaTypes&quot;&gt;
-            &lt;util:list id=&quot;types&quot;&gt;
-              &lt;value&gt;text/plain&lt;/value&gt;
-            &lt;/util:list&gt;
-          &lt;/property&gt;
-        &lt;/bean&gt;
-      &lt;/util:list&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;errorHandler&quot;&gt;
-      &lt;!-- Custom error handler --&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;requestFactory&quot;&gt;
-      &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
-        &lt;property name=&quot;readTimeout&quot; value=&quot;9000&quot; /&gt;
+&lt;!-- Customized rest template --&gt;
+&lt;bean name=&quot;customizedRestTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
+  &lt;property name=&quot;messageConverters&quot;&gt;
+    &lt;util:list id=&quot;converter&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+          &lt;util:list id=&quot;types&quot;&gt;
+            &lt;value&gt;text/plain&lt;/value&gt;
+          &lt;/util:list&gt;
+        &lt;/property&gt;
       &lt;/bean&gt;
-    &lt;/property&gt;
-  &lt;/bean&gt;
+    &lt;/util:list&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;errorHandler&quot;&gt;
+    &lt;!-- Custom error handler --&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;requestFactory&quot;&gt;
+    &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
+      &lt;property name=&quot;readTimeout&quot; value=&quot;9000&quot; /&gt;
+    &lt;/bean&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
         </programlisting>
         </tip>
+        
+        <tip><para>And another tip for you regarding dynamic endpoint URI in Http message sender. Similar to the endpoint resolving mechanism in SOAP sending action you can dynamically set
+        the called endpoint URI on Http message sender. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
+        inside the test. See the next short example and you will see that it is very simple.</para>
+        
+        <programlisting>&lt;header&gt;
+    &lt;element name=&quot;citrus_endpoint_uri&quot; value=&quot;http://localhost:8080/customers/${customerId}&quot;/&gt;
+&lt;/header&gt;</programlisting>
+        
+        <para>The specific send action above will send its message to the dynamic endpoint (http://localhost:8080/customers/${customerId}) which is set in the header <emphasis>citrus_endpoint_uri</emphasis>. 
+        As you can see the endpoint contains a variable entry so you can reuse the same Http message sender with different endpoint URI. This is essential when calling RESTful WebServices where the 
+        URI contains parameters, identifiers and modifiers.</para></tip>
     </section>
     
     <section id="http-server">
@@ -126,27 +138,26 @@
         
         <programlisting>&lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping&quot;/&gt;
   
-  &lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;
-    &lt;property name=&quot;messageConverters&quot;&gt;
-      &lt;util:list id=&quot;converters&quot;&gt;
-        &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
-          &lt;property name=&quot;supportedMediaTypes&quot;&gt;
-            &lt;util:list&gt;
-              &lt;value&gt;text/xml&lt;/value&gt;
-            &lt;/util:list&gt;
-          &lt;/property&gt;
-        &lt;/bean&gt;
-      &lt;/util:list&gt;
-    &lt;/property&gt;
-  &lt;/bean&gt;
-        
-  &lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
-    &lt;property name=&quot;messageHandler&quot;&gt;
-        &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-         class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
-    &lt;/property&gt;
-  &lt;/bean&gt;
-        </programlisting>
+&lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;
+  &lt;property name=&quot;messageConverters&quot;&gt;
+    &lt;util:list id=&quot;converters&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+          &lt;util:list&gt;
+            &lt;value&gt;text/xml&lt;/value&gt;
+          &lt;/util:list&gt;
+        &lt;/property&gt;
+      &lt;/bean&gt;
+    &lt;/util:list&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+      
+&lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
+  &lt;property name=&quot;messageHandler&quot;&gt;
+      &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+       class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
+  &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
         
         <para>The beans above are responsible for proper Http server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives 
         us a great customization and extension points. The important part is the message handler definition inside the HttpMessageController. Once a client request was accepted the 
@@ -264,21 +275,21 @@
         explicitly set before the request is sent.</para>
         
         <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-                  &lt;testRequestMessage&gt;
-                      &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                  &lt;/testRequestMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
-          &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
-          &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/send&gt;</programlisting>
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
         
         <para>We are able to set custom headers (<emphasis>CustomHeaderId</emphasis>) that go directly into the Http header section of the request. In addition to that testers can explicitly set Http reserved headers
         such as <emphasis>Content-Type</emphasis>. Fortunately you do not have to set all headers on your own. Citrus will automatically set the required Http headers for the request. So we have the following Http request
@@ -292,29 +303,29 @@ Accept-Charset: big5, big5-hkscs, euc-jp, euc-kr, gb18030, gb2312, gbk, ibm-thai
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8091
 Content-Length: 175
-  &lt;testRequestMessage&gt;
-      &lt;text&gt;Hello HttpServer&lt;/text&gt;
-  &lt;/testRequestMessage&gt;</programlisting>
+&lt;testRequestMessage&gt;
+    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+&lt;/testRequestMessage&gt;</programlisting>
         
         <para>On server side testers are interested in validating the Http headers. Within Citrus receive action you simply define the expected header entries. The Http specific headers are automatically available for validation
         as you can see in this example:</para>
         
         <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-                  &lt;testRequestMessage&gt;
-                      &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                  &lt;/testRequestMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
-          &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
-          &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/receive&gt;</programlisting>
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
         
         <para>The test checks on custom headers and Http specific headers to meet the expected values.</para>
         
@@ -322,22 +333,22 @@ Content-Length: 175
         the server operation. In the test case you can set those headers for the response message with convention header names. See the following example to find out how that works for you.</para>
         
         <programlisting>&lt;send with=&quot;httpResponseSender&quot;&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-                  &lt;testResponseMessage&gt;
-                      &lt;text&gt;Hello Citrus Client&lt;/text&gt;
-                  &lt;/testResponseMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
-          &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
-          &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
-          &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/send&gt;</programlisting>
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testResponseMessage&gt;
+                    &lt;text&gt;Hello Citrus Client&lt;/text&gt;
+                &lt;/testResponseMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
         
         <para>Once more we set the custom header entry (<emphasis>CustomHeaderId</emphasis>) and a Http reserved header (<emphasis>Content-Type</emphasis>) for the response message. On top of this we are able to set the response status for
         the Http response. We use the reserved header names <emphasis>citrus_http_status_code</emphasis> in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as Http 
@@ -348,31 +359,31 @@ Content-Type: text/xml;charset=UTF-8
 Accept-Charset: big5, big5-hkscs, euc-jp, euc-kr, gb18030, gb2312, gbk, ibm-thai, ibm00858, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-13, iso-8859-15, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, macroman, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-solaris, x-euc-jp-linux, x-euc-tw, x-eucjp-open, x-ibm1006, x-ibm1025, x-ibm1046, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1381, x-ibm1383, x-ibm33722, x-ibm737, x-ibm833, x-ibm834, x-ibm856, x-ibm874, x-ibm875, x-ibm921, x-ibm922, x-ibm930, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm964, x-ibm970, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-jis0208, x-jisautodetect, x-johab, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-mswin-936, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
 Content-Length: 205
 Server: Jetty(7.0.0.pre5)
-  &lt;testResponseMessage&gt;
-      &lt;text&gt;Hello Citrus Client&lt;/text&gt;
-  &lt;/testResponseMessage&gt;</programlisting>
+&lt;testResponseMessage&gt;
+    &lt;text&gt;Hello Citrus Client&lt;/text&gt;
+&lt;/testResponseMessage&gt;</programlisting>
         
         <tip><para>You do not have to set the reason phrase all the time. It is sufficient to only set the Http status code. Citrus will automatically add the proper reason phrase for well known Http status codes.</para></tip>
         
         <para>The only thing that is missing right now is the validation of Http status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.</para>
         
         <programlisting>&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
-      &lt;message&gt;
-          &lt;data&gt;
-              &lt;![CDATA[
-                  &lt;testResponseMessage&gt;
-                      &lt;text&gt;Hello Test Framework&lt;/text&gt;
-                  &lt;/testResponseMessage&gt;
-              ]]&gt;
-          &lt;/data&gt;
-      &lt;/message&gt;
-      &lt;header&gt;
-          &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
-          &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
-          &lt;element name=&quot;citrus_http_version&quot; value=&quot;HTTP/1.1&quot;/&gt;
-          &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
-      &lt;/header&gt;
-  &lt;/receive&gt;</programlisting>
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testResponseMessage&gt;
+                    &lt;text&gt;Hello Test Framework&lt;/text&gt;
+                &lt;/testResponseMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
+        &lt;element name=&quot;citrus_http_version&quot; value=&quot;HTTP/1.1&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
         
         <para>This completes the Http header processing within Citrus. On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
     </section>
@@ -393,32 +404,31 @@ Server: Jetty(7.0.0.pre5)
                               reply-handler=&quot;testHttpReplyMessageHandler&quot;
                               request-factory=&quot;userCredentialsClientRequestFactory&quot;/&gt;
   
-  &lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
+&lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
 
-  &lt;bean id=&quot;userCredentialsClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.UserCredentialsClientHttpRequestFactory&quot;&gt;
-    &lt;property name=&quot;targetRequestFactory&quot;&gt;
-      &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
-          &lt;constructor-arg&gt;
-              &lt;bean id=&quot;httpClient&quot; class=&quot;org.apache.commons.httpclient.HttpClient&quot;&gt;
-                  &lt;constructor-arg&gt;
-                      &lt;bean id=&quot;httpClientParams&quot; class=&quot;org.apache.commons.httpclient.params.HttpClientParams&quot;&gt;
-                          &lt;property name=&quot;authenticationPreemptive&quot; value=&quot;true&quot;/&gt;
-                          &lt;property name=&quot;connectionManagerClass&quot;
-                                    value=&quot;org.apache.commons.httpclient.MultiThreadedHttpConnectionManager&quot;/&gt;
-                      &lt;/bean&gt;
-                  &lt;/constructor-arg&gt;
-              &lt;/bean&gt;
-          &lt;/constructor-arg&gt;
-      &lt;/bean&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;credentials&quot;&gt;
-      &lt;bean class=&quot;org.apache.commons.httpclient.UsernamePasswordCredentials&quot;&gt;
-          &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
-          &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
-      &lt;/bean&gt;      
-    &lt;/property&gt;  
-  &lt;/bean&gt;
-        </programlisting>
+&lt;bean id=&quot;userCredentialsClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.UserCredentialsClientHttpRequestFactory&quot;&gt;
+  &lt;property name=&quot;targetRequestFactory&quot;&gt;
+    &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
+        &lt;constructor-arg&gt;
+            &lt;bean id=&quot;httpClient&quot; class=&quot;org.apache.commons.httpclient.HttpClient&quot;&gt;
+                &lt;constructor-arg&gt;
+                    &lt;bean id=&quot;httpClientParams&quot; class=&quot;org.apache.commons.httpclient.params.HttpClientParams&quot;&gt;
+                        &lt;property name=&quot;authenticationPreemptive&quot; value=&quot;true&quot;/&gt;
+                        &lt;property name=&quot;connectionManagerClass&quot;
+                                  value=&quot;org.apache.commons.httpclient.MultiThreadedHttpConnectionManager&quot;/&gt;
+                    &lt;/bean&gt;
+                &lt;/constructor-arg&gt;
+            &lt;/bean&gt;
+        &lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;credentials&quot;&gt;
+    &lt;bean class=&quot;org.apache.commons.httpclient.UsernamePasswordCredentials&quot;&gt;
+        &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
+        &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
+    &lt;/bean&gt;      
+  &lt;/property&gt;  
+&lt;/bean&gt;</programlisting>
         
         <para>The above configuration results in Http client requests with authentication headers properly set for basic authentication. See the following example request and have a look
         at the <emphasis>Authorization</emphasis> header which gets automatically set for all requsts.</para>
@@ -431,18 +441,16 @@ Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8080
 Content-Length: 175
-
 &lt;testRequestMessage&gt;
   &lt;text&gt;Hello HttpServer&lt;/text&gt;
-&lt;/testRequestMessage&gt;
-</programlisting>
+&lt;/testRequestMessage&gt;</programlisting>
     
         <tip><para>Of course you can simple set the <emphasis>Authorization</emphasis> header on your own for each request. 
         You just have to use base64 encoding for the username:password phrase.</para>
         
         <programlisting>&lt;header&gt;
-      &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
-  &lt;/header&gt;</programlisting>
+    &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
+&lt;/header&gt;</programlisting>
         </tip>
     </section>
 </chapter>
