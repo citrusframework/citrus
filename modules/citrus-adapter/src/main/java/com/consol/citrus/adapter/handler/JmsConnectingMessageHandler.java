@@ -80,7 +80,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     private JmsMessageCallback messageCallback;
     
     /** Fallback message handler in case no reply message was received */
-    private MessageHandler fallbackMessageHandlerDelegate = new EmptyResponseProducingMessageHandler();
+    private MessageHandler fallbackMessageHandlerDelegate = new TimeoutProducingMessageHandler();
     
     /** Jms header mapper */
     private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
