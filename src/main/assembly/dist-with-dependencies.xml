@@ -105,6 +105,7 @@
             <includes>
                 <include>org.hibernate:hibernate-entitymanager</include>
                 <include>javax.persistence:persistence-api</include>
+                <include>org.springframework.integration:spring-integration-http</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
           </dependencySet>
