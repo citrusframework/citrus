@@ -22,7 +22,7 @@
       
       <p>Have a look at the folder structure I created for our new Citrus project</p>
     
-      <img alt="Project explorer" src="../images/tutorials/ant/project_explorer.png" style="float:left;"/>
+      <img alt="Project explorer" src="../images/tutorials/ant/project_explorer.png"/>
             
       <p>
         I created a simple Java project in Eclipse called <i>&quot;citrus-sample&quot;</i>. I manually added folders and files to the project
@@ -141,7 +141,7 @@
         generated files.
       </p>
       
-      <img alt="Created test files" src="../images/tutorials/ant/created_test_files.png" style="float:left;"/>
+      <img alt="Created test files" src="../images/tutorials/ant/created_test_files.png"/>
       
       <p>  
         The generated files are:
