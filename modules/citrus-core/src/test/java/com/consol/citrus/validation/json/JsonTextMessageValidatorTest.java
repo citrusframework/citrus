@@ -261,4 +261,39 @@ public class JsonTextMessageValidatorTest extends AbstractBaseTest {
         
         Assert.fail("Missing validation exception due to wrong value");
     }
+    
+    @Test
+    public void testJsonNullValueValidation() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        
+        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        
+        validator.validateMessagePayload(receivedMessage, controlMessage, context);
+    }
+    
+    @Test
+    public void testJsonNullValueMismatch() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        
+        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        
+        try {
+            validator.validateMessagePayload(receivedMessage, controlMessage, context);
+            Assert.fail("Missing validation exception due to wrong value");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected 'null' but was 'x123456789x'"));
+        }
+        
+        receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        
+        try {
+            validator.validateMessagePayload(receivedMessage, controlMessage, context);
+            Assert.fail("Missing validation exception due to wrong value");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected 'x123456789x' but was 'null'"));
+        }
+    }
 }

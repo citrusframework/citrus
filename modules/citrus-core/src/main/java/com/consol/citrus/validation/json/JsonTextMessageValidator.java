@@ -93,6 +93,19 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
             Assert.isTrue(receivedJson.containsKey(controlJsonEntry.getKey()), 
                     "Missing JSON entry: + '" + controlJsonEntry.getKey() + "'");
             
+            if (controlJsonEntry.getValue() == null) {
+                Assert.isTrue(receivedJson.get(controlJsonEntry.getKey()) == null, 
+                        "Values not equal for entry: '" + controlJsonEntry.getKey() + "'" +
+                                ", expected '" + controlJsonEntry.getValue() + "' " +
+                                "but was '" + receivedJson.get(controlJsonEntry.getKey()) + "'");
+                
+                if (log.isDebugEnabled()) {
+                    log.debug("Validation successful for JSON entry '" + controlJsonEntry.getKey() + "' (" + controlJsonEntry.getValue() + ")");
+                }
+                
+                continue;
+            }
+            
             // check if entry is ignored by placeholder
             if (log.isDebugEnabled() && 
                     controlJsonEntry.getValue().toString().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
