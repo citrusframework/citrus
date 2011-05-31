@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="31.05.2011" description="Latest snapshot release">
         <action dev="christophd" type="fix">
+          #365 @ property marker escaping in HTML reporter
+        </action>
+        <action dev="christophd" type="fix">
           #364 JSON null value validation
         </action>
         <action dev="christophd" type="add">

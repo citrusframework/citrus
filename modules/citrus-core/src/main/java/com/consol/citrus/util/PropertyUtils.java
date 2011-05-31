@@ -71,7 +71,7 @@ public final class PropertyUtils {
 
         boolean isVarComplete = false;
 
-        StringBuffer variableNameBuf = new StringBuffer();
+        StringBuffer propertyName = new StringBuffer();
 
         int startIndex = 0;
         int curIndex;
@@ -95,29 +95,22 @@ public final class PropertyUtils {
                 }
 
                 if (!isVarComplete) {
-                    variableNameBuf.append(line.charAt(curIndex));
+                    propertyName.append(line.charAt(curIndex));
                 }
                 ++curIndex;
             }
             
-            if(!properties.containsKey(variableNameBuf.toString())) {
+            if (!properties.containsKey(propertyName.toString())) {
                 throw new CitrusRuntimeException("No such property '"
-                        + propertyMarker + variableNameBuf.toString()
-                        + propertyMarker + "'");
+                        + propertyMarker + propertyName.toString() + propertyMarker + "'");
             }
-
-            String value = properties.getProperty(variableNameBuf.toString(), "");
 
             newStr.append(line.substring(startIndex, searchIndex));
-            if (value.indexOf(propertyMarker) != -1) {
-                newStr.append(replacePropertiesInString(value, properties));
-            } else {
-                newStr.append(value);
-            }
+            newStr.append(properties.getProperty(propertyName.toString(), "")); // property value
 
             startIndex = curIndex;
 
-            variableNameBuf = new StringBuffer();
+            propertyName = new StringBuffer();
             isVarComplete = false;
         }
 

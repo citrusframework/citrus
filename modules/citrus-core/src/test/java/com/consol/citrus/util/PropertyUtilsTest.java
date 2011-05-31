@@ -77,32 +77,21 @@ public class PropertyUtilsTest extends AbstractBaseTest {
     }
     
     @Test
-    public void testPropertyReplacementNestedProperties() {
+    public void testPropertyMarkerEscaping() {
         Properties props = new Properties();
         props.put("test.name", "MyTest");
-        props.put("test.author", "Mickey Mouse and @test.coauthor@");
-        props.put("test.coauthor", "Donald Duck");
+        props.put("test.author", "Mickey Mouse (mail:mickey@mouse.de)");
+        props.put("test.coauthor", "Donald Duck (mail:donald@duck.de)");
         
-        String content = "This test has the name @test.name@ and its author is @test.author@";
+        String content = "This test has the name @test.name@ and its author is @test.author@ and @test.coauthor@";
         
         String result = PropertyUtils.replacePropertiesInString(content, props);
         
-        Assert.assertEquals("This test has the name MyTest and its author is Mickey Mouse and Donald Duck", result);
-    }
-    
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
-    public void testPropertyReplacementUnknownPropertyInNestedProperty() {
-        Properties props = new Properties();
-        props.put("test.name", "MyTest");
-        props.put("test.author", "Mickey Mouse and @test.coauthor@");
-        
-        String content = "This test has the name @test.name@ and its author is @test.author@";
-        
-        PropertyUtils.replacePropertiesInString(content, props);
+        Assert.assertEquals("This test has the name MyTest and its author is Mickey Mouse (mail:mickey@mouse.de) and Donald Duck (mail:donald@duck.de)", result);
     }
     
     @Test
-    public void testPropertyReplacementEscapeCharacter() {
+    public void testPropertyMarkerEscapingInContent() {
         Properties props = new Properties();
         props.put("test.name", "MyTest");
         props.put("test.author", "Mickey Mouse");
@@ -115,7 +104,7 @@ public class PropertyUtilsTest extends AbstractBaseTest {
     }
     
     @Test
-    public void testPropertyReplacementEscapeCharacterInDirectNeighbourhood() {
+    public void testPropertyMarkerEscapingInDirectNeighbourhood() {
         Properties props = new Properties();
         props.put("test.name", "MyTest");
         props.put("test.author", "Mickey Mouse");
