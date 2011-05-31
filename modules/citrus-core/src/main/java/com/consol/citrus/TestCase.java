@@ -53,7 +53,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private String packageName;
     
     /** In case test was called with parameters from outside */
-    private String[] parameters;
+    private String[] parameters = new String[] {};
     
     /**
      * Logger
@@ -238,7 +238,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param parameters the parameters to set
      */
     public void setParameters(String[] parameters) {
-        this.parameters = parameters;
+        this.parameters = Arrays.copyOf(parameters, parameters.length);
     }
 
     /**

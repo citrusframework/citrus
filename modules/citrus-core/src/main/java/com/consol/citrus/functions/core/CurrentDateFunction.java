@@ -102,9 +102,9 @@ public class CurrentDateFunction implements Function {
                     }
 
                     if (offsetString.charAt(i) == '-') {
-                        return new Integer("-" + offsetValue.toString()).intValue();
+                        return Integer.valueOf("-" + offsetValue.toString());
                     } else {
-                        return new Integer(offsetValue.toString()).intValue();
+                        return Integer.valueOf(offsetValue.toString());
                     }
                 }
             }

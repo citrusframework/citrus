@@ -114,7 +114,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
-        Destination replyDestination = null;
+        Destination replyToDestination = null;
         
         Message<?> replyMessage = null;
         try {
@@ -131,20 +131,20 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             
             messageProducer = session.createProducer(getDestination(session));
 
-            replyDestination = getReplyDestination(session, request);
-            jmsRequest.setJMSReplyTo(replyDestination);
+            replyToDestination = getReplyDestination(session, request);
+            jmsRequest.setJMSReplyTo(replyToDestination);
             
             if(messageCallback != null) {
                 messageCallback.doWithMessage(jmsRequest, request);
             }
             
             messageProducer.send(jmsRequest);
-            if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
-                messageConsumer = session.createConsumer(replyDestination);
+            if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
+                messageConsumer = session.createConsumer(replyToDestination);
             } else {
                 String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
                 String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createConsumer(replyDestination, messageSelector);
+                messageConsumer = session.createConsumer(replyToDestination, messageSelector);
             }
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
@@ -169,7 +169,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);
-            deleteTemporaryDestination(replyDestination);
+            deleteTemporaryDestination(replyToDestination);
         }
         
         return replyMessage;
@@ -328,14 +328,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
-    }
-
-    /**
-     * Set the reply destination.
-     * @param replyDestination
-     */
-    public void setReplyDestination(String replyDestination) {
-        this.replyDestinationName = replyDestination;
     }
 
     /**

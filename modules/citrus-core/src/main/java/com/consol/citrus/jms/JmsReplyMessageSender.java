@@ -55,6 +55,7 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
         Assert.notNull(message, "Message is empty - unable to send empty message");
         
         Destination replyDestination;
+        Message<?> replyMessage;
         
         if(correlator != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
@@ -65,8 +66,9 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
             Assert.notNull(replyDestination, "Unable to locate JMS reply destination with correlation key: '" + correlationKey + "'");
             
             //remove citrus specific header from message
-            message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
+            replyMessage = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
         } else {
+            replyMessage = message;
             replyDestination = replyDestinationHolder.getReplyDestination();
             Assert.notNull(replyDestination, "Unable to locate JMS reply destination");
         }
@@ -74,10 +76,10 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
         log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + message.toString());
+            log.debug("Message to send is:\n" + replyMessage.toString());
         }
         
-        getJmsTemplate().convertAndSend(replyDestination, message);
+        getJmsTemplate().convertAndSend(replyDestination, replyMessage);
         
         log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
     }

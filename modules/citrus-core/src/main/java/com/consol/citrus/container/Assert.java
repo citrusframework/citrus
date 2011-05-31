@@ -57,6 +57,7 @@ public class Assert extends AbstractActionContainer {
             setLastExecutedAction(action);
             action.execute(context);
         } catch (Exception e) {
+            log.error("Exception in assert action", e);
             log.info("Validating caught exception ...");
             if (exception.isAssignableFrom(e.getClass())) {
                 

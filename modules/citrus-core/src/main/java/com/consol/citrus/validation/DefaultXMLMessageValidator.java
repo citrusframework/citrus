@@ -37,7 +37,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageValidationContext> {
     
     @Autowired
-    DomXmlMessageValidator domXmlMessageValidatorDelegate;
+    private DomXmlMessageValidator domXmlMessageValidatorDelegate;
     
     /**
      * Delegate to new dom tree xml validator

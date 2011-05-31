@@ -26,20 +26,22 @@ import com.consol.citrus.testng.AbstractBaseTest;
  */
 public class StopTimeActionTest extends AbstractBaseTest {
 	
+    private static String TIMELINEID = "CITRUS_TIMELINE";
+    
 	@Test
 	public void testDefaultTimeline() throws InterruptedException {
 		StopTimeAction stopTime = new StopTimeAction();
 		
-		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID), false);
+		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(TIMELINEID), false);
 		
 		stopTime.execute(context);
-		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID), true);
+		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(TIMELINEID), true);
 		Thread.sleep(100L);
 		stopTime.execute(context);
-		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID), true);
+		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(TIMELINEID), true);
 		Thread.sleep(100L);
 		stopTime.execute(context);
-		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(StopTimeAction.DEFAULT_TIMELINE_ID), true);
+		Assert.assertEquals(StopTimeAction.getTimeStamps().containsKey(TIMELINEID), true);
 	}
 	
 	@Test

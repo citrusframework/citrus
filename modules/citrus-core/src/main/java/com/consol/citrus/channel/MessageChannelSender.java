@@ -62,9 +62,9 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        String channelName = getDestinationChannelName();
+        String destinationChannelName = getDestinationChannelName();
         
-        log.info("Sending message to channel: '" + channelName + "'");
+        log.info("Sending message to channel: '" + destinationChannelName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
@@ -73,10 +73,10 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
         try {
             messagingTemplate.send(getDestinationChannel(), message);
         } catch (MessageDeliveryException e) {
-            throw new CitrusRuntimeException("Failed to send message to channel: '" + channelName + "'", e);
+            throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }
         
-        log.info("Message was successfully sent to channel: '" + channelName + "'");
+        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
     }
     
     /**

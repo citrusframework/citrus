@@ -66,16 +66,16 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receive(long timeout) {
-        String channelName = getDestinationChannelName();
+        String destinationChannelName = getDestinationChannelName();
         
-        log.info("Receiving message from: " + channelName);
+        log.info("Receiving message from: " + destinationChannelName);
         
         messagingTemplate.setReceiveTimeout(timeout);
         Message<?> received = messagingTemplate.receive(getDestinationChannel());
         
         if(received == null) {
             throw new ActionTimeoutException("Action timeout while receiving message from channel '"
-                    + channelName + "'");
+                    + destinationChannelName + "'");
         }
         
         return received;

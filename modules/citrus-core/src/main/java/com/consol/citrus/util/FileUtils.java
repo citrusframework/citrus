@@ -123,11 +123,7 @@ public abstract class FileUtils {
                     File tmp = new File(dir.getPath() + "/" + name);
 
                     /* Only allowing XML files as spring configuration files */
-                    if ((name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS")) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return (name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
                 }
             });
 

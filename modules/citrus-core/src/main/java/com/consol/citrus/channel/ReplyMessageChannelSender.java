@@ -54,6 +54,7 @@ public class ReplyMessageChannelSender implements MessageSender {
         Assert.notNull(message, "Can not send empty message");
         
         MessageChannel replyChannel;
+        Message<?> replyMessage;
         
         if(correlator != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
@@ -64,8 +65,9 @@ public class ReplyMessageChannelSender implements MessageSender {
             Assert.notNull(replyChannel, "Unable to locate reply channel with correlation key: " + correlationKey);
             
             //remove citrus specific header from message
-            message = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
+            replyMessage = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
         } else {
+            replyMessage = message;
             replyChannel = replyMessageChannelHolder.getReplyMessageChannel();
             Assert.notNull(replyChannel, "Unable to locate reply channel");
         }
@@ -73,11 +75,11 @@ public class ReplyMessageChannelSender implements MessageSender {
         log.info("Sending message to reply channel: '" + replyChannel + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + message.toString());
+            log.debug("Message to send is:\n" + replyMessage.toString());
         }
         
         try {
-            messagingTemplate.send(replyChannel, message);
+            messagingTemplate.send(replyChannel, replyMessage);
         } catch (MessageDeliveryException e) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }

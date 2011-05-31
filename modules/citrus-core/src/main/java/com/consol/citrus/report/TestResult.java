@@ -48,10 +48,8 @@ public class TestResult {
      * @param name
      * @param result
      */
-    public TestResult(String name, RESULT result, String[] parameters) {
-        this.testName = name;
-        this.result = result;
-        this.parameters = parameters;
+    public TestResult(String name, RESULT result, String ... parameters) {
+        this(name, result, null, parameters);
     }
 
     /**
@@ -60,11 +58,11 @@ public class TestResult {
      * @param result
      * @param cause
      */
-    public TestResult(String name, RESULT result, Throwable cause, String[] parameters) {
+    public TestResult(String name, RESULT result, Throwable cause, String ... parameters) {
         this.testName = name;
         this.result = result;
         this.cause = cause;
-        this.parameters = parameters;
+        this.parameters = Arrays.copyOf(parameters, parameters.length);
     }
 
     @Override
@@ -161,7 +159,7 @@ public class TestResult {
      * @param parameters the parameters to set
      */
     public void setParameters(String[] parameters) {
-        this.parameters = parameters;
+        this.parameters = Arrays.copyOf(parameters, parameters.length);
     }
 
     /**

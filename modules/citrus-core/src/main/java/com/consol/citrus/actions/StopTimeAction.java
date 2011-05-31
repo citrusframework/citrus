@@ -39,11 +39,8 @@ public class StopTimeAction extends AbstractTestAction {
     /** Static member to hold all time stamps */
     private static Map<String, Long> timeStamps = new HashMap<String, Long>();
 
-    /** Default time stamp id */
-    public static String DEFAULT_TIMELINE_ID = "CITRUS_TIMELINE";
-
     /** Current time line id */
-    private String id = DEFAULT_TIMELINE_ID;
+    private String id = "CITRUS_TIMELINE";
 
     /**
      * Logger

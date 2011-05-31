@@ -73,18 +73,21 @@ public class JmsMessageConverter implements MessageConverter {
         MessageHeaders headers = null;
         javax.jms.Message jmsMessage = null;
         
+        Object payload;
         if (object instanceof Message) {
             headers = ((Message<?>) object).getHeaders();
-            object = ((Message<?>) object).getPayload();
+            payload = ((Message<?>) object).getPayload();
+        } else {
+            payload = object;
         }
         
-        jmsMessage = messageConverter.toMessage(object, session);
+        jmsMessage = messageConverter.toMessage(payload, session);
         if (headers != null) {
             headerMapper.fromHeaders(headers, jmsMessage);
         }
         
         if (log.isDebugEnabled()) {
-            log.debug("Just converted [" + object + "] to JMS Message [" + jmsMessage + "]");
+            log.debug("Just converted [" + payload + "] to JMS Message [" + jmsMessage + "]");
         }
         
         return jmsMessage;

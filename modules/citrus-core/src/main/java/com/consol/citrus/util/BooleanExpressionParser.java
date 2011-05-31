@@ -114,7 +114,7 @@ public final class BooleanExpressionParser {
                 log.debug("Boolean expression " + expression + " evaluates to " + value);
             }
         } catch(EmptyStackException e) {
-            throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!");
+            throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);
         }
 
         return result;

@@ -68,11 +68,7 @@ public class FunctionLibrary {
             return false;
         }
 
-        if (members.containsKey(functionName.substring(functionName.indexOf(':') + 1, functionName.indexOf('(')))) {
-            return true;
-        } else {
-            return false;
-        }
+        return members.containsKey(functionName.substring(functionName.indexOf(':') + 1, functionName.indexOf('(')));
     }
 
     /**

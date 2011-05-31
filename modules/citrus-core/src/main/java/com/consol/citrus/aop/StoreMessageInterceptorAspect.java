@@ -82,16 +82,16 @@ public class StoreMessageInterceptorAspect {
             
             int counter = StoreMessageInterceptorAspect.count.getAndIncrement();
             
-            Resource file_body = debugDirectory.createRelative("message" + counter + ".body");
-            Resource file_header = debugDirectory.createRelative("message" + counter + ".header");
+            Resource fileBody = debugDirectory.createRelative("message" + counter + ".body");
+            Resource fileHeader = debugDirectory.createRelative("message" + counter + ".header");
             
             //write body message
-            bodyOutput = new BufferedWriter(new FileWriter(file_body.getFile()));
+            bodyOutput = new BufferedWriter(new FileWriter(fileBody.getFile()));
             bodyOutput.write(receivedMessage.getPayload().toString());
             bodyOutput.flush();
 
             //write header message
-            headerOutput = new BufferedWriter(new FileWriter(file_header.getFile()));
+            headerOutput = new BufferedWriter(new FileWriter(fileHeader.getFile()));
             Map<String, Object> header = receivedMessage.getHeaders();
 
             for (Entry<String, Object> entry : header.entrySet()) {

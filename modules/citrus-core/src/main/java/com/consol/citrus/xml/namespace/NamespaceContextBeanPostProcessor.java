@@ -38,7 +38,7 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 public class NamespaceContextBeanPostProcessor implements BeanPostProcessor {
     
     @Autowired(required=false)
-    NamespaceContextBuilder namespaceContextBuilder;
+    private NamespaceContextBuilder namespaceContextBuilder;
 
     /**
      * Checks for {@link VariableExtractor} instances and injects {@link NamespaceContextBuilder}

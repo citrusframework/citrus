@@ -83,13 +83,12 @@ public final class XMLUtils {
             attributeName = element;
 
             //cut off attributeName and set element to next token and continue
-            pathExpression = pathExpression.substring(0, pathExpression.length()-attributeName.length()-1);
-            Node found = findNodeByName(doc, pathExpression);
+            Node found = findNodeByName(doc, pathExpression.substring(0, pathExpression.length() - attributeName.length() - 1));
 
             if (found != null) {
                 return found.getAttributes().getNamedItem(attributeName);
             } else {
-                 return null;
+                return null;
             }
         }
 

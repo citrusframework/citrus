@@ -109,7 +109,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
 
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
-        Destination replyDestination = null;
+        Destination replyToDestination = null;
         
         try {
             if(connection == null) { 
@@ -125,19 +125,19 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             
             messageProducer = session.createProducer(getDefaultDestination(session));
 
-            replyDestination = getReplyDestination(session, message);
-            jmsRequest.setJMSReplyTo(replyDestination);
+            replyToDestination = getReplyDestination(session, message);
+            jmsRequest.setJMSReplyTo(replyToDestination);
 
-            if (replyDestination instanceof TemporaryQueue || replyDestination instanceof TemporaryTopic) {
-                messageConsumer = session.createConsumer(replyDestination);
-            } else if(replyDestination instanceof Queue) {
+            if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
+                messageConsumer = session.createConsumer(replyToDestination);
+            } else if(replyToDestination instanceof Queue) {
                 String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
                 String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createConsumer(replyDestination, messageSelector);
+                messageConsumer = session.createConsumer(replyToDestination, messageSelector);
             } else {
                 String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
                 String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createDurableSubscriber((Topic)replyDestination, name, messageSelector, false);
+                messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name, messageSelector, false);
             }
             
             messageProducer.send(jmsRequest);
@@ -159,7 +159,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         } finally {
             JmsUtils.closeMessageProducer(messageProducer);
             JmsUtils.closeMessageConsumer(messageConsumer);
-            deleteTemporaryDestination(replyDestination);
+            deleteTemporaryDestination(replyToDestination);
         }
     }
     

@@ -153,7 +153,7 @@ public abstract class TestUtils {
         private Stack<TestAction> actionStack = new Stack<TestAction>();
         
         /** Test action we are currently working on */
-        TestAction action = null;
+        private TestAction action = null;
         
         /**
          * Default constructor using fields.

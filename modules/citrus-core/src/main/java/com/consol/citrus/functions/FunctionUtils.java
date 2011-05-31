@@ -89,7 +89,8 @@ public final class FunctionUtils {
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
                 if (value == null) {
-                    throw new NoSuchFunctionException("Function: " + variableNameBuf.toString() + " could not be found");
+                    throw new NoSuchFunctionException("Function: " + 
+                            VariableUtils.cutOffVariablesPrefix(variableNameBuf.toString()) + " could not be found");
                 }
 
                 strBuffer.append(newString.substring(startIndex, searchIndex));
@@ -122,11 +123,11 @@ public final class FunctionUtils {
      * @return evaluated result
      */
     public static String resolveFunction(String functionString, TestContext context) {
-        functionString = VariableUtils.cutOffVariablesPrefix(functionString);
+        String functionExpression = VariableUtils.cutOffVariablesPrefix(functionString);
 
-        String functionPrefix = functionString.substring(0, functionString.indexOf(':')+1);
-        String parameterString = functionString.substring(functionString.indexOf('(')+1, functionString.length()-1);
-        String function = functionString.substring(functionString.indexOf(':')+1, functionString.indexOf('('));
+        String functionPrefix = functionExpression.substring(0, functionExpression.indexOf(':') + 1);
+        String parameterString = functionExpression.substring(functionExpression.indexOf('(') + 1, functionExpression.length() - 1);
+        String function = functionExpression.substring(functionExpression.indexOf(':') + 1, functionExpression.indexOf('('));
 
         FunctionLibrary library = context.getFunctionRegistry().getLibraryForPrefix(functionPrefix);
 

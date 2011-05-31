@@ -47,7 +47,7 @@ public class RandomNumberFunction implements Function {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
-        numberLength = new Integer(parameterList.get(0)).intValue();
+        numberLength = Integer.valueOf(parameterList.get(0));
         if (numberLength < 0) {
             throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
         }

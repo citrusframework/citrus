@@ -73,9 +73,9 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        String channelName = getDestinationChannelName();
+        String destinationChannelName = getDestinationChannelName();
         
-        log.info("Sending message to channel: '" + channelName + "'");
+        log.info("Sending message to channel: '" + destinationChannelName + "'");
 
         if (log.isDebugEnabled()) {
             log.debug("Message to sent is:\n" + message.toString());
@@ -91,7 +91,7 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
                     replyTimeout + "ms. Did not receive reply message on reply channel");
         }
         
-        log.info("Message was successfully sent to channel: '" + channelName + "'");
+        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
         
         if(replyMessageHandler != null) {
             if(correlator != null) {

@@ -106,7 +106,7 @@ public class HtmlTestDocGenerator {
                 }
             }
 
-            int maxEntries = testFiles.size() / new Integer(props.getProperty("overview.columns")).intValue();
+            int maxEntries = testFiles.size() / Integer.valueOf(props.getProperty("overview.columns"));
 
             buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
             buffered.write("<ol>".getBytes());

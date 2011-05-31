@@ -160,11 +160,7 @@ public final class Citrus {
                     File tmp = new File(dir.getPath() + "/" + name);
 
                     /* Only allowing XML files as spring configuration files */
-                    if ((name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn")) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return (name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
                 }
             });
 
