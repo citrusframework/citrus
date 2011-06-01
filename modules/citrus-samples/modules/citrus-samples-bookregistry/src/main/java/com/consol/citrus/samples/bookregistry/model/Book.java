@@ -103,7 +103,7 @@ public class Book {
      * @return the registrationDate
      */
     public Date getRegistrationDate() {
-        return registrationDate;
+        return new Date(registrationDate.getTime());
     }
     
     /**

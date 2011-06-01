@@ -238,8 +238,10 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             in = resource.getInputStream();
             out = new FileOutputStream(RESOURCE_DIRECTORY + "/" + resource.getFilename());
             byte[] buffer = new byte[ 0xFFFF ];
-            for (int len; (len = in.read(buffer)) != -1;) {
+            int len = in.read(buffer);
+            while (len != -1) {
                 out.write(buffer, 0, len);
+                len = in.read(buffer);
             }
         } catch (IOException e) {
             log.error("Failed to copy the HTML test report resource files", e);

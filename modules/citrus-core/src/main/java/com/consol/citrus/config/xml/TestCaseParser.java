@@ -137,7 +137,9 @@ public class TestCaseParser implements BeanDefinitionParser {
                 } else {
                 	testChain.add(parser.parse(action, parserContext));
                 }
-            } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
+                
+                action = DOMUtil.getNextSiblingElement(action);
+            } while (action != null);
         }
 
         Element finallyChainElement = DomUtils.getChildElementByTagName(element, "finally");
@@ -154,7 +156,9 @@ public class TestCaseParser implements BeanDefinitionParser {
                     } else {
                     	finallyChain.add(parser.parse(action, parserContext));
                     }
-                } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
+                    
+                    action = DOMUtil.getNextSiblingElement(action);
+                } while (action != null);
             }
         }
 

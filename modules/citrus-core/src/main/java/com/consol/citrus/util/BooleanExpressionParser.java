@@ -83,7 +83,11 @@ public final class BooleanExpressionParser {
                     do {
                         operatorBuffer.append(actChar);
                         m++;
-                    } while (m < expression.length() && !Character.isDigit(actChar = expression.charAt(m)) && !(expression.charAt(m) == ' ') && !(expression.charAt(m) == '('));
+                        
+                        if (m < expression.length()) {
+                            actChar = expression.charAt(m);
+                        }
+                    } while (m < expression.length() && !Character.isDigit(actChar) && !(actChar == ' ') && !(actChar == '('));
     
                     i = m - 1;
     
@@ -95,7 +99,11 @@ public final class BooleanExpressionParser {
                     do {
                         digitBuffer.append(actChar);
                         m++;
-                    } while (m < expression.length() && Character.isDigit(actChar = expression.charAt(m)));
+                        
+                        if (m < expression.length()) {
+                            actChar = expression.charAt(m);
+                        }
+                    } while (m < expression.length() && Character.isDigit(actChar));
     
                     i = m - 1;
     

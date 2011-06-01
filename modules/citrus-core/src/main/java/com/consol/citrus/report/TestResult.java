@@ -167,6 +167,6 @@ public class TestResult {
      * @return the parameters
      */
     public String[] getParameters() {
-        return parameters;
+        return Arrays.copyOf(parameters, parameters.length);
     }
 }

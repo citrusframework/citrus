@@ -246,6 +246,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @return the parameters
      */
     public String[] getParameters() {
-        return parameters;
+        return Arrays.copyOf(parameters, parameters.length);
     }
 }

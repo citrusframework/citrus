@@ -62,7 +62,7 @@ public class TestCaseMetaInfo {
      * @return the creationDate
      */
     public Date getCreationDate() {
-        return creationDate;
+        return new Date(creationDate.getTime());
     }
 
     /**
@@ -94,7 +94,7 @@ public class TestCaseMetaInfo {
      * @return the lastUpdatedOn
      */
     public Date getLastUpdatedOn() {
-        return lastUpdatedOn;
+        return new Date(lastUpdatedOn.getTime());
     }
 
     /**

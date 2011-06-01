@@ -86,10 +86,10 @@ public class CurrentDateFunction implements Function {
      * @return
      */
     private int getDateValueOffset(String offsetString, char c) {
-        int index = 0;
         ArrayList<Character> charList = new ArrayList<Character>();
 
-        if ((index = offsetString.indexOf(c)) != -1) {
+        int index = offsetString.indexOf(c);
+        if (index != -1) {
             for (int i = index-1; i >= 0; i--) {
                 if (Character.isDigit(offsetString.charAt(i))) {
                     charList.add(0, offsetString.charAt(i));

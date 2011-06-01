@@ -64,7 +64,9 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
                 } else {
                     actions.add(parser.parse(action, parserContext));
                 }
-            } while ((action = DOMUtil.getNextSiblingElement(action)) != null);
+                
+                action = DOMUtil.getNextSiblingElement(action);
+            } while (action != null);
         }
 
         if (actions.size() > 0) {
