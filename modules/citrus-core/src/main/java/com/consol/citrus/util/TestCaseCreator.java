@@ -229,7 +229,11 @@ public class TestCaseCreator {
         try {
             File file = new File(filePath);
             if(!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
+                boolean success = file.getParentFile().mkdirs();
+                
+                if (!success) {
+                    throw new CitrusRuntimeException("Unable to create folder structure for test case");
+                }
             }
                 
             buffered = new BufferedOutputStream(new FileOutputStream(file));

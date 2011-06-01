@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.apache.xerces.util.DOMUtil;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
@@ -71,7 +72,7 @@ public class TestCaseParser implements BeanDefinitionParser {
             try {
                 metaInfo.setCreationDate(new SimpleDateFormat("yyyy-MM-dd").parse(DomUtils.getTextValue(creationDateElement)));
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                throw new BeanCreationException("Unable to parse creation date", e);
             }
             
             String status = DomUtils.getTextValue(statusElement);
@@ -93,7 +94,7 @@ public class TestCaseParser implements BeanDefinitionParser {
                 try {
                     metaInfo.setLastUpdatedOn(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(DomUtils.getTextValue(lastUpdatedOnElement)));
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    throw new BeanCreationException("Unable to parse lastupdate date", e);
                 }
             }
 

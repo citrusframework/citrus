@@ -26,7 +26,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.*;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestResult.RESULT;
 import com.consol.citrus.util.FileUtils;
@@ -231,7 +232,11 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         OutputStream out = null;
         File targetDirectory = new File(RESOURCE_DIRECTORY);
         if (!targetDirectory.exists()) {
-            targetDirectory.mkdirs();
+            boolean success = targetDirectory.mkdirs();
+            
+            if (!success) {
+                throw new CitrusRuntimeException("Unable to create folder structure for HTML report");
+            }
         }
         
         try {

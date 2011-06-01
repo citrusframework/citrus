@@ -32,6 +32,7 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestResult.RESULT;
 
 /**
@@ -113,7 +114,12 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                     }
 
                     if(!outputFile.exists()) {
-                        outputFile.getFile().getParentFile().mkdirs();
+                        boolean success = outputFile.getFile().getParentFile().mkdirs();
+                        
+                        if (!success) {
+                            throw new CitrusRuntimeException("Unable to create folder structure for JUnit report");
+                        }
+                        
                         outputFile.createRelative("");
                     }
                     
@@ -169,10 +175,12 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
             errorElement.setAttribute("type", cause.getClass().getName());
 
             StringBuffer buf = new StringBuffer();
-            buf.append(cause.getMessage() + "\n");
+            buf.append(cause.getMessage());
+            buf.append("\n");
             buf.append(cause.getClass().getName());
             for (int i = 0; i < cause.getStackTrace().length; i++) {
-                buf.append("\n at " + cause.getStackTrace()[i]);
+                buf.append("\n at ");
+                buf.append(cause.getStackTrace()[i]);
             }
             errorElement.setTextContent(buf.toString());
         } else {

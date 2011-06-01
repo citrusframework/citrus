@@ -84,7 +84,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                             buffer.setLength(0);
                             buffer = new StringBuffer();
                         } else {
-                            buffer.append(line + "\n");
+                            buffer.append(line);
+                            buffer.append("\n");
                         }
                     }
                 }

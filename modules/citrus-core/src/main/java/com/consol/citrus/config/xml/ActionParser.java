@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -47,7 +48,7 @@ public class ActionParser implements BeanDefinitionParser {
 
             return beanDefinition.getBeanDefinition();
         } else {
-            throw new RuntimeException("No reference to parent action provided");
+            throw new BeanCreationException("Must specify reference to parent bean");
         }
     }
 }

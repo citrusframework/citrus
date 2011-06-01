@@ -70,7 +70,7 @@ public class TestCaseMetaInfo {
      * @param creationDate the creationDate to set
      */
     public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = new Date(creationDate.getTime());
     }
 
     /**
@@ -102,7 +102,7 @@ public class TestCaseMetaInfo {
      * @param lastUpdatedOn the lastUpdatedOn to set
      */
     public void setLastUpdatedOn(Date lastUpdatedOn) {
-        this.lastUpdatedOn = lastUpdatedOn;
+        this.lastUpdatedOn = new Date(lastUpdatedOn.getTime());
     }
 
     /**

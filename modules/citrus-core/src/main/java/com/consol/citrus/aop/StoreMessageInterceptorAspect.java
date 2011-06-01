@@ -16,17 +16,12 @@
 
 package com.consol.citrus.aop;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -77,7 +72,11 @@ public class StoreMessageInterceptorAspect {
         
         try {
             if(!debugDirectory.exists()) {
-                debugDirectory.getFile().mkdirs();
+                boolean success = debugDirectory.getFile().mkdirs();
+                
+                if (!success) {
+                    log.warn("Unable to create folder structure for message interceptor");
+                }
             }
             
             int counter = StoreMessageInterceptorAspect.count.getAndIncrement();

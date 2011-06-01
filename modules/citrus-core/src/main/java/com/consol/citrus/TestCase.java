@@ -144,7 +144,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         buf.append("[testVariables:");
 
         for (Entry<String, String> entry : variableDefinitions.entrySet()) {
-            buf.append(entry.getKey() + "=" + entry.getValue() + ";");
+            buf.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
         }
 
         buf.append("] ");
@@ -152,7 +152,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         buf.append("[testChain:");
 
         for (TestAction action: actions) {
-            buf.append(action.getClass().getName() + ";");
+            buf.append(action.getClass().getName()).append(";");
         }
 
         buf.append("] ");

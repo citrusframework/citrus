@@ -110,6 +110,6 @@ public class Book {
      * @param registrationDate the registrationDate to set
      */
     public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+        this.registrationDate = new Date(registrationDate.getTime());
     }
 }
