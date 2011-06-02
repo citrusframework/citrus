@@ -42,7 +42,7 @@ public class InputAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(InputAction.class);
+    private static Logger log = LoggerFactory.getLogger(InputAction.class);
 
     /** Prompted message displayed to the user before input */
     private String message = "Press return key to continue...";

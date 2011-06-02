@@ -61,7 +61,7 @@ public class HtmlTestDocGenerator {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(HtmlTestDocGenerator.class);
+    private static Logger log = LoggerFactory.getLogger(HtmlTestDocGenerator.class);
     
     public void generateDoc() {
         BufferedReader reader = null;

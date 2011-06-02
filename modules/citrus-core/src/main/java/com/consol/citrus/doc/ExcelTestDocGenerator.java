@@ -65,7 +65,7 @@ public class ExcelTestDocGenerator {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ExcelTestDocGenerator.class);
+    private static Logger log = LoggerFactory.getLogger(ExcelTestDocGenerator.class);
     
     public void generateDoc() {
         BufferedReader reader = null;

@@ -44,7 +44,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SyncMessageChannelReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(SyncMessageChannelReceiver.class);
     
     @Override
     public Message<?> receive(long timeout) {

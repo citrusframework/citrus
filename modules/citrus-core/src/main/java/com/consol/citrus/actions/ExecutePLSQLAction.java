@@ -37,7 +37,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
+    private static Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
 
     /** SQL file resource */
     private Resource sqlResource;

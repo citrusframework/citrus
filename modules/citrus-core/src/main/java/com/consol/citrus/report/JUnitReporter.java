@@ -58,7 +58,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JUnitReporter.class);
+    private static Logger log = LoggerFactory.getLogger(JUnitReporter.class);
 
     /** Track test execution time */
     private Map<String, Long> testExecutionTime = new HashMap<String, Long>();

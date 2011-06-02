@@ -72,7 +72,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
+    private static Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
      * Method receives a message via {@link MessageReceiver} instance

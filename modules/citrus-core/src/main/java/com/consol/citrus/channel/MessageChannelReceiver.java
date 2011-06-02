@@ -43,7 +43,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(MessageChannelReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(MessageChannelReceiver.class);
     
     /** Pollable channel */
     private PollableChannel channel;

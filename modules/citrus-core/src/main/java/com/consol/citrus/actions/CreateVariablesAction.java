@@ -42,7 +42,7 @@ public class CreateVariablesAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
+    private static Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
 
     @Override
     public void doExecute(TestContext context) {

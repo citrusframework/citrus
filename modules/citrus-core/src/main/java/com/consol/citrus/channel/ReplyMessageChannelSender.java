@@ -45,7 +45,7 @@ public class ReplyMessageChannelSender implements MessageSender {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
+    private static Logger log = LoggerFactory.getLogger(ReplyMessageChannelSender.class);
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)

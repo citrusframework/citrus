@@ -34,7 +34,7 @@ public final class TestActionExecutionLogger {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestActionExecutionLogger.class);
+    private static Logger log = LoggerFactory.getLogger(TestActionExecutionLogger.class);
     
     /**
      * Prevent instantiation.

@@ -76,7 +76,7 @@ public class HttpMessageSender implements MessageSender {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
+    private static Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
     
     /**
      * Default constructor.

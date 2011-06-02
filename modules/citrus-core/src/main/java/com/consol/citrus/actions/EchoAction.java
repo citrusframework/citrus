@@ -37,7 +37,7 @@ public class EchoAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(EchoAction.class);
+    private static Logger log = LoggerFactory.getLogger(EchoAction.class);
 
     @Override
     public void doExecute(TestContext context) {

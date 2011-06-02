@@ -47,7 +47,7 @@ public class Assert extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(Assert.class);
+    private static Logger log = LoggerFactory.getLogger(Assert.class);
 
     @Override
     public void doExecute(TestContext context) {

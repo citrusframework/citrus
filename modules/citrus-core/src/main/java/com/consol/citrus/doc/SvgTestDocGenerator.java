@@ -43,7 +43,7 @@ public final class SvgTestDocGenerator {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SvgTestDocGenerator.class);
+    private static Logger log = LoggerFactory.getLogger(SvgTestDocGenerator.class);
 
     /**
      * Prevent instantiation.

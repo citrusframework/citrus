@@ -46,7 +46,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ReceiveTimeoutAction.class);
+    private static Logger log = LoggerFactory.getLogger(ReceiveTimeoutAction.class);
 
     @Override
     public void doExecute(TestContext context) {

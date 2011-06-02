@@ -41,7 +41,7 @@ public class StartServerAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(StartServerAction.class);
+    private static Logger log = LoggerFactory.getLogger(StartServerAction.class);
 
     @Override
     public void doExecute(TestContext context) {

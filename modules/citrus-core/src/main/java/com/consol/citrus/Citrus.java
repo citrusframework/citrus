@@ -38,7 +38,7 @@ public final class Citrus {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(Citrus.class);
+    private static Logger log = LoggerFactory.getLogger(Citrus.class);
 
     /**
      * Prevent instanciation.

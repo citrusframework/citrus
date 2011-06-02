@@ -43,7 +43,7 @@ public class Parallel extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(Parallel.class);
+    private static Logger log = LoggerFactory.getLogger(Parallel.class);
 
     @Override
     public void doExecute(TestContext context) {

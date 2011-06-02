@@ -40,7 +40,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
+    private static Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
     
     /** Destination channel */
     private MessageChannel channel;

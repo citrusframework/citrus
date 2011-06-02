@@ -37,7 +37,7 @@ public class TibcoHawkAgentBean extends AbstractTestAction implements Initializi
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TibcoHawkAgentBean.class);
+    private static Logger log = LoggerFactory.getLogger(TibcoHawkAgentBean.class);
 
     /** Hawk console */
     private TIBHawkConsole hawkConsole;

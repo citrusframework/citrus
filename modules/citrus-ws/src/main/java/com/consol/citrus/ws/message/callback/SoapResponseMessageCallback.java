@@ -46,7 +46,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SoapResponseMessageCallback.class);
+    private static Logger log = LoggerFactory.getLogger(SoapResponseMessageCallback.class);
     
     /** The response message built from WebService response message */
     private Message<String> response;

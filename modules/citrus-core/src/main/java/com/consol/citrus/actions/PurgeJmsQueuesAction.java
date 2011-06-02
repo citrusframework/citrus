@@ -59,7 +59,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
+    private static Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
 
     @Override
     public void doExecute(TestContext context) {

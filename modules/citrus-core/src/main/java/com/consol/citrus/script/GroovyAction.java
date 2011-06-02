@@ -62,7 +62,7 @@ public class GroovyAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(GroovyAction.class);
+    private static Logger log = LoggerFactory.getLogger(GroovyAction.class);
 
     @Override
     public void doExecute(TestContext context) {

@@ -44,7 +44,7 @@ public final class BooleanExpressionParser {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
+    private static Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
     /**
      * Prevent instantiation.

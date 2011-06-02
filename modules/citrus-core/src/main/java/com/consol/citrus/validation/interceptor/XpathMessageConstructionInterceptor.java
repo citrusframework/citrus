@@ -50,7 +50,7 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
     
     /**
      * Default constructor using fields.

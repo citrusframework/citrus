@@ -59,7 +59,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
+    private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
     
     /**
      * Extract variables using Xpath expressions.

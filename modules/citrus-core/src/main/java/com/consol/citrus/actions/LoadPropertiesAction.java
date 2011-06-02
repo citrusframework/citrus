@@ -44,7 +44,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
+    private static Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
 
     @Override
     public void doExecute(TestContext context) {

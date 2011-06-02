@@ -31,7 +31,7 @@ public class SequenceBeforeTest extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SequenceBeforeTest.class);
+    private static Logger log = LoggerFactory.getLogger(SequenceBeforeTest.class);
     
     @Override
     public void doExecute(TestContext context) {

@@ -42,7 +42,7 @@ public class TestContext {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestContext.class);
+    private static Logger log = LoggerFactory.getLogger(TestContext.class);
     
     /** Local variables */
     protected Map<String, Object> variables;

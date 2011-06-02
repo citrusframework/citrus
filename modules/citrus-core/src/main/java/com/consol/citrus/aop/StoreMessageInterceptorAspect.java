@@ -41,7 +41,7 @@ public class StoreMessageInterceptorAspect {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(StoreMessageInterceptorAspect.class);
+    private static Logger log = LoggerFactory.getLogger(StoreMessageInterceptorAspect.class);
     
     /** Target directory */
     private Resource debugDirectory = new FileSystemResource("logs/debug/messages/");

@@ -33,7 +33,7 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
+    private static Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)

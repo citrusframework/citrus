@@ -45,7 +45,7 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(Server.class);
+    private static Logger log = LoggerFactory.getLogger(Server.class);
     
     /**
      * @see com.consol.citrus.server.Server#start()

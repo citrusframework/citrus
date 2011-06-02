@@ -62,7 +62,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(CleanIcJobsBean.class);
+    private static Logger log = LoggerFactory.getLogger(CleanIcJobsBean.class);
 
 	@Override
     public void doExecute(TestContext context) {

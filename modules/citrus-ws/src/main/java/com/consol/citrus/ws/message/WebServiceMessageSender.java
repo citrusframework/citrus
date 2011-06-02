@@ -57,7 +57,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
+    private static Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)

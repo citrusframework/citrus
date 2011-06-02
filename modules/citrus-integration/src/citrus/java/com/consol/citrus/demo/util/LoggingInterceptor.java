@@ -26,7 +26,7 @@ import org.springframework.integration.MessageChannel;
  * @author Christoph Deppisch
  */
 public class LoggingInterceptor extends ChannelInterceptorAdapter {
-    private static final Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
     
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {

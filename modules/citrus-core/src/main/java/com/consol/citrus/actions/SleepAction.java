@@ -37,7 +37,7 @@ public class SleepAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SleepAction.class);
+    private static Logger log = LoggerFactory.getLogger(SleepAction.class);
 
     @Override
     public void doExecute(TestContext context) {

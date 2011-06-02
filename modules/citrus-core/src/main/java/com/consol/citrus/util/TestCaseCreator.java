@@ -59,7 +59,7 @@ public class TestCaseCreator {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestCaseCreator.class);
+    private static Logger log = LoggerFactory.getLogger(TestCaseCreator.class);
     
     /**
      * Unit testing framework can be either JUnit or TestNG. Test case creator

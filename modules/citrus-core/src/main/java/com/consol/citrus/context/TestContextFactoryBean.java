@@ -44,7 +44,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestContextFactoryBean.class);
+    private static Logger log = LoggerFactory.getLogger(TestContextFactoryBean.class);
     
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()

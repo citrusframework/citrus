@@ -45,7 +45,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(GroovySqlResultSetValidator.class);
+    private static Logger log = LoggerFactory.getLogger(GroovySqlResultSetValidator.class);
     
     /** Static code snippet for groovy script validation */
     private Resource scriptTemplateResource;

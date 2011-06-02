@@ -35,7 +35,7 @@ public class Catch extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(Catch.class);
+    private static Logger log = LoggerFactory.getLogger(Catch.class);
 
     @Override
     public void doExecute(TestContext context) {

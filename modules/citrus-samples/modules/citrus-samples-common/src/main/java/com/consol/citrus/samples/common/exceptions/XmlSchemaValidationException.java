@@ -31,7 +31,7 @@ public class XmlSchemaValidationException extends MessageHandlingException {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(XmlSchemaValidationException.class);
+    private static Logger log = LoggerFactory.getLogger(XmlSchemaValidationException.class);
     
     /**
      * @param failedMessage

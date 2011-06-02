@@ -90,7 +90,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
+    private static Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)

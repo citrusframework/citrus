@@ -37,7 +37,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JmsMessageReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(JmsMessageReceiver.class);
     
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)

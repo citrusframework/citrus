@@ -36,7 +36,7 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(LoggingClientInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(LoggingClientInterceptor.class);
 
     /**
      * Write SOAP request to logger before sending.

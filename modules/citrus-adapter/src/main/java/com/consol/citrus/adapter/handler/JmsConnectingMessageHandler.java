@@ -91,7 +91,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
+    private static Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
 
     /**
      * Message callback interface for manipulating JMS request messages before sending. 

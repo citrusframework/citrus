@@ -73,7 +73,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
+    private static Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
 	@Override
     public void doExecute(TestContext context) {

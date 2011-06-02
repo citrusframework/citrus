@@ -63,7 +63,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(AbstractJmsAdapter.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractJmsAdapter.class);
     
     /**
      * Initialize default JMS template if not already set.

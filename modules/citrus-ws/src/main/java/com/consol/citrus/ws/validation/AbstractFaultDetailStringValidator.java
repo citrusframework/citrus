@@ -38,7 +38,7 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(AbstractFaultDetailStringValidator.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractFaultDetailStringValidator.class);
     
     /**
      * @see com.consol.citrus.ws.validation.AbstractSoapFaultValidator#validateFaultDetail(org.springframework.ws.soap.SoapFaultDetail, org.springframework.ws.soap.SoapFaultDetail, com.consol.citrus.context.TestContext)

@@ -41,7 +41,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
     
     /**
      * Validate contentId and contentType of attachment to meet control attachment.

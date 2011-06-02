@@ -33,7 +33,7 @@ public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SoapAttachmentHandlingEndpoint.class);
+    private static Logger log = LoggerFactory.getLogger(SoapAttachmentHandlingEndpoint.class);
     
     public void invoke(MessageContext messageContext) throws Exception {
 	    Iterator<Attachment> it = ((SoapMessage)messageContext.getRequest()).getAttachments();

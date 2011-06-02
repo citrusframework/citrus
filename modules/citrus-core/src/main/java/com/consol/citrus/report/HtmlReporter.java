@@ -43,7 +43,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(HtmlReporter.class);
+    private static Logger log = LoggerFactory.getLogger(HtmlReporter.class);
     
     /** Collect test results for test report */
     private TestResults testResults = new TestResults();

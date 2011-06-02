@@ -50,7 +50,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
+    private static Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
     
     /**
      * Load the properties as variables.

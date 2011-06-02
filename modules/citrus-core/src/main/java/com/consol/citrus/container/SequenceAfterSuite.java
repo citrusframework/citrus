@@ -33,7 +33,7 @@ public class SequenceAfterSuite extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(SequenceAfterSuite.class);
+    private static Logger log = LoggerFactory.getLogger(SequenceAfterSuite.class);
     
     @Autowired
     private TestSuiteListeners testSuiteListener = new TestSuiteListeners();

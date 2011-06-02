@@ -58,7 +58,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TestCase.class);
+    private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
     /**
      * Method executes the test case and all its actions.

@@ -40,7 +40,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
+    private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
     /**
      * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)

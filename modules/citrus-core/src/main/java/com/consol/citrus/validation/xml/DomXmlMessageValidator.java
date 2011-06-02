@@ -64,7 +64,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
+    private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
 
     @Autowired
     private FunctionRegistry functionRegistry;

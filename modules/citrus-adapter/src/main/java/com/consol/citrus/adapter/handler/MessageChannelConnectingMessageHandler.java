@@ -63,7 +63,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(MessageChannelConnectingMessageHandler.class);
+    private static Logger log = LoggerFactory.getLogger(MessageChannelConnectingMessageHandler.class);
 
     /**
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)

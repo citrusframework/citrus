@@ -53,7 +53,7 @@ public class JavaAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JavaAction.class);
+    private static Logger log = LoggerFactory.getLogger(JavaAction.class);
 
     @SuppressWarnings("unchecked")
 	@Override

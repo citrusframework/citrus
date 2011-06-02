@@ -35,7 +35,7 @@ public class ServerShutdownThread extends Thread
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(ServerShutdownThread.class);
+    private static Logger log = LoggerFactory.getLogger(ServerShutdownThread.class);
 
     /** List of servers to be shut down */
     private List<Server> servers = new ArrayList<Server>();

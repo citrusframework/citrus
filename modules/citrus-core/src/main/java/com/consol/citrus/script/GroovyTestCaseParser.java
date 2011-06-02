@@ -45,7 +45,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(GroovyTestCaseParser.class);
+    private static Logger log = LoggerFactory.getLogger(GroovyTestCaseParser.class);
 
     /** Builds a test case using the application context and test context */
     public interface TestCaseBuilder {

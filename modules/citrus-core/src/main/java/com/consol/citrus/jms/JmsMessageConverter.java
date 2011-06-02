@@ -49,7 +49,7 @@ public class JmsMessageConverter implements MessageConverter {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(JmsMessageConverter.class);
+    private static Logger log = LoggerFactory.getLogger(JmsMessageConverter.class);
     
     /**
      * Default constructor using fields.

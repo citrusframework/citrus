@@ -41,7 +41,7 @@ public class CurrentDateFunction implements Function {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
+    private static Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
 
     /**
      * @see com.consol.citrus.functions.Function#execute(java.util.List)

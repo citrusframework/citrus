@@ -78,7 +78,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
+    private static Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
     
     /** JMS headers begin with this prefix */
     private static final String DEFAULT_JMS_HEADER_PREFIX = "JMS";

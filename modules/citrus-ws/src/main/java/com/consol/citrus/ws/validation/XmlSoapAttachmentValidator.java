@@ -47,7 +47,7 @@ public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator 
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
+    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
 	@Override
 	protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {

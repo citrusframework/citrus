@@ -78,7 +78,7 @@ public class AssertSoapFault extends AbstractActionContainer {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
+    private static Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
 
     @Override
     public void doExecute(TestContext context) {

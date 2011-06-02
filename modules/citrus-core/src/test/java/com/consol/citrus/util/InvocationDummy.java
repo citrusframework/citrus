@@ -27,7 +27,7 @@ public class InvocationDummy {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(InvocationDummy.class);
+    private static Logger log = LoggerFactory.getLogger(InvocationDummy.class);
 
     public InvocationDummy() {
         if (log.isDebugEnabled()) {

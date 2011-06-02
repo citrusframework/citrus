@@ -59,7 +59,7 @@ public class TransformAction extends AbstractTestAction {
 	/**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(TransformAction.class);
+    private static Logger log = LoggerFactory.getLogger(TransformAction.class);
 
 	@Override
 	public void doExecute(TestContext context) {

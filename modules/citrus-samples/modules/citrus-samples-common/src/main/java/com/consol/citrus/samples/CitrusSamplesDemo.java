@@ -29,7 +29,7 @@ public class CitrusSamplesDemo {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(CitrusSamplesDemo.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusSamplesDemo.class);
     
     private Thread t;
     

@@ -49,7 +49,7 @@ public class XmlSchemaValidatingChannelInterceptor extends ChannelInterceptorAda
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(XmlSchemaValidatingChannelInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(XmlSchemaValidatingChannelInterceptor.class);
     
     /**
      * Default constructor using fields.

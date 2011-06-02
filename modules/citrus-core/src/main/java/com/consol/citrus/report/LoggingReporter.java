@@ -50,7 +50,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(LoggingReporter.class);
+    private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
