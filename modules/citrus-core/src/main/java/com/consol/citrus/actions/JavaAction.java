@@ -106,7 +106,7 @@ public class JavaAction extends AbstractTestAction {
                     methodTypes[i] = float.class;
                 } else if (methodArgs.get(i).getClass().equals(Boolean.class)) {
                     methodTypes[i] = boolean.class;
-                } else if (methodArgs.get(i).getClass().equals(ArrayList.class)) {
+                } else if (methodArgs.get(i).getClass().equals(List.class)) {
                     methodTypes[i] = String[].class;
                 } else {
                     methodTypes[i] = methodArgs.get(i).getClass();

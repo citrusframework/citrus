@@ -35,8 +35,8 @@ public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
-    public void setup() {
-        super.setup();
+    public void prepareTest() {
+        super.prepareTest();
         
         if(new FileSystemResource("logs/debug/messages/message" + 1 + ".body").exists()) {
             new FileSystemResource("logs/debug/messages/message" + 1 + ".body").getFile().delete();

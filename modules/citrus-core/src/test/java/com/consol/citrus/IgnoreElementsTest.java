@@ -51,8 +51,8 @@ public class IgnoreElementsTest extends AbstractBaseTest {
     @Override
     @BeforeMethod
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void setup() {
-        super.setup();
+    public void prepareTest() {
+        super.prepareTest();
         
         reset(messageReceiver);
         

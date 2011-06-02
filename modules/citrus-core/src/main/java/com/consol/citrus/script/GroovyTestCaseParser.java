@@ -37,7 +37,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  * @since 2009
  */
-public class GroovyTestCaseParser implements ApplicationContextAware {
+public final class GroovyTestCaseParser implements ApplicationContextAware {
    
     /** Application context */
     private ApplicationContext applicationContext;

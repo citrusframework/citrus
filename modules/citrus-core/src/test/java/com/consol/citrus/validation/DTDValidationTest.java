@@ -50,8 +50,8 @@ public class DTDValidationTest extends AbstractBaseTest {
     
     @Override
     @BeforeMethod
-    public void setup() {
-        super.setup();
+    public void prepareTest() {
+        super.prepareTest();
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setMessageReceiver(messageReceiver);

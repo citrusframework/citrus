@@ -62,7 +62,11 @@ public class TestCaseMetaInfo {
      * @return the creationDate
      */
     public Date getCreationDate() {
-        return new Date(creationDate.getTime());
+        if (creationDate != null) {
+            return new Date(creationDate.getTime());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -94,7 +98,11 @@ public class TestCaseMetaInfo {
      * @return the lastUpdatedOn
      */
     public Date getLastUpdatedOn() {
-        return new Date(lastUpdatedOn.getTime());
+        if (lastUpdatedOn != null) {
+            return new Date(lastUpdatedOn.getTime());
+        } else {
+            return null;
+        }
     }
 
     /**

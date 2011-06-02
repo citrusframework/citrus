@@ -46,7 +46,7 @@ public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests 
      * Setup test execution.
      */
     @BeforeMethod
-    public void setup() {
+    public void prepareTest() {
         context = createTestContext();
     }
 
