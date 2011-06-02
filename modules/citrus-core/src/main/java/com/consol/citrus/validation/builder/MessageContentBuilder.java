@@ -32,5 +32,5 @@ public interface MessageContentBuilder<T> {
      * @param context the current test context.
      * @return the constructed message object.
      */
-    public Message<T> buildMessageContent(TestContext context);
+    Message<T> buildMessageContent(TestContext context);
 }

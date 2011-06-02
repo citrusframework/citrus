@@ -111,7 +111,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      * Executes a validation-script
      */
      public static interface ValidationScriptExecutor {
-         public void validate(Message<?> receivedMessage, TestContext context);
+         void validate(Message<?> receivedMessage, TestContext context);
      }
 
     /**

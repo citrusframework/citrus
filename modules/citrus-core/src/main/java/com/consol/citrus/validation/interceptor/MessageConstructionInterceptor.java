@@ -34,12 +34,12 @@ public interface MessageConstructionInterceptor<T> {
      * @param message the message to be modified.
      * @param context the current test context
      */
-    public Message<T> interceptMessageConstruction(Message<T> message, TestContext context);
+    Message<T> interceptMessageConstruction(Message<T> message, TestContext context);
     
     /**
      * Intercept the message payload construction.
      * @param messagePayload the payload
      * @param context the current test context
      */
-    public T interceptMessageConstruction(T messagePayload, TestContext context);
+    T interceptMessageConstruction(T messagePayload, TestContext context);
 }

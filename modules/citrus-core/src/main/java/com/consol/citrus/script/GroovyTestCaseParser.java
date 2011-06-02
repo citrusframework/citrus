@@ -49,7 +49,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
 
     /** Builds a test case using the application context and test context */
     public interface TestCaseBuilder {
-        public TestCase build(ApplicationContext applicationContext);
+        TestCase build(ApplicationContext applicationContext);
     }
     
     /**

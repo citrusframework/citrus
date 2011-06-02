@@ -56,7 +56,7 @@ public class GroovyAction extends AbstractTestAction {
     
     /** Executes a script using the TestContext */
     public interface ScriptExecutor {
-        public void execute(TestContext context);
+        void execute(TestContext context);
     }
 
     /**

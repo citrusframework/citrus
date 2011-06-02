@@ -104,7 +104,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
             for (int i = 0; i < statements.size(); i++) {
                 try {
-                    stmt = statements.get(i).toString();
+                    stmt = statements.get(i);
 
                     if(log.isDebugEnabled()) {
                         log.debug("Executing SQL statement: " + stmt);

@@ -30,12 +30,12 @@ public interface ReplyMessageCorrelator {
      * @param request
      * @return
      */
-    public String getCorrelationKey(Message<?> request);
+    String getCorrelationKey(Message<?> request);
     
     /**
      * Get the correlation header name.
      * @param id
      * @return
      */
-    public String getCorrelationKey(String id);
+    String getCorrelationKey(String id);
 }

@@ -31,5 +31,5 @@ public interface Function {
      * @param parameterList list of function arguments.
      * @return function result as string.
      */
-    public String execute(List<String> parameterList);
+    String execute(List<String> parameterList);
 }

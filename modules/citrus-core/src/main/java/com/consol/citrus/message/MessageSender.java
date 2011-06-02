@@ -29,5 +29,5 @@ public interface MessageSender {
      * Sends the message.
      * @param message the message object to send.
      */
-    public void send(Message<?> message);
+    void send(Message<?> message);
 }

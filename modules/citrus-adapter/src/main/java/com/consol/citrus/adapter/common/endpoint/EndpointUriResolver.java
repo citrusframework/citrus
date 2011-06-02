@@ -31,7 +31,7 @@ public interface EndpointUriResolver {
      * @param message the request message to send.
      * @return the endpoint uri String representation
      */
-    public String resolveEndpointUri(Message<?> message);
+    String resolveEndpointUri(Message<?> message);
     
     /**
      * Get the dedicated message endpoint uri for this message.
@@ -39,5 +39,5 @@ public interface EndpointUriResolver {
      * @param defaultUri the fallback uri in case no mapping was found.
      * @return the endpoint uri String representation
      */
-    public String resolveEndpointUri(Message<?> message, String defaultUri);
+    String resolveEndpointUri(Message<?> message, String defaultUri);
 }
