@@ -38,7 +38,7 @@ public class FloorFunction implements Function {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        return new Double(Math.floor(new Double((parameterList.get(0))))).toString();
+        return String.valueOf(Math.floor(Double.valueOf(parameterList.get(0))));
     }
 
 }

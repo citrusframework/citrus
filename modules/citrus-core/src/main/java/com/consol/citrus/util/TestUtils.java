@@ -138,8 +138,10 @@ public abstract class TestUtils {
             });
             
             reader.parse(new InputSource(testFileResource.getInputStream()));
+        } catch (RuntimeException e) {
+            log.warn("Failed to locate line numbers for failure stack trace", e);
         } catch (Exception e) {
-            log.warn("Unable to locate line numbers in test case for failure cause stack trace", e);
+            log.warn("Failed to locate line numbers for failure stack trace", e);
         }
         
         return failureStack;

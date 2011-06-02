@@ -18,8 +18,7 @@ package com.consol.citrus.http;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 
@@ -332,11 +331,6 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      * @param connectors the connectors to set
      */
     public void setConnectors(Connector[] connectors) {
-        Connector[] clone = new Connector[connectors.length];
-        for (int i = 0; i < connectors.length; i++) {
-            clone[i] = connectors[i];
-        }
-        
-        this.connectors = clone;
+        this.connectors = Arrays.copyOf(connectors, connectors.length);
     }
 }

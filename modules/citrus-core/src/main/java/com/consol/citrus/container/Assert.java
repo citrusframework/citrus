@@ -57,19 +57,20 @@ public class Assert extends AbstractActionContainer {
             setLastExecutedAction(action);
             action.execute(context);
         } catch (Exception e) {
-            log.error("Exception in assert action", e);
             log.info("Validating caught exception ...");
             if (exception.isAssignableFrom(e.getClass())) {
                 
                 if(message != null && !message.equals(e.getLocalizedMessage())) {
-                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + message + "' but was: '" + e.getLocalizedMessage() + "'");
+                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + 
+                            message + "' but was: '" + e.getLocalizedMessage() + "'", e);
                 }
                 
                 log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
                 log.info("Exception validation successful");
                 return;
             } else {
-                throw new ValidationException("Validation failed for asserted exception type - expected: '" + exception + "' but was: '" + e.getClass().getName() + "'");
+                throw new ValidationException("Validation failed for asserted exception type - expected: '" + 
+                        exception + "' but was: '" + e.getClass().getName() + "'", e);
             }
         }
 

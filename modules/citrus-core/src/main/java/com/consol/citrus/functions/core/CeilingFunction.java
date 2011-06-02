@@ -38,7 +38,7 @@ public class CeilingFunction implements Function {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        return new Double(Math.ceil(new Double((parameterList.get(0))))).toString();
+        return String.valueOf(Math.ceil(Double.valueOf(parameterList.get(0))));
     }
 
 }

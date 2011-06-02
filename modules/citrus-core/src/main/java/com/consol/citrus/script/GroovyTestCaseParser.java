@@ -87,8 +87,7 @@ public class GroovyTestCaseParser implements ApplicationContextAware {
             groovyObject = (GroovyObject) groovyClass.newInstance();
             
             if(groovyObject instanceof TestCaseBuilder) {
-                TestCase test = ((TestCaseBuilder)groovyObject).build(applicationContext);
-                return test;
+                return ((TestCaseBuilder)groovyObject).build(applicationContext);
             } else {
                 throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
             }

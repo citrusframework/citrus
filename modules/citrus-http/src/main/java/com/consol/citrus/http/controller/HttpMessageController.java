@@ -117,8 +117,7 @@ public class HttpMessageController {
                                             .copyHeaders(customHeaders)
                                             .build());
         
-        ResponseEntity<String> responseEntity = generateResponse(response);
-        return responseEntity;
+        return generateResponse(response);
     }
     
     /**

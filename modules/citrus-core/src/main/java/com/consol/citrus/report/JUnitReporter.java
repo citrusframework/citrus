@@ -128,7 +128,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                     }
 
                     serializer.writeToURI(doc, outputFile.getFile().toURI().toString());
-                } catch(Exception e) {
+                } catch(RuntimeException e) {
                     log.error("Error during report generation", e);
                     continue;
                 }
@@ -277,6 +277,8 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
             testSuiteElement.setAttribute("name", "citrus.AllTests");
             testSuiteElement.setAttribute("tests", "0");
             testSuiteElement.setAttribute("time", "0.0");
+        } catch (RuntimeException e) {
+            log.error("Error initialising reporter", e);
         } catch (Exception e) {
             log.error("Error initialising reporter", e);
         }
