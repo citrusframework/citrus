@@ -33,5 +33,5 @@ public interface SoapFaultValidator {
      * @param receivedFault the received fault instance.
      * @param controlfFault the control fault with expected fault information.
      */
-    public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault) throws ValidationException;
+    void validateSoapFault(SoapFault receivedFault, SoapFault controlFault) throws ValidationException;
 }

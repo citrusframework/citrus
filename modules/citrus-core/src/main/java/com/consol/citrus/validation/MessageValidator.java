@@ -38,7 +38,7 @@ public interface MessageValidator<T extends ValidationContext> {
      * @param context the current test context.
      * @param validationContexts list of available validation contexts.
      */
-    public void validateMessage(Message<?> receivedMessage, 
+    void validateMessage(Message<?> receivedMessage, 
                                 TestContext context, 
                                 List<ValidationContext> validationContexts) 
                                 throws ValidationException;
@@ -49,7 +49,7 @@ public interface MessageValidator<T extends ValidationContext> {
      * @param context the current test context
      * @param validationContext the proper validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, 
+    void validateMessage(Message<?> receivedMessage, 
                                 TestContext context, 
                                 T validationContext) 
                                 throws ValidationException;
@@ -58,7 +58,7 @@ public interface MessageValidator<T extends ValidationContext> {
      * Returns the validation context required for this validator implementation.
      * @return the validation context.
      */
-    public T findValidationContext(List<ValidationContext> validationContexts);
+    T findValidationContext(List<ValidationContext> validationContexts);
     
     /**
      * Checks if this message validator is capable of this message type. XML message validators may only apply to this message
@@ -68,5 +68,5 @@ public interface MessageValidator<T extends ValidationContext> {
      * @param messageType the message type representation as String (e.g. xml, json, csv, plaintext).
      * @return true if this message validator is capable of validating the message type.
      */
-    public boolean supportsMessageType(String messageType);
+    boolean supportsMessageType(String messageType);
 }

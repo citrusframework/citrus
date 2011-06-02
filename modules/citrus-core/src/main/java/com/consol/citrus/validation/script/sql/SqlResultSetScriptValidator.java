@@ -37,7 +37,7 @@ public interface SqlResultSetScriptValidator {
      * @param validationContext the current validation context.
      * @param context the current test context.
      */
-    public void validateSqlResultSet(List<Map<String, Object>> resultSet, 
+    void validateSqlResultSet(List<Map<String, Object>> resultSet, 
             ScriptValidationContext validationContext, TestContext context) throws ValidationException;
     
     /**
@@ -50,6 +50,6 @@ public interface SqlResultSetScriptValidator {
          * @param rows the result set.
          * @param context the current test context.
          */
-        public void validate(List<Map<String, Object>> rows, TestContext context);
+        void validate(List<Map<String, Object>> rows, TestContext context);
     }
 }

@@ -25,32 +25,32 @@ public interface TestSuiteListener {
     /**
      * Invoked on test suite start.
      */
-    public void onStart();
+    void onStart();
 
     /**
      * Invoked after successful test suite start.
      */
-    public void onStartSuccess();
+    void onStartSuccess();
 
     /**
      * Invoked after failed test suite start.
      * @param cause
      */
-    public void onStartFailure(Throwable cause);
+    void onStartFailure(Throwable cause);
 
     /**
      * Invoked on test suite finish.
      */
-    public void onFinish();
+    void onFinish();
 
     /**
      * Invoked after successful test suite finish.
      */
-    public void onFinishSuccess();
+    void onFinishSuccess();
 
     /**
      * Invoked after failed test suite finish.
      * @param cause
      */
-    public void onFinishFailure(Throwable cause);
+    void onFinishFailure(Throwable cause);
 }

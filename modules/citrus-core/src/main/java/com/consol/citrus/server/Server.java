@@ -29,22 +29,22 @@ public interface Server extends Runnable {
     /**
      * Start the server
      */
-    public void start();
+    void start();
 
     /**
      * Stop the server.
      */
-    public void stop();
+    void stop();
 
     /**
      * Is server running.
      * @return
      */
-    public boolean isRunning();
+    boolean isRunning();
 
     /**
      * Get server name.
      * @return
      */
-    public String getName();
+    String getName();
 }

@@ -43,5 +43,5 @@ public interface SoapAttachmentValidator {
      * @param controlAttachment
      * @throws IOException
      */
-    public void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException;
+    void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException;
 }

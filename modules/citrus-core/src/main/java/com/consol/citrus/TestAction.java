@@ -29,23 +29,23 @@ public interface TestAction {
      * Main execution method doing all work
      * @param context
      */
-    public void execute(TestContext context);
+    void execute(TestContext context);
 
     /**
      * Name of TestAction injected as Spring bean name
      * @return name as String
      */
-    public String getName();
+    String getName();
 
     /**
      * Name of TestAction injected as Spring bean name
      * @return name as String
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Description of TestAction
      * @return description as String
      */
-    public String getDescription();
+    String getDescription();
 }
