@@ -24,6 +24,13 @@ package com.consol.citrus.script;
  * @author Christoph Deppisch
  */
 public abstract class ScriptTypes {
+    
+    /**
+     * Prevent instantiation.
+     */
+    private ScriptTypes() {
+    }
+    
     /** Groovy */
     public static final String GROOVY = "groovy";
 }

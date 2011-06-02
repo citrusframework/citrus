@@ -72,9 +72,10 @@ public final class BooleanExpressionParser {
                 } else if (actChar == ' ') {
                     continue; //ignore
                 } else if (actChar == ')') {
-                    String operator;
-                    while ((operator = operators.pop()) != "(") {
+                    String operator = operators.pop();
+                    while (!(operator).equals("(")) {
                         values.push(getBooleanResultAsString(operator, values.pop(), values.pop()));
+                        operator = operators.pop();
                     }
                 } else if (!Character.isDigit(actChar)) {
                     StringBuffer operatorBuffer = new StringBuffer();
