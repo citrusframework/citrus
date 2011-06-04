@@ -26,5 +26,5 @@ public interface TestReporter {
     /**
      * Test reporter generates a report for several test suite instances.
      */
-    public void generateTestResults();
+    void generateTestResults();
 }

@@ -33,7 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public final class PropertyUtils {
 
     /** Constant marking a property in template files */
-    private static final char propertyMarker = '@';
+    private static final char PROPERTY_MARKER = '@';
     
     /**
      * Prevent instantiation.
@@ -76,11 +76,11 @@ public final class PropertyUtils {
         int startIndex = 0;
         int curIndex;
         int searchIndex;
-        while ((searchIndex = line.indexOf(propertyMarker, startIndex)) != -1) {
+        while ((searchIndex = line.indexOf(PROPERTY_MARKER, startIndex)) != -1) {
             //first check if property Marker is escaped by '\' character
             if(searchIndex != 0 && line.charAt((searchIndex-1)) == '\\') {
                 newStr.append(line.substring(startIndex, searchIndex-1));
-                newStr.append(propertyMarker);
+                newStr.append(PROPERTY_MARKER);
                 startIndex = searchIndex + 1;
                 continue;
             }
@@ -90,7 +90,7 @@ public final class PropertyUtils {
             curIndex = searchIndex + 1;
 
             while (curIndex < line.length() && !isVarComplete) {
-                if ((line.charAt(curIndex) == propertyMarker) || (curIndex+1 == line.length())) {
+                if ((line.charAt(curIndex) == PROPERTY_MARKER) || (curIndex+1 == line.length())) {
                     isVarComplete = true;
                 }
 
@@ -102,7 +102,7 @@ public final class PropertyUtils {
             
             if (!properties.containsKey(propertyName.toString())) {
                 throw new CitrusRuntimeException("No such property '"
-                        + propertyMarker + propertyName.toString() + propertyMarker + "'");
+                        + PROPERTY_MARKER + propertyName.toString() + PROPERTY_MARKER + "'");
             }
 
             newStr.append(line.substring(startIndex, searchIndex));

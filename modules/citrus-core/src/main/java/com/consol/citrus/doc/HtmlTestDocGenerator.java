@@ -41,8 +41,8 @@ import com.consol.citrus.util.PropertyUtils;
  * @since 2007
  */
 public class HtmlTestDocGenerator {
-    private final static String BODY_PLACEHOLDER = "+++++ BODY +++++";
-    private final static String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
+    private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
+    private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     
     private String testDirectory = "src/citrus/tests";
     

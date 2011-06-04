@@ -47,7 +47,7 @@ public class StoreMessageInterceptorAspect {
     private Resource debugDirectory = new FileSystemResource("logs/debug/messages/");
     
     /** Count messages */
-    private static final AtomicInteger count = new AtomicInteger(1);
+    private static final AtomicInteger FILE_COUNTER = new AtomicInteger(1);
     
     @Pointcut("execution(org.springframework.integration.Message com.consol.citrus.message.MessageReceiver.receive*(..))")
     public void inReceivingMessage() {}
@@ -79,7 +79,7 @@ public class StoreMessageInterceptorAspect {
                 }
             }
             
-            int counter = StoreMessageInterceptorAspect.count.getAndIncrement();
+            int counter = StoreMessageInterceptorAspect.FILE_COUNTER.getAndIncrement();
             
             Resource fileBody = debugDirectory.createRelative("message" + counter + ".body");
             Resource fileHeader = debugDirectory.createRelative("message" + counter + ".header");
@@ -123,7 +123,7 @@ public class StoreMessageInterceptorAspect {
      * Resets the file counter.
      */
     public static final void resetFileCounter() {
-        count.set(1);
+        FILE_COUNTER.set(1);
     }
 
     /**

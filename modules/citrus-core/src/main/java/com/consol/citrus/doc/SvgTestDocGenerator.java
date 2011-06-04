@@ -37,8 +37,8 @@ import com.consol.citrus.util.FileUtils;
  * @since 2007
  */
 public final class SvgTestDocGenerator {
-    private final static String DEFAULT_XSLT_SOURCE = "generate-svg-doc.xslt";
-    private final static String DEFAULT_TEST_DIRECTORY = "tests";
+    private static final String DEFAULT_XSLT_SOURCE = "generate-svg-doc.xslt";
+    private static final String DEFAULT_TEST_DIRECTORY = "tests";
 
     /**
      * Logger

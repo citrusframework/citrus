@@ -44,7 +44,7 @@ import com.consol.citrus.util.PropertyUtils;
  * @since 2007
  */
 public class ExcelTestDocGenerator {
-    private final static String BODY_PLACEHOLDER = "+++++ BODY +++++";
+    private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
     private String testDirectory = "src/citrus/tests";
     

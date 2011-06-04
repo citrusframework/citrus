@@ -32,5 +32,5 @@ public interface XsdSchemaMappingStrategy {
      * @param namespace
      * @return
      */
-    public XsdSchema getSchema(List<XsdSchema> schemas, String namespace);
+    XsdSchema getSchema(List<XsdSchema> schemas, String namespace);
 }
