@@ -126,9 +126,6 @@ public final class Citrus {
         } catch (FileNotFoundException e) {
             log.error("Failed to load test files", e);
             throw new TestEngineFailedException("TestSuite failed with error", e);
-        } catch (IOException e) {
-            log.error("Error while accessing test file", e);
-            throw new TestEngineFailedException("TestSuite failed with error", e);
         }
     }
     
@@ -142,7 +139,7 @@ public final class Citrus {
      * @return the class name of the test
      */
     public static String getClassNameForTest(final String startDir, final String testName)
-        throws IOException, FileNotFoundException {
+        throws FileNotFoundException {
         /* Stack to hold potential sub directories */
         final Stack<File> dirs = new Stack<File>();
         /* start directory */
