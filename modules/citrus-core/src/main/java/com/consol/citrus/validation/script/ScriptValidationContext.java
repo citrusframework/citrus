@@ -76,7 +76,7 @@ public class ScriptValidationContext implements ValidationContext {
      * @return the validationScript
      * @throws CitrusRuntimeException
      */
-    public String getValidationScript(TestContext context) throws CitrusRuntimeException {
+    public String getValidationScript(TestContext context) {
         try {
             if (validationScriptResource != null) {
                 return context.replaceDynamicContentInString(FileUtils.readToString(validationScriptResource));

@@ -194,7 +194,7 @@ public final class XMLUtils {
      * Checks if DOM implementation was initialized correctly.
      * @throws CitrusRuntimeException
      */
-    private static void checkDomImplInitialization() throws CitrusRuntimeException {
+    private static void checkDomImplInitialization() {
         if (domImpl == null) {
             throw new CitrusRuntimeException("DOM initialization was not done correctly - unable to continue");
         }

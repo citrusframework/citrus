@@ -46,7 +46,7 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
      * Execute embedded actions in loop.
      * @param context TestContext holding variable information.
      */
-    protected abstract void executeIteration(TestContext context) throws CitrusRuntimeException;
+    protected abstract void executeIteration(TestContext context);
     
     /**
      * Executes the nested test actions.

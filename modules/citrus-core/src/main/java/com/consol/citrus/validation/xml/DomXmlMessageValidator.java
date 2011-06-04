@@ -137,7 +137,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     public void validateMessageElements(Message<?> receivedMessage,
             XmlMessageValidationContext validationContext,
-            TestContext context) throws CitrusRuntimeException {
+            TestContext context) {
         if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {

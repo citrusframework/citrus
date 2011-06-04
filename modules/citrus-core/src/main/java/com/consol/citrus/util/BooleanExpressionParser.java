@@ -135,7 +135,7 @@ public final class BooleanExpressionParser {
      * @return the operator itself.
      * @throws CitrusRuntimeException
      */
-    private static String validateOperator(String operator) throws CitrusRuntimeException {
+    private static String validateOperator(String operator) {
         if(!knownOperators.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
