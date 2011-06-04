@@ -39,93 +39,106 @@ public final class Citrus {
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(Citrus.class);
+    
+    /** XML file extension */
+    private static final String XML_FILE_EXTENSION = ".xml";
 
+    /** Command line arguments */
+    private CommandLine cmdArgs;
+    
+    /** TestNG */
+    private TestNG testng = new TestNG(true);
+    
     /**
-     * Prevent instanciation.
+     * Default constructor.
+     * @param cmdArgs the command line arguments.
      */
-    private Citrus() {}
+    public Citrus(CommandLine cmdArgs) {
+        this.cmdArgs = cmdArgs;
+    }
     
     /**
      * Main CLI method.
      * @param args
      */
     public static void main(String[] args) {
-        log.info("CITRUS TESTFRAMEWORK ");
-        log.info("");
-
         Options options = new CitrusCliOptions();
-        CommandLineParser cliParser = new GnuParser();
-        
-        CommandLine cmd = null;
+        HelpFormatter formatter = new HelpFormatter();
         
         try {
-            cmd = cliParser.parse(options, args);
-            
-            if(cmd.hasOption("help")) {
-                HelpFormatter formatter = new HelpFormatter();
+            CommandLine cmd = new GnuParser().parse(options, args);
+
+            if (cmd.hasOption("help")) {
                 formatter.printHelp("CITRUS TestFramework", options);
-                
                 return;
             }
             
-            String testDirectory = cmd.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
-            
-            if(!testDirectory.endsWith("/")) {
-                testDirectory = testDirectory + "/";
-            }
-            
-            TestNG testNG = new TestNG(true);
-            
-            XmlSuite suite = new XmlSuite();
-            suite.setName(cmd.getOptionValue("suitename", "citrus-test-suite"));
-            
-            if(cmd.hasOption("test")) {
-                for (String testName : cmd.getOptionValues("test")) {
-                    XmlTest test = new XmlTest(suite);
-                    test.setName(testName);
-                    
-                    test.setXmlClasses(Collections.singletonList(new XmlClass(getClassNameForTest(testDirectory, testName.trim()))));
-                }
-            }
-            
-            if(cmd.hasOption("package")) {
-                for (String packageName : cmd.getOptionValues("package")) {
-                    XmlTest test = new XmlTest(suite);
-                    test.setName(packageName);
-                    
-                    XmlPackage xmlPackage = new XmlPackage();
-                    xmlPackage.setName(packageName);
-                    test.setXmlPackages(Collections.singletonList(xmlPackage));
-                }
-            }
-
-            if(cmd.getArgList().size() > 0) {
-                List<String> testNgXml = new ArrayList<String>(); 
-                for (String testNgXmlFile : cmd.getArgs()) {
-                    if(testNgXmlFile.endsWith(".xml")) {
-                        testNgXml.add(testNgXmlFile);
-                    } else {
-                        log.warn("Unrecognized argument '" + testNgXmlFile + "'");
-                    }
-                }
-                testNG.setTestSuites(testNgXml);
-            }
-            
-            List<XmlSuite> suites = new ArrayList<XmlSuite>();
-            suites.add(suite);
-            testNG.setXmlSuites(suites);
-            testNG.run();
-            
-            if (testNG.hasFailure()) {
-                throw new TestEngineFailedException("Citrus test run failed!");
-            }
+            Citrus citrus = new Citrus(cmd);
+            citrus.run();
         } catch (ParseException e) {
             log.error("Failed to parse command line arguments", e);
-            HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("CITRUS TestFramework", options);
-        } catch (FileNotFoundException e) {
-            log.error("Failed to load test files", e);
-            throw new TestEngineFailedException("TestSuite failed with error", e);
+        }
+    }
+    
+    /**
+     * Runs all tests using TestNG.
+     */
+    public void run() {
+        log.info("CITRUS TESTFRAMEWORK ");
+        log.info("");
+        
+        String testDirectory = cmdArgs.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
+        
+        if (!testDirectory.endsWith("/")) {
+            testDirectory = testDirectory + "/";
+        }
+        
+        XmlSuite suite = new XmlSuite();
+        suite.setName(cmdArgs.getOptionValue("suitename", "citrus-test-suite"));
+        
+        if (cmdArgs.hasOption("test")) {
+            for (String testName : cmdArgs.getOptionValues("test")) {
+                XmlTest test = new XmlTest(suite);
+                test.setName(testName);
+                try {
+                    test.setXmlClasses(Collections.singletonList(new XmlClass(getClassNameForTest(testDirectory, testName.trim()))));
+                } catch (FileNotFoundException e) {
+                    throw new TestEngineFailedException("TestSuite failed with error", e);
+                }
+            }
+        }
+        
+        if (cmdArgs.hasOption("package")) {
+            for (String packageName : cmdArgs.getOptionValues("package")) {
+                XmlTest test = new XmlTest(suite);
+                test.setName(packageName);
+                
+                XmlPackage xmlPackage = new XmlPackage();
+                xmlPackage.setName(packageName);
+                test.setXmlPackages(Collections.singletonList(xmlPackage));
+            }
+        }
+
+        if (cmdArgs.getArgList().size() > 0) {
+            List<String> testNgXml = new ArrayList<String>(); 
+            for (String testNgXmlFile : cmdArgs.getArgs()) {
+                if (testNgXmlFile.endsWith(XML_FILE_EXTENSION)) {
+                    testNgXml.add(testNgXmlFile);
+                } else {
+                    log.warn("Unrecognized argument '" + testNgXmlFile + "'");
+                }
+            }
+            testng.setTestSuites(testNgXml);
+        }
+        
+        List<XmlSuite> suites = new ArrayList<XmlSuite>();
+        suites.add(suite);
+        testng.setXmlSuites(suites);
+        testng.run();
+        
+        if (testng.hasFailure()) {
+            throw new TestEngineFailedException("Citrus test run failed!");
         }
     }
     
@@ -138,7 +151,7 @@ public final class Citrus {
      * @throws CitrusRuntimeException
      * @return the class name of the test
      */
-    public static String getClassNameForTest(final String startDir, final String testName)
+    private String getClassNameForTest(final String startDir, final String testName)
         throws FileNotFoundException {
         /* Stack to hold potential sub directories */
         final Stack<File> dirs = new Stack<File>();
@@ -149,6 +162,8 @@ public final class Citrus {
             dirs.push(startdir);
         }
 
+        log.info("Starting test search in dir: " + startdir.getAbsolutePath());
+        
         /* walk through the directories */
         while (dirs.size() > 0) {
             File file = dirs.pop();
@@ -157,7 +172,7 @@ public final class Citrus {
                     File tmp = new File(dir.getPath() + "/" + name);
 
                     /* Only allowing XML files as spring configuration files */
-                    return (name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
+                    return (name.endsWith(XML_FILE_EXTENSION) || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
                 }
             });
 
@@ -166,11 +181,11 @@ public final class Citrus {
                 if (found[i].isDirectory()) {
                     dirs.push(found[i]);
                 } else {
-                    if ((testName + ".xml").equalsIgnoreCase(found[i].getName())) {
+                    if ((testName + XML_FILE_EXTENSION).equalsIgnoreCase(found[i].getName())) {
                         String fileName = found[i].getPath();
-                        fileName = fileName.substring(0, (fileName.length()-".xml".length()));
+                        fileName = fileName.substring(0, (fileName.length() - XML_FILE_EXTENSION.length()));
 
-                        if(fileName.startsWith(File.separator)) {
+                        if (fileName.startsWith(File.separator)) {
                             fileName = fileName.substring(File.separator.length());
                         }
                         
@@ -186,7 +201,16 @@ public final class Citrus {
                 }
             }
         }
+        
         throw new CitrusRuntimeException("Could not find test with name '"
                 + testName + "'. Test directory is: " + startDir);
+    }
+
+    /**
+     * Sets the testng.
+     * @param testng the testng to set
+     */
+    public void setTestNG(TestNG testng) {
+        this.testng = testng;
     }
 }
