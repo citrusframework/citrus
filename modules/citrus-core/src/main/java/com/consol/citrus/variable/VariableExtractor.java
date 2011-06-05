@@ -32,5 +32,5 @@ public interface VariableExtractor {
      * @param message
      * @param context
      */
-    public void extractVariables(Message<?> message, TestContext context);
+    void extractVariables(Message<?> message, TestContext context);
 }
