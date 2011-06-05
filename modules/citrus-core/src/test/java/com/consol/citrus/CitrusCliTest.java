@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import org.testng.xml.XmlSuite;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestEngineFailedException;
 import com.consol.citrus.testng.AbstractBaseTest;
 
 /**
@@ -149,6 +150,82 @@ public class CitrusCliTest extends AbstractBaseTest {
         citrus.run();
         
         verify(testngMock);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testTestNgXml() throws ParseException {
+        reset(testngMock);
+
+        testngMock.setXmlSuites((List<XmlSuite>)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                List<XmlSuite> suites = (List<XmlSuite>)getCurrentArguments()[0];
+                Assert.assertEquals(suites.size(), 1);
+                Assert.assertEquals(suites.get(0).getTests().size(), 0);
+                Assert.assertEquals(suites.get(0).getName(), "citrus-test-suite");
+                return null;
+            }
+        }).once();
+        
+        testngMock.setTestSuites((List<String>)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                List<String> suites = (List<String>)getCurrentArguments()[0];
+                Assert.assertEquals(suites.size(), 1);
+                Assert.assertEquals(suites.get(0), "testng-suite.xml");
+                return null;
+            }
+        });
+        
+        testngMock.run();
+        expectLastCall().once();
+        
+        expect(testngMock.hasFailure()).andReturn(false).once();
+        
+        replay(testngMock);
+        
+        Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
+                new String[] {"testng-suite.xml"}));
+        citrus.setTestNG(testngMock);
+        citrus.run();
+        
+        verify(testngMock);
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testHasFailures() throws ParseException {
+        
+        reset(testngMock);
+
+        testngMock.setXmlSuites((List<XmlSuite>)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                List<XmlSuite> suites = (List<XmlSuite>)getCurrentArguments()[0];
+                Assert.assertEquals(suites.size(), 1);
+                Assert.assertEquals(suites.get(0).getName(), "citrus-test-suite");
+                return null;
+            }
+        }).once();
+        
+        testngMock.run();
+        expectLastCall().once();
+        
+        expect(testngMock.hasFailure()).andReturn(true).once();
+        
+        replay(testngMock);
+        
+        Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
+                new String[] {"-test", "SampleTest", "-testdir", "../src/citrus/tests"}));
+        citrus.setTestNG(testngMock);
+        
+        try {
+            citrus.run();
+            Assert.fail("Missing TestEngineFailedException due to failures in TestNG");
+        } catch(TestEngineFailedException e) {
+            verify(testngMock);
+        }
     }
     
     @Test
