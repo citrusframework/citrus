@@ -124,7 +124,7 @@ public class TestCaseCreator {
             throw new CitrusRuntimeException("Test name must start with an uppercase letter");
         }
         
-        Properties properties = prepareTestCasePoroperties();
+        Properties properties = prepareTestCaseProperties();
         
         targetPackage = targetPackage.replace('.', '/');
         
@@ -143,7 +143,7 @@ public class TestCaseCreator {
      * 
      * @return the prepared property set.
      */
-    private Properties prepareTestCasePoroperties() {
+    private Properties prepareTestCaseProperties() {
         Properties properties = new Properties();
         properties.put("test.name", name);
         properties.put("test.author", author);
@@ -169,7 +169,7 @@ public class TestCaseCreator {
      * @return the Java test file content.
      */
     public String buildJavaFileContent() {
-        return buildFileContentFromTemplate(prepareTestCasePoroperties(), getTemplateFileForJavaClass());
+        return buildFileContentFromTemplate(prepareTestCaseProperties(), getTemplateFileForJavaClass());
     }
     
     /**
@@ -178,7 +178,7 @@ public class TestCaseCreator {
      * @return the XML test file content.
      */
     public String buildXmlFileContent() {
-        return buildFileContentFromTemplate(prepareTestCasePoroperties(), getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
+        return buildFileContentFromTemplate(prepareTestCaseProperties(), getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
     }
     
     /**
