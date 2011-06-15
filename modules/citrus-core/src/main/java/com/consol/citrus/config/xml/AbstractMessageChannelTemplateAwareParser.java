@@ -37,7 +37,7 @@ public abstract class AbstractMessageChannelTemplateAwareParser extends Abstract
         String msgChannelTemplate = element.getAttribute("message-channel-template");
         
         if (StringUtils.hasText(msgChannelTemplate)) {
-            builder.addPropertyReference("messageChannelTemplate", msgChannelTemplate);
+            builder.addPropertyReference("messagingTemplate", msgChannelTemplate);
         }
         
         return builder.getBeanDefinition();
