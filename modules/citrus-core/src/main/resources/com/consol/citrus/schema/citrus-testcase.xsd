@@ -429,7 +429,8 @@
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute name="class" type="xs:string" use="required"/>
+            <xs:attribute name="class" type="xs:string"/>
+            <xs:attribute name="ref" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     

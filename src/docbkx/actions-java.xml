@@ -47,4 +47,21 @@
     
     <para>Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method
     and class constructor fit your arguments and vice versa, otherwise you will cause errors at runtime.</para>
+    
+    <para>Besides instantiating a fully new object instance for a class how about reusing a bean instance available in Spring bean container. Simply
+    use the <emphasis>ref</emphasis> attribute and refer to an existing bean in Spring application context.</para>
+    
+    <programlisting>&lt;java ref=&quot;invocationDummy&quot;&gt;
+    &lt;method name=&quot;invoke&quot;&gt;
+        &lt;argument type=&quot;int&quot;&gt;4&lt;/argument&gt;
+        &lt;argument type=&quot;String&quot;&gt;Test Invocation&lt;/argument&gt;
+        &lt;argument type=&quot;boolean&quot;&gt;true&lt;/argument&gt;
+    &lt;/method&gt;
+&lt;/java&gt;
+
+&lt;bean id=&quot;invocationDummy&quot; class=&quot;com.consol.citrus.test.util.InvocationDummy&quot;/&gt;
+    </programlisting>
+    
+    <para>The method is invoked on the Spring bean instance. This is very useful as you can inject other objects (e.g. via Autowiring) to the Spring bean 
+    instance before method invocation in test takes place. This enables you to execute any Java logic inside a test case.</para>
 </section>

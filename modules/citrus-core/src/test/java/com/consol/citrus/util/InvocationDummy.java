@@ -41,7 +41,7 @@ public class InvocationDummy {
         }
     }
     
-    public InvocationDummy(int arg1, String arg2, boolean arg3) {
+    public InvocationDummy(Integer arg1, String arg2, Boolean arg3) {
         if (log.isDebugEnabled()) {
         	if (log.isDebugEnabled()) {
                 log.debug("Constructor with arguments:");
@@ -72,7 +72,7 @@ public class InvocationDummy {
         }
     }
 
-    public void invoke(int arg1, String arg2, boolean arg3) {
+    public void invoke(Integer arg1, String arg2, Boolean arg3) {
         if (log.isDebugEnabled()) {
             log.debug("Method invoke with arguments:");
             log.debug("arg1: " + arg1);

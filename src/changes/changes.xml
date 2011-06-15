@@ -17,6 +17,12 @@
   <body>
     <release version="1.2-SNAPSHOT" date="31.05.2011" description="Latest snapshot release">
         <action dev="christophd" type="fix">
+          #301 Variable support in Java action
+        </action>
+        <action dev="christophd" type="fix">
+          #367 Setter on messaging template attribute in message-channel sender/receiver
+        </action>
+        <action dev="christophd" type="fix">
           #365 @ property marker escaping in HTML reporter
         </action>
         <action dev="christophd" type="fix">

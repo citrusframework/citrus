@@ -107,6 +107,24 @@ public class JavaActionTest extends AbstractBaseTest {
 	}
 	
 	@Test
+    public void testJavaCallConstructorArgsVariableSupport() {
+        JavaAction action = new JavaAction();
+        action.setClassName("com.consol.citrus.util.InvocationDummy");
+        action.setMethodName("invoke");
+        
+        context.setVariable("text", "Test");
+        
+        List<Object> args = new ArrayList<Object>();
+        args.add(4);
+        args.add("${text}");
+        args.add(true);
+        
+        action.setConstructorArgs(args);
+        
+        action.execute(context);
+    }
+	
+	@Test
 	public void testJavaCall() {
 		JavaAction action = new JavaAction();
 		action.setClassName("com.consol.citrus.util.InvocationDummy");
@@ -122,6 +140,25 @@ public class JavaActionTest extends AbstractBaseTest {
 		
 		action.execute(context);
 	}
+	
+	@Test
+    public void testJavaCallVariableSupport() {
+        JavaAction action = new JavaAction();
+        action.setClassName("com.consol.citrus.util.InvocationDummy");
+        action.setMethodName("invoke");
+        
+        context.setVariable("text", "Test");
+        
+        List<Object> args = new ArrayList<Object>();
+        args.add(4);
+        args.add("${text}");
+        args.add(true);
+        
+        action.setConstructorArgs(args);
+        action.setMethodArgs(args);
+        
+        action.execute(context);
+    }
 	
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallWrongConstructorArgs() {

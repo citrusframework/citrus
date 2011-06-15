@@ -18,6 +18,9 @@ package com.consol.citrus.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+
+import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Test class only used to explain the usage of java reflection in test examples
@@ -38,6 +41,8 @@ public class InvocationDummy {
     }
 
     public InvocationDummy(String arg) {
+        checkNotVariable(arg);
+        
         if (log.isDebugEnabled()) {
             log.debug("Constructor with argument: " + arg);
         }
@@ -50,6 +55,8 @@ public class InvocationDummy {
     }
     
     public void invoke(String text) {
+        checkNotVariable(text);
+        
     	if (log.isDebugEnabled()) {
             log.debug("Methode invoke with string argument: '" + text + "'");
         }
@@ -57,13 +64,18 @@ public class InvocationDummy {
     
     public void invoke(String[] args) {
         for (int i = 0; i < args.length; i++) {
+            
+            checkNotVariable(args[i]);
+            
             if (log.isDebugEnabled()) {
                 log.debug("Methode invoke with argument: " + args[i]);
             }
         }
     }
 
-    public void invoke(int arg1, String arg2, boolean arg3) {
+    public void invoke(Integer arg1, String arg2, Boolean arg3) {
+        checkNotVariable(arg2);
+        
         if (log.isDebugEnabled()) {
             log.debug("Method invoke with arguments:");
             log.debug("arg1: " + arg1);
@@ -72,8 +84,18 @@ public class InvocationDummy {
         }
     }
 
+    /**
+     * Validates argument to not be a test variable expression.
+     * @param argument
+     */
+    private static void checkNotVariable(String argument) {
+        Assert.assertFalse(VariableUtils.isVariableName(argument), "Found unresolved variable '" + argument + "'");
+    }
+    
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
+            checkNotVariable(args[i]);
+            
             if (log.isDebugEnabled()) {
                 log.debug("arg" + i + ": " + args[i]);
             }
