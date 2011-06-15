@@ -17,6 +17,9 @@
   <body>
     <release version="1.2-SNAPSHOT" date="15.06.2011" description="Latest snapshot release">
         <action dev="christophd" type="fix">
+          #363 Unknown test error reporting
+        </action>
+        <action dev="christophd" type="fix">
           #366 Documentation bug on JmsConnectingMessageHandler package
         </action>
         <action dev="christophd" type="fix">

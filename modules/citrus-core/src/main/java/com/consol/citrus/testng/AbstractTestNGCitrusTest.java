@@ -217,7 +217,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
             testCase.setPackageName(this.getClass().getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
-            org.testng.Assert.fail("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
         }
         return testCase;
     }
@@ -228,27 +228,39 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected ClassPathXmlApplicationContext createApplicationContext() {
         try {
-        return new ClassPathXmlApplicationContext(
-                new String[] {
-                        this.getClass().getPackage().getName().replace('.', '/')
-                                + "/" + getClass().getSimpleName() + ".xml",
-                                "com/consol/citrus/spring/internal-helper-ctx.xml"},
-                true, applicationContext);
+            return new ClassPathXmlApplicationContext(
+                    new String[] {
+                            this.getClass().getPackage().getName().replace('.', '/')
+                                    + "/" + getClass().getSimpleName() + ".xml",
+                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                    true, applicationContext);
         } catch (Exception e) {
-            // Create empty backup test case for logging
-            TestCase backupTest = new TestCase();
-            backupTest.setName(getClass().getSimpleName());
-            backupTest.setPackageName(getClass().getPackage().getName());
-            
-            CitrusRuntimeException cause = new CitrusRuntimeException("Failed to load test case", e);
-            
-            // inform test listeners with failed test
-            testListener.onTestStart(backupTest);
-            testListener.onTestFailure(backupTest, cause);
-            testListener.onTestFinish(backupTest);
-            
-            throw cause;
+            throw handleError("Failed to load test case", e);
         }
+    }
+
+    /**
+     * Handles error creating a new CitrusRuntimeException and 
+     * informs test listeners.
+     * 
+     * @param message
+     * @param cause
+     * @return
+     */
+    private CitrusRuntimeException handleError(String message, Exception cause) {
+        // Create empty backup test case for logging
+        TestCase backupTest = new TestCase();
+        backupTest.setName(getClass().getSimpleName());
+        backupTest.setPackageName(getClass().getPackage().getName());
+        
+        CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
+        
+        // inform test listeners with failed test
+        testListener.onTestStart(backupTest);
+        testListener.onTestFailure(backupTest, exception);
+        testListener.onTestFinish(backupTest);
+        
+        return exception;
     }
 
     /**
