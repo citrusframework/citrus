@@ -249,7 +249,7 @@
             reply destination.</para>
             
             <programlisting>&lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
-         class=&quot;com.consol.citrus.http.handler.JmsConnectingMessageHandler&quot;&gt;
+         class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
     &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
     &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Queue.Response.Out&quot;/&gt;
     &lt;property name=&quot;connectionFactory&quot;&gt;

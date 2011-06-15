@@ -162,7 +162,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                        message-handler=&quot;jmsForwardingMessageHandler&quot;/&gt;
         
 &lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
-         class=&quot;com.consol.citrus.http.handler.JmsConnectingMessageHandler&quot;&gt;
+         class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
     &lt;property name=&quot;destinationName&quot; value=&quot;${royal.airline.request.queue}&quot;/&gt;
     &lt;property name=&quot;connectionFactory&quot; ref=&quot;connectionFactory&quot; /&gt;
     &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
