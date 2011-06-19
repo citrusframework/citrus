@@ -25,6 +25,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.integration.Message;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
@@ -57,9 +58,19 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
         String receivedJsonText = receivedMessage.getPayload().toString();
         String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload().toString());
         
-        JSONParser parser = new JSONParser();
-        
         try {
+            if (!StringUtils.hasText(controlJsonText)) {
+                Assert.isTrue(!StringUtils.hasText(receivedJsonText), "Validation failed - " +
+                		"expected empty message content, but was: " + receivedJsonText);
+                return; // empty message contents as expected - validation finished
+            } else {
+                Assert.isTrue(StringUtils.hasText(receivedJsonText), "Validation failed - " +
+                		"expected message contents, but received empty message!");
+            }
+            
+            JSONParser parser = new JSONParser();
+        
+        
             JSONObject receivedJson = (JSONObject) parser.parse(receivedJsonText);
             JSONObject controlJson = (JSONObject) parser.parse(controlJsonText);
             

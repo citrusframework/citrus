@@ -98,8 +98,8 @@
             </receive>
             
             <send with="httpMessageSender">
-            	<message>
-            		<data>
+                <message>
+                    <data>
                       {
                         "type" : "read",
                         "mbean" : "java.lang:type=Memory",
@@ -107,21 +107,22 @@
                         "path" : "used"
                       }
                     </data>
-            	</message>
+                </message>
             </send>
             
             <sleep time="2"/>
             
             <receive with="httpResponseReceiver">
-            	<message validator="plainTextMessageValidator">
+                <message type="json">
                     <data></data>
                 </message>
-            	<header>
-           			<element name="citrus_http_status_code" value="200"/>
-           			<element name="citrus_http_version" value="HTTP/1.1"/>
-           			<element name="citrus_http_reason_phrase" value="OK"/>
-           		</header>
+                <header>
+                    <element name="citrus_http_status_code" value="200"/>
+                    <element name="citrus_http_version" value="HTTP/1.1"/>
+                    <element name="citrus_http_reason_phrase" value="OK"/>
+                </header>
             </receive>
+            
         </actions>
     </testcase>
 </spring:beans>

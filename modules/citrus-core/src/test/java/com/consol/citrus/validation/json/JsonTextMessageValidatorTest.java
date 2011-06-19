@@ -273,6 +273,41 @@ public class JsonTextMessageValidatorTest extends AbstractBaseTest {
     }
     
     @Test
+    public void testJsonEmptyMessageValidation() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        
+        Message<String> receivedMessage = MessageBuilder.withPayload("").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("").build();
+        
+        validator.validateMessagePayload(receivedMessage, controlMessage, context);
+    }
+    
+    @Test
+    public void testJsonEmptyMessageValidationError() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        
+        Message<String> receivedMessage = MessageBuilder.withPayload("").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        
+        try {
+            validator.validateMessagePayload(receivedMessage, controlMessage, context);
+            Assert.fail("Missing validation exception due to validation error");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected message contents, but received empty message"));
+        }
+        
+        receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        controlMessage = MessageBuilder.withPayload("").build();
+        
+        try {
+            validator.validateMessagePayload(receivedMessage, controlMessage, context);
+            Assert.fail("Missing validation exception due to validation error");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected empty message content"));
+        }
+    }
+    
+    @Test
     public void testJsonNullValueMismatch() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
