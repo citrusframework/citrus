@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.config;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
+
+import com.consol.citrus.config.xml.*;
 
 /**
  * Registers bean definition parser for actions in test case.

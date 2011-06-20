@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.ws.config.handler;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-/**
- * Namespace handler registers bean definition parser
- * for Citrus testcase schema elements.
- *
- * @author Christoph Deppisch
- * @since 2007
- */
-public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
+import com.consol.citrus.ws.config.xml.*;
 
-    /**
-     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
-     */
+/**
+ * Namespace handler for test action components in Citrus ws namespace.
+ * 
+ * @author Christoph Deppisch
+ */
+public class CitrusWsTestcaseNamespaceHandler extends NamespaceHandlerSupport {
+
     public void init() {
-        registerBeanDefinitionParser("testcase", new TestCaseParser());
-        registerBeanDefinitionParser("template", new TemplateParser());
+        registerBeanDefinitionParser("assert", new AssertSoapFaultParser());
+        registerBeanDefinitionParser("send", new SendSoapMessageActionParser());
+        registerBeanDefinitionParser("send-fault", new SendSoapFaultActionParser());
+        registerBeanDefinitionParser("receive", new ReceiveSoapMessageActionParser());
     }
+
 }

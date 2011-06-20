@@ -35,20 +35,18 @@ public class ActionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String beanName = element.getAttribute("reference");
-
         BeanDefinitionBuilder beanDefinition;
 
-        if (StringUtils.hasText(beanName)) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(beanName);
+        String beanReference = element.getAttribute("reference");
+        if (StringUtils.hasText(beanReference)) {
+            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(beanReference);
 
             DescriptionElementParser.doParse(element, beanDefinition);
-            
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + beanName);
+            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + beanReference);
 
             return beanDefinition.getBeanDefinition();
         } else {
-            throw new BeanCreationException("Must specify reference to parent bean");
+            throw new BeanCreationException("Must specify proper reference attribute to bean");
         }
     }
 }

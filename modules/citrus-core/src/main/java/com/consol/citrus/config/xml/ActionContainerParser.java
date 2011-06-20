@@ -26,6 +26,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.TestActionRegistry;
+
 /**
  * Abstract parser implementation that is aware of several embedded test actions of a container. Bean definitions that use
  * this parser component must have an 'actions' property of type {@link List} in order to receive the list of embedded test actions. 

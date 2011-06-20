@@ -33,6 +33,8 @@ import org.w3c.dom.Element;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.TestCaseFactory;
 import com.consol.citrus.variable.VariableUtils;
 
 /**

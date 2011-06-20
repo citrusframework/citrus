@@ -26,6 +26,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Parser for Http sender implementation in Citrus http namespace.
  * 
@@ -47,46 +49,25 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
             
             builder.addConstructorArgReference(restTemplate);
         } else {
-            String requestFactory = element.getAttribute("request-factory");
-            if (StringUtils.hasText(requestFactory)) {
-                builder.addConstructorArgReference(requestFactory);
-            }
+            BeanDefinitionParserUtils.addConstructorArgReference(builder, element.getAttribute("request-factory"));
         }
         
-        String requestUrl = element.getAttribute("request-url");
-        if (StringUtils.hasText(requestUrl)) {
-            builder.addPropertyValue("requestUrl", requestUrl);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("request-url"), "requestUrl");
     
         String requestMethod = element.getAttribute("request-method");
         if (StringUtils.hasText(requestMethod)) {
             builder.addPropertyValue("requestMethod", new TypedStringValue(requestMethod, HttpMethod.class));
         }
         
-        String replyHandler = element.getAttribute("reply-handler");
-        if (StringUtils.hasText(replyHandler)) {
-            builder.addPropertyReference("replyMessageHandler", replyHandler);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("reply-handler"), "replyMessageHandler");
 
-        String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference("correlator", replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("reply-message-correlator"), "correlator");
         
-        String endpointResolver = element.getAttribute("endpoint-resolver");
-        if (StringUtils.hasText(endpointResolver)) {
-            builder.addPropertyReference("endpointResolver", endpointResolver);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("endpoint-resolver"), "endpointResolver");
         
-        String charset = element.getAttribute("charset");
-        if (StringUtils.hasText(charset)) {
-            builder.addPropertyValue("charset", charset);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("charset"), "charset");
         
-        String contentType = element.getAttribute("content-type");
-        if (StringUtils.hasText(contentType)) {
-            builder.addPropertyValue("contentType", contentType);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("content-type"), "contentType");
         
         return builder.getBeanDefinition();
     }

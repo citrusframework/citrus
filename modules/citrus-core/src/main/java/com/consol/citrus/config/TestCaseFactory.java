@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.config;
 
 import java.util.List;
 

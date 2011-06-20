@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.config.xml;
+package com.consol.citrus.http.config.handler;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+import com.consol.citrus.http.config.xml.*;
 
 /**
  * Namespace handler implementation for components in Citrus http namespace.

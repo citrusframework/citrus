@@ -28,8 +28,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.config.xml.TestActionRegistry;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
