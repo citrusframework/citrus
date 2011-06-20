@@ -20,9 +20,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Catch;
 
 /**
@@ -38,15 +38,11 @@ public class CatchParser implements BeanDefinitionParser {
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Catch.class);
 
-        String exception = element.getAttribute("exception");
-
-        if (StringUtils.hasText(exception)) {
-            builder.addPropertyValue("exception", exception);
-        }
-
-        DescriptionElementParser.doParse(element, builder);
         builder.addPropertyValue("name", element.getLocalName());
         
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("exception"), "exception");
+
+        DescriptionElementParser.doParse(element, builder);
         ActionContainerParser.doParse(element, parserContext, builder);
         
         return builder.getBeanDefinition();

@@ -62,4 +62,12 @@ public class Catch extends AbstractActionContainer {
     public void setException(String exception) {
         this.exception = exception;
     }
+
+    /**
+     * Gets the exception.
+     * @return the exception
+     */
+    public String getException() {
+        return exception;
+    }
 }

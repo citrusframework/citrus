@@ -37,7 +37,7 @@ import com.consol.citrus.variable.VariableUtils;
 public class CreateVariablesAction extends AbstractTestAction {
 
     /** New variables to set */
-    private Map<String, String> newVariables = new LinkedHashMap<String, String>();
+    private Map<String, String> variables = new LinkedHashMap<String, String>();
 
     /**
      * Logger
@@ -46,7 +46,7 @@ public class CreateVariablesAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        for (Entry<String, String> entry : newVariables.entrySet()) {
+        for (Entry<String, String> entry : variables.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             
@@ -75,7 +75,15 @@ public class CreateVariablesAction extends AbstractTestAction {
      * @param variables
      */
     public void setVariables(Map<String, String> variables) {
-        this.newVariables = variables;
+        this.variables = variables;
+    }
+
+    /**
+     * Gets the variables.
+     * @return the variables
+     */
+    public Map<String, String> getVariables() {
+        return variables;
     }
 
 }
