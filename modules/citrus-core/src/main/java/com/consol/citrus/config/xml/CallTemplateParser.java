@@ -16,20 +16,15 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.container.Template;
 
 /**
  * Bean definition parser for call template action in test case.
@@ -44,15 +39,10 @@ public class CallTemplateParser implements BeanDefinitionParser {
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
-        String parentBeanName = element.getAttribute("name");
+        String templateName = element.getAttribute("name");
 
-        if (StringUtils.hasText(parentBeanName)) {
-            beanDefinition = BeanDefinitionBuilder.childBeanDefinition(parentBeanName);
-            beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + parentBeanName);
-        } else {
-            beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Template.class);
-            beanDefinition.addPropertyValue("name", element.getLocalName());
-        }
+        beanDefinition = BeanDefinitionBuilder.childBeanDefinition(templateName);
+        beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + templateName);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -76,7 +66,7 @@ public class CallTemplateParser implements BeanDefinitionParser {
                 if (value != null) {
                 	parameters.put(name, value);
                 } else {
-                	throw new IllegalArgumentException("Please supply either a value attribute or a value child node");
+                	throw new BeanCreationException("Please provide either value attribute or value element for parameter");
                 }
             }
 

@@ -48,9 +48,6 @@ import com.consol.citrus.variable.VariableUtils;
  */
 public class Template extends AbstractTestAction {
 
-    /** Name of sequence */
-    private String name;
-
     /** List of actions to be executed */
     private List<TestAction> actions = new ArrayList<TestAction>();
 
@@ -67,7 +64,7 @@ public class Template extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Executing template '" + name + "' with " + actions.size() + " embedded actions");
+        log.info("Executing template '" + getName() + "' with " + actions.size() + " embedded actions");
 
         TestContext innerContext;
         
@@ -113,15 +110,6 @@ public class Template extends AbstractTestAction {
     }
 
     /**
-     * Sets the template name. Test cases can call templates by their name.
-     * @param name
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * Set parameter before execution.
      * @param parameter the parameter to set
      */
@@ -136,5 +124,21 @@ public class Template extends AbstractTestAction {
      */
     public void setGlobalContext(boolean globalContext) {
         this.globalContext = globalContext;
+    }
+
+    /**
+     * Gets the parameter.
+     * @return the parameter
+     */
+    public Map<String, String> getParameter() {
+        return parameter;
+    }
+
+    /**
+     * Gets the globalContext.
+     * @return the globalContext
+     */
+    public boolean isGlobalContext() {
+        return globalContext;
     }
 }
