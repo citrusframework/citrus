@@ -37,10 +37,10 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String dataSource = element.getAttribute("datasource");
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);
         
-        beanDefinition.addPropertyValue("name", "psql:" + dataSource);
+        String dataSource = element.getAttribute("datasource");
+        beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + dataSource);
         beanDefinition.addPropertyReference("dataSource", dataSource);
 
         DescriptionElementParser.doParse(element, beanDefinition);

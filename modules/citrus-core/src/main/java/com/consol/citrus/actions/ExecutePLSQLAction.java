@@ -17,11 +17,10 @@
 package com.consol.citrus.actions;
 
 import java.io.*;
-import java.util.*;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -39,24 +38,11 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      */
     private static Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
 
-    /** SQL file resource */
-    private Resource sqlResource;
-
     /** In line script */
     private String script = null;
 
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
-
-    /** List of SQL statements */
-    private List<String> statements = new ArrayList<String>();
-
-    /**
-     * @param statements the statements to set
-     */
-    public void setStatements(List<String> statements) {
-        this.statements = statements;
-    }
 
     @Override
     public void doExecute(TestContext context) {
@@ -144,18 +130,26 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * Setterfor external file resource containing PLSLQ statements.
-     * @param sqlResource
-     */
-    public void setSqlResource(Resource sqlResource) {
-        this.sqlResource = sqlResource;
-    }
-
-    /**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
      */
     public void setIgnoreErrors(boolean ignoreErrors) {
         this.ignoreErrors = ignoreErrors;
+    }
+
+    /**
+     * Gets the script.
+     * @return the script
+     */
+    public String getScript() {
+        return script;
+    }
+
+    /**
+     * Gets the ignoreErrors.
+     * @return the ignoreErrors
+     */
+    public boolean isIgnoreErrors() {
+        return ignoreErrors;
     }
 }

@@ -56,4 +56,12 @@ public class EchoAction extends AbstractTestAction {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    /**
+     * Gets the message.
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
 }

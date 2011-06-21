@@ -177,4 +177,20 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     public void setSqlResource(Resource sqlResource) {
         this.sqlResource = sqlResource;
     }
+
+    /**
+     * Gets the sqlResource.
+     * @return the sqlResource
+     */
+    public Resource getSqlResource() {
+        return sqlResource;
+    }
+
+    /**
+     * Gets the statements.
+     * @return the statements
+     */
+    public List<String> getStatements() {
+        return statements;
+    }
 }
