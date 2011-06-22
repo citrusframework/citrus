@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -133,7 +134,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
      * Checks if the message type is supported. 
      */
     public boolean supportsMessageType(String messageType) {
-        // support all message types other than xml
-        return !messageType.equalsIgnoreCase(MessageType.XML.toString());
+        // support all known message types other than XML
+        return MessageType.knows(messageType) && !messageType.equalsIgnoreCase(MessageType.XML.toString());
     }
 }

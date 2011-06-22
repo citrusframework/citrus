@@ -26,5 +26,21 @@ public enum MessageType {
     CSV,
     JSON,
     PLAINTEXT,
-    MSCONS
+    MSCONS;
+
+    /**
+     * Check if this message type name is matching a enum value.
+     * 
+     * @param messageType
+     * @return
+     */
+    public static boolean knows(String messageTypeName) {
+        for (MessageType messageType: MessageType.values()) {
+            if (messageType.toString().equalsIgnoreCase(messageTypeName)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
