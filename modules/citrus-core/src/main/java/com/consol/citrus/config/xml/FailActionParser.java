@@ -23,6 +23,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for fail action in test case.
@@ -38,9 +39,7 @@ public class FailActionParser implements BeanDefinitionParser {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(FailAction.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
-
-        String message = element.getAttribute("message");
-        beanDefinition.addPropertyValue("message", message);
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("message"), "message");
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
 
