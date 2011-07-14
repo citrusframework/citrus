@@ -49,7 +49,7 @@ public class GroovyAction extends AbstractTestAction {
     private Resource fileResource;
     
     /** Static code snippet for basic groovy action implementation */
-    private Resource scriptTemplateResource = null;
+    private Resource scriptTemplateResource = new ClassPathResource("script-template.groovy", GroovyAction.class);
     
     /** Manage automatic groovy template usage */
     private boolean useScriptTemplate = true;
@@ -89,11 +89,6 @@ public class GroovyAction extends AbstractTestAction {
             
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
-                // surround code with default script template code
-                if (scriptTemplateResource == null) {
-                    scriptTemplateResource = new ClassPathResource("script-template.groovy", GroovyAction.class);
-                }
-                
                 // build new script with surrounding template
                 code = TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                  .withCode(code)
@@ -172,5 +167,21 @@ public class GroovyAction extends AbstractTestAction {
      */
     public void setUseScriptTemplate(boolean useScriptTemplate) {
         this.useScriptTemplate = useScriptTemplate;
+    }
+
+    /**
+     * Gets the useScriptTemplate.
+     * @return the useScriptTemplate
+     */
+    public boolean isUseScriptTemplate() {
+        return useScriptTemplate;
+    }
+
+    /**
+     * Gets the scriptTemplateResource.
+     * @return the scriptTemplateResource
+     */
+    public Resource getScriptTemplateResource() {
+        return scriptTemplateResource;
     }
 }

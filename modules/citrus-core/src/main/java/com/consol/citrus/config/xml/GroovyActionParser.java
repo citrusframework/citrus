@@ -34,9 +34,6 @@ import com.consol.citrus.util.FileUtils;
  */
 public class GroovyActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(GroovyAction.class);
         
@@ -60,6 +57,8 @@ public class GroovyActionParser implements BeanDefinitionParser {
         if (StringUtils.hasText(filePath)) {
             beanDefinition.addPropertyValue("fileResource", FileUtils.getResourceFromFilePath(filePath));
         }
+        
+        beanDefinition.addPropertyValue("name", element.getLocalName());
         
         return beanDefinition.getBeanDefinition();
     }
