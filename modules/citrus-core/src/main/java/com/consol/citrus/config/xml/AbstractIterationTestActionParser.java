@@ -20,8 +20,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Abstract parser implementation for all iterative container actions. Parser takes care of
@@ -39,13 +40,8 @@ public abstract class AbstractIterationTestActionParser  implements BeanDefiniti
         
         DescriptionElementParser.doParse(element, builder);
 
-        String index = element.getAttribute("index");
-        if (StringUtils.hasText(index)) {
-            builder.addPropertyValue("indexName", index);
-        }
-
-        String condition = element.getAttribute("condition");
-        builder.addPropertyValue("condition", condition);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("index"), "indexName");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("condition"), "condition");
 
         builder.addPropertyValue("name", element.getLocalName());
         

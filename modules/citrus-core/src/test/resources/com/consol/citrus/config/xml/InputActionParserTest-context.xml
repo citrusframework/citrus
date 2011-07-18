@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="InputActionParserTest">
+        <actions>
+            <input/>
+            
+            <input message="Do you want to continue?"/>
+            
+            <input message="Do you want to continue?" valid-answers="yes/no"/>
+            
+            <input message="Do you want to continue?" valid-answers="y/n" variable="inputVar"/>
+        </actions>
+    </testcase>
+    
+</spring:beans>

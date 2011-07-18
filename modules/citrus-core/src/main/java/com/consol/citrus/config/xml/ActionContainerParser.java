@@ -19,11 +19,11 @@ package com.consol.citrus.config.xml;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.TestActionRegistry;
@@ -50,27 +50,23 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList actions = new ManagedList();
 
-        Element action = DOMUtil.getFirstChildElement(element);
+        List<Element> childElements = DomUtils.getChildElements(element);
 
-        if (action != null && action.getTagName().equals("description")) {
-            builder.addPropertyValue("description", action.getNodeValue());
-            action = DOMUtil.getNextSiblingElement(action);
+        for (Element action : childElements) {
+            if (action.getTagName().equals("description")) {
+                builder.addPropertyValue("description", action.getNodeValue());
+                continue;
+            }
+            
+            BeanDefinitionParser parser = (BeanDefinitionParser) actionRegistry.get(action.getTagName());
+
+            if (parser ==  null) {
+                actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+            } else {
+                actions.add(parser.parse(action, parserContext));
+            }
         }
-
-        if (action != null) {
-            do {
-                BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
-
-                if(parser ==  null) {
-                    actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
-                } else {
-                    actions.add(parser.parse(action, parserContext));
-                }
-                
-                action = DOMUtil.getNextSiblingElement(action);
-            } while (action != null);
-        }
-
+        
         if (actions.size() > 0) {
             builder.addPropertyValue("actions", actions);
         }

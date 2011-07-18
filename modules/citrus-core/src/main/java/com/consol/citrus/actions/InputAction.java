@@ -45,7 +45,7 @@ public class InputAction extends AbstractTestAction {
     private static Logger log = LoggerFactory.getLogger(InputAction.class);
 
     /** Prompted message displayed to the user before input */
-    private String message = "Press return key to continue...";
+    private String message = "Press return key to continue ...";
     
     /** Destination variable name */
     private String variable = "userinput";
@@ -96,7 +96,7 @@ public class InputAction extends AbstractTestAction {
         StringTokenizer tok = new StringTokenizer(validAnswers, "/");
 
         while (tok.hasMoreTokens()) {
-            if (tok.nextElement().toString().trim().toLowerCase().equals(input.trim().toLowerCase())) {
+            if (tok.nextElement().toString().trim().equalsIgnoreCase(input.trim())) {
                 return true;
             }
         }
@@ -107,6 +107,7 @@ public class InputAction extends AbstractTestAction {
     }
 
     /**
+     * Sets the message.
      * @param message the message to set
      */
     public void setMessage(String message) {
@@ -114,6 +115,7 @@ public class InputAction extends AbstractTestAction {
     }
 
     /**
+     * Sets the variable.
      * @param variable the variable to set
      */
     public void setVariable(String variable) {
@@ -121,10 +123,35 @@ public class InputAction extends AbstractTestAction {
     }
 
     /**
+     * Sets the valid answers.
      * @param validAnswers the validAnswers to set
      */
     public void setValidAnswers(String validAnswers) {
         this.validAnswers = validAnswers;
+    }
+
+    /**
+     * Gets the message.
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Gets the variable.
+     * @return the variable
+     */
+    public String getVariable() {
+        return variable;
+    }
+
+    /**
+     * Gets the validAnswers.
+     * @return the validAnswers
+     */
+    public String getValidAnswers() {
+        return validAnswers;
     }
 
 }

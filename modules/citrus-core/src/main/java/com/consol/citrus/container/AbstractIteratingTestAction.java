@@ -18,7 +18,6 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
@@ -30,7 +29,7 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
     protected String condition;
 
     /** Name of index variable */
-    protected String indexName;
+    protected String indexName = "i";
 
     /** Looping index */
     protected int index = 1;
@@ -97,5 +96,29 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
      */
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    /**
+     * Gets the condition.
+     * @return the condition
+     */
+    public String getCondition() {
+        return condition;
+    }
+
+    /**
+     * Gets the indexName.
+     * @return the indexName
+     */
+    public String getIndexName() {
+        return indexName;
+    }
+
+    /**
+     * Gets the index.
+     * @return the index
+     */
+    public int getIndex() {
+        return index;
     }
 }

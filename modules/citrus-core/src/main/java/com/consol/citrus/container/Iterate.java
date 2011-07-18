@@ -57,4 +57,12 @@ public class Iterate extends AbstractIteratingTestAction {
     public void setStep(int step) {
         this.step = step;
     }
+
+    /**
+     * Gets the step.
+     * @return the step
+     */
+    public int getStep() {
+        return step;
+    }
 }

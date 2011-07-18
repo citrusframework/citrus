@@ -20,10 +20,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for input action in test case.
@@ -40,20 +40,9 @@ public class InputActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String message = element.getAttribute("message");
-        if (StringUtils.hasText(message)) {
-            beanDefinition.addPropertyValue("message", message);
-        }
-
-        String variable = element.getAttribute("variable");
-        if (StringUtils.hasText(variable)) {
-            beanDefinition.addPropertyValue("variable", variable);
-        }
-
-        String validAnswers = element.getAttribute("valid-answers");
-        if (StringUtils.hasText(validAnswers)) {
-            beanDefinition.addPropertyValue("validAnswers", validAnswers);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("message"), "message");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "variable");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("valid-answers"), "validAnswers");
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
 
