@@ -16,19 +16,17 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.JavaAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for java action in test case.
@@ -45,15 +43,8 @@ public class JavaActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String className = element.getAttribute("class");
-        if (StringUtils.hasText(className)) {
-            beanDefinition.addPropertyValue("className", className);
-        }
-        
-        String beanReference = element.getAttribute("ref");
-        if (StringUtils.hasText(beanReference)) {
-            beanDefinition.addPropertyReference("instance", beanReference);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("class"), "className");
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("ref"), "instance");
         
         Element constructorElement = DomUtils.getChildElementByTagName(element, "constructor");
         List<Object> arguments = new ArrayList<Object>();

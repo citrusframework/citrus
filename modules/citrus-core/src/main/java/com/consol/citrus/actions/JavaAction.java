@@ -189,4 +189,44 @@ public class JavaAction extends AbstractTestAction {
     public void setInstance(Object instance) {
         this.instance = instance;
     }
+
+    /**
+     * Gets the instance.
+     * @return the instance
+     */
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Gets the className.
+     * @return the className
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * Gets the methodName.
+     * @return the methodName
+     */
+    public String getMethodName() {
+        return methodName;
+    }
+
+    /**
+     * Gets the methodArgs.
+     * @return the methodArgs
+     */
+    public List<Object> getMethodArgs() {
+        return methodArgs;
+    }
+
+    /**
+     * Gets the constructorArgs.
+     * @return the constructorArgs
+     */
+    public List<Object> getConstructorArgs() {
+        return constructorArgs;
+    }
 }
