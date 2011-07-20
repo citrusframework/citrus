@@ -135,4 +135,12 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
         this.xPathExpressions = xPathExpressions;
     }
 
+    /**
+     * Gets the xPathExpressions.
+     * @return the xPathExpressions
+     */
+    public Map<String, String> getxPathExpressions() {
+        return xPathExpressions;
+    }
+
 }

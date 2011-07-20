@@ -60,5 +60,13 @@ public class ControlMessageValidationContext implements ValidationContext {
     public void setMessageBuilder(MessageContentBuilder<?> messageBuilder) {
         this.messageBuilder = messageBuilder;
     }
+
+    /**
+     * Gets the messageBuilder.
+     * @return the messageBuilder
+     */
+    public MessageContentBuilder<?> getMessageBuilder() {
+        return messageBuilder;
+    }
    
 }

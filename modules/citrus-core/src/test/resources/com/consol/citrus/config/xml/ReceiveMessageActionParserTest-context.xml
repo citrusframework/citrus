@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ReceiveMessageActionParserTest">
+        <actions>
+            <receive with="myMessageReceiver">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </receive>
+            
+            <receive with="myMessageReceiver" timeout="1000">
+                <selector>
+                    <element name="operation" value="Test"/>
+                </selector>
+                <message>
+                    <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
+                </message>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <selector>
+                    <value>operation = 'Test'</value>
+                </selector>
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <message>
+                    <builder type="groovy">
+                        <![CDATA[
+                            println '<TestMessage>Hello Citrus</TestMessage>'
+                        ]]>
+                    </builder>
+                </message>
+                <header>
+                    <element name="header1" value="Test"/>
+                    <element name="header2" value="Test"/>
+                </header>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <message>
+                    <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
+                </message>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                    <message path="/TestMessage/text()" variable="text"/>
+                </extract>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <message schema-validation="false">
+                    <data>
+                        <![CDATA[
+                            <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+                        ]]>
+                    </data>
+                    <element path="/ns:TestMessage/" value="newValue"/>
+                    <ignore path="/ns:TestMessage/ns:ignore"/>
+                    <namespace prefix="ns" value="http://www.consol.com"/>
+                </message>
+            </receive>
+            
+            <receive with="myMessageReceiver">
+                <message>
+                    <validate path="/TestMessage/text" value="Hello Citrus"/>
+                    <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+    
+    <spring:bean id="myMessageReceiver" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.message.MessageReceiver"/>
+    </spring:bean>
+    
+</spring:beans>

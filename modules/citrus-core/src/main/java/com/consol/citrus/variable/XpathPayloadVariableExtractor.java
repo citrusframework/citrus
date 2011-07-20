@@ -53,7 +53,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Namespace definitions used in xpath expressions */
     private Map<String, String> namespaces;
     
-    @Autowired(required= false)
+    @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
     
     /**
@@ -136,5 +136,21 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      */
     public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
         this.namespaceContextBuilder = namespaceContextBuilder;
+    }
+
+    /**
+     * Gets the xPathExpressions.
+     * @return the xPathExpressions
+     */
+    public Map<String, String> getxPathExpressions() {
+        return xPathExpressions;
+    }
+
+    /**
+     * Gets the namespaces.
+     * @return the namespaces
+     */
+    public Map<String, String> getNamespaces() {
+        return namespaces;
     }
 }

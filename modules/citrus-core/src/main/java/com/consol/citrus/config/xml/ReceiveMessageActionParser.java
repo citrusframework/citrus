@@ -137,7 +137,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                 String pathExpression = messageValue.getAttribute("path");
                 
                 //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                if(messageValue.hasAttribute("result-type")) {
+                if (messageValue.hasAttribute("result-type")) {
                     pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
                 }
                 

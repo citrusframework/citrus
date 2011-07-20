@@ -61,4 +61,12 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     public void setHeaderMappings(Map<String, String> headerMappings) {
         this.headerMappings = headerMappings;
     }
+
+    /**
+     * Gets the headerMappings.
+     * @return the headerMappings
+     */
+    public Map<String, String> getHeaderMappings() {
+        return headerMappings;
+    }
 }

@@ -124,4 +124,12 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     public void setMessageHeaderData(String messageHeaderData) {
         this.messageHeaderData = messageHeaderData;
     }
+
+    /**
+     * Gets the messageHeaders.
+     * @return the messageHeaders
+     */
+    public Map<String, Object> getMessageHeaders() {
+        return messageHeaders;
+    }
 }

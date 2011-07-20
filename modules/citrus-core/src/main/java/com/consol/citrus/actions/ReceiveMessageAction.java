@@ -28,7 +28,8 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
@@ -84,39 +85,22 @@ public class ReceiveMessageAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         Message<?> receivedMessage;
+        String selectorString = null;
         
         try {
-            //receive message either selected or plain with message receiver
+            //build message selector string if present
             if (StringUtils.hasText(messageSelectorString)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting message selector: '" + messageSelectorString + "'");
-                }
-                
-                if(receiveTimeout > 0) {
-                    receivedMessage = messageReceiver.receiveSelected(
-                            context.replaceDynamicContentInString(messageSelectorString), 
-                            receiveTimeout);
-                } else {
-                    receivedMessage = messageReceiver.receiveSelected(
-                            context.replaceDynamicContentInString(messageSelectorString));
-                }
+                selectorString = messageSelectorString;
             } else if (!CollectionUtils.isEmpty(messageSelector)) {
-                String constructedMessageSelector = MessageSelectorBuilder.fromKeyValueMap(
-                        context.replaceVariablesInMap(messageSelector)).build();
-                        
-                if (log.isDebugEnabled()) {
-                    log.debug("Setting message selector: '" + constructedMessageSelector + "'");
-                }
-                
-                if(receiveTimeout > 0) {
-                    receivedMessage = messageReceiver
-                            .receiveSelected(constructedMessageSelector, receiveTimeout);
-                } else {
-                    receivedMessage = messageReceiver
-                            .receiveSelected(constructedMessageSelector);
-                }
+                selectorString = MessageSelectorBuilder.fromKeyValueMap(
+                        context.replaceVariablesInMap(messageSelector)).build(); 
+            }
+            
+            //receive message either selected or plain with message receiver
+            if (StringUtils.hasText(selectorString)) {
+                receivedMessage = receiveSelected(context, selectorString);
             } else {
-                receivedMessage = receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
+                receivedMessage = receive(context);
             }
 
             if (receivedMessage == null) {
@@ -132,6 +116,37 @@ public class ReceiveMessageAction extends AbstractTestAction {
             validateMessage(receivedMessage, context);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
+        }
+    }
+
+    /**
+     * Receives the message with respective message receiver implementation.
+     * @param context the test context.
+     * @return
+     */
+    private Message<?> receive(TestContext context) {
+        return receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
+    }
+
+    /**
+     * Receives the message with the respective message receiver implementation 
+     * also using a message selector.
+     * @param context the test context.
+     * @param selectorString the message selector string.
+     * @return
+     */
+    private Message<?> receiveSelected(TestContext context, String selectorString) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting message selector: '" + selectorString + "'");
+        }
+        
+        if (receiveTimeout > 0) {
+            return messageReceiver.receiveSelected(
+                    context.replaceDynamicContentInString(selectorString), 
+                    receiveTimeout);
+        } else {
+            return messageReceiver.receiveSelected(
+                    context.replaceDynamicContentInString(selectorString));
         }
     }
 
@@ -247,5 +262,45 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public String getMessageType() {
         return messageType;
+    }
+
+    /**
+     * Gets the messageSelector.
+     * @return the messageSelector
+     */
+    public Map<String, String> getMessageSelector() {
+        return messageSelector;
+    }
+
+    /**
+     * Gets the messageSelectorString.
+     * @return the messageSelectorString
+     */
+    public String getMessageSelectorString() {
+        return messageSelectorString;
+    }
+
+    /**
+     * Gets the receiveTimeout.
+     * @return the receiveTimeout
+     */
+    public long getReceiveTimeout() {
+        return receiveTimeout;
+    }
+
+    /**
+     * Gets the validator.
+     * @return the validator
+     */
+    public MessageValidator<? extends ValidationContext> getValidator() {
+        return validator;
+    }
+
+    /**
+     * Gets the validationContexts.
+     * @return the validationContexts
+     */
+    public List<ValidationContext> getValidationContexts() {
+        return validationContexts;
     }
 }

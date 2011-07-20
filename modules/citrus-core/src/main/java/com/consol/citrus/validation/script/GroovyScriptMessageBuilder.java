@@ -112,4 +112,20 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
     public void setScriptResource(Resource scriptResource) {
         this.scriptResource = scriptResource;
     }
+
+    /**
+     * Gets the scriptResource.
+     * @return the scriptResource
+     */
+    public Resource getScriptResource() {
+        return scriptResource;
+    }
+
+    /**
+     * Gets the scriptData.
+     * @return the scriptData
+     */
+    public String getScriptData() {
+        return scriptData;
+    }
 }
