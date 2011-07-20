@@ -25,7 +25,7 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class IterateActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class IterateParserTest extends AbstractBeanDefinitionParserBaseTest {
 
     @Test
     public void testFailActionParser() {
