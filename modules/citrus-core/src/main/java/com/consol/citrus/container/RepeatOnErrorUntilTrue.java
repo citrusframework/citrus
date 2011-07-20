@@ -58,7 +58,8 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
                     throw new CitrusRuntimeException(e);
                 } else {
                     index--;
-                    log.info("Caught exception of type " + e.getClass().getName() + " '" + e.getMessage() + "' - repeating because of error");
+                    log.info("Caught exception of type " + e.getClass().getName() + " '" + 
+                            e.getMessage() + "' - repeating because of error");
                 }
             } finally {
                 index++;
@@ -92,5 +93,13 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
      */
     public void setAutoSleep(long autoSleep) {
         this.autoSleep = autoSleep;
+    }
+
+    /**
+     * Gets the autoSleep.
+     * @return the autoSleep
+     */
+    public long getAutoSleep() {
+        return autoSleep;
     }
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="SendMessageActionParserTest">
+        <actions>
+            <send with="myMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </send>
+            
+            <send with="myMessageSender">
+                <message>
+                    <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
+                </message>
+            </send>
+            
+            <send with="myMessageSender">
+                <message>
+                    <builder type="groovy">
+                        <![CDATA[
+                            println '<TestMessage>Hello Citrus</TestMessage>'
+                        ]]>
+                    </builder>
+                </message>
+                <header>
+                    <element name="header1" value="Test"/>
+                    <element name="header2" value="Test"/>
+                </header>
+            </send>
+            
+            <send with="myMessageSender">
+                <message>
+                    <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
+                </message>
+            </send>
+            
+            <send with="myMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                    <element path="/TestMessage/text()" value="newValue"/>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                </extract>
+            </send>
+        </actions>
+    </testcase>
+    
+    <spring:bean id="myMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.message.MessageSender"/>
+    </spring:bean>
+    
+</spring:beans>

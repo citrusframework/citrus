@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -50,8 +49,6 @@ public class SendMessageAction extends AbstractTestAction {
     /**
      * Message is constructed with payload and header entries and sent via
      * {@link MessageSender} instance.
-     * 
-     * @throws CitrusRuntimeException
      */
     @Override
     public void doExecute(TestContext context) {
@@ -104,5 +101,13 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public List<VariableExtractor> getVariableExtractors() {
         return variableExtractors;
+    }
+
+    /**
+     * Gets the messageBuilder.
+     * @return the messageBuilder
+     */
+    public MessageContentBuilder<?> getMessageBuilder() {
+        return messageBuilder;
     }
 }

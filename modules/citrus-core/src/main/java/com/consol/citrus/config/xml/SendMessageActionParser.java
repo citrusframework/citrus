@@ -55,7 +55,7 @@ public class SendMessageActionParser implements BeanDefinitionParser {
 
             builder.addPropertyReference("messageSender", messageSenderReference);
         } else {
-            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
+            throw new BeanCreationException("Missing message sender attrbiute 'with'");
         }
         
         DescriptionElementParser.doParse(element, builder);

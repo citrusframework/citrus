@@ -18,9 +18,9 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 
 /**
@@ -37,10 +37,7 @@ public class RepeatOnErrorUntilTrueParser extends AbstractIterationTestActionPar
 	public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(RepeatOnErrorUntilTrue.class);
 
-        String autoSleep = element.getAttribute("auto-sleep");
-        if (StringUtils.hasText(autoSleep)) {
-            builder.addPropertyValue("autoSleep", autoSleep);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-sleep"), "autoSleep");
 
         return builder;
     }
