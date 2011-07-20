@@ -25,16 +25,17 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class FailActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class FailActionParserTest extends AbstractBeanDefinitionParserBaseTest<FailAction> {
 
     @Test
     public void testFailActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 2);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), FailAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "fail");
+        assertActionCount(2);
+        assertActionClassAndName(FailAction.class, "fail");
         
-        Assert.assertEquals(((FailAction)getTestCase().getActions().get(0)).getMessage(), "Something went wrong");
-        Assert.assertEquals(((FailAction)getTestCase().getActions().get(1)).getMessage(), "Generated error to interrupt test execution");
+        FailAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Something went wrong");
+        
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Generated error to interrupt test execution");
     }
 }

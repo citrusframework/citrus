@@ -25,31 +25,32 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class IterateParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class IterateParserTest extends AbstractBeanDefinitionParserBaseTest<Iterate> {
 
     @Test
     public void testFailActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 3);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), Iterate.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "iterate");
+        assertActionCount(3);
+        assertActionClassAndName(Iterate.class, "iterate");
         
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getCondition(), "i lt 3");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getIndexName(), "i");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getIndex(), 1);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getStep(), 1);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getActionCount(), 1);
+        Iterate action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getCondition(), "i lt 3");
+        Assert.assertEquals(action.getIndexName(), "i");
+        Assert.assertEquals(action.getIndex(), 1);
+        Assert.assertEquals(action.getStep(), 1);
+        Assert.assertEquals(action.getActionCount(), 1);
         
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(1)).getCondition(), "index lt= 2");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(1)).getIndexName(), "index");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(1)).getIndex(), 1);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(1)).getStep(), 1);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(0)).getActionCount(), 1);
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getCondition(), "index lt= 2");
+        Assert.assertEquals(action.getIndexName(), "index");
+        Assert.assertEquals(action.getIndex(), 1);
+        Assert.assertEquals(action.getStep(), 1);
+        Assert.assertEquals(action.getActionCount(), 1);
         
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(2)).getCondition(), "i lt= 10");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(2)).getIndexName(), "i");
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(2)).getIndex(), 0);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(2)).getStep(), 5);
-        Assert.assertEquals(((Iterate)getTestCase().getActions().get(2)).getActionCount(), 2);
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getCondition(), "i lt= 10");
+        Assert.assertEquals(action.getIndexName(), "i");
+        Assert.assertEquals(action.getIndex(), 0);
+        Assert.assertEquals(action.getStep(), 5);
+        Assert.assertEquals(action.getActionCount(), 2);
     }
 }

@@ -25,16 +25,15 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class EchoActionParserTest extends AbstractBeanDefinitionParserBaseTest<EchoAction> {
 
     @Test
     public void testEchoActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 1);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "echo");
+        assertActionCount(1);
+        assertActionClassAndName(EchoAction.class, "echo");
         
-        Assert.assertEquals(((EchoAction)getTestCase().getActions().get(0)).getDescription(), "This action prints messages to console logger");
-        Assert.assertEquals(((EchoAction)getTestCase().getActions().get(0)).getMessage(), "This is a test!");
+        EchoAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getDescription(), "This action prints messages to console logger");
+        Assert.assertEquals(action.getMessage(), "This is a test!");
     }
 }

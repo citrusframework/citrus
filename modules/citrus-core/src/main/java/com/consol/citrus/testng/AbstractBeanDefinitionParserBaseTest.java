@@ -16,10 +16,14 @@
 
 package com.consol.citrus.testng;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 
 /**
@@ -28,10 +32,13 @@ import com.consol.citrus.TestCase;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractBeanDefinitionParserBaseTest extends AbstractBaseTest {
+public abstract class AbstractBeanDefinitionParserBaseTest<T extends TestAction> extends AbstractBaseTest {
 
     /** Application context holding bean definitions parsed */
     protected ApplicationContext beanDefinitionContext;
+    
+    /** Navigate index for list of actions */
+    private AtomicInteger actionIndex = new AtomicInteger(0);
     
     /**
      * Creates the application context with bean definitions parsed. By default searches
@@ -59,7 +66,38 @@ public abstract class AbstractBeanDefinitionParserBaseTest extends AbstractBaseT
                 true, applicationContext);
     }
 
+    /**
+     * Gets the actual test case object from Spring application context.
+     * @return
+     */
     protected TestCase getTestCase() {
         return beanDefinitionContext.getBean(getClass().getSimpleName(), TestCase.class);
+    }
+    
+    /**
+     * Gets the next test action in list of action in test case.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected T getNextTestActionFromTest() {
+        return (T)getTestCase().getActions().get(actionIndex.getAndIncrement());
+    }
+    
+    /**
+     * Checks for test action to meet expected class and name.
+     * @param actionClass the action class.
+     * @param actionName the action name.
+     */
+    protected void assertActionClassAndName(Class<T> actionClass, String actionName) {
+        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), actionClass);
+        Assert.assertEquals(getTestCase().getActions().get(0).getName(), actionName);
+    }
+    
+    /**
+     * Asserts the action count in test case.
+     * @param count the number of expected test actions in test case.
+     */
+    protected void assertActionCount(int count) {
+        Assert.assertEquals(getTestCase().getActions().size(), count);
     }
 }

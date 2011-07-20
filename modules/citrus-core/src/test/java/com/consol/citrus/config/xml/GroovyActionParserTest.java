@@ -25,29 +25,31 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class GroovyActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class GroovyActionParserTest extends AbstractBeanDefinitionParserBaseTest<GroovyAction> {
 
     @Test
     public void testFailActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 4);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), GroovyAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "groovy");
+        assertActionCount(4);
+        assertActionClassAndName(GroovyAction.class, "groovy");
         
-        Assert.assertNull(((GroovyAction)getTestCase().getActions().get(0)).getFileResource());
-        Assert.assertEquals(((GroovyAction)getTestCase().getActions().get(0)).getScriptTemplateResource().getFilename(), "script-template.groovy");
-        Assert.assertEquals(((GroovyAction)getTestCase().getActions().get(0)).getScript().trim(), "println 'Hello Citrus'");
+        GroovyAction action = getNextTestActionFromTest();
+        Assert.assertNull(action.getFileResource());
+        Assert.assertEquals(action.getScriptTemplateResource().getFilename(), "script-template.groovy");
+        Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
         
-        Assert.assertNull(((GroovyAction)getTestCase().getActions().get(1)).getFileResource());
-        Assert.assertNotNull(((GroovyAction)getTestCase().getActions().get(1)).getScript());
-        Assert.assertEquals(((GroovyAction)getTestCase().getActions().get(1)).isUseScriptTemplate(), false);
+        action = getNextTestActionFromTest();
+        Assert.assertNull(action.getFileResource());
+        Assert.assertNotNull(action.getScript());
+        Assert.assertEquals(action.isUseScriptTemplate(), false);
         
-        Assert.assertNull(((GroovyAction)getTestCase().getActions().get(2)).getFileResource());
-        Assert.assertEquals(((GroovyAction)getTestCase().getActions().get(2)).getScriptTemplateResource().getFilename(), "custom-script-template.groovy");
-        Assert.assertNotNull(((GroovyAction)getTestCase().getActions().get(2)).getScript());
+        action = getNextTestActionFromTest();
+        Assert.assertNull(action.getFileResource());
+        Assert.assertEquals(action.getScriptTemplateResource().getFilename(), "custom-script-template.groovy");
+        Assert.assertNotNull(action.getScript());
         
-        Assert.assertNotNull(((GroovyAction)getTestCase().getActions().get(3)).getFileResource());
-        Assert.assertEquals(((GroovyAction)getTestCase().getActions().get(3)).getFileResource().getFilename(), "example.groovy");
-        Assert.assertNull(((GroovyAction)getTestCase().getActions().get(3)).getScript());
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getFileResource());
+        Assert.assertEquals(action.getFileResource().getFilename(), "example.groovy");
+        Assert.assertNull(action.getScript());
     }
 }

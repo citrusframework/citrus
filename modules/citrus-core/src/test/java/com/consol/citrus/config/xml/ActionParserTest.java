@@ -21,19 +21,20 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class ActionParserTest extends AbstractBeanDefinitionParserBaseTest<TestAction> {
 
     @Test
     public void testActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 1);
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), EchoAction.class);
+        assertActionCount(1);
         
+        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(getTestCase().getActions().get(0).getName(), "action:echoAction");
     }
     

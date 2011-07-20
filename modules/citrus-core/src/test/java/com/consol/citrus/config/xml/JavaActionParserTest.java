@@ -26,34 +26,35 @@ import com.consol.citrus.util.InvocationDummy;
 /**
  * @author Christoph Deppisch
  */
-public class JavaActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class JavaActionParserTest extends AbstractBeanDefinitionParserBaseTest<JavaAction> {
 
     @Test
     public void testJavaActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 3);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), JavaAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "java");
+        assertActionCount(3);
+        assertActionClassAndName(JavaAction.class, "java");
         
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getClassName(), "com.consol.citrus.util.InvocationDummy");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getMethodName(), "invoke");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getConstructorArgs().size(), 1);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getConstructorArgs().get(0), "Test Invocation");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getMethodArgs().size(), 1);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(0)).getMethodArgs().get(0), new String[] {"1", "2"});
+        JavaAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getClassName(), "com.consol.citrus.util.InvocationDummy");
+        Assert.assertEquals(action.getMethodName(), "invoke");
+        Assert.assertEquals(action.getConstructorArgs().size(), 1);
+        Assert.assertEquals(action.getConstructorArgs().get(0), "Test Invocation");
+        Assert.assertEquals(action.getMethodArgs().size(), 1);
+        Assert.assertEquals(action.getMethodArgs().get(0), new String[] {"1", "2"});
         
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getClassName(), "com.consol.citrus.util.InvocationDummy");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getMethodName(), "invoke");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getConstructorArgs().size(), 0);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getMethodArgs().size(), 3);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getMethodArgs().get(0), 4);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getMethodArgs().get(1), "Test");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(1)).getMethodArgs().get(2), true);
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getClassName(), "com.consol.citrus.util.InvocationDummy");
+        Assert.assertEquals(action.getMethodName(), "invoke");
+        Assert.assertEquals(action.getConstructorArgs().size(), 0);
+        Assert.assertEquals(action.getMethodArgs().size(), 3);
+        Assert.assertEquals(action.getMethodArgs().get(0), 4);
+        Assert.assertEquals(action.getMethodArgs().get(1), "Test");
+        Assert.assertEquals(action.getMethodArgs().get(2), true);
         
-        Assert.assertNull(((JavaAction)getTestCase().getActions().get(2)).getClassName());
-        Assert.assertNotNull(((JavaAction)getTestCase().getActions().get(2)).getInstance());
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(2)).getInstance().getClass(), InvocationDummy.class);
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(2)).getMethodName(), "invoke");
-        Assert.assertEquals(((JavaAction)getTestCase().getActions().get(2)).getConstructorArgs().size(), 0);
+        action = getNextTestActionFromTest();
+        Assert.assertNull(action.getClassName());
+        Assert.assertNotNull(action.getInstance());
+        Assert.assertEquals(action.getInstance().getClass(), InvocationDummy.class);
+        Assert.assertEquals(action.getMethodName(), "invoke");
+        Assert.assertEquals(action.getConstructorArgs().size(), 0);
     }
 }

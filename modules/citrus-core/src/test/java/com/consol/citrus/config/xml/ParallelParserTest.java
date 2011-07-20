@@ -26,22 +26,23 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class ParallelParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class ParallelParserTest extends AbstractBeanDefinitionParserBaseTest<Parallel> {
 
     @Test
     public void testFailActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 2);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), Parallel.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "parallel");
+        assertActionCount(2);
+        assertActionClassAndName(Parallel.class, "parallel");
         
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(0)).getActionCount(), 2);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(0)).getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(0)).getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(1)).getActionCount(), 3);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(1)).getActions().get(0).getClass(), Parallel.class);
-        Assert.assertEquals(((Parallel)((Parallel)getTestCase().getActions().get(1)).getActions().get(0)).getActionCount(), 2);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(1)).getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((Parallel)getTestCase().getActions().get(1)).getActions().get(2).getClass(), EchoAction.class);
+        Parallel action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getActionCount(), 2);
+        Assert.assertEquals(action.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
+        
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getActionCount(), 3);
+        Assert.assertEquals(action.getActions().get(0).getClass(), Parallel.class);
+        Assert.assertEquals(((Parallel)action.getActions().get(0)).getActionCount(), 2);
+        Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(action.getActions().get(2).getClass(), EchoAction.class);
     }
 }

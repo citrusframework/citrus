@@ -25,18 +25,17 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class CreateVariablesActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class CreateVariablesActionParserTest extends AbstractBeanDefinitionParserBaseTest<CreateVariablesAction> {
 
     @Test
     public void testCreateVariablesActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 1);
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), CreateVariablesAction.class);
+        assertActionCount(1);
+        assertActionClassAndName(CreateVariablesAction.class, "create-variables");
         
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "create-variables");
-        
-        Assert.assertEquals(((CreateVariablesAction)getTestCase().getActions().get(0)).getVariables().size(), 2);
-        Assert.assertEquals(((CreateVariablesAction)getTestCase().getActions().get(0)).getVariables().get("text"), "Hello");
-        Assert.assertEquals(((CreateVariablesAction)getTestCase().getActions().get(0)).getVariables().get("sum"), "script:<groovy>(1+2+3+4+5)");
+        CreateVariablesAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getVariables().size(), 2);
+        Assert.assertEquals(action.getVariables().get("text"), "Hello");
+        Assert.assertEquals(action.getVariables().get("sum"), "script:<groovy>(1+2+3+4+5)");
     }
     
 }

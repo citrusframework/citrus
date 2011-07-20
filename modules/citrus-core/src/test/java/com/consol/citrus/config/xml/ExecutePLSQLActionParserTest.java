@@ -25,27 +25,24 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class ExecutePLSQLActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class ExecutePLSQLActionParserTest extends AbstractBeanDefinitionParserBaseTest<ExecutePLSQLAction> {
 
     @Test
     public void testPLSQLActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 2);
+        assertActionCount(2);
+        
+        ExecutePLSQLAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getName(), "plsql:testDataSource");
+        Assert.assertNotNull(action.getDataSource());
+        Assert.assertNotNull(action.getSqlResource());
+        Assert.assertNull(action.getScript());
+        Assert.assertEquals(action.isIgnoreErrors(), false);
 
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "plsql:testDataSource");
-        
-        Assert.assertEquals(getTestCase().getActions().get(1).getClass(), ExecutePLSQLAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(1).getName(), "plsql:testDataSource");
-        
-        Assert.assertNotNull(((ExecutePLSQLAction)getTestCase().getActions().get(0)).getDataSource());
-        Assert.assertNotNull(((ExecutePLSQLAction)getTestCase().getActions().get(1)).getDataSource());
-        
-        Assert.assertNotNull(((ExecutePLSQLAction)getTestCase().getActions().get(0)).getSqlResource());
-        Assert.assertNull(((ExecutePLSQLAction)getTestCase().getActions().get(0)).getScript());
-        Assert.assertEquals(((ExecutePLSQLAction)getTestCase().getActions().get(0)).isIgnoreErrors(), false);
-        
-        Assert.assertNull(((ExecutePLSQLAction)getTestCase().getActions().get(1)).getSqlResource());
-        Assert.assertTrue(((ExecutePLSQLAction)getTestCase().getActions().get(1)).getScript().length() > 0);
-        Assert.assertEquals(((ExecutePLSQLAction)getTestCase().getActions().get(1)).isIgnoreErrors(), true);
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getName(), "plsql:testDataSource");
+        Assert.assertNotNull(action.getDataSource());
+        Assert.assertNull(action.getSqlResource());
+        Assert.assertTrue(action.getScript().length() > 0);
+        Assert.assertEquals(action.isIgnoreErrors(), true);
     }
 }

@@ -26,35 +26,36 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class PurgeJmsQueuesActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class PurgeJmsQueuesActionParserTest extends AbstractBeanDefinitionParserBaseTest<PurgeJmsQueuesAction> {
 
     @Test
     public void testPurgeJmsQueuesActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 3);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "purge-jms-queues");
+        assertActionCount(3);
+        assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-jms-queues");
         
-        Assert.assertNotNull(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getReceiveTimeout());
-        Assert.assertNotNull(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getConnectionFactory());
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getQueues().size(), 0);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getQueueNames().size(), 3);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getQueueNames().get(0), "JMS.Queue.1");
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getQueueNames().get(1), "JMS.Queue.2");
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(0)).getQueueNames().get(2), "JMS.Queue.3");
+        PurgeJmsQueuesAction action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getReceiveTimeout());
+        Assert.assertNotNull(action.getConnectionFactory());
+        Assert.assertEquals(action.getQueues().size(), 0);
+        Assert.assertEquals(action.getQueueNames().size(), 3);
+        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
+        Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
+        Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
         
-        Assert.assertNotNull(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getReceiveTimeout());
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getReceiveTimeout(), 125);
-        Assert.assertNotNull(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getConnectionFactory());
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getQueues().size(), 0);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getQueueNames().size(), 3);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getQueueNames().get(0), "JMS.Queue.1");
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getQueueNames().get(1), "JMS.Queue.2");
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(1)).getQueueNames().get(2), "JMS.Queue.3");
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getReceiveTimeout());
+        Assert.assertEquals(action.getReceiveTimeout(), 125);
+        Assert.assertNotNull(action.getConnectionFactory());
+        Assert.assertEquals(action.getQueues().size(), 0);
+        Assert.assertEquals(action.getQueueNames().size(), 3);
+        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
+        Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
+        Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
         
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(2)).getQueues().size(), 1);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(2)).getQueueNames().size(), 1);
-        Assert.assertEquals(((PurgeJmsQueuesAction)getTestCase().getActions().get(2)).getQueueNames().get(0), "JMS.Queue.1");
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getQueues().size(), 1);
+        Assert.assertEquals(action.getQueueNames().size(), 1);
+        Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
     }
     
     @Test

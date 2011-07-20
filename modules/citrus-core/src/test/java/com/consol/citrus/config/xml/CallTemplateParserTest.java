@@ -27,21 +27,20 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class CallTemplateParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class CallTemplateParserTest extends AbstractBeanDefinitionParserBaseTest<Template> {
 
     @Test
     public void testCallTemplateParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 2);
+        assertActionCount(2);
         
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), Template.class);
-        Assert.assertEquals(((Template)getTestCase().getActions().get(0)).getName(), "call-template:myTemplate");
+        Template action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getName(), "call-template:myTemplate");
         
-        Assert.assertEquals(getTestCase().getActions().get(1).getClass(), Template.class);
-        Assert.assertEquals(((Template)getTestCase().getActions().get(1)).getName(), "call-template:print");
-        
-        Assert.assertEquals(((Template)getTestCase().getActions().get(1)).getParameter().size(), 2);
-        Assert.assertEquals(((Template)getTestCase().getActions().get(1)).getParameter().get("text"), "Hello Template");
-        Assert.assertTrue(((Template)getTestCase().getActions().get(1)).getParameter().get("message").contains("<Text>Hello Template</Text>"));
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getName(), "call-template:print");
+        Assert.assertEquals(action.getParameter().size(), 2);
+        Assert.assertEquals(action.getParameter().get("text"), "Hello Template");
+        Assert.assertTrue(action.getParameter().get("message").contains("<Text>Hello Template</Text>"));
     }
     
     @Test

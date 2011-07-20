@@ -25,29 +25,31 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class InputActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class InputActionParserTest extends AbstractBeanDefinitionParserBaseTest<InputAction> {
 
     @Test
     public void testInputActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 4);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), InputAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "input");
+        assertActionCount(4);
+        assertActionClassAndName(InputAction.class, "input");
         
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(0)).getMessage(), "Press return key to continue ...");
-        Assert.assertNull(((InputAction)getTestCase().getActions().get(0)).getValidAnswers());
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(0)).getVariable(), "userinput");
+        InputAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Press return key to continue ...");
+        Assert.assertNull(action.getValidAnswers());
+        Assert.assertEquals(action.getVariable(), "userinput");
         
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(1)).getMessage(), "Do you want to continue?");
-        Assert.assertNull(((InputAction)getTestCase().getActions().get(1)).getValidAnswers());
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(1)).getVariable(), "userinput");
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
+        Assert.assertNull(action.getValidAnswers());
+        Assert.assertEquals(action.getVariable(), "userinput");
         
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(2)).getMessage(), "Do you want to continue?");
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(2)).getValidAnswers(), "yes/no");
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(2)).getVariable(), "userinput");
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
+        Assert.assertEquals(action.getValidAnswers(), "yes/no");
+        Assert.assertEquals(action.getVariable(), "userinput");
         
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(3)).getMessage(), "Do you want to continue?");
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(3)).getValidAnswers(), "y/n");
-        Assert.assertEquals(((InputAction)getTestCase().getActions().get(3)).getVariable(), "inputVar");
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getMessage(), "Do you want to continue?");
+        Assert.assertEquals(action.getValidAnswers(), "y/n");
+        Assert.assertEquals(action.getVariable(), "inputVar");
     }
 }

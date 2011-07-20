@@ -26,16 +26,15 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
 /**
  * @author Christoph Deppisch
  */
-public class LoadPropertiesActionParserTest extends AbstractBeanDefinitionParserBaseTest {
+public class LoadPropertiesActionParserTest extends AbstractBeanDefinitionParserBaseTest<LoadPropertiesAction> {
 
     @Test
     public void testLoadPropertiesActionParser() {
-        Assert.assertEquals(getTestCase().getActions().size(), 1);
-
-        Assert.assertEquals(getTestCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
-        Assert.assertEquals(getTestCase().getActions().get(0).getName(), "load");
+        assertActionCount(1);
+        assertActionClassAndName(LoadPropertiesAction.class, "load");
         
-        Assert.assertEquals(((LoadPropertiesAction)getTestCase().getActions().get(0)).getFile(), "classpath:com/consol/citrus/actions/load.properties");
+        LoadPropertiesAction action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getFile(), "classpath:com/consol/citrus/actions/load.properties");
     }
     
     @Test
