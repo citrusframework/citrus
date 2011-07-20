@@ -26,6 +26,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for receive-timeout action in test case.
@@ -38,21 +39,21 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-    	String messageReceiver = element.getAttribute("message-receiver");
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
-        beanDefinition.addPropertyValue("name", element.getLocalName()+ ":" + messageReceiver);
         
-        if(StringUtils.hasText(messageReceiver)) {
+        String messageReceiver = element.getAttribute("message-receiver");        
+        
+        if (StringUtils.hasText(messageReceiver)) {
         	beanDefinition.addPropertyReference("messageReceiver", messageReceiver);
         } else {
-        	throw new BeanCreationException("Mandatory 'message-receiver' attribute has to be set");
+        	throw new BeanCreationException("Missing 'message-receiver' for expect timeout action");
         }
+
+        beanDefinition.addPropertyValue("name", element.getLocalName()+ ":" + messageReceiver);
+        
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String wait = element.getAttribute("wait");
-        if (wait != null) {
-            beanDefinition.addPropertyValue("timeout", wait);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("wait"), "timeout");
 
         Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "select");
         if (messageSelectorElement != null) {

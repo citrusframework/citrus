@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ReceiveTimeoutActionParserTest">
+        <actions>
+            <expect-timeout message-receiver="myMessageReceiver"/>
+            
+            <expect-timeout message-receiver="myMessageReceiver" wait="10000">
+                <select>operation='Test'</select>
+            </expect-timeout>
+        </actions>
+    </testcase>
+    
+    <spring:bean id="myMessageReceiver" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.message.MessageReceiver"/>
+    </spring:bean>
+    
+</spring:beans>

@@ -64,7 +64,8 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
                     log.debug("Received message: " + receivedMessage.getPayload());
                 }
                 
-                throw new CitrusRuntimeException("Message timeout validation failed! Received message while waiting for timeout on destination");
+                throw new CitrusRuntimeException("Message timeout validation failed! " +
+                		"Received message while waiting for timeout on destination");
             }
         } catch (ActionTimeoutException e) {
             log.info("No messages received on destination. Message timeout validation OK!");
@@ -93,5 +94,29 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      */
     public void setMessageReceiver(MessageReceiver messageReceiver) {
         this.messageReceiver = messageReceiver;
+    }
+
+    /**
+     * Gets the timeout.
+     * @return the timeout
+     */
+    public long getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Gets the messageSelector.
+     * @return the messageSelector
+     */
+    public String getMessageSelector() {
+        return messageSelector;
+    }
+
+    /**
+     * Gets the messageReceiver.
+     * @return the messageReceiver
+     */
+    public MessageReceiver getMessageReceiver() {
+        return messageReceiver;
     }
 }
