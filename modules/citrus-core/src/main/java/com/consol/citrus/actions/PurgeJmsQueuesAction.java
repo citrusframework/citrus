@@ -23,7 +23,6 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
@@ -85,10 +84,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             throw new CitrusRuntimeException(e);
         } finally {
             JmsUtils.closeSession(session);
-
-            if(connection != null) {
-                ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
-            }
+            JmsUtils.closeConnection(connection, true);
         }
 
         log.info("JMS queues purged successfully");
@@ -219,6 +215,30 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      */
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
+    }
+
+    /**
+     * Gets the queues.
+     * @return the queues
+     */
+    public List<Queue> getQueues() {
+        return queues;
+    }
+
+    /**
+     * Gets the connectionFactory.
+     * @return the connectionFactory
+     */
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    /**
+     * Gets the receiveTimeout.
+     * @return the receiveTimeout
+     */
+    public long getReceiveTimeout() {
+        return receiveTimeout;
     }
 
 }

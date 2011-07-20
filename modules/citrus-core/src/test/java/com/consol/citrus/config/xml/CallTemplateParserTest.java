@@ -45,7 +45,7 @@ public class CallTemplateParserTest extends AbstractBeanDefinitionParserBaseTest
     }
     
     @Test
-    public void testCalTemplateParserUnknownTemplate() {
+    public void testCallTemplateParserUnknownTemplate() {
         try {
             createApplicationContext("failed");
             Assert.fail("Missing bean creation exception due to unknown template");
@@ -55,7 +55,7 @@ public class CallTemplateParserTest extends AbstractBeanDefinitionParserBaseTest
     }
     
     @Test
-    public void testCalTemplateParserInvalidParam() {
+    public void testCallTemplateParserInvalidParam() {
         try {
             createApplicationContext("invalid-param");
             Assert.fail("Missing bean creation exception due to invalid parameter value");

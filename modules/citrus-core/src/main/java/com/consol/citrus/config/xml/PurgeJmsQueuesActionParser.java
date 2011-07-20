@@ -29,6 +29,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for purge-jms-queues action in test case.
@@ -49,33 +50,29 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
         String connectionFactory = "connectionFactory"; //default value
         
-        if(element.hasAttribute("connection-factory")) {
+        if (element.hasAttribute("connection-factory")) {
             connectionFactory = element.getAttribute("connection-factory");
         }
         
-        if(!StringUtils.hasText(connectionFactory)) {
-            parserContext.getReaderContext().error(
-                    "'connection-factory' attribute must not be empty for this element", element);
+        if (!StringUtils.hasText(connectionFactory)) {
+            parserContext.getReaderContext().error("Attribute 'connection-factory' must not be empty", element);
         }
         
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
         
-        if(element.hasAttribute("receive-timeout")) {
-            beanDefinition.addPropertyValue("receiveTimeout", element.getAttribute("receive-timeout"));
-        }
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
         
         List<String> queueNames = new ArrayList<String>();
         ManagedList queueRefs = new ManagedList();
-        
         List<?> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
         for (Iterator<?> iter = queueElements.iterator(); iter.hasNext();) {
             Element queue = (Element) iter.next();
             String queueName = queue.getAttribute("name");
             String queueRef = queue.getAttribute("ref");
             
-            if(StringUtils.hasText(queueName)) {
+            if (StringUtils.hasText(queueName)) {
                 queueNames.add(queueName);
-            } else if(StringUtils.hasText(queueRef)) {
+            } else if (StringUtils.hasText(queueRef)) {
                 queueRefs.add(BeanDefinitionBuilder.childBeanDefinition(queueRef).getBeanDefinition());
             } else {
                 throw new BeanCreationException("Element 'queue' must set one of the attributes 'name' or 'ref'");
