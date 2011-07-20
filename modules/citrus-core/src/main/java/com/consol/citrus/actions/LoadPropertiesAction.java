@@ -79,4 +79,12 @@ public class LoadPropertiesAction extends AbstractTestAction {
     public void setFile(String file) {
         this.file = file;
     }
+
+    /**
+     * Gets the file.
+     * @return the file
+     */
+    public String getFile() {
+        return file;
+    }
 }

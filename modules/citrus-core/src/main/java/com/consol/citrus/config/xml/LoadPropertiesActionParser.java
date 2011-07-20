@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -24,6 +25,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for load-properties action in test case.
@@ -42,8 +44,9 @@ public class LoadPropertiesActionParser implements BeanDefinitionParser {
 
         Element propertiesElement = DomUtils.getChildElementByTagName(element, "properties");
         if (propertiesElement != null) {
-            String fileName = propertiesElement.getAttribute("file");
-            beanDefinition.addPropertyValue("file", fileName);
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, propertiesElement.getAttribute("file"), "file");
+        } else {
+            throw new BeanCreationException("Missing properties file definition for load action");
         }
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
