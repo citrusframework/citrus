@@ -23,6 +23,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for sleep action in test case.
@@ -39,13 +40,7 @@ public class SleepActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        String delay = element.getAttribute("time");
-
-        if (delay == null || delay.length() == 0) {
-            delay = "5";
-        }
-
-        beanDefinition.addPropertyValue("delay", delay);
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("time"), "delay");
 
         beanDefinition.addPropertyValue("name", element.getLocalName());
 

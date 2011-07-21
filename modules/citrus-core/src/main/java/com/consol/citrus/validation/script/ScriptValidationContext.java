@@ -97,4 +97,44 @@ public class ScriptValidationContext implements ValidationContext {
     public String getScriptType() {
         return scriptType;
     }
+
+    /**
+     * Gets the validationScriptResource.
+     * @return the validationScriptResource
+     */
+    public Resource getValidationScriptResource() {
+        return validationScriptResource;
+    }
+
+    /**
+     * Sets the validationScriptResource.
+     * @param validationScriptResource the validationScriptResource to set
+     */
+    public void setValidationScriptResource(Resource validationScriptResource) {
+        this.validationScriptResource = validationScriptResource;
+    }
+
+    /**
+     * Gets the validationScript.
+     * @return the validationScript
+     */
+    public String getValidationScript() {
+        return validationScript;
+    }
+
+    /**
+     * Sets the validationScript.
+     * @param validationScript the validationScript to set
+     */
+    public void setValidationScript(String validationScript) {
+        this.validationScript = validationScript;
+    }
+
+    /**
+     * Sets the scriptType.
+     * @param scriptType the scriptType to set
+     */
+    public void setScriptType(String scriptType) {
+        this.scriptType = scriptType;
+    }
 }

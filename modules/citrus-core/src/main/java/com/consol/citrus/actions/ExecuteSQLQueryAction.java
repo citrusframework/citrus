@@ -344,4 +344,60 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             ScriptValidationContext scriptValidationContext) {
         this.scriptValidationContext = scriptValidationContext;
     }
+
+    /**
+     * Gets the validator.
+     * @return the validator
+     */
+    public SqlResultSetScriptValidator getValidator() {
+        return validator;
+    }
+
+    /**
+     * Sets the validator.
+     * @param validator the validator to set
+     */
+    public void setValidator(SqlResultSetScriptValidator validator) {
+        this.validator = validator;
+    }
+
+    /**
+     * Gets the controlResultSet.
+     * @return the controlResultSet
+     */
+    public Map<String, List<String>> getControlResultSet() {
+        return controlResultSet;
+    }
+
+    /**
+     * Gets the maxRetries.
+     * @return the maxRetries
+     */
+    public int getMaxRetries() {
+        return maxRetries;
+    }
+
+    /**
+     * Gets the retryPauseInMs.
+     * @return the retryPauseInMs
+     */
+    public int getRetryPauseInMs() {
+        return retryPauseInMs;
+    }
+
+    /**
+     * Gets the extractVariables.
+     * @return the extractVariables
+     */
+    public Map<String, String> getExtractVariables() {
+        return extractVariables;
+    }
+
+    /**
+     * Gets the scriptValidationContext.
+     * @return the scriptValidationContext
+     */
+    public ScriptValidationContext getScriptValidationContext() {
+        return scriptValidationContext;
+    }
 }

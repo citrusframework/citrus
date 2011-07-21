@@ -32,7 +32,7 @@ import com.consol.citrus.variable.VariableUtils;
  */
 public class SleepAction extends AbstractTestAction {
     /** Delay time in seconds */
-    private String delay;
+    private String delay = "5";
 
     /**
      * Logger
@@ -68,5 +68,13 @@ public class SleepAction extends AbstractTestAction {
      */
     public void setDelay(String delay) {
         this.delay = delay;
+    }
+
+    /**
+     * Gets the delay.
+     * @return the delay
+     */
+    public String getDelay() {
+        return delay;
     }
 }
