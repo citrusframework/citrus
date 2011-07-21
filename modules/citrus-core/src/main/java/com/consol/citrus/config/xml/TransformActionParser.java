@@ -20,11 +20,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -64,10 +64,9 @@ public class TransformActionParser implements BeanDefinitionParser {
         	        FileUtils.getResourceFromFilePath(xsltResourceElement.getAttribute("file")));
 		}
 		
-		String variable = element.getAttribute("variable");
-		if (StringUtils.hasText(variable)) {
-			beanDefinition.addPropertyValue("targetVariable", variable);
-		}
+		BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");
+		
+		beanDefinition.addPropertyValue("name", element.getLocalName());
 		
 		return beanDefinition.getBeanDefinition();
 	}

@@ -54,7 +54,7 @@ public class TransformAction extends AbstractTestAction {
 	private Resource xsltResource;
 	
 	/** Target variable for the result */
-	private String targetVariable;
+	private String targetVariable = "transform-result";
 	
 	/**
      * Logger
@@ -150,5 +150,45 @@ public class TransformAction extends AbstractTestAction {
 	public void setTargetVariable(String targetVariable) {
 		this.targetVariable = targetVariable;
 	}
+
+    /**
+     * Gets the xmlData.
+     * @return the xmlData
+     */
+    public String getXmlData() {
+        return xmlData;
+    }
+
+    /**
+     * Gets the xmlResource.
+     * @return the xmlResource
+     */
+    public Resource getXmlResource() {
+        return xmlResource;
+    }
+
+    /**
+     * Gets the xsltData.
+     * @return the xsltData
+     */
+    public String getXsltData() {
+        return xsltData;
+    }
+
+    /**
+     * Gets the xsltResource.
+     * @return the xsltResource
+     */
+    public Resource getXsltResource() {
+        return xsltResource;
+    }
+
+    /**
+     * Gets the targetVariable.
+     * @return the targetVariable
+     */
+    public String getTargetVariable() {
+        return targetVariable;
+    }
 
 }

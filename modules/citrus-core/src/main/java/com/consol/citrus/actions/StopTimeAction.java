@@ -57,9 +57,11 @@ public class StopTimeAction extends AbstractTestAction {
         try {
             if (timeStamps.containsKey(id)) {
                 if (description != null) {
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds (" + description + ")");
+                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - 
+                            timeStamps.get(id).longValue())/(double)1000) + " seconds (" + description + ")");
                 } else {
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - timeStamps.get(id).longValue())/(double)1000) + " seconds");
+                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - 
+                            timeStamps.get(id).longValue())/(double)1000) + " seconds");
                 }
             } else {
                 log.info("Starting TimeWatcher: " + id);
@@ -84,5 +86,13 @@ public class StopTimeAction extends AbstractTestAction {
      */
     public static Map<String, Long> getTimeStamps() {
         return timeStamps;
+    }
+
+    /**
+     * Gets the id.
+     * @return the id
+     */
+    public String getId() {
+        return id;
     }
 }

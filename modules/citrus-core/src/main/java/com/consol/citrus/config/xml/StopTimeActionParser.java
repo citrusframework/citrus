@@ -23,6 +23,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for time action in test case.
@@ -37,10 +38,7 @@ public class StopTimeActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopTimeAction.class);
 
-        String id = element.getAttribute("id");
-        if (id != null) {
-            beanDefinition.addPropertyValue("id", id);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("id"), "id");
 
         DescriptionElementParser.doParse(element, beanDefinition);
 

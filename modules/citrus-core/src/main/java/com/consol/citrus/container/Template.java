@@ -141,4 +141,12 @@ public class Template extends AbstractTestAction {
     public boolean isGlobalContext() {
         return globalContext;
     }
+
+    /**
+     * Gets the actions.
+     * @return the actions
+     */
+    public List<TestAction> getActions() {
+        return actions;
+    }
 }

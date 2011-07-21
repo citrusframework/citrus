@@ -68,4 +68,12 @@ public class TraceVariablesAction extends AbstractTestAction {
     public void setVariableNames(List<String> variableNames) {
         this.variableNames = variableNames;
     }
+
+    /**
+     * Gets the variableNames.
+     * @return the variableNames
+     */
+    public List<String> getVariableNames() {
+        return variableNames;
+    }
 }
