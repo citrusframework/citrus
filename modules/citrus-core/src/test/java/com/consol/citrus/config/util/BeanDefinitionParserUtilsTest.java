@@ -21,12 +21,12 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class BeanDefinitionParserUtilsTest extends AbstractBaseTest {
+public class BeanDefinitionParserUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSetPropertyReference() {

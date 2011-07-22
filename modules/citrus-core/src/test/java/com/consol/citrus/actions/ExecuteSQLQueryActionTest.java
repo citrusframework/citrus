@@ -34,13 +34,13 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
  * @author Christoph Deppisch
  */
-public class ExecuteSQLQueryActionTest extends AbstractBaseTest {
+public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
     private ExecuteSQLQueryAction executeSQLQueryAction;
     

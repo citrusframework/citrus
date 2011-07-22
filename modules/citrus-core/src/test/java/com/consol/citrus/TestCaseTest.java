@@ -25,12 +25,12 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseTest extends AbstractBaseTest {
+public class TestCaseTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecution() {

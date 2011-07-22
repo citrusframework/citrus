@@ -27,14 +27,14 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapFaultActionTest extends AbstractBaseTest {
+public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
 
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     

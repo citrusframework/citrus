@@ -30,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.JmsMessageSender;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
@@ -38,7 +38,7 @@ import com.consol.citrus.ws.message.WebServiceMessageSender;
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapMessageActionTest extends AbstractBaseTest {
+public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     
     private WebServiceMessageSender messageSender = EasyMock.createMock(WebServiceMessageSender.class);
     

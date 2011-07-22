@@ -32,12 +32,12 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class TestSuiteTest extends AbstractBaseTest {
+public class TestSuiteTest extends AbstractTestNGUnitTest {
     @Autowired
     TestSuiteListeners testSuiteListeners;
     

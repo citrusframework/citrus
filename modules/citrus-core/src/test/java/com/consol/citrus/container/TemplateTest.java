@@ -30,12 +30,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class TemplateTest extends AbstractBaseTest {
+public class TemplateTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testTemplateExecution() {

@@ -22,12 +22,12 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class TraceVariablesActionTest extends AbstractBaseTest {
+public class TraceVariablesActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testTraceVariables() throws InterruptedException {

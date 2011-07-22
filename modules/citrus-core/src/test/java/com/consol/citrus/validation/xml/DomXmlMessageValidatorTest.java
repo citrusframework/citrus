@@ -31,14 +31,14 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.xml.XsdSchemaRepository;
 
 /**
  * @author Christoph Deppisch
  */
-public class DomXmlMessageValidatorTest extends AbstractBaseTest {
+public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"

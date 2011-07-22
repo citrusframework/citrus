@@ -29,7 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
@@ -41,7 +41,7 @@ import com.consol.citrus.ws.validation.SoapAttachmentValidator;
  * @author Christoph Deppisch
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class ReceiveSoapMessageActionTest extends AbstractBaseTest {
+public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

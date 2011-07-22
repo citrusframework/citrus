@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.FloorFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class FloorFunctionTest extends AbstractBaseTest {
+public class FloorFunctionTest extends AbstractTestNGUnitTest {
     FloorFunction function = new FloorFunction();
     
     @Test

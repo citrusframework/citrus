@@ -18,12 +18,12 @@ package com.consol.citrus.actions;
 
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class SleepActionTest extends AbstractBaseTest {
+public class SleepActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testSleep() {

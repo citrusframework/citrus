@@ -120,4 +120,12 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
     }
+
+    /**
+     * Gets the receiveTimeout.
+     * @return the receiveTimeout
+     */
+    public long getReceiveTimeout() {
+        return receiveTimeout;
+    }
 }

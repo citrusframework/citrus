@@ -21,12 +21,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class AssertTest extends AbstractBaseTest {
+public class AssertTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertDefaultException() {

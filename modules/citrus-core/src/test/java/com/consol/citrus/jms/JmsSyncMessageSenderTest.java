@@ -66,6 +66,8 @@ public class JmsSyncMessageSenderTest {
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
@@ -104,6 +106,8 @@ public class JmsSyncMessageSenderTest {
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createQueue("replyDestination")).andReturn(replyDestinationQueue).once();
@@ -145,6 +149,8 @@ public class JmsSyncMessageSenderTest {
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createTemporaryQueue()).andReturn(tempReplyQueue).once();
@@ -199,6 +205,8 @@ public class JmsSyncMessageSenderTest {
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
@@ -245,6 +253,8 @@ public class JmsSyncMessageSenderTest {
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, replyMessageHandler);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
         expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();

@@ -23,12 +23,12 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class XpathMessageConstructionInterceptorTest extends AbstractBaseTest {
+public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReplaceMessageValuesWithXPath() {

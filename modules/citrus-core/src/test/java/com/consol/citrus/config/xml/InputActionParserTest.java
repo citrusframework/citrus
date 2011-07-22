@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.InputAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class InputActionParserTest extends AbstractBeanDefinitionParserBaseTest<InputAction> {
+public class InputActionParserTest extends AbstractActionParserTest<InputAction> {
 
     @Test
     public void testInputActionParser() {

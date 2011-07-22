@@ -31,12 +31,12 @@ import org.testng.xml.XmlSuite;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestEngineFailedException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CitrusCliTest extends AbstractBaseTest {
+public class CitrusCliTest extends AbstractTestNGUnitTest {
     
     private TestNG testngMock = EasyMock.createMock(TestNG.class);
     

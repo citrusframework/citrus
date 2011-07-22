@@ -21,6 +21,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Bean definition parser for jms-sync-message-sender configuration.
  * 
@@ -36,32 +38,23 @@ public class JmsSyncMessageSenderParser extends AbstractJmsConfigParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.jms.JmsSyncMessageSender");
         
-        String replyDestination = element.getAttribute(JmsParserConstants.REPLY_DESTINATION_ATTRIBUTE);
-        String replyDestinationName = element.getAttribute(JmsParserConstants.REPLY_DESTINATION_NAME_ATTRIBUTE);
+        String replyDestination = element.getAttribute("reply-destination");
+        String replyDestinationName = element.getAttribute("reply-destination-name");
         
         if (StringUtils.hasText(replyDestination)) {
-            builder.addPropertyReference(JmsParserConstants.REPLY_DESTINATION_PROPERTY, replyDestination);
+            builder.addPropertyReference("replyDestination", replyDestination);
         } else if(StringUtils.hasText(replyDestinationName)){
-            builder.addPropertyValue(JmsParserConstants.REPLY_DESTINATION_NAME_PROPERTY, replyDestinationName);
+            builder.addPropertyValue("replyDestinationName", replyDestinationName);
         }
         
-        String replyTimeout = element.getAttribute(JmsParserConstants.REPLY_TIMEOUT_ATTRIBUTE);
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("reply-timeout"), "replyTimeout");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-handler"), "replyMessageHandler");
         
-        if (StringUtils.hasText(replyTimeout)) {
-            builder.addPropertyValue(JmsParserConstants.REPLY_TIMEOUT_PROPERTY, replyTimeout);
-        }
-        
-        String replyHandler = element.getAttribute(JmsParserConstants.REPLY_HANDLER_ATTRIBUTE);
-        
-        if (StringUtils.hasText(replyHandler)) {
-            builder.addPropertyReference(JmsParserConstants.REPLY_HANDLER_PROPERTY, replyHandler);
-        }
-        
-        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
-        
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-message-correlator"), "correlator");
         
         return builder;
     }

@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class GroovyActionParserTest extends AbstractBeanDefinitionParserBaseTest<GroovyAction> {
+public class GroovyActionParserTest extends AbstractActionParserTest<GroovyAction> {
 
     @Test
     public void testFailActionParser() {

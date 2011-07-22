@@ -27,13 +27,13 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 
 /**
  * @author Christoph Deppisch
  */
-public class PayloadTemplateMessageBuilderTest extends AbstractBaseTest {
+public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     private PayloadTemplateMessageBuilder messageBuilder;
     

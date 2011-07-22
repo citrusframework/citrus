@@ -21,12 +21,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class TransformActionParserTest extends AbstractBeanDefinitionParserBaseTest<TransformAction> {
+public class TransformActionParserTest extends AbstractActionParserTest<TransformAction> {
 
     @Test
     public void testTransformActionParser() {

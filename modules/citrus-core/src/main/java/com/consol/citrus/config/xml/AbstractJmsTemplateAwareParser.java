@@ -33,17 +33,16 @@ public abstract class AbstractJmsTemplateAwareParser extends AbstractJmsConfigPa
     protected BeanDefinitionBuilder doParse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = doParseComponent(element, parserContext);
         
-        String jmsTemplate = element.getAttribute(JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE);
+        String jmsTemplate = element.getAttribute("jms-template");
         
         if (StringUtils.hasText(jmsTemplate)) {
-            if (element.hasAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE) ||
-                    element.hasAttribute(JmsParserConstants.DESTINATION_ATTRIBUTE) ||
-                    element.hasAttribute(JmsParserConstants.DESTINATION_NAME_ATTRIBUTE)) {
-                throw new BeanCreationException("When providing a '" + JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE + "' reference, none of " +
-                        "'" + JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE + "', '" + JmsParserConstants.DESTINATION_ATTRIBUTE + 
-                        "', or '" + JmsParserConstants.DESTINATION_NAME_ATTRIBUTE + "' should be provided.");
+            if (element.hasAttribute("connection-factory") ||
+                    element.hasAttribute("destination") ||
+                    element.hasAttribute("destination-name")) {
+                throw new BeanCreationException("When providing a jms-template, none of " +
+                		"connection-factory, destination, or destination-name should be provided.");
             }
-            builder.addPropertyReference(JmsParserConstants.JMS_TEMPLATE_PROPERTY, jmsTemplate);
+            builder.addPropertyReference("jmsTemplate", jmsTemplate);
         }
         
         return builder;

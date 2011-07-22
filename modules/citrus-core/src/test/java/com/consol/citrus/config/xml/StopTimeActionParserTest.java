@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.StopTimeAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class StopTimeActionParserTest extends AbstractBeanDefinitionParserBaseTest<StopTimeAction> {
+public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeAction> {
 
     @Test
     public void testFailActionParser() {

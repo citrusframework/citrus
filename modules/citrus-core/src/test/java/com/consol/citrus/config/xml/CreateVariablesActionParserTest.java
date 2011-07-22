@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.CreateVariablesAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CreateVariablesActionParserTest extends AbstractBeanDefinitionParserBaseTest<CreateVariablesAction> {
+public class CreateVariablesActionParserTest extends AbstractActionParserTest<CreateVariablesAction> {
 
     @Test
     public void testCreateVariablesActionParser() {

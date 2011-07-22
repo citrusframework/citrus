@@ -25,12 +25,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.RandomNumberFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class RandomNumberFunctionTest extends AbstractBaseTest {
+public class RandomNumberFunctionTest extends AbstractTestNGUnitTest {
     RandomNumberFunction function = new RandomNumberFunction();
     
     @Test

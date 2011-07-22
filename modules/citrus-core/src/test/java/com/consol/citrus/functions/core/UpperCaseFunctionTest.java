@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.UpperCaseFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class UpperCaseFunctionTest extends AbstractBaseTest {
+public class UpperCaseFunctionTest extends AbstractTestNGUnitTest {
     UpperCaseFunction function = new UpperCaseFunction();
     
     @Test

@@ -21,12 +21,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class PurgeJmsQueuesActionParserTest extends AbstractBeanDefinitionParserBaseTest<PurgeJmsQueuesAction> {
+public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<PurgeJmsQueuesAction> {
 
     @Test
     public void testPurgeJmsQueuesActionParser() {

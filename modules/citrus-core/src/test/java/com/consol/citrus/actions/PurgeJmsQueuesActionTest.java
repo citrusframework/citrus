@@ -27,12 +27,12 @@ import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.jms.TextMessageImpl;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class PurgeJmsQueuesActionTest extends AbstractBaseTest {
+public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
 	
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);

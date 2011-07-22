@@ -24,12 +24,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.functions.FunctionParameterHelper;
 import com.consol.citrus.functions.core.CurrentDateFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CurrentDateFunctionTest extends AbstractBaseTest {
+public class CurrentDateFunctionTest extends AbstractTestNGUnitTest {
     CurrentDateFunction function = new CurrentDateFunction();
     
     @Test

@@ -22,13 +22,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
  * @author Jan Lipphaus
  */
-public class VariableUtilsTest extends AbstractBaseTest {
+public class VariableUtilsTest extends AbstractTestNGUnitTest {
     private String validGroovyScript = "a = 1";
     private String groovyScriptResult = "1";
     private String invalidGroovyScript = "a";

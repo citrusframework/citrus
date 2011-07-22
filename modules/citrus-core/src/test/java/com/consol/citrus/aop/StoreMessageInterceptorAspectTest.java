@@ -24,12 +24,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class StoreMessageInterceptorAspectTest extends AbstractBaseTest {
+public class StoreMessageInterceptorAspectTest extends AbstractTestNGUnitTest {
     @Autowired
     StoreMessageInterceptorAspect storageAspect;
     

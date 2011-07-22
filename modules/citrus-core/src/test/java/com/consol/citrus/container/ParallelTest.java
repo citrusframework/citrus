@@ -27,12 +27,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ParallelTest extends AbstractBaseTest {
+public class ParallelTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSingleAction() {

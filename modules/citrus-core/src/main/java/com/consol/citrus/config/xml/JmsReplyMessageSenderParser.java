@@ -31,6 +31,9 @@ import org.w3c.dom.Element;
  */
 public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
 
+    /** Connection factory attribute */
+    private static final String CONNECTION_FACTORY_ATTRIBUTE = "connection-factory";
+    
     /**
      * @see org.springframework.beans.factory.xml.AbstractBeanDefinitionParser#parseInternal(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
@@ -39,42 +42,42 @@ public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.jms.JmsReplyMessageSender");
         
-        String jmsTemplate = element.getAttribute(JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE);
+        String jmsTemplate = element.getAttribute("jms-template");
         
         if (StringUtils.hasText(jmsTemplate)) {
-            if (element.hasAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE)) {
-                throw new BeanCreationException("When providing a '" + JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE + "' reference, no " +
-                        "'" + JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE + "' should be provided.");
+            if (element.hasAttribute(CONNECTION_FACTORY_ATTRIBUTE)) {
+                throw new BeanCreationException("When providing a jms-template reference, no " +
+                        CONNECTION_FACTORY_ATTRIBUTE + " should be provided.");
             }
-            builder.addPropertyReference(JmsParserConstants.JMS_TEMPLATE_PROPERTY, jmsTemplate);
+            builder.addPropertyReference("jmsTemplate", jmsTemplate);
         } else {
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
             
-            if(element.hasAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE)) {
-                connectionFactory = element.getAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE);
+            if(element.hasAttribute(CONNECTION_FACTORY_ATTRIBUTE)) {
+                connectionFactory = element.getAttribute(CONNECTION_FACTORY_ATTRIBUTE);
             }
             
             if(!StringUtils.hasText(connectionFactory)) {
                 parserContext.getReaderContext().error(
-                        "'" + JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE + "' attribute must not be empty for jms configuration elements", element);
+                        "connection-factory attribute must not be empty for jms configuration elements", element);
             }
             
-            builder.addPropertyReference(JmsParserConstants.CONNECTION_FACTORY_PROPERTY, connectionFactory);
+            builder.addPropertyReference("connectionFactory", connectionFactory);
         }
         
-        String destinationHolder = element.getAttribute(JmsParserConstants.DESTINATION_HOLDER_ATTRIBUTE);
+        String destinationHolder = element.getAttribute("reply-destination-holder");
         
         if (StringUtils.hasText(destinationHolder)) {
-            builder.addPropertyReference(JmsParserConstants.DESTINATION_HOLDER_PROPERTY, destinationHolder);
+            builder.addPropertyReference("replyDestinationHolder", destinationHolder);
         } else {
-            throw new BeanCreationException("Element must define " + JmsParserConstants.DESTINATION_HOLDER_ATTRIBUTE + " attribute");
+            throw new BeanCreationException("Element must define reply-destination-holder attribute");
         }
         
-        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
+        String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
         
         if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
+            builder.addPropertyReference("correlator", replyMessageCorrelator);
         }
         
         return builder.getBeanDefinition();

@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.RepeatUntilTrue;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class RepeatUntilTrueParserTest extends AbstractBeanDefinitionParserBaseTest<RepeatUntilTrue> {
+public class RepeatUntilTrueParserTest extends AbstractActionParserTest<RepeatUntilTrue> {
 
     @Test
     public void testFailActionParser() {

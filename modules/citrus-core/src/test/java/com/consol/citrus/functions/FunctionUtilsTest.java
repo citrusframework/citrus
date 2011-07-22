@@ -24,12 +24,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class FunctionUtilsTest extends AbstractBaseTest {
+public class FunctionUtilsTest extends AbstractTestNGUnitTest {
     @Test
     public void testResolveFunction() {
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' TestFramework!')", context), "Hello TestFramework!");

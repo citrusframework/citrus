@@ -22,12 +22,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Template;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CallTemplateParserTest extends AbstractBeanDefinitionParserBaseTest<Template> {
+public class CallTemplateParserTest extends AbstractActionParserTest<Template> {
 
     @Test
     public void testCallTemplateParser() {

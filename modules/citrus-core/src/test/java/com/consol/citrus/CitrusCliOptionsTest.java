@@ -20,12 +20,12 @@ import org.apache.commons.cli.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CitrusCliOptionsTest extends AbstractBaseTest {
+public class CitrusCliOptionsTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSingleTestArg() throws ParseException {

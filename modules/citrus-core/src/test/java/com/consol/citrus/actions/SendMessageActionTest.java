@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
@@ -44,7 +44,7 @@ import com.consol.citrus.variable.VariableExtractor;
 /**
  * @author Christoph Deppisch
  */
-public class SendMessageActionTest extends AbstractBaseTest {
+public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     

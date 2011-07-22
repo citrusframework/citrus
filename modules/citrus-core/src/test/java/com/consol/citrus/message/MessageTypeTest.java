@@ -19,12 +19,12 @@ package com.consol.citrus.message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class MessageTypeTest extends AbstractBaseTest {
+public class MessageTypeTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testKnowsMessageType() {

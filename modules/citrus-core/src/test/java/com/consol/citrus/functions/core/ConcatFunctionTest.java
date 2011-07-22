@@ -25,12 +25,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.ConcatFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ConcatFunctionTest extends AbstractBaseTest {
+public class ConcatFunctionTest extends AbstractTestNGUnitTest {
     ConcatFunction function = new ConcatFunction();
     
     @Test

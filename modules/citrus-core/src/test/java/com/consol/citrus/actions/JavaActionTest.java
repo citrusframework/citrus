@@ -21,12 +21,12 @@ import java.util.*;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class JavaActionTest extends AbstractBaseTest {
+public class JavaActionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testJavaCallNoMethodParameter() {

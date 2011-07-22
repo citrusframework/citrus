@@ -25,12 +25,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.SubstringFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class SubstringFunctionTest extends AbstractBaseTest {
+public class SubstringFunctionTest extends AbstractTestNGUnitTest {
     SubstringFunction function = new SubstringFunction();
     
     @Test

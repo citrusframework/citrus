@@ -24,12 +24,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CreateVariablesActionTest extends AbstractBaseTest {
+public class CreateVariablesActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testCreateSingleVariable() {

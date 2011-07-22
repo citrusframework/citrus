@@ -24,12 +24,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class GroovyScriptMessageValidatorTest extends AbstractBaseTest {
+public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
     
     GroovyScriptMessageValidator validator = new GroovyScriptMessageValidator();
     

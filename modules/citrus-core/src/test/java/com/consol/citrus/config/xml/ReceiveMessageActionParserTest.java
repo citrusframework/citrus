@@ -20,7 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
@@ -31,7 +31,7 @@ import com.consol.citrus.variable.*;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageActionParserTest extends AbstractBeanDefinitionParserBaseTest<ReceiveMessageAction> {
+public class ReceiveMessageActionParserTest extends AbstractActionParserTest<ReceiveMessageAction> {
 
     @Test
     public void testReceiveMessageActionParser() {

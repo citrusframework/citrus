@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -40,7 +40,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 /**
  * @author Christoph Deppisch
  */
-public class DTDValidationTest extends AbstractBaseTest {
+public class DTDValidationTest extends AbstractTestNGUnitTest {
     @Autowired
     MessageValidator<ValidationContext> validator;
     

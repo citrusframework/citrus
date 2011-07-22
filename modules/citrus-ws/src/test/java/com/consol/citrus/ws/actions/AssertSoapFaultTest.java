@@ -37,13 +37,13 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
  * @author Christoph Deppisch
  */
-public class AssertSoapFaultTest extends AbstractBaseTest {
+public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
     
     @Autowired 
     SaajSoapMessageFactory messageFactory;

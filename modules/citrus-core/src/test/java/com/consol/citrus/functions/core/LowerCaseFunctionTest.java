@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.LowerCaseFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class LowerCaseFunctionTest extends AbstractBaseTest {
+public class LowerCaseFunctionTest extends AbstractTestNGUnitTest {
     LowerCaseFunction function = new LowerCaseFunction();
     
     @Test

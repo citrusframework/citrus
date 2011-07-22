@@ -18,10 +18,7 @@ package com.consol.citrus.testng;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
@@ -32,40 +29,11 @@ import com.consol.citrus.TestCase;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractBeanDefinitionParserBaseTest<T extends TestAction> extends AbstractBaseTest {
+public abstract class AbstractActionParserTest<T extends TestAction> extends AbstractBeanDefinitionParserTest {
 
-    /** Application context holding bean definitions parsed */
-    protected ApplicationContext beanDefinitionContext;
-    
     /** Navigate index for list of actions */
     private AtomicInteger actionIndex = new AtomicInteger(0);
     
-    /**
-     * Creates the application context with bean definitions parsed. By default searches
-     * for SimpleClassName-context.xml application context file in test package and 
-     * builds child application context.
-     * 
-     * @return
-     */
-    @BeforeClass(alwaysRun = true, dependsOnMethods = "springTestContextPrepareTestInstance")
-    protected void parseBeanDefinitions() {
-        beanDefinitionContext = createApplicationContext("context");
-    }
-    
-    /**
-     * Creates a new application context with specified child application context. Child application context
-     * is named SimpleClassName-[suffix].xml and is located in test class package.
-     * @param string
-     * @return
-     */
-    protected ApplicationContext createApplicationContext(String suffix) {
-        return new ClassPathXmlApplicationContext(
-                new String[] {
-                        this.getClass().getPackage().getName().replace('.', '/')
-                                + "/" + getClass().getSimpleName() + "-" + suffix + ".xml"},
-                true, applicationContext);
-    }
-
     /**
      * Gets the actual test case object from Spring application context.
      * @return

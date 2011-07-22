@@ -20,7 +20,8 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.integration.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
@@ -44,7 +45,7 @@ import com.consol.citrus.message.*;
  * 
  * @author Christoph Deppisch
  */
-public class JmsSyncMessageSender implements MessageSender, BeanNameAware, InitializingBean, DisposableBean {
+public class JmsSyncMessageSender implements MessageSender, BeanNameAware, DisposableBean {
     /** JMS connection factory */
     private ConnectionFactory connectionFactory;
     
@@ -112,48 +113,29 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         Destination replyToDestination = null;
         
         try {
-            if(connection == null) { 
-                connection = createConnection();
-            }
-            
-            if(session == null) {
-                session = createSession(connection);
-            }
+            createConnection();
+            createSession(connection);
             
             JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
             javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(message, session);
             
             messageProducer = session.createProducer(getDefaultDestination(session));
-
+            
             replyToDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyToDestination);
-
-            if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
-                messageConsumer = session.createConsumer(replyToDestination);
-            } else if(replyToDestination instanceof Queue) {
-                String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
-                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createConsumer(replyToDestination, messageSelector);
-            } else {
-                String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
-                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name, messageSelector, false);
-            }
+            
+            messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
             
             messageProducer.send(jmsRequest);
             
             log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
             
-            javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
+            javax.jms.Message jmsReplyMessage = (replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
-            if(replyMessageHandler != null) {
-                if(correlator != null) {
-                    replyMessageHandler.onReplyMessage((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage),
-                        correlator.getCorrelationKey(message));
-                } else {
-                    replyMessageHandler.onReplyMessage((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage));
-                }
-            }
+            log.info("Received reply message from destination: '" + replyToDestination + "'");
+            log.info("Informing reply message handler for further processing");
+            
+            informReplyMessageHandler(message, (Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage));
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);
         } finally {
@@ -163,6 +145,47 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
         }
     }
     
+    /**
+     * Informs reply message handler for further processing 
+     * of reply message.
+     * @param requestMessage the request message.
+     * @param replyMessage the reply message
+     */
+    protected void informReplyMessageHandler(Message<?> requestMessage, Message<?> replyMessage) {
+        if (replyMessageHandler != null) {
+            if (correlator != null) {
+                replyMessageHandler.onReplyMessage(replyMessage, correlator.getCorrelationKey(requestMessage));
+            } else {
+                replyMessageHandler.onReplyMessage(replyMessage);
+            }
+        }
+    }
+
+    /**
+     * Creates a message consumer on temporary/durable queue or topic. Durable queue/topic destinations
+     * require a message selector to be set.
+     * 
+     * @param replyToDestination the reply destination.
+     * @param messageId the messageId used for optional message selector.
+     * @return
+     * @throws JMSException 
+     */
+    private MessageConsumer createMessageConsumer(Destination replyToDestination, String messageId) throws JMSException {
+        MessageConsumer messageConsumer;
+
+        if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
+            messageConsumer = session.createConsumer(replyToDestination);
+        } else if (replyToDestination instanceof Queue) {
+            messageConsumer = session.createConsumer(replyToDestination, 
+                    "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
+        } else {
+            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name, 
+                    "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'", false);
+        }
+        
+        return messageConsumer;
+    }
+
     /**
      * Delete temporary destinations.
      * @param destination
@@ -189,8 +212,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @throws JMSException
      */
     private Destination getReplyDestination(Session session, Message<?> message) throws JMSException {
-        if(message.getHeaders().getReplyChannel() != null) {
-            if(message.getHeaders().getReplyChannel() instanceof Destination) {
+        if (message.getHeaders().getReplyChannel() != null) {
+            if (message.getHeaders().getReplyChannel() instanceof Destination) {
                 return (Destination)message.getHeaders().getReplyChannel();
             } else {
                 return resolveDestinationName(message.getHeaders().getReplyChannel().toString(), session);
@@ -201,7 +224,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
             return resolveDestinationName(this.replyDestinationName, session);
         }
         
-        if(pubSubDomain && session instanceof TopicSession){
+        if (pubSubDomain && session instanceof TopicSession){
             return session.createTemporaryTopic();
         } else {
             return session.createTemporaryQueue();
@@ -239,10 +262,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      */
     protected String getDefaultDestinationName() {
         try {
-            if(destination != null) {
-                if(destination instanceof Queue) {
+            if (destination != null) {
+                if (destination instanceof Queue) {
                     return ((Queue)destination).getQueueName();
-                } else if(destination instanceof Topic) {
+                } else if (destination instanceof Topic) {
                     return ((Topic)destination).getTopicName();
                 } else {
                     return destination.toString();
@@ -261,21 +284,22 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @return connection
      * @throws JMSException
      */
-    protected Connection createConnection() throws JMSException {
-        if(connection == null) {
+    protected void createConnection() throws JMSException {
+        if (connection == null) {
             if (!pubSubDomain && connectionFactory instanceof QueueConnectionFactory) {
                 connection = ((QueueConnectionFactory) connectionFactory).createQueueConnection();
-            } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
+            } else if (pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
                 connection = ((TopicConnectionFactory) connectionFactory).createTopicConnection();
+                connection.setClientID(name);
             } else {
                 log.warn("Not able to create a connection with connection factory '" + connectionFactory + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
                 
                 connection = connectionFactory.createConnection();
             }
+            
+            connection.start();
         }
-        
-        return connection;
     }
     
     /**
@@ -284,12 +308,11 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      * @return session.
      * @throws JMSException
      */
-    protected Session createSession(Connection connection) throws JMSException {
-        if(session == null) {
+    protected void createSession(Connection connection) throws JMSException {
+        if (session == null) {
             if (!pubSubDomain && connection instanceof QueueConnection) {
                 session = ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-            } else if(pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
-                connection.setClientID(name);
+            } else if (pubSubDomain && connectionFactory instanceof TopicConnectionFactory) {
                 session = ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             } else {
                 log.warn("Not able to create a session with connection factory '" + connectionFactory + "'" +
@@ -298,18 +321,6 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
                 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             }
         }
-        
-        return session;
-    }
-    
-    /**
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
-    public void afterPropertiesSet() throws Exception {
-        createConnection();
-        createSession(connection);
-        
-        connection.start();
     }
     
     /**
@@ -318,7 +329,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
     public void destroy() throws Exception {
         JmsUtils.closeSession(session);
         
-        if(connection != null) {
+        if (connection != null) {
             ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
         }
     }
@@ -416,5 +427,61 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Initi
      */
     public void setBeanName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the connectionFactory.
+     * @return the connectionFactory
+     */
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    /**
+     * Gets the destination.
+     * @return the destination
+     */
+    public Destination getDestination() {
+        return destination;
+    }
+
+    /**
+     * Gets the destinationName.
+     * @return the destinationName
+     */
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    /**
+     * Gets the replyDestination.
+     * @return the replyDestination
+     */
+    public Destination getReplyDestination() {
+        return replyDestination;
+    }
+
+    /**
+     * Gets the replyDestinationName.
+     * @return the replyDestinationName
+     */
+    public String getReplyDestinationName() {
+        return replyDestinationName;
+    }
+
+    /**
+     * Gets the replyTimeout.
+     * @return the replyTimeout
+     */
+    public long getReplyTimeout() {
+        return replyTimeout;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
     }
 }

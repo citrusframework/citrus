@@ -33,7 +33,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -42,7 +42,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 /**
  * @author Christoph Deppisch
  */
-public class NamespaceTest extends AbstractBaseTest {
+public class NamespaceTest extends AbstractTestNGUnitTest {
     @Autowired
     MessageValidator<ValidationContext> validator;
     

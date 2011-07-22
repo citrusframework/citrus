@@ -21,12 +21,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ExecuteSQLQueryActionParserTest extends AbstractBeanDefinitionParserBaseTest<ExecuteSQLQueryAction> {
+public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<ExecuteSQLQueryAction> {
 
     @Test
     public void testSQLActionParser() {

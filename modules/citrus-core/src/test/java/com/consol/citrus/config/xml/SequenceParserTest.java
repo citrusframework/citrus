@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Sequence;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class SequenceParserTest extends AbstractBeanDefinitionParserBaseTest<Sequence> {
+public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
 
     @Test
     public void testFailActionParser() {

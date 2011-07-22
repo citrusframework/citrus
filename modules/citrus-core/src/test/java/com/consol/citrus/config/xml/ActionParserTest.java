@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ActionParserTest extends AbstractBeanDefinitionParserBaseTest<TestAction> {
+public class ActionParserTest extends AbstractActionParserTest<TestAction> {
 
     @Test
     public void testActionParser() {

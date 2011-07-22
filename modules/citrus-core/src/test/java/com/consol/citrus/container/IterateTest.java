@@ -28,12 +28,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class IterateTest extends AbstractBaseTest {
+public class IterateTest extends AbstractTestNGUnitTest {
     @Test
     public void testIteration() {
         Iterate iterate = new Iterate();

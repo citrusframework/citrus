@@ -20,7 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
@@ -29,7 +29,7 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 /**
  * @author Christoph Deppisch
  */
-public class SendMessageActionParserTest extends AbstractBeanDefinitionParserBaseTest<SendMessageAction> {
+public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
     @Test
     public void testSendMessageActionParser() {

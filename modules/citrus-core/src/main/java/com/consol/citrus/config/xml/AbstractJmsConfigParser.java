@@ -24,6 +24,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Abstract base class for JMS related configuration. Sender and receiver bean definitions use
  * this base parser to configure attributes like connection factory or JMS template.
@@ -36,39 +38,36 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = doParse(element, parserContext);
         
-        String destination = element.getAttribute(JmsParserConstants.DESTINATION_ATTRIBUTE);
-        String destinationName = element.getAttribute(JmsParserConstants.DESTINATION_NAME_ATTRIBUTE);
+        String destination = element.getAttribute("destination");
+        String destinationName = element.getAttribute("destination-name");
         
         if(StringUtils.hasText(destination) || StringUtils.hasText(destinationName)) {
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
             
-            if(element.hasAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE)) {
-                connectionFactory = element.getAttribute(JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE);
+            if(element.hasAttribute("connection-factory")) {
+                connectionFactory = element.getAttribute("connection-factory");
             }
             
             if(!StringUtils.hasText(connectionFactory)) {
-                parserContext.getReaderContext().error(
-                        "'" + JmsParserConstants.CONNECTION_FACTORY_ATTRIBUTE + "' attribute must not be empty for jms configuration elements", element);
+                parserContext.getReaderContext().error("Attribute connection-factory must not be empty " +
+                		"for jms configuration elements", element);
             }
             
-            builder.addPropertyReference(JmsParserConstants.CONNECTION_FACTORY_PROPERTY, connectionFactory);
+            builder.addPropertyReference("connectionFactory", connectionFactory);
             
             //destination
             if (StringUtils.hasText(destination)) {
-                builder.addPropertyReference(JmsParserConstants.DESTINATION_PROPERTY, destination);
+                builder.addPropertyReference("destination", destination);
             } else {
-                builder.addPropertyValue(JmsParserConstants.DESTINATION_NAME_PROPERTY, destinationName);
+                builder.addPropertyValue("destinationName", destinationName);
             }
-        } else if(!StringUtils.hasText(element.getAttribute(JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE))){
-            throw new BeanCreationException("Either a '" + JmsParserConstants.JMS_TEMPLATE_ATTRIBUTE + "' reference " +
-                    "or one of '" + JmsParserConstants.DESTINATION_ATTRIBUTE + "' or '" + JmsParserConstants.DESTINATION_NAME_ATTRIBUTE + "' must be provided.");
+        } else if(!StringUtils.hasText(element.getAttribute("jms-template"))){
+            throw new BeanCreationException("Either a jms-template reference " +
+                    "or one of destination or destination-name must be provided.");
         }
         
-        String pubSubDomain = element.getAttribute(JmsParserConstants.PUB_SUB_DOMAIN_ATTRIBUTE);
-        if(StringUtils.hasText(pubSubDomain)) {
-            builder.addPropertyValue(JmsParserConstants.PUB_SUB_DOMAIN_PROPERTY, pubSubDomain);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("pub-sub-domain"), "pubSubDomain");
         
         return builder.getBeanDefinition();
     }

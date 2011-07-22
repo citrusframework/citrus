@@ -24,12 +24,12 @@ import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class StartServerActionTest extends AbstractBaseTest {
+public class StartServerActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testEmpty() {

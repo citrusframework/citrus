@@ -25,12 +25,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.core.MaxFunction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class MaxFunctionTest extends AbstractBaseTest {
+public class MaxFunctionTest extends AbstractTestNGUnitTest {
     MaxFunction function = new MaxFunction();
     
     @Test

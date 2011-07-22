@@ -24,13 +24,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseCreatorTest extends AbstractBaseTest {
+public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {

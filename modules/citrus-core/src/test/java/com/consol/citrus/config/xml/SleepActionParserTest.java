@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SleepAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class SleepActionParserTest extends AbstractBeanDefinitionParserBaseTest<SleepAction> {
+public class SleepActionParserTest extends AbstractActionParserTest<SleepAction> {
 
     @Test
     public void testSleepActionParser() {

@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CatchTest extends AbstractBaseTest {
+public class CatchTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -18,8 +18,9 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for jms-sync-message-receiver configuration.
@@ -36,17 +37,11 @@ public class JmsSyncMessageReceiverParser extends AbstractJmsTemplateAwareParser
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.jms.JmsSyncMessageReceiver");
         
-        String replyTimeout = element.getAttribute(JmsParserConstants.RECEIVE_TIMEOUT_ATTRIBUTE);
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("receive-timeout"), "receiveTimeout");
         
-        if (StringUtils.hasText(replyTimeout)) {
-            builder.addPropertyValue(JmsParserConstants.RECEIVE_TIMEOUT_PROPERTY, replyTimeout);
-        }
-        
-        String replyMessageCorrelator = element.getAttribute(JmsParserConstants.REPLY_CORRELATOR_ATTRIBUTE);
-        
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference(JmsParserConstants.REPLY_CORRELATOR_PROPERTY, replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-message-correlator"), "correlator");
         
         return builder;
     }

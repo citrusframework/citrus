@@ -20,12 +20,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Philipp Komninos
  */
-public class TransformActionTest extends AbstractBaseTest {
+public class TransformActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testTransform(){

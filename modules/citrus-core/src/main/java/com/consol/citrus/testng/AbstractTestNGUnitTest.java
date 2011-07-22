@@ -34,7 +34,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 @ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml",
                                    "classpath:citrus-context.xml",
                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
-public abstract class AbstractBaseTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
     /** Test context */
     protected TestContext context;
 

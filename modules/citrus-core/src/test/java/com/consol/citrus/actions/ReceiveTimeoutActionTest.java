@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveTimeoutActionTest extends AbstractBaseTest {
+public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 	
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

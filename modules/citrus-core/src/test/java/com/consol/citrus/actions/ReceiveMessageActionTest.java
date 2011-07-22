@@ -34,7 +34,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -48,7 +48,7 @@ import com.consol.citrus.variable.*;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageActionTest extends AbstractBaseTest {
+public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     

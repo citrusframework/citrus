@@ -21,12 +21,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ParallelParserTest extends AbstractBeanDefinitionParserBaseTest<Parallel> {
+public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
 
     @Test
     public void testFailActionParser() {

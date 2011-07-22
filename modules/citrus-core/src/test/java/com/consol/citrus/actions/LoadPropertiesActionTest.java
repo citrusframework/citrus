@@ -23,12 +23,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class LoadPropertiesActionTest extends AbstractBaseTest {
+public class LoadPropertiesActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testLoadProperties() {

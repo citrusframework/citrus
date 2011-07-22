@@ -28,12 +28,12 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class RepeatOnErrorUntilTrueTest extends AbstractBaseTest {
+public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
     @Test
     public void testSuccessOnFirstIteration() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();

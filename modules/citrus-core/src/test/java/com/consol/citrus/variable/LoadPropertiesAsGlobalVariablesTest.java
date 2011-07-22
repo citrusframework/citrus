@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class LoadPropertiesAsGlobalVariablesTest extends AbstractBaseTest {
+public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest {
     
     @Autowired
     private FunctionRegistry functionRegistry;

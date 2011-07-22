@@ -21,12 +21,12 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.container.Catch;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class CatchParserTest extends AbstractBeanDefinitionParserBaseTest<Catch> {
+public class CatchParserTest extends AbstractActionParserTest<Catch> {
 
     @Test
     public void testCatchParser() {

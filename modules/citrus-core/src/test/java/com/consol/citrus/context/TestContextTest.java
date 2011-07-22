@@ -26,13 +26,13 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
-import com.consol.citrus.testng.AbstractBaseTest;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.GlobalVariables;
 
 /**
  * @author Christoph Deppisch
  */
-public class TestContextTest extends AbstractBaseTest {
+public class TestContextTest extends AbstractTestNGUnitTest {
 
     @Autowired
     GlobalVariables globalVariables;

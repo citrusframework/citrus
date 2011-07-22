@@ -32,10 +32,7 @@ public class JmsMessageSenderParser extends AbstractJmsTemplateAwareParser {
      */
     @Override
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition("com.consol.citrus.jms.JmsMessageSender");
-        
-        return builder;
+        return BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.jms.JmsMessageSender");
     }
 
 }

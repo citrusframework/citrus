@@ -20,12 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserBaseTest;
+import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ExecutePLSQLActionParserTest extends AbstractBeanDefinitionParserBaseTest<ExecutePLSQLAction> {
+public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<ExecutePLSQLAction> {
 
     @Test
     public void testPLSQLActionParser() {
