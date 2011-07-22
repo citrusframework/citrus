@@ -18,8 +18,9 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for sync-message-channel-sender configuration.
@@ -35,42 +36,24 @@ public class SyncMessageChannelSenderParser extends AbstractMessageChannelTempla
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.channel.SyncMessageChannelSender");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel"), "channel");
+
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("channel-name"), "channelName");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel-resolver"), "channelResolver");
+
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("reply-timeout"), "replyTimeout");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-handler"), "replyMessageHandler");
         
-        String channel = element.getAttribute("channel");
-        
-        if (StringUtils.hasText(channel)) {
-            builder.addPropertyReference("channel", channel);
-        }
-        
-        String channelName = element.getAttribute("channel-name");
-        
-        if (StringUtils.hasText(channelName)) {
-            builder.addPropertyValue("channelName", channelName);
-        }
-        
-        String channelResolver = element.getAttribute("channel-resolver");
-        
-        if (StringUtils.hasText(channelResolver)) {
-            builder.addPropertyReference("channelResolver", channelResolver);
-        }
-        
-        String replyTimeout = element.getAttribute("reply-timeout");
-        
-        if (StringUtils.hasText(replyTimeout)) {
-            builder.addPropertyValue("replyTimeout", replyTimeout);
-        }
-        
-        String replyHandler = element.getAttribute("reply-handler");
-        
-        if (StringUtils.hasText(replyHandler)) {
-            builder.addPropertyReference("replyMessageHandler", replyHandler);
-        }
-        
-        String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
-        
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference("correlator", replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-message-correlator"), "correlator");
         
         return builder;
     }

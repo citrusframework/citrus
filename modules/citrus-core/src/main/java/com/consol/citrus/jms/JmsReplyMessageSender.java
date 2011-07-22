@@ -132,4 +132,20 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
     }
+
+    /**
+     * Gets the replyDestinationHolder.
+     * @return the replyDestinationHolder
+     */
+    public JmsReplyDestinationHolder getReplyDestinationHolder() {
+        return replyDestinationHolder;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
+    }
 }

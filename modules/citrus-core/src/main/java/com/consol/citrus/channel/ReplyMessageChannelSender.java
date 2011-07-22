@@ -118,4 +118,20 @@ public class ReplyMessageChannelSender implements MessageSender {
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
+
+    /**
+     * Gets the messagingTemplate.
+     * @return the messagingTemplate
+     */
+    public MessagingTemplate getMessagingTemplate() {
+        return messagingTemplate;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
+    }
 }

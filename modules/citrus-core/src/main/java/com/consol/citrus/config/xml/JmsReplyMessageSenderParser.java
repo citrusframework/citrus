@@ -24,6 +24,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Bean definition parser for jms-reply-message-sender configuration.
  * 
@@ -74,11 +76,8 @@ public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
             throw new BeanCreationException("Element must define reply-destination-holder attribute");
         }
         
-        String replyMessageCorrelator = element.getAttribute("reply-message-correlator");
-        
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference("correlator", replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-message-correlator"), "correlator");
         
         return builder.getBeanDefinition();
     }

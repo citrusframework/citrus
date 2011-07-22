@@ -238,4 +238,36 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     public void setChannelName(String channelName) {
         this.channelName = channelName;
     }
+
+    /**
+     * Gets the channel.
+     * @return the channel
+     */
+    public MessageChannel getChannel() {
+        return channel;
+    }
+
+    /**
+     * Gets the channelName.
+     * @return the channelName
+     */
+    public String getChannelName() {
+        return channelName;
+    }
+
+    /**
+     * Gets the messagingTemplate.
+     * @return the messagingTemplate
+     */
+    public MessagingTemplate getMessagingTemplate() {
+        return messagingTemplate;
+    }
+
+    /**
+     * Gets the channelResolver.
+     * @return the channelResolver
+     */
+    public ChannelResolver getChannelResolver() {
+        return channelResolver;
+    }
 }

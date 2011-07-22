@@ -183,4 +183,36 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     public void setChannelResolver(ChannelResolver channelResolver) {
         this.channelResolver = channelResolver;
     }
+
+    /**
+     * Gets the channel.
+     * @return the channel
+     */
+    public PollableChannel getChannel() {
+        return channel;
+    }
+
+    /**
+     * Gets the channelName.
+     * @return the channelName
+     */
+    public String getChannelName() {
+        return channelName;
+    }
+
+    /**
+     * Gets the messagingTemplate.
+     * @return the messagingTemplate
+     */
+    public MessagingTemplate getMessagingTemplate() {
+        return messagingTemplate;
+    }
+
+    /**
+     * Gets the channelResolver.
+     * @return the channelResolver
+     */
+    public ChannelResolver getChannelResolver() {
+        return channelResolver;
+    }
 }

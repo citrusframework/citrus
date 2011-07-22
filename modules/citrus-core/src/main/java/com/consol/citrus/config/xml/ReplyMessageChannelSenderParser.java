@@ -22,8 +22,10 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
- * Bean definition parser for jms-reply-message-sender configuration.
+ * Bean definition parser for message-channel-reply-sender configuration.
  * 
  * @author Christoph Deppisch
  */
@@ -38,18 +40,14 @@ public class ReplyMessageChannelSenderParser extends AbstractMessageChannelTempl
             .genericBeanDefinition("com.consol.citrus.channel.ReplyMessageChannelSender");
         
         String channelHolder = element.getAttribute("reply-channel-holder");
-        
         if (StringUtils.hasText(channelHolder)) {
             builder.addPropertyReference("replyMessageChannelHolder", channelHolder);
         } else {
             throw new BeanCreationException("Element must define 'reply-channel-holder' attribute");
         }
         
-        String replyMessageCorrelator = element.getAttribute("reply-message-corelator");
-        
-        if (StringUtils.hasText(replyMessageCorrelator)) {
-            builder.addPropertyReference("correlator", replyMessageCorrelator);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("reply-message-correlator"), "correlator");
         
         return builder;
     }

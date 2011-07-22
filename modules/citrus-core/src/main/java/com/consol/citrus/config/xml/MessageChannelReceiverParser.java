@@ -18,8 +18,9 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for message-channel-receiver configuration.
@@ -35,29 +36,17 @@ public class MessageChannelReceiverParser extends AbstractMessageChannelTemplate
     protected BeanDefinitionBuilder doParseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = getBeanDefinitionBuilder(element, parserContext);
         
-        String channel = element.getAttribute("channel");
-        
-        if (StringUtils.hasText(channel)) {
-            builder.addPropertyReference("channel", channel);
-        }
-        
-        String channelName = element.getAttribute("channel-name");
-        
-        if (StringUtils.hasText(channelName)) {
-            builder.addPropertyValue("channelName", channelName);
-        }
-        
-        String channelResolver = element.getAttribute("channel-resolver");
-        
-        if (StringUtils.hasText(channelResolver)) {
-            builder.addPropertyReference("channelResolver", channelResolver);
-        }
-        
-        String receiveTimeout = element.getAttribute("receive-timeout");
-        
-        if (StringUtils.hasText(receiveTimeout)) {
-            builder.addPropertyValue("receiveTimeout", receiveTimeout);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel"), "channel");
+
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("channel-name"), "channelName");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel-resolver"), "channelResolver");
+
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("receive-timeout"), "receiveTimeout");
         
         return builder;
     }

@@ -59,5 +59,13 @@ public abstract class AbstractMessageReceiver implements MessageReceiver {
     public void setReceiveTimeout(long receiveTimeout) {
         this.receiveTimeout = receiveTimeout;
     }
+
+    /**
+     * Gets the receiveTimeout.
+     * @return the receiveTimeout
+     */
+    public long getReceiveTimeout() {
+        return receiveTimeout;
+    }
     
 }

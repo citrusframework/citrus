@@ -109,5 +109,13 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     public void setCorrelator(ReplyMessageCorrelator correlator) {
         this.correlator = correlator;
     }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
+    }
     
 }
