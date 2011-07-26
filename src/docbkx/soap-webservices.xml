@@ -420,7 +420,7 @@ Server: Jetty(7.0.0.pre5)
             Otherwise the test is failing.</para>
             
             <para>This exception assertion can not offer direct SOAP fault code and fault string validation, because we do not have access
-            to the SOAP fault elements. But we can use a special assert implementation for this.</para>
+            to the SOAP fault elements. We can use a special assert implementation especially designed for SOAP faults in this case.</para>
             
             <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
            fault-string=&quot;Invalid request&quot;&gt;
@@ -519,6 +519,52 @@ Server: Jetty(7.0.0.pre5)
             for validation the SOAP fault detail offering a validation algorithm. It depends on the chosen validator implementation how the detail
             is compared to the expected template. Possible algorithms are pure String comparison and XML tree comparison as already known from the
             normal message payload validation. Please see the Citrus API documentation for available validator implementations and validation algorithms.</para>
+            
+            <para>So far we used assert action wrapper in order to catch SOAP fault exceptions and validate the SOAP fault content. Now we have an alternative way
+            of handling SOAP faults in Citrus. With exceptions the send action aborts and we do not have a receive action for the SOAP fault. This might be inadequate if
+            we need to validate the SOAP message content (SOAPHeader and SOAPBody) coming with the SOAP fault. Therefore the web service message sender component offers
+            several fault strategy options. In the following we discuss the propagation of SOAP fault as messages to the reply message handler as we would do with
+            normal SOAP messages.</para>
+            
+            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+                               request-url=&quot;http://localhost:8090/test&quot; 
+                               reply-handler=&quot;soapResponseHandler&quot;
+                               fault-strategy=&quot;propagateError&quot;/&gt;
+
+&lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;</programlisting>
+
+            <para>We have configured a fault strategy <emphasis>propagateError</emphasis> so the message sender will not raise client exceptions but inform the reply message handler
+            with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy=<emphasis>throwsException</emphasis>).</para>
+            
+            <para>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault 
+            like this.</para>
+
+            <programlisting>&lt;send with=&quot;soapMessageSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;ns0:SoapFaultForcingRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                    &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
+                &lt;/ns0:SoapFaultForcingRequest&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+&lt;/send&gt;
+
+&lt;receive with=&quot;soapResponseHandler&quot; timeout=&quot;5000&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;SOAP-ENV:Fault xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+                    &lt;faultcode xmlns:CITRUS=&quot;http://www.citrusframework.org/faults&quot;&gt;CITRUS:${soapFaultCode}&lt;/faultcode&gt;
+                    &lt;faultstring xml:lang=&quot;en&quot;&gt;${soapFaultString}&lt;/faultstring&gt;
+                &lt;/SOAP-ENV:Fault&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+            <para>So choose the prefered way of handling SOAP faults either by asserting client exceptions or propagating fault messages to reply message handler receive action.</para>            
         </section>
     </section>
     

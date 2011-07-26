@@ -388,6 +388,67 @@ Server: Jetty(7.0.0.pre5)
         <para>This completes the Http header processing within Citrus. On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
     </section>
     
+    <section id="http-error-handling">
+        <title>Http error handling</title>
+        
+        <para>So far we have received response messages with Http status code <emphasis>200 OK</emphasis>. How to deal with server errors like <emphasis>404 Not Found</emphasis> or <emphasis>500 Internal server error</emphasis>? The default Http message client
+        error strategy is to propagate server error response messages to the reply message handler for validation. We simply check on Http status code and status text for error validation.</para>
+        
+        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+&lt;/send&gt;
+        
+&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;![CDATA[]]&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;403&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;FORBIDDEN&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+
+        <para>The message data can be empty depending on the server logic for these error situations. If we receive additional error information as message payload just add validation assertions as usual.</para>
+        
+        <para>Instead of receiving such empty messages with checks on Http status header information we can change the error strategy in the message sender component in order to automatically raise exceptions 
+        on response messages other than <emphasis>200 OK</emphasis>. Therefore we go back to the Http message sender configuration for changing the error strategy.</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot;
+                              request-url=&quot;http://localhost:8080/test&quot;
+                              reply-handler=&quot;httpResponseReceiver&quot;
+                              error-strategy=&quot;throwsException&quot;/&gt;
+  
+&lt;citrus-http:reply-message-handler id=&quot;httpResponseReceiver&quot;/&gt;</programlisting>
+
+        <para>Now we expect an exception to be thrown because of the error response. Following from that we have to change our test case. 
+        Instead of receiving the error message with receive action we assert the client exception and check on the Http status code and status text.</para>
+        
+        <programlisting>&lt;assert exception=&quot;org.springframework.web.client.HttpClientErrorException&quot; 
+           message=&quot;403 Forbidden&quot;&gt;
+    &lt;send with=&quot;httpMessageSender&quot;&gt;
+        &lt;message&gt;
+            &lt;data&gt;
+                &lt;![CDATA[
+                    &lt;testRequestMessage&gt;
+                        &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                    &lt;/testRequestMessage&gt;
+                ]]&gt;
+            &lt;/data&gt;
+        &lt;/message&gt;
+    &lt;/send&gt;
+&lt;/assert&gt;</programlisting>
+
+        <para>Both ways of handling Http error messages on client side are valid for expecting the server to raise Http error codes. Choose the prefered way according to your test project requirements.</para>
+    </section>
+    
     <section id="htp-basic-auth">
         <title>Basic authentication</title>
         
