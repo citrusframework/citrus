@@ -86,25 +86,26 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         try {
             action.execute(context);
-        } catch (Exception e) {
+            
+            throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
+        } catch (SoapFaultClientException e) {
             log.info("Validating SOAP fault ...");
-            if (e instanceof SoapFaultClientException) {
-                SoapFaultClientException soapFaultException = (SoapFaultClientException)e;
+            
+            SoapFaultClientException soapFaultException = (SoapFaultClientException)e;
 
-                SoapFault controlFault = constructControlFault(context);
-                
-                validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault);
-                
-                log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
-                log.info("SOAP fault validation successful");
-                return;
-            } else {
-                throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
-                        SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
-            }
+            SoapFault controlFault = constructControlFault(context);
+            
+            validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault);
+            
+            log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
+            log.info("SOAP fault validation successful");
+        } catch (RuntimeException e) {
+            throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
+                    SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
+        } catch (Exception e) {
+            throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
+                    SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
         }
-
-        throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
     }
 
     /**
