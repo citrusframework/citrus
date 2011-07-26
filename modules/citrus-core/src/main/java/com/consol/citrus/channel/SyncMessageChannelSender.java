@@ -86,15 +86,15 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
         
         replyMessage = messagingTemplate.sendAndReceive(getDestinationChannel(), message);
         
-        if(replyMessage == null) {
+        if (replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + 
                     replyTimeout + "ms. Did not receive reply message on reply channel");
         }
         
         log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
         
-        if(replyMessageHandler != null) {
-            if(correlator != null) {
+        if (replyMessageHandler != null) {
+            if (correlator != null) {
                 replyMessageHandler.onReplyMessage(replyMessage,
                     correlator.getCorrelationKey(message));
             } else {

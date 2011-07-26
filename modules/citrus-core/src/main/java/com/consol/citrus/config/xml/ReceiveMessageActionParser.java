@@ -181,7 +181,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
         
         if (messageElement != null) {
             String schemaValidation = messageElement.getAttribute("schema-validation");
-            if(StringUtils.hasText(schemaValidation)) {
+            if (StringUtils.hasText(schemaValidation)) {
                 context.setSchemaValidation(Boolean.valueOf(schemaValidation));
             }
             
@@ -260,7 +260,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                     String pathExpression = validateElement.getAttribute("path");
                     if (StringUtils.hasText(pathExpression)) {
                         //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                        if(validateElement.hasAttribute("result-type")) {
+                        if (validateElement.hasAttribute("result-type")) {
                             pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
                         }
                         
@@ -275,7 +275,7 @@ public class ReceiveMessageActionParser implements BeanDefinitionParser {
                             String expression = xpathElement.getAttribute("expression");
                             if (StringUtils.hasText(expression)) {
                                 //construct expression with explicit result-type, like boolean:/TestMessage/Value
-                                if(xpathElement.hasAttribute("result-type")) {
+                                if (xpathElement.hasAttribute("result-type")) {
                                     expression = xpathElement.getAttribute("result-type") + ":" + expression;
                                 }
                                 

@@ -61,7 +61,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                 while (reader.ready()) {
                     line = reader.readLine();
 
-                    if(line != null) {
+                    if (line != null) {
                         if (line.trim()!= null && line.trim().endsWith("/")) {
                             buffer.append(line.trim().substring(0, (line.trim().length() -1)));
     
@@ -77,7 +77,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                 }
             } else {
                 script = context.replaceDynamicContentInString(script);
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("Found inline PLSQL script " + script);
                 }
 
@@ -92,7 +92,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                 try {
                     stmt = statements.get(i);
 
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Executing SQL statement: " + stmt);
                     }
                     
@@ -111,7 +111,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             log.error("Resource could not be found - filename: " + sqlResource.getFilename(), e);
             throw new CitrusRuntimeException(e);
         } finally {
-            if(reader != null) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {

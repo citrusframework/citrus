@@ -67,7 +67,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     public void extractVariables(Message<?> message, TestContext context) {
         if (CollectionUtils.isEmpty(xPathExpressions)) {return;}
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Reading XML elements from document");
         }
         
@@ -77,7 +77,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             String pathExpression = entry.getKey();
             String variableName = entry.getValue();
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Reading element: " + pathExpression);
             }
             
@@ -89,7 +89,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 
                 String value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
 
-                if(value == null) {
+                if (value == null) {
                     throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
                 }
                 

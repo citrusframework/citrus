@@ -56,7 +56,7 @@ public class StoreMessageInterceptorAspect {
             returning="message")
     public void doInterceptMessage(Object message) {
         //in case of receive timeout message will be null, check that
-        if(message != null) {
+        if (message != null) {
             storeMessage((Message<?>)message);
         }
     }
@@ -71,7 +71,7 @@ public class StoreMessageInterceptorAspect {
         Writer bodyOutput = null;
         
         try {
-            if(!debugDirectory.exists()) {
+            if (!debugDirectory.exists()) {
                 boolean success = debugDirectory.getFile().mkdirs();
                 
                 if (!success) {
@@ -101,7 +101,7 @@ public class StoreMessageInterceptorAspect {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Error while trying to save incoming message to filesystem", e);
         } finally {
-            if(headerOutput != null) {
+            if (headerOutput != null) {
                 try {
                     headerOutput.close();
                 } catch (IOException e) {
@@ -109,7 +109,7 @@ public class StoreMessageInterceptorAspect {
                 }
             }
             
-            if(bodyOutput != null) {
+            if (bodyOutput != null) {
                 try {
                     bodyOutput.close();
                 } catch (IOException e) {

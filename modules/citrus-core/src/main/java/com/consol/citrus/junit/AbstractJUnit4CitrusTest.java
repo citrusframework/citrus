@@ -81,7 +81,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     protected void executeTest() {
         TestCase testCase = getTestCase();
         
-        if(!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
+        if (!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
             testListener.onTestStart(testCase);
             
             try {

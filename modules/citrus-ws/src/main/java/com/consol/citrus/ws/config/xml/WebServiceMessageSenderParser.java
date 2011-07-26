@@ -46,7 +46,7 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
     
         String webServiceTemplate = element.getAttribute(WSParserConstants.WS_TEMPLATE_ATTRIBUTE);
         
-        if(StringUtils.hasText(webServiceTemplate)) {
+        if (StringUtils.hasText(webServiceTemplate)) {
         	if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE) ||
                     element.hasAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE) ||
                     element.hasAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE)) {
@@ -60,11 +60,11 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         
         String messageFactory = "messageFactory"; //default value
         
-        if(element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
+        if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
             messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
         }
         
-        if(!StringUtils.hasText(messageFactory)) {
+        if (!StringUtils.hasText(messageFactory)) {
             parserContext.getReaderContext().error(
                     "'" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "' attribute must not be empty for element", element);
         }

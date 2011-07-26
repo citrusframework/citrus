@@ -35,7 +35,7 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailStringValidator
     @Override
     protected void validateFaultDetailString(String receivedDetailString, String controlDetailString) 
         throws ValidationException {
-        if(!StringUtils.trimAllWhitespace(receivedDetailString).equals( 
+        if (!StringUtils.trimAllWhitespace(receivedDetailString).equals( 
                 StringUtils.trimAllWhitespace(controlDetailString))) {
             throw new ValidationException("SOAP fault validation failed! Fault detail does not match: expected \n'" +
                     StringUtils.trimAllWhitespace(controlDetailString) + "' \n received \n'" + StringUtils.trimAllWhitespace(receivedDetailString) + "'");

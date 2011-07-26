@@ -93,16 +93,16 @@ public abstract class TestUtils {
                         throws SAXException {
                     
                     //start when actions element is reached
-                    if(qName.equals("actions")) {
+                    if (qName.equals("actions")) {
                         stackFinder = new FailureStackFinder(test);
                         return;
                     }
                     
-                    if(stackFinder != null) {
-                        if(stackFinder.isFailureStackElement(qName)) {
+                    if (stackFinder != null) {
+                        if (stackFinder.isFailureStackElement(qName)) {
                             failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
                             
-                            if(stackFinder.getNestedActionContainer() != null && 
+                            if (stackFinder.getNestedActionContainer() != null && 
                                     stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
                                 //continue with nested action container, in order to find out which action caused the failure
                                 stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
@@ -186,15 +186,15 @@ public abstract class TestUtils {
              * tree. SAX content handler can not differ between action elements and other nested elements
              * in startElement event. 
              */
-            if(eventElement.equals(action.getName())) {
-                if(action instanceof TestActionContainer && !actionStack.isEmpty()) {
+            if (eventElement.equals(action.getName())) {
+                if (action instanceof TestActionContainer && !actionStack.isEmpty()) {
                     TestActionContainer container = (TestActionContainer)action;
                     for (int i = container.getActions().size()-1; i >= 0; i--) {
                         actionStack.add(container.getActions().get(i));
                     }
                 }
                 
-                if(!actionStack.isEmpty()) {
+                if (!actionStack.isEmpty()) {
                     action = null;
                 }
             } else {
@@ -211,7 +211,7 @@ public abstract class TestUtils {
          * @return the nested container or null
          */
         public TestActionContainer getNestedActionContainer() {
-            if(action instanceof TestActionContainer) {
+            if (action instanceof TestActionContainer) {
                 return (TestActionContainer)action;
             } else {
                 return null;

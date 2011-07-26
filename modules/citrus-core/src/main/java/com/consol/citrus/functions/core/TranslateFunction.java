@@ -51,7 +51,7 @@ public class TranslateFunction implements Function {
             replacement = parameterList.get(2);
         }
 
-        if(regex != null && replacement != null) {
+        if (regex != null && replacement != null) {
             resultString = resultString.replaceAll(regex, replacement);
         }
 

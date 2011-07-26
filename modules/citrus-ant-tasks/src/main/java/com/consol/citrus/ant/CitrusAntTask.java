@@ -33,7 +33,7 @@ public class CitrusAntTask extends Java {
     
     @Override
     public void execute() throws BuildException {
-        if(suitename != null && suitename.length() > 0) {
+        if (suitename != null && suitename.length() > 0) {
             this.createArg().setValue("-suitename");
             String[] suites = suitename.split(" ");
             for (String suite : suites) {
@@ -41,7 +41,7 @@ public class CitrusAntTask extends Java {
             }
         }
         
-        if(test != null && test.length() > 0) {
+        if (test != null && test.length() > 0) {
             this.createArg().setValue("-test");
             String[] tests = test.split(" ");
             for (String testname : tests) {
@@ -49,7 +49,7 @@ public class CitrusAntTask extends Java {
             }
         }
         
-        if(packages != null && packages.length() > 0) {
+        if (packages != null && packages.length() > 0) {
             this.createArg().setValue("-package");
             String[] packageNames = packages.split(" ");
             for (String packageName : packageNames) {
@@ -57,7 +57,7 @@ public class CitrusAntTask extends Java {
             }
         }
         
-        if(testngXml != null && testngXml.length() > 0) {
+        if (testngXml != null && testngXml.length() > 0) {
             String[] testNgSuites = testngXml.split(" ");
             for (String testNgSuite : testNgSuites) {
                 this.createArg().setValue(testNgSuite);

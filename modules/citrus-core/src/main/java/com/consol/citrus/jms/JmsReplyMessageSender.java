@@ -57,7 +57,7 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
         Destination replyDestination;
         Message<?> replyMessage;
         
-        if(correlator != null) {
+        if (correlator != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
             		"you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
             
@@ -99,10 +99,10 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
      */
     protected String getDestinationName(Destination destination) {
         try {
-            if(destination != null) {
-                if(destination instanceof Queue) {
+            if (destination != null) {
+                if (destination instanceof Queue) {
                     return ((Queue)destination).getQueueName();
-                } else if(destination instanceof Topic) {
+                } else if (destination instanceof Topic) {
                     return ((Topic)destination).getTopicName();
                 } else {
                     return destination.toString();

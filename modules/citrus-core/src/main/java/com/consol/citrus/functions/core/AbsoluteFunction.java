@@ -39,7 +39,7 @@ public class AbsoluteFunction implements Function {
 
         String param = parameterList.get(0);
         
-        if(param.contains(".")) {
+        if (param.contains(".")) {
             return Double.valueOf(Math.abs(Double.valueOf(param))).toString();
         } else {
             return Integer.valueOf(Math.abs(Integer.valueOf(param))).toString();

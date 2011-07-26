@@ -69,13 +69,13 @@ public class TestCaseCreator {
         TESTNG, JUNIT3, JUNIT4;
         
         public static UnitFramework fromString(String value) {
-            if(value.equalsIgnoreCase("testng")) {
+            if (value.equalsIgnoreCase("testng")) {
                 return TESTNG;
-            } else if(value.equalsIgnoreCase("junit3")) {
+            } else if (value.equalsIgnoreCase("junit3")) {
                 return JUNIT3;
-            } else if(value.equalsIgnoreCase("junit4")) {
+            } else if (value.equalsIgnoreCase("junit4")) {
                 return JUNIT4;
-            } else if(value.equalsIgnoreCase("junit")) {
+            } else if (value.equalsIgnoreCase("junit")) {
                 return JUNIT3;
             } else {
                 throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
@@ -96,7 +96,7 @@ public class TestCaseCreator {
         try {
             cmd = cliParser.parse(options, args);
             
-            if(cmd.hasOption("help")) {
+            if (cmd.hasOption("help")) {
                 HelpFormatter formatter = new HelpFormatter();
                 formatter.printHelp("CITRUS test creation", options);
                 return;
@@ -120,7 +120,7 @@ public class TestCaseCreator {
      * Create the test case.
      */
     public void createTestCase() {
-        if(Character.isLowerCase(name.charAt(0))) {
+        if (Character.isLowerCase(name.charAt(0))) {
             throw new CitrusRuntimeException("Test name must start with an uppercase letter");
         }
         
@@ -205,7 +205,7 @@ public class TestCaseCreator {
             throw new CitrusRuntimeException("Failed to create test case, error while accessing test case template file", e);
         } finally {
             try {
-                if(reader != null) {
+                if (reader != null) {
                     reader.close();
                 }
             } catch (IOException e) {
@@ -228,7 +228,7 @@ public class TestCaseCreator {
         
         try {
             File file = new File(filePath);
-            if(!file.getParentFile().exists()) {
+            if (!file.getParentFile().exists()) {
                 boolean success = file.getParentFile().mkdirs();
                 
                 if (!success) {
@@ -245,7 +245,7 @@ public class TestCaseCreator {
             throw new CitrusRuntimeException("Failed to create test case, unable to access test file", e);
         } finally {
             try {
-                if(buffered != null) {
+                if (buffered != null) {
                     buffered.close();
                 }
             } catch (IOException e) {

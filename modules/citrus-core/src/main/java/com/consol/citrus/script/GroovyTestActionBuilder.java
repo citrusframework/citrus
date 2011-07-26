@@ -42,18 +42,18 @@ public class GroovyTestActionBuilder {
     public TestAction build(String name, Map<String, Object> properties) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.childBeanDefinition(name);
         
-        if(name.startsWith("send")) {
+        if (name.startsWith("send")) {
             beanDefinition.addPropertyValue("headerValues", properties.get("header"));
             beanDefinition.addPropertyValue("messageData", properties.get("msg").toString());
             
-            if(properties.get("replace") != null) {
+            if (properties.get("replace") != null) {
                 beanDefinition.addPropertyValue("messageElements", properties.get("replace"));
             }
-        } else if(name.startsWith("receive")) {
+        } else if (name.startsWith("receive")) {
             beanDefinition.addPropertyValue("headerValues", properties.get("header"));
             beanDefinition.addPropertyValue("messageData", properties.get("msg").toString());
             
-            if(properties.get("replace") != null) {
+            if (properties.get("replace") != null) {
                 beanDefinition.addPropertyValue("messageElements", properties.get("replace"));
             }
         }

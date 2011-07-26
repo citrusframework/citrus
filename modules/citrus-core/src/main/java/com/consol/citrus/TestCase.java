@@ -78,7 +78,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             if (VariableUtils.isVariableName(value)) {
                 value = context.getVariable(value);
-            } else if(context.getFunctionRegistry().isFunction(value)) {
+            } else if (context.getFunctionRegistry().isFunction(value)) {
                 value = FunctionUtils.resolveFunction(value, context);
             }
 

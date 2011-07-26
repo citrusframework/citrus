@@ -39,7 +39,7 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
      */
     public boolean understands(SoapHeaderElement header) {
         //see if header is accepted
-        if(header.getName() != null && acceptedHeaders.contains(header.getName().toString())) {
+        if (header.getName() != null && acceptedHeaders.contains(header.getName().toString())) {
             return true;
         }
         

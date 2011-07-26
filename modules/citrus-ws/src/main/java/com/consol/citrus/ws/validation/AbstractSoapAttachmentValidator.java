@@ -52,8 +52,8 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     public void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException {
         log.info("Validating SOAP attachments ...");
         
-        if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_ID)) {
-            if(log.isDebugEnabled()) {
+        if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_ID)) {
+            if (log.isDebugEnabled()) {
                 log.debug("Found attachment with contentId '" + receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID) + "'");
             }
             
@@ -61,23 +61,23 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             
             attachment.setContentId(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID).toString());
             
-            if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_TYPE)) {
+            if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_TYPE)) {
                 attachment.setContentType(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_TYPE).toString());
             }
             
-            if(receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT)) {
+            if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT)) {
                 Object contentObject = receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT);
                 
-                if(contentObject instanceof byte[]) {
+                if (contentObject instanceof byte[]) {
                     String content = new String((byte[])contentObject, controlAttachment.getCharsetName());
                     
-                    if(content.contains("<?xml")) {
+                    if (content.contains("<?xml")) {
                         //strip off possible leading prolog characters in xml content
                         attachment.setContent(content.substring(content.indexOf('<')));
                     } else {
                         attachment.setContent(content);
                     }
-                } else if(contentObject instanceof String) {
+                } else if (contentObject instanceof String) {
                     attachment.setContent(contentObject.toString());
                 } else {
                     throw new IllegalArgumentException("Unsupported attachment content object (" + contentObject.getClass() + ")." +
@@ -102,9 +102,9 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      */
     protected void validateAttachmentContentId(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         //in case contentId was not set in test case, skip validation 
-        if(!StringUtils.hasText(controlAttachment.getContentId())) { return; }
+        if (!StringUtils.hasText(controlAttachment.getContentId())) { return; }
         
-        if(receivedAttachment.getContentId() != null) {
+        if (receivedAttachment.getContentId() != null) {
             Assert.isTrue(controlAttachment.getContentId() != null, 
                     "Values not equal for attachment contentId, expected '"
                         + null + "' but was '"
@@ -121,7 +121,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                         + null + "'");
         }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating attachment contentId: " + receivedAttachment.getContentId() + 
                     "='" + controlAttachment.getContentId() + "': OK.");
         }
@@ -134,9 +134,9 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      */
     protected void validateAttachmentContentType(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         //in case contentType was not set in test case, skip validation
-        if(!StringUtils.hasText(controlAttachment.getContentType())) { return; }
+        if (!StringUtils.hasText(controlAttachment.getContentType())) { return; }
         
-        if(receivedAttachment.getContentType() != null) {
+        if (receivedAttachment.getContentType() != null) {
             Assert.isTrue(controlAttachment.getContentType() != null, 
                     "Values not equal for attachment contentType, expected '"
                         + null + "' but was '"
@@ -153,7 +153,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                         + null + "'");
         }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
                     "='" + controlAttachment.getContentType() + "': OK.");
         }

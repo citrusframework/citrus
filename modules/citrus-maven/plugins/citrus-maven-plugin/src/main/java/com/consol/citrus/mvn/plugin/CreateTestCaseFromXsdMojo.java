@@ -129,7 +129,7 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 			SchemaType requestElem = null;
 			SchemaType responseElem = null;
 			
-			if(interactiveMode) {
+			if (interactiveMode) {
 				xsdRequestElem = prompter.prompt("Enter tag of request-element", xsdRequestElem);
 				for (SchemaType elem : globalElems) {
 					if (elem.toString().contains(xsdRequestElem)) {
@@ -161,11 +161,11 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
         		name = prompter.prompt("Enter test name", name);
         	}
         	
-        	if(!StringUtils.hasText(name)) {
+        	if (!StringUtils.hasText(name)) {
         		throw new CitrusRuntimeException("Test must have a name!");
         	}
         	
-        	if(interactiveMode) {
+        	if (interactiveMode) {
         		author = prompter.prompt("Enter test author:", author);
         		description = prompter.prompt("Enter test description:", description);
         		targetPackage = prompter.prompt("Enter test package:", targetPackage);
@@ -178,7 +178,7 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
     					"description: " + description + "\n" +
     					"package: " + targetPackage + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
-		    	if(confirm.equalsIgnoreCase("n")) {
+		    	if (confirm.equalsIgnoreCase("n")) {
 		    		return;
 		    	}
         	}

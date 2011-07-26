@@ -49,7 +49,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("scriptTemplateResource", FileUtils.getResourceFromFilePath(scriptTemplatePath));
         }
         
-        if(DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
+        if (DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
             beanDefinition.addPropertyValue("script", DomUtils.getTextValue(element));
         }
         

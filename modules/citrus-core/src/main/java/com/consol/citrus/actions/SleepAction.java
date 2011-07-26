@@ -45,7 +45,7 @@ public class SleepAction extends AbstractTestAction {
 
         if (VariableUtils.isVariableName(delay)) {
             value = context.getVariable(delay);
-        } else if(context.getFunctionRegistry().isFunction(delay)) {
+        } else if (context.getFunctionRegistry().isFunction(delay)) {
             value = FunctionUtils.resolveFunction(delay, context);
         } else {
             value = delay;

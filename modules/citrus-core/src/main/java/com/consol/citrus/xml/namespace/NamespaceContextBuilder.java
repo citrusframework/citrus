@@ -60,11 +60,11 @@ public class NamespaceContextBuilder {
         }
         
         Map<String, String> dynamicBindings = XMLUtils.lookupNamespaces(receivedMessage.getPayload().toString());
-        if(!CollectionUtils.isEmpty(namespaces)) {
+        if (!CollectionUtils.isEmpty(namespaces)) {
             //dynamic binding of namespaces declarations in root element of received message
             for (Entry<String, String> binding : dynamicBindings.entrySet()) {
                 //only bind namespace that is not present in explicit namespace bindings
-                if(!namespaces.containsValue(binding.getValue())) {
+                if (!namespaces.containsValue(binding.getValue())) {
                     simpleNamespaceContext.bindNamespaceUri(binding.getKey(), binding.getValue());
                 }
             }

@@ -44,7 +44,7 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
     @Override
     public void prepareTestInstance(TestContext testContext) throws Exception {
         synchronized (doneMonitor) {
-            if(done) { 
+            if (done) { 
                 return; 
             } else {
                 done = true;

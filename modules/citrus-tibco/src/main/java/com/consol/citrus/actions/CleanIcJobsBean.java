@@ -85,7 +85,7 @@ public class CleanIcJobsBean extends AbstractTestAction {
             session = client.createSession(userName, password, serverName);
             log.info("Connected to icServer "  + serverName + " as user " + userName);
             
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Using transport configuration: " + client.getDefaultTransportConfig(serverName));
             }
 

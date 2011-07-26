@@ -38,9 +38,9 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
         SoapAttachmentParser.parseAttachment(builder, element, parserContext);
         
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
-        if(attachmentElement != null) {
+        if (attachmentElement != null) {
             String attachmentValidator = attachmentElement.getAttribute("validator");
-            if(StringUtils.hasText(attachmentValidator)) {
+            if (StringUtils.hasText(attachmentValidator)) {
                 builder.addPropertyReference("attachmentValidator", attachmentValidator);
             } else { //inject default soap attachment validator implementation
                 builder.addPropertyReference("attachmentValidator", "soapAttachmentValidator");

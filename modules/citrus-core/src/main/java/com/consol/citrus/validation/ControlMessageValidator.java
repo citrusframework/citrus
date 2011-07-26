@@ -94,13 +94,13 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
-            if(MessageUtils.isSpringInternalHeader(headerName)) {
+            if (MessageUtils.isSpringInternalHeader(headerName)) {
                 continue;
             }
 
             if (VariableUtils.isVariableName(headerName)) {
                 headerName = context.getVariable(headerName);
-            } else if(context.getFunctionRegistry().isFunction(headerName)) {
+            } else if (context.getFunctionRegistry().isFunction(headerName)) {
                 headerName = FunctionUtils.resolveFunction(headerName, context);
             }
 
@@ -108,18 +108,18 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
             
-            if(receivedHeaders.get(headerName) != null) {
+            if (receivedHeaders.get(headerName) != null) {
                 actualValue = receivedHeaders.get(headerName).toString();
             }
 
             if (VariableUtils.isVariableName(expectedValue)) {
                 expectedValue = context.getVariable(expectedValue);
-            } else if(context.getFunctionRegistry().isFunction(expectedValue)) {
+            } else if (context.getFunctionRegistry().isFunction(expectedValue)) {
                 expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
             }
 
             try {
-                if(actualValue != null) {
+                if (actualValue != null) {
                     Assert.isTrue(expectedValue != null,
                             "Values not equal for header element '"
                                 + headerName + "', expected '"
@@ -142,7 +142,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
                 throw new ValidationException("Validation failed:", e);
             }
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
             }
         }

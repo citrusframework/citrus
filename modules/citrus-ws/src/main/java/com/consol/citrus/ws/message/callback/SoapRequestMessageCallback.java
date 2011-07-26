@@ -83,13 +83,13 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
         
         // Copy headers into soap-header:
         for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-            if(MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
+            if (MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 continue;
             }
             
-            if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
+            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 soapRequest.setSoapAction(headerEntry.getValue().toString());
-            } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         soapRequest.getSoapHeader().getResult());
             } else if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
@@ -98,7 +98,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
                         headerEntry.getValue());
             } else {
                 SoapHeaderElement headerElement;
-                if(QNameUtils.validateQName(headerEntry.getKey())) {
+                if (QNameUtils.validateQName(headerEntry.getKey())) {
                     headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
                 } else {
                     headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
@@ -108,8 +108,8 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
             }
         }
         // Add attachment:
-        if(attachment != null) {
-            if(log.isDebugEnabled()) {
+        if (attachment != null) {
+            if (log.isDebugEnabled()) {
                 log.debug("Adding attachment to SOAP message: '" + attachment.getContentId() + "' ('" + attachment.getContentType() + "')");
             }
             

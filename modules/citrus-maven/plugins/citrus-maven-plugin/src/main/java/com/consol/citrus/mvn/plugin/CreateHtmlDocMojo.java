@@ -85,7 +85,7 @@ public class CreateHtmlDocMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException {
     	try {
-			if(interactiveMode) {
+			if (interactiveMode) {
 				overviewTitle = prompter.prompt("Enter overview title:", overviewTitle);
 				columns = prompter.prompt("Enter number of columns in overview:", columns);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
@@ -95,7 +95,7 @@ public class CreateHtmlDocMojo extends AbstractMojo {
 				String confirm = prompter.prompt("Confirm HTML documentation: outputFile='target/" + outputFile + ".html'\n", 
 				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
-		    	if(confirm.equalsIgnoreCase("n")) {
+		    	if (confirm.equalsIgnoreCase("n")) {
 		    		return;
 		    	}
 			}

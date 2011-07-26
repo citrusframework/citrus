@@ -61,7 +61,7 @@ public abstract class XPathUtils {
      */
     public static String evaluate(Node node, String xPathExpression,
             NamespaceContext nsContext, XPathExpressionResult resultType) {
-        if(resultType.equals(XPathExpressionResult.NODE)) {
+        if (resultType.equals(XPathExpressionResult.NODE)) {
             Node resultNode = evaluateAsNode(node, xPathExpression, nsContext);
 
             if (resultNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -73,12 +73,12 @@ public abstract class XPathUtils {
             } else {
                 return resultNode.getNodeValue();
             }
-        } else if(resultType.equals(XPathExpressionResult.STRING)){
+        } else if (resultType.equals(XPathExpressionResult.STRING)){
             return evaluateAsString(node, xPathExpression, nsContext);
         } else {
             Object result = evaluateAsObject(node, xPathExpression, nsContext, resultType.getAsQName());
 
-            if(result == null) {
+            if (result == null) {
                 throw new CitrusRuntimeException("No result for XPath expression: '" + xPathExpression + "'");
             } else {
                 return result.toString();
@@ -169,7 +169,7 @@ public abstract class XPathUtils {
             throws XPathExpressionException {
         XPath xpath = xPathFactory.newXPath();
 
-        if(nsContext != null) {
+        if (nsContext != null) {
             xpath.setNamespaceContext(nsContext);
         } else {
             xpath.setNamespaceContext(buildNamespaceContext(node));

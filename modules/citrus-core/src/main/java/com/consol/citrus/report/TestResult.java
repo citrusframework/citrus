@@ -90,7 +90,7 @@ public class TestResult {
             case FAILURE:
                 builder.append(" FAILED");
                 
-                if(cause!= null && StringUtils.hasText(cause.getLocalizedMessage())) {
+                if (cause!= null && StringUtils.hasText(cause.getLocalizedMessage())) {
                     builder.append("\n FAILED! Caused by: \n " + cause.getClass().getName() + ": " +  cause.getLocalizedMessage());
                 } else {
                     builder.append("\n FAILED! Caused by: Unknown error");

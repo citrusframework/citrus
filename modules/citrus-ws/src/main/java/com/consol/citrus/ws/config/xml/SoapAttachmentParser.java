@@ -45,20 +45,20 @@ public final class SoapAttachmentParser {
      */
     public static void parseAttachment(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
-        if(attachmentElement == null) { return; }
+        if (attachmentElement == null) { return; }
         
         String contentId = attachmentElement.getAttribute("content-id");
-        if(StringUtils.hasText(contentId)) {
+        if (StringUtils.hasText(contentId)) {
             builder.addPropertyValue("contentId", contentId);
         }
         
         String contentType = attachmentElement.getAttribute("content-type");
-        if(StringUtils.hasText(contentType)) {
+        if (StringUtils.hasText(contentType)) {
             builder.addPropertyValue("contentType", contentType);
         }
         
         String charset = attachmentElement.getAttribute("charset-name");
-        if(StringUtils.hasText(charset)) {
+        if (StringUtils.hasText(charset)) {
             builder.addPropertyValue("charsetName", charset);
         }
         

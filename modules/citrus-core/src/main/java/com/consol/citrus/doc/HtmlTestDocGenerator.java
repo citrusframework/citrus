@@ -168,7 +168,7 @@ public class HtmlTestDocGenerator {
         } catch (ParserConfigurationException e) {
             throw new CitrusRuntimeException(e);
         } finally {
-            if(reader != null) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -176,7 +176,7 @@ public class HtmlTestDocGenerator {
                 }
             }
             
-            if(buffered != null) {
+            if (buffered != null) {
                 try {
                     buffered.flush();
                 } catch (IOException e) {
@@ -184,7 +184,7 @@ public class HtmlTestDocGenerator {
                 }
             }
             
-            if(file != null) {
+            if (file != null) {
                 try {
                     file.close();
                 } catch (IOException e) {

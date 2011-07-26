@@ -56,11 +56,11 @@ public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
             
-            if(element.hasAttribute(CONNECTION_FACTORY_ATTRIBUTE)) {
+            if (element.hasAttribute(CONNECTION_FACTORY_ATTRIBUTE)) {
                 connectionFactory = element.getAttribute(CONNECTION_FACTORY_ATTRIBUTE);
             }
             
-            if(!StringUtils.hasText(connectionFactory)) {
+            if (!StringUtils.hasText(connectionFactory)) {
                 parserContext.getReaderContext().error(
                         "connection-factory attribute must not be empty for jms configuration elements", element);
             }

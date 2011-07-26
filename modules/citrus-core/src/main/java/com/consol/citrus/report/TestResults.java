@@ -78,7 +78,7 @@ public class TestResults extends ArrayList<TestResult> {
      */
     public int getSuccess() {
         synchronized (cacheLock) {
-            if(!cached) {
+            if (!cached) {
                 cntSuccess = getCountForResult(RESULT.SUCCESS);
             }
             
@@ -92,7 +92,7 @@ public class TestResults extends ArrayList<TestResult> {
      */
     public int getFailed() {
         synchronized (cacheLock) {
-            if(!cached) {
+            if (!cached) {
                 cntFailed = getCountForResult(RESULT.FAILURE);
             }
             
@@ -106,7 +106,7 @@ public class TestResults extends ArrayList<TestResult> {
      */
     public int getSkipped() {
         synchronized (cacheLock) {
-            if(!cached) {
+            if (!cached) {
                 cntSkipped = getCountForResult(RESULT.SKIP);
             }
             
@@ -123,7 +123,7 @@ public class TestResults extends ArrayList<TestResult> {
         int count = 0;
         
         for (TestResult testResult : this) {
-            if(testResult.getResult().equals(result)) {
+            if (testResult.getResult().equals(result)) {
                 count++;
             }
         }

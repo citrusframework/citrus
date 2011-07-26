@@ -59,8 +59,8 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
                 receivedMessage = messageReceiver.receive(timeout); 
             }
 
-            if(receivedMessage != null) {
-                if(log.isDebugEnabled()) {
+            if (receivedMessage != null) {
+                if (log.isDebugEnabled()) {
                     log.debug("Received message: " + receivedMessage.getPayload());
                 }
                 

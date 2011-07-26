@@ -109,7 +109,7 @@ public final class SvgTestDocGenerator {
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to generate test documentation, IO error", e);
                 } finally {
-                    if(fileWriter != null) {
+                    if (fileWriter != null) {
                         try {
                             fileWriter.close();
                         } catch (IOException e) {

@@ -71,9 +71,9 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     private void saveReplyMessageChannel(Message<?> receivedMessage) {
         MessageChannel replyChannel;
         
-        if(receivedMessage.getHeaders().getReplyChannel() instanceof MessageChannel) {
+        if (receivedMessage.getHeaders().getReplyChannel() instanceof MessageChannel) {
             replyChannel = (MessageChannel)receivedMessage.getHeaders().getReplyChannel();
-        } else if(StringUtils.hasText((String)receivedMessage.getHeaders().getReplyChannel())){
+        } else if (StringUtils.hasText((String)receivedMessage.getHeaders().getReplyChannel())){
             replyChannel = resolveChannelName(receivedMessage.getHeaders().getReplyChannel().toString());
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" + 
@@ -81,7 +81,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
             return;
         }
         
-        if(correlator != null) {
+        if (correlator != null) {
             replyChannels.put(correlator.getCorrelationKey(receivedMessage), replyChannel);
         } else {
             replyChannels.put("", replyChannel);

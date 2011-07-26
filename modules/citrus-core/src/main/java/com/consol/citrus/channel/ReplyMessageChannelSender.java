@@ -56,7 +56,7 @@ public class ReplyMessageChannelSender implements MessageSender {
         MessageChannel replyChannel;
         Message<?> replyMessage;
         
-        if(correlator != null) {
+        if (correlator != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
             

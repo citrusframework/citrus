@@ -69,7 +69,7 @@ public class AssertParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             
-            if(parser ==  null) {
+            if (parser ==  null) {
             	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
             } else {
             	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));

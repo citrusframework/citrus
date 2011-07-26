@@ -43,7 +43,7 @@ public class JmsSyncMessageSenderParser extends AbstractJmsConfigParser {
         
         if (StringUtils.hasText(replyDestination)) {
             builder.addPropertyReference("replyDestination", replyDestination);
-        } else if(StringUtils.hasText(replyDestinationName)){
+        } else if (StringUtils.hasText(replyDestinationName)){
             builder.addPropertyValue("replyDestinationName", replyDestinationName);
         }
         

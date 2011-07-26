@@ -85,7 +85,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
             DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
             DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 for (int i = 0; i < domImplList.getLength(); i++) {
                     log.debug("Found DOMImplementationLS: " + domImplList.item(i));
                 }
@@ -96,24 +96,24 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                 try {
                     domImpl = (DOMImplementationLS)domImplList.item(i);
 
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Using DOMSerializerImpl: " + domImpl.getClass().getName());
                     }
 
                     LSSerializer serializer = domImpl.createLSSerializer();
 
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Using LSSerializer: " + serializer.getClass().getName());
                     }
 
                     if (serializer.getDomConfig().canSetParameter("format-pretty-print", true)) {
-                        if(log.isDebugEnabled()) {
+                        if (log.isDebugEnabled()) {
                             log.debug("Setting parameter format-pretty-print " + true);
                         }
                         serializer.getDomConfig().setParameter("format-pretty-print", true);
                     }
 
-                    if(!outputFile.exists()) {
+                    if (!outputFile.exists()) {
                         boolean success = outputFile.getFile().getParentFile().mkdirs();
                         
                         if (!success) {
@@ -123,7 +123,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
                         outputFile.createRelative("");
                     }
                     
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Serializing to file " + outputFile.getFile().toURI().toString());
                     }
 
@@ -137,7 +137,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
             }
 
             log.info("JUnit results successfully");
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("OutputFile is: " + outputFile.getFile().getPath());
             }
         } catch (IOException e) {

@@ -113,7 +113,7 @@ public class TestContext {
             throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Setting variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + " with value: '" + value + "'");
         }
 
@@ -152,7 +152,7 @@ public class TestContext {
 
             if (VariableUtils.isVariableName(value)) {
                 target.put(key, getVariable(value));
-            } else if(functionRegistry.isFunction(value)) {
+            } else if (functionRegistry.isFunction(value)) {
                 target.put(key, FunctionUtils.resolveFunction(value, this));
             } else {
                 target.put(key, value);
@@ -175,7 +175,7 @@ public class TestContext {
         for (String entry : list) {
             if (VariableUtils.isVariableName(entry)) {
                 variableFreeList.add(getVariable(entry));
-            } else if(functionRegistry.isFunction(entry)) {
+            } else if (functionRegistry.isFunction(entry)) {
                 variableFreeList.add(FunctionUtils.resolveFunction(entry, this));
             } else {
                 variableFreeList.add(entry);

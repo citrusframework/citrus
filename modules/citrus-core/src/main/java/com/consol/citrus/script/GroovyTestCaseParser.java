@@ -86,7 +86,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             GroovyObject groovyObject;
             groovyObject = (GroovyObject) groovyClass.newInstance();
             
-            if(groovyObject instanceof TestCaseBuilder) {
+            if (groovyObject instanceof TestCaseBuilder) {
                 return ((TestCaseBuilder)groovyObject).build(applicationContext);
             } else {
                 throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
@@ -101,7 +101,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             throw new CitrusRuntimeException(e);
         } finally {
             try {
-                if(templateReader != null) {
+                if (templateReader != null) {
                     templateReader.close();
                 }
             } catch (IOException e) {
@@ -109,7 +109,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             }
             
             try {
-                if(bodyReader != null) {
+                if (bodyReader != null) {
                     bodyReader.close();
                 }
             } catch (IOException e) {

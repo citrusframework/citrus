@@ -68,7 +68,7 @@ public class ActiveMQServer extends AbstractServer {
      */
     @Override
     protected void shutdown() {
-        if(broker != null) {
+        if (broker != null) {
             try {
                 broker.stop();
             } catch (Exception e) {

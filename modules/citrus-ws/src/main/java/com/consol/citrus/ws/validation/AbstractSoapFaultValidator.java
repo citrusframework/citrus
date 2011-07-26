@@ -44,9 +44,9 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      */
     public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault)
             throws ValidationException {
-        if(controlFault.getFaultStringOrReason() != null && 
+        if (controlFault.getFaultStringOrReason() != null && 
                 !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
-            if(controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if (controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
                 log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
             } else {
                 throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
@@ -54,16 +54,16 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
             }
         }
         
-        if(StringUtils.hasText(controlFault.getFaultCode().getLocalPart())) {
+        if (StringUtils.hasText(controlFault.getFaultCode().getLocalPart())) {
             Assert.isTrue(controlFault.getFaultCode().equals(receivedFault.getFaultCode()), 
                     "SOAP fault validation failed! Fault code does not match - expected: '" +
                     controlFault.getFaultCode() + "' but was: '" + receivedFault.getFaultCode() + "'");
         }
         
-        if(controlFault.getFaultDetail() != null) {
+        if (controlFault.getFaultDetail() != null) {
             SoapFaultDetail detail = receivedFault.getFaultDetail();
             
-            if(detail == null) {
+            if (detail == null) {
                 throw new ValidationException("SOAP fault validation failed! Missing fault detail in received message.");
             }
             

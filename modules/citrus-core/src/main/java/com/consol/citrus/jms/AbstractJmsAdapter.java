@@ -79,7 +79,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
             
             if (this.destination != null) {
                 jmsTemplate.setDefaultDestination(this.destination);
-            } else if(this.destinationName != null) {
+            } else if (this.destinationName != null) {
                 jmsTemplate.setDefaultDestinationName(this.destinationName);
             } 
             
@@ -146,10 +146,10 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
      */
     public String getDefaultDestinationName() {
         try {
-            if(getJmsTemplate().getDefaultDestination() != null) {
-                if(getJmsTemplate().getDefaultDestination() instanceof Queue) {
+            if (getJmsTemplate().getDefaultDestination() != null) {
+                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
                     return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if(getJmsTemplate().getDefaultDestination() instanceof Topic) {
+                } else if (getJmsTemplate().getDefaultDestination() instanceof Topic) {
                     return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
                 } else {
                     return getJmsTemplate().getDefaultDestination().toString();

@@ -131,7 +131,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     protected void executeTest(ITestContext testContext) {
         TestCase testCase = getTestCase();
 
-        if(!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
+        if (!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
             testListener.onTestStart(testCase);
 
             try {

@@ -152,13 +152,13 @@ public class TestCaseParser implements BeanDefinitionParser {
             }
             
             String status = DomUtils.getTextValue(statusElement);
-            if(status.equals("DRAFT")) {
+            if (status.equals("DRAFT")) {
                 metaInfo.setStatus(Status.DRAFT);
-            } else if(status.equals("READY_FOR_REVIEW")) {
+            } else if (status.equals("READY_FOR_REVIEW")) {
                 metaInfo.setStatus(Status.READY_FOR_REVIEW);
-            } else if(status.equals("FINAL")) {
+            } else if (status.equals("FINAL")) {
                 metaInfo.setStatus(Status.FINAL);
-            } else if(status.equals("DISABLED")) {
+            } else if (status.equals("DISABLED")) {
                 metaInfo.setStatus(Status.DISABLED);
             }
 

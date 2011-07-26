@@ -47,7 +47,7 @@ public class BookRegistry {
         
         Book book = request.getPayload().getBook();
         
-        if(!bookRegistry.containsKey(book.getIsbn())) {
+        if ((!bookRegistry.containsKey(book.getIsbn())) {
             book.setId(ids.incrementAndGet());
             book.setRegistrationDate(new Date());
             bookRegistry.put(book.getIsbn(), book);
@@ -70,7 +70,7 @@ public class BookRegistry {
         
         Book book = bookRegistry.get(request.getPayload().getIsbn());
         
-        if(book == null) {
+       if ( (book == null) {
             throw new UnknownBookException(request, request.getPayload().getIsbn());
         } else {
             response.setBook(book);
@@ -89,7 +89,7 @@ public class BookRegistry {
         
         Book book = bookRegistry.get(request.getPayload().getIsbn());
         
-        if(book == null) {
+      if (f (book == null) {
             throw new UnknownBookException(request, request.getPayload().getIsbn());
         } else {
             response.setBook(book);

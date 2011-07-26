@@ -72,7 +72,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
     public Message<?> handleMessage(final Message<?> request) {
         log.info("Forwarding request to: " + getChannelName());
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Message is: " + request.getPayload());
         }
 
@@ -81,8 +81,8 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
         messagingTemplate.setReceiveTimeout(replyTimeout);
         replyMessage = messagingTemplate.sendAndReceive(getChannel(), request);
         
-        if((replyMessage == null || replyMessage.getPayload() == null)) {
-            if(fallbackMessageHandlerDelegate != null) {
+        if ((replyMessage == null || replyMessage.getPayload() == null)) {
+            if (fallbackMessageHandlerDelegate != null) {
                 log.info("Did not receive reply message - "
                         + "delegating to fallback message handler for response generation");
                 
@@ -100,7 +100,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      * @return the channelName
      */
     protected String getChannelName() {
-        if(channel != null) {
+        if (channel != null) {
             return channel.toString();
         } else {
             return channelName;
@@ -112,9 +112,9 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      * @return
      */
     private MessageChannel getChannel() {
-        if(channel != null) {
+        if (channel != null) {
             return channel;
-        } else if(StringUtils.hasText(channelName)) {
+        } else if (StringUtils.hasText(channelName)) {
             return channelResolver.resolveChannelName(channelName);
         } else {
             throw new CitrusRuntimeException("Neither 'channel' nor 'channelName' property " +

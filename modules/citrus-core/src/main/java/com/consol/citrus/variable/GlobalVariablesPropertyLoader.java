@@ -76,7 +76,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                     String propertyExpression;
                     while ((propertyExpression = reader.readLine()) != null) {
                         propertyExpression = propertyExpression.trim();
-                        if(!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#") 
+                        if (!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#") 
                                 || propertyExpression.indexOf('=') == -1) {
                             continue;
                         }

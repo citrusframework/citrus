@@ -41,13 +41,13 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
     
     @Override
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating SOAP attachment content ...");
             log.debug("Received attachment content: " + StringUtils.trimWhitespace(receivedAttachment.getContent()));
             log.debug("Control attachment content: " + StringUtils.trimWhitespace(controlAttachment.getContent()));
         }
         
-        if(receivedAttachment.getContent() != null) {
+        if (receivedAttachment.getContent() != null) {
             Assert.isTrue(controlAttachment.getContent() != null, 
                     "Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
@@ -78,7 +78,7 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
                         + null + "'");
         }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating attachment content: OK");
         }
     }

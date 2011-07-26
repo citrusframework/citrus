@@ -55,7 +55,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("TestContextFactory created test context '" + context
                     + "' using global variables: '"
                     + context.getGlobalVariables() + "'");

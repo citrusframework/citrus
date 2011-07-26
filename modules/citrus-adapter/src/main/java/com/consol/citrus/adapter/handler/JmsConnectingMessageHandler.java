@@ -108,7 +108,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     public Message<?> handleMessage(final Message<?> request) {
         log.info("Forwarding request to: " + getDestinationName());
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Message is: " + request.getPayload());
         }
         
@@ -118,11 +118,11 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         
         Message<?> replyMessage = null;
         try {
-            if(connection == null) { 
+            if (connection == null) { 
                 connection = createConnection();
             }
             
-            if(session == null) {
+            if (session == null) {
                 session = createSession(connection);
             }
             
@@ -134,7 +134,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             replyToDestination = getReplyDestination(session, request);
             jmsRequest.setJMSReplyTo(replyToDestination);
             
-            if(messageCallback != null) {
+            if (messageCallback != null) {
                 messageCallback.doWithMessage(jmsRequest, request);
             }
             
@@ -149,9 +149,9 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
-            if(jmsReplyMessage != null) {
+            if (jmsReplyMessage != null) {
                 replyMessage = (Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage);
-            } else if(fallbackMessageHandlerDelegate != null) {
+            } else if (fallbackMessageHandlerDelegate != null) {
                 log.info("Did not receive reply message from destination '"
                         + getReplyDestination(session, request)
                         + "' - delegating to fallback message handler for response generation");
@@ -201,8 +201,8 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      * @throws JMSException
      */
     private Destination getReplyDestination(Session session, Message<?> message) throws JMSException {
-        if(message.getHeaders().getReplyChannel() != null) {
-            if(message.getHeaders().getReplyChannel() instanceof Destination) {
+        if (message.getHeaders().getReplyChannel() != null) {
+            if (message.getHeaders().getReplyChannel() instanceof Destination) {
                 return (Destination)message.getHeaders().getReplyChannel();
             } else {
                 return new DynamicDestinationResolver().resolveDestinationName(session, 
@@ -238,10 +238,10 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      */
     protected String getDestinationName() {
         try {
-            if(destination != null) {
-                if(destination instanceof Queue) {
+            if (destination != null) {
+                if (destination instanceof Queue) {
                     return ((Queue)destination).getQueueName();
-                } else if(destination instanceof Topic) {
+                } else if (destination instanceof Topic) {
                     return ((Topic)destination).getTopicName();
                 } else {
                     return destination.toString();
@@ -261,14 +261,14 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      * @throws JMSException
      */
     protected Connection createConnection() throws JMSException {
-        if(connection == null) {
+        if (connection == null) {
             if (connectionFactory instanceof QueueConnectionFactory) {
                 this.connection = ((QueueConnectionFactory) connectionFactory).createQueueConnection();
             } else {
                 this.connection = connectionFactory.createConnection();
             }
             
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Created new JMS connection [" + connection + "]");
             }
         }
@@ -283,14 +283,14 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      * @throws JMSException
      */
     protected Session createSession(Connection connection) throws JMSException {
-        if(session == null) {
+        if (session == null) {
             if (connection instanceof QueueConnection) {
                 session = ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
             } else {
                 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             }
             
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Created new JMS session [" + session + "]");
             }
             
@@ -306,7 +306,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     public void destroy() throws Exception {
         JmsUtils.closeSession(session);
         
-        if(connection != null) {
+        if (connection != null) {
             ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
         }
     }

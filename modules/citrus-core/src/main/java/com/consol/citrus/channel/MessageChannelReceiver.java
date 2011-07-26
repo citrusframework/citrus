@@ -73,7 +73,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         messagingTemplate.setReceiveTimeout(timeout);
         Message<?> received = messagingTemplate.receive(getDestinationChannel());
         
-        if(received == null) {
+        if (received == null) {
             throw new ActionTimeoutException("Action timeout while receiving message from channel '"
                     + destinationChannelName + "'");
         }

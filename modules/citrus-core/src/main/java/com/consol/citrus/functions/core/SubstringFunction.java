@@ -48,7 +48,7 @@ public class SubstringFunction implements Function {
         String beginIndex = parameterList.get(1);
         String endIndex = null;
 
-        if(!StringUtils.hasText(beginIndex)) {
+        if (!StringUtils.hasText(beginIndex)) {
             throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
         }
         

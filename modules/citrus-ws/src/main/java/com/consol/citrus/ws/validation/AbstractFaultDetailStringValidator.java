@@ -45,14 +45,14 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
      */
     @Override
     protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail) {
-        if(controlDetail == null) { return; }
+        if (controlDetail == null) { return; }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating SOAP fault detail content ...");
         }
         
         try {
-            if(receivedDetail != null) {
+            if (receivedDetail != null) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 
@@ -64,7 +64,7 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
                 
                 String receivedDetailString = receivedDetailResult.toString();
                 String controlDetailString = controlDetailResult.toString();
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
                     log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
                 }

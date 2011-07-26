@@ -85,7 +85,7 @@ public class CreateExcelDocMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException {
     	try {
-			if(interactiveMode) {
+			if (interactiveMode) {
 				company = prompter.prompt("Enter company:", company);
 				author = prompter.prompt("Enter author:", author);
 				pageTitle = prompter.prompt("Enter page title:", pageTitle);
@@ -95,7 +95,7 @@ public class CreateExcelDocMojo extends AbstractMojo {
 				String confirm = prompter.prompt("Confirm Excel documentation: outputFile='target/" + outputFile + ".xls'\n", 
 				        CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
     	
-		    	if(confirm.equalsIgnoreCase("n")) {
+		    	if (confirm.equalsIgnoreCase("n")) {
 		    		return;
 		    	}
 			}

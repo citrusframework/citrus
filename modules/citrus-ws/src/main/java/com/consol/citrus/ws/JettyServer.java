@@ -75,7 +75,7 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     
     @Override
     protected void shutdown() {
-        if(jettyServer != null) {
+        if (jettyServer != null) {
             try {
                 synchronized (serverLock) {
                     jettyServer.stop();
@@ -108,7 +108,7 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
             context.setResourceBase(resourceBase);
             
             //add the root application context as parent to the constructed WebApplicationContext
-            if(useRootContextAsParent) {
+            if (useRootContextAsParent) {
                 context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
                         new SimpleDelegatingWebApplicationContext());
             }

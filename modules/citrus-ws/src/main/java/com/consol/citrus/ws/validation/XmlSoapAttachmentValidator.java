@@ -51,13 +51,13 @@ public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator 
 
 	@Override
 	protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-	    if(log.isDebugEnabled()) {
+	    if (log.isDebugEnabled()) {
             log.debug("Validating SOAP attachment content ...");
             log.debug("Received attachment content: " + StringUtils.trimWhitespace(receivedAttachment.getContent()));
             log.debug("Control attachment content: " + StringUtils.trimWhitespace(controlAttachment.getContent()));
         }
 	    
-	    if(receivedAttachment.getContent() != null) {
+	    if (receivedAttachment.getContent() != null) {
 	        String controlContent = controlAttachment.getContent();
 	        String receivedContent = receivedAttachment.getContent();
 	        

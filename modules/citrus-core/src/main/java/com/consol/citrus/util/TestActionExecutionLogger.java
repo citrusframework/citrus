@@ -55,7 +55,7 @@ public final class TestActionExecutionLogger {
         if (action.getName() != null) {
             builder.append(action.getName());
             
-            if(log.isDebugEnabled() && StringUtils.hasText(action.getDescription())) {
+            if (log.isDebugEnabled() && StringUtils.hasText(action.getDescription())) {
                 builder.append("(" + action.getDescription() + ")");
             }
         } else {
@@ -64,7 +64,7 @@ public final class TestActionExecutionLogger {
 
         builder.append(">");
         
-        if(action instanceof TestActionContainer) {
+        if (action instanceof TestActionContainer) {
             builder.append(" container with " + ((TestActionContainer)action).getActionCount() + " embedded actions");
         }
         

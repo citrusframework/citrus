@@ -103,7 +103,7 @@ public class GroovyAction extends AbstractTestAction {
             }
             
             // execute the Groovy script
-            if(groovyObject instanceof ScriptExecutor) {
+            if (groovyObject instanceof ScriptExecutor) {
                 ((ScriptExecutor)groovyObject).execute(context);
             } else {
                 groovyObject.invokeMethod("run", new Object[] {});

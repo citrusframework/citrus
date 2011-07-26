@@ -102,7 +102,7 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
-        if(autoStart) {
+        if (autoStart) {
             start();
         }
     }

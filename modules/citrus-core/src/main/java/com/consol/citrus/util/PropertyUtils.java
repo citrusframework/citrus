@@ -78,7 +78,7 @@ public final class PropertyUtils {
         int searchIndex;
         while ((searchIndex = line.indexOf(PROPERTY_MARKER, startIndex)) != -1) {
             //first check if property Marker is escaped by '\' character
-            if(searchIndex != 0 && line.charAt((searchIndex-1)) == '\\') {
+            if (searchIndex != 0 && line.charAt((searchIndex-1)) == '\\') {
                 newStr.append(line.substring(startIndex, searchIndex-1));
                 newStr.append(PROPERTY_MARKER);
                 startIndex = searchIndex + 1;

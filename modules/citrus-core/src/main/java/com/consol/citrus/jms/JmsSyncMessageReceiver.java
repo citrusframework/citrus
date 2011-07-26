@@ -76,7 +76,7 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @param receivedMessage
      */
     private void saveReplyDestination(Message<?> receivedMessage) {
-        if(correlator != null) {
+        if (correlator != null) {
             replyDestinations.put(correlator.getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
         } else {
             replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));

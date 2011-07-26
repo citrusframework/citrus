@@ -60,7 +60,7 @@ public class Assert extends AbstractActionContainer {
             log.info("Validating caught exception ...");
             if (exception.isAssignableFrom(e.getClass())) {
                 
-                if(message != null && !message.equals(e.getLocalizedMessage())) {
+                if (message != null && !message.equals(e.getLocalizedMessage())) {
                     throw new ValidationException("Validation failed for asserted exception message - expected: '" + 
                             message + "' but was: '" + e.getLocalizedMessage() + "'", e);
                 }
@@ -141,7 +141,7 @@ public class Assert extends AbstractActionContainer {
      * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
      */
     public TestAction getTestAction(int index) {
-        if(index == 0) {
+        if (index == 0) {
             return action;
         } else {
             throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
@@ -152,7 +152,7 @@ public class Assert extends AbstractActionContainer {
      * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
      */
     public void setActions(List<TestAction> actions) {
-        if(!CollectionUtils.isEmpty(actions)) {
+        if (!CollectionUtils.isEmpty(actions)) {
             action = actions.get(0); 
         }
     }

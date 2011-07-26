@@ -110,7 +110,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             SoapMessage response = (SoapMessage)messageContext.getResponse();
             
             //add soap fault or normal soap body to response
-            if(replyMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.SOAP_FAULT)) {
+            if (replyMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.SOAP_FAULT)) {
                 addSoapFault(response, replyMessage, transformer);
             } else {
                 addSoapBody(response, replyMessage, transformer);
@@ -164,27 +164,27 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) throws TransformerException {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
-            if(MessageUtils.isSpringInternalHeader(headerEntry.getKey()) || 
+            if (MessageUtils.isSpringInternalHeader(headerEntry.getKey()) || 
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                 continue;
             }
             
-            if(headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
+            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
-            } else if(headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         response.getSoapHeader().getResult());
-            } else if(headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
+            } else if (headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
                 continue; //leave out Citrus internal header entries
             } else {
                 SoapHeaderElement headerElement;
-                if(QNameUtils.validateQName(headerEntry.getKey())) {
+                if (QNameUtils.validateQName(headerEntry.getKey())) {
                     QName qname = QNameUtils.parseQNameString(headerEntry.getKey());
                     
-                    if(StringUtils.hasText(qname.getNamespaceURI())) {
+                    if (StringUtils.hasText(qname.getNamespaceURI())) {
                         headerElement = response.getSoapHeader().addHeaderElement(qname);
                     } else {
                         headerElement = response.getSoapHeader().addHeaderElement(getDefaultQName(headerEntry.getKey()));
@@ -367,7 +367,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @return
      */
     private QName getDefaultQName(String localPart) {
-        if(StringUtils.hasText(defaultNamespaceUri)) {
+        if (StringUtils.hasText(defaultNamespaceUri)) {
             return QNameUtils.createQName(defaultNamespaceUri, localPart, defaultPrefix);
         } else {
             throw new SoapHeaderException("Failed to add SOAP header '" + localPart + "', " +

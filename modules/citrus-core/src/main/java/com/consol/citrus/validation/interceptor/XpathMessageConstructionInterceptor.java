@@ -81,7 +81,7 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
 
             if (VariableUtils.isVariableName(valueExpression)) {
                 valueExpression = context.getVariable(valueExpression);
-            } else if(context.getFunctionRegistry().isFunction(valueExpression)) {
+            } else if (context.getFunctionRegistry().isFunction(valueExpression)) {
                 valueExpression = FunctionUtils.resolveFunction(valueExpression, context);
             } 
 
@@ -112,7 +112,7 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
                 node.setNodeValue(valueExpression);
             }
             
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
             }
         }

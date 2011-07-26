@@ -82,7 +82,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
                                                             .withCode(scriptData)
                                                             .build());
             
-            if(groovyClass == null) {
+            if (groovyClass == null) {
                 throw new CitrusRuntimeException("Could not load groovy script!");    
             }
             

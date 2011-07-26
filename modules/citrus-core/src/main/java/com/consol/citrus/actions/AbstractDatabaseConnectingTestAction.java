@@ -102,7 +102,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
                         buffer.setLength(0);
                         buffer = new StringBuffer();
     
-                        if(log.isDebugEnabled()) {
+                        if (log.isDebugEnabled()) {
                             log.debug("Found statement: " + stmt);
                         }
     
@@ -119,7 +119,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
             log.error(e.getLocalizedMessage());
             throw new CitrusRuntimeException(e);
         } finally {
-            if(reader != null) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {

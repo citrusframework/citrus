@@ -77,7 +77,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
             Node matchingElement;
             if (xpathMappingExpression != null) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                if(!CollectionUtils.isEmpty(namespaceBindings)) {
+                if (!CollectionUtils.isEmpty(namespaceBindings)) {
                     nsContext.setBindings(namespaceBindings);
                 } else {
                     nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));

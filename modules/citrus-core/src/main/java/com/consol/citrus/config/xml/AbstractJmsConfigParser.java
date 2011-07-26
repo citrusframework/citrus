@@ -41,15 +41,15 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
         String destination = element.getAttribute("destination");
         String destinationName = element.getAttribute("destination-name");
         
-        if(StringUtils.hasText(destination) || StringUtils.hasText(destinationName)) {
+        if (StringUtils.hasText(destination) || StringUtils.hasText(destinationName)) {
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
             
-            if(element.hasAttribute("connection-factory")) {
+            if (element.hasAttribute("connection-factory")) {
                 connectionFactory = element.getAttribute("connection-factory");
             }
             
-            if(!StringUtils.hasText(connectionFactory)) {
+            if (!StringUtils.hasText(connectionFactory)) {
                 parserContext.getReaderContext().error("Attribute connection-factory must not be empty " +
                 		"for jms configuration elements", element);
             }
@@ -62,7 +62,7 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
             } else {
                 builder.addPropertyValue("destinationName", destinationName);
             }
-        } else if(!StringUtils.hasText(element.getAttribute("jms-template"))){
+        } else if (!StringUtils.hasText(element.getAttribute("jms-template"))){
             throw new BeanCreationException("Either a jms-template reference " +
                     "or one of destination or destination-name must be provided.");
         }

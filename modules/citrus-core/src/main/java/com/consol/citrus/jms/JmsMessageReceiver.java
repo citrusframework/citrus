@@ -49,7 +49,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveAndConvert();
         
-        if(receivedObject == null) {
+        if (receivedObject == null) {
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName() + "'");
         }
         
@@ -62,7 +62,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Received message is:\n" + receivedMessage.toString());
         }
         
@@ -79,7 +79,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
         
-        if(receivedObject == null) {
+        if (receivedObject == null) {
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName()  + "(" + selector + ")'");
         }
         
@@ -92,7 +92,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }
         
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Received message is:\n" + receivedMessage.toString());
         }
         

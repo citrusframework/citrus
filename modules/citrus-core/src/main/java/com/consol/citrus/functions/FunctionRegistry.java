@@ -40,7 +40,7 @@ public class FunctionRegistry {
      * @return flag (true/false)
      */
     public boolean isFunction(final String variableExpression) {
-        if(variableExpression == null || variableExpression.length() == 0) {
+        if (variableExpression == null || variableExpression.length() == 0) {
             return false;
         }
         

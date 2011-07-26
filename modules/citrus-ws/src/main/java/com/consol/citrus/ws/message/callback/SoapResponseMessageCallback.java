@@ -75,8 +75,8 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
                 }
             }
             
-            if(StringUtils.hasText(soapMessage.getSoapAction())) {
-                if(soapMessage.getSoapAction().equals("\"\"")) {
+            if (StringUtils.hasText(soapMessage.getSoapAction())) {
+                if (soapMessage.getSoapAction().equals("\"\"")) {
                     responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
                 } else {
                     responseMessageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
@@ -88,13 +88,13 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
             while (attachments.hasNext()) {
                 Attachment attachment = (Attachment)attachments.next();
                 
-                if(StringUtils.hasText(attachment.getContentId())) {
+                if (StringUtils.hasText(attachment.getContentId())) {
                     String contentId = attachment.getContentId();
                     
-                    if(contentId.startsWith("<")) {contentId = contentId.substring(1);}
-                    if(contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
+                    if (contentId.startsWith("<")) {contentId = contentId.substring(1);}
+                    if (contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
                     
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Response contains attachment with contentId '" + contentId + "'");
                     }
                     

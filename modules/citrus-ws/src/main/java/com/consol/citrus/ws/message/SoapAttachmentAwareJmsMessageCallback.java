@@ -43,14 +43,14 @@ public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback
         try {
             //explicitly take care of soap attachments in message header
             for (Entry<String, Object> headerEntry : request.getHeaders().entrySet()) {
-                if(headerEntry.getValue() instanceof Attachment) {
+                if (headerEntry.getValue() instanceof Attachment) {
                     Attachment attachment = (Attachment)headerEntry.getValue();
                     
                     String contentId = attachment.getContentId();
                     
                     //remove automatically added prefix and suffix (implementation specific: Saaj, Axiom)
-                    if(contentId.startsWith("<")) {contentId = contentId.substring(1);}
-                    if(contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
+                    if (contentId.startsWith("<")) {contentId = contentId.substring(1);}
+                    if (contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
                     
                     jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
                     jmsMessage.setStringProperty(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());

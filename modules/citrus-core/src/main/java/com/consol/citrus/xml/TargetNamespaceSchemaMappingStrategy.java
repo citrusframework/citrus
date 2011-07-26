@@ -32,7 +32,7 @@ public class TargetNamespaceSchemaMappingStrategy implements XsdSchemaMappingStr
      */
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace) {
         for (XsdSchema schema : schemas) {
-            if(schema.getTargetNamespace().equals(namespace)) {
+            if (schema.getTargetNamespace().equals(namespace)) {
                 return schema;
             }
         }

@@ -63,16 +63,16 @@ public class SendSoapMessageAction extends SendMessageAction {
             variableExtractor.extractVariables(message, context);
         }
         
-        if(!(messageSender instanceof WebServiceMessageSender)) {
+        if (!(messageSender instanceof WebServiceMessageSender)) {
             throw new CitrusRuntimeException("Sending SOAP messages requires a " +
             		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + messageSender.getClass().getName() + "'");
         }
         
         final String attachmentContent;
         try {
-            if(StringUtils.hasText(attachmentData)) {
+            if (StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
-            } else if(attachmentResource != null) {
+            } else if (attachmentResource != null) {
                 attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
             } else {
                 attachmentContent = null;
@@ -101,7 +101,7 @@ public class SendSoapMessageAction extends SendMessageAction {
      */
     private void sendSoapMessage(Message<?> message, String attachmentContent) {
         WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
-        if(attachmentContent != null) {
+        if (attachmentContent != null) {
             attachment.setContent(attachmentContent);
             
             webServiceMessageSender.send(message, attachment);

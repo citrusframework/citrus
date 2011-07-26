@@ -263,19 +263,19 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 
                 if (VariableUtils.isVariableName(controlValue)) {
                     controlValue = context.getVariable(controlValue);
-                } else if(context.getFunctionRegistry().isFunction(controlValue)) {
+                } else if (context.getFunctionRegistry().isFunction(controlValue)) {
                     controlValue = FunctionUtils.resolveFunction(controlValue, context);
                 }
                 
                 // check if value is ignored
                 if (controlValue.equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
-                    if(log.isDebugEnabled()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Ignoring column value '" + columnName + "(resultValue)'");
                     }
                 } else {
                     if (resultValue == null) {
                         if (controlValue.toUpperCase().equals("NULL") || controlValue.length() == 0) {
-                            if(log.isDebugEnabled()) {
+                            if (log.isDebugEnabled()) {
                                 log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
                             }
                         } else {
@@ -283,7 +283,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                                     + "found value: NULL expected value: " + controlValue);
                         }
                     } else if (resultValue.equals(controlValue)) {
-                        if(log.isDebugEnabled()) {
+                        if (log.isDebugEnabled()) {
                             log.debug("Validation successful for column: '" + columnName + "' expected value: " + controlValue + " - value OK");
                         }
                     } else {

@@ -60,7 +60,7 @@ public class CreateVariablesAction extends AbstractTestAction {
 
             if (VariableUtils.isVariableName(value)) {
                 value = context.getVariable(value);
-            } else if(context.getFunctionRegistry().isFunction(value)) {
+            } else if (context.getFunctionRegistry().isFunction(value)) {
                 value = FunctionUtils.resolveFunction(value, context);
             } 
 

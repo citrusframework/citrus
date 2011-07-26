@@ -120,7 +120,7 @@ public class AssertSoapFault extends AbstractActionContainer {
         try {
             SoapFaultDefinitionEditor definitionEditor = new SoapFaultDefinitionEditor();
         
-            if(StringUtils.hasText(faultString)) {
+            if (StringUtils.hasText(faultString)) {
                 definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode) + "," + context.replaceDynamicContentInString(faultString));
             } else {
                 definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode));
@@ -260,7 +260,7 @@ public class AssertSoapFault extends AbstractActionContainer {
      * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
      */
     public TestAction getTestAction(int index) {
-        if(index == 0) {
+        if (index == 0) {
             return action;
         } else {
             throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
@@ -271,7 +271,7 @@ public class AssertSoapFault extends AbstractActionContainer {
      * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
      */
     public void setActions(List<TestAction> actions) {
-        if(!CollectionUtils.isEmpty(actions)) {
+        if (!CollectionUtils.isEmpty(actions)) {
             action = actions.get(0); 
         }
     }

@@ -43,13 +43,13 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         Map<String, Object> headers = super.buildMessageHeaders(context);
         
-        if(!StringUtils.hasText(faultCode)) {
+        if (!StringUtils.hasText(faultCode)) {
             throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
         }
         
         String soapFaultString = context.replaceDynamicContentInString(faultCode);
         
-        if(StringUtils.hasText(faultString)) {
+        if (StringUtils.hasText(faultString)) {
             soapFaultString += "," + context.replaceDynamicContentInString(faultString);
         }
 

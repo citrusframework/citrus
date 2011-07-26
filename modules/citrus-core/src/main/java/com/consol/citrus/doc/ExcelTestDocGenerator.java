@@ -109,7 +109,7 @@ public class ExcelTestDocGenerator {
                 }
             }
 
-            if(StringUtils.hasText(customHeaders)) {
+            if (StringUtils.hasText(customHeaders)) {
                 t.transform(new StringSource(buildHeaderXml()), res);
             } else {
                 //first generate header row
@@ -144,7 +144,7 @@ public class ExcelTestDocGenerator {
         } catch (ParserConfigurationException e) {
             throw new CitrusRuntimeException(e);
         } finally {
-            if(reader != null) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -152,7 +152,7 @@ public class ExcelTestDocGenerator {
                 }
             }
             
-            if(buffered != null) {
+            if (buffered != null) {
                 try {
                     buffered.flush();
                 } catch (IOException e) {
@@ -160,7 +160,7 @@ public class ExcelTestDocGenerator {
                 }
             }
             
-            if(file != null) {
+            if (file != null) {
                 try {
                     file.close();
                 } catch (IOException e) {

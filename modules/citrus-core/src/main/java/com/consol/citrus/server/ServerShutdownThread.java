@@ -67,7 +67,7 @@ public class ServerShutdownThread extends Thread
      * Adds ShutdownHook to JVM
      */
     private void create() {
-        if(!done) {
+        if (!done) {
             Runtime.getRuntime().addShutdownHook(this);
             done = true;
         }

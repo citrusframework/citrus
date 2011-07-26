@@ -30,7 +30,7 @@ public class HelloJmsDemo implements Runnable {
     
     public void start() {
         synchronized (contextLock) {
-            if(ctx == null) {
+            if (ctx == null) {
                 TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor("HelloJmsDemo");
                 taskExecutor.execute(this);
             }
@@ -39,7 +39,7 @@ public class HelloJmsDemo implements Runnable {
     
     public void stop() {
         synchronized (contextLock) {
-            if(ctx != null) {
+            if (ctx != null) {
                 ctx.close();
             }
         }

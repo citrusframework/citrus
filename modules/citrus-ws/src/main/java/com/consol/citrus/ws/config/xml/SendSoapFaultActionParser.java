@@ -72,9 +72,9 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
             
             Element faultDetailElement = DomUtils.getChildElementByTagName(faultElement, "fault-detail");
             if (faultDetailElement != null) {
-                if(faultDetailElement.hasAttribute("file")) {
+                if (faultDetailElement.hasAttribute("file")) {
                     
-                    if(StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
+                    if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
                         throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
                         		"Please choose one of them.");
                     }
@@ -84,7 +84,7 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
                     messageBuilder.setFaultDetailResource(FileUtils.getResourceFromFilePath(filePath));
                 } else {
                     String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
-                    if(StringUtils.hasText(faultDetailData)) {
+                    if (StringUtils.hasText(faultDetailData)) {
                         messageBuilder.setFaultDetail(faultDetailData);
                     } else {
                         throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");

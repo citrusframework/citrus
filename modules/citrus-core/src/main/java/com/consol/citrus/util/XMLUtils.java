@@ -244,7 +244,7 @@ public final class XMLUtils {
         Map<String, String> namespaces = new HashMap<String, String>();
 
         Node node;
-        if(referenceNode.getNodeType() == Node.DOCUMENT_NODE) {
+        if (referenceNode.getNodeType() == Node.DOCUMENT_NODE) {
             node = referenceNode.getFirstChild();
         } else {
             node = referenceNode;
@@ -278,7 +278,7 @@ public final class XMLUtils {
         Map<String, String> namespaces = new HashMap<String, String>();
 
         //TODO: handle inner CDATA sections because namespaces they might interfere with real namespaces in xml fragment
-        if(xml.indexOf(XMLConstants.XMLNS_ATTRIBUTE) != -1) {
+        if (xml.indexOf(XMLConstants.XMLNS_ATTRIBUTE) != -1) {
             String[] tokens = StringUtils.split(xml, XMLConstants.XMLNS_ATTRIBUTE);
             
             do {
@@ -287,7 +287,7 @@ public final class XMLUtils {
                 String nsPrefix;
                 if (token.startsWith(":")) {
                     nsPrefix = token.substring(1, token.indexOf('='));
-                } else if(token.startsWith("=")) { 
+                } else if (token.startsWith("=")) { 
                     nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
                 } else {
                     //we have found a "xmlns" phrase that is no namespace attribute - ignore and continue
@@ -347,12 +347,12 @@ public final class XMLUtils {
      * @return charsetName if supported.
      */
     private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
-        if(messagePayload.trim().startsWith("<?xml") && messagePayload.contains("encoding")) {
+        if (messagePayload.trim().startsWith("<?xml") && messagePayload.contains("encoding")) {
             String encoding = messagePayload.substring(messagePayload.indexOf("encoding") + 8);
             encoding = encoding.substring(encoding.indexOf('\"')+1);
             encoding = encoding.substring(0, encoding.indexOf('\"'));
             
-            if(Charset.availableCharsets().containsKey(encoding)) {
+            if (Charset.availableCharsets().containsKey(encoding)) {
                 return encoding;
             } else {
                 throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");

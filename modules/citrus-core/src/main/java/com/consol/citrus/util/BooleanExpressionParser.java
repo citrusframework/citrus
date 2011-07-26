@@ -119,7 +119,7 @@ public final class BooleanExpressionParser {
             String value = values.pop();
             result = Boolean.valueOf(value).booleanValue();
     
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Boolean expression " + expression + " evaluates to " + value);
             }
         } catch(EmptyStackException e) {
@@ -136,7 +136,7 @@ public final class BooleanExpressionParser {
      * @throws CitrusRuntimeException
      */
     private static String validateOperator(String operator) {
-        if(!knownOperators.contains(operator)) {
+        if (!knownOperators.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
         return operator;

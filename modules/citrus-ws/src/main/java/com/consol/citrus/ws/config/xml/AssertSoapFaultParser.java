@@ -61,9 +61,9 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         Element faultDetailElement = DomUtils.getChildElementByTagName(element, "fault-detail");
         if (faultDetailElement != null) {
-            if(faultDetailElement.hasAttribute("file")) {
+            if (faultDetailElement.hasAttribute("file")) {
                 
-                if(StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
+                if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
                     throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
                             "Please choose one of them.");
                 }
@@ -73,7 +73,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 beanDefinition.addPropertyValue("faultDetailResource", FileUtils.getResourceFromFilePath(filePath));
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
-                if(StringUtils.hasText(faultDetailData)) {
+                if (StringUtils.hasText(faultDetailData)) {
                     beanDefinition.addPropertyValue("faultDetail", faultDetailData);
                 } else {
                     throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
@@ -85,7 +85,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         Element action;
         
-        if(faultDetailElement == null) {
+        if (faultDetailElement == null) {
             action = DOMUtil.getFirstChildElement(element);
         } else {
             action = DOMUtil.getNextSiblingElement(faultDetailElement);
@@ -98,7 +98,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             
-            if(parser ==  null) {
+            if (parser ==  null) {
             	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
             } else {
             	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
@@ -109,11 +109,11 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         
         String validator = "soapFaultValidator"; //default value
         
-        if(element.hasAttribute("fault-validator")) {
+        if (element.hasAttribute("fault-validator")) {
             validator = element.getAttribute("fault-validator");
         }
         
-        if(!StringUtils.hasText(validator)) {
+        if (!StringUtils.hasText(validator)) {
             parserContext.getReaderContext().error(
                     "Attribute 'fault-validator' must not be empty for element", element);
         }
@@ -122,11 +122,11 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         
         String messageFactory = "messageFactory"; //default value
         
-        if(element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
+        if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
             messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
         }
         
-        if(!StringUtils.hasText(messageFactory)) {
+        if (!StringUtils.hasText(messageFactory)) {
             parserContext.getReaderContext().error(
                     "Attribute '" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "' must not be empty for element", element);
         }

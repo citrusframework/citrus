@@ -48,13 +48,13 @@ public enum XPathExpressionResult {
      * @return
      */
     public static XPathExpressionResult fromString(String value, XPathExpressionResult defaultResult) {
-        if(value.startsWith(STRING_PREFIX)) {
+        if (value.startsWith(STRING_PREFIX)) {
             return STRING;  
         } else if (value.startsWith(NODE_PREFIX)) {
             return NODE;
-        } else if(value.startsWith(BOOLEAN_PREFIX)) {
+        } else if (value.startsWith(BOOLEAN_PREFIX)) {
             return BOOLEAN;
-        } else if(value.startsWith(NUMBER_PREFIX)) {
+        } else if (value.startsWith(NUMBER_PREFIX)) {
             return NUMBER;
         } else {
             return defaultResult;
@@ -66,13 +66,13 @@ public enum XPathExpressionResult {
      * @return
      */
     public QName getAsQName() {
-        if(this.equals(STRING)) {
+        if (this.equals(STRING)) {
             return XPathConstants.STRING;
         } else if (this.equals(NODE)) {
             return XPathConstants.NODE;
-        } else if(this.equals(BOOLEAN)) {
+        } else if (this.equals(BOOLEAN)) {
             return XPathConstants.BOOLEAN;
-        } else if(this.equals(NUMBER)) {
+        } else if (this.equals(NUMBER)) {
             return XPathConstants.NUMBER;
         } else {
             return XPathConstants.NODE;
@@ -85,13 +85,13 @@ public enum XPathExpressionResult {
      * @return
      */
     public static String cutOffPrefix(String expression) {
-        if(expression.startsWith(STRING_PREFIX)) {
+        if (expression.startsWith(STRING_PREFIX)) {
             return expression.substring(STRING_PREFIX.length());  
         } else if (expression.startsWith(NODE_PREFIX)) {
             return expression.substring(NODE_PREFIX.length());
-        } else if(expression.startsWith(BOOLEAN_PREFIX)) {
+        } else if (expression.startsWith(BOOLEAN_PREFIX)) {
             return expression.substring(BOOLEAN_PREFIX.length());
-        } else if(expression.startsWith(NUMBER_PREFIX)) {
+        } else if (expression.startsWith(NUMBER_PREFIX)) {
             return expression.substring(NUMBER_PREFIX.length());
         } else {
             return expression;
