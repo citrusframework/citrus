@@ -44,7 +44,7 @@ public class CitrusSamplesDemo {
      */
     public void start() {
         synchronized (startupMonitor) {
-            if ((!running) {
+            if (!running) {
                 running = true;
             } else {
                return;
@@ -71,7 +71,7 @@ public class CitrusSamplesDemo {
      * Stops the demo application context.
      */
     public void stop() {
-       if ( (ctx != null) {
+       if (ctx != null) {
             ctx.close();
         }
         

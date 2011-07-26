@@ -42,14 +42,14 @@ public class BookingSplitter {
     public Object splitMessage(Message<?> message) {
         List<Message<FlightBookingRequestMessage>> flightRequests = new ArrayList<Message<FlightBookingRequestMessage>>();
         
-        if ((!(message.getPayload() instanceof TravelBookingRequestMessage)) {
+        if (!(message.getPayload() instanceof TravelBookingRequestMessage)) {
             throw new IllegalStateException("Unsupported message type: " + message.getPayload().getClass());
         }
         
         TravelBookingRequestMessage request  = ((TravelBookingRequestMessage)message.getPayload());
         
         //Save customer if not already present
-       if ( (customerDao.find(request.getCustomer().getId()) == null) {
+       if (customerDao.find(request.getCustomer().getId()) == null) {
             customerDao.persist(request.getCustomer());
         }
         
