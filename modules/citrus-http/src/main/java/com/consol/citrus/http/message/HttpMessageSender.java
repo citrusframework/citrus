@@ -16,20 +16,20 @@
 
 package com.consol.citrus.http.message;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.CommonsClientHttpRequestFactory;
+import org.springframework.http.client.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
@@ -46,6 +46,7 @@ import com.consol.citrus.util.MessageUtils;
  * @author Christoph Deppisch
  */
 public class HttpMessageSender implements MessageSender {
+
     /** Http url as service destination */
     private String requestUrl;
 
@@ -72,6 +73,9 @@ public class HttpMessageSender implements MessageSender {
     
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.outboundMapper();
+    
+    /** Should http errors be handled with reply message handler or simply throw exception */
+    private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
     
     /**
      * Logger
@@ -128,37 +132,74 @@ public class HttpMessageSender implements MessageSender {
             method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
         }
         
+        restTemplate.setErrorHandler(new InternalResponseErrorHandler(message));
         ResponseEntity<?> response = restTemplate.exchange(endpointUri, method, requestEntity, String.class);
         
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
         
-        Map<String, ?> httpResponseHeaders = headerMapper.toHeaders(response.getHeaders());
-        
-        Map<String, String> customHeaders = new HashMap<String, String>();
-        for (Entry<String, List<String>> header : response.getHeaders().entrySet()) {
-            if (!httpResponseHeaders.containsKey(header.getKey())) {
-                customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
-            }
-        }
-        
-        Message<?> responseMessage = MessageBuilder.withPayload(response.getBody())
-                                                    .copyHeaders(httpResponseHeaders)
-                                                    .copyHeaders(customHeaders)
-                                                    .setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, response.getStatusCode())
-                                                    .setHeader(CitrusHttpMessageHeaders.HTTP_VERSION, "HTTP/1.1") //TODO check if we have access to version information
-                                                    .setHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, response.getStatusCode().name())
-                                                    .build();
-        if(replyMessageHandler != null) {
-            if(correlator != null) {
-                replyMessageHandler.onReplyMessage(responseMessage,
-                        correlator.getCorrelationKey(message));
+        informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
+                                                       response.getBody(), 
+                                                       response.getStatusCode()), message);
+    }
+    
+    /**
+     * Informs reply message handler for further processing 
+     * of reply message.
+     * @param responseMessage the reply message.
+     * @param requestMessage the initial request message.
+     */
+    protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
+        if (replyMessageHandler != null) {
+            log.info("Informing reply message handler for further processing");
+            
+            if (correlator != null) {
+                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
             } else {
                 replyMessageHandler.onReplyMessage(responseMessage);
             }
         }
-        
     }
     
+    /**
+     * Builds the actual integration message from HTTP response entity.
+     * @param response the HTTP response entity.
+     * @return
+     */
+    private Message<?> buildResponseMessage(HttpHeaders headers, Object responseBody, HttpStatus statusCode) {
+        Map<String, ?> mappedHeaders = headerMapper.toHeaders(headers);
+        
+        Message<?> responseMessage = MessageBuilder.withPayload(responseBody)
+                                            .copyHeaders(mappedHeaders)
+                                            .copyHeaders(getCustomHeaders(headers, mappedHeaders))
+                                            .setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, statusCode)
+                                            .setHeader(CitrusHttpMessageHeaders.HTTP_VERSION, "HTTP/1.1") //TODO check if we have access to version information
+                                            .setHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, statusCode.name())
+                                            .build();
+        
+        return responseMessage;
+    }
+
+    /**
+     * Message headers consist of standard HTTP message headers and custom headers.
+     * This method assumes that all header entries that were not initially mapped 
+     * by header mapper implementations are custom headers.
+     * 
+     * @param httpHeaders all message headers in their pre nature.
+     * @param mappedHeaders the previously mapped header entries (all standard headers). 
+     * @return
+     */
+    private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, ?> mappedHeaders) {
+        Map<String, String> customHeaders = new HashMap<String, String>();
+        
+        for (Entry<String, List<String>> header : httpHeaders.entrySet()) {
+            if (!mappedHeaders.containsKey(header.getKey())) {
+                customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
+            }
+        }
+        
+        return customHeaders;
+    }
+
     /**
      * Generate http request entity from Spring Integration message.
      * @param requestMessage
@@ -187,6 +228,49 @@ public class HttpMessageSender implements MessageSender {
         }
         
         return new HttpEntity<Object>(httpHeaders);
+    }
+    
+    /**
+     * Handles error response messages constructing a proper response message
+     * which will be propagated to the respective reply message handler for 
+     * further processing.
+     */
+    private class InternalResponseErrorHandler implements ResponseErrorHandler {
+
+        /** Request message associated with this response error handler */
+        private Message<?> requestMessage;
+        
+        /**
+         * Default constructor provided with request message 
+         * associated with this error handler.
+         */
+        public InternalResponseErrorHandler(Message<?> requestMessage) {
+            this.requestMessage = requestMessage;
+        }
+        
+        /**
+         * Check for error HTTP status code in response message. 
+         * Delegates to default Spring implementation.
+         */
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            return new DefaultResponseErrorHandler().hasError(response);
+        }
+
+        /**
+         * Handle error response message according to error strategy.
+         */
+        public void handleError(ClientHttpResponse response) throws IOException {
+            if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
+                informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
+                                                           response.getBody(), 
+                                                           response.getStatusCode()), requestMessage);
+            } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
+                new DefaultResponseErrorHandler().handleError(response);
+            } else {
+                throw new CitrusRuntimeException("Unsupported error strategy: " + errorHandlingStrategy);
+            }
+        }
+
     }
     
     /**
@@ -268,4 +352,85 @@ public class HttpMessageSender implements MessageSender {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
+
+    /**
+     * Gets the errorHandlingStrategy.
+     * @return the errorHandlingStrategy
+     */
+    public ErrorHandlingStrategy getErrorHandlingStrategy() {
+        return errorHandlingStrategy;
+    }
+
+    /**
+     * Sets the errorHandlingStrategy.
+     * @param errorHandlingStrategy the errorHandlingStrategy to set
+     */
+    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
+        this.errorHandlingStrategy = errorHandlingStrategy;
+    }
+
+    /**
+     * Gets the requestMethod.
+     * @return the requestMethod
+     */
+    public HttpMethod getRequestMethod() {
+        return requestMethod;
+    }
+
+    /**
+     * Gets the charset.
+     * @return the charset
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * Gets the contentType.
+     * @return the contentType
+     */
+    public String getContentType() {
+        return contentType;
+    }
+
+    /**
+     * Gets the replyMessageHandler.
+     * @return the replyMessageHandler
+     */
+    public ReplyMessageHandler getReplyMessageHandler() {
+        return replyMessageHandler;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
+    }
+
+    /**
+     * Gets the restTemplate.
+     * @return the restTemplate
+     */
+    public RestTemplate getRestTemplate() {
+        return restTemplate;
+    }
+
+    /**
+     * Gets the endpointUriResolver.
+     * @return the endpointUriResolver
+     */
+    public EndpointUriResolver getEndpointUriResolver() {
+        return endpointUriResolver;
+    }
+
+    /**
+     * Gets the headerMapper.
+     * @return the headerMapper
+     */
+    public HeaderMapper<HttpHeaders> getHeaderMapper() {
+        return headerMapper;
+    }
+
 }

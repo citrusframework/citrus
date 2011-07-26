@@ -46,6 +46,14 @@
             <xs:attribute name="interceptors" type="xs:string"/>
             <xs:attribute name="endpoint-resolver" type="xs:string"/>
             <xs:attribute name="addressing-headers" type="xs:string"/>
+            <xs:attribute name="fault-strategy">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="throwsException"/>
+                        <xs:enumeration value="propagateError"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     

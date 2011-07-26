@@ -92,7 +92,7 @@
                               reply-handler="webServiceReplyHandler"
                               message-factory="messageFactory"
                               interceptors="clientInterceptors"/>
-    
+                              
     <citrus-ws:reply-message-handler id="webServiceReplyHandler"/>
     
     <citrus:jms-message-receiver id="webServiceRequestReceiver" destination-name="${jms.ws.stub.request}"/>
@@ -104,6 +104,13 @@
                               reply-handler="webServiceHelloReplyHandler"
                               message-factory="messageFactory"
                               interceptors="clientInterceptors"/>
+                              
+    <citrus-ws:message-sender id="webServiceFaultPropagatingHelloRequestSender"
+                              request-url="http://localhost:8071/hello"
+                              reply-handler="webServiceHelloReplyHandler"
+                              message-factory="messageFactory"
+                              interceptors="clientInterceptors"
+                              fault-strategy="propagateError"/>
                               
     <citrus-ws:message-sender id="wsAddressingHelloRequestSender"
                               request-url="http://localhost:8071/hello"

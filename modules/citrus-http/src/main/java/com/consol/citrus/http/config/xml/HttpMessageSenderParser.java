@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
 
 /**
  * Parser for Http sender implementation in Citrus http namespace.
@@ -63,11 +64,16 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("reply-message-correlator"), "correlator");
         
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("endpoint-resolver"), "endpointResolver");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("endpoint-resolver"), "endpointUriResolver");
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("charset"), "charset");
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("content-type"), "contentType");
+        
+        if (element.hasAttribute("error-strategy")) {
+            builder.addPropertyValue("errorHandlingStrategy", 
+                    ErrorHandlingStrategy.fromName(element.getAttribute("error-strategy")));
+        }
         
         return builder.getBeanDefinition();
     }

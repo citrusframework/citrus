@@ -43,6 +43,14 @@
             <xs:attribute name="rest-template" type="xs:string"/>
             <xs:attribute name="charset" type="xs:string"/>
             <xs:attribute name="content-type" type="xs:string"/>
+            <xs:attribute name="error-strategy">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="throwsException"/>
+                        <xs:enumeration value="propagateError"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="reply-message-handler">

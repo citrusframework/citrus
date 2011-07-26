@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -31,6 +32,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -42,11 +44,11 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
  */
 public class DTDValidationTest extends AbstractTestNGUnitTest {
     @Autowired
-    MessageValidator<ValidationContext> validator;
+    private MessageValidator<ValidationContext> validator;
     
-    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
+    private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    ReceiveMessageAction receiveMessageBean;
+    private ReceiveMessageAction receiveMessageBean;
     
     @Override
     @BeforeMethod
@@ -100,7 +102,7 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testExternalDTD() {
+    public void testSystemId() {
         reset(messageReceiver);
         
         Message message = MessageBuilder.withPayload("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
@@ -129,4 +131,108 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         receiveMessageBean.execute(context);
     }
     
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testPublicId() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>").build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>");
+        
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
+        receiveMessageBean.execute(context);
+    }
+    
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testPublicIdError() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>").build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"foo\" \"com/consol/citrus/validation/example.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>");
+        
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
+        
+        try {
+            receiveMessageBean.execute(context);
+            Assert.fail("Missing validation exception due to mismatch in public id");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
+        }
+    }
+    
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testSystemIdError() {
+        reset(messageReceiver);
+        
+        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>").build();
+        
+        expect(messageReceiver.receive()).andReturn(message);
+        replay(messageReceiver);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"org/w3/xhtml/xhtml1-transitional.dtd\">"
+                        + "<root>"
+                            + "<message>"
+                                + "<text>Hello TestFramework!</text>"
+                            + "</message>"
+                        + "</root>");
+        
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveMessageBean.setValidationContexts(validationContexts);
+        
+        try {
+            receiveMessageBean.execute(context);
+            Assert.fail("Missing validation exception due to mismatch in public id");
+        } catch (ValidationException e) {
+            Assert.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'com/consol/citrus/validation/example.dtd'"));
+        }
+    }
 }

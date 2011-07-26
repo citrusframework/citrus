@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.message;
+package com.consol.citrus.ws;
 
-import org.springframework.integration.Message;
+import org.testng.ITestContext;
+import org.testng.annotations.Test;
+
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * Message handler is invoked when a reply message is received.
- * 
  * @author Christoph Deppisch
+ * @since 2011
  */
-public interface ReplyMessageHandler {
-    /**
-     * Handle reply message.
-     * @param replyMessage
-     */
-    void onReplyMessage(Message<?> replyMessage);
-    
-    /**
-     * Handle reply message with given correlation key.
-     * @param replyMessage
-     * @param correlationKey
-     */
-    void onReplyMessage(Message<?> replyMessage, String correlationKey);
-    
+public class PropagateSoapFaultITest extends AbstractTestNGCitrusTest {
+    @Test
+    public void propagateSoapFaultITest(ITestContext testContext) {
+        executeTest(testContext);
+    }
 }

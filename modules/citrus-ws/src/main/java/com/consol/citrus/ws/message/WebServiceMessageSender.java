@@ -18,9 +18,12 @@ package com.consol.citrus.ws.message;
 
 import java.io.IOException;
 
+import javax.xml.transform.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.*;
@@ -28,6 +31,7 @@ import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
+import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -40,7 +44,7 @@ import com.consol.citrus.ws.message.callback.*;
  * 
  * @author Christoph Deppisch
  */
-public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, FaultMessageResolver {
+public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender {
 
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
@@ -53,6 +57,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     
     /** WS adressing specific headers */
     private WsAddressingHeaders addressingHeaders;
+    
+    /** Should http errors be handled with reply message handler or simply throw exception */
+    private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
     
     /**
      * Logger
@@ -87,7 +94,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
             log.debug("Message to send is:\n" + message.toString());
         }
         
-        if(!(message.getPayload() instanceof String)) {
+        if (!(message.getPayload() instanceof String)) {
         	throw new CitrusRuntimeException("Unsupported payload type '" + message.getPayload().getClass() +
     				"' Currently only 'java.lang.String' is supported as payload type.");
         }
@@ -101,27 +108,102 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         }
         
         SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback();
+        getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(message, endpointUri));
         
-        getWebServiceTemplate().setFaultMessageResolver(this);
+        log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
         
+        boolean result; 
         // send and receive message
         if (endpointResolver != null) {
-            getWebServiceTemplate().sendAndReceive(endpointUri, requestCallback, responseCallback);
+            result = getWebServiceTemplate().sendAndReceive(endpointUri, requestCallback, responseCallback);
         } else { // use default endpoint uri
-            getWebServiceTemplate().sendAndReceive(requestCallback, responseCallback);
+            result = getWebServiceTemplate().sendAndReceive(requestCallback, responseCallback);
         }
 
-        log.info("SOAP message was successfully sent to endpoint: '" + endpointUri + "'");
-        
-        Message<String> responseMessage = responseCallback.getResponse();
-        
-        if(replyMessageHandler != null) {
-            if(correlator != null) {
-                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(message));
+        if (result) {
+            log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
+            informReplyMessageHandler(responseCallback.getResponse(), message);
+        } else { // must have fault in response message, error handler took care of that
+            
+        }
+    }
+    
+    /**
+     * Informs reply message handler for further processing 
+     * of reply message.
+     * @param responseMessage the reply message.
+     * @param requestMessage the initial request message.
+     */
+    protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
+        if (replyMessageHandler != null) {
+            log.info("Informing reply message handler for further processing");
+            
+            if (correlator != null) {
+                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
             } else {
                 replyMessageHandler.onReplyMessage(responseMessage);
             }
         }
+    }
+    
+    /**
+     * Handles error response messages constructing a proper response message
+     * which will be propagated to the respective reply message handler for 
+     * further processing.
+     */
+    private class InternalFaultMessageResolver implements FaultMessageResolver {
+
+        /** Request message associated with this response error handler */
+        private Message<?> requestMessage;
+        
+        /** The endpoint that was initially invoked */
+        private String endpointUri;
+        
+        /**
+         * Default constructor provided with request message 
+         * associated with this fault resolver and endpoint uri.
+         */
+        public InternalFaultMessageResolver(Message<?> requestMessage, String endpointUri) {
+            this.requestMessage = requestMessage;
+        }
+        
+        /**
+         * Handle fault response message according to error strategy.
+         */
+        public void resolveFault(WebServiceMessage webServiceResponse) throws IOException {
+            if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
+                SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+                try {
+                    callback.doWithMessage(webServiceResponse);
+                    
+                    Message<?> responseMessage = callback.getResponse();
+                    
+                    if (webServiceResponse instanceof SoapMessage) {
+                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                        Transformer transformer = transformerFactory.newTransformer();
+                        
+                        StringResult faultPayload = new StringResult();
+                        transformer.transform(((SoapMessage)webServiceResponse).getSoapBody().getFault().getSource(), faultPayload);
+                        
+                        responseMessage = MessageBuilder.withPayload(faultPayload.toString()).copyHeaders(responseMessage.getHeaders()).build();
+                    }
+                    
+                    log.info("Received SOAP fault response from endpoint: '" + endpointUri + "'");
+                    informReplyMessageHandler(responseMessage, requestMessage);
+                } catch (TransformerException e) {
+                    throw new CitrusRuntimeException("Failed to handle fault response message", e);
+                }
+            } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
+                if (webServiceResponse instanceof SoapMessage) {
+                    new SoapFaultMessageResolver().resolveFault(webServiceResponse);
+                } else {
+                    new SimpleFaultMessageResolver().resolveFault(webServiceResponse);
+                }
+            } else {
+                throw new CitrusRuntimeException("Unsupported error strategy: " + errorHandlingStrategy);
+            }
+        }
+
     }
     
     /**
@@ -132,17 +214,6 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         this.replyMessageHandler = replyMessageHandler;
     }
     
-    /**
-     * @see org.springframework.ws.client.core.FaultMessageResolver#resolveFault(org.springframework.ws.WebServiceMessage)
-     */
-	public void resolveFault(WebServiceMessage message) throws IOException {
-		if(message instanceof SoapMessage) {
-			new SoapFaultMessageResolver().resolveFault(message);
-		} else {
-			new SimpleFaultMessageResolver().resolveFault(message);
-		}
-	}
-
     /**
      * Set reply message correlator.
      * @param correlator the correlator to set
@@ -165,5 +236,21 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      */
     public void setAddressingHeaders(WsAddressingHeaders addressingHeaders) {
         this.addressingHeaders = addressingHeaders;
+    }
+
+    /**
+     * Gets the errorHandlingStrategy.
+     * @return the errorHandlingStrategy
+     */
+    public ErrorHandlingStrategy getErrorHandlingStrategy() {
+        return errorHandlingStrategy;
+    }
+
+    /**
+     * Sets the errorHandlingStrategy.
+     * @param errorHandlingStrategy the errorHandlingStrategy to set
+     */
+    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
+        this.errorHandlingStrategy = errorHandlingStrategy;
     }
 }

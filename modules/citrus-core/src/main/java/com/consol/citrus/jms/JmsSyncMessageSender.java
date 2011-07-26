@@ -133,9 +133,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             javax.jms.Message jmsReplyMessage = (replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             log.info("Received reply message from destination: '" + replyToDestination + "'");
-            log.info("Informing reply message handler for further processing");
             
-            informReplyMessageHandler(message, (Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage));
+            informReplyMessageHandler((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage), message);
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);
         } finally {
@@ -148,15 +147,17 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     /**
      * Informs reply message handler for further processing 
      * of reply message.
-     * @param requestMessage the request message.
-     * @param replyMessage the reply message
+     * @param responseMessage the reply message.
+     * @param requestMessage the initial request message.
      */
-    protected void informReplyMessageHandler(Message<?> requestMessage, Message<?> replyMessage) {
+    protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
         if (replyMessageHandler != null) {
+            log.info("Informing reply message handler for further processing");
+            
             if (correlator != null) {
-                replyMessageHandler.onReplyMessage(replyMessage, correlator.getCorrelationKey(requestMessage));
+                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
             } else {
-                replyMessageHandler.onReplyMessage(replyMessage);
+                replyMessageHandler.onReplyMessage(responseMessage);
             }
         }
     }

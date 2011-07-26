@@ -24,6 +24,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
+
 /**
  * Parser for ws message sender in Citrus ws namespace.
  * 
@@ -109,6 +111,11 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         
         if (StringUtils.hasText(addressingHeaders)) {
             builder.addPropertyReference(WSParserConstants.ADRESSING_HEADERS_PROPERTY, addressingHeaders);
+        }
+        
+        if (element.hasAttribute("fault-strategy")) {
+            builder.addPropertyValue("errorHandlingStrategy", 
+                    ErrorHandlingStrategy.fromName(element.getAttribute("fault-strategy")));
         }
         
         return builder.getBeanDefinition();

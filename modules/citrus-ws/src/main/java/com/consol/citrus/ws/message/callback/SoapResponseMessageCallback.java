@@ -55,7 +55,6 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
      * Callback method called on response message.
      */
     public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
-        
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         
@@ -109,6 +108,8 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
                     log.warn("Could not handle response attachment with empty 'contentId'. Attachment is ignored in further processing");
                 }
             }
+            
+            
         }
         
         // now set response for later access via getResponse():

@@ -161,7 +161,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
 
                 //Give ignore elements the chance to prevent the validation in case result type is node
-                if(resultType.equals(XPathExpressionResult.NODE) &&
+                if (resultType.equals(XPathExpressionResult.NODE) &&
                         isNodeIgnored(XPathUtils.evaluateAsNode(received, 
                                 elementPathExpression, 
                                 namespaceContext), 
@@ -181,7 +181,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     throw new UnknownElementException("Element ' " + elementPathExpression + "' could not be found in DOM tree");
                 }
 
-                if(isNodeIgnored(node, validationContext, namespaceContext)) {
+                if (isNodeIgnored(node, validationContext, namespaceContext)) {
                     continue;
                 }
 
@@ -194,12 +194,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             if (VariableUtils.isVariableName(expectedValue)) {
                 expectedValue = context.getVariable(expectedValue);
-            } else if(functionRegistry.isFunction(expectedValue)) {
+            } else if (functionRegistry.isFunction(expectedValue)) {
                 expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
             }
 
             try {
-                if(actualValue != null) {
+                if (actualValue != null) {
                     Assert.isTrue(expectedValue != null,
                             "Values not equal for element '"
                                 + elementPathExpression + "', expected '"
@@ -222,7 +222,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 throw new ValidationException("Validation failed:", e);
             }
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Validating element: " + elementPathExpression + "='" + expectedValue + "': OK.");
             }
         }
@@ -253,7 +253,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         try {
             Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
 
-            if(!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
+            if (!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
                 return;
             }
 
@@ -267,7 +267,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             SAXParseException[] results = validator.validate(new DOMSource(doc));
 
-            if(results.length == 0) {
+            if (results.length == 0) {
                 log.info("Schema of received XML validated OK");
             } else {
                 log.error("Schema validation failed for message:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
@@ -379,6 +379,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private void validateXmlTree(Node received, Node source, 
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         switch(received.getNodeType()) {
+            case Node.DOCUMENT_TYPE_NODE:
+                doDocumentTypeDefinition(received, source, validationContext, namespaceContext);
+                break;
             case Node.DOCUMENT_NODE:
                 validateXmlTree(received.getFirstChild(), source.getFirstChild(), 
                         validationContext, namespaceContext);
@@ -399,6 +402,64 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 break;
         }
     }
+    
+    /**
+     * Handle document type definition with validation of publicId and systemId.
+     * 
+     * @param received
+     * @param source
+     * @param validationContext
+     * @param namespaceContext
+     */
+    private void doDocumentTypeDefinition(Node received, Node source,
+            XmlMessageValidationContext validationContext,
+            NamespaceContext namespaceContext) {
+
+        Assert.isTrue(source instanceof DocumentType, "Missing document type definition in expected xml fragment");
+        
+        DocumentType receivedDTD = (DocumentType) received;
+        DocumentType sourceDTD = (DocumentType) source;
+        
+        if (log.isDebugEnabled()) {
+            log.debug("Validating document type definition: " + receivedDTD.getPublicId() + " (" + receivedDTD.getSystemId() + ")");
+        }
+        
+        if (!StringUtils.hasText(sourceDTD.getPublicId())) {
+            Assert.isNull(receivedDTD.getPublicId(), 
+                    "Document type public id not equal, expected '" +
+                    sourceDTD.getPublicId() + "' but was '" + 
+                    receivedDTD.getPublicId() + "'");
+        } else if (sourceDTD.getPublicId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Document type public id: '" + receivedDTD.getPublicId() +
+                        "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
+            }
+        } else {
+            Assert.isTrue(StringUtils.hasText(receivedDTD.getPublicId()) && receivedDTD.getPublicId().equals(sourceDTD.getPublicId()), 
+                    "Document type public id not equal, expected '" +
+                    sourceDTD.getPublicId() + "' but was '" + 
+                    receivedDTD.getPublicId() + "'");
+        }
+        
+        if (!StringUtils.hasText(sourceDTD.getSystemId())) {
+            Assert.isNull(receivedDTD.getSystemId(), 
+                    "Document type system id not equal, expected '" +
+                    sourceDTD.getSystemId() + "' but was '" + 
+                    receivedDTD.getSystemId() + "'");
+        } else if (sourceDTD.getSystemId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Document type system id: '" + receivedDTD.getSystemId() + 
+                        "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
+            }
+        } else {
+            Assert.isTrue(StringUtils.hasText(receivedDTD.getSystemId()) && receivedDTD.getSystemId().equals(sourceDTD.getSystemId()), 
+                    "Document type system id not equal, expected '" +
+                    sourceDTD.getSystemId() + "' but was '" + 
+                    receivedDTD.getSystemId() + "'");
+        }
+        
+        validateXmlTree(received.getNextSibling(), source.getNextSibling(), validationContext, namespaceContext);
+    }
 
     /**
      * Handle element node.
@@ -410,7 +471,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private void doElement(Node received, Node source, 
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
         //validate element name
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
         }
 
@@ -420,11 +481,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     + received.getLocalName() + "'");
 
         //validate element namespace
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating namespace for element: " + received.getLocalName());
         }
 
-        if(received.getNamespaceURI() != null) {
+        if (received.getNamespaceURI() != null) {
             Assert.isTrue(source.getNamespaceURI() != null,
                     "Element namespace not equal for element '"
                         + received.getLocalName() + "', expected '"
@@ -446,21 +507,21 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
         if (isNodeIgnored(received, validationContext, namespaceContext)) {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
             return;
-        } else if(source.getFirstChild() != null &&
+        } else if (source.getFirstChild() != null &&
                     StringUtils.hasText(source.getFirstChild().getNodeValue()) && 
                     source.getFirstChild().getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
             }
             return;
         }
 
         //work on attributes
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating attributes for element: " + received.getLocalName());
         }
         NamedNodeMap receivedAttr = received.getAttributes();
@@ -491,7 +552,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     validationContext, namespaceContext);
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validation successful for element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
         }
     }
@@ -503,7 +564,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param source
      */
     private void doText(Node received, Node source) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating node value for element: " + received.getParentNode());
         }
 
@@ -527,7 +588,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             + null + "'");
         }
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Node value '" + received.getNodeValue().trim() + "': OK");
         }
     }
@@ -542,11 +603,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, 
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
-        if(received.getNodeName().startsWith("xmlns")) { return; }
+        if (received.getNodeName().startsWith("xmlns")) { return; }
 
         String receivedName = received.getLocalName();
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Validating attribute: " + receivedName + " (" + received.getNamespaceURI() + ")");
         }
 
@@ -559,7 +620,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         if ((StringUtils.hasText(source.getNodeValue()) && source.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) 
                 || isAttributeIgnored(element, received, validationContext, namespaceContext)) {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
             return;
@@ -574,7 +635,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     + sourceValue + "' but was '"
                     + receivedValue + "'");
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Attribute '" + receivedName + "'='" + receivedValue + "': OK");
         }
     }
