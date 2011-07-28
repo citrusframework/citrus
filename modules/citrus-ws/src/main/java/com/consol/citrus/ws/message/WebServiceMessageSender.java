@@ -123,8 +123,6 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
         if (result) {
             log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
             informReplyMessageHandler(responseCallback.getResponse(), message);
-        } else { // must have fault in response message, error handler took care of that
-            
         }
     }
     
