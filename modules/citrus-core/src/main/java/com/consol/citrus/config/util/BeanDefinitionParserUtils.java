@@ -27,6 +27,12 @@ import org.springframework.util.StringUtils;
 public abstract class BeanDefinitionParserUtils {
 
     /**
+     * Prevent instantiation.
+     */
+    private BeanDefinitionParserUtils() {
+    }
+    
+    /**
      * Sets the property value on bean definition in case value 
      * is set properly.
      * 
