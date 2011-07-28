@@ -201,22 +201,13 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             try {
                 if (actualValue != null) {
                     Assert.isTrue(expectedValue != null,
-                            "Values not equal for element '"
-                                + elementPathExpression + "', expected '"
-                                + null + "' but was '"
-                                + actualValue + "'");
+                            buildValidationErrorMessage("Values not equal for element '" + elementPathExpression + "'", null, actualValue));
 
                     Assert.isTrue(actualValue.equals(expectedValue),
-                            "Values not equal for element '"
-                                + elementPathExpression + "', expected '"
-                                + expectedValue + "' but was '"
-                                + actualValue + "'");
+                            buildValidationErrorMessage("Values not equal for element '" + elementPathExpression + "'", expectedValue, actualValue));
                 } else {
                     Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
-                            "Values not equal for element '"
-                                + elementPathExpression + "', expected '"
-                                + expectedValue + "' but was '"
-                                + null + "'");
+                            buildValidationErrorMessage("Values not equal for element '" + elementPathExpression + "'", expectedValue, null));
                 }
             } catch (IllegalArgumentException e) {
                 throw new ValidationException("Validation failed:", e);
@@ -426,9 +417,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         
         if (!StringUtils.hasText(sourceDTD.getPublicId())) {
             Assert.isNull(receivedDTD.getPublicId(), 
-                    "Document type public id not equal, expected '" +
-                    sourceDTD.getPublicId() + "' but was '" + 
-                    receivedDTD.getPublicId() + "'");
+                    buildValidationErrorMessage("Document type public id not equal", sourceDTD.getPublicId(), receivedDTD.getPublicId()));
         } else if (sourceDTD.getPublicId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type public id: '" + receivedDTD.getPublicId() +
@@ -436,16 +425,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getPublicId()) && receivedDTD.getPublicId().equals(sourceDTD.getPublicId()), 
-                    "Document type public id not equal, expected '" +
-                    sourceDTD.getPublicId() + "' but was '" + 
-                    receivedDTD.getPublicId() + "'");
+                    buildValidationErrorMessage("Document type public id not equal", sourceDTD.getPublicId(), receivedDTD.getPublicId()));
         }
         
         if (!StringUtils.hasText(sourceDTD.getSystemId())) {
             Assert.isNull(receivedDTD.getSystemId(), 
-                    "Document type system id not equal, expected '" +
-                    sourceDTD.getSystemId() + "' but was '" + 
-                    receivedDTD.getSystemId() + "'");
+                    buildValidationErrorMessage("Document type system id not equal", sourceDTD.getSystemId(), receivedDTD.getSystemId()));
         } else if (sourceDTD.getSystemId().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type system id: '" + receivedDTD.getSystemId() + 
@@ -453,9 +438,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getSystemId()) && receivedDTD.getSystemId().equals(sourceDTD.getSystemId()), 
-                    "Document type system id not equal, expected '" +
-                    sourceDTD.getSystemId() + "' but was '" + 
-                    receivedDTD.getSystemId() + "'");
+                    buildValidationErrorMessage("Document type system id not equal", sourceDTD.getSystemId(), receivedDTD.getSystemId()));
         }
         
         validateXmlTree(received.getNextSibling(), source.getNextSibling(), validationContext, namespaceContext);
@@ -476,9 +459,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         Assert.isTrue(received.getLocalName().equals(source.getLocalName()),
-                "Element names not equal , expected '"
-                    + source.getLocalName() + "' but was '"
-                    + received.getLocalName() + "'");
+                buildValidationErrorMessage("Element names not equal", source.getLocalName(), received.getLocalName()));
 
         //validate element namespace
         if (log.isDebugEnabled()) {
@@ -487,22 +468,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         if (received.getNamespaceURI() != null) {
             Assert.isTrue(source.getNamespaceURI() != null,
-                    "Element namespace not equal for element '"
-                        + received.getLocalName() + "', expected '"
-                        + null + "' but was '"
-                        + received.getNamespaceURI() + "'");
+                    buildValidationErrorMessage("Element namespace not equal for element '" + received.getLocalName() + "'", 
+                            null, received.getNamespaceURI()));
 
             Assert.isTrue(received.getNamespaceURI().equals(source.getNamespaceURI()),
-                    "Element namespace not equal for element '"
-                        + received.getLocalName() + "', expected '"
-                        + source.getNamespaceURI() + "' but was '"
-                        + received.getNamespaceURI() + "'");
+                    buildValidationErrorMessage("Element namespace not equal for element '" + received.getLocalName() + "'", 
+                        source.getNamespaceURI(), received.getNamespaceURI()));
         } else {
             Assert.isTrue(source.getNamespaceURI() == null,
-                    "Element namespace not equal for element '"
-                        + received.getLocalName() + "', expected '"
-                        + source.getNamespaceURI() + "' but was '"
-                        + null + "'");
+                    buildValidationErrorMessage("Element namespace not equal for element '" + received.getLocalName() + "'", 
+                    source.getNamespaceURI(), null));
         }
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
@@ -528,10 +503,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         NamedNodeMap sourceAttr = source.getAttributes();
 
         Assert.isTrue(countAttributes(receivedAttr) == countAttributes(sourceAttr),
-                "Number of attributes not equal for element '"
-                    + received.getLocalName() + "', expected "
-                    + countAttributes(sourceAttr) + " but was "
-                    + countAttributes(receivedAttr));
+                buildValidationErrorMessage("Number of attributes not equal for element '" 
+                        + received.getLocalName() + "'", countAttributes(sourceAttr), countAttributes(receivedAttr)));
 
         for(int i = 0; i<receivedAttr.getLength(); i++) {
             doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext);
@@ -542,10 +515,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         NodeList sourceChilds = source.getChildNodes();
 
         Assert.isTrue(receivedChilds.getLength() == sourceChilds.getLength(),
-                "Number of child elements not equal for element '"
-                    + received.getLocalName() + "', expected "
-                    + sourceChilds.getLength() + " but was "
-                    + receivedChilds.getLength());
+                buildValidationErrorMessage("Number of child elements not equal for element '"
+                    + received.getLocalName() + "'", sourceChilds.getLength(), receivedChilds.getLength()));
 
         for(int i = 0; i<receivedChilds.getLength(); i++) {
             this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), 
@@ -570,22 +541,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         if (received.getNodeValue() != null) {
             Assert.isTrue(source.getNodeValue() != null,
-                    "Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "', expected '"
-                            + null + "' but was '"
-                            + received.getNodeValue().trim() + "'");
+                    buildValidationErrorMessage("Node value not equal for element '"
+                            + received.getParentNode().getLocalName() + "'", null, received.getNodeValue().trim()));
 
             Assert.isTrue(received.getNodeValue().trim().equals(source.getNodeValue().trim()),
-                    "Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "', expected '"
-                            + source.getNodeValue().trim() + "' but was '"
-                            + received.getNodeValue().trim() + "'");
+                    buildValidationErrorMessage("Node value not equal for element '"
+                            + received.getParentNode().getLocalName() + "'", source.getNodeValue().trim(), received.getNodeValue().trim()));
         } else {
             Assert.isTrue(source.getNodeValue() == null,
-                    "Node value not equal for element '"
-                            + received.getParentNode().getLocalName() + "', expected '"
-                            + source.getNodeValue().trim() + "' but was '"
-                            + null + "'");
+                    buildValidationErrorMessage("Node value not equal for element '"
+                            + received.getParentNode().getLocalName() + "'", source.getNodeValue().trim(), null));
         }
 
         if (log.isDebugEnabled()) {
@@ -630,10 +595,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         String sourceValue = source.getNodeValue();
 
         Assert.isTrue(receivedValue.equals(sourceValue),
-                "Values not equal for attribute '"
-                    + receivedName + "', expected '"
-                    + sourceValue + "' but was '"
-                    + receivedValue + "'");
+                buildValidationErrorMessage("Values not equal for attribute '"
+                    + receivedName + "'", sourceValue, receivedValue));
 
         if (log.isDebugEnabled()) {
             log.debug("Attribute '" + receivedName + "'='" + receivedValue + "': OK");
@@ -800,6 +763,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
         
         return null;
+    }
+    
+    /**
+     * Constructs proper error message with expected value and actual value.
+     * @param message the base error message.
+     * @param expectedValue the expected value.
+     * @param actualValue the actual value.
+     * @return
+     */
+    private String buildValidationErrorMessage(String message, Object expectedValue, Object actualValue) {
+        return message + ", expected '" + expectedValue + "' but was '" + actualValue + "'";
     }
 
     /**
