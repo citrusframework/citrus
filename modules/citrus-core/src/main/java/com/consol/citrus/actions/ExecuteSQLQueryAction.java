@@ -69,6 +69,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /** SQL result set script validator */
     @Autowired(required = false)
     private SqlResultSetScriptValidator validator;
+
+    /** NULL value representation in SQL */
+    private static final String NULL_VALUE = "NULL";
     
     /**
      * Logger
@@ -160,7 +163,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             // legacy: save all columns as variables TODO: remove in major version upgrade 
             for (Entry<String, List<String>> column : resultSet.entrySet()) {
                 List<String> columnValues = column.getValue();
-                context.setVariable(column.getKey(), columnValues.get(0) == null ? "NULL" : columnValues.get(0));
+                context.setVariable(column.getKey(), columnValues.get(0) == null ? NULL_VALUE : columnValues.get(0));
             }
         } catch (DataAccessException e) {
             log.error("Failed to execute SQL statement", e);
@@ -191,7 +194,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         if (CollectionUtils.isEmpty(rowValues)) {
             return "";
         } else if (rowValues.size() == 1) {
-            return rowValues.get(0) == null ? "NULL" : rowValues.get(0);
+            return rowValues.get(0) == null ? NULL_VALUE : rowValues.get(0);
         } else {
             StringBuilder result = new StringBuilder();
             
@@ -200,7 +203,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             result.append(it.next());
             while (it.hasNext()) {
                 String nextValue = it.next();
-                result.append(";" + (nextValue == null ? "NULL" : nextValue));
+                result.append(";" + (nextValue == null ? NULL_VALUE : nextValue));
             }
             
             return result.toString();
@@ -274,7 +277,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     }
                 } else {
                     if (resultValue == null) {
-                        if (controlValue.toUpperCase().equals("NULL") || controlValue.length() == 0) {
+                        if (controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0) {
                             if (log.isDebugEnabled()) {
                                 log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
                             }
@@ -291,7 +294,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                                 + " found value: '"
                                 + resultValue
                                 + "' expected value: "
-                                + ((controlValue.length()==0) ? "NULL" : controlValue));
+                                + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
                     }
                 }
             }

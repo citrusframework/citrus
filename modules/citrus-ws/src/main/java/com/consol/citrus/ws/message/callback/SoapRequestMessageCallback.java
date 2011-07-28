@@ -87,9 +87,9 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
                 continue;
             }
             
-            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
+            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 soapRequest.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().equalsIgnoreCase(CitrusMessageHeaders.HEADER_CONTENT)) {
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         soapRequest.getSoapHeader().getResult());
             } else if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {

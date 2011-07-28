@@ -169,9 +169,9 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 continue;
             }
             
-            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.SOAP_ACTION)) {
+            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().toLowerCase().equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().equalsIgnoreCase(CitrusMessageHeaders.HEADER_CONTENT)) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 
