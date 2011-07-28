@@ -48,7 +48,7 @@ public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringCon
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(AbstractJUnit38CitrusTest.class);
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     
     /** Test listeners */
     @Autowired
