@@ -36,7 +36,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
     /**
      * Logger
      */
-    protected transient final Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     
     /**
      * Prevent instantiation. 
