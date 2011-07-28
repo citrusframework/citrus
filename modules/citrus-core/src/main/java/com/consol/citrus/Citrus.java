@@ -99,37 +99,18 @@ public final class Citrus {
         
         if (cmdArgs.hasOption("test")) {
             for (String testName : cmdArgs.getOptionValues("test")) {
-                XmlTest test = new XmlTest(suite);
-                test.setName(testName);
-                try {
-                    test.setXmlClasses(Collections.singletonList(new XmlClass(getClassNameForTest(testDirectory, testName.trim()))));
-                } catch (FileNotFoundException e) {
-                    throw new TestEngineFailedException("TestSuite failed with error", e);
-                }
+                addTest(testName, testDirectory, suite);
             }
         }
         
         if (cmdArgs.hasOption("package")) {
             for (String packageName : cmdArgs.getOptionValues("package")) {
-                XmlTest test = new XmlTest(suite);
-                test.setName(packageName);
-                
-                XmlPackage xmlPackage = new XmlPackage();
-                xmlPackage.setName(packageName);
-                test.setXmlPackages(Collections.singletonList(xmlPackage));
+                addTest(packageName, suite);
             }
         }
 
         if (cmdArgs.getArgList().size() > 0) {
-            List<String> testNgXml = new ArrayList<String>(); 
-            for (String testNgXmlFile : cmdArgs.getArgs()) {
-                if (testNgXmlFile.endsWith(XML_FILE_EXTENSION)) {
-                    testNgXml.add(testNgXmlFile);
-                } else {
-                    log.warn("Unrecognized argument '" + testNgXmlFile + "'");
-                }
-            }
-            testng.setTestSuites(testNgXml);
+            testng.setTestSuites(getTestSuites(cmdArgs.getArgs()));
         }
         
         List<XmlSuite> suites = new ArrayList<XmlSuite>();
@@ -142,6 +123,55 @@ public final class Citrus {
         }
     }
     
+    /**
+     * Get suites defined in external testng files.
+     * @param testNgXmlArgs
+     * @return
+     */
+    private List<String> getTestSuites(String[] testNgXmlArgs) {
+        List<String> suites = new ArrayList<String>(); 
+        for (String testNgXmlFile : testNgXmlArgs) {
+            if (testNgXmlFile.endsWith(XML_FILE_EXTENSION)) {
+                suites.add(testNgXmlFile);
+            } else {
+                log.warn("Unrecognized argument '" + testNgXmlFile + "'");
+            }
+        }
+        
+        return suites;
+    }
+
+    /**
+     * Adds all tests in package to test suite.
+     * @param packageName the test package.
+     * @param suite the XML suite.
+     */
+    private void addTest(String packageName, XmlSuite suite) {
+        XmlTest test = new XmlTest(suite);
+        test.setName(packageName);
+        
+        XmlPackage xmlPackage = new XmlPackage();
+        xmlPackage.setName(packageName);
+        test.setXmlPackages(Collections.singletonList(xmlPackage));
+    }
+
+    /**
+     * Adds a new XML class to test suite.
+     * @param testName the test name.
+     * @param testDirectory the test directory.
+     * @param suite the XML suite.
+     */
+    private void addTest(String testName, String testDirectory, XmlSuite suite) {
+        XmlTest test = new XmlTest(suite);
+        test.setName(testName);
+        try {
+            test.setXmlClasses(Collections.singletonList(
+                    new XmlClass(getClassNameForTest(testDirectory, testName.trim()))));
+        } catch (FileNotFoundException e) {
+            throw new TestEngineFailedException("TestSuite failed with error", e);
+        }
+    }
+
     /**
      * Method to retrieve the full class name for a test.
      * Hierarchy of folders is supported, too.
@@ -167,14 +197,7 @@ public final class Citrus {
         /* walk through the directories */
         while (dirs.size() > 0) {
             File file = dirs.pop();
-            File[] found = file.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    File tmp = new File(dir.getPath() + "/" + name);
-
-                    /* Only allowing XML files as spring configuration files */
-                    return (name.endsWith(XML_FILE_EXTENSION) || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
-                }
-            });
+            File[] found = file.listFiles(new TestCaseFileNameFilter());
 
             for (int i = 0; i < found.length; i++) {
                 /* Subfolder support */
@@ -204,6 +227,18 @@ public final class Citrus {
         
         throw new CitrusRuntimeException("Could not find test with name '"
                 + testName + "'. Test directory is: " + startDir);
+    }
+    
+    /**
+     * Filter for test case files (usually .xml files)
+     */
+    private static final class TestCaseFileNameFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            File tmp = new File(dir.getPath() + "/" + name);
+
+            /* Only allowing XML files as spring configuration files */
+            return (name.endsWith(XML_FILE_EXTENSION) || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
+        }
     }
 
     /**
