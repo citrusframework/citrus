@@ -163,6 +163,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
          */
         public InternalFaultMessageResolver(Message<?> requestMessage, String endpointUri) {
             this.requestMessage = requestMessage;
+            this.endpointUri = endpointUri;
         }
         
         /**
