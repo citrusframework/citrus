@@ -16,6 +16,12 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="15.06.2011" description="Latest snapshot release">
+        <action dev="christophd" type="add">
+          #400 Validate REST Http error status codes
+        </action>
+        <action dev="christophd" type="add">
+          #369 Write blog entry on TestNG parameter support
+        </action>
         <action dev="christophd" type="fix">
           #363 Unknown test error reporting
         </action>
