@@ -100,7 +100,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             if (StringUtils.hasText(selectorString)) {
                 receivedMessage = receiveSelected(context, selectorString);
             } else {
-                receivedMessage = receive(context);
+                receivedMessage = receive();
             }
 
             if (receivedMessage == null) {
@@ -121,10 +121,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Receives the message with respective message receiver implementation.
-     * @param context the test context.
      * @return
      */
-    private Message<?> receive(TestContext context) {
+    private Message<?> receive() {
         return receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
     }
 
