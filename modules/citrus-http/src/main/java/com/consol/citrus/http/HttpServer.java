@@ -333,4 +333,44 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     public void setConnectors(Connector[] connectors) {
         this.connectors = Arrays.copyOf(connectors, connectors.length);
     }
+
+    /**
+     * Gets the resourceBase.
+     * @return the resourceBase
+     */
+    public String getResourceBase() {
+        return resourceBase;
+    }
+
+    /**
+     * Gets the contextConfigLocation.
+     * @return the contextConfigLocation
+     */
+    public String getContextConfigLocation() {
+        return contextConfigLocation;
+    }
+
+    /**
+     * Gets the useRootContextAsParent.
+     * @return the useRootContextAsParent
+     */
+    public boolean isUseRootContextAsParent() {
+        return useRootContextAsParent;
+    }
+
+    /**
+     * Gets the connector.
+     * @return the connector
+     */
+    public Connector getConnector() {
+        return connector;
+    }
+
+    /**
+     * Gets the connectors.
+     * @return the connectors
+     */
+    public Connector[] getConnectors() {
+        return connectors;
+    }
 }

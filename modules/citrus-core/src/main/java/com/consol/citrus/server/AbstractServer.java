@@ -149,4 +149,28 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
         this.autoStart = autoStart;
     }
 
+    /**
+     * Gets the autoStart.
+     * @return the autoStart
+     */
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    /**
+     * Sets the name.
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the running.
+     * @param running the running to set
+     */
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
 }
