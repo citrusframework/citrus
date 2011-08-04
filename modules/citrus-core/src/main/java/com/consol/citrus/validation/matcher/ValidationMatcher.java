@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.validation;
+package com.consol.citrus.validation.matcher;
 
-import org.springframework.ws.soap.SoapFault;
-
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 
 /**
- * Interface for soap fault validation.
+ * General validation matcher interface.
  * 
- * @author Christoph Deppisch
+ * @author Christian Wied
  */
-public interface SoapFaultValidator {
+public interface ValidationMatcher {
 
     /**
-     * Validate soap fault with given control fault.
+     * Method called on validation.
      * 
-     * @param receivedFault the received fault instance.
-     * @param controlfFault the control fault with expected fault information.
+     * @param fieldName the fieldName for logging purpose.
+     * @param value the value to be validated.
+     * @param control the control value.
+     * @throws ValidationException when validation fails
      */
-    void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, TestContext context) throws ValidationException;
+    void validate(String fieldName, String value, String control) throws ValidationException;
 }

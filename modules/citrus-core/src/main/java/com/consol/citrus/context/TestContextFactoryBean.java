@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 
 /**
@@ -34,6 +35,9 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     
     @Autowired
     private FunctionRegistry functionRegistry;
+    
+    @Autowired
+    private ValidationMatcherRegistry validationMatcherRegistry;
     
     @Autowired(required = false)
     private GlobalVariables globalVariables = new GlobalVariables();
@@ -52,6 +56,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     public TestContext getObject() throws Exception {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
+        context.setValidationMatcherRegistry(validationMatcherRegistry);
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         
@@ -91,6 +96,21 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
      */
     public FunctionRegistry getFunctionRegistry() {
         return functionRegistry;
+    }
+    
+    /**
+     * @param validationMatcherRegistry the validationMatcherRegistry to set
+     */
+    public void setValidationMatcherRegistry(
+            ValidationMatcherRegistry validationMatcherRegistry) {
+        this.validationMatcherRegistry = validationMatcherRegistry;
+    }
+
+    /**
+     * @return the validationMatcherRegistry
+     */
+    public ValidationMatcherRegistry getValidationMatcherRegistry() {
+        return validationMatcherRegistry;
     }
 
     /**

@@ -47,6 +47,7 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -357,7 +358,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             log.debug("Control message:\n" + XMLUtils.serialize(source));
         }
 
-        validateXmlTree(received, source, validationContext, namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces()));
+        validateXmlTree(received, source, validationContext, namespaceContextBuilder.buildContext(receivedMessage, validationContext.getNamespaces()), context);
     }
 
     /**
@@ -368,17 +369,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      */
     private void validateXmlTree(Node received, Node source, 
-            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
         switch(received.getNodeType()) {
             case Node.DOCUMENT_TYPE_NODE:
-                doDocumentTypeDefinition(received, source, validationContext, namespaceContext);
+                doDocumentTypeDefinition(received, source, validationContext, namespaceContext, context);
                 break;
             case Node.DOCUMENT_NODE:
                 validateXmlTree(received.getFirstChild(), source.getFirstChild(), 
-                        validationContext, namespaceContext);
+                        validationContext, namespaceContext, context);
                 break;
             case Node.ELEMENT_NODE:
-                doElement(received, source, validationContext, namespaceContext);
+                doElement(received, source, validationContext, namespaceContext, context);
                 break;
             case Node.TEXT_NODE: case Node.CDATA_SECTION_NODE:
                 doText(received, source);
@@ -404,7 +405,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private void doDocumentTypeDefinition(Node received, Node source,
             XmlMessageValidationContext validationContext,
-            NamespaceContext namespaceContext) {
+            NamespaceContext namespaceContext, TestContext context) {
 
         Assert.isTrue(source instanceof DocumentType, "Missing document type definition in expected xml fragment");
         
@@ -441,7 +442,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     buildValidationErrorMessage("Document type system id not equal", sourceDTD.getSystemId(), receivedDTD.getSystemId()));
         }
         
-        validateXmlTree(received.getNextSibling(), source.getNextSibling(), validationContext, namespaceContext);
+        validateXmlTree(received.getNextSibling(), source.getNextSibling(), validationContext, namespaceContext, context);
     }
 
     /**
@@ -452,7 +453,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      */
     private void doElement(Node received, Node source, 
-            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
         //validate element name
         if (log.isDebugEnabled()) {
             log.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
@@ -493,6 +494,13 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" + CitrusConstants.IGNORE_PLACEHOLDER + "'");
             }
             return;
+        } else if (source.getFirstChild() != null &&
+                StringUtils.hasText(source.getFirstChild().getNodeValue()) && 
+                source.getFirstChild().getNodeValue().trim().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                source.getFirstChild().getNodeValue().trim().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+            
+            ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(), received.getFirstChild().getNodeValue().trim(), source.getFirstChild().getNodeValue().trim(), context);
+            return;
         }
 
         //work on attributes
@@ -507,7 +515,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         + received.getLocalName() + "'", countAttributes(sourceAttr), countAttributes(receivedAttr)));
 
         for(int i = 0; i<receivedAttr.getLength(); i++) {
-            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext);
+            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext, context);
         }
 
         //work on child nodes
@@ -520,7 +528,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         for(int i = 0; i<receivedChilds.getLength(); i++) {
             this.validateXmlTree(receivedChilds.item(i), sourceChilds.item(i), 
-                    validationContext, namespaceContext);
+                    validationContext, namespaceContext, context);
         }
 
         if (log.isDebugEnabled()) {
@@ -567,7 +575,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      */
     private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes, 
-            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
+            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
         if (received.getNodeName().startsWith("xmlns")) { return; }
 
         String receivedName = received.getLocalName();
@@ -588,6 +596,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             if (log.isDebugEnabled()) {
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
+            return;
+        } else if (StringUtils.hasText(source.getNodeValue()) &&
+                source.getNodeValue().trim().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                source.getNodeValue().trim().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+            
+            ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(), received.getFirstChild().getNodeValue().trim(), source.getFirstChild().getNodeValue().trim(), context);
             return;
         }
 

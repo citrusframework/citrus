@@ -39,7 +39,7 @@ public class FunctionLibrary {
 
     /** Function library prefix */
     private String prefix = DEFAULT_PREFIX;
-
+    
     /**
      * Try to find function in library by name.
      * 

@@ -16,7 +16,11 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -27,8 +31,11 @@ import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
@@ -270,37 +277,44 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     controlValue = FunctionUtils.resolveFunction(controlValue, context);
                 }
                 
-                // check if value is ignored
-                if (controlValue.equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Ignoring column value '" + columnName + "(resultValue)'");
-                    }
-                } else {
-                    if (resultValue == null) {
-                        if (controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
-                            }
-                        } else {
-                            throw new ValidationException("Validation failed for column: '" +  columnName + "'"
-                                    + "found value: NULL expected value: " + controlValue);
-                        }
-                    } else if (resultValue.equals(controlValue)) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Validation successful for column: '" + columnName + "' expected value: " + controlValue + " - value OK");
-                        }
-                    } else {
-                        throw new ValidationException("Validation failed for column: '" +  columnName + "'"
-                                + " found value: '"
-                                + resultValue
-                                + "' expected value: "
-                                + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
-                    }
-                }
+                validateValue(columnName, controlValue, resultValue, context);
             }
         }
 
         log.info("Database query validation finished successfully: All values OK");
+    }
+
+    private void validateValue(String columnName, String controlValue, String resultValue, TestContext context) {
+        
+        // check if value is ignored
+        if (controlValue.equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Ignoring column value '" + columnName + "(resultValue)'");
+            }
+        } else {
+            if (controlValue.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) && controlValue.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+                ValidationMatcherUtils.resolveValidationMatcher(columnName, resultValue, controlValue, context);
+            } else if (resultValue == null) {
+                if (controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Validating database value for column: ''" + columnName + "'' value as expected: NULL - value OK");
+                    }
+                } else {
+                    throw new ValidationException("Validation failed for column: '" +  columnName + "'"
+                            + "found value: NULL expected value: " + controlValue);
+                }
+            } else if (resultValue.equals(controlValue)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Validation successful for column: '" + columnName + "' expected value: " + controlValue + " - value OK");
+                }
+            } else {
+                throw new ValidationException("Validation failed for column: '" +  columnName + "'"
+                        + " found value: '"
+                        + resultValue
+                        + "' expected value: "
+                        + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
+            }
+        }
     }
     
     /**

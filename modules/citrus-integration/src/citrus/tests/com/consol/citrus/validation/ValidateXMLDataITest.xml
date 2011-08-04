@@ -44,9 +44,9 @@
 							<HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
                                 <MessageId>_</MessageId>
                                 <CorrelationId>_</CorrelationId>
-                                <User>HelloService</User>
+                                <User>@equalsIgnoreCase('HelloService')@</User>
                                 <Text>xxx</Text>
-                            </HelloResponse>						
+                            </HelloResponse>
 						]]>
 					</data>
                     <element path="HelloResponse.MessageId" value="${messageId}"/>

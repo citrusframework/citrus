@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.xml.transform.StringResult;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 
@@ -44,7 +45,7 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
      * @see com.consol.citrus.ws.validation.AbstractSoapFaultValidator#validateFaultDetail(org.springframework.ws.soap.SoapFaultDetail, org.springframework.ws.soap.SoapFaultDetail, com.consol.citrus.context.TestContext)
      */
     @Override
-    protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail) {
+    protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, TestContext context) {
         if (controlDetail == null) { return; }
         
         if (log.isDebugEnabled()) {
@@ -69,7 +70,7 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
                     log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
                 }
                 
-                validateFaultDetailString(receivedDetailString, controlDetailString);
+                validateFaultDetailString(receivedDetailString, controlDetailString, context);
             } else {
                 throw new ValidationException("Missing SOAP fault detail in received message");
             }
@@ -84,6 +85,6 @@ public abstract class AbstractFaultDetailStringValidator extends AbstractSoapFau
      * @param receivedDetailString received soap fault representation as String.
      * @param controlDetailString control soap fault representation as String.
      */
-    protected abstract void validateFaultDetailString(String receivedDetailString, String controlDetailString) 
+    protected abstract void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
         throws ValidationException;
 }

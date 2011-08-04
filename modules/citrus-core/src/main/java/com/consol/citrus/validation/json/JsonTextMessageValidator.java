@@ -33,6 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 
 /**
  * This message validator implementation is able to validate two JSON text objects. The order of JSON entries can differ
@@ -124,7 +125,12 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 continue;
             }
             
-            if (controlJsonEntry.getValue() instanceof JSONObject) {
+            if (controlJsonEntry.getValue().toString().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                    controlJsonEntry.getValue().toString().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+                
+                ValidationMatcherUtils.resolveValidationMatcher(controlJsonEntry.getKey().toString(), receivedJson.get(controlJsonEntry.getKey()).toString(), controlJsonEntry.getValue().toString(), context);
+            
+            } else if (controlJsonEntry.getValue() instanceof JSONObject) {
                 Assert.isTrue(receivedJson.get(controlJsonEntry.getKey()) instanceof JSONObject, 
                         "Type mismatch for JSON entry '" + controlJsonEntry.getKey() + "', " + 
                     "expected '" + JSONObject.class.getSimpleName() + "' but was '" + receivedJson.get(controlJsonEntry.getKey()).getClass().getSimpleName() + "'");

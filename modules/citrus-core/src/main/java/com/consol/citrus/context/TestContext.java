@@ -29,6 +29,7 @@ import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -55,6 +56,9 @@ public class TestContext {
     
     /** Registered message validators */
     private MessageValidatorRegistry messageValidatorRegistry;
+    
+    /** Registered validation matchers */
+    private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
     
     /**
      * Default constructor
@@ -292,6 +296,22 @@ public class TestContext {
      */
     public MessageValidatorRegistry getMessageValidatorRegistry() {
         return messageValidatorRegistry;
+    }
+
+    /**
+     * Get the current validation matcher registry
+     * @return
+     */
+    public ValidationMatcherRegistry getValidationMatcherRegistry() {
+        return validationMatcherRegistry;
+    }
+
+    /**
+     * Set the validation matcher registry
+     * @param validationMatcherRegistry
+     */
+    public void setValidationMatcherRegistry(ValidationMatcherRegistry validationMatcherRegistry) {
+        this.validationMatcherRegistry = validationMatcherRegistry;
     }
     
 }

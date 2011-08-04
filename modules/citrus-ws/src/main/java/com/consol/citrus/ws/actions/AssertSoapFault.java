@@ -95,7 +95,7 @@ public class AssertSoapFault extends AbstractActionContainer {
 
             SoapFault controlFault = constructControlFault(context);
             
-            validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault);
+            validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault, context);
             
             log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
             log.info("SOAP fault validation successful");

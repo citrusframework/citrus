@@ -37,7 +37,7 @@
                                 "type" : "read",
                                 "mbean" : "java.lang:type=Memory",
                                 "attribute" : "HeapMemoryUsage",
-                                "path" : "used"
+                                "path" : "@equalsIgnoreCase('USED')@"
                               }
                             </data>
                         </message>

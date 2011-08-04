@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -44,7 +45,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailStringValidator {
      * @see com.consol.citrus.ws.validation.AbstractFaultDetailStringValidator#validateFaultDetailString(java.lang.String, java.lang.String)
      */
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString) 
+    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
         throws ValidationException {
         Message<String> controlMessage = MessageBuilder.withPayload(controlDetailString).build();
         validationContext.setControlMessage(controlMessage);

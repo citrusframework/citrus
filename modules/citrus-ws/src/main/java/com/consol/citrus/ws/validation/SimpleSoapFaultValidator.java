@@ -19,6 +19,7 @@ package com.consol.citrus.ws.validation;
 
 import org.springframework.util.StringUtils;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 
 /**
@@ -33,7 +34,7 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailStringValidator
      * @see com.consol.citrus.ws.validation.AbstractFaultDetailStringValidator#validateFaultDetailString(java.lang.String, java.lang.String)
      */
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString) 
+    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
         throws ValidationException {
         if (!StringUtils.trimAllWhitespace(receivedDetailString).equals( 
                 StringUtils.trimAllWhitespace(controlDetailString))) {

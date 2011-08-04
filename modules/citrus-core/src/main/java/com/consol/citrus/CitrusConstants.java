@@ -52,6 +52,10 @@ public final class CitrusConstants {
     /** Placeholder used in messages to ignore elements */
     public static final String IGNORE_PLACEHOLDER = "@ignore@";
     
+    /** Prefix/suffix used to identify validation matchers */
+    public static final String VALIDATION_MATCHER_PREFIX = "@";
+    public static final String VALIDATION_MATCHER_SUFFIX = "@";
+    
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
 }

@@ -44,9 +44,10 @@ import com.consol.citrus.report.TestSuiteListeners;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml",
-                                   "classpath:citrus-context.xml",
-                                   "classpath:com/consol/citrus/functions/citrus-function-ctx.xml"})
+@ContextConfiguration(locations = { "classpath:com/consol/citrus/spring/root-application-ctx.xml", 
+                                    "classpath:citrus-context.xml", 
+                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
+                                    "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     /**
      * Logger
