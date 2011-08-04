@@ -26,6 +26,18 @@
                 <entry key="equalsIgnoreCase">
                     <bean class="com.consol.citrus.validation.matcher.core.EqualsIgnoreCaseValidationMatcher"/>
                 </entry>
+                <entry key="contains">
+                    <bean class="com.consol.citrus.validation.matcher.core.ContainsValidationMatcher"/>
+                </entry>
+                <entry key="containsIgnoreCase">
+                    <bean class="com.consol.citrus.validation.matcher.core.ContainsIgnoreCaseValidationMatcher"/>
+                </entry>
+                <entry key="greaterThan">
+                    <bean class="com.consol.citrus.validation.matcher.core.GreaterThanValidationMatcher"/>
+                </entry>
+                <entry key="lowerThan">
+                    <bean class="com.consol.citrus.validation.matcher.core.LowerThanValidationMatcher"/>
+                </entry>
             </map>
         </property>
     </bean>

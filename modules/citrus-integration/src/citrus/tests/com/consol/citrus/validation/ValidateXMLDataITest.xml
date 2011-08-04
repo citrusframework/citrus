@@ -88,7 +88,7 @@
 							<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
                                 <ns0:MessageId>_</ns0:MessageId>
                                 <ns0:CorrelationId>_</ns0:CorrelationId>
-                                <ns0:User>HelloService</ns0:User>
+                                <ns0:User>@containsIgnoreCase('elloservic')@</ns0:User>
                                 <ns0:Text>xxx</ns0:Text>
                             </ns0:HelloResponse>
 					    ]]>
