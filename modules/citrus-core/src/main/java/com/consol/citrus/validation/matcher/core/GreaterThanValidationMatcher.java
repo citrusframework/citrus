@@ -4,7 +4,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 
 /**
- * ValidationMatcher based on String.contains()
+ * ValidationMatcher based on Double > Double.
  * 
  * @author Christian Wied
  */

@@ -38,6 +38,12 @@
                 <entry key="lowerThan">
                     <bean class="com.consol.citrus.validation.matcher.core.LowerThanValidationMatcher"/>
                 </entry>
+                <entry key="startsWith">
+                    <bean class="com.consol.citrus.validation.matcher.core.StartsWithValidationMatcher"/>
+                </entry>
+                <entry key="endsWith">
+                    <bean class="com.consol.citrus.validation.matcher.core.EndsWithValidationMatcher"/>
+                </entry>
             </map>
         </property>
     </bean>
