@@ -44,6 +44,12 @@
                 <entry key="endsWith">
                     <bean class="com.consol.citrus.validation.matcher.core.EndsWithValidationMatcher"/>
                 </entry>
+                <entry key="isNumber">
+                    <bean class="com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher"/>
+                </entry>
+                <entry key="matches">
+                    <bean class="com.consol.citrus.validation.matcher.core.MatchesValidationMatcher"/>
+                </entry>
             </map>
         </property>
     </bean>

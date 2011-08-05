@@ -82,11 +82,11 @@
                         "request" : 
                           {
                             "mbean" : "java.lang:type=Memory",
-                            "path" : "used",
+                            "path" : "@matches('u*s*e*d*')@",
                             "attribute" : "HeapMemoryUsage",
                             "type" : "read"
                           },
-                        "value" : "512"
+                        "value" : "@isNumber()@"
                       }
                     </data>
             	</message>
