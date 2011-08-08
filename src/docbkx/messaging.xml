@@ -391,7 +391,7 @@
     &lt;ignore path=&quot;//ResponseMessage/MessageHeader/Timestamp&quot;/&gt;
 &lt;/message&gt;</programlisting>
         
-        <para>If you do not like XPath you couls also use another possibility to ignore message contents. The next example uses the special <emphasis>@ignore@</emphasis> placeholder
+        <para>If you do not like XPath you could also use another possibility to ignore message contents. The next example uses the special <emphasis>@ignore@</emphasis> placeholder
         directly in the message content:</para>
         
         <programlisting>&lt;message&gt;
@@ -415,6 +415,48 @@
 &lt;/message&gt;</programlisting>
         
         <para>The ignored message elements are automatically skipped when Citrus compares and validates message contents.</para>
+    </section>
+    
+    <section id="message-validation-matcher">
+        <title>Validate message elements with matchers</title>
+        
+        <para>Sometimes you want to validate dynamic message content with basic assertion functions. So called validation matchers allow you
+        to do these simple assertions.</para>
+        
+        <programlisting>&lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+        &lt;RequestMessage&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;@greaterThan(0)@&lt;/Id&gt;
+                    &lt;Name&gt;@equalsIgnoreCase('smith')@&lt;/Name&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+&lt;/message&gt;</programlisting>
+        
+        <para>The message element 'Id' is automatically validated to be greater than zero, the 'Name' to be equal to "smith" by ignoring case considerations.</para>
+
+		<para>Following validation matchers are supported:</para>
+        <itemizedlist>
+            <listitem>equalsIgnoreCase: validates the equality of the element to the specified string, ignoring case considerations.</listitem>
+            <listitem>contains: validates this element contains the specified string.</listitem>
+            <listitem>containsIgnoreCase: validates this element contains the specified string, ignoring case considerations.</listitem>
+            <listitem>startsWith: validates this element starts with the specified string.</listitem>
+            <listitem>endsWith: validates this element ends with the specified string.</listitem>
+            <listitem>matches: validates this element matches with the specified regular expression.</listitem>
+            <listitem>isNumber: validates this element is a number and can be parsed as double.</listitem>
+            <listitem>lowerThan: validates this element is a number and lower than the specified number.</listitem>
+            <listitem>greaterThan: validates this element is a number and greater than the specified number.</listitem>
+        </itemizedlist>
+        
+    	<tip>
+            <para>You can use validation matchers not only within xml-elements, but also within plaintext, json-content, sql-results etc. Just give it a try!</para>
+        </tip>
+        
     </section>
     
     <section id="message-validation-elements">
