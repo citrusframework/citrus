@@ -94,6 +94,13 @@
     stopped. <xref linkend="reporting-html"/> provides details on this new feature.</para>
   </section>
   
+  <section id="whatsnew-validation">
+    <title>Message validation matchers</title>
+    
+    <para>We added simple validation-mechanisms within message content using so called validation-matchers. Have a look at <xref linkend="message-validation-matcher"/> for details.</para>
+  
+  </section>
+  
   <section id="whatsnew-bugfixes">
     <title>Bugfixes</title>
     
