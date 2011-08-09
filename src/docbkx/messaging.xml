@@ -448,6 +448,7 @@
             <listitem>startsWith: validates this element starts with the specified string.</listitem>
             <listitem>endsWith: validates this element ends with the specified string.</listitem>
             <listitem>matches: validates this element matches with the specified regular expression.</listitem>
+            <listitem>matchesDatePattern: validates this element matches with the specified date pattern.</listitem>
             <listitem>isNumber: validates this element is a number and can be parsed as double.</listitem>
             <listitem>lowerThan: validates this element is a number and lower than the specified number.</listitem>
             <listitem>greaterThan: validates this element is a number and greater than the specified number.</listitem>

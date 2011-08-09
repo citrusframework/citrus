@@ -50,7 +50,7 @@
     	            	<message>
     	            		<data>
                               {
-                                "timestamp" : "123456789",
+                                "timestamp" : "2011-01-01",
                                 "status" : 200,
                                 "request" : 
                                   {
@@ -77,7 +77,7 @@
             	<message type="json">
                     <data>
                       {
-                        "timestamp" : "123456789",
+                        "timestamp" : "@matchesDatePattern('yyyy-MM-dd')@",
                         "status" : 200,
                         "request" : 
                           {
