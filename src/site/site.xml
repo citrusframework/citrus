@@ -34,6 +34,7 @@
         <item name="Run with Maven" href="${site.url}/tutorials/run-with-maven.html"/>
         <item name="Run with ANT" href="${site.url}/tutorials/run-with-ant.html"/>
         <item name="Writing functions" href="${site.url}/tutorials/write-functions.html"/>
+        <item name="Custom actions" href="${site.url}/tutorials/create-custom-actions.html"/>
         <item name="More ..." href="${site.url}/tutorials.html"/>
       </item>
     </menu>

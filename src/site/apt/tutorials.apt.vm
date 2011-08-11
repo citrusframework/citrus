@@ -22,7 +22,7 @@ Tutorials
     The tutorial show how to write custom functions and how to use them in a test case. The tutorial implements 
     two sample functions with and without parameters.  
   
-  * Writing actions (comming soon)
+  * {{{./tutorials/create-custom-actions.html} Writing custom actions}}
   
     The tutorial shows how to include custom test actions into a test case. The example handles the Java implementation of a test action and
     shows the XML schema support in Spring to include the new actions into a Citrus test case.
