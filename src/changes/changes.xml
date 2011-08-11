@@ -15,7 +15,13 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="15.06.2011" description="Latest snapshot release">
+    <release version="1.2-SNAPSHOT" date="11.08.2011" description="Latest snapshot release">
+        <action dev="jza" type="add">
+          #331 Custom actions tutorial
+        </action>
+        <action dev="cwied" type="add">
+          #346 Validation matchers
+        </action>
         <action dev="christophd" type="add">
           #400 Validate REST Http error status codes
         </action>
