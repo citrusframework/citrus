@@ -22,9 +22,9 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
-public class MatchesDatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
+public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	MatchesDatePatternValidationMatcher matcher = new MatchesDatePatternValidationMatcher();
+	DatePatternValidationMatcher matcher = new DatePatternValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

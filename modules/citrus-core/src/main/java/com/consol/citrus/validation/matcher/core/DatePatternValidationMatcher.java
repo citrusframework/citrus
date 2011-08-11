@@ -28,7 +28,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
  * 
  * @author Christian Wied
  */
-public class MatchesDatePatternValidationMatcher implements ValidationMatcher {
+public class DatePatternValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control) throws ValidationException {
         
@@ -37,16 +37,16 @@ public class MatchesDatePatternValidationMatcher implements ValidationMatcher {
     		dateFormat = new SimpleDateFormat(control);
     	} catch (PatternSyntaxException e) {
     		throw new ValidationException(this.getClass().getSimpleName()
-                    + " failed for field '" + fieldName
-                    + "'. Control value has invalid syntax: " + e.getMessage());
+                    + " failed for field '" + fieldName + "' " + 
+                    ". Found invalid date format", e);
 		}
     	try {
 			dateFormat.parse(value);
 		} catch (ParseException e) {
             throw new ValidationException(this.getClass().getSimpleName()
-                    + " failed for field '" + fieldName
-                    + "'. Received value is '" + value
-                    + "', control value is '" + control + "'. Exception: " + e.getMessage());
+                    + " failed for field '" + fieldName + "'" +
+                    		". Received invalid date format for value '" + value
+                    + "', expected date format is '" + control + "'", e);
 		}
     }
 }

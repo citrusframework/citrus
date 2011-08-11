@@ -35,13 +35,14 @@ public class IsNumberValidationMatcher implements ValidationMatcher {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
-                    + "' and is not a number.");
+                    + "' and is not a number", e);
 		}
+    	
     	if (dValue.isNaN() || dValue.isInfinite()) {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
-                    + "' and not a number.");
+                    + "' and not a number");
     	}
     }
 }

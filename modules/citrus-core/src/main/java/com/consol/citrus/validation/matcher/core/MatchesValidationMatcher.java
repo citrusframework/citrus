@@ -36,13 +36,14 @@ public class MatchesValidationMatcher implements ValidationMatcher {
     	} catch (PatternSyntaxException e) {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
-                    + "'. Control value has invalid syntax: " + e.getMessage());
+                    + "'. Found invalid pattern syntax", e);
 		}
+    	
         if (!success) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
-                    + "', control value is '" + control + "'.");
+                    + "', control value is '" + control + "'");
         }
     }
 }

@@ -32,7 +32,7 @@ public class StartsWithValidationMatcher implements ValidationMatcher {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
-                    + "', control value is '" + control + "'.");
+                    + "', control value is '" + control + "'");
         }
     }
 }

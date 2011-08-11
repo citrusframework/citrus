@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.NoSuchFunctionException;
+import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
 
 /**
  * Library holding a set of validation matchers. Each library defines a validation prefix as namespace, so
@@ -44,22 +45,21 @@ public class ValidationMatcherLibrary {
      * @return the validationMatcher instance.
      * @throws NoSuchFunctionException
      */
-    public ValidationMatcher getValidationMatcher(String validationMatcherName) throws NoSuchFunctionException {
+    public ValidationMatcher getValidationMatcher(String validationMatcherName) throws NoSuchValidationMatcherException {
         if (!members.containsKey(validationMatcherName)) {
-            throw new NoSuchFunctionException("Can not find validationMatcher " + validationMatcherName + " in library " + name + " (" + prefix + ")");
+            throw new NoSuchValidationMatcherException("Can not find validation matcher " + validationMatcherName + " in library " + name + " (" + prefix + ")");
         }
 
         return members.get(validationMatcherName);
     }
 
     /**
-     * Does this validationMatcher library know a validationMatcher with the given name.
+     * Does this library know a validationMatcher with the given name.
      * 
      * @param validationMatcherName name to search for.
      * @return boolean flag to mark existence.
      */
     public boolean knowsValidationMatcher(String validationMatcherName) {
-
         // custom libraries:
         if (validationMatcherName.contains(":")) {
             String validationMatcherPrefix = validationMatcherName.substring(0, validationMatcherName.indexOf(':') + 1);

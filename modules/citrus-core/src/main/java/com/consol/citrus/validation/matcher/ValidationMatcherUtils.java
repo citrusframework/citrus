@@ -35,47 +35,41 @@ public final class ValidationMatcherUtils {
     
     /**
      * This method resolves a custom falidationMatcher to its respective result.
-     * @param validationMatcherString to evaluate.
+     * @param validationMatcherExpression to evaluate.
      * @param fieldName the name of the field
      * @throws ValidationException
      * @return evaluated control value
      */
-    public static void resolveValidationMatcher(String fieldName, String value, String validationMatcherString, TestContext context) {
-
-        if (validationMatcherString.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX)) {
-            validationMatcherString = validationMatcherString.substring(CitrusConstants.VALIDATION_MATCHER_PREFIX.length());
-        }
-        if (validationMatcherString.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
-            validationMatcherString = validationMatcherString.substring(0, validationMatcherString.length() - CitrusConstants.VALIDATION_MATCHER_SUFFIX.length());
-        }
+    public static void resolveValidationMatcher(String fieldName, String fieldValue, 
+            String validationMatcherExpression, TestContext context) {
+        String expression = VariableUtils.cutOffVariablesPrefix(cutOffValidationMatchersPrefix(validationMatcherExpression));
         
-        String validationMatcherPrefix = validationMatcherString.substring(0, validationMatcherString.indexOf(':') + 1);
-        String validationMatcherExpression = cutOffValidationMatchersPrefix(validationMatcherString);
-        String controlString = validationMatcherExpression.substring(validationMatcherExpression.indexOf('(') + 1, validationMatcherExpression.length() - 1);
-        String validationMatcher = validationMatcherExpression.substring(validationMatcherExpression.indexOf(':') + 1, validationMatcherExpression.indexOf('('));
+        String prefix = expression.substring(0, expression.indexOf(':') + 1);
+        String controlString = expression.substring(expression.indexOf('(') + 1, expression.length() - 1);
+        String validationMatcher = expression.substring(expression.indexOf(':') + 1, expression.indexOf('('));
 
-        ValidationMatcherLibrary library = context.getValidationMatcherRegistry().getLibraryForPrefix(validationMatcherPrefix);
+        ValidationMatcherLibrary library = context.getValidationMatcherRegistry().getLibraryForPrefix(prefix);
 
         controlString = VariableUtils.replaceVariablesInString(controlString, context, false);
         controlString = FunctionUtils.replaceFunctionsInString(controlString, context);
         if (controlString.contains("\'")) {
-            controlString = controlString.substring(controlString.indexOf("\'") + 1, controlString.lastIndexOf("\'"));
+            controlString = controlString.substring(controlString.indexOf('\'') + 1, controlString.lastIndexOf('\''));
         }
 
-        library.getValidationMatcher(validationMatcher).validate(fieldName, value, controlString);
+        library.getValidationMatcher(validationMatcher).validate(fieldName, fieldValue, controlString);
     }
     
     
     /**
-     * Cut off validation matchers prefix
-     * @param validationMatcherString
+     * Cut off validation matchers prefix and suffix.
+     * @param expression
      * @return
      */
-    public static String cutOffValidationMatchersPrefix(String validationMatcherString) {
-        if (validationMatcherString.indexOf(CitrusConstants.VARIABLE_PREFIX) == 0 && validationMatcherString.charAt(validationMatcherString.length()-1) == CitrusConstants.VARIABLE_SUFFIX) {
-            return validationMatcherString.substring(CitrusConstants.VARIABLE_PREFIX.length(), validationMatcherString.length()-1);
+    private static String cutOffValidationMatchersPrefix(String expression) {
+        if (expression.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) && expression.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+            return expression.substring(CitrusConstants.VALIDATION_MATCHER_PREFIX.length(), expression.length() - CitrusConstants.VALIDATION_MATCHER_SUFFIX.length());
         }
 
-        return validationMatcherString;
+        return expression;
     }
 }

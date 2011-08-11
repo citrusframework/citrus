@@ -39,6 +39,22 @@
         </property>
     </bean>
     
+    <bean id="fooValidationMatcherLibrary" class="com.consol.citrus.validation.matcher.ValidationMatcherLibrary">
+        <property name="name" value="fooValidationMatcherLibrary"/>
+        <property name="prefix" value="foo:"/>
+        <property name="members">
+            <map>
+                <entry key="customMatcher">
+                    <ref bean="validationMatcher"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id ="validationMatcher" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.validation.matcher.ValidationMatcher"/>
+    </bean>
+    
     <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     

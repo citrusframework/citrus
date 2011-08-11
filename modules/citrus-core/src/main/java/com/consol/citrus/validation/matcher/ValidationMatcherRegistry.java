@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
+import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
 
 /**
  * ValidationMatcher registry holding all available validation matcher libraries.
@@ -32,27 +32,6 @@ public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
     @Autowired
     private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<ValidationMatcherLibrary>();
-    
-    /**
-     * Check if variable expression is a custom validationMatcher.
-     * Expression has to start with one of the registered validationMatcher library prefix.
-     * @param variableExpression to be checked
-     * @return flag (true/false)
-     */
-    public boolean isValidationMatcher(final String variableExpression) {
-        if (variableExpression == null || variableExpression.length() == 0) {
-            return false;
-        }
-        
-        for (int i = 0; i < validationMatcherLibraries.size(); i++) {
-            ValidationMatcherLibrary lib = (ValidationMatcherLibrary)validationMatcherLibraries.get(i);
-            if (variableExpression.startsWith(lib.getPrefix())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
     
     /**
      * Get library for validationMatcher prefix.
@@ -66,7 +45,7 @@ public class ValidationMatcherRegistry {
             }
         }
 
-        throw new NoSuchFunctionLibraryException("Can not find validationMatcher library for prefix " + validationMatcherPrefix);
+        throw new NoSuchValidationMatcherLibraryException("Can not find validationMatcher library for prefix " + validationMatcherPrefix);
     }
     
     /**

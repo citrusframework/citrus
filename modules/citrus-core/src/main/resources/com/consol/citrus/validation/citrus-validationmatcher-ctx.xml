@@ -51,7 +51,7 @@
                     <bean class="com.consol.citrus.validation.matcher.core.MatchesValidationMatcher"/>
                 </entry>
                 <entry key="matchesDatePattern">
-                    <bean class="com.consol.citrus.validation.matcher.core.MatchesDatePatternValidationMatcher"/>
+                    <bean class="com.consol.citrus.validation.matcher.core.DatePatternValidationMatcher"/>
                 </entry>
             </map>
         </property>
