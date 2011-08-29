@@ -95,10 +95,11 @@
   </section>
   
   <section id="whatsnew-validation">
-    <title>Message validation matchers</title>
+    <title>Validation matchers</title>
     
-    <para>We added simple validation-mechanisms within message content using so called validation-matchers. Have a look at <xref linkend="message-validation-matcher"/> for details.</para>
-  
+    <para>The new validation matchers will put the message validation mechanisms to a new level. With validation matchers you are able to execute powerful assertions on each message content element.
+    For instance you can use the isNumber validation matcher for checking that a message value is of numeric nature. We added several matcher implementations that are ready for usage in your test but you can
+    also write your custom validation matchers. Have a look at <xref linkend="validation-matchers"/> for details.</para>
   </section>
   
   <section id="whatsnew-bugfixes">

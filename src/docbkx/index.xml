@@ -39,6 +39,7 @@
     <xi:include href='soap-webservices.xml'/>
     <xi:include href='message-channel.xml'/>
     <xi:include href='functions.xml'/>
+    <xi:include href='validation-matchers.xml'/>
     <xi:include href='testsuite.xml'/>
     <xi:include href='tibco.xml'/>
     <xi:include href='schema-validation.xml'/>

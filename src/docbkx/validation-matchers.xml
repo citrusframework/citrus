@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="validation-matchers">
+    <title>Validation matchers</title>
+
+    <para>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. 
+    With test variables we are able to check that message entries do match a dynamic value. Validation matchers add powerful assertion functionality on top of that.
+    You simply use the predefined validation matcher functionalities in order to perform assertions in validation statements.</para>
+    
+    <para>See the following sections for Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the
+    basic assertions on character sequences and numbers. Of course you can add custom validation matcher implementations in order to meet your very specific validation 
+    assertions.</para>
+    
+    <para>First of all let us have a look at a validation matcher statement in action so we understand how to use them in a test case.</para>
+        
+    <programlisting>&lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+        &lt;RequestMessage&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;@greaterThan(0)@&lt;/Id&gt;
+                    &lt;Name&gt;@equalsIgnoreCase('foo')@&lt;/Name&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+&lt;/message&gt;</programlisting>
+        
+    <para>The listing above is a normal message validation inside a receive test action. We use some expected message payload data inline as CDATA and simply include our first validation matcher 
+    statements. The message element <emphasis>Id</emphasis> is automatically validated to be a number greater than zero, the <emphasis>Name</emphasis> character sequence is checked to match 'foo' 
+    ignoring case spelling considerations.</para>
+    
+    <para>Please note the special validation matcher syntax. The statements are surrounded with '@' markers and are identified by some unique name. The optional parameters are given inside the brackets just 
+    like we would do with normal function calls.</para>
+
+    <tip>
+        <para>You can use validation matchers not only within xml-elements, but also within plaintext, json-content, sql-results etc. Just give it a try!</para>
+    </tip>
+    
+    <para>See the following sections describing the default validation matchers in Citrus.</para>
+    
+    <section id="validation-matcher-equals">
+        <title>equalsIgnoreCase</title>
+        
+        <para>This matcher implementation checks for character sequences equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence 
+        to check for.</para>
+        
+        <programlisting>
+            @equalsIgnoreCase('foo')@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-contains">
+        <title>contains</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>
+        
+        <para>Contains ignore case! TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-startswith">
+        <title>startsWith</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-endswith">
+        <title>endsWith</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-matches">
+        <title>matches</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-datepattern">
+        <title>matchesDatePattern</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-isnumber">
+        <title>isNumber</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-lowerthan">
+        <title>lowerThan</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+    
+    <section id="validation-matcher-greaterthan">
+        <title>greaterThan</title>
+        
+        <para>TODO: Describe the matcher</para>
+        
+        <programlisting>
+            @matcher()@
+        </programlisting>        
+    </section>
+</chapter>
