@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.ws.config.xml;
 
 import java.util.Map;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.jms.JmsReplyMessageReceiver;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
 
 /**
  * @author Christoph Deppisch
  */
-public class JmsReplyMessageReceiverParserTest extends AbstractBeanDefinitionParserTest {
+public class WebServiceReplyMessageReceiverParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
     public void testReplyMessageReceiverParser() {
-        Map<String, JmsReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(JmsReplyMessageReceiver.class);
+        Map<String, WebServiceReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(WebServiceReplyMessageReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 1);
-        Assert.assertTrue(messageReceivers.containsKey("jmsReplyMessageReceiver"));
+        Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver"));
     }
 }

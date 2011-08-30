@@ -18,10 +18,10 @@ package com.consol.citrus.ws.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -47,20 +47,9 @@ public final class SoapAttachmentParser {
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
         if (attachmentElement == null) { return; }
         
-        String contentId = attachmentElement.getAttribute("content-id");
-        if (StringUtils.hasText(contentId)) {
-            builder.addPropertyValue("contentId", contentId);
-        }
-        
-        String contentType = attachmentElement.getAttribute("content-type");
-        if (StringUtils.hasText(contentType)) {
-            builder.addPropertyValue("contentType", contentType);
-        }
-        
-        String charset = attachmentElement.getAttribute("charset-name");
-        if (StringUtils.hasText(charset)) {
-            builder.addPropertyValue("charsetName", charset);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("content-id"), "contentId");
+        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("content-type"), "contentType");
+        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("charset-name"), "charsetName");
         
         Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
         if (attachmentDataElement != null) {

@@ -32,6 +32,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         assertActionCount(4);
         assertActionClassAndName(AssertSoapFault.class, "assert");
         
+        // 1st action
         AssertSoapFault action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
@@ -41,6 +42,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertNull(action.getFaultDetail());
         Assert.assertNull(action.getFaultDetailResource());
         
+        // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
@@ -50,6 +52,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertNull(action.getFaultDetail());
         Assert.assertNull(action.getFaultDetailResource());
         
+        // 3rd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
@@ -59,6 +62,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
         Assert.assertNull(action.getFaultDetailResource());
         
+        // 4th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("customMessageFactory"));

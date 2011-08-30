@@ -157,4 +157,36 @@ public class SendSoapMessageAction extends SendMessageAction {
     public void setForkMode(boolean fork) {
         this.forkMode = fork;
     }
+
+    /**
+     * Gets the attachmentData.
+     * @return the attachmentData
+     */
+    public String getAttachmentData() {
+        return attachmentData;
+    }
+
+    /**
+     * Gets the attachmentResource.
+     * @return the attachmentResource
+     */
+    public Resource getAttachmentResource() {
+        return attachmentResource;
+    }
+
+    /**
+     * Gets the forkMode.
+     * @return the forkMode
+     */
+    public boolean isForkMode() {
+        return forkMode;
+    }
+
+    /**
+     * Gets the attachment.
+     * @return the attachment
+     */
+    public SoapAttachment getAttachment() {
+        return attachment;
+    }
 }
