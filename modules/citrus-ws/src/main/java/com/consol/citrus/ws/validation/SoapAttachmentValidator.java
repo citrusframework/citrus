@@ -19,18 +19,16 @@ package com.consol.citrus.ws.validation;
 import java.io.IOException;
 
 import org.springframework.integration.Message;
-import org.springframework.ws.mime.Attachment;
 
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.WebServiceEndpoint;
 
 
 /**
  * Interface for SOAP attachment validators. 
  * 
- * The Citrus {@link WebServiceEndpoint} implementation adds the received SOAP attachments as 
- * {@link Attachment} implementations to the Spring integration message header. The header name will be the
- * attachment's contentId. The header value is the {@link Attachment} object.
+ * The Citrus {@link com.consol.citrus.ws.WebServiceEndpoint} implementation adds the received SOAP attachments as 
+ * {@link org.springframework.ws.mime.Attachment} implementations to the Spring integration message header. The header name will be the
+ * attachment's contentId. The header value is the {@link org.springframework.ws.mime.Attachment} object.
  *  
  * @author Christoph Deppisch
  */

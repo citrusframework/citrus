@@ -128,4 +128,44 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
         this.attachmentValidator = attachmentValidator;
     }
+
+    /**
+     * Gets the controlAttachment.
+     * @return the controlAttachment
+     */
+    public SoapAttachment getControlAttachment() {
+        return controlAttachment;
+    }
+
+    /**
+     * Sets the controlAttachment.
+     * @param controlAttachment the controlAttachment to set
+     */
+    public void setControlAttachment(SoapAttachment controlAttachment) {
+        this.controlAttachment = controlAttachment;
+    }
+
+    /**
+     * Gets the attachmentData.
+     * @return the attachmentData
+     */
+    public String getAttachmentData() {
+        return attachmentData;
+    }
+
+    /**
+     * Gets the attachmentResource.
+     * @return the attachmentResource
+     */
+    public Resource getAttachmentResource() {
+        return attachmentResource;
+    }
+
+    /**
+     * Gets the attachmentValidator.
+     * @return the attachmentValidator
+     */
+    public SoapAttachmentValidator getAttachmentValidator() {
+        return attachmentValidator;
+    }
 }

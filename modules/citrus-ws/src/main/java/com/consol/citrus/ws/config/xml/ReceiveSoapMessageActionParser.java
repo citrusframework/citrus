@@ -18,10 +18,10 @@ package com.consol.citrus.ws.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 
 /**
@@ -39,12 +39,8 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
         
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
         if (attachmentElement != null) {
-            String attachmentValidator = attachmentElement.getAttribute("validator");
-            if (StringUtils.hasText(attachmentValidator)) {
-                builder.addPropertyReference("attachmentValidator", attachmentValidator);
-            } else { //inject default soap attachment validator implementation
-                builder.addPropertyReference("attachmentValidator", "soapAttachmentValidator");
-            }
+            BeanDefinitionParserUtils.setPropertyReference(builder, attachmentElement.getAttribute("validator"), 
+                    "attachmentValidator", "soapAttachmentValidator");
         }
         
         return builder; 
