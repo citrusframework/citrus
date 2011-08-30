@@ -42,7 +42,7 @@
     <para>See now the following sections describing the default validation matchers in Citrus.</para>
     
     <section id="validation-matcher-equals">
-        <title>equalsIgnoreCase</title>
+        <title>equalsIgnoreCase()</title>
         
         <para>This matcher implementation checks for equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence 
         to check for.</para>
@@ -51,7 +51,7 @@
     </section>
     
     <section id="validation-matcher-contains">
-        <title>contains</title>
+        <title>contains()</title>
         
         <para>This matcher searches for a character sequence inside the actual value. If the character sequence is not found somewhere the matcher starts complaining.</para>
         
@@ -63,7 +63,7 @@
     </section>
     
     <section id="validation-matcher-startswith">
-        <title>startsWith</title>
+        <title>startsWith()</title>
         
         <para>The matcher implementation asserts that the given value starts with a character sequence otherwise the matcher will arise some error.</para>
         
@@ -71,7 +71,7 @@
     </section>
     
     <section id="validation-matcher-endswith">
-        <title>endsWith</title>
+        <title>endsWith()</title>
         
         <para>Ends with matcher validates a value to end with a given character sequence.</para>
         
@@ -79,7 +79,7 @@
     </section>
     
     <section id="validation-matcher-matches">
-        <title>matches</title>
+        <title>matches()</title>
         
         <para>You can check a value to meet a regular expression with this validation matcher. This is for instance very useful for email address 
         validation.</para>
@@ -88,7 +88,7 @@
     </section>
     
     <section id="validation-matcher-datepattern">
-        <title>matchesDatePattern</title>
+        <title>matchesDatePattern()</title>
         
         <para>Date values are always difficult to check for equality. Especially when you have millisecond timestamps to deal with. Therefore the date pattern validation 
         matcher should have some improvement for you. You simply validate the date format pattern instead of checking for total equality.</para>
@@ -100,7 +100,7 @@
     </section>
     
     <section id="validation-matcher-isnumber">
-        <title>isNumber</title>
+        <title>isNumber()</title>
         
         <para>Checking on values to be of numeric nature is essential. The actual value must be a numeric number otherwise the matcher raises errors. The matcher implementation
         does not evaluate any parameters.</para>
@@ -109,7 +109,7 @@
     </section>
     
     <section id="validation-matcher-lowerthan">
-        <title>lowerThan</title>
+        <title>lowerThan()</title>
         
         <para>This matcher checks a number to be lower than a given threshold value.</para>
         
@@ -117,7 +117,7 @@
     </section>
     
     <section id="validation-matcher-greaterthan">
-        <title>greaterThan</title>
+        <title>greaterThan()</title>
         
         <para>The matcher implementation will check on numeric values to be greater than a minimum value.</para>
         
