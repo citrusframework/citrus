@@ -24,6 +24,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
 
 /**
@@ -47,29 +48,18 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
         String webServiceTemplate = element.getAttribute(WSParserConstants.WS_TEMPLATE_ATTRIBUTE);
         
         if (StringUtils.hasText(webServiceTemplate)) {
-        	if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE) ||
+        	if (element.hasAttribute("message-factory") ||
                     element.hasAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE) ||
                     element.hasAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE)) {
                 throw new BeanCreationException("When providing a '" + WSParserConstants.WS_TEMPLATE_ATTRIBUTE + "' reference, none of " +
-                        "'" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "', '" + WSParserConstants.MESSAGE_SENDER_ATTRIBUTE + 
+                        "'message-factory', '" + WSParserConstants.MESSAGE_SENDER_ATTRIBUTE + 
                         "', or '" + WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE + "' should be provided.");
             }
         	
         	builder.addPropertyReference(WSParserConstants.WS_TEMPLATE_PROPERTY, webServiceTemplate);
         }
         
-        String messageFactory = "messageFactory"; //default value
-        
-        if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
-            messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
-        }
-        
-        if (!StringUtils.hasText(messageFactory)) {
-            parserContext.getReaderContext().error(
-                    "'" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "' attribute must not be empty for element", element);
-        }
-        
-        builder.addPropertyReference(WSParserConstants.MESSAGE_FACTORY_PROPERTY, messageFactory);
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-factory"), "messageFactory", "messageFactory");
         
         String messageSender = element.getAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE);
 		String messageSenderList = element.getAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE);

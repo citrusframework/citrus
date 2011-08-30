@@ -275,4 +275,60 @@ public class AssertSoapFault extends AbstractActionContainer {
             action = actions.get(0); 
         }
     }
+
+    /**
+     * Gets the action.
+     * @return the action
+     */
+    public TestAction getAction() {
+        return action;
+    }
+
+    /**
+     * Gets the faultString.
+     * @return the faultString
+     */
+    public String getFaultString() {
+        return faultString;
+    }
+
+    /**
+     * Gets the faultCode.
+     * @return the faultCode
+     */
+    public String getFaultCode() {
+        return faultCode;
+    }
+
+    /**
+     * Gets the faultDetailResource.
+     * @return the faultDetailResource
+     */
+    public Resource getFaultDetailResource() {
+        return faultDetailResource;
+    }
+
+    /**
+     * Gets the faultDetail.
+     * @return the faultDetail
+     */
+    public String getFaultDetail() {
+        return faultDetail;
+    }
+
+    /**
+     * Gets the validator.
+     * @return the validator
+     */
+    public SoapFaultValidator getValidator() {
+        return validator;
+    }
+
+    /**
+     * Gets the messageFactory.
+     * @return the messageFactory
+     */
+    public SoapMessageFactory getMessageFactory() {
+        return messageFactory;
+    }
 }

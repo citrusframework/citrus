@@ -57,10 +57,6 @@ public final class WSParserConstants {
     
     public static final String INTERCEPTORS_PROPERTY = "interceptors";
 
-    public static final String MESSAGE_FACTORY_ATTRIBUTE = "message-factory";
-
-    public static final String MESSAGE_FACTORY_PROPERTY = "messageFactory";
-    
     public static final String MESSAGE_SENDER_ATTRIBUTE = "message-sender";
 
     public static final String MESSAGE_SENDER_PROPERTY = "messageSender";

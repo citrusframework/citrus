@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+    <testcase name="AssertSoapFaultParserTest">
+        <actions>
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1001">
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1002"
+                       fault-string="FaultString">
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+                        
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
+                       fault-string="FaultString">
+                <ws:fault-detail>
+                  <![CDATA[FaultDetail]]>
+                </ws:fault-detail>
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+            
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1004"
+                       fault-string="FaultString" fault-validator="customSoapFaultValidator" message-factory="customMessageFactory">
+                <ws:fault-detail file="classpath:com/consol/citrus/ws/actions/test-fault-detail.xml"/>
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+        </actions>
+    </testcase>
+    
+    <spring:bean id="customSoapFaultValidator" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.ws.validation.SoapFaultValidator"/>
+    </spring:bean>
+    
+    <spring:bean id="customMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+    </spring:bean>
+</spring:beans>

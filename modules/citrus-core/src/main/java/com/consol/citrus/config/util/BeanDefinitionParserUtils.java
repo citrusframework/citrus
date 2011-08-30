@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.util;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.StringUtils;
 
@@ -70,6 +71,22 @@ public abstract class BeanDefinitionParserUtils {
     public static void addConstructorArgReference(BeanDefinitionBuilder builder, String beanReference) {
         if (StringUtils.hasText(beanReference)) {
             builder.addConstructorArgReference(beanReference);
+        }
+    }
+
+    /**
+     * Sets the property reference on bean definition. In case reference is not available a default value is set.
+     * 
+     * @param builder
+     * @param beanReference
+     * @param propertyName
+     * @param defaultValue
+     */
+    public static void setPropertyReference(BeanDefinitionBuilder builder, String beanReference, String propertyName, String defaultValue) {
+        if (StringUtils.hasText(beanReference)) {
+            builder.addPropertyReference(propertyName, beanReference);
+        } else {
+            builder.addPropertyReference(propertyName, defaultValue);
         }
     }
 

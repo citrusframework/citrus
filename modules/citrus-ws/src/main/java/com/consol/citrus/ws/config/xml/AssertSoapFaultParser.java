@@ -29,12 +29,13 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
 /**
- * Parser for assert action in Citrus ws namespace.
+ * Parser for SOAP fault assert action.
  * 
  * @author Christoph Deppisch
  */
@@ -45,24 +46,15 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(AssertSoapFault.class);
 
-        String faultCode = element.getAttribute("fault-code");
-
-        if (StringUtils.hasText(faultCode)) {
-            beanDefinition.addPropertyValue("faultCode", faultCode);
-        }
-        
-        String faultString = element.getAttribute("fault-string");
-
-        if (StringUtils.hasText(faultString)) {
-            beanDefinition.addPropertyValue("faultString", faultString);
-        }
-
+        beanDefinition.addPropertyValue("name", element.getLocalName());
         DescriptionElementParser.doParse(element, beanDefinition);
 
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-code"), "faultCode");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-string"), "faultString");
+        
         Element faultDetailElement = DomUtils.getChildElementByTagName(element, "fault-detail");
         if (faultDetailElement != null) {
             if (faultDetailElement.hasAttribute("file")) {
-                
                 if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
                     throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
                             "Please choose one of them.");
@@ -82,9 +74,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         }
         
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-
         Element action;
-        
         if (faultDetailElement == null) {
             action = DOMUtil.getFirstChildElement(element);
         } else {
@@ -105,34 +95,9 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             }
         }
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("fault-validator"), "validator", "soapFaultValidator");
+        BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("message-factory"), "messageFactory", "messageFactory");
         
-        String validator = "soapFaultValidator"; //default value
-        
-        if (element.hasAttribute("fault-validator")) {
-            validator = element.getAttribute("fault-validator");
-        }
-        
-        if (!StringUtils.hasText(validator)) {
-            parserContext.getReaderContext().error(
-                    "Attribute 'fault-validator' must not be empty for element", element);
-        }
-        
-        beanDefinition.addPropertyReference("validator", validator);
-        
-        String messageFactory = "messageFactory"; //default value
-        
-        if (element.hasAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE)) {
-            messageFactory = element.getAttribute(WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE);
-        }
-        
-        if (!StringUtils.hasText(messageFactory)) {
-            parserContext.getReaderContext().error(
-                    "Attribute '" + WSParserConstants.MESSAGE_FACTORY_ATTRIBUTE + "' must not be empty for element", element);
-        }
-        
-        beanDefinition.addPropertyReference(WSParserConstants.MESSAGE_FACTORY_PROPERTY, messageFactory);
-
         return beanDefinition.getBeanDefinition();
     }
 }
