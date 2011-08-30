@@ -74,68 +74,7 @@ public abstract class TestUtils {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             XMLReader reader = factory.newSAXParser().getXMLReader();
             
-            reader.setContentHandler(new DefaultHandler() {
-                /** Locator providing actual line number information */
-                private Locator locator;
-                
-                /** Failure stack finder */
-                private FailureStackFinder stackFinder;
-                
-                /** Start/stop to listen for error line ending */
-                private boolean findLineEnding = false;
-                
-                /** The name of action which caused the error */
-                private String failedActionName;
-                
-                @Override
-                public void startElement(String uri, String localName,
-                        String qName, Attributes attributes)
-                        throws SAXException {
-                    
-                    //start when actions element is reached
-                    if (qName.equals("actions")) {
-                        stackFinder = new FailureStackFinder(test);
-                        return;
-                    }
-                    
-                    if (stackFinder != null) {
-                        if (stackFinder.isFailureStackElement(qName)) {
-                            failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
-                            
-                            if (stackFinder.getNestedActionContainer() != null && 
-                                    stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
-                                //continue with nested action container, in order to find out which action caused the failure
-                                stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
-                            } else {
-                                //stop failure stack evaluation as failure-causing action was found
-                                stackFinder = null;
-                                
-                                //now start to find ending line number
-                                findLineEnding = true;
-                                failedActionName = qName;
-                            }
-                        }
-                    }
-                    
-                    super.startElement(uri, localName, qName, attributes);
-                }
-                
-                @Override
-                public void endElement(String uri, String localName, String qName) throws SAXException {
-                    if (findLineEnding && qName.equals(failedActionName)) {
-                        // get last failure stack element
-                        FailureStackElement failureStackElement = failureStack.get(failureStack.size()-1);
-                        failureStackElement.setLineNumberEnd(Long.valueOf(locator.getLineNumber()));
-                        findLineEnding = false;
-                    }
-                    super.endElement(uri, localName, qName);
-                }
-                
-                @Override
-                public void setDocumentLocator(Locator locator) {
-                    this.locator = locator;
-                }
-            });
+            reader.setContentHandler(new FailureStackContentHandler(failureStack, test, testFilePath));
             
             reader.parse(new InputSource(testFileResource.getInputStream()));
         } catch (RuntimeException e) {
@@ -147,6 +86,87 @@ public abstract class TestUtils {
         return failureStack;
     }
     
+    /**
+     * Special content handler responsible of filling the failure stack.
+     */
+    private static final class FailureStackContentHandler extends DefaultHandler {
+        /** The failure stack to work on */
+        private final List<FailureStackElement> failureStack;
+        /** The actual test case */
+        private final TestCase test;
+        /** The test file path */
+        private final String testFilePath;
+        /** Locator providing actual line number information */
+        private Locator locator;
+        /** Failure stack finder */
+        private FailureStackFinder stackFinder;
+        /** Start/stop to listen for error line ending */
+        private boolean findLineEnding = false;
+        /** The name of action which caused the error */
+        private String failedActionName;
+
+        /**
+         * Default constructor using fields.
+         * @param failureStack
+         * @param test
+         * @param testFilePath
+         */
+        private FailureStackContentHandler(List<FailureStackElement> failureStack, 
+                                           TestCase test,
+                                           String testFilePath) {
+            this.failureStack = failureStack;
+            this.test = test;
+            this.testFilePath = testFilePath;
+        }
+
+        @Override
+        public void startElement(String uri, String localName,
+                String qName, Attributes attributes)
+                throws SAXException {
+            
+            //start when actions element is reached
+            if (qName.equals("actions")) {
+                stackFinder = new FailureStackFinder(test);
+                return;
+            }
+            
+            if (stackFinder != null && stackFinder.isFailureStackElement(qName)) {
+                failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
+                
+                if (stackFinder.getNestedActionContainer() != null && 
+                        stackFinder.getNestedActionContainer().getLastExecutedAction() != null) {
+                    //continue with nested action container, in order to find out which action caused the failure
+                    stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
+                } else {
+                    //stop failure stack evaluation as failure-causing action was found
+                    stackFinder = null;
+                    
+                    //now start to find ending line number
+                    findLineEnding = true;
+                    failedActionName = qName;
+                }
+            }
+            
+            super.startElement(uri, localName, qName, attributes);
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+            if (findLineEnding && qName.equals(failedActionName)) {
+                // get last failure stack element
+                FailureStackElement failureStackElement = failureStack.get(failureStack.size()-1);
+                failureStackElement.setLineNumberEnd(Long.valueOf(locator.getLineNumber()));
+                findLineEnding = false;
+            }
+            super.endElement(uri, localName, qName);
+        }
+
+        @Override
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+        }
+    }
+
     /**
      * Failure stack finder listens for actions in a testcase 
      */

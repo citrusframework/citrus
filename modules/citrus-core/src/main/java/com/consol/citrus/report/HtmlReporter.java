@@ -110,10 +110,8 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
                 
                 reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
                 
-                if (result.getResult().equals(RESULT.FAILURE)) {
-                    if (result.getCause() != null) {
-                        reportDetails.append(getStackTraceHtml(result.getCause()));
-                    }
+                if (result.getResult().equals(RESULT.FAILURE) && result.getCause() != null) {
+                    reportDetails.append(getStackTraceHtml(result.getCause()));
                 }
             }
 

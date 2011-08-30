@@ -86,7 +86,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                     }
                     
                     GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-                    ((ValidationScriptExecutor) groovyObject).validate(resultSet, context);
+                    ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
                     
                     log.info("Groovy SQL result set validation finished successfully: All values OK");
                 }

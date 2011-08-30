@@ -92,7 +92,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 }
                 
                 GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-                ((ValidationScriptExecutor) groovyObject).validate(receivedMessage, context);
+                ((GroovyScriptExecutor) groovyObject).validate(receivedMessage, context);
                 
                 log.info("Groovy message validation finished successfully: All values OK");
             }
@@ -108,21 +108,13 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     }
 
     /**
-     * Executes a validation-script
-     */
-     public static interface ValidationScriptExecutor {
-         void validate(Message<?> receivedMessage, TestContext context);
-     }
-
-    /**
      * Returns the needed validation context for this validation mechanism.
      */
     public ScriptValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof ScriptValidationContext) {
-                if (((ScriptValidationContext)validationContext).getScriptType().equals(ScriptTypes.GROOVY)) {
-                    return (ScriptValidationContext) validationContext;
-                }
+            if (validationContext instanceof ScriptValidationContext && 
+                    ((ScriptValidationContext)validationContext).getScriptType().equals(ScriptTypes.GROOVY)) {
+                return (ScriptValidationContext) validationContext;
             }
         }
         

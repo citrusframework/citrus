@@ -20,23 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
- * Validator working on SQL result sets. Scripts get the actual test context 
- * and a SQL result set representation for validation.
- *  
- * @author Christoph Deppisch
+ * Executes the sql validation script providing the 
+ * result set representation.
  */
-public interface SqlResultSetScriptValidator {
-
+public interface SqlResultSetScriptExecutor {
     /**
      * Validates the SQL result set.
-     * @param resultSet the SQL result set.
-     * @param validationContext the current validation context.
+     * @param rows the result set.
      * @param context the current test context.
      */
-    void validateSqlResultSet(List<Map<String, Object>> resultSet, 
-            ScriptValidationContext validationContext, TestContext context) throws ValidationException;
+    void validate(List<Map<String, Object>> rows, TestContext context);
 }
