@@ -3,12 +3,13 @@
     <title>Validation matchers</title>
 
     <para>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. 
-    With test variables we are able to check that message entries do match a dynamic value. Validation matchers add powerful assertion functionality on top of that.
-    You simply use the predefined validation matcher functionalities in order to perform assertions in validation statements.</para>
+    With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation 
+    matchers add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform 
+    more complex assertions like <emphasis>contains</emphasis> or <emphasis>isNumber</emphasis> in your validation statements.</para>
     
-    <para>See the following sections for Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the
+    <para>The following sections describe the Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the
     basic assertions on character sequences and numbers. Of course you can add custom validation matcher implementations in order to meet your very specific validation 
-    assertions.</para>
+    assertions, too.</para>
     
     <para>First of all let us have a look at a validation matcher statement in action so we understand how to use them in a test case.</para>
         
@@ -27,113 +28,99 @@
     &lt;/data&gt;
 &lt;/message&gt;</programlisting>
         
-    <para>The listing above is a normal message validation inside a receive test action. We use some expected message payload data inline as CDATA and simply include our first validation matcher 
-    statements. The message element <emphasis>Id</emphasis> is automatically validated to be a number greater than zero, the <emphasis>Name</emphasis> character sequence is checked to match 'foo' 
-    ignoring case spelling considerations.</para>
+    <para>The listing above describes a normal message validation block inside a receive test action. We use some inline message payload template as CDATA. As you know Citrus will compare the
+    actual message payload to this expected template in DOM tree comparison. In addition to that you can simply include validation matcher statements. The message element <emphasis>Id</emphasis> 
+    is automatically validated to be a number greater than zero and the <emphasis>Name</emphasis> character sequence is supposed to match 'foo' ignoring case spelling considerations.</para>
     
-    <para>Please note the special validation matcher syntax. The statements are surrounded with '@' markers and are identified by some unique name. The optional parameters are given inside the brackets just 
-    like we would do with normal function calls.</para>
+    <para>Please note the special validation matcher syntax. The statements are surrounded with '@' markers and are identified by some unique name. The optional parameters passed to the matcher 
+    implementation state the expected values to match.</para>
 
     <tip>
-        <para>You can use validation matchers not only within xml-elements, but also within plaintext, json-content, sql-results etc. Just give it a try!</para>
+        <para>You can use validation matchers with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.</para>
     </tip>
     
-    <para>See the following sections describing the default validation matchers in Citrus.</para>
+    <para>See now the following sections describing the default validation matchers in Citrus.</para>
     
     <section id="validation-matcher-equals">
         <title>equalsIgnoreCase</title>
         
-        <para>This matcher implementation checks for character sequences equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence 
+        <para>This matcher implementation checks for equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence 
         to check for.</para>
         
-        <programlisting>
-            @equalsIgnoreCase('foo')@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@equalsIgnoreCase('foo')@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-contains">
         <title>contains</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>This matcher searches for a character sequence inside the actual value. If the character sequence is not found somewhere the matcher starts complaining.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>
+        <programlisting>&lt;value&gt;@contains('foo')@&lt;/value&gt;</programlisting>
         
-        <para>Contains ignore case! TODO: Describe the matcher</para>
+        <para>The validation matcher also exist in a case insensitive variant.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@containsIgnoreCase('foo')@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-startswith">
         <title>startsWith</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>The matcher implementation asserts that the given value starts with a character sequence otherwise the matcher will arise some error.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@startsWith('foo')@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-endswith">
         <title>endsWith</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>Ends with matcher validates a value to end with a given character sequence.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@endsWith('foo')@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-matches">
         <title>matches</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>You can check a value to meet a regular expression with this validation matcher. This is for instance very useful for email address 
+        validation.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@matches('[a-z0-9]')@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-datepattern">
         <title>matchesDatePattern</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>Date values are always difficult to check for equality. Especially when you have millisecond timestamps to deal with. Therefore the date pattern validation 
+        matcher should have some improvement for you. You simply validate the date format pattern instead of checking for total equality.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@matchesDatePattern('yyyy-MM-dd')@&lt;/value&gt;</programlisting>
+        
+        <para>The example listing uses a date format pattern that is expected. The actual date value is parsed according to this pattern and may cause errors in case the 
+        value is no valid date matching the desired format.</para>        
     </section>
     
     <section id="validation-matcher-isnumber">
         <title>isNumber</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>Checking on values to be of numeric nature is essential. The actual value must be a numeric number otherwise the matcher raises errors. The matcher implementation
+        does not evaluate any parameters.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@isNumber()@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-lowerthan">
         <title>lowerThan</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>This matcher checks a number to be lower than a given threshold value.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@lowerThan(5)@&lt;/value&gt;</programlisting>        
     </section>
     
     <section id="validation-matcher-greaterthan">
         <title>greaterThan</title>
         
-        <para>TODO: Describe the matcher</para>
+        <para>The matcher implementation will check on numeric values to be greater than a minimum value.</para>
         
-        <programlisting>
-            @matcher()@
-        </programlisting>        
+        <programlisting>&lt;value&gt;@greaterThan(5)@&lt;/value&gt;</programlisting>        
     </section>
 </chapter>
