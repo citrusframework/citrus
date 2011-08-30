@@ -16,7 +16,6 @@
 
 package com.consol.citrus.config.util;
 
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.StringUtils;
 

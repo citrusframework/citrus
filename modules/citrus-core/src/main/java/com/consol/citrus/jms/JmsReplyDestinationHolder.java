@@ -18,13 +18,11 @@ package com.consol.citrus.jms;
 
 import javax.jms.Destination;
 
-import com.consol.citrus.message.MessageReceiver;
-
 /**
  * Reply destination holder interface for getting reply destinations in synchronous
  * JMS communication.
  * 
- * {@link MessageReceiver} implementation receives synchronous messages and saves the 
+ * {@link com.consol.citrus.message.MessageReceiver} implementation receives synchronous messages and saves the 
  * reply destination. Reply message senders may ask for the saved reply destination in order to
  * provide proper reply message.
  * 

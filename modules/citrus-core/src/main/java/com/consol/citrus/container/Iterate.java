@@ -17,14 +17,12 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
  * Class executes nested test actions in loops. Iteration continues as long
  * as looping condition evaluates to true.
  * 
- * See {@link BooleanExpressionParser} for supported boolean expressions that define
+ * See {@link com.consol.citrus.util.BooleanExpressionParser} for supported boolean expressions that define
  * the conditioning.
  * 
  * Each loop an index variable is incremented. The index variable is accessible inside the nested
@@ -39,7 +37,7 @@ public class Iterate extends AbstractIteratingTestAction {
 
     /**
      * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
+     * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      */
     @Override
     public void executeIteration(TestContext context) {

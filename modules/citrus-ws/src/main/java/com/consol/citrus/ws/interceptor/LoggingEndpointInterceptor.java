@@ -16,8 +16,6 @@
 
 package com.consol.citrus.ws.interceptor;
 
-import java.io.ByteArrayOutputStream;
-
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
@@ -27,7 +25,7 @@ import org.springframework.ws.soap.SoapMessage;
  * the logger in their complete nature (e.g. complete SOAP envelope).
  * 
  * For SOAP messages the SOAP envelope content is logged with transformer instance. For 
- * WebService requests (other than SOAP) the content is logged via {@link ByteArrayOutputStream} 
+ * WebService requests (other than SOAP) the content is logged via {@link java.io.ByteArrayOutputStream} 
  * which is much more expensive as whole message is loaded to internal memory.
  * 
  * @author Christoph Deppisch

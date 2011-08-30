@@ -26,12 +26,11 @@ import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.TestCase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 
 /**
- * Class to automatically generate a visual representation of a {@link TestCase} in SVG.
+ * Class to automatically generate a visual representation of a {@link com.consol.citrus.TestCase} in SVG.
  * 
  * @author Christoph Deppisch
  * @since 2007

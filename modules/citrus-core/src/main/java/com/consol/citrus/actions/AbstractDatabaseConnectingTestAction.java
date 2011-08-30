@@ -20,8 +20,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -34,7 +32,7 @@ import com.consol.citrus.util.TestActionExecutionLogger;
 
 /**
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
- * access to a {@link DataSource}.
+ * access to a {@link javax.sql.DataSource}.
  * 
  * @author Christoph Deppisch
  */

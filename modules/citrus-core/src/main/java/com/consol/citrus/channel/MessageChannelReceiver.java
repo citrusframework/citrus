@@ -32,10 +32,9 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageReceiver;
-import com.consol.citrus.message.MessageReceiver;
 
 /**
- * Receive messages from {@link MessageChannel} instance.
+ * Receive messages from {@link com.consol.citrus.message.MessageChannel} instance.
  * @author Christoph Christoph
  */
 public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {

@@ -17,7 +17,6 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
@@ -31,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class RepeatUntilTrue extends AbstractIteratingTestAction {
     /**
      * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
+     * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      */
     @Override
     public void executeIteration(TestContext context) {

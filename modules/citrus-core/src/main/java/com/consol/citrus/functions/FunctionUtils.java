@@ -17,7 +17,6 @@
 package com.consol.citrus.functions;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.variable.VariableUtils;
 
@@ -119,7 +118,7 @@ public final class FunctionUtils {
     /**
      * This method resolves a custom function to its respective result.
      * @param functionString to evaluate.
-     * @throws CitrusRuntimeException
+     * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      * @return evaluated result
      */
     public static String resolveFunction(String functionString, TestContext context) {

@@ -19,7 +19,6 @@ package com.consol.citrus.validation.matcher;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
 
 /**
@@ -43,7 +42,7 @@ public class ValidationMatcherLibrary {
      * 
      * @param validationMatcherName validationMatcher name.
      * @return the validationMatcher instance.
-     * @throws NoSuchFunctionException
+     * @throws com.consol.citrus.exceptions.NoSuchValidationMatcherException
      */
     public ValidationMatcher getValidationMatcher(String validationMatcherName) throws NoSuchValidationMatcherException {
         if (!members.containsKey(validationMatcherName)) {

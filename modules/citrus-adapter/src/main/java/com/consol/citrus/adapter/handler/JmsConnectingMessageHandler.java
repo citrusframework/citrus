@@ -96,7 +96,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     /**
      * Message callback interface for manipulating JMS request messages before sending. 
      */
-    public static interface JmsMessageCallback {
+    static interface JmsMessageCallback {
         /** Opportunity to decorate generated jms message before forwarding */
         void doWithMessage(javax.jms.Message message, Message<?> request) throws JMSException;
     }

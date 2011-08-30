@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -62,8 +61,8 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     
     /**
      * Set the fault code QName string. This can be either
-     * a fault code in {@link SoapFaultDefinition} or a custom QName like
-     * {http://www.consol.de/citrus}citrus:TEC-1000
+     * a fault code in {@link org.springframework.ws.soap.server.endpoint.SoapFaultDefinition} 
+     * or a custom QName like {http://www.consol.de/citrus}citrus:TEC-1000
      * 
      * @param faultCode the faultCode to set
      */
