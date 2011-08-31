@@ -37,9 +37,7 @@ import com.consol.citrus.message.MessageSender;
  */
 public class MessageChannelSender implements MessageSender, BeanFactoryAware {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
     
     /** Destination channel */
@@ -86,7 +84,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
      * 
      * @return the destination channel object.
      */
-    private MessageChannel getDestinationChannel() {
+    protected MessageChannel getDestinationChannel() {
         if (channel != null) {
             return channel;
         } else if (StringUtils.hasText(channelName)) {
@@ -103,7 +101,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
      * 
      * @return the channel name.
      */
-    private String getDestinationChannelName() {
+    protected String getDestinationChannelName() {
         if (channel != null) {
             return channel.toString();
         } else if (StringUtils.hasText(channelName)) {
@@ -119,7 +117,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
      * @param channelName the name to resolve
      * @return the MessageChannel object
      */
-    private MessageChannel resolveChannelName(String channelName) {
+    protected MessageChannel resolveChannelName(String channelName) {
         if (channelResolver == null) {
             channelResolver = new BeanFactoryChannelResolver(beanFactory);
         }

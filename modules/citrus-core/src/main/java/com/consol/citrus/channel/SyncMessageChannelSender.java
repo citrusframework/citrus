@@ -18,18 +18,11 @@ package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.ChannelResolver;
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.ReplyMessageHandler;
 
 /**
  * Synchronous message channel sender. After sending message action will listen for reply message. A
@@ -37,21 +30,10 @@ import com.consol.citrus.message.*;
  * 
  * @author Christoph Deppisch
  */
-public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware {
+public class SyncMessageChannelSender extends MessageChannelSender {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SyncMessageChannelSender.class);
-    
-    /** Message channel */
-    private MessageChannel channel;
-    
-    /** Destination channel name */
-    private String channelName;
-    
-    /** Message channel template */
-    private MessagingTemplate messagingTemplate = new MessagingTemplate();
     
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
@@ -61,12 +43,6 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
-    
-    /** The parent bean factory used for channel name resolving */
-    private BeanFactory beanFactory;
-    
-    /** Channel resolver instance */
-    private ChannelResolver channelResolver;
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
@@ -81,10 +57,10 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
             log.debug("Message to sent is:\n" + message.toString());
         }
 
-        messagingTemplate.setReceiveTimeout(replyTimeout);
+        getMessagingTemplate().setReceiveTimeout(replyTimeout);
         Message<?> replyMessage;
         
-        replyMessage = messagingTemplate.sendAndReceive(getDestinationChannel(), message);
+        replyMessage = getMessagingTemplate().sendAndReceive(getDestinationChannel(), message);
         
         if (replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + 
@@ -103,54 +79,6 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
         }
     }
     
-    /**
-     * Get the destination channel depending on settings in this message sender.
-     * Either a direct channel object is set or a channel name which will be resolved 
-     * to a channel.
-     * 
-     * @return the destination channel object.
-     */
-    private MessageChannel getDestinationChannel() {
-        if (channel != null) {
-            return channel;
-        } else if (StringUtils.hasText(channelName)) {
-            return resolveChannelName(channelName);
-        } else {
-            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
-                    "please specify destination channel");
-        }
-    }
-
-    /**
-     * Gets the channel name depending on what is set in this message sender. 
-     * Either channel name is set directly or channel object is consulted for channel name.
-     * 
-     * @return the channel name.
-     */
-    private String getDestinationChannelName() {
-        if (channel != null) {
-            return channel.toString();
-        } else if (StringUtils.hasText(channelName)) {
-            return channelName;
-        } else {
-            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
-                    "please specify destination channel");
-        }
-    }
-
-    /**
-     * Resolve the channel by name.
-     * @param channelName the name to resolve
-     * @return the MessageChannel object
-     */
-    private MessageChannel resolveChannelName(String channelName) {
-        if (channelResolver == null) {
-            channelResolver = new BeanFactoryChannelResolver(beanFactory);
-        }
-        
-        return channelResolver.resolveChannelName(channelName);
-    }
-
     /**
      * Set the reply message handler
      * @param replyMessageHandler the replyMessageHandler to set
@@ -198,76 +126,5 @@ public class SyncMessageChannelSender implements MessageSender, BeanFactoryAware
     public ReplyMessageCorrelator getCorrelator() {
         return correlator;
     }
-
-    /**
-     * Set the message channel to publish messages on.
-     * @param channel the channel to set
-     */
-    public void setChannel(MessageChannel channel) {
-        this.channel = channel;
-    }
-
-    /**
-     * Set the messaging template.
-     * @param messagingTemplate the messagingTemplate to set
-     */
-    public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
-    }
     
-    /**
-     * Sets the bean factory for channel resolver.
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
-     */
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    /**
-     * Set the channel resolver.
-     * @param channelResolver the channelResolver to set
-     */
-    public void setChannelResolver(ChannelResolver channelResolver) {
-        this.channelResolver = channelResolver;
-    }
-    
-    /**
-     * Sets the destination channel name.
-     * @param channelName the channelName to set
-     */
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
-    }
-
-    /**
-     * Gets the channel.
-     * @return the channel
-     */
-    public MessageChannel getChannel() {
-        return channel;
-    }
-
-    /**
-     * Gets the channelName.
-     * @return the channelName
-     */
-    public String getChannelName() {
-        return channelName;
-    }
-
-    /**
-     * Gets the messagingTemplate.
-     * @return the messagingTemplate
-     */
-    public MessagingTemplate getMessagingTemplate() {
-        return messagingTemplate;
-    }
-
-    /**
-     * Gets the channelResolver.
-     * @return the channelResolver
-     */
-    public ChannelResolver getChannelResolver() {
-        return channelResolver;
-    }
 }
