@@ -78,9 +78,11 @@
             			]]>
             		</data>
             	</message>
-              <header>
-                  <element name="jms_correlationId" value="${internal_correlation_id}"/>
-              </header>
+                <header>
+                    <element name="{http://citrusframework.org/test}Operation" value="answerHello"/>
+                    <element name="citrus_http_operation" value="answerHello"/>
+                    <element name="jms_correlationId" value="${internal_correlation_id}"/>
+                </header>
             </send>
             
             <receive with="webServiceReplyHandler" timeout="5000">
@@ -96,6 +98,10 @@
                         ]]>
                     </data>
                 </message>
+                <header>
+                    <element name="Operation" value="answerHello"/>
+                    <element name="operation" value="answerHello"/>
+                </header>
             </receive>
     	</actions>
     </testcase>

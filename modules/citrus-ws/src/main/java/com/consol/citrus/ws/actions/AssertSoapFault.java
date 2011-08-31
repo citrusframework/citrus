@@ -118,16 +118,7 @@ public class AssertSoapFault extends AbstractActionContainer {
         SoapFault controlFault = null;
         
         try {
-            SoapFaultDefinitionEditor definitionEditor = new SoapFaultDefinitionEditor();
-        
-            if (StringUtils.hasText(faultString)) {
-                definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode) + "," + context.replaceDynamicContentInString(faultString));
-            } else {
-                definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode));
-            }
-            
-            SoapFaultDefinition definition = (SoapFaultDefinition)definitionEditor.getValue();
-            
+            SoapFaultDefinition definition = getSoapFaultDefinition(context);
             SoapBody soapBody = ((SoapMessage)messageFactory.createWebServiceMessage()).getSoapBody();
         
             if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
@@ -155,16 +146,7 @@ public class AssertSoapFault extends AbstractActionContainer {
                     throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
             }
         
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            
-            if (faultDetailResource != null) {
-                transformer.transform(new StringSource(
-                        context.replaceDynamicContentInString(FileUtils.readToString(faultDetailResource))), controlFault.addFaultDetail().getResult());
-            } else if (faultDetail != null){
-                transformer.transform(new StringSource(
-                        context.replaceDynamicContentInString(faultDetail)), controlFault.addFaultDetail().getResult());
-            }
+            addFaultDetail(controlFault, context);
         } catch (IOException ex) {
             throw new CitrusRuntimeException("Error during SOAP fault validation", ex);
         } catch (TransformerException ex) {
@@ -172,6 +154,43 @@ public class AssertSoapFault extends AbstractActionContainer {
         }
         
         return controlFault;
+    }
+
+    /**
+     * Adds a fault detail to soap fault object if specified.
+     * @param fault the fault object.
+     * @param context the current test context.
+     * @throws IOException 
+     * @throws TransformerException 
+     */
+    private void addFaultDetail(SoapFault fault, TestContext context) throws TransformerException, IOException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        
+        if (faultDetailResource != null) {
+            transformer.transform(new StringSource(
+                    context.replaceDynamicContentInString(FileUtils.readToString(faultDetailResource))), fault.addFaultDetail().getResult());
+        } else if (faultDetail != null){
+            transformer.transform(new StringSource(
+                    context.replaceDynamicContentInString(faultDetail)), fault.addFaultDetail().getResult());
+        }
+    }
+
+    /**
+     * Constructs a new fault definition object from fault code and string.
+     * @param context the current test context.
+     * @return the soap fault definition.
+     */
+    private SoapFaultDefinition getSoapFaultDefinition(TestContext context) {
+        SoapFaultDefinitionEditor definitionEditor = new SoapFaultDefinitionEditor();
+        
+        if (StringUtils.hasText(faultString)) {
+            definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode) + "," + context.replaceDynamicContentInString(faultString));
+        } else {
+            definitionEditor.setAsText(context.replaceDynamicContentInString(faultCode));
+        }
+        
+        return (SoapFaultDefinition)definitionEditor.getValue();
     }
 
     /**
