@@ -371,6 +371,10 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      * @return the connectors
      */
     public Connector[] getConnectors() {
-        return Arrays.copyOf(connectors, connectors.length);
+        if (connectors != null) {
+            return Arrays.copyOf(connectors, connectors.length);
+        } else {
+            return null;
+        }
     }
 }
