@@ -18,6 +18,7 @@ package com.consol.citrus.ws;
 
 import static org.easymock.EasyMock.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 import javax.xml.namespace.QName;
@@ -760,6 +761,8 @@ public class WebServiceEndpointTest {
         expect(messageContext.getResponse()).andReturn(soapResponse).once();
 
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
+        
+        expect(attachment.getInputStream()).andReturn(new ByteArrayInputStream("AttachmentBody".getBytes())).once();
         
         replay(messageContext, soapRequest, soapRequestHeader, soapResponse, attachment);
         

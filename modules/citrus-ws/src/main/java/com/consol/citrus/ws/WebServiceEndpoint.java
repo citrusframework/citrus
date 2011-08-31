@@ -16,11 +16,9 @@
 
 package com.consol.citrus.ws;
 
-import java.util.*;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -28,12 +26,9 @@ import javax.xml.transform.dom.DOMSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
@@ -44,7 +39,6 @@ import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
@@ -54,6 +48,7 @@ import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 
 /**
  * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
@@ -75,9 +70,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     /** Include mime headers (HTTP headers) into request which is passed to the message handler */
     private boolean handleMimeHeaders = false;
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
     
     /** JMS headers begin with this prefix */
@@ -91,7 +84,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
         //build request message for message handler
-        Message<String> requestMessage = buildRequestMessage(messageContext.getRequest(), messageContext);
+        SoapMessageConverter messageConverter = new SoapMessageConverter(handleMimeHeaders);
+        Message<?> requestMessage = messageConverter.convert(messageContext.getRequest(), messageContext);
         
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
@@ -118,42 +112,6 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
     }
     
-    /**
-     * Transform incoming {@link WebServiceMessage} into a proper {@link Message} instance.
-     * Specific SOAP message parts are translated to message headers with special names (e.g. SOAP attachments).
-     * See {@link CitrusSoapMessageHeaders} for details.
-     * 
-     * @param requestMessage the web service request message.
-     * @param messageContext the message context.
-     * @return the internal request message representation.
-     * @throws TransformerException 
-     */
-    private Message<String> buildRequestMessage(WebServiceMessage requestMessage, MessageContext messageContext) throws TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        
-        StringResult requestPayload = new StringResult();
-        transformer.transform(requestMessage.getPayloadSource(), requestPayload);
-        
-        MessageBuilder<String> requestMessageBuilder = MessageBuilder.withPayload(requestPayload.toString());
-        
-        handleMessageProperties(messageContext, requestMessageBuilder);
-        
-        if (requestMessage instanceof SoapMessage) {
-            SoapMessage soapMessage = (SoapMessage) requestMessage;
-            
-            handleSoapHeaders(soapMessage, requestMessageBuilder);
-            handleAttachments(soapMessage, requestMessageBuilder);
-            
-            // take care of mime headers in message
-            if (handleMimeHeaders) {
-                handleMimeHeaders(soapMessage, requestMessageBuilder);
-            }
-        }
-        
-        return requestMessageBuilder.build();
-    }
-
     /**
      * Adds mime headers outside of SOAP envelope. Header entries that go to this header section 
      * must have internal http header prefix defined in {@link CitrusSoapMessageHeaders}.
@@ -230,127 +188,6 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 }
                 
                 headerElement.setText(headerEntry.getValue().toString());
-            }
-        }
-    }
-
-    /**
-     * Adds attachments if present in soap web service message.
-     * 
-     * @param soapMessage the web service message.
-     * @param messageBuilder the response message builder.
-     * 
-     */
-    private void handleAttachments(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
-        Iterator<?> attachments = soapMessage.getAttachments();
-        
-        while (attachments.hasNext()) {
-            Attachment attachment = (Attachment)attachments.next();
-            
-            if (StringUtils.hasText(attachment.getContentId())) {
-                String contentId = attachment.getContentId();
-                
-                if (contentId.startsWith("<")) {contentId = contentId.substring(1);}
-                if (contentId.endsWith(">")) {contentId = contentId.substring(0, contentId.length()-1);}
-                
-                if (log.isDebugEnabled()) {
-                    log.debug("SOAP message contains attachment with contentId '" + contentId + "'");
-                }
-                
-                messageBuilder.setHeader(contentId, attachment);
-            } else {
-                log.warn("Could not handle SOAP attachment with empty 'contentId'. Attachment is ignored in further processing");
-            }
-        }
-    }
-
-    /**
-     * Reads all soap headers from web service message and 
-     * adds them to message builder as normal headers. Also takes care of soap action header.
-     * 
-     * @param soapMessage the web service message.
-     * @param messageBuilder the response message builder.
-     */
-    private void handleSoapHeaders(SoapMessage soapMessage, MessageBuilder<?> messageBuilder) {
-        SoapHeader soapHeader = soapMessage.getSoapHeader();
-        
-        if (soapHeader != null) {
-            Iterator<?> iter = soapHeader.examineAllHeaderElements();
-            while (iter.hasNext()) {
-                SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
-                messageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
-            }
-        }
-        
-        if (StringUtils.hasText(soapMessage.getSoapAction())) {
-            if (soapMessage.getSoapAction().equals("\"\"")) {
-                messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
-            } else {
-                if (soapMessage.getSoapAction().startsWith("\"") && soapMessage.getSoapAction().endsWith("\"")) {
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, 
-                            soapMessage.getSoapAction().substring(1, soapMessage.getSoapAction().length()-1));
-                } else {
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds all message properties from web service request message to message builder 
-     * as normal header entries.
-     * 
-     * @param messageContext the web service request message context.
-     * @param messageBuilder the request message builder.
-     */
-    private void handleMessageProperties(MessageContext messageContext, MessageBuilder<String> messageBuilder) {
-        String[] propertyNames = messageContext.getPropertyNames();
-        if (propertyNames != null) {
-            for (String propertyName : propertyNames) {
-                messageBuilder.setHeader(propertyName, messageContext.getProperty(propertyName));
-            }
-        }
-    }
-
-    /**
-     * Adds mime headers to constructed request message. This can be HTTP headers in case
-     * of HTTP transport. Note: HTTP headers may have multiple values that are represented as 
-     * comma delimited string value.
-     * 
-     * @param soapMessage the source SOAP message.
-     * @param messageBuilder the message build constructing the result message. 
-     */
-    private void handleMimeHeaders(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
-        Map<String, String> mimeHeaders = new HashMap<String, String>();
-        MimeHeaders messageMimeHeaders = null;
-        
-        // to get access to mime headers we need to get implementation specific here
-        if (soapMessage instanceof SaajSoapMessage) {
-            messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
-        } else if (soapMessage instanceof AxiomSoapMessage) {
-            // we do not handle axiom message implementations as it is very difficult to get access to the mime headers there
-            log.warn("Skip mime headers for AxiomSoapMessage - unsupported");
-        } else {
-            log.warn("Unsupported SOAP message implementation - skipping mime headers");
-        }
-        
-        if (messageMimeHeaders != null) {
-            Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
-            while (mimeHeaderIterator.hasNext()) {
-                MimeHeader mimeHeader = (MimeHeader)mimeHeaderIterator.next();
-                // http headers can have multpile values so headers might occur several times in map
-                if (mimeHeaders.containsKey(mimeHeader.getName())) {
-                    // header is already present, so concat values to a single comma delimited string
-                    String value = mimeHeaders.get(mimeHeader.getName());
-                    value += ", " + mimeHeader.getValue();
-                    mimeHeaders.put(mimeHeader.getName(), value);
-                } else {
-                    mimeHeaders.put(mimeHeader.getName(), mimeHeader.getValue());
-                }
-            }
-            
-            for (Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
-                messageBuilder.setHeader(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
             }
         }
     }
