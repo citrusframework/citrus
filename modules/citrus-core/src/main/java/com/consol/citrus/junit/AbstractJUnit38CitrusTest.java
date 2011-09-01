@@ -18,20 +18,15 @@ package com.consol.citrus.junit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit38.AbstractJUnit38SpringContextTests;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestListeners;
 
 /**
@@ -61,42 +56,22 @@ public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringCon
     @Autowired(required = false)
     private SequenceBeforeTest beforeTest;
     
+    /** Delegate test execution to this executor */
+    private JUnitTestExecutor testExecutor;
+    
     /**
      * Run tasks before each test case.
      */
     protected void setUp() {
-        if (beforeTest != null) {
-            try {
-                beforeTest.execute(createTestContext());
-            } catch (Exception e) {
-                throw new CitrusRuntimeException("Before test failed with errors", e);
-            }
-        }
+        testExecutor  = new JUnitTestExecutor(applicationContext, testListener);
+        testExecutor.beforeTest(beforeTest, createTestContext());
     }
     
     /**
      * Execute the test case.
      */
     protected void executeTest() {
-        TestCase testCase = getTestCase();
-        
-        if (!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
-            testListener.onTestStart(testCase);
-            
-            try {
-                testCase.execute(prepareTestContext(createTestContext()));
-                testListener.onTestSuccess(testCase);
-            } catch (Exception e) {
-                testListener.onTestFailure(testCase, e);
-                
-                throw new TestCaseFailedException(e);
-            } finally {
-                testListener.onTestFinish(testCase);
-                testCase.finish();
-            }
-        } else {
-            testListener.onTestSkipped(testCase);
-        }
+        testExecutor.executeTest(prepareTestContext(createTestContext()));
     }
     
     /**
@@ -116,64 +91,11 @@ public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringCon
      * @return the new citrus test context.
      * @throws Exception on error.
      */
-    protected TestContext createTestContext() throws Exception {
-        return (TestContext)testContextFactory.getObject();
-    }
-    
-    /**
-     * Gets the test case from application context.
-     * @return the new test case.
-     */
-    protected TestCase getTestCase() {
-        ClassPathXmlApplicationContext ctx = createApplicationContext();
-        TestCase testCase = null;
+    protected TestContext createTestContext() {
         try {
-            testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
-            testCase.setPackageName(this.getClass().getPackage().getName());
-        } catch (NoSuchBeanDefinitionException e) {
-            throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
-        }
-        return testCase;
-    }
-
-    /**
-     * Creates the Spring application context.
-     * @return
-     */
-    protected ClassPathXmlApplicationContext createApplicationContext() {
-        try {
-            return new ClassPathXmlApplicationContext(
-                    new String[] {
-                            this.getClass().getPackage().getName().replace('.', '/')
-                                    + "/" + getClass().getSimpleName() + ".xml",
-                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
-                    true, applicationContext);
+            return (TestContext)testContextFactory.getObject();
         } catch (Exception e) {
-            throw handleError("Failed to load test case", e);
+            throw new CitrusRuntimeException("Failed to create test context", e);
         }
-    }
-    
-    /**
-     * Handles error creating a new CitrusRuntimeException and 
-     * informs test listeners.
-     * 
-     * @param message
-     * @param cause
-     * @return
-     */
-    private CitrusRuntimeException handleError(String message, Exception cause) {
-        // Create empty backup test case for logging
-        TestCase backupTest = new TestCase();
-        backupTest.setName(getClass().getSimpleName());
-        backupTest.setPackageName(getClass().getPackage().getName());
-        
-        CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
-        
-        // inform test listeners with failed test
-        testListener.onTestStart(backupTest);
-        testListener.onTestFailure(backupTest, exception);
-        testListener.onTestFinish(backupTest);
-        
-        return exception;
     }
 }
