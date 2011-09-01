@@ -39,7 +39,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         // 1st message sender
         HttpServer server = servers.get("httpServer1");
         Assert.assertNull(server.getConnector());
-        Assert.assertNull(server.getConnectors());
+        Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertEquals(server.getName(), "httpServer1");
         Assert.assertEquals(server.getPort(), 8081);
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
@@ -51,7 +51,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         server = servers.get("httpServer2");
         Assert.assertNotNull(server.getConnector());
         Assert.assertEquals(server.getConnector(), beanDefinitionContext.getBean("connector"));
-        Assert.assertNull(server.getConnectors());
+        Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertEquals(server.getName(), "httpServer2");
         Assert.assertEquals(server.getPort(), 8082);
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/servlet-context.xml");
