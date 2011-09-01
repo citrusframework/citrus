@@ -374,7 +374,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         if (connectors != null) {
             return Arrays.copyOf(connectors, connectors.length);
         } else {
-            return null;
+            return new Connector[]{};
         }
     }
 }
