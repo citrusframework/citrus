@@ -106,19 +106,16 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
         
         if (receivedAttachment.getContentId() != null) {
             Assert.isTrue(controlAttachment.getContentId() != null, 
-                    "Values not equal for attachment contentId, expected '"
-                        + null + "' but was '"
-                        + receivedAttachment.getContentId() + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentId", 
+                            null, receivedAttachment.getContentId()));
 
             Assert.isTrue(receivedAttachment.getContentId().equals(controlAttachment.getContentId()),
-                    "Values not equal for attachment contentId, expected '"
-                        + controlAttachment.getContentId() + "' but was '"
-                        + receivedAttachment.getContentId() + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentId", 
+                            controlAttachment.getContentId(), receivedAttachment.getContentId()));
         } else {
             Assert.isTrue(controlAttachment.getContentId() == null || controlAttachment.getContentId().length() == 0, 
-                    "Values not equal for attachment contentId, expected '"
-                        + controlAttachment.getContentId() + "' but was '"
-                        + null + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentId", 
+                            controlAttachment.getContentId(), null));
         }
         
         if (log.isDebugEnabled()) {
@@ -138,25 +135,33 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
         
         if (receivedAttachment.getContentType() != null) {
             Assert.isTrue(controlAttachment.getContentType() != null, 
-                    "Values not equal for attachment contentType, expected '"
-                        + null + "' but was '"
-                        + receivedAttachment.getContentType() + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentType", 
+                            null, receivedAttachment.getContentType()));
 
             Assert.isTrue(receivedAttachment.getContentType().equals(controlAttachment.getContentType()),
-                    "Values not equal for attachment contentType, expected '"
-                        + controlAttachment.getContentType() + "' but was '"
-                        + receivedAttachment.getContentType() + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentType", 
+                            controlAttachment.getContentType(), receivedAttachment.getContentType()));
         } else {
             Assert.isTrue(controlAttachment.getContentType() == null || controlAttachment.getContentType().length() == 0, 
-                    "Values not equal for attachment contentType, expected '"
-                        + controlAttachment.getContentType() + "' but was '"
-                        + null + "'");
+                    buildValidationErrorMessage("Values not equal for attachment contentType", 
+                            controlAttachment.getContentType(), null));
         }
         
         if (log.isDebugEnabled()) {
             log.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
                     "='" + controlAttachment.getContentType() + "': OK.");
         }
+    }
+    
+    /**
+     * Constructs proper error message with expected value and actual value.
+     * @param message the base error message.
+     * @param expectedValue the expected value.
+     * @param actualValue the actual value.
+     * @return
+     */
+    private String buildValidationErrorMessage(String message, Object expectedValue, Object actualValue) {
+        return message + ", expected '" + expectedValue + "' but was '" + actualValue + "'";
     }
 
     /**
