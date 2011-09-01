@@ -110,4 +110,12 @@ public class SendMessageAction extends AbstractTestAction {
     public MessageContentBuilder<?> getMessageBuilder() {
         return messageBuilder;
     }
+
+    /**
+     * Gets the messageSender.
+     * @return the messageSender
+     */
+    public MessageSender getMessageSender() {
+        return messageSender;
+    }
 }

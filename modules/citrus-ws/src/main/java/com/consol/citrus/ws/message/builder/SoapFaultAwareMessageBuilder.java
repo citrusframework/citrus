@@ -93,4 +93,20 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     public void setFaultDetailResource(Resource faultDetailResource) {
         setPayloadResource(faultDetailResource);
     }
+
+    /**
+     * Gets the faultCode.
+     * @return the faultCode
+     */
+    public String getFaultCode() {
+        return faultCode;
+    }
+
+    /**
+     * Gets the faultString.
+     * @return the faultString
+     */
+    public String getFaultString() {
+        return faultString;
+    }
 }

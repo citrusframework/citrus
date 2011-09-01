@@ -43,15 +43,14 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String messageSenderReference = element.getAttribute("with");
-        
-        if (!StringUtils.hasText(messageSenderReference)) {
-            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
-        }
-
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
         builder.addPropertyValue("name", element.getLocalName());
 
+        String messageSenderReference = element.getAttribute("with");
+
+        if (!StringUtils.hasText(messageSenderReference)) {
+            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
+        }
         builder.addPropertyReference("messageSender", messageSenderReference);
         
         DescriptionElementParser.doParse(element, builder);
@@ -70,27 +69,7 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
                 messageBuilder.setFaultString(DomUtils.getTextValue(faultStringElement).trim());
             }
             
-            Element faultDetailElement = DomUtils.getChildElementByTagName(faultElement, "fault-detail");
-            if (faultDetailElement != null) {
-                if (faultDetailElement.hasAttribute("file")) {
-                    
-                    if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
-                        throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
-                        		"Please choose one of them.");
-                    }
-                    
-                    String filePath = faultDetailElement.getAttribute("file");
-                    
-                    messageBuilder.setFaultDetailResource(FileUtils.getResourceFromFilePath(filePath));
-                } else {
-                    String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
-                    if (StringUtils.hasText(faultDetailData)) {
-                        messageBuilder.setFaultDetail(faultDetailData);
-                    } else {
-                        throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
-                    }
-                }
-            }
+            parseFaultDetail(faultElement, messageBuilder);
         }
 
         Element headerElement = DomUtils.getChildElementByTagName(element, "header");
@@ -107,5 +86,35 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
         builder.addPropertyValue("messageBuilder", messageBuilder);
         
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Parses the fault detail element.
+     * 
+     * @param faultElement the fault DOM element.
+     * @param messageBuilder the soap fault aware message builder.
+     */
+    private void parseFaultDetail(Element faultElement, SoapFaultAwareMessageBuilder messageBuilder) {
+        Element faultDetailElement = DomUtils.getChildElementByTagName(faultElement, "fault-detail");
+        if (faultDetailElement != null) {
+            if (faultDetailElement.hasAttribute("file")) {
+                
+                if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
+                    throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
+                            "Please choose one of them.");
+                }
+                
+                String filePath = faultDetailElement.getAttribute("file");
+                
+                messageBuilder.setFaultDetailResource(FileUtils.getResourceFromFilePath(filePath));
+            } else {
+                String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
+                if (StringUtils.hasText(faultDetailData)) {
+                    messageBuilder.setFaultDetail(faultDetailData);
+                } else {
+                    throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
+                }
+            }
+        }
     }
 }
