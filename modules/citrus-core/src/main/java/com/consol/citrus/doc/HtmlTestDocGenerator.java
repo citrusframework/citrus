@@ -19,20 +19,13 @@ package com.consol.citrus.doc;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
 
 /**
  * Class to automatically generate a list of all available tests in HTML.
@@ -40,194 +33,142 @@ import com.consol.citrus.util.PropertyUtils;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class HtmlTestDocGenerator {
-    private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
-    private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
+public class HtmlTestDocGenerator extends AbstractTestDocGenerator {
     
-    private String testDirectory = "src/citrus/tests";
-    
+    /** Test doc specific information */
     private String pageTitle = "Citrus Test Documentation";
-    
     private String overviewTitle = "Overview";
-    
     private String overviewColumns = "1";
-    
     private String logoFilePath = "logo.png";
     
-    private String outputFile = "CitrusTests";
-    
-    private String testDocTemplate = "testdoc.html.template";
-    
     /**
-     * Logger
+     * Default constructor with test doc template name.
      */
-    private static Logger log = LoggerFactory.getLogger(HtmlTestDocGenerator.class);
+    public HtmlTestDocGenerator() {
+        super("CitrusTests.html", "testdoc.html.template");
+    }
     
-    public void generateDoc() {
-        BufferedReader reader = null;
-        FileOutputStream file = null;
-        OutputStream buffered = null;
+    @Override
+    public void doHeader(OutputStream buffered) throws TransformerException, IOException, SAXException {
+        List<File> testFiles = getTestFiles();
+        int maxEntries = testFiles.size() / Integer.valueOf(getTestDocProperties().getProperty("overview.columns"));
+
+        buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
+        buffered.write("<ol>".getBytes());
+
+        for (int i = 0; i < testFiles.size(); i++) {
+            if (i != 0 && i % maxEntries == 0 && testFiles.size() - i >= maxEntries) {
+                buffered.write("</ol>".getBytes());
+                buffered.write("</td>".getBytes());
+                buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
+                buffered.write(("<ol start=\"" + (i+1) + "\">").getBytes());
+            }
+
+            buffered.write("<li>".getBytes());
+            buffered.write(("<a href=\"#" + i + "\">").getBytes());
+            buffered.write(testFiles.get(i).getName().getBytes());
+            buffered.write("</a>".getBytes());
+        }
+
+        buffered.write("</ol>".getBytes());
+        buffered.write("</td>".getBytes());
+    }
+    
+    @Override
+    public void doBody(OutputStream buffered) throws TransformerException, IOException, SAXException {
+        StreamResult res = new StreamResult(buffered);
+        Transformer t = getTransformer("generate-html-doc.xslt", "text/html", "html");
         
-        try {
-            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
+        int testNumber = 1;
+        for (File testFile : getTestFiles()) {
+            buffered.write("<tr>".getBytes());
 
-            Properties props = new Properties();
-            props.setProperty("page.title", pageTitle);
-            props.setProperty("overview.title", overviewTitle);
-            props.setProperty("overview.columns", overviewColumns);
-            props.setProperty("logo.file.path", logoFilePath);
-            props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
-            
-            Source xsl = new StreamSource(new ClassPathResource("generate-html-doc.xslt", HtmlTestDocGenerator.class).getInputStream());
-            
-            TransformerFactory factory = TransformerFactory.newInstance();
+            Source xml = new DOMSource(getDocumentBuilder().parse(testFile));
+            buffered.write(("<td style=\"border:1px solid #bbbbbb\">" + testNumber + ".</td>").getBytes());
 
-            Transformer t = factory.newTransformer(xsl);
-
-            t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/html");
-            t.setOutputProperty(OutputKeys.METHOD, "html");
-
-            file = new FileOutputStream("target/" + outputFile + ".html");
-            buffered = new BufferedOutputStream(file);
-            StreamResult res = new StreamResult(buffered);
-
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-            documentBuilderFactory.setNamespaceAware(true);
-
-            reader = new BufferedReader(new InputStreamReader(HtmlTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equalsIgnoreCase(OVERVIEW_PLACEHOLDER)) {
-                    buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
-                } else {
-                    break;
-                }
-            }
-
-            int maxEntries = testFiles.size() / Integer.valueOf(props.getProperty("overview.columns"));
-
-            buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
-            buffered.write("<ol>".getBytes());
-
-            for (int i = 0; i < testFiles.size(); i++) {
-                if (i != 0 && i % maxEntries == 0 && testFiles.size() - i >= maxEntries) {
-                    buffered.write("</ol>".getBytes());
-                    buffered.write("</td>".getBytes());
-                    buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
-                    buffered.write(("<ol start=\"" + (i+1) + "\">").getBytes());
-                }
-
-                buffered.write("<li>".getBytes());
-                buffered.write(("<a href=\"#" + i + "\">").getBytes());
-                buffered.write(testFiles.get(i).getName().getBytes());
-                buffered.write("</a>".getBytes());
-            }
-
-            buffered.write("</ol>".getBytes());
+            buffered.write("<td style=\"border:1px solid #bbbbbb\">".getBytes());
+            t.transform(xml, res);
+            buffered.write(("<a name=\"" + testNumber + "\" href=\"file:///" + testFile.getAbsolutePath() + "\">" + testFile.getName() + "</a>").getBytes());
             buffered.write("</td>".getBytes());
 
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
-                    buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
-                } else {
-                    break;
-                }
-            }
-
-            int testNumber = 1;
-            for (File testFile : testFiles) {
-                buffered.write("<tr>".getBytes());
-
-                Source xml = new DOMSource(builder.parse(testFile));
-                buffered.write(("<td style=\"border:1px solid #bbbbbb\">" + testNumber + ".</td>").getBytes());
-
-                buffered.write("<td style=\"border:1px solid #bbbbbb\">".getBytes());
-                t.transform(xml, res);
-                buffered.write(("<a name=\"" + testNumber + "\" href=\"file:///" + testFile.getAbsolutePath() + "\">" + testFile.getName() + "</a>").getBytes());
-                buffered.write("</td>".getBytes());
-
-                buffered.write("</tr>".getBytes());
-                
-                testNumber++;
-            }
-
-            while ((line = reader.readLine()) != null) {
-                buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
-            }
-
-            buffered.flush();
-            file.close();
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (SAXException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ParserConfigurationException e) {
-            throw new CitrusRuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.error("Failed to close reader", e);
-                }
-            }
+            buffered.write("</tr>".getBytes());
             
-            if (buffered != null) {
-                try {
-                    buffered.flush();
-                } catch (IOException e) {
-                    log.error("Failed to close output stream", e);
-                }
-            }
-            
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                    log.error("Failed to close file", e);
-                }
-            }
+            testNumber++;
         }
     }
     
+    /**
+     * Builds a new test doc generator.
+     * @return
+     */
     public static HtmlTestDocGenerator build() {
         return new HtmlTestDocGenerator();
     }
     
+    /**
+     * Adds a custom output file.
+     * @param filename the output file name.
+     * @return
+     */
     public HtmlTestDocGenerator withOutputFile(String filename) {
         this.setOutputFile(filename);
         return this;
     }
     
+    /**
+     * Adds a custom page title.
+     * @param pageTitle the page title.
+     * @return
+     */
     public HtmlTestDocGenerator withPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
         return this;
     }
     
+    /**
+     * Adds a custom overview title.
+     * @param overvieTitle the title.
+     * @return
+     */
     public HtmlTestDocGenerator withOverviewTitle(String overvieTitle) {
         this.overviewTitle = overvieTitle;
         return this;
     }
     
+    /**
+     * Adds a column configuration.
+     * @param columns the column names.
+     * @return
+     */
     public HtmlTestDocGenerator withColumns(String columns) {
         this.overviewColumns = columns;
         return this;
     }
     
+    /**
+     * Adds a custom logo file path.
+     * @param logoFilePath the file path.
+     * @return
+     */
     public HtmlTestDocGenerator withLogo(String logoFilePath) {
         this.logoFilePath = logoFilePath;
         return this;
     }
     
+    /**
+     * Adds a custom test directory.
+     * @param testDir the test directory.
+     * @return
+     */
     public HtmlTestDocGenerator useTestDirectory(String testDir) {
         this.setTestDirectory(testDir);
         return this;
     }
     
+    /**
+     * Executable application cli.
+     * @param args
+     */
     public static void main(String[] args) {
         try {    
             HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
@@ -246,33 +187,17 @@ public class HtmlTestDocGenerator {
                     "Use parameters in the following way: [test.directory] [output.file]", e);
         }
     }
-
-    /**
-     * @param testDirectory the testDirectory to set
-     */
-    public void setTestDirectory(String testDirectory) {
-        this.testDirectory = testDirectory;
-    }
-
-    /**
-     * @return the testDirectory
-     */
-    public String getTestDirectory() {
-        return testDirectory;
-    }
-
-    /**
-     * @param outputFile the outputFile to set
-     */
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
-    }
-
-    /**
-     * @return the outputFile
-     */
-    public String getOutputFile() {
-        return outputFile;
+    
+    @Override
+    protected Properties getTestDocProperties() {
+        Properties props = new Properties();
+        props.setProperty("page.title", pageTitle);
+        props.setProperty("overview.title", overviewTitle);
+        props.setProperty("overview.columns", overviewColumns);
+        props.setProperty("logo.file.path", logoFilePath);
+        props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
+        
+        return props;
     }
 
     /**
@@ -288,4 +213,5 @@ public class HtmlTestDocGenerator {
     public String getPageTitle() {
         return pageTitle;
     }
+
 }

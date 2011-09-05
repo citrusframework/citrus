@@ -19,14 +19,11 @@ package com.consol.citrus.doc;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -34,8 +31,6 @@ import org.springframework.xml.transform.StringSource;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
 
 /**
  * Class to automatically generate a list of all available tests in MS Excel.
@@ -43,133 +38,69 @@ import com.consol.citrus.util.PropertyUtils;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class ExcelTestDocGenerator {
-    private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
+public class ExcelTestDocGenerator extends AbstractTestDocGenerator {
 
-    private String testDirectory = "src/citrus/tests";
-    
-    private String outputFile = "CitrusTests";
-    
-    private String testDocTemplate = "testdoc.xls.template";
-    
+    /** Test doc specific information */
     private String pageTitle = "Citrus Test Documentation";
-    
     private String company = "Unknown";
-    
     private String author = "Citrus Testframework";
-    
     private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocGenerator.class);
-    
     private String customHeaders = "";
     
     /**
-     * Logger
+     * Default constructor using test doc template name.
      */
-    private static Logger log = LoggerFactory.getLogger(ExcelTestDocGenerator.class);
+    public ExcelTestDocGenerator() {
+        super("CitrusTests.xls", "testdoc.xls.template");
+    }
     
-    public void generateDoc() {
-        BufferedReader reader = null;
-        FileOutputStream file = null;
-        OutputStream buffered = null;
+    @Override
+    public void doHeader(OutputStream buffered) throws TransformerException,
+            IOException, SAXException {
+        // no header information here.
+    }
+    
+    @Override
+    public void doBody(OutputStream buffered) throws TransformerException, IOException, SAXException {
+        StreamResult res = new StreamResult(buffered);
+        Transformer t = getTransformer("generate-xls-doc.xslt", "text/xml", "xml");
         
-        try {
-            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
+        if (StringUtils.hasText(customHeaders)) {
+            t.transform(new StringSource(buildHeaderXml()), res);
+        } else {
+            t.transform(new StreamSource(headers.getInputStream()), res);
+        }
+        
+        int testNumber = 1;
+        for (File testFile : getTestFiles()) {
+        	buffered.write("<Row>".getBytes());
 
-            Properties props = new Properties();
-            props.setProperty("page.title", pageTitle);
-            props.setProperty("company", company);
-            props.setProperty("author", author);
-            props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
+            Source xml = new DOMSource(getDocumentBuilder().parse(testFile));
+            buffered.write(("<Cell><Data ss:Type=\"Number\">" + testNumber + "</Data></Cell>").getBytes());
+
+            t.transform(xml, res);
+            buffered.write(("<Cell><Data ss:Type=\"String\">" + testFile.getName() + "</Data></Cell>").getBytes());
+            buffered.write("</Row>".getBytes());
             
-            Source xsl = new StreamSource(new ClassPathResource("generate-xls-doc.xslt", ExcelTestDocGenerator.class).getInputStream());
-            
-            TransformerFactory factory = TransformerFactory.newInstance();
-
-            Transformer t = factory.newTransformer(xsl);
-
-            t.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
-            t.setOutputProperty(OutputKeys.METHOD, "xml");
-
-            file = new FileOutputStream("target/" + outputFile + ".xls");
-            buffered = new BufferedOutputStream(file);
-            StreamResult res = new StreamResult(buffered);
-
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-            documentBuilderFactory.setNamespaceAware(true);
-
-            reader = new BufferedReader(new InputStreamReader(ExcelTestDocGenerator.class.getResourceAsStream(testDocTemplate)));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
-                    buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
-                } else {
-                    break;
-                }
-            }
-
-            if (StringUtils.hasText(customHeaders)) {
-                t.transform(new StringSource(buildHeaderXml()), res);
-            } else {
-                //first generate header row
-                t.transform(new StreamSource(headers.getInputStream()), res);
-            }
-            
-            int testNumber = 1;
-            for (File testFile : testFiles) {
-            	buffered.write("<Row>".getBytes());
-
-                Source xml = new DOMSource(builder.parse(testFile));
-                buffered.write(("<Cell><Data ss:Type=\"Number\">" + testNumber + "</Data></Cell>").getBytes());
-
-                t.transform(xml, res);
-
-                buffered.write(("<Cell><Data ss:Type=\"String\">" + testFile.getName() + "</Data></Cell>").getBytes());
-
-                buffered.write("</Row>".getBytes());
-                
-                testNumber++;
-            }
-
-            while ((line = reader.readLine()) != null) {
-                buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
-            }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (SAXException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (ParserConfigurationException e) {
-            throw new CitrusRuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.error("Failed to close reader", e);
-                }
-            }
-            
-            if (buffered != null) {
-                try {
-                    buffered.flush();
-                } catch (IOException e) {
-                    log.error("Failed to close output stream", e);
-                }
-            }
-            
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                    log.error("Failed to close file", e);
-                }
-            }
+            testNumber++;
         }
     }
     
+    @Override
+    protected Properties getTestDocProperties() {
+        Properties props = new Properties();
+        props.setProperty("page.title", pageTitle);
+        props.setProperty("company", company);
+        props.setProperty("author", author);
+        props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
+        
+        return props;
+    }
+
+    /**
+     * Builds custom header information.
+     * @return
+     */
     private String buildHeaderXml() {
         StringBuffer buf = new StringBuffer();
         
@@ -186,40 +117,78 @@ public class ExcelTestDocGenerator {
         return buf.toString();
     }
 
+    /**
+     * Builds a new test doc generator.
+     * @return
+     */
     public static ExcelTestDocGenerator build() {
         return new ExcelTestDocGenerator();
     }
     
+    /**
+     * Adds a custom output file.
+     * @param filename the output file name.
+     * @return
+     */
     public ExcelTestDocGenerator withOutputFile(String filename) {
         this.setOutputFile(filename);
         return this;
     }
     
+    /**
+     * Adds a custom page title.
+     * @param pageTitle the page title.
+     * @return
+     */
     public ExcelTestDocGenerator withPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
         return this;
     }
     
+    /**
+     * Adds a custom test directory.
+     * @param testDir the test directory.
+     * @return
+     */
     public ExcelTestDocGenerator useTestDirectory(String testDir) {
         this.setTestDirectory(testDir);
         return this;
     }
     
+    /**
+     * Adds a custom author name.
+     * @param author the author name.
+     * @return
+     */
     public ExcelTestDocGenerator withAuthor(String author) {
         this.author = author;
         return this;
     }
     
+    /**
+     * Adds a custom company.
+     * @param company the company name.
+     * @return
+     */
     public ExcelTestDocGenerator withCompany(String company) {
         this.company = company;
         return this;
     }
     
+    /**
+     * Adds a custom header configuration.
+     * @param customHeaders the header configuration.
+     * @return
+     */
     public ExcelTestDocGenerator withCustomHeaders(String customHeaders) {
         this.customHeaders = customHeaders;
         return this;
     }
     
+    /**
+     * Executable application cli.
+     * @param args
+     */
     public static void main(String[] args) {
         try {    
             ExcelTestDocGenerator creator = ExcelTestDocGenerator.build();
@@ -236,34 +205,6 @@ public class ExcelTestDocGenerator {
             throw new CitrusRuntimeException("Wrong usage exception! " +
                     "Use parameters in the following way: [test.directory] [output.file]", e);
         }
-    }
-
-    /**
-     * @param testDirectory the testDirectory to set
-     */
-    public void setTestDirectory(String testDirectory) {
-        this.testDirectory = testDirectory;
-    }
-
-    /**
-     * @return the testDirectory
-     */
-    public String getTestDirectory() {
-        return testDirectory;
-    }
-
-    /**
-     * @param outputFile the outputFile to set
-     */
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
-    }
-
-    /**
-     * @return the outputFile
-     */
-    public String getOutputFile() {
-        return outputFile;
     }
 
     /**

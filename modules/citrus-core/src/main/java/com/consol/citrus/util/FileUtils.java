@@ -111,6 +111,10 @@ public abstract class FileUtils {
         /* start directory */
         final File startdir = new File(startDir);
         
+        if (!startdir.exists()) {
+            throw new CitrusRuntimeException("Test directory " + startdir.getAbsolutePath() + " does not exist");
+        }
+        
         if (startdir.isDirectory()) {
             dirs.push(startdir);
         }

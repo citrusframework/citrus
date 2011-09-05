@@ -20,7 +20,7 @@
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns="http://www.w3.org/2000/svg"
-	exclude-result-prefixes="spring tsf">
+	exclude-result-prefixes="spring citrus">
 	
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" doctype-public="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"/>
 	

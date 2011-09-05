@@ -8,19 +8,18 @@
     
     <testcase name="SampleTest">
         <meta-info>
-            <author>Christoph Deppisch</author>
-            <creationdate>2011-06-04</creationdate>
-            <status>FINAL</status>
-            <last-updated-by>Christoph Deppisch</last-updated-by>
-            <last-updated-on>2011-06-04T18:37:23</last-updated-on>
+            <author>Christoph</author>
+            <creationdate>2011-09-05</creationdate>
+            <status>DRAFT</status>
+            <last-updated-by>Christoph</last-updated-by>
+            <last-updated-on>2011-09-05T13:42:09</last-updated-on>
         </meta-info>
         
-        <description>Just a sample integration test executed from Citrus command line app
-        during unit tests.</description>
+        <description>This is a sample test</description>
         
         <actions>
             <echo>
-                <message>Sample test gets executed!</message>
+                <message>TODO: Code the test SampleTest</message>
             </echo>
         </actions>
     </testcase>

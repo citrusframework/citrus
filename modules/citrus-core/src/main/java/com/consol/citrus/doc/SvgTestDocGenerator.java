@@ -18,16 +18,15 @@ package com.consol.citrus.doc;
 
 import java.io.*;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Class to automatically generate a visual representation of a {@link com.consol.citrus.TestCase} in SVG.
@@ -35,90 +34,102 @@ import com.consol.citrus.util.FileUtils;
  * @author Christoph Deppisch
  * @since 2007
  */
-public final class SvgTestDocGenerator {
-    private static final String DEFAULT_XSLT_SOURCE = "generate-svg-doc.xslt";
-    private static final String DEFAULT_TEST_DIRECTORY = "tests";
+public final class SvgTestDocGenerator extends AbstractTestDocGenerator {
 
     /**
-     * Logger
+     * Default constructor.
      */
-    private static Logger log = LoggerFactory.getLogger(SvgTestDocGenerator.class);
-
-    /**
-     * Prevent instantiation.
-     */
-    private SvgTestDocGenerator() {
+    public SvgTestDocGenerator() {
+        super("", "");
     }
     
-    public static void main(String[] args) {
+    /**
+     * Generates the test documentation.
+     */
+    public void generateDoc() {
+        FileOutputStream fos = null;
+        BufferedOutputStream buffered = null;
+        
+        Transformer t = getTransformer("generate-svg-doc.xslt", "text/xml", "xml");
+        t.setOutputProperty(OutputKeys.INDENT, "yes");
+        t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        
         try {
-            String testDirectory = DEFAULT_TEST_DIRECTORY;
-
-            if (args.length > 1) {
-                testDirectory = args[1];
-            }
-
-            List<File> testFiles = FileUtils.getTestFiles(testDirectory);
-
-            String xslSource;
-            if (args.length > 0) {
-                xslSource = args[0];
-            } else {
-                xslSource = DEFAULT_XSLT_SOURCE;
-            }
-
-            Source xsl = new StreamSource(SvgTestDocGenerator.class.getResourceAsStream(xslSource));
-            log.info("XSLT stylesheet was set: " + xsl.getSystemId());
-
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer t = factory.newTransformer(xsl);
-
-            t.setOutputProperty(OutputKeys.METHOD, "xml");
-            t.setOutputProperty(OutputKeys.INDENT, "yes");
-            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            log.info("XSL transformer was created");
+            List<File> testFiles = getTestFiles();
 
             for (File testFile : testFiles) {
                 log.info("Working on test " + testFile.getName());
 
-                StringWriter stringWriter = new StringWriter();
-                StreamSource xml = new StreamSource(testFile);
-                StreamResult res = new StreamResult(stringWriter);
+                fos = getFileOutputStream(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
+                buffered = new BufferedOutputStream(fos);
                 
-                FileWriter fileWriter = null;
+                Source xml = new DOMSource(getDocumentBuilder().parse(testFile));
+                StreamResult res = new StreamResult(buffered);
                 
+                t.transform(xml, res);
+                
+                log.info("Finished test " + testFile.getName());
+                
+                buffered.flush();
+                fos.close();
+            }
+        } catch (TransformerException e) {
+            throw new CitrusRuntimeException(e);
+        } catch (SAXException e) {
+            throw new CitrusRuntimeException(e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(e);
+        } finally {
+            if (buffered != null) {
                 try {
-                    t.transform(xml, res);
-                    stringWriter.flush();
-
-                    String fileContent = stringWriter.toString();
-                    stringWriter.close();
-
-                    if (fileContent!= null && fileContent.indexOf("svg")!=-1) {
-                        log.info("Created file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
-                        fileWriter = new FileWriter(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
-                        fileWriter.write(stringWriter.toString());
-                        fileWriter.flush();
-                    } else {
-                        log.warn("Could not create file " + testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
-                    }
-                } catch(TransformerException e) {
-                    throw new CitrusRuntimeException("XSLT tranformation failed", e);
+                    buffered.flush();
                 } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to generate test documentation, IO error", e);
-                } finally {
-                    if (fileWriter != null) {
-                        try {
-                            fileWriter.close();
-                        } catch (IOException e) {
-                            log.error("Failed to close test documentation file", e);
-                        }
-                    }
+                    log.error("Failed to close output stream", e);
                 }
             }
-        } catch (TransformerConfigurationException e) {
-            throw new CitrusRuntimeException("Error during doc generation", e);
+            
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    log.error("Failed to close file", e);
+                }
+            }
         }
+    }
+    
+    /**
+     * Builds a new test doc generator.
+     * @return
+     */
+    public static SvgTestDocGenerator build() {
+        return new SvgTestDocGenerator();
+    }
+    
+    /**
+     * Adds a custom test directory.
+     * @param testDir the test directory.
+     * @return
+     */
+    public SvgTestDocGenerator useTestDirectory(String testDir) {
+        this.setTestDirectory(testDir);
+        return this;
+    }
+    
+    @Override
+    public void doBody(OutputStream buffered) throws TransformerException,
+            IOException, SAXException {
+        // no body information here.
+    }
+
+    @Override
+    public void doHeader(OutputStream buffered) throws TransformerException,
+            IOException, SAXException {
+        // no header information here.
+    }
+
+    @Override
+    protected Properties getTestDocProperties() {
+        return null;
     }
 }
