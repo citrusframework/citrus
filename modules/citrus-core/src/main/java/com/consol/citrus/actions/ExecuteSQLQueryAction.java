@@ -89,7 +89,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     public void doExecute(TestContext context) {
         try {
             if (statements.isEmpty()) {
-                statements = getStatementsFromResource();
+                statements = createStatementsFromFileResource(context);
             }
             
             for (String statement : statements) {

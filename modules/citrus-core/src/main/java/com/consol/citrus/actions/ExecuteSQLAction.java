@@ -40,7 +40,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
         String stmt = "";
 
         if (statements.isEmpty()) {
-            statements = getStatementsFromResource();
+            statements = createStatementsFromFileResource(context);
         }
 
         Iterator<String> it = statements.iterator();

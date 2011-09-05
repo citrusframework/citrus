@@ -55,7 +55,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     protected List<String> statements = new ArrayList<String>();
     
     /** Constant representing SQL comment */
-    private static final String SQL_COMMENT = "--";
+    protected static final String SQL_COMMENT = "--";
 
     /**
      * Do basic logging and delegate execution to subclass.
@@ -75,47 +75,47 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Reads SQL statements from external file resource. File resource can hold several
      * multi-line statements and comments.
      * 
+     * @param context the current test context.
      * @return list of SQL statements.
      */
-    protected List<String> getStatementsFromResource() {
+    protected List<String> createStatementsFromFileResource(TestContext context) {
         BufferedReader reader = null;
-        StringBuffer buffer = new StringBuffer();
-        String line = "";
-        String stmt = "";
+        StringBuffer buffer;
         
         List<String> stmts = new ArrayList<String>();
         
-        log.info("Executing Sql file: " + sqlResource.getFilename());
-        
         try {
+            log.info("Executing SQL file: " + sqlResource.getFilename());
+            
             reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
+            buffer = new StringBuffer();
+            
+            String line;
             while (reader.ready()) {
                 line = reader.readLine();
     
                 if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
-                    buffer.append(line);
-                    
-                    if (line.trim().endsWith(";")) {
-                        stmt = buffer.toString();
-                        buffer.setLength(0);
-                        buffer = new StringBuffer();
+                    if (line.trim().endsWith(getStatemendEndingCharacter())) {
+                        buffer.append(decorateLastScriptLine(line));
+                        String stmt = buffer.toString();
     
                         if (log.isDebugEnabled()) {
                             log.debug("Found statement: " + stmt);
                         }
     
-                        stmts.add(stmt);
+                        stmts.add(context.replaceDynamicContentInString(stmt));
+                        buffer.setLength(0);
+                        buffer = new StringBuffer();
                     } else {
-                        //more lines to some for this statement add line break
+                        buffer.append(line);
+                        
+                        //more lines to come for this statement add line break
                         buffer.append("\n");
                     }
                 }
             }
         } catch (IOException e) {
-            log.error("Sql resource could not be found - filename: "
-                    + sqlResource.getFilename() + ". Nested Exception is: ");
-            log.error(e.getLocalizedMessage());
-            throw new CitrusRuntimeException(e);
+            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResource.getFilename(), e);
         } finally {
             if (reader != null) {
                 try {
@@ -129,6 +129,23 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         return stmts;
     }
     
+    /**
+     * Gets the SQL statement ending character sequence.
+     * @return
+     */
+    protected String getStatemendEndingCharacter() {
+        return ";";
+    }
+
+    /**
+     * Subclasses may want to decorate last script line.
+     * @param line the last script line finishing a SQL statement.
+     * @return
+     */
+    protected String decorateLastScriptLine(String line) {
+        return line;
+    }
+
     /**
      * Gets this action's description.
      * @return the description

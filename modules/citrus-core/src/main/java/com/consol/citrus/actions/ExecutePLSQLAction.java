@@ -17,10 +17,9 @@
 package com.consol.citrus.actions;
 
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -33,11 +32,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @since 2008
  */
 public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(ExecutePLSQLAction.class);
-
     /** In line script */
     private String script = null;
 
@@ -46,79 +40,62 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        BufferedReader reader = null;
-        StringBuffer buffer;
-        String stmt;
+        if (script != null) {
+            statements = createStatementsFromScript(context);
+        } else {
+            statements = createStatementsFromFileResource(context);
+        }
 
-        try {
-            if (script == null) {
-                log.info("Executing PLSQL file: " + sqlResource.getFilename());
+        for (int i = 0; i < statements.size(); i++) {
+            try {
+                String stmt = statements.get(i);
 
-                reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
-                buffer = new StringBuffer();
-
-                String line;
-                while (reader.ready()) {
-                    line = reader.readLine();
-
-                    if (line != null) {
-                        if (line.trim()!= null && line.trim().endsWith("/")) {
-                            buffer.append(line.trim().substring(0, (line.trim().length() -1)));
-    
-                            stmt = context.replaceDynamicContentInString(buffer.toString());
-                            statements.add(stmt);
-                            buffer.setLength(0);
-                            buffer = new StringBuffer();
-                        } else {
-                            buffer.append(line);
-                            buffer.append("\n");
-                        }
-                    }
-                }
-            } else {
-                script = context.replaceDynamicContentInString(script);
                 if (log.isDebugEnabled()) {
-                    log.debug("Found inline PLSQL script " + script);
+                    log.debug("Executing SQL statement: " + stmt);
                 }
-
-                StringTokenizer tok = new StringTokenizer(script, "/");
-                while (tok.hasMoreTokens()) {
-                    stmt = tok.nextToken();
-                    statements.add(stmt.trim());
-                }
-            }
-
-            for (int i = 0; i < statements.size(); i++) {
-                try {
-                    stmt = statements.get(i);
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("Executing SQL statement: " + stmt);
-                    }
-                    
-                    getJdbcTemplate().execute(stmt);
-                    log.info("SQL statement execution successful");
-                } catch (Exception e) {
-                    if (ignoreErrors) {
-                        log.error("Error while executing SQL statement: " + e.getMessage());
-                        continue;
-                    } else {
-                        throw new CitrusRuntimeException(e);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            log.error("Resource could not be found - filename: " + sqlResource.getFilename(), e);
-            throw new CitrusRuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Warning: could not close reader instance", e);
+                
+                getJdbcTemplate().execute(stmt);
+                log.info("SQL statement execution successful");
+            } catch (DataAccessException e) {
+                if (ignoreErrors) {
+                    log.warn("Ignoring error while executing SQL statement: " + e.getMessage());
+                    continue;
+                } else {
+                    throw new CitrusRuntimeException("Failed to execute SQL statement", e);
                 }
             }
         }
+    }
+
+    /**
+     * Create SQL statements from inline script.
+     * @param context the current test context.
+     * @return list of SQL statements.
+     */
+    private List<String> createStatementsFromScript(TestContext context) {
+        List<String> stmts = new ArrayList<String>();
+        
+        script = context.replaceDynamicContentInString(script);
+        if (log.isDebugEnabled()) {
+            log.debug("Found inline PLSQL script " + script);
+        }
+
+        StringTokenizer tok = new StringTokenizer(script, "/");
+        while (tok.hasMoreTokens()) {
+            stmts.add(tok.nextToken().trim());
+        }
+        
+        return stmts;
+    }
+
+    @Override
+    protected String getStatemendEndingCharacter() {
+        return "/";
+    }
+    
+    @Override
+    protected String decorateLastScriptLine(String line) {
+        return line.trim().substring(0, (line.trim().length()-1));
     }
 
     /**
