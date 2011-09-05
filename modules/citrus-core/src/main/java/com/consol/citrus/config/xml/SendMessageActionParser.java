@@ -16,7 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -28,7 +29,6 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 
 /**
@@ -67,21 +67,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
-        
-        Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> extractHeaderValues = new HashMap<String, String>();
-        if (extractElement != null) {
-            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
-            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
-                Element headerValue = (Element) iter.next();
-                extractHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
-            }
-            
-            MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
-            headerVariableExtractor.setHeaderMappings(extractHeaderValues);
-            
-            variableExtractors.add(headerVariableExtractor);
-        }
+        parseExtractHeaderElements(element, variableExtractors);
         
         if (!variableExtractors.isEmpty()) {
             builder.addPropertyValue("variableExtractors", variableExtractors);

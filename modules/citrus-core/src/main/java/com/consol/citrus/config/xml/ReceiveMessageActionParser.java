@@ -112,21 +112,12 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      */
     private List<VariableExtractor> getVariableExtractors(Element element) {
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+
+        parseExtractHeaderElements(element, variableExtractors);
         
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
         Map<String, String> extractMessageValues = new HashMap<String, String>();
-        Map<String, String> extractHeaderValues = new HashMap<String, String>();
         if (extractElement != null) {
-            List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
-            for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {
-                Element headerValue = (Element) iter.next();
-                extractHeaderValues.put(headerValue.getAttribute("name"), headerValue.getAttribute("variable"));
-            }
-            MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
-            headerVariableExtractor.setHeaderMappings(extractHeaderValues);
-            
-            variableExtractors.add(headerVariableExtractor);
-
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
             for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
@@ -259,10 +250,11 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param context the message validation context.
      */
     private void parseValidationElements(Element messageElement, XmlMessageValidationContext context) {
-      //check for validate elements, these elements can either have script, xpath or namespace validation information
+        //check for validate elements, these elements can either have script, xpath or namespace validation information
         //script validation is handled separately for now we only handle xpath and namepsace validation
         Map<String, String> validateNamespaces = new HashMap<String, String>();
         Map<String, String> validateXpathExpressions = new HashMap<String, String>();
+        
         List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (validateElements.size() > 0) {
             for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
