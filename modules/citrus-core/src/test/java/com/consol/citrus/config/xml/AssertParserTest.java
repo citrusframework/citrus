@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class AssertParserTest extends AbstractActionParserTest<com.consol.citrus.container.Assert> {
 
     @Test
-    public void testEchoActionParser() {
+    public void testAssertParser() {
         assertActionCount(1);
         assertActionClassAndName(com.consol.citrus.container.Assert.class, "assert");
         
