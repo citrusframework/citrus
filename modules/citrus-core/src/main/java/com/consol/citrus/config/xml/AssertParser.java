@@ -23,10 +23,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Assert;
 
 /**
@@ -40,28 +40,16 @@ public class AssertParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition;
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Assert.class);
 
-        beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Assert.class);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("exception"), "exception");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("message"), "message");
 
-        String exception = element.getAttribute("exception");
-
-        if (StringUtils.hasText(exception)) {
-            beanDefinition.addPropertyValue("exception", exception);
-        }
-        
-        String message = element.getAttribute("message");
-
-        if (StringUtils.hasText(message)) {
-            beanDefinition.addPropertyValue("message", message);
-        }
-
-        DescriptionElementParser.doParse(element, beanDefinition);
+        DescriptionElementParser.doParse(element, builder);
 
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
 
         Element action = DOMUtil.getFirstChildElement(element);
-
         if (action != null && action.getTagName().equals("description")) {
             action = DOMUtil.getNextSiblingElement(action);
         }
@@ -69,15 +57,15 @@ public class AssertParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
             
-            if (parser ==  null) {
-            	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+            if (parser !=  null) {
+                builder.addPropertyValue("action", parser.parse(action, parserContext));
             } else {
-            	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
+                builder.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
             }
         }
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
+        builder.addPropertyValue("name", element.getLocalName());
 
-        return beanDefinition.getBeanDefinition();
+        return builder.getBeanDefinition();
     }
 }

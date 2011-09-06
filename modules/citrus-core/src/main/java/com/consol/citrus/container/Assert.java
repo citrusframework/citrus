@@ -78,19 +78,19 @@ public class Assert extends AbstractActionContainer {
     }
 
     /**
-     * Set the exception.
-     * @param exception the exception to set
-     */
-    public void setException(Class<Throwable> exception) {
-        this.exception = exception;
-    }
-
-    /**
      * Set the nested test action.
      * @param action the action to set
      */
     public void setAction(TestAction action) {
         this.action = action;
+    }
+    
+    /**
+     * Gets the action.
+     * @return the action
+     */
+    public TestAction getAction() {
+        return action;
     }
 
     /**
@@ -107,6 +107,22 @@ public class Assert extends AbstractActionContainer {
      */
     public String getMessage() {
         return message;
+    }
+    
+    /**
+     * Gets the exception.
+     * @return the exception
+     */
+    public Class<? extends Throwable> getException() {
+        return exception;
+    }
+
+    /**
+     * Sets the exception.
+     * @param exception the exception to set
+     */
+    public void setException(Class<? extends Throwable> exception) {
+        this.exception = exception;
     }
 
     /**
@@ -156,4 +172,5 @@ public class Assert extends AbstractActionContainer {
             action = actions.get(0); 
         }
     }
+
 }
