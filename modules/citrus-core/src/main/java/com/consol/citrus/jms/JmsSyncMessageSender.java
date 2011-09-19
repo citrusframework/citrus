@@ -128,12 +128,12 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
 
             messageProducer.send(jmsRequest);
 
-            log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
-            log.info("Receiving / waiting for reply message from destination: '{}'", replyToDestination);
+            log.info("Message was successfully sent to destination: '{}'", defaultDestinationName);
+            log.info("Waiting for reply message on destination: '{}'", replyToDestination);
 
             javax.jms.Message jmsReplyMessage = (replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
 
-            log.info("Received reply message from destination: '" + replyToDestination + "'");
+            log.info("Received reply message from destination: '{}'", replyToDestination);
 
             informReplyMessageHandler((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage), message);
         } catch (JMSException e) {
