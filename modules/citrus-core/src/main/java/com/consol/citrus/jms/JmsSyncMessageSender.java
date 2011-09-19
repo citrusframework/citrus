@@ -40,68 +40,68 @@ import com.consol.citrus.message.*;
  * Synchronous message sender implementation for JMS. Sender publishes messages to a JMS destination and
  * sets the reply destination in the request message. Sender consumes the reply destination right away and
  * invokes a reply message handler implementation with this reply message.
- * 
+ *
  * Class can either define a static reply destination or a temporary reply destination.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class JmsSyncMessageSender implements MessageSender, BeanNameAware, DisposableBean {
     /** JMS connection factory */
     private ConnectionFactory connectionFactory;
-    
+
     /** JMS connection */
     private Connection connection = null;
-    
+
     /** JMS session */
     private Session session = null;
-    
+
     /** Destination instance */
     private Destination destination;
-    
+
     /** Destination name */
     private String destinationName;
-    
+
     /** Reply destination */
     private Destination replyDestination;
-    
+
     /** Reply destination name */
     private String replyDestinationName;
-    
+
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
-    
+
     /** The message converter */
     private MessageConverter messageConverter = new SimpleMessageConverter();
 
     /** The header mapper */
     private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
-    
+
     /** Time to synchronously wait for reply */
     private long replyTimeout = 5000L;
-    
+
     /** Reply message corelator */
     private ReplyMessageCorrelator correlator = null;
-    
+
     /** Use JMS topics instead of queues */
     private boolean pubSubDomain = false;
-    
+
     /** Message sender name */
     private String name;
-    
+
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(JmsSyncMessageSender.class);
-    
+
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
-        
+
         String defaultDestinationName = getDefaultDestinationName();
-        
+
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
         if (log.isDebugEnabled()) {
@@ -111,29 +111,30 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
         Destination replyToDestination = null;
-        
+
         try {
             createConnection();
             createSession(connection);
-            
+
             JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
             javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(message, session);
-            
+
             messageProducer = session.createProducer(getDefaultDestination(session));
-            
+
             replyToDestination = getReplyDestination(session, message);
             jmsRequest.setJMSReplyTo(replyToDestination);
-            
+
             messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
-            
+
             messageProducer.send(jmsRequest);
-            
+
             log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
-            
+            log.info("Receiving / waiting for reply message from destination: '{}'", replyToDestination);
+
             javax.jms.Message jmsReplyMessage = (replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
-            
+
             log.info("Received reply message from destination: '" + replyToDestination + "'");
-            
+
             informReplyMessageHandler((Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage), message);
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);
@@ -143,9 +144,9 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             deleteTemporaryDestination(replyToDestination);
         }
     }
-    
+
     /**
-     * Informs reply message handler for further processing 
+     * Informs reply message handler for further processing
      * of reply message.
      * @param responseMessage the reply message.
      * @param requestMessage the initial request message.
@@ -153,7 +154,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
         if (replyMessageHandler != null) {
             log.info("Informing reply message handler for further processing");
-            
+
             if (correlator != null) {
                 replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
             } else {
@@ -165,11 +166,11 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     /**
      * Creates a message consumer on temporary/durable queue or topic. Durable queue/topic destinations
      * require a message selector to be set.
-     * 
+     *
      * @param replyToDestination the reply destination.
      * @param messageId the messageId used for optional message selector.
      * @return
-     * @throws JMSException 
+     * @throws JMSException
      */
     private MessageConsumer createMessageConsumer(Destination replyToDestination, String messageId) throws JMSException {
         MessageConsumer messageConsumer;
@@ -177,13 +178,13 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
             messageConsumer = session.createConsumer(replyToDestination);
         } else if (replyToDestination instanceof Queue) {
-            messageConsumer = session.createConsumer(replyToDestination, 
+            messageConsumer = session.createConsumer(replyToDestination,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
         } else {
-            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name, 
+            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'", false);
         }
-        
+
         return messageConsumer;
     }
 
@@ -193,20 +194,20 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      */
     private void deleteTemporaryDestination(Destination destination) {
         try {
-            if (destination instanceof TemporaryQueue) { 
+            if (destination instanceof TemporaryQueue) {
                 ((TemporaryQueue) destination).delete();
             } else if (destination instanceof TemporaryTopic) {
                 ((TemporaryTopic) destination).delete();
             }
         } catch (JMSException e) {
-            log.error("Error while deleting temporary destination", e);
+            log.error("Error while deleting temporary destination '" + destination + "'", e);
         }
     }
 
     /**
      * Retrieve the reply destination either by injected instance, destination name or
      * by creating a new temporary destination.
-     * 
+     *
      * @param session current JMS session
      * @param message holding possible reply destination in header.
      * @return the reply destination.
@@ -224,7 +225,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         } else if (StringUtils.hasText(replyDestinationName)) {
             return resolveDestinationName(this.replyDestinationName, session);
         }
-        
+
         if (pubSubDomain && session instanceof TopicSession){
             return session.createTemporaryTopic();
         } else {
@@ -235,7 +236,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     /**
      * Get send destination either from injected destination instance or by resolving
      * a destination name.
-     *  
+     *
      * @param session current JMS session
      * @return the destination.
      * @throws JMSException
@@ -244,19 +245,19 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         if (destination != null) {
             return destination;
         }
-        
+
         return resolveDestinationName(destinationName, session);
     }
-    
+
     /**
-     * 
+     *
      * @param destinationName
      * @return
      */
     private Destination resolveDestinationName(String name, Session session) throws JMSException {
         return new DynamicDestinationResolver().resolveDestinationName(session, name, pubSubDomain);
     }
-    
+
     /**
      * Get the destination name (either queue name or topic name).
      * @return the destinationName
@@ -279,7 +280,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             return "";
         }
     }
-    
+
     /**
      * Create new JMS connection.
      * @return connection
@@ -295,14 +296,14 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             } else {
                 log.warn("Not able to create a connection with connection factory '" + connectionFactory + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
-                
+
                 connection = connectionFactory.createConnection();
             }
-            
+
             connection.start();
         }
     }
-    
+
     /**
      * Create new JMS session.
      * @param connection to use for session creation.
@@ -318,23 +319,23 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             } else {
                 log.warn("Not able to create a session with connection factory '" + connectionFactory + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + pubSubDomain + ")");
-                
+
                 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             }
         }
     }
-    
+
     /**
      * Destroy method closing JMS session and connection
      */
     public void destroy() throws Exception {
         JmsUtils.closeSession(session);
-        
+
         if (connection != null) {
             ConnectionFactoryUtils.releaseConnection(connection, this.connectionFactory, true);
         }
     }
-    
+
     /**
      * Set the connection factory.
      * @param connectionFactory the connectionFactory to set
