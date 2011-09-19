@@ -34,65 +34,71 @@ import com.consol.citrus.util.FileUtils;
 
 /**
  * Loads properties from an external property file and creates global test variables.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class GlobalVariablesPropertyLoader implements InitializingBean {
     @Autowired
     private GlobalVariables globalVariables;
-    
+
     @Autowired
     private FunctionRegistry functionRegistry;
-    
+
     /** List of property files loaded as global variables */
     private List<String> propertyFiles = new ArrayList<String>();
-    
+
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
-    
+
     /**
      * Load the properties as variables.
      * @throws CitrusRuntimeException
      */
     public void loadPropertiesAsVariables() {
         BufferedReader reader = null;
-        
+
         try {
             if (propertyFiles != null && propertyFiles.size() >0) {
                 for (String propertyFile: propertyFiles) {
 
-                    Resource file = FileUtils.getResourceFromFilePath(propertyFile);
+                    Resource file = FileUtils.getResourceFromFilePath(propertyFile.trim());
 
                     log.info("Reading property file " + file.getFilename());
-                    reader = new BufferedReader(new FileReader(file.getFile()));
-                    
+
+                    // Use input stream as this also allows to read from resources in a JAR file
+                    reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+
                     // local context instance handling variable replacement in property values
                     TestContext context = new TestContext();
                     context.setGlobalVariables(globalVariables);
                     context.setFunctionRegistry(functionRegistry);
-                    
+
                     String propertyExpression;
                     while ((propertyExpression = reader.readLine()) != null) {
+
+                        log.debug("Property line [ {} ]", propertyExpression);
+
                         propertyExpression = propertyExpression.trim();
-                        if (!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#") 
+                        if (!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#")
                                 || propertyExpression.indexOf('=') == -1) {
                             continue;
                         }
-                        
+
                         String key = propertyExpression.substring(0, propertyExpression.indexOf('=')).trim();
                         String value = propertyExpression.substring(propertyExpression.indexOf('=')+1).trim();
 
+                        log.debug("Property value replace dynamic content [ {} ]", value);
                         value = context.replaceDynamicContentInString(value);
-                        
+
                         log.info("Loading property: " + key + "=" + value + " into default variables");
 
                         if (log.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
-                            log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key) 
+                            log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key)
                                     + " new value:" + value);
                         }
-                        
+
                         globalVariables.getVariables().put(key, value);
                         // we need to keep local context up to date in case of recursive variable usage
                         context.setVariable(key, globalVariables.getVariables().get(key));
@@ -111,14 +117,14 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
             }
         }
     }
-    
+
     /**
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() {
         loadPropertiesAsVariables();
     }
-    
+
     /**
      * Set list of property files to be loaded
      * @param propertyFiles
@@ -126,7 +132,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     public void setPropertyFiles(List<String> propertyFiles) {
         this.propertyFiles = propertyFiles;
     }
-    
+
     /**
      * Get the property files.
      * @return the propertyFiles
