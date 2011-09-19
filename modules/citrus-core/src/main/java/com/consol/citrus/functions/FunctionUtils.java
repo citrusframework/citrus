@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
-import com.consol.citrus.variable.GlobalVariablesPropertyLoader;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
@@ -57,22 +56,20 @@ public final class FunctionUtils {
      * @return parsed string result.
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
-
-        // make sure it is a function
+        // make sure given string expression meets requirements for having a function
         if ((null == stringValue) || (stringValue.isEmpty()) ||
                 (stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
 
-            // it is not a function, a function is defined as 'prefix:methodName(arguments)'
+            // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
-        log.debug("Search for function [ {} ]", stringValue);
-
+        
+        log.debug("Resolving functions in expression [ {} ]", stringValue);
+        
         String newString = stringValue;
-
         StringBuffer strBuffer = new StringBuffer();
 
         boolean isVarComplete = false;
-
         StringBuffer variableNameBuf = new StringBuffer();
 
         int startIndex = 0;
