@@ -16,31 +16,40 @@
 
 package com.consol.citrus.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
+import com.consol.citrus.variable.GlobalVariablesPropertyLoader;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Utility class for functions.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class FunctionUtils {
 
     /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(FunctionUtils.class);
+
+    /**
      * Prevent class instantiation.
      */
     private FunctionUtils() {}
-    
+
     /**
-     * Search for functions in string and replace with respective function result. 
+     * Search for functions in string and replace with respective function result.
      * @param string to parse
      * @return parsed string result
      */
     public static String replaceFunctionsInString(String str, TestContext context) {
         return replaceFunctionsInString(str, context, false);
     }
-   
+
     /**
      * Search for functions in string and replace with respective function result.
      * @param string to parse.
@@ -48,6 +57,16 @@ public final class FunctionUtils {
      * @return parsed string result.
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
+
+        // make sure it is a function
+        if ((null == stringValue) || (stringValue.isEmpty()) ||
+                (stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
+
+            // it is not a function, a function is defined as 'prefix:methodName(arguments)'
+            return stringValue;
+        }
+        log.debug("Search for function [ {} ]", stringValue);
+
         String newString = stringValue;
 
         StringBuffer strBuffer = new StringBuffer();
@@ -88,7 +107,7 @@ public final class FunctionUtils {
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
                 if (value == null) {
-                    throw new NoSuchFunctionException("Function: " + 
+                    throw new NoSuchFunctionException("Function: " +
                             VariableUtils.cutOffVariablesPrefix(variableNameBuf.toString()) + " could not be found");
                 }
 
@@ -114,7 +133,7 @@ public final class FunctionUtils {
 
         return newString;
     }
-    
+
     /**
      * This method resolves a custom function to its respective result.
      * @param functionString to evaluate.
