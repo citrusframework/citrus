@@ -78,6 +78,8 @@ public class Template extends AbstractTestAction {
             globalVariables.getVariables().putAll(context.getGlobalVariables());
             innerContext.setGlobalVariables(globalVariables);
             innerContext.getVariables().putAll(context.getVariables());
+            
+            innerContext.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
         }
         
         for (Entry<String, String> entry : parameter.entrySet()) {
