@@ -124,7 +124,7 @@
         is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a preconfigured Jetty  
         server instance with Spring web application context support.</para>
         
-        <programlisting>&lt;citrus-http:server id=&quot;sinpleHttpServer&quot; 
+        <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
                 port=&quot;8090&quot;
                 auto-start=&quot;true&quot;
                 context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
