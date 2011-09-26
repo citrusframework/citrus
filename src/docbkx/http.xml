@@ -155,7 +155,7 @@
 &lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
   &lt;property name=&quot;messageHandler&quot;&gt;
       &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-       class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
+       class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
   &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
         
@@ -184,7 +184,7 @@
             The handler does not need any configurations or properties as it simply responds with an empty Http response.</para>
             
             <programlisting>&lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-  class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
+  class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
         </section>
         
         <section id="http-message-handler-static">
@@ -229,7 +229,7 @@
             configuration context. The separate context is loaded in advance.</para>
             
             <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot; 
-  class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
+  class=&quot;com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler&quot;&gt;
     &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation&quot;/&gt;
     &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
 &lt;/bean&gt;</programlisting>
