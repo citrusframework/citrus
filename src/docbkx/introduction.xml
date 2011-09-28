@@ -61,13 +61,13 @@
     interface partners (ClientApplication, Backend1, Backend2, Backend3) and simulates their behavior by sending proper response messages in 
     order to keep the message flow alive.</para>
     
-    <para>Each communication step comes with message validation and XML tree comparison towards an expected message template. Besides 
-    messaging actions Citrus is also able to perform plenty of other test actions. You could have a look at the database in order to check 
-    the persistence layer for instance.</para>
+    <para>Each communication step comes with message validation and XML tree comparison against an expected message template. Besides 
+    messaging actions Citrus is also able to perform arbitrary other test actions. The client can, for example, perform a database query
+    between requests to ensure that the previous test step stored what was expected.</para>
     
-    <para>The Citrus test case runs fully automated as Java application. Step by step the whole use case scenario is performed like in a 
-    real production environment. The Java test is repeatable and is included into the software building process (e.g. using Maven) like a 
-    normal unit test case would do. This gives you the automated integration testing to ensure your interface stability to external partners.</para>
+    <para>The Citrus test case runs fully automated as a Java application. Step by step the whole use case scenario is performed like in a 
+    real production environment. The Java test is repeatable and is included into the software build process (e.g. using Maven) like a 
+    normal unit test case would be. This gives clients automated integration testing to help ensure interface stability to external partners.</para>
     
     <para>The following reference guide walks through all Citrus functionalities and shows how to set up a great integration test with Citrus.</para>
   </section>
