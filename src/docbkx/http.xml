@@ -67,7 +67,7 @@
     &lt;/header&gt;
 &lt;/send&gt;</programlisting>
         
-        <tip><para>Citrus uses Spring's REST template mechanism for sedning Http requests. This means you have great customizing opportunities with a special REST 
+        <tip><para>Citrus uses Spring's REST template mechanism for sending Http requests. This means you have great customizing opportunities with a special REST 
         template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
         attribute in message sender like this:</para>
         
@@ -261,7 +261,7 @@
 &lt;/bean&gt;</programlisting>
             
             <tip>
-                <para>The samples section may help you get in touch with the http configuration and the JMS forwarding stategy 
+                <para>The samples section may help you get in touch with the http configuration and the JMS forwarding strategy 
                 (<xref linkend="samples"/>)</para>
             </tip>
         </section>
@@ -270,7 +270,7 @@
     <section id="http-headers">
         <title>Http headers</title>
         
-        <para>When dealing with Http request/response communication we always deal with Http specific headers. The Http protocol defines a goup of header attributes that both client 
+        <para>When dealing with Http request/response communication we always deal with Http specific headers. The Http protocol defines a group of header attributes that both client 
         and server need to handle. You can set and validate these Http headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some Http headers are 
         explicitly set before the request is sent.</para>
         
