@@ -131,6 +131,7 @@
   </mailingLists>
   
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.0.5.RELEASE</spring.version>
     <spring.ws.version>2.0.0.RELEASE</spring.ws.version>
     <spring.integration.version>2.0.3.RELEASE</spring.integration.version>
@@ -570,7 +571,7 @@
   <repositories>
     <repository>
       <id>jboss</id>
-      <url>http://repository.jboss.com/maven2</url>
+      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
