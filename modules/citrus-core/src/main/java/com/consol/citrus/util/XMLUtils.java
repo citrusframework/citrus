@@ -358,45 +358,39 @@ public final class XMLUtils {
      * @return charsetName if supported.
      */
     private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
-
-        // trim incoming pay load
+        // trim incoming payload
         String payload = messagePayload.trim();
 
+        char doubleQuote = '\"';
+        char singleQuote = '\'';
         // make sure pay load has an XML encoding string
         if (payload.startsWith("<?xml") && payload.contains("encoding") && payload.contains("?>")) {
 
             // extract only encoding part, as otherwise the rest of the complete pay load will be load
             String encoding = payload.substring(payload.indexOf("encoding") + 8, payload.indexOf("?>"));
 
-            char chr = '\"';
-            int idxD = encoding.indexOf('\"');
-            int idxS = encoding.indexOf('\'');
+            char quoteChar = doubleQuote;
+            int idxDoubleQuote = encoding.indexOf(doubleQuote);
+            int idxSingleQuote = encoding.indexOf(singleQuote);
 
             // check which character is the first one, allowing for <encoding = 'UTF-8'> white spaces
-            if (idxS >= 0) {
-
-                if (idxD < 0) {
-
-                   chr = '\'';
-                } else if (idxS < idxD) {
-
-                    chr = '\'';
+            if (idxSingleQuote >= 0) {
+                if (idxDoubleQuote < 0 || idxSingleQuote < idxDoubleQuote) {
+                    quoteChar = singleQuote;
                 }
             }
 
             // build encoding using the found character
-            encoding = encoding.substring(encoding.indexOf(chr) + 1);
-            encoding = encoding.substring(0, encoding.indexOf(chr));
+            encoding = encoding.substring(encoding.indexOf(quoteChar) + 1);
+            encoding = encoding.substring(0, encoding.indexOf(quoteChar));
 
             // check if it has a valid char set
-            if (Charset.availableCharsets().containsKey(encoding)) {
-
-                // should be a valid encoding
-                return encoding;
+            if (!Charset.availableCharsets().containsKey(encoding)) {
+                throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");
             }
-
-            // some kind of error
-            throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");
+            
+            // should be a valid encoding
+            return encoding;
         }
 
         // return as encoding the default UTF-8
