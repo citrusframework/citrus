@@ -20,13 +20,13 @@
     
   <para>The figure above describes a typical test action sequence in Citrus. A list of test actions that send and receive messages 
   with various MessageSender and MessageReceiver components. So how do we define those test logic? Citrus specifies test cases 
-  through simple XML files. The whole test case description will take place in one single XML file. This chapter will introduce 
+  through simple XML files. The whole test case description takes place in one single XML file. This chapter will introduce 
   the custom XML schema language that defines a test cases.</para>
 
   <section id="testcase-defining">
     <title>Defining a test case</title>
 
-    <para>Clearly spoken a test case is nothing but a simple Spring XML configuration file. 
+    <para>Put simply, a test case is nothing but a simple Spring XML configuration file. 
     So using the Spring XML configuration syntax you are able to write fully compatible test cases for the Citrus framework.</para>
     
     <programlisting>&lt;beans
@@ -43,8 +43,8 @@
     &lt;/bean&gt;
 &lt;/beans&gt;</programlisting>
     
-    <para>Citrus can execute these test case as normal test cases - no problem, but this XML usual 
-    syntax is not the best way to describe a test case in Citrus, especially when test scenarios get more 
+    <para>Citrus can execute these test case as normal test cases - no problem, but this XML
+    syntax is not usually the best way to describe a test case in Citrus, especially when test scenarios get more 
     complex and the test cases grow in size. Therefore Citrus provides a custom XML schema definition for 
     writing test cases.</para>
     
@@ -82,6 +82,7 @@
     
     <para>The test case itself gets a mandatory name that must be unique throughout all test cases in a project. You will receive errors
     when using duplicate test names. The name must not contain any whitespaces but does support special characters like '-', '.', '_'. 
+    For example, <literal>TestFeature1</literal> is valid but <literal>TestFeature_1</literal> is not.
     The &lt;testcase&gt; element holds several child elements. These basic test elements are described in the following sections.</para>
     
     <section id="testcase-description">
@@ -154,8 +155,8 @@
         
         <para>The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every 
         test case defines local variables which are valid inside the test you can also define global variables. The global variables are valid in all 
-        tests by default. This is a good opportunity to declare constant values for all tests in global variables. See the following ways
-        to add global variables to Citrus:</para>
+        tests by default. This is a good opportunity to declare constant values for all tests in global variables. The following demonstrates how to add 
+        global variables to Citrus:</para>
         
         <programlisting>&lt;bean class=&quot;com.consol.citrus.variable.GlobalVariables&quot;&gt;
     &lt;property name=&quot;variables&quot;&gt;
@@ -166,7 +167,7 @@
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
         
-        <para>Add this Spring bean to the <emphasis>'citrus-context.xml'</emphasis> application context file in order to have the global 
+        <para>Add this Spring bean to the <emphasis>'citrus-context.xml'</emphasis> application context file in order to make the global 
         variables available in all tests. The bean just receives a map of key-value-pairs where the keys represent the variable names and 
         the values the respective values, of course.</para>
         
@@ -197,8 +198,8 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
     <section id="testcase-actions">
         <title>Actions</title>
         
-        <para>A test case defines a sequence of actions that will take place during the test. The
-        actions are executed sequentially as they are defined in the test case definition.</para>
+        <para>A test case defines a sequence of actions that will take place during the test. 
+        Actions are executed in the same order as they are defined in the test case definition.</para>
         
         <programlisting>&lt;actions&gt;
     &lt;action&gt;[...]&lt;/action&gt;
@@ -213,16 +214,16 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
         actions that can be part of a test case execution.</para>
         
         <para>The actions are combined in free sequence to each other so that the tester is able to declare a special action chain inside the test.
-        These actions can be sending or receiving messages, delaying the test, validating the database and so on. Step by step the test proceeds 
+        These actions can be sending or receiving messages, delaying the test, validating the database and so on. Step-by-step the test proceeds through 
         the action chain. Usually the tester tries to fit the designed use case scenario with the action chain.</para>
     </section>
     
     <section id="testcase-finally">
         <title>Cleanup</title>
         
-        <para>The finally element also contains a list of test actions. These actions will be executed at the very
+        <para>The <literal>finally</literal> element also contains a list of test actions. These actions will be executed at the very
         end of the test case even if errors did occur during the execution before. This is the right place to tidy up things that were previously 
-        created by the test like cleaning up the database for instance. The finally section is described in more detail in <xref linkend="finally"/></para>
+        created by the test like cleaning up the database for instance. The <literal>finally</literal> section is described in more detail in <xref linkend="finally"/>.</para>
   
         <programlisting>&lt;finally&gt;
     &lt;action&gt;[...]&lt;/action&gt;
@@ -261,10 +262,10 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
     documentation generates HTML or Excel documents that list all tests with their metadata information and description.</para>
     
     <note>
-        <para>Tests in status DISABLED will not be executed during a test suite run. So someone can just start adding
-        planned test cases that are not finished yet in status DRAFT. In case a test is not runnable yet because not finished entirely
-        someone may disable a test temporarily to avoid causing failures during a test run. Using these different status one can 
-        easily set up test plans and review the progress of test coverage by comparing the amount of test in status DRAFT to those in FINAL state.</para>
+        <para>Tests with the status DISABLED will not be executed during a test suite run. So someone can just start adding
+        planned test cases that are not finished yet in status DRAFT. In case a test is not runnable yet because it is not finished,
+        someone may disable a test temporarily to avoid causing failures during a test run. Using these different statuses one can 
+        easily set up test plans and review the progress of test coverage by comparing the number of DRAFT tests to those in the FINAL state.</para>
     </note>
     
   </section>
