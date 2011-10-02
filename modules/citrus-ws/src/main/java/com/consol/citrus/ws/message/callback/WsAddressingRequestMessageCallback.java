@@ -73,9 +73,11 @@ public class WsAddressingRequestMessageCallback extends SoapRequestMessageCallba
                         messageId);
         
         AddressingVersion version;
-        if (addressingHeaders.getVersion().equals(WsAddressingVersion.VERSION10)) {
+        
+        // avoid NPE
+        if (WsAddressingVersion.VERSION10.equals(addressingHeaders.getVersion())) {
             version = new Addressing10();
-        } else if (addressingHeaders.getVersion().equals(WsAddressingVersion.VERSION200408)) {
+        } else if (WsAddressingVersion.VERSION200408.equals(addressingHeaders.getVersion())) {
             version = new Addressing200408();
         } else {
             throw new CitrusRuntimeException("Unsupported ws addressing version '" + 
