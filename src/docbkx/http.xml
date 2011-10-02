@@ -67,7 +67,7 @@
     &lt;/header&gt;
 &lt;/send&gt;</programlisting>
         
-        <tip><para>Citrus uses Spring's REST template mechanism for sedning Http requests. This means you have great customizing opportunities with a special REST 
+        <tip><para>Citrus uses Spring's REST template mechanism for sending Http requests. This means you have great customizing opportunities with a special REST 
         template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
         attribute in message sender like this:</para>
         
@@ -124,7 +124,7 @@
         is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a preconfigured Jetty  
         server instance with Spring web application context support.</para>
         
-        <programlisting>&lt;citrus-http:server id=&quot;sinpleHttpServer&quot; 
+        <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
                 port=&quot;8090&quot;
                 auto-start=&quot;true&quot;
                 context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
@@ -155,7 +155,7 @@
 &lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
   &lt;property name=&quot;messageHandler&quot;&gt;
       &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-       class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
+       class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
   &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
         
@@ -184,7 +184,7 @@
             The handler does not need any configurations or properties as it simply responds with an empty Http response.</para>
             
             <programlisting>&lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
-  class=&quot;com.consol.citrus.http.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
+  class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
         </section>
         
         <section id="http-message-handler-static">
@@ -229,7 +229,7 @@
             configuration context. The separate context is loaded in advance.</para>
             
             <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot; 
-  class=&quot;com.consol.citrus.http.handler.XpathDispatchingMessageHandler&quot;&gt;
+  class=&quot;com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler&quot;&gt;
     &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation&quot;/&gt;
     &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
 &lt;/bean&gt;</programlisting>
@@ -261,7 +261,7 @@
 &lt;/bean&gt;</programlisting>
             
             <tip>
-                <para>The samples section may help you get in touch with the http configuration and the JMS forwarding stategy 
+                <para>The samples section may help you get in touch with the http configuration and the JMS forwarding strategy 
                 (<xref linkend="samples"/>)</para>
             </tip>
         </section>
@@ -270,7 +270,7 @@
     <section id="http-headers">
         <title>Http headers</title>
         
-        <para>When dealing with Http request/response communication we always deal with Http specific headers. The Http protocol defines a goup of header attributes that both client 
+        <para>When dealing with Http request/response communication we always deal with Http specific headers. The Http protocol defines a group of header attributes that both client 
         and server need to handle. You can set and validate these Http headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some Http headers are 
         explicitly set before the request is sent.</para>
         

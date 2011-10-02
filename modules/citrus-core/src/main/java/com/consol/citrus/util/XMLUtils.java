@@ -16,16 +16,26 @@
 
 package com.consol.citrus.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.XMLConstants;
 
 import org.springframework.util.StringUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.*;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSParser;
+import org.w3c.dom.ls.LSSerializer;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.LSResolverImpl;
@@ -38,6 +48,7 @@ import com.consol.citrus.xml.LSResolverImpl;
  *
  */
 public final class XMLUtils {
+
     /** DOM implementation */
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;
@@ -50,13 +61,13 @@ public final class XMLUtils {
             throw new CitrusRuntimeException(e);
         }
     }
-    
+
     /**
      * Prevent instantiation.
      */
     private XMLUtils() {
     }
-    
+
     /**
      * Searches for a node within a DOM document with a given node path expression.
      * Elements are separated by '.' characters.
@@ -102,7 +113,7 @@ public final class XMLUtils {
                 if (parent != null) {
                     pathName.insert(0, '.');
                     pathName.insert(0, parent.getLocalName());//getNodeName());
-                    
+
                     parent = parent.getParentNode();
                 }
             } while (parent != null && --cnt > 0);
@@ -111,7 +122,7 @@ public final class XMLUtils {
 
         return null;
     }
-    
+
     /**
      * Removes text nodes that are only containing whitespace characters
      * inside a DOM tree.
@@ -134,7 +145,7 @@ public final class XMLUtils {
      * Returns the path expression for a given node.
      * Path expressions look like: Foo.Bar.Poo where elements are
      * separated with a dot character.
-     * 
+     *
      * @param node in DOM tree.
      * @return the path expression representing the node in DOM tree.
      */
@@ -153,14 +164,14 @@ public final class XMLUtils {
         if (node.getParentNode() == null) {
             return;
         }
-        
+
         buildNodeName(node.getParentNode(), buffer);
-        
+
         if (node.getParentNode() != null
                 && node.getParentNode().getParentNode() != null) {
             buffer.append(".");
         }
-        
+
         buffer.append(node.getLocalName());
     }
 
@@ -174,19 +185,19 @@ public final class XMLUtils {
         LSSerializer serializer = null;
 
         checkDomImplInitialization();
-        
+
         serializer = domImpl.createLSSerializer();
         serializer.getDomConfig().setParameter("split-cdata-sections", false);
         serializer.getDomConfig().setParameter("format-pretty-print", true);
 
         LSOutput output = domImpl.createLSOutput();
         output.setEncoding(doc.getInputEncoding());
-        
+
         StringWriter writer = new StringWriter();
         output.setCharacterStream(writer);
-        
+
         serializer.write(doc, output);
-        
+
         return writer.toString();
     }
 
@@ -210,7 +221,7 @@ public final class XMLUtils {
         LSParser parser = null;
 
         checkDomImplInitialization();
-        
+
         parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
         parser.getDomConfig().setParameter("cdata-sections", true);
         parser.getDomConfig().setParameter("split-cdata-sections", false);
@@ -236,7 +247,7 @@ public final class XMLUtils {
      * Look up namespace attribute declarations in the specified node and
      * store them in a binding map, where the key is the namespace prefix and the value
      * is the namespace uri.
-     * 
+     *
      * @param referenceNode XML node to search for namespace declarations.
      * @return map containing namespace prefix - namespace url pairs.
      */
@@ -249,14 +260,14 @@ public final class XMLUtils {
         } else {
             node = referenceNode;
         }
-        
+
         if (node != null && node.hasAttributes()) {
             for (int i = 0; i < node.getAttributes().getLength(); i++) {
                 Node attribute = node.getAttributes().item(i);
 
                 if (attribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE + ":")) {
                     namespaces.put(attribute.getNodeName().substring((XMLConstants.XMLNS_ATTRIBUTE + ":").length()), attribute.getNodeValue());
-                } else if (attribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) { 
+                } else if (attribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) {
                     //default namespace
                     namespaces.put(XMLConstants.DEFAULT_NS_PREFIX, attribute.getNodeValue());
                 }
@@ -265,12 +276,12 @@ public final class XMLUtils {
 
         return namespaces;
     }
-    
+
     /**
      * Look up namespace attribute declarations in the XML fragment and
      * store them in a binding map, where the key is the namespace prefix and the value
      * is the namespace uri.
-     * 
+     *
      * @param xmlString XML fragment.
      * @return map containing namespace prefix - namespace uri pairs.
      */
@@ -280,14 +291,14 @@ public final class XMLUtils {
         //TODO: handle inner CDATA sections because namespaces they might interfere with real namespaces in xml fragment
         if (xml.indexOf(XMLConstants.XMLNS_ATTRIBUTE) != -1) {
             String[] tokens = StringUtils.split(xml, XMLConstants.XMLNS_ATTRIBUTE);
-            
+
             do {
                 String token = tokens[1];
 
                 String nsPrefix;
                 if (token.startsWith(":")) {
                     nsPrefix = token.substring(1, token.indexOf('='));
-                } else if (token.startsWith("=")) { 
+                } else if (token.startsWith("=")) {
                     nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
                 } else {
                     //we have found a "xmlns" phrase that is no namespace attribute - ignore and continue
@@ -302,16 +313,16 @@ public final class XMLUtils {
                     //maybe we have more luck with single "'"
                     nsUri = token.substring(token.indexOf('\'')+1, token.indexOf('\'', token.indexOf('\'')+1));
                 }
-                
+
                 namespaces.put(nsPrefix, nsUri);
-                
+
                 tokens = StringUtils.split(token, XMLConstants.XMLNS_ATTRIBUTE);
             } while(tokens != null);
         }
-        
+
         return namespaces;
     }
-    
+
     /**
      * Parse message payload with DOM implementation.
      * @param messagePayload
@@ -320,45 +331,76 @@ public final class XMLUtils {
      */
     public static Document parseMessagePayload(String messagePayload) {
         checkDomImplInitialization();
-        
+
         LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
         parser.getDomConfig().setParameter("cdata-sections", true);
         parser.getDomConfig().setParameter("split-cdata-sections", false);
         parser.getDomConfig().setParameter("validate-if-schema", true);
-        
+
         parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
-        
+
         parser.getDomConfig().setParameter("element-content-whitespace", false);
-        
+
         LSInput receivedInput = domImpl.createLSInput();
         try {
             receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
         } catch(UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
         }
-        
+
         return parser.parse(receivedInput);
     }
 
     /**
      * Try to find target encoding in XML declaration.
-     * 
+     *
      * @param messagePayload XML message payload.
      * @return charsetName if supported.
      */
     private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
-        if (messagePayload.trim().startsWith("<?xml") && messagePayload.contains("encoding")) {
-            String encoding = messagePayload.substring(messagePayload.indexOf("encoding") + 8);
-            encoding = encoding.substring(encoding.indexOf('\"')+1);
-            encoding = encoding.substring(0, encoding.indexOf('\"'));
-            
-            if (Charset.availableCharsets().containsKey(encoding)) {
-                return encoding;
-            } else {
-                throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");
+
+        // trim incoming pay load
+        String payload = messagePayload.trim();
+
+        // make sure pay load has an XML encoding string
+        if (payload.startsWith("<?xml") && payload.contains("encoding") && payload.contains("?>")) {
+
+            // extract only encoding part, as otherwise the rest of the complete pay load will be load
+            String encoding = payload.substring(payload.indexOf("encoding") + 8, payload.indexOf("?>"));
+
+            char chr = '\"';
+            int idxD = encoding.indexOf('\"');
+            int idxS = encoding.indexOf('\'');
+
+            // check which character is the first one, allowing for <encoding = 'UTF-8'> white spaces
+            if (idxS >= 0) {
+
+                if (idxD < 0) {
+
+                   chr = '\'';
+                } else if (idxS < idxD) {
+
+                    chr = '\'';
+                }
             }
-        } else {
-            return "UTF-8";
+
+            // build encoding using the found character
+            encoding = encoding.substring(encoding.indexOf(chr) + 1);
+            encoding = encoding.substring(0, encoding.indexOf(chr));
+
+            // check if it has a valid char set
+            if (Charset.availableCharsets().containsKey(encoding)) {
+
+                // should be a valid encoding
+                return encoding;
+            }
+
+            // some kind of error
+            throw new UnsupportedEncodingException("Found unsupported encoding: '" + encoding + "'");
         }
+
+        // return as encoding the default UTF-8
+        return "UTF-8";
     }
+
 }
