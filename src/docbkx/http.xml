@@ -299,7 +299,7 @@
 Accept: text/xml, */*
 Content-Type: text/xml
 CustomHeaderId: 123456789
-Accept-Charset: big5, big5-hkscs, euc-jp, euc-kr, gb18030, gb2312, gbk, ibm-thai, ibm00858, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-13, iso-8859-15, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, macroman, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-solaris, x-euc-jp-linux, x-euc-tw, x-eucjp-open, x-ibm1006, x-ibm1025, x-ibm1046, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1381, x-ibm1383, x-ibm33722, x-ibm737, x-ibm833, x-ibm834, x-ibm856, x-ibm874, x-ibm875, x-ibm921, x-ibm922, x-ibm930, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm964, x-ibm970, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-jis0208, x-jisautodetect, x-johab, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-mswin-936, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Accept-Charset: macroman
 User-Agent: Jakarta Commons-HttpClient/3.1
 Host: localhost:8091
 Content-Length: 175
@@ -356,7 +356,7 @@ Content-Length: 175
         
         <programlisting>HTTP/1.1 200 OK
 Content-Type: text/xml;charset=UTF-8
-Accept-Charset: big5, big5-hkscs, euc-jp, euc-kr, gb18030, gb2312, gbk, ibm-thai, ibm00858, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-13, iso-8859-15, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, macroman, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-solaris, x-euc-jp-linux, x-euc-tw, x-eucjp-open, x-ibm1006, x-ibm1025, x-ibm1046, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1381, x-ibm1383, x-ibm33722, x-ibm737, x-ibm833, x-ibm834, x-ibm856, x-ibm874, x-ibm875, x-ibm921, x-ibm922, x-ibm930, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm964, x-ibm970, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-jis0208, x-jisautodetect, x-johab, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-mswin-936, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Accept-Charset: macroman
 Content-Length: 205
 Server: Jetty(7.0.0.pre5)
 &lt;testResponseMessage&gt;
@@ -385,7 +385,36 @@ Server: Jetty(7.0.0.pre5)
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
         
-        <para>This completes the Http header processing within Citrus. On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
+        <para>Up to now we have used some of the basic Citrus reserved Http header names (citrus_http_status_code, citrus_http_version, citrus_http_reason_phrase). In Http RESTful WebServices some more header names are essential ofr
+        validation. These are request attributes like query parameters, context path and request URI. The Citrus server side REST message controller will automatically add all this information to the message header for you. So
+        all you need to do is validate the header entries in your test.</para>
+        
+        <para>The next example receives a Http GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume
+        the client to call <emphasis>http://localhost:8080/app/users?id=123456789</emphasis>. As a tester we need to validate the request method, request URI, context path and the query parameters.</para>
+        
+        <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;Host&quot; value=&quot;localhost:8080&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/html&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+        &lt;element name=&quot;citrus_http_method&quot; value=&quot;GET&quot;/&gt;
+        &lt;element name=&quot;citrus_http_request_uri&quot; value=&quot;/app/users&quot;/&gt;
+        &lt;element name=&quot;citrus_http_context_path&quot; value=&quot;/app&quot;/&gt;
+        &lt;element name=&quot;citrus_http_query_params&quot; value=&quot;id=123456789&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+        
+        <tip><para>Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. 
+        The request URI always gives you the complete path that was called for this request.</para></tip>
+        
+        <important><para>Another important thing to notice is the usage of multiple query parameters that are put together using '&amp;' characters (e.g. http://localhost:8080/app/users?id=123456789&amp;name=foo). As the Citrus test case
+        is written in XML we have to escape the reserved '&amp;' with &amp;amp; entity (e.g. value=&quot;id=123456789&amp;amp;name=test&quot;).</para></important>
+        
+        <para>As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the Http header processing within Citrus. 
+        On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
     </section>
     
     <section id="http-error-handling">

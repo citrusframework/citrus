@@ -33,8 +33,6 @@
           		</header>
             </send>
             
-            <sleep time="1"/>
-            
             <receive with="httpResponseReceiver">
             	<message>
             		<data>
@@ -66,8 +64,6 @@
           			<element name="CustomHeaderId" value="${custom_header_id}"/>
           		</header>
             </send>
-            
-            <sleep time="1"/>
             
             <receive with="httpResponseReceiver">
             	<message>

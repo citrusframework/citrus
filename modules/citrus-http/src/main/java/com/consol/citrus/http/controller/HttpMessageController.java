@@ -19,6 +19,8 @@ package com.consol.citrus.http.controller;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
@@ -27,6 +29,9 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
@@ -109,6 +114,15 @@ public class HttpMessageController {
                 customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
             }
         }
+        
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        UrlPathHelper pathHelper = new UrlPathHelper();
+        
+        customHeaders.put(CitrusHttpMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(request));
+        customHeaders.put(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(request));
+        
+        String queryParams = pathHelper.getOriginatingQueryString(request);
+        customHeaders.put(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
         
         customHeaders.put(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
         

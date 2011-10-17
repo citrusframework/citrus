@@ -40,4 +40,10 @@ public abstract class CitrusHttpMessageHeaders {
     public static final String HTTP_REASON_PHRASE = HTTP_PREFIX + "reason_phrase";
     
     public static final String HTTP_REQUEST_METHOD = HTTP_PREFIX + "method";
+    
+    public static final String HTTP_CONTEXT_PATH = HTTP_PREFIX + "context_path";
+    
+    public static final String HTTP_REQUEST_URI = HTTP_PREFIX + "request_uri";
+    
+    public static final String HTTP_QUERY_PARAMS = HTTP_PREFIX + "query_params";
 }

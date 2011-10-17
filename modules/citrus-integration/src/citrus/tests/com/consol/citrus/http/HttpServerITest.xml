@@ -54,6 +54,7 @@
                             <element name="Accept" value="text/xml,*/*"/>
                             <element name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
                             <element name="citrus_http_method" value="POST"/>
+                            <element name="citrus_http_request_uri" value="/test"/>
                         </header>
                         <extract>
                             <header name="jms_messageId" variable="correlation_id"/>
