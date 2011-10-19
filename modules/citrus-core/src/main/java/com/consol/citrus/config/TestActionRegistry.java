@@ -25,7 +25,7 @@ import com.consol.citrus.config.xml.*;
 
 /**
  * Registers bean definition parser for actions in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2007
  */
@@ -51,6 +51,7 @@ public final class TestActionRegistry {
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());
         registerActionParser("call-template", new CallTemplateParser());
+        registerActionParser("selection", new SelectionParser());
         registerActionParser("sequential", new SequenceParser());
         registerActionParser("iterate", new IterateParser());
         registerActionParser("repeat-until-true", new RepeatUntilTrueParser());
@@ -65,7 +66,7 @@ public final class TestActionRegistry {
         registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
     }
-    
+
     /**
      * Prevent instantiation.
      */
