@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.variable.VariableUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Utility class for functions.
@@ -57,7 +58,7 @@ public final class FunctionUtils {
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
         // make sure given string expression meets requirements for having a function
-        if ((null == stringValue) || (stringValue.isEmpty()) ||
+        if (!StringUtils.hasText(stringValue) ||
                 (stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
 
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
