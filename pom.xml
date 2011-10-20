@@ -95,6 +95,16 @@
         <role>Developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>jza</id>
+      <name>Jan Zahalka</name>
+      <email>jza@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
   </developers>
 
   <prerequisites>
