@@ -9,3 +9,7 @@ test-output
 *.ipr
 *.iws
 .metadata
+bin
+.codepro
+.pmd
+
