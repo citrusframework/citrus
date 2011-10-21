@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 
 import java.util.*;
 
@@ -70,6 +71,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	    
 	    executeSQLQueryAction.execute(context);
 	    
+        verify(jdbcTemplate);
+        
 	    Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
 	    Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
 	    Assert.assertNotNull(context.getVariable("${STATUS}"));
@@ -103,6 +106,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setStatements(stmts);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
@@ -140,6 +145,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         executeSQLQueryAction.execute(context);
         
+        verify(jdbcTemplate);
+        
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));
@@ -168,6 +175,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         executeSQLQueryAction.execute(context);
         
+        verify(jdbcTemplate);
+        
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
         Assert.assertNotNull(context.getVariable("${STATUS}"));
@@ -193,6 +202,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setStatements(stmts);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
@@ -221,6 +232,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setExtractVariables(extractVariables);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${orderStatus}"));
         Assert.assertEquals(context.getVariable("${orderStatus}"), "in_progress");
@@ -251,6 +264,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setExtractVariables(extractVariables);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
     }
 	
 	@Test
@@ -276,6 +291,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
@@ -306,6 +323,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${TYPE}"));
         Assert.assertEquals(context.getVariable("${TYPE}"), "small");
@@ -343,6 +362,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
             
             return;
         }
+        
+        verify(jdbcTemplate);
         
         Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
     }
@@ -390,6 +411,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("ORDERTYPE"));
         Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
@@ -441,6 +464,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         executeSQLQueryAction.execute(context);
         
+        verify(jdbcTemplate);
+        
         Assert.assertNotNull(context.getVariable("ORDERTYPE"));
         Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
         Assert.assertNotNull(context.getVariable("STATUS"));
@@ -491,6 +516,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setControlResultSet(controlResultSet);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("ORDERTYPE"));
         Assert.assertEquals(context.getVariable("ORDERTYPE"), "small");
@@ -548,6 +575,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         executeSQLQueryAction.execute(context);
         
+        verify(jdbcTemplate);
+        
         Assert.assertNotNull(context.getVariable("orderType"));
         Assert.assertEquals(context.getVariable("orderType"), "small;NULL;big");
         Assert.assertNotNull(context.getVariable("orderStatus"));
@@ -602,7 +631,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
             
             return;
         }
-        
+        verify(jdbcTemplate);
         Assert.fail("Expected test to fail with " + ValidationException.class + " but was successful");
     }
     
@@ -629,6 +658,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setSqlResource(new ClassPathResource("test-sql-query-statements.sql", ExecuteSQLQueryActionTest.class));
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
@@ -663,6 +694,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
         
         Assert.assertNotNull(context.getVariable("${ORDERTYPE}"));
         Assert.assertEquals(context.getVariable("${ORDERTYPE}"), "small");
@@ -708,6 +741,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
     }
     
     @Test
@@ -737,6 +772,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getCause() instanceof AssertionError);
             return;
         }
+        
+        verify(jdbcTemplate);
         
         Assert.fail("Missing validation exception due to script validation error");
     }
@@ -770,5 +807,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
+        
+        verify(jdbcTemplate);
     }
 }
