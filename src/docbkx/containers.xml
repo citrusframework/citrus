@@ -12,6 +12,7 @@
   containers are described.</para>
 
   <xi:include href='containers-sequential.xml'/>
+  <xi:include href='containers-conditional.xml'/>
   <xi:include href='containers-parallel.xml'/>
   <xi:include href='containers-iterate.xml'/>
   <xi:include href='containers-repeat.xml'/>
