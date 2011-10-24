@@ -16,9 +16,7 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +33,13 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Matthias Beil
  * @since CITRUS 1.2
  */
-public class SelectionTest extends AbstractTestNGUnitTest {
+public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testConditionFalse() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 0");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 0");
 
         final TestAction action = EasyMock.createMock(TestAction.class);
 
@@ -54,9 +52,9 @@ public class SelectionTest extends AbstractTestNGUnitTest {
 
         final List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(action);
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
 
         // must throw IllegalStateException, as the action should never be called
         expectLastCall().once();
@@ -65,8 +63,8 @@ public class SelectionTest extends AbstractTestNGUnitTest {
     @Test
     public void testSingleAction() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 1");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 1");
 
         final TestAction action = EasyMock.createMock(TestAction.class);
 
@@ -80,16 +78,18 @@ public class SelectionTest extends AbstractTestNGUnitTest {
         final List<TestAction> actionList = new ArrayList<TestAction>();
         actionList.add(action);
 
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
+        
+        verify(action);
     }
 
     @Test
     public void testMultipleActions() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 1");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -111,16 +111,18 @@ public class SelectionTest extends AbstractTestNGUnitTest {
         actionList.add(action2);
         actionList.add(action3);
 
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
+        
+        verify(action1, action2, action3);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFirstActionFailing() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 1");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -136,16 +138,18 @@ public class SelectionTest extends AbstractTestNGUnitTest {
         actionList.add(action2);
         actionList.add(action3);
 
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
+        
+        verify(action1, action2, action3);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testLastActionFailing() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 1");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -168,16 +172,18 @@ public class SelectionTest extends AbstractTestNGUnitTest {
         actionList.add(action3);
         actionList.add(new FailAction());
 
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
+        
+        verify(action1, action2, action3);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFailingAction() {
 
-        final Selection selectionAction = new Selection();
-        selectionAction.setCondition("1 = 1");
+        final Conditional conditionalAction = new Conditional();
+        conditionalAction.setExpression("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -196,9 +202,11 @@ public class SelectionTest extends AbstractTestNGUnitTest {
         actionList.add(action2);
         actionList.add(action3);
 
-        selectionAction.setActions(actionList);
+        conditionalAction.setActions(actionList);
 
-        selectionAction.execute(this.context);
+        conditionalAction.execute(this.context);
+        
+        verify(action1, action2, action3);
     }
 
 }

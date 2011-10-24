@@ -3,16 +3,16 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                       http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-  <testcase name="SelectionParserTest">
+  <testcase name="ConditionalParserTest">
     <actions>
-      <selection condition="1 = 1">
+      <conditional expression="1 = 1">
         <echo>
           <message>1</message>
         </echo>
         <echo>
           <message>2</message>
         </echo>
-      </selection>
+      </conditional>
     </actions>
   </testcase>
 
