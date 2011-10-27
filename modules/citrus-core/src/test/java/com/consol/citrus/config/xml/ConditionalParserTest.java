@@ -19,22 +19,22 @@ package com.consol.citrus.config.xml;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.container.Selection;
+import com.consol.citrus.container.Conditional;
 import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Matthias Beil
  * @since CITRUS 1.2
  */
-public class SelectionParserTest extends AbstractActionParserTest<Selection> {
+public class ConditionalParserTest extends AbstractActionParserTest<Conditional> {
 
     @Test
     public void testFailActionParser() {
 
         this.assertActionCount(1);
-        this.assertActionClassAndName(Selection.class, "selection");
+        this.assertActionClassAndName(Conditional.class, "conditional");
 
-        final Selection action = this.getNextTestActionFromTest();
+        final Conditional action = this.getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 2);
     }
 

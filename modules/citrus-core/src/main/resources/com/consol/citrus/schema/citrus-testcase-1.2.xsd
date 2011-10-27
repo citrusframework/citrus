@@ -305,7 +305,7 @@
             <xs:element ref="load"/>
             <xs:element ref="repeat-until-true"/>
             <xs:element ref="repeat-onerror-until-true"/>
-            <xs:element ref="selection"/>
+            <xs:element ref="conditional"/>
             <xs:element ref="sequential"/>
             <xs:element ref="fail"/>
             <xs:element ref="parallel"/>
@@ -650,13 +650,13 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="selection">
+    <xs:element name="conditional">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="description" minOccurs="0"/>
                 <xs:group ref="actionGroup" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attribute name="condition" type="xs:string" use="required"/>
+            <xs:attribute name="expression" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
 

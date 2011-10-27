@@ -24,7 +24,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
- * Class executes test actions if condition is meet.
+ * Class executes nested test actions if condition expression evaluates to true.
  *
  * See {@link com.consol.citrus.util.BooleanExpressionParser} for supported
  * boolean expressions that define the conditioning.
@@ -32,34 +32,30 @@ import com.consol.citrus.util.BooleanExpressionParser;
  * @author Matthias Beil
  * @since CITRUS 1.2
  */
-public class Selection extends AbstractActionContainer {
+public class Conditional extends AbstractActionContainer {
 
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(Selection.class);
-
+    private static Logger log = LoggerFactory.getLogger(Conditional.class);
 
     /** Boolean expression string */
-    protected String condition;
+    protected String expression;
 
     @Override
     public void doExecute(final TestContext context) {
 
-        final String conditionString = context.replaceDynamicContentInString(this.condition);
+        final String conditionString = context.replaceDynamicContentInString(this.expression);
 
         if (BooleanExpressionParser.evaluate(conditionString)) {
+            log.debug("Condition [ {} ] evaluates to true, executing nested actions", expression);
 
-            log.debug("Condition [ {} ] evaluated to true", this.condition);
-
-            for (final TestAction action : this.actions) {
-
-                this.setLastExecutedAction(action);
+            for (final TestAction action : actions) {
+                setLastExecutedAction(action);
                 action.execute(context);
             }
         } else {
-
-            log.debug("Condition [ {} ] evaluated to false", this.condition);
+            log.debug("Condition [ {} ] evaluates to false, not executing nested actions", expression);
         }
     }
 
@@ -68,19 +64,17 @@ public class Selection extends AbstractActionContainer {
      *
      * @param conditionIn
      */
-    public void setCondition(final String conditionIn) {
-
-        this.condition = conditionIn;
+    public void setExpression(final String expressionIn) {
+        this.expression = expressionIn;
     }
 
     /**
-     * Gets the condition.
+     * Gets the expression.
      *
-     * @return the condition
+     * @return the expression
      */
-    public String getCondition() {
-
-        return this.condition;
+    public String getExpression() {
+        return this.expression;
     }
 
 }

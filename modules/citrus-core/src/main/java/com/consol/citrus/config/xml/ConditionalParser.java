@@ -23,7 +23,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.container.Selection;
+import com.consol.citrus.container.Conditional;
 
 /**
  * Bean definition parser for selection container in test case.
@@ -31,16 +31,15 @@ import com.consol.citrus.container.Selection;
  * @author Matthias Beil
  * @since CITRUS 1.2
  */
-public class SelectionParser implements BeanDefinitionParser {
+public class ConditionalParser implements BeanDefinitionParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element,
      *      org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(final Element element, final ParserContext parserContext) {
-
         // create new bean builder
-        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Selection.class);
+        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Conditional.class);
 
         // see if there is a description
         DescriptionElementParser.doParse(element, builder);
@@ -49,7 +48,7 @@ public class SelectionParser implements BeanDefinitionParser {
         builder.addPropertyValue("name", element.getLocalName());
 
         // set condition, which is mandatory
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("condition"), "condition");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("expression"), "expression");
 
         // get all internal actions
         ActionContainerParser.doParse(element, parserContext, builder);

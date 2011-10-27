@@ -102,6 +102,13 @@
     also write your custom validation matchers. Have a look at <xref linkend="validation-matchers"/> for details.</para>
   </section>
   
+  <section id="whatsnew-conditional">
+    <title>Conditional container</title>
+    
+    <para>The new conditional test action container enables you to execute test actions only in case a boolean expression evaluates to true. So the nested test actions inside the container may be not 
+    executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
+  </section>
+  
   <section id="whatsnew-bugfixes">
     <title>Bugfixes</title>
     

@@ -21,7 +21,34 @@ import java.util.Map;
 
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
-import com.consol.citrus.config.xml.*;
+import com.consol.citrus.config.xml.ActionParser;
+import com.consol.citrus.config.xml.AssertParser;
+import com.consol.citrus.config.xml.CallTemplateParser;
+import com.consol.citrus.config.xml.CatchParser;
+import com.consol.citrus.config.xml.ConditionalParser;
+import com.consol.citrus.config.xml.CreateVariablesActionParser;
+import com.consol.citrus.config.xml.EchoActionParser;
+import com.consol.citrus.config.xml.ExecutePLSQLActionParser;
+import com.consol.citrus.config.xml.FailActionParser;
+import com.consol.citrus.config.xml.GroovyActionParser;
+import com.consol.citrus.config.xml.InputActionParser;
+import com.consol.citrus.config.xml.IterateParser;
+import com.consol.citrus.config.xml.JavaActionParser;
+import com.consol.citrus.config.xml.LoadPropertiesActionParser;
+import com.consol.citrus.config.xml.ParallelParser;
+import com.consol.citrus.config.xml.PurgeJmsQueuesActionParser;
+import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.config.xml.ReceiveTimeoutActionParser;
+import com.consol.citrus.config.xml.RepeatOnErrorUntilTrueParser;
+import com.consol.citrus.config.xml.RepeatUntilTrueParser;
+import com.consol.citrus.config.xml.SQLActionParser;
+import com.consol.citrus.config.xml.SendMessageActionParser;
+import com.consol.citrus.config.xml.SequenceParser;
+import com.consol.citrus.config.xml.SleepActionParser;
+import com.consol.citrus.config.xml.StopTimeActionParser;
+import com.consol.citrus.config.xml.TemplateParser;
+import com.consol.citrus.config.xml.TraceVariablesActionParser;
+import com.consol.citrus.config.xml.TransformActionParser;
 
 /**
  * Registers bean definition parser for actions in test case.
@@ -51,7 +78,7 @@ public final class TestActionRegistry {
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());
         registerActionParser("call-template", new CallTemplateParser());
-        registerActionParser("selection", new SelectionParser());
+        registerActionParser("conditional", new ConditionalParser());
         registerActionParser("sequential", new SequenceParser());
         registerActionParser("iterate", new IterateParser());
         registerActionParser("repeat-until-true", new RepeatUntilTrueParser());
