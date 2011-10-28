@@ -354,7 +354,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = {ValidationException.class})
-    public void testValidateMessageElementsWithWithDotNotationSuccessful() {
+    public void testValidateMessageElementsWithDotNotationNotSuccessful() {
         Message<?> message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
