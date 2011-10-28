@@ -840,9 +840,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private String resolveExpectedValue(String expectedValue, TestContext context) {
         if (VariableUtils.isVariableName(expectedValue)) {
-            expectedValue = context.getVariable(expectedValue);
+            return context.getVariable(expectedValue);
         } else if (functionRegistry.isFunction(expectedValue)) {
-            expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
+            return FunctionUtils.resolveFunction(expectedValue, context);
         }
         return expectedValue;
     }
