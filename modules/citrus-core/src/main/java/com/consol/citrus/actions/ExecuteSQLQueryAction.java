@@ -272,13 +272,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             }
             return;
         }
-        if (controlValue.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                controlValue.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+        if (isValidationMatcher(controlValue)) {
             ValidationMatcherUtils.resolveValidationMatcher(columnName, resultValue, controlValue, context);
             return;
         }
         if (resultValue == null) {
-            if (controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0) {
+            if (isCitrusNullValue(controlValue)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Validating database value for column: ''" +
                             columnName + "'' value as expected: NULL - value OK");
@@ -301,6 +300,15 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     + "' expected value: "
                     + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
         }
+    }
+    
+    private boolean isValidationMatcher(String controlValue) {
+        return controlValue.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                controlValue.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
+    }
+
+    private boolean isCitrusNullValue(String controlValue) {
+        return controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0;
     }
 
     /**

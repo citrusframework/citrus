@@ -98,26 +98,18 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
                 continue;
             }
 
-            if (VariableUtils.isVariableName(headerName)) {
-                headerName = context.getVariable(headerName);
-            } else if (context.getFunctionRegistry().isFunction(headerName)) {
-                headerName = FunctionUtils.resolveFunction(headerName, context);
-            }
+            headerName = resolveVariableOrFunction(headerName, context);
 
             if (!receivedHeaders.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
-            
+
             if (receivedHeaders.get(headerName) != null) {
                 actualValue = receivedHeaders.get(headerName).toString();
             }
 
-            if (VariableUtils.isVariableName(expectedValue)) {
-                expectedValue = context.getVariable(expectedValue);
-            } else if (context.getFunctionRegistry().isFunction(expectedValue)) {
-                expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
-            }
-
+            expectedValue = resolveVariableOrFunction(expectedValue, context);
+ 
             try {
                 if (actualValue != null) {
                     Assert.isTrue(expectedValue != null,
@@ -148,6 +140,15 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
         }
 
         log.info("Validation of message headers finished successfully: All properties OK");
+    }
+
+    private String resolveVariableOrFunction(String value, TestContext context) {
+        if (VariableUtils.isVariableName(value)) {
+            value = context.getVariable(value);
+        } else if (context.getFunctionRegistry().isFunction(value)) {
+            value = FunctionUtils.resolveFunction(value, context);
+        }
+        return value;
     }
     
     /**

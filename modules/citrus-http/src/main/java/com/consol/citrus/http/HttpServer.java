@@ -109,7 +109,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
-                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                         new SimpleDelegatingWebApplicationContext());
             }
             

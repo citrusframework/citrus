@@ -60,8 +60,8 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
         BufferedReader reader = null;
 
         try {
-            if (propertyFiles != null && propertyFiles.size() >0) {
-                for (String propertyFile: propertyFiles) {
+            if (propertyFilesSet()) {
+                for (String propertyFile : propertyFiles) {
 
                     Resource file = FileUtils.getResourceFromFilePath(propertyFile.trim());
 
@@ -81,13 +81,12 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         log.debug("Property line [ {} ]", propertyExpression);
 
                         propertyExpression = propertyExpression.trim();
-                        if (!StringUtils.hasText(propertyExpression) || propertyExpression.startsWith("#")
-                                || propertyExpression.indexOf('=') == -1) {
+                        if (!isPropertyLine(propertyExpression)) {
                             continue;
                         }
 
                         String key = propertyExpression.substring(0, propertyExpression.indexOf('=')).trim();
-                        String value = propertyExpression.substring(propertyExpression.indexOf('=')+1).trim();
+                        String value = propertyExpression.substring(propertyExpression.indexOf('=') + 1).trim();
 
                         log.debug("Property value replace dynamic content [ {} ]", value);
                         value = context.replaceDynamicContentInString(value);
@@ -116,6 +115,15 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                 }
             }
         }
+    }
+
+    private boolean propertyFilesSet() {
+        return propertyFiles != null && propertyFiles.size() > 0;
+    }
+
+    private boolean isPropertyLine(String line) {
+        return StringUtils.hasText(line) && !line.startsWith("#")
+                                && line.indexOf('=') > -1;
     }
 
     /**
