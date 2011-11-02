@@ -144,9 +144,9 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
 
     private String resolveVariableOrFunction(String value, TestContext context) {
         if (VariableUtils.isVariableName(value)) {
-            value = context.getVariable(value);
+            return context.getVariable(value);
         } else if (context.getFunctionRegistry().isFunction(value)) {
-            value = FunctionUtils.resolveFunction(value, context);
+            return FunctionUtils.resolveFunction(value, context);
         }
         return value;
     }

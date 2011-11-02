@@ -23,14 +23,14 @@ public class HttpServerTest {
     @Test
     public void startupAndShutdownTest() throws IOException {
         HttpServer server = new HttpServer();
-        server.setPort(9999);
+        server.setPort(8095);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 
         server.startup();
 
         //build a client to test the server
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpGet get = new HttpGet("http://localhost:9999/test");
+        HttpGet get = new HttpGet("http://localhost:8095/test");
         get.setHeader(HttpHeaders.ACCEPT, "text/xml");
         get.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml");
         //send get request
