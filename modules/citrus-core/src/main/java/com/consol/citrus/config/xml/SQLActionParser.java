@@ -38,6 +38,7 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SQLActionParser implements BeanDefinitionParser {
 
     /**

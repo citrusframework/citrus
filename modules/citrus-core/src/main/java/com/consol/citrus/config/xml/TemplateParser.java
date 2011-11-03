@@ -30,6 +30,7 @@ import com.consol.citrus.container.Template;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class TemplateParser implements BeanDefinitionParser {
 
     /**

@@ -29,6 +29,7 @@ import com.consol.citrus.TestAction;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class GroovyTestActionBuilder {
     /** Application context */
     private GenericApplicationContext applicationContext;

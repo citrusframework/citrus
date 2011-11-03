@@ -41,6 +41,7 @@ import com.consol.citrus.report.TestResult.RESULT;
  *  
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class JUnitReporter implements TestSuiteListener, TestListener, TestReporter {
     
     /** Collect all test results */
