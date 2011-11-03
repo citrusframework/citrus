@@ -38,6 +38,7 @@ import com.consol.citrus.variable.*;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     /**
