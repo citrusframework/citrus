@@ -31,9 +31,7 @@ import org.w3c.dom.Node;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
@@ -64,7 +62,7 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
     /**
      * Intercept the message payload construction and replace elements identified 
      * via XPath expressions.
-     * 
+     *
      * Method parses the message payload to DOM document representation, therefore message payload
      * needs to be XML here.
      */
@@ -74,21 +72,19 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
         if (doc == null) {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
         }
-        
+
         for (Entry<String, String> entry : xPathExpressions.entrySet()) {
             String pathExpression = entry.getKey();
             String valueExpression = entry.getValue();
 
-            if (VariableUtils.isVariableName(valueExpression)) {
-                valueExpression = context.getVariable(valueExpression);
-            } else if (context.getFunctionRegistry().isFunction(valueExpression)) {
-                valueExpression = FunctionUtils.resolveFunction(valueExpression, context);
-            } 
+            //check if value expr is variable or function (and resolve it if yes)
+            valueExpression = context.resolveDynamicValue(valueExpression);
 
             if (valueExpression == null) {
-                throw new CitrusRuntimeException("Can not set null values in XML document - path expression is " + pathExpression);
+                throw new CitrusRuntimeException(
+                        "Can not set null values in XML document - path expression is " + pathExpression);
             }
-            
+
             Node node;
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();

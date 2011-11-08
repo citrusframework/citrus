@@ -139,53 +139,41 @@ public class TestContext {
             }
         }
     }
-    
+
     /**
-     * Replaces variables inside a map with respective variable values and returns a new
+     * Replaces variables and functions inside a map with respective values and returns a new
      * map representation.
-     * 
+     *
      * @param map optionally having variable entries.
      * @return the constructed map without variable entries.
      */
-    public Map<String, Object> replaceVariablesInMap(final Map<String, ?> map) {
+    public Map<String, Object> resolveDynamicValuesInMap(final Map<String, ?> map) {
         Map<String, Object> target = new HashMap<String, Object>(map.size());
-        
+
         for (Entry<String, ?> entry : map.entrySet()) {
             String key = entry.getKey();
-            String value = (String)entry.getValue();
+            String value = (String) entry.getValue();
 
-            if (VariableUtils.isVariableName(value)) {
-                target.put(key, getVariable(value));
-            } else if (functionRegistry.isFunction(value)) {
-                target.put(key, FunctionUtils.resolveFunction(value, this));
-            } else {
-                target.put(key, value);
-            }
+            //put value into target map, but check if value is variable or function first
+            target.put(key, resolveDynamicValue(value));
         }
-        
         return target;
     }
-    
+
     /**
-     * Replaces variables in a list with respective variable values and
+     * Replaces variables and functions in a list with respective values and
      * returns the new list representation.
-     * 
+     *
      * @param list having optional variable entries.
      * @return the constructed list without variable entries.
      */
-    public List<String> replaceVariablesInList(final List<String> list) {
+    public List<String> resolveDynamicValuesInList(final List<String> list) {
         List<String> variableFreeList = new ArrayList<String>(list.size());
 
         for (String entry : list) {
-            if (VariableUtils.isVariableName(entry)) {
-                variableFreeList.add(getVariable(entry));
-            } else if (functionRegistry.isFunction(entry)) {
-                variableFreeList.add(FunctionUtils.resolveFunction(entry, this));
-            } else {
-                variableFreeList.add(entry);
-            }
+            //add new value after check if it is variable or function
+            variableFreeList.add(resolveDynamicValue(entry));
         }
-
         return variableFreeList;
     }
     
@@ -230,6 +218,21 @@ public class TestContext {
         result = FunctionUtils.replaceFunctionsInString(result, this, enableQuoting);
         
         return result;
+    }
+    
+    /**
+     * Checks wether the given expression is a variable or function and resolves the value
+     * accordingly
+     * @param expression the expression to resolve
+     * @return the resolved expression value
+     */
+    public String resolveDynamicValue(String expression) {
+        if (VariableUtils.isVariableName(expression)) {
+            return getVariable(expression);
+        } else if (functionRegistry.isFunction(expression)) {
+            return FunctionUtils.resolveFunction(expression, this);
+        }
+        return expression;
     }
     
     /**

@@ -25,8 +25,6 @@ import org.springframework.beans.factory.BeanNameAware;
 
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -67,7 +65,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (log.isDebugEnabled()) {
             log.debug("Initializing TestCase");
         }
-        
+
         this.context = context;
 
         /* build up the global test variables in TestContext by
@@ -76,11 +74,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            if (VariableUtils.isVariableName(value)) {
-                value = context.getVariable(value);
-            } else if (context.getFunctionRegistry().isFunction(value)) {
-                value = FunctionUtils.resolveFunction(value, context);
-            }
+            //check if value is a variable or function (and resolve it accordingly)
+            value = context.resolveDynamicValue(value);
 
             context.setVariable(key, value);
         }

@@ -173,21 +173,21 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testMap.put("plainText", "Hello TestFramework!");
         testMap.put("value", "${test}");
         
-        testMap = context.replaceVariablesInMap(testMap);
+        testMap = context.resolveDynamicValuesInMap(testMap);
         
         Assert.assertEquals(testMap.get("value"), "123");
         
         testMap.clear();
         testMap.put("value", "test");
         
-        testMap = context.replaceVariablesInMap(testMap);
+        testMap = context.resolveDynamicValuesInMap(testMap);
         
         Assert.assertEquals(testMap.get("value"), "test");
         
         testMap.clear();
         testMap.put("${value}", "test");
         
-        testMap = context.replaceVariablesInMap(testMap);
+        testMap = context.resolveDynamicValuesInMap(testMap);
         
         Assert.assertEquals(testMap.get("${value}"), "test");
     }
@@ -201,10 +201,20 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testList.add("${test}");
         testList.add("test");
         
-        List<String> replaceValues = context.replaceVariablesInList(testList);
+        List<String> replaceValues = context.resolveDynamicValuesInList(testList);
         
         Assert.assertEquals(replaceValues.get(0), "Hello TestFramework!");
         Assert.assertEquals(replaceValues.get(1), "123");
         Assert.assertEquals(replaceValues.get(2), "test");
+    }
+    
+    @Test
+    public void testResolveDynamicValue() {
+        context.getVariables().put("test", "testtesttest");
+
+        Assert.assertEquals(context.resolveDynamicValue("${test}"), "testtesttest");
+        Assert.assertEquals(context.resolveDynamicValue(
+                "citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
+        Assert.assertEquals(context.resolveDynamicValue("nonDynamicValue"), "nonDynamicValue");
     }
 }

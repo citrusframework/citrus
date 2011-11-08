@@ -810,4 +810,33 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         verify(jdbcTemplate);
     }
+
+    @Test
+    public void testResultSetValidationWithVariableAndFunction() {
+        String sql = "select ORDERTYPE, STATUS from orders where ID=5";
+        reset(jdbcTemplate);
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("ORDERTYPE", "testVariableValue");
+        resultMap.put("STATUS", "in_progress");
+
+        expect(jdbcTemplate.queryForList(sql)).andReturn(Collections.singletonList(resultMap));
+
+        replay(jdbcTemplate);
+
+        List<String> stmts = Collections.singletonList(sql);
+        executeSQLQueryAction.setStatements(stmts);
+
+        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+        controlResultSet.put("ORDERTYPE", Collections.singletonList("${testVariable}"));
+        controlResultSet.put("STATUS", Collections.singletonList("citrus:concat('in_', ${progressVar})"));
+
+        executeSQLQueryAction.setControlResultSet(controlResultSet);
+
+        context.getVariables().put("testVariable", "testVariableValue");
+        context.getVariables().put("progressVar", "progress");
+        executeSQLQueryAction.execute(context);
+
+        verify(jdbcTemplate);
+    }
 }

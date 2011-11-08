@@ -34,12 +34,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
-import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -236,12 +234,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             Iterator<String> it = resultColumnValues.iterator();
             for (String controlValue : controlColumnValues) {
                 String resultValue = it.next();
-
-                if (VariableUtils.isVariableName(controlValue)) {
-                    controlValue = context.getVariable(controlValue);
-                } else if (context.getFunctionRegistry().isFunction(controlValue)) {
-                    controlValue = FunctionUtils.resolveFunction(controlValue, context);
-                }
+                //check if controlValue is variable or function (and resolve it)
+                controlValue = context.resolveDynamicValue(controlValue);
 
                 validateSingleValue(columnName, controlValue, resultValue, context);
             }

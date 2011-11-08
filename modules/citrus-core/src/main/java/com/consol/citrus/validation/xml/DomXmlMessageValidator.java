@@ -191,7 +191,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
                 actualValue = getNodeValue(node);
             }
-            expectedValue = resolveExpectedValue(expectedValue, context);
+            //check if expected value is variable or function (and resolve it, if yes)
+            expectedValue = context.resolveDynamicValue(expectedValue);
 
             //do the validation of actual and expected value for element
             validateExpectedActualElements(actualValue, expectedValue, elementPathExpression);
@@ -830,21 +831,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
-    }
-
-    /**
-     * Resolves an expected validation value, either as variable, function or static value
-     * @param expectedValue
-     * @param context
-     * @return resolved expected value
-     */
-    private String resolveExpectedValue(String expectedValue, TestContext context) {
-        if (VariableUtils.isVariableName(expectedValue)) {
-            return context.getVariable(expectedValue);
-        } else if (functionRegistry.isFunction(expectedValue)) {
-            return FunctionUtils.resolveFunction(expectedValue, context);
-        }
-        return expectedValue;
     }
 
     /**

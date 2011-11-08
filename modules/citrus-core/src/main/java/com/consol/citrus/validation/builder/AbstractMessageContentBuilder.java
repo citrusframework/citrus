@@ -62,7 +62,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
-            Map<String, Object> headers = context.replaceVariablesInMap(messageHeaders);
+            Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
             
             String headerContent = null;
             if (messageHeaderResource != null) {

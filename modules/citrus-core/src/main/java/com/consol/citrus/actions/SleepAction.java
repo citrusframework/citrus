@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Stop the test execution for a given amount of time.
@@ -43,18 +41,13 @@ public class SleepAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         String value = null;
 
-        if (VariableUtils.isVariableName(delay)) {
-            value = context.getVariable(delay);
-        } else if (context.getFunctionRegistry().isFunction(delay)) {
-            value = FunctionUtils.resolveFunction(delay, context);
-        } else {
-            value = delay;
-        }
+        //check if given delay value is a variable or function
+        value = context.resolveDynamicValue(delay);
 
         try {
             log.info("Sleeping " + value + " seconds");
 
-            Thread.sleep((long)(new Double(value).doubleValue() * 1000));
+            Thread.sleep((long) (new Double(value).doubleValue() * 1000));
 
             log.info("Returning after " + value + " seconds");
         } catch (InterruptedException e) {

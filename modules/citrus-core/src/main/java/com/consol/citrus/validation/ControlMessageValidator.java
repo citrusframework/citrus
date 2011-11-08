@@ -28,10 +28,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Basic control message validator provides message header validation. Subclasses only have to add
@@ -97,8 +95,8 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             if (MessageUtils.isSpringInternalHeader(headerName)) {
                 continue;
             }
-
-            headerName = resolveVariableOrFunction(headerName, context);
+            //check if header expression is variable or function
+            headerName = context.resolveDynamicValue(headerName);
 
             if (!receivedHeaders.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
@@ -107,9 +105,9 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             if (receivedHeaders.get(headerName) != null) {
                 actualValue = receivedHeaders.get(headerName).toString();
             }
+            //check if value expression is variable or function
+            expectedValue = context.resolveDynamicValue(expectedValue);
 
-            expectedValue = resolveVariableOrFunction(expectedValue, context);
- 
             try {
                 if (actualValue != null) {
                     Assert.isTrue(expectedValue != null,
@@ -142,19 +140,10 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
         log.info("Validation of message headers finished successfully: All properties OK");
     }
 
-    private String resolveVariableOrFunction(String value, TestContext context) {
-        if (VariableUtils.isVariableName(value)) {
-            return context.getVariable(value);
-        } else if (context.getFunctionRegistry().isFunction(value)) {
-            return FunctionUtils.resolveFunction(value, context);
-        }
-        return value;
-    }
-    
     /**
      * Construct a proper validation context for this validator. Method uses the
      * available context builder implementations searching for an accountable builder supporting
-     * {@link ControlMessageValidationContext}. 
+     * {@link ControlMessageValidationContext}.
      */
     public ControlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
