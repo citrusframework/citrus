@@ -41,13 +41,13 @@ import com.consol.citrus.xml.xpath.XPathUtils;
 /**
  * This message handler implementation dispatches incoming request to other message handlers
  * according to a XPath expression evaluated on the message payload of the incoming request.
- * 
+ *
  * The XPath expression's result value will determine the message handler delegate. You can think of
  * having a message handler for each root element name, meaning the message type.
- * 
+ *
  * All available message handlers are hosted in a separate Spring application context. The message handler
  * will search for a appropriate bean instance in this context according to the mapping expression.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class XpathDispatchingMessageHandler implements MessageHandler {
@@ -56,17 +56,19 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
     /** Application context holding available message handlers */
     private String messageHandlerContext;
-    
+
     /** Map holding namespace bindings for XPath expression */
     private Map<String, String> namespaceBindings = new HashMap<String, String>();
-    
+
     /**
+     * Handles the message by evaluating the given Xpath and routing to the correct handler
+     * bean (identified by name) specified in messageHandlerContext
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(Message<?> request) {
         Assert.notNull(messageHandlerContext, "MessageHandler application context must not be empty or null");
-        
+
         try {
             final Reader reader = new StringReader(request.getPayload().toString());
             DOMParser parser = new DOMParser();
@@ -82,24 +84,27 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
                 } else {
                     nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
                 }
-                
-                matchingElement = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(parser.getDocument()), xpathMappingExpression, nsContext);
+
+                matchingElement = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(
+                        parser.getDocument()), xpathMappingExpression, nsContext);
             } else {
                 matchingElement = DOMUtil.getFirstChildElement(parser.getDocument());
             }
 
             if (matchingElement == null) {
-                throw new CitrusRuntimeException("Could not find matching element '" + xpathMappingExpression + "' in message");
+                throw new CitrusRuntimeException(
+                        "Could not find matching element '" + xpathMappingExpression + "' in message");
             }
 
             //TODO support FileSystemContext
             ApplicationContext ctx = new ClassPathXmlApplicationContext(messageHandlerContext);
-            MessageHandler handler = (MessageHandler)ctx.getBean(matchingElement.getNodeName(), MessageHandler.class);
+            MessageHandler handler = (MessageHandler) ctx.getBean(matchingElement.getNodeName(), MessageHandler.class);
 
             if (handler != null) {
                 return handler.handleMessage(request);
             } else {
-                throw new CitrusRuntimeException("Could not find message handler with name '" + matchingElement.getNodeName() + "' in '" + messageHandlerContext + "'");
+                throw new CitrusRuntimeException("Could not find message handler with name '" +
+                        matchingElement.getNodeName() + "' in '" + messageHandlerContext + "'");
             }
         } catch (SAXException e) {
             throw new CitrusRuntimeException(e);
@@ -107,7 +112,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
             throw new CitrusRuntimeException(e);
         }
     }
-    
+
     /**
      * Set the XPath mapping expression.
      * @param mappingExpression

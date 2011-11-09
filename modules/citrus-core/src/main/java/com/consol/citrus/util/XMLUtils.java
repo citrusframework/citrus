@@ -282,7 +282,7 @@ public final class XMLUtils {
      * store them in a binding map, where the key is the namespace prefix and the value
      * is the namespace uri.
      *
-     * @param xmlString XML fragment.
+     * @param xml XML fragment.
      * @return map containing namespace prefix - namespace uri pairs.
      */
     public static Map<String, String> lookupNamespaces(String xml) {

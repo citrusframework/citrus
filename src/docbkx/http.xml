@@ -224,20 +224,31 @@
             <title>Xpath dispatching message handler</title>
             
             <para>The idea behind the xpath-dispatching-message-handler is that the incoming requests are dispatched to several
-            message handlers according to an element value inside the message payload. The XPath expression will evaluate and
-            call the respective message handler. The message handler mapping is done by their names inside a message handler Spring
-            configuration context. The separate context is loaded in advance.</para>
+            message handlers depending on the existence of a specific node inside the message payload. The XPath expression will evaluate to
+            the parent of the deciding node and call the respective message handler. The message handler mapping is done by mapping the deciding node name to
+            a bean name in a message handler Spring configuration context. The separate context is loaded in advance. Let's see an example.</para>
             
             <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot; 
   class=&quot;com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler&quot;&gt;
-    &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation&quot;/&gt;
+    &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation/*&quot;/&gt;
     &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
 &lt;/bean&gt;</programlisting>
             
-            <para>The handler receives a XPath mapping expression as well as a Spring ApllicationContext file resource. The message handlers
-            are mapped to the different values via their names. For instance a incoming request with 
-            <literal>//MessageBody/Operation = "getOrders"</literal> is handled by the message handler named "getOrders". The available message handlers
-            are configured in the message-handler-context (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...).</para>
+            <para>The handler receives a XPath mapping expression as well as a Spring ApplicationContext file resource. The message handlers in this
+            ApplicationContext are mapped to the different values via their names. For instance an incoming request with 
+            <literal>//MessageBody/Operation/GetOrders</literal> would be handled by the message handler named "GetOrders". The available message handlers
+            are configured in the separate message-handler-context (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...). Here is an example.</para>
+            
+            <programlisting>&lt;bean name=&quot;GetOrders&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+    &lt;property name=&quot;messagePayload&quot; value=&quot;Your orders&quot;/&gt;
+&lt;/bean>
+&lt;bean name=&quot;SaveOrder&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+    &lt;property name=&quot;messagePayload&quot; value=&quot;Order saved&quot;/&gt;    
+&lt;/bean&gt;</programlisting>
+            
+            <tip>It is possible to ommit the xpath expression in the xpath dispatching message handler bean definition. If no xpath is provided, Citrus will take the first element node in the request into account.</tip>
         </section>
         
         <section id="http-message-handler-jms">
