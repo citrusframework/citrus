@@ -40,15 +40,12 @@ import org.xml.sax.SAXParseException;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
-import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
@@ -66,10 +63,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
-
-    @Autowired
-    private FunctionRegistry functionRegistry;
-
+    
     @Autowired
     private XsdSchemaRepository schemaRepository;
 
@@ -909,13 +903,5 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     public void setSchemaRepository(XsdSchemaRepository schemaRepository) {
         this.schemaRepository = schemaRepository;
-    }
-
-    /**
-     * Set the function registry for this validator.
-     * @param functionRegistry the functionRegistry to set
-     */
-    public void setFunctionRegistry(FunctionRegistry functionRegistry) {
-        this.functionRegistry = functionRegistry;
     }
 }

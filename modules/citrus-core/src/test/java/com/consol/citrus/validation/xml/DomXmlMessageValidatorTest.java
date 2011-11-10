@@ -313,7 +313,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-        validator.setFunctionRegistry(new FunctionRegistry());
         validator.validateMessageElements(message, validationContext, context);
     }
 
@@ -331,7 +330,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-        validator.setFunctionRegistry(new FunctionRegistry());
         validator.validateMessageElements(message, validationContext, context);
     }
 
@@ -349,7 +347,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-        validator.setFunctionRegistry(new FunctionRegistry());
         validator.validateMessageElements(message, validationContext, context);
     }
 
@@ -367,7 +364,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-        validator.setFunctionRegistry(new FunctionRegistry());
         validator.validateMessageElements(message, validationContext, context);
     }
 
@@ -388,7 +384,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-        validator.setFunctionRegistry(new FunctionRegistry());
         validator.validateMessageElements(message, validationContext, context);
     }
 
