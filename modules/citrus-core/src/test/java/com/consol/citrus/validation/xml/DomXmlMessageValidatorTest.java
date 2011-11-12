@@ -31,9 +31,13 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * @author Christoph Deppisch
@@ -294,5 +298,205 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
+    }
+    
+    @Test
+    public void testValidateMessageElementsWithXPathSuccessful() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setPathValidationExpressions(Collections.singletonMap("//element/sub-element", "text-value"));
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        validator.validateMessageElements(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessageElementsWithXPathNotSuccessful() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setPathValidationExpressions(Collections.singletonMap(
+                "//element/sub-element", "false-value"));
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        validator.validateMessageElements(message, validationContext, context);
+    }
+
+    @Test
+    public void testValidateMessageElementsWithDotNotationSuccessful() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setPathValidationExpressions(Collections.singletonMap(
+                "root.element.sub-element", "text-value"));
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        validator.validateMessageElements(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessageElementsWithDotNotationNotSuccessful() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setPathValidationExpressions(Collections.singletonMap(
+                "root.element.sub-element", "false-value"));
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        validator.validateMessageElements(message, validationContext, context);
+    }
+
+    @Test
+    public void testValidateMessageElementsWithMixedNotationsSuccessful() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        //mix of xpath and dot-notation
+        Map<String, String> validationExpressions = new HashMap<String, String>();
+        validationExpressions.put("//element/sub-element", "text-value");
+        validationExpressions.put("root.element.sub-element", "text-value");
+        validationContext.setPathValidationExpressions(validationExpressions);
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        validator.validateMessageElements(message, validationContext, context);
+    }
+
+    @Test
+    public void testValidateMessagePayloadSuccess() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='A'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setControlMessage(controlMessage);
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+    
+    @Test
+    public void testValidateMessagePayloadWithIgnoresSuccess() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element1 attribute='A'>THIS_IS_IGNORED_BY_XPATH</sub-element1>"
+                        + "<sub-element2 attribute='A'>THIS IS IGNORED BY IGNORE-EXPR</sub-element2>"
+                        + "<sub-element3 attribute='A'>a text</sub-element3>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element1 attribute='A'>text-value</sub-element1>"
+                        + "<sub-element2 attribute='A'>@ignore@</sub-element2>"
+                        + "<sub-element3 attribute='A'>a text</sub-element3>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        Set<String> ignoreExpressions = new HashSet<String>();
+        ignoreExpressions.add("//root/element/sub-element1");
+
+        validationContext.setControlMessage(controlMessage);
+        validationContext.setIgnoreExpressions(ignoreExpressions);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+    
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessagePayloadWithValidationMatchersFailsBecauseOfAttribute() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='text-attribute'>text-element</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='@startsWith(FAIL)@'>@startsWith(text)@</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+    
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessagePayloadWithValidationMatcherOnElementFails() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='text-attribute'>text-element</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='text-attribute'>@startsWith(FAIL)@</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+    
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessagePayloadWithValidationMatcherOnAttributeFails() {
+        Message<?> message = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='text-attribute'>text-element</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root>"
+                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element attribute='@startsWith(FAIL)@'>text-element</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
     }
 }

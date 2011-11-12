@@ -563,7 +563,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
                 validationContext.setControlMessage(controlMessage);
-                validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -608,7 +607,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
                 validationContext.setControlMessage(controlMessage);
-                validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -712,7 +710,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
                 validationContext.setControlMessage(controlMessage);
-                validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -743,7 +740,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
                 validationContext.setControlMessage(MessageBuilder.withPayload("").build());
-                validator.setFunctionRegistry(context.getFunctionRegistry());
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;

@@ -38,6 +38,7 @@ import com.consol.citrus.variable.*;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     /**
@@ -254,39 +255,13 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         //script validation is handled separately for now we only handle xpath and namepsace validation
         Map<String, String> validateNamespaces = new HashMap<String, String>();
         Map<String, String> validateXpathExpressions = new HashMap<String, String>();
-        
+
         List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
         if (validateElements.size() > 0) {
             for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
                 Element validateElement = (Element) iter.next();
-                
-                //check for xpath validation - old style with direct attribute TODO: remove with next major version
-                String pathExpression = validateElement.getAttribute("path");
-                if (StringUtils.hasText(pathExpression)) {
-                    //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
-                    if (validateElement.hasAttribute("result-type")) {
-                        pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
-                    }
-                    
-                    validateXpathExpressions.put(pathExpression, validateElement.getAttribute("value"));
-                }
-                
-                //check for xpath validation elements - new style preferred
-                List<?> xpathElements = DomUtils.getChildElementsByTagName(validateElement, "xpath");
-                if (xpathElements.size() > 0) {
-                    for (Iterator<?> xpathIterator = xpathElements.iterator(); xpathIterator.hasNext();) {
-                        Element xpathElement = (Element) xpathIterator.next();
-                        String expression = xpathElement.getAttribute("expression");
-                        if (StringUtils.hasText(expression)) {
-                            //construct expression with explicit result-type, like boolean:/TestMessage/Value
-                            if (xpathElement.hasAttribute("result-type")) {
-                                expression = xpathElement.getAttribute("result-type") + ":" + expression;
-                            }
-                            
-                            validateXpathExpressions.put(expression, xpathElement.getAttribute("value"));
-                        }
-                    }
-                }
+
+                extractXPathValidateExpressions(validateElement, validateXpathExpressions);
                 
                 //check for namespace validation elements
                 List<?> validateNamespaceElements = DomUtils.getChildElementsByTagName(validateElement, "namespace");
@@ -303,8 +278,44 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     }
 
     /**
+     * Extracts xpath validation expressions and fills map with them
+     * @param validateElement
+     * @param validateXpathExpressions
+     */
+    private void extractXPathValidateExpressions(
+            Element validateElement, Map<String, String> validateXpathExpressions) {
+        //check for xpath validation - old style with direct attribute TODO: remove with next major version
+        String pathExpression = validateElement.getAttribute("path");
+        if (StringUtils.hasText(pathExpression)) {
+            //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
+            if (validateElement.hasAttribute("result-type")) {
+                pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
+            }
+
+            validateXpathExpressions.put(pathExpression, validateElement.getAttribute("value"));
+        }
+
+        //check for xpath validation elements - new style preferred
+        List<?> xpathElements = DomUtils.getChildElementsByTagName(validateElement, "xpath");
+        if (xpathElements.size() > 0) {
+            for (Iterator<?> xpathIterator = xpathElements.iterator(); xpathIterator.hasNext();) {
+                Element xpathElement = (Element) xpathIterator.next();
+                String expression = xpathElement.getAttribute("expression");
+                if (StringUtils.hasText(expression)) {
+                    //construct expression with explicit result-type, like boolean:/TestMessage/Value
+                    if (xpathElement.hasAttribute("result-type")) {
+                        expression = xpathElement.getAttribute("result-type") + ":" + expression;
+                    }
+
+                    validateXpathExpressions.put(expression, xpathElement.getAttribute("value"));
+                }
+            }
+        }
+    }
+
+    /**
      * Parse component returning generic bean definition.
-     * 
+     *
      * @param element
      * @return
      */

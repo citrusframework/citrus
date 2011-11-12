@@ -51,5 +51,12 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.0.3</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 </project>

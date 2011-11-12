@@ -41,6 +41,7 @@ import com.consol.citrus.variable.VariableUtils;
  * 
  * @author Christoph Deppisch
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class TestCaseParser implements BeanDefinitionParser {
 
     /**

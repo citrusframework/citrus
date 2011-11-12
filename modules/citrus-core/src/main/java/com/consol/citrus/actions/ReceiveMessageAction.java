@@ -93,7 +93,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 selectorString = messageSelectorString;
             } else if (!CollectionUtils.isEmpty(messageSelector)) {
                 selectorString = MessageSelectorBuilder.fromKeyValueMap(
-                        context.replaceVariablesInMap(messageSelector)).build(); 
+                        context.resolveDynamicValuesInMap(messageSelector)).build(); 
             }
             
             //receive message either selected or plain with message receiver

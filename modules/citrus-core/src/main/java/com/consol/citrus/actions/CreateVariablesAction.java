@@ -24,13 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Action creating new test variables during a test. Existing test variables are overwritten
  * by new values.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
@@ -49,20 +48,15 @@ public class CreateVariablesAction extends AbstractTestAction {
         for (Entry<String, String> entry : variables.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            
+
             if (value.startsWith("script:<")) {
                 String scriptEngine = value.substring("script:<".length(), value.indexOf('>'));
-                value = VariableUtils.getValueFromScript(scriptEngine, 
+                value = VariableUtils.getValueFromScript(scriptEngine,
                         context.replaceDynamicContentInString(value.substring(value.indexOf('>') + 1)));
             }
 
-            log.info("Try to set variable: " +  key + " to value " + value);
-
-            if (VariableUtils.isVariableName(value)) {
-                value = context.getVariable(value);
-            } else if (context.getFunctionRegistry().isFunction(value)) {
-                value = FunctionUtils.resolveFunction(value, context);
-            } 
+            //check if value is variable or function (and resolve it if yes)
+            value = context.resolveDynamicValue(value);
 
             log.info("Setting variable: " + key + " to value: " + value);
 

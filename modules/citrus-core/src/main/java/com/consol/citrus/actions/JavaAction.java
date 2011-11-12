@@ -56,13 +56,13 @@ public class JavaAction extends AbstractTestAction {
     private static Logger log = LoggerFactory.getLogger(JavaAction.class);
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public void doExecute(TestContext context) {
         try {
             if (instance == null) {
                 instance = getObjectInstanceFromClass(context);
             }
-    
+
             Class<?>[] methodTypes = new Class<?>[methodArgs.size()];
             Object[] methodObjects = new Object[methodArgs.size()];
             for (int i = 0; i < methodArgs.size(); i++) {
@@ -90,22 +90,26 @@ public class JavaAction extends AbstractTestAction {
                     methodObjects[i] = methodArgs.get(i);
                 }
             }
-    
-            Method methodToRun = ReflectionUtils.findMethod(instance.getClass(), methodName, methodTypes);
-    
-            if (methodToRun == null) {
-                throw new CitrusRuntimeException("Unable to find method '" + methodName + "(" + 
-                        StringUtils.arrayToCommaDelimitedString(methodTypes) + ")' for class '" + instance.getClass() + "'");
-            }
-            
-            log.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
-    
-            methodToRun.invoke(instance, methodObjects);
+
+            invokeMethod(methodTypes, methodObjects);
         } catch (RuntimeException e) {
             throw new CitrusRuntimeException("Failed to invoke Java method due to runtime error", e);
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to invoke Java method", e);
         }
+    }
+
+    private void invokeMethod(Class<?>[] methodTypes, Object[] methodObjects) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, CitrusRuntimeException {
+        Method methodToRun = ReflectionUtils.findMethod(instance.getClass(), methodName, methodTypes);
+
+        if (methodToRun == null) {
+            throw new CitrusRuntimeException("Unable to find method '" + methodName + "(" + 
+                    StringUtils.arrayToCommaDelimitedString(methodTypes) + ")' for class '" + instance.getClass() + "'");
+        }
+        
+        log.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
+
+        methodToRun.invoke(instance, methodObjects);
     }
 
     /**

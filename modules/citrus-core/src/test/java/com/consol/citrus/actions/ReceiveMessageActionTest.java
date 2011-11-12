@@ -508,8 +508,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
         controlMessageBuilder.setMessageHeaders(headers);
@@ -544,8 +542,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         context.setVariable("myOperation", "sayHello");
         
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -582,8 +578,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
         controlMessageBuilder.setMessageHeaders(headers);
@@ -657,8 +651,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Operation", "myOperation");
         
@@ -700,8 +692,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/TestRequest/Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
@@ -734,8 +724,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/:TestRequest/:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
@@ -771,8 +759,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
@@ -808,8 +794,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
@@ -844,8 +828,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        
-        validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
@@ -887,8 +869,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/TestRequest/Message", "messageVar");
         
@@ -930,8 +910,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/:TestRequest/:Message", "messageVar");
         
@@ -975,8 +953,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
-
-        validator.setFunctionRegistry(context.getFunctionRegistry());
         
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
@@ -1022,8 +998,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
         
@@ -1068,8 +1042,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
-        validator.setFunctionRegistry(context.getFunctionRegistry());
-        
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
         

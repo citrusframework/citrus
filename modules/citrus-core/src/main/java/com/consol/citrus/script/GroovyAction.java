@@ -69,46 +69,39 @@ public class GroovyAction extends AbstractTestAction {
         try {
             ClassLoader parent = getClass().getClassLoader();
             GroovyClassLoader loader = new GroovyClassLoader(parent);
-            
-            String code;
-            
-            // get the script either from inline data or external file resource
-            if (StringUtils.hasText(script)) {
-            	code = context.replaceDynamicContentInString(script.trim());
-            } else if (fileResource != null) {
-            	code = context.replaceDynamicContentInString(FileUtils.readToString(fileResource)).trim();
-            } else {
-                throw new CitrusRuntimeException("Neither inline script nor " +
-                		"external script resource is defined. Unable to execute groovy script.");
-            }
-            
+
+            assertScriptProvided();
+
+            String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(fileResource);
+            String code = context.replaceDynamicContentInString(rawCode.trim());
+
             // load groovy code
             Class<?> groovyClass = loader.parseClass(code);
             // Instantiate an object from groovy code
             GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-            
+
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
                 // build new script with surrounding template
                 code = TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                  .withCode(code)
                                                  .build();
-                
+
                 groovyClass = loader.parseClass(code);
                 groovyObject = (GroovyObject) groovyClass.newInstance();
             }
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("Executing Groovy script:\n" + code);
             }
-            
+
             // execute the Groovy script
             if (groovyObject instanceof ScriptExecutor) {
-                ((ScriptExecutor)groovyObject).execute(context);
+                ((ScriptExecutor) groovyObject).execute(context);
             } else {
                 groovyObject.invokeMethod("run", new Object[] {});
             }
-            
+
             log.info("Groovy script execution successfully");
         } catch (InstantiationException e) {
             throw new CitrusRuntimeException(e);
@@ -118,6 +111,13 @@ public class GroovyAction extends AbstractTestAction {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
+        }
+    }
+
+    private void assertScriptProvided() {
+        if (!StringUtils.hasText(script) && fileResource == null) {
+            throw new CitrusRuntimeException("Neither inline script nor " +
+                "external script resource is defined. Unable to execute groovy script.");
         }
     }
 

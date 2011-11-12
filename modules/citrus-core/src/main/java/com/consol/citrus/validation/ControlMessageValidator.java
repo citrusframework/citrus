@@ -28,10 +28,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.variable.VariableUtils;
 
 /**
  * Basic control message validator provides message header validation. Subclasses only have to add
@@ -97,26 +95,18 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             if (MessageUtils.isSpringInternalHeader(headerName)) {
                 continue;
             }
-
-            if (VariableUtils.isVariableName(headerName)) {
-                headerName = context.getVariable(headerName);
-            } else if (context.getFunctionRegistry().isFunction(headerName)) {
-                headerName = FunctionUtils.resolveFunction(headerName, context);
-            }
+            //check if header expression is variable or function
+            headerName = context.resolveDynamicValue(headerName);
 
             if (!receivedHeaders.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
-            
+
             if (receivedHeaders.get(headerName) != null) {
                 actualValue = receivedHeaders.get(headerName).toString();
             }
-
-            if (VariableUtils.isVariableName(expectedValue)) {
-                expectedValue = context.getVariable(expectedValue);
-            } else if (context.getFunctionRegistry().isFunction(expectedValue)) {
-                expectedValue = FunctionUtils.resolveFunction(expectedValue, context);
-            }
+            //check if value expression is variable or function
+            expectedValue = context.resolveDynamicValue(expectedValue);
 
             try {
                 if (actualValue != null) {
@@ -149,11 +139,11 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
 
         log.info("Validation of message headers finished successfully: All properties OK");
     }
-    
+
     /**
      * Construct a proper validation context for this validator. Method uses the
      * available context builder implementations searching for an accountable builder supporting
-     * {@link ControlMessageValidationContext}. 
+     * {@link ControlMessageValidationContext}.
      */
     public ControlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
