@@ -18,14 +18,13 @@ package com.consol.citrus.doc;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.springframework.core.io.FileSystemResource;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.*;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
