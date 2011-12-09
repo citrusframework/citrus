@@ -19,6 +19,8 @@ package com.consol.citrus.validation.builder;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
@@ -41,7 +43,11 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
-    
+
+    /** The control header types expected for this message */
+    private Map<String, Class> messageHeaderTypes;
+
+
     /** The message header as a file resource */
     private Resource messageHeaderResource;
 
@@ -63,6 +69,20 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+
+            if (messageHeaderTypes != null)
+            {
+                for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    Class clazz = messageHeaderTypes.get(key);
+                    if (clazz != null)
+                    {
+                        Constructor constr = clazz.getConstructor(new Class[] { String.class});
+                        entry.setValue(constr.newInstance(value));
+                    }
+                }
+            }
             
             String headerContent = null;
             if (messageHeaderResource != null) {
@@ -79,6 +99,14 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             
             return headers;
         } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (InvocationTargetException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (NoSuchMethodException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (IllegalAccessException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (InstantiationException e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
     }
@@ -107,6 +135,14 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      */
     public void setMessageHeaders(Map<String, Object> messageHeaders) {
         this.messageHeaders = messageHeaders;
+    }
+
+    /**
+     * Sets the message header types for this control message.
+     * @param messageHeaderTypes the controlMessageHeaderTypes to set
+     */
+    public void setMessageHeaderTypes(Map<String, Class> messageHeaderTypes) {
+        this.messageHeaderTypes = messageHeaderTypes;
     }
 
     /**
