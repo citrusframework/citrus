@@ -93,7 +93,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     /**
      * Parses message payload template information given in message element.
      * @param messageElement
-     * @param payloadTemplateMessageBuilder
      */
     private PayloadTemplateMessageBuilder parsePayloadTemplateBuilder(Element messageElement) {
         PayloadTemplateMessageBuilder messageBuilder = null;
@@ -132,7 +131,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     /**
      * Parses the xs:any payload elements nested in message element.
      * @param messageElement
-     * @param payloadTemplateMessageBuilder
      */
     private PayloadTemplateMessageBuilder parsePayloadElement(Element messageElement) {
         PayloadTemplateMessageBuilder messageBuilder = null;
@@ -157,14 +155,31 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new HashMap<String, Object>();
+        Map<String, Class> messageHeadersClasses = new HashMap<String, Class>();
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
-                messageHeaders.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
+                
+                String name = headerValue.getAttribute("name");
+                String value = headerValue.getAttribute("value");
+                String type = headerValue.getAttribute("type");
+
+                messageHeaders.put(name, value);
+                messageHeadersClasses.put(name,String.class);
+                if (type != null)
+                {
+                    try {
+                        messageHeadersClasses.put(name, Class.forName("java.lang."+type));
+                    } catch (ClassNotFoundException e) {
+                        // keep String Default
+                    }
+                }
+
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);
+            messageBuilder.setMessageHeaderTypes(messageHeadersClasses);
         }
     }
     

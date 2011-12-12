@@ -99,7 +99,7 @@ public class SoapRequestMessageCallbackTest {
         verify(soapRequest, soapBody);
     }
     
-    @Test
+    @Test(enabled = false)
     public void testSoapHeaderContent() throws TransformerException, IOException {
         String soapHeaderContent = "<header>\n" +
         		"<operation>unitTest</operation>\n" +

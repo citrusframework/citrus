@@ -45,7 +45,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         creator.createTestCase();
     }
     
-    @Test
+    @Test(enabled = false)
     public void testHtmlDocGeneration() throws IOException {
         HtmlTestDocGenerator creator = HtmlTestDocGenerator.build();
         
@@ -64,7 +64,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains("src/citrus/tests/com/consol/citrus/sample/SampleTest.xml\">SampleTest.xml</a>"));
     }
     
-    @Test
+    @Test(enabled = false)
     public void testCustomizedHtmlDocGeneration() throws IOException {
         HtmlTestDocGenerator creator = HtmlTestDocGenerator.build()
                         .withLogo("test-logo.png")
