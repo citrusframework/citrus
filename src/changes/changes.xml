@@ -16,6 +16,15 @@
   
   <body>
     <release version="1.2-SNAPSHOT" date="11.08.2011" description="Latest snapshot release">
+        <action dev="cwied" type="add">
+          #348 Custom validation matchers
+        </action>
+        <action dev="christophd" type="fix">
+          #339 Work on Sonar reported warnings
+        </action>
+        <action dev="christophd" type="fix">
+          #362 Do not use ParseException
+        </action>
         <action dev="jza" type="add">
           #331 Custom actions tutorial
         </action>
