@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * File: TestLinkHandlerImpl.java
- * last modified: Friday, December 30, 2011 (13:03) by: Matthias Beil
+ * last modified: Friday, December 30, 2011 (18:42) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -28,11 +28,12 @@ import org.apache.maven.plugin.logging.Log;
 
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPI;
 import br.eti.kinoshita.testlinkjavaapi.model.Build;
+import br.eti.kinoshita.testlinkjavaapi.model.CustomField;
 import br.eti.kinoshita.testlinkjavaapi.model.ExecutionType;
+import br.eti.kinoshita.testlinkjavaapi.model.ResponseDetails;
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase;
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
-import br.eti.kinoshita.testlinkjavaapi.model.TestSuite;
 
 /**
  * Implementation of interacting with TestLink.
@@ -61,7 +62,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     // ~ Constructors --------------------------------------------------------------------------------------------------
 
     /**
-     * Constructor for {@code TestLinkContainerImpl} class.
+     * Constructor for {@code TestLinkHandlerImpl} class.
      * 
      * @param urlIn
      *            URL to TestLink to which the path to the XML RPC will be added.
@@ -84,21 +85,21 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     /**
      * {@inheritDoc}
      */
-    public List<TestCaseBean> readTestCases() throws MojoExecutionException {
+    public List<TestLinkBean> readTestCases() throws MojoExecutionException {
 
         try {
 
             // make sure the returned list is never null
-            final List<TestCaseBean> testCaseList = new ArrayList<TestCaseBean>();
+            final List<TestLinkBean> testCaseList = new ArrayList<TestLinkBean>();
 
             // open connection to TestLink, there seems to be no close method
             final TestLinkAPI api = this.connect(this.rpcUrl, this.devKey);
 
             // get all available projects
-            final TestProject[] projects = api.getProjects();
+            final TestProject[] projects = this.readTestProjects(api);
 
-            // make sure there are some projects
-            if ((null != projects) && (projects.length > 0)) {
+            // make sure there are some project(s)
+            if (null != projects) {
 
                 // iterate over all projects
                 for (final TestProject project : projects) {
@@ -110,7 +111,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                         this.handleBuild(testCaseList, project, api);
                     } else {
 
-                        // inform user that this is a not active project
+                        // inform user that this is not an active project
                         this.log.info("Skipping project [ " + project.getName() + " ] as it is not active!");
                     }
                 }
@@ -119,6 +120,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
             return testCaseList;
         } catch (final MojoExecutionException moex) {
 
+            // just do nothing, as this exception was already handled
             throw moex;
         } catch (final Exception ex) {
 
@@ -137,39 +139,33 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
      * @param api
      *            Connection object for TestLink.
      */
-    private void handleBuild(final List<TestCaseBean> testCaseList, final TestProject project, final TestLinkAPI api) {
+    private void handleBuild(final List<TestLinkBean> testCaseList, final TestProject project, final TestLinkAPI api) {
 
         // get test plan(s) for this project
-        final TestPlan[] plans = api.getProjectTestPlans(project.getId());
+        final TestPlan[] plans = this.readTestPlans(api, project.getId());
 
         // make sure there are some test plan(s)
-        if ((null != plans) && (plans.length > 0)) {
+        if (null != plans) {
 
             // iterate over all test plan(s)
             for (final TestPlan plan : plans) {
 
-                // get the latest build for this test plan as only one single build should be assign for a test plan
-                final Build build = api.getLatestBuildForTestPlan(plan.getId());
+                // make sure the test plan is active
+                if (plan.isActive().booleanValue()) {
 
-                // make sure there is a build and a corresponding test plan ID
-                if ((null != build) && (null != build.getTestPlanId())) {
+                    // get the latest build for this test plan as only one single build should be assign for a test plan
+                    final Build build = api.getLatestBuildForTestPlan(plan.getId());
 
-                    // get all test suite(s) for the test plan of the latest build
-                    final TestSuite[] suites = api.getTestSuitesForTestPlan(build.getTestPlanId());
+                    // make sure there is a build and a corresponding test plan ID
+                    if ((null != build) && (null != build.getTestPlanId())) {
 
-                    // make sure there are some test suite(s)
-                    if ((null != suites) && (suites.length > 0)) {
-
-                        // iterate over all test suite(s)
-                        for (final TestSuite suite : suites) {
-
-                            // get all test case(s) for each test suite
-                            final TestCase[] cases = api.getTestCasesForTestSuite(suite.getId(), Boolean.TRUE, "full");
-
-                            // handle all test case(s)
-                            this.handleTestCases(testCaseList, project, plan, build, suite, cases);
-                        }
+                        // handle all test case(s)
+                        this.handleTestCases(testCaseList, project, plan, build, api);
                     }
+                } else {
+
+                    // inform user that this is not an active test plan
+                    this.log.info("Skipping test plan [ " + plan.getName() + " ] as it is not active!");
                 }
             }
         }
@@ -186,16 +182,17 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
      *            TestPlan for this test case(s)
      * @param build
      *            Build for this test case(s).
-     * @param suite
-     *            TestSuite for this test case(s).
-     * @param cases
-     *            Test case(s) found for this test suite.
+     * @param api
+     *            Connection object for TestLink.
      */
-    private void handleTestCases(final List<TestCaseBean> testCaseList, final TestProject project, final TestPlan plan,
-            final Build build, final TestSuite suite, final TestCase[] cases) {
+    private void handleTestCases(final List<TestLinkBean> testCaseList, final TestProject project, final TestPlan plan,
+            final Build build, final TestLinkAPI api) {
+
+        // get all test case(s) for each test suite
+        final TestCase[] cases = this.readTestCases(api, build.getTestPlanId());
 
         // make sure there are some test case(s)
-        if ((null != cases) && (cases.length > 0)) {
+        if (null != cases) {
 
             // iterate over all test case(s)
             for (final TestCase testCase : cases) {
@@ -203,16 +200,34 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                 // only consider using test case(s) which are marked to be executed automatically
                 if (testCase.getExecutionType() == ExecutionType.AUTOMATED) {
 
-                    // add this test case to the returning result list
-                    final TestCaseBean bean = new TestCaseBean();
+                    // set values which seems not to be set by the TestLinkAPI
+                    testCase.setTestProjectId(project.getId());
 
-                    bean.setBuild(build);
-                    bean.setPlan(plan);
-                    bean.setProject(project);
-                    bean.setSuite(suite);
-                    bean.setTestCase(testCase);
+                    // read CITRUS custom field, which requires the project id
+                    final CustomField customField = this.readCitrusCustomField(api, testCase);
 
-                    testCaseList.add(bean);
+                    // only allow test case(s) where the CITRUS custom field was set
+                    if (null != customField) {
+
+                        // add custom field to test case
+                        testCase.getCustomFields().add(customField);
+
+                        // add this test case to the returning result list
+                        final TestLinkBean bean = new TestLinkBean();
+
+                        bean.setBuild(build);
+                        bean.setPlan(plan);
+                        bean.setProject(project);
+                        bean.setSuite(null);
+                        bean.setTestCase(testCase);
+
+                        testCaseList.add(bean);
+                    } else {
+
+                        // inform user that custom field CITRUS is not set
+                        this.log.info("Skipping test case [ " + testCase.getName()
+                                + " ] as it custom field CITRUS is not set!");
+                    }
                 } else {
 
                     // inform user that there are some manually executable test case(s)
@@ -249,6 +264,127 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
             throw new MojoExecutionException("Could not connect to TestLink with URL [ " + rpcUrlIn + " ]", ex);
         }
+    }
+
+    /**
+     * Read all test project(s) catching any exceptions.
+     * 
+     * @param api
+     *            Connection object for TestLink.
+     * 
+     * @return Array of {@link TestProject} in case there was no error and there are some element(s) otherwise
+     *         {@code null} is returned.
+     */
+    private TestProject[] readTestProjects(final TestLinkAPI api) {
+
+        try {
+
+            final TestProject[] projects = api.getProjects();
+
+            if ((null != projects) && (projects.length > 0)) {
+
+                return projects;
+            }
+        } catch (final Exception ex) {
+
+            this.log.error("Exception caught while reading project(s)!", ex);
+        }
+
+        return null;
+    }
+
+    /**
+     * Read all test plan(s) catching any exceptions and allowing to continue for next project in case this one has a
+     * problem.
+     * 
+     * @param api
+     *            Connection object for TestLink.
+     * @param projectID
+     *            Test project ID.
+     * 
+     * @return Array of {@link TestPlan} in case there was no error and there are some element(s) otherwise {@code null}
+     *         is returned.
+     */
+    private TestPlan[] readTestPlans(final TestLinkAPI api, final Integer projectID) {
+
+        try {
+
+            final TestPlan[] plans = api.getProjectTestPlans(projectID);
+
+            if ((null != plans) && (plans.length > 0)) {
+
+                return plans;
+            }
+        } catch (final Exception ex) {
+
+            this.log.error("Exception caught while reading test plan(s) for test project ID [ " + projectID + " ]!", ex);
+        }
+
+        return null;
+    }
+
+    /**
+     * Read all test case(s) catching any exceptions and allowing to continue in case this one has a problem.
+     * 
+     * @param api
+     *            Connection object for TestLink.
+     * @param planID
+     *            Test plan ID. This test plan ID is from the latest build for the given test plan.
+     * 
+     * @return Array of {@link TestCase} in case there was no error and there are some element(s) otherwise {@code null}
+     *         is returned. Return also all manually test case, so the user is informed about skipping those.
+     */
+    private TestCase[] readTestCases(final TestLinkAPI api, final Integer planID) {
+
+        try {
+
+            // use this API call as there is only need for a test plan ID and it is possible to expand
+            final TestCase[] cases = api.getTestCasesForTestPlan(planID, null, null, null, null, null, null, null,
+                    null, Boolean.TRUE);
+
+            if ((null != cases) && (cases.length > 0)) {
+
+                return cases;
+            }
+        } catch (final Exception ex) {
+
+            this.log.error("Exception caught while reading test case(s) for test plan ID [ " + planID + " ]!", ex);
+        }
+
+        return null;
+    }
+
+    /**
+     * Read CITRUS custom field for this test case.
+     * 
+     * @param api
+     *            Connection object for TestLink.
+     * @param testCase
+     *            Test case for which the custom field is to be read.
+     * 
+     * @return {@link CustomField} if there was a not null custom field and the value was not null or empty. Otherwise
+     *         {@code null} is returned.
+     */
+    private CustomField readCitrusCustomField(final TestLinkAPI api, final TestCase testCase) {
+
+        try {
+
+            // retrieve from TestLink the CITRUS custom field
+            final CustomField customField = api.getTestCaseCustomFieldDesignValue(testCase.getId(), null,
+                    testCase.getVersion(), testCase.getTestProjectId(), "CITRUS", ResponseDetails.FULL);
+
+            // make sure it is a valid CITRUS custom field
+            if ((null != customField) && ((null != customField.getValue()) && (!customField.getValue().isEmpty()))) {
+
+                return customField;
+            }
+        } catch (final Exception ex) {
+
+            this.log.error("Exception caught while reading CITRUS custom field for test case [ " + testCase.getName()
+                    + " ]!", ex);
+        }
+
+        return null;
     }
 
 }

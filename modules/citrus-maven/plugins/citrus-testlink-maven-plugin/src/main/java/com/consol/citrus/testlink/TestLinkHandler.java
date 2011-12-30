@@ -35,11 +35,11 @@ public interface TestLinkHandler {
     /**
      * Read all test case(s) from TestLink and returns them as a list.
      * 
-     * @return List of test case beans.
+     * @return List of TestLink beans.
      * 
      * @throws MojoExecutionException
      *             Thrown in case of some error interacting with TestLink.
      */
-    List<TestCaseBean> readTestCases() throws MojoExecutionException;
+    List<TestLinkBean> readTestCases() throws MojoExecutionException;
 
 }

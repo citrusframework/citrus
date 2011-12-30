@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * File: TestCaseBean.java
- * last modified: Friday, December 30, 2011 (12:36) by: Matthias Beil
+ * File: TestLinkBean.java
+ * last modified: Friday, December 30, 2011 (18:41) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -25,12 +25,13 @@ import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 import br.eti.kinoshita.testlinkjavaapi.model.TestSuite;
 
 /**
- * TestLink bean holding all relevant data for a given test case.
+ * TestLink bean holding all relevant data for a given test case. It was found that actual a TestSuite is not needed.
+ * Keep it anyway in case the TestSuite corresponding to the TestCase is needed.
  * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public final class TestCaseBean {
+public final class TestLinkBean {
 
     // ~ Instance fields -----------------------------------------------------------------------------------------------
 
@@ -52,9 +53,9 @@ public final class TestCaseBean {
     // ~ Constructors --------------------------------------------------------------------------------------------------
 
     /**
-     * Constructor for {@code TestCaseBean} class.
+     * Constructor for {@code TestLinkBean} class.
      */
-    public TestCaseBean() {
+    public TestLinkBean() {
 
         super();
     }
@@ -192,7 +193,7 @@ public final class TestCaseBean {
      * @see Object#equals(Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
 
         if (this == obj) {
             return true;
@@ -202,11 +203,11 @@ public final class TestCaseBean {
             return false;
         }
 
-        if (getClass() != obj.getClass()) {
+        if (this.getClass() != obj.getClass()) {
             return false;
         }
 
-        TestCaseBean other = (TestCaseBean) obj;
+        final TestLinkBean other = (TestLinkBean) obj;
 
         if (null == this.build) {
 
@@ -307,8 +308,7 @@ public final class TestCaseBean {
     @Override
     public String toString() {
 
-        return "TestCaseBean [\nproject=" + this.project + ", \nplan=" + this.plan + ", \nbuild=" + this.build
+        return "TestLinkBean [\nproject=" + this.project + ", \nplan=" + this.plan + ", \nbuild=" + this.build
                 + ", \nsuite=" + this.suite + ", \ntestCase=" + this.testCase + "\n]";
     }
-
 }

@@ -24,7 +24,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.consol.citrus.testlink.TestCaseBean;
+import com.consol.citrus.testlink.TestLinkBean;
 import com.consol.citrus.testlink.TestLinkHandler;
 import com.consol.citrus.testlink.TestLinkHandlerImpl;
 
@@ -89,13 +89,13 @@ public class ShowTestlinkMojo extends AbstractMojo {
             final TestLinkHandler container = new TestLinkHandlerImpl(this.url, this.devKey, this.getLog());
 
             // get all available test cases
-            final List<TestCaseBean> testCaseList = container.readTestCases();
+            final List<TestLinkBean> testCaseList = container.readTestCases();
 
             // make sure there are some test case(s)
             if ((null != testCaseList) && (!testCaseList.isEmpty())) {
 
                 // iterate over all test case(s) and log them
-                for (final TestCaseBean bean : testCaseList) {
+                for (final TestLinkBean bean : testCaseList) {
 
                     this.getLog().info(bean.toString());
                 }
