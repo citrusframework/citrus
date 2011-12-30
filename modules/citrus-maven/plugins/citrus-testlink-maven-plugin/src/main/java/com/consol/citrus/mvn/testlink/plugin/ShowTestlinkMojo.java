@@ -18,12 +18,15 @@
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
+import java.util.List;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.consol.citrus.testlink.TestLinkContainer;
-import com.consol.citrus.testlink.TestLinkContainerImpl;
+import com.consol.citrus.testlink.TestCaseBean;
+import com.consol.citrus.testlink.TestLinkHandler;
+import com.consol.citrus.testlink.TestLinkHandlerImpl;
 
 /**
  * Show all available info's from {@code TestLink}. For this the URL to TestLink and the generated development key must
@@ -69,6 +72,7 @@ public class ShowTestlinkMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        // make sure mandatory fields are set
         if ((null == this.url) || (this.url.isEmpty())) {
 
             throw new MojoFailureException("Parameter <url> may not be null or empty!");
@@ -81,9 +85,25 @@ public class ShowTestlinkMojo extends AbstractMojo {
 
         try {
 
-            final TestLinkContainer container = new TestLinkContainerImpl(this.getLog());
+            // get new test link container
+            final TestLinkHandler container = new TestLinkHandlerImpl(this.url, this.devKey, this.getLog());
 
-            container.connect(this.url, this.devKey);
+            // get all available test cases
+            final List<TestCaseBean> testCaseList = container.readTestCases();
+
+            // make sure there are some test case(s)
+            if ((null != testCaseList) && (!testCaseList.isEmpty())) {
+
+                // iterate over all test case(s) and log them
+                for (final TestCaseBean bean : testCaseList) {
+
+                    this.getLog().info(bean.toString());
+                }
+            } else {
+
+                // no test case(s) found
+                this.getLog().info("No test case(s) found!");
+            }
         } catch (final MojoExecutionException moex) {
 
             throw moex;

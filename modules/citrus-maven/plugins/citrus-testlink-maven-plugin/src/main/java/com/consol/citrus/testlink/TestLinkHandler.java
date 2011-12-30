@@ -13,35 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * File: TestLinkContainer.java
- * last modified: Thursday, December 29, 2011 (15:50) by: Matthias Beil
+ * File: TestLinkHandler.java
+ * last modified: Friday, December 30, 2011 (12:47) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
+
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Defines interface to all objects related to interface with TestLink.
+ * Handler handles interaction with TestLink.
  * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public interface TestLinkContainer {
+public interface TestLinkHandler {
 
     // ~ Methods -------------------------------------------------------------------------------------------------------
 
     /**
-     * Establish connection to TestLink. A new connection object is created and held in this container. So this method
-     * must be called before all others.
+     * Read all test case(s) from TestLink and returns them as a list.
      * 
-     * @param url
-     *            URL to TestLink. The path to the XML RPC will be added in this method.
-     * @param devKey
-     *            Development key as generated in TestLink.
+     * @return List of test case beans.
      * 
      * @throws MojoExecutionException
-     *             Thrown in case the connection could not be established.
+     *             Thrown in case of some error interacting with TestLink.
      */
-    void connect(final String url, final String devKey) throws MojoExecutionException;
+    List<TestCaseBean> readTestCases() throws MojoExecutionException;
 
 }
