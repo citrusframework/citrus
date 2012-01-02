@@ -1,5 +1,7 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * File: TestLinkBean.java
+ *
+ * Copyright (c) 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * File: TestLinkBean.java
- * last modified: Friday, December 30, 2011 (18:41) by: Matthias Beil
+ * last modified: Monday, January 2, 2012 (10:19) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -196,14 +197,17 @@ public final class TestLinkBean {
     public boolean equals(final Object obj) {
 
         if (this == obj) {
+
             return true;
         }
 
         if (obj == null) {
+
             return false;
         }
 
         if (this.getClass() != obj.getClass()) {
+
             return false;
         }
 
@@ -212,6 +216,7 @@ public final class TestLinkBean {
         if (null == this.build) {
 
             if (null != other.getBuild()) {
+
                 return false;
             }
         } else {
@@ -221,15 +226,25 @@ public final class TestLinkBean {
                 return false;
             }
 
-            if (!this.build.getId().equals(other.getBuild().getId())) {
+            if (null == this.build.getId()) {
 
-                return false;
+                if (null != other.getBuild().getId()) {
+
+                    return false;
+                }
+            } else {
+
+                if (!this.build.getId().equals(other.getBuild().getId())) {
+
+                    return false;
+                }
             }
         }
 
         if (null == this.testCase) {
 
             if (null != other.getTestCase()) {
+
                 return false;
             }
         } else {
@@ -239,15 +254,25 @@ public final class TestLinkBean {
                 return false;
             }
 
-            if (!this.testCase.getId().equals(other.getTestCase().getId())) {
+            if (null == this.testCase.getId()) {
 
-                return false;
+                if (null != other.getTestCase().getId()) {
+
+                    return false;
+                }
+            } else {
+
+                if (!this.testCase.getId().equals(other.getTestCase().getId())) {
+
+                    return false;
+                }
             }
         }
 
         if (null == this.plan) {
 
             if (null != other.getPlan()) {
+
                 return false;
             }
         } else {
@@ -257,15 +282,25 @@ public final class TestLinkBean {
                 return false;
             }
 
-            if (!this.plan.getId().equals(other.getPlan().getId())) {
+            if (null == this.plan.getId()) {
 
-                return false;
+                if (null != other.getPlan().getId()) {
+
+                    return false;
+                }
+            } else {
+
+                if (!this.plan.getId().equals(other.getPlan().getId())) {
+
+                    return false;
+                }
             }
         }
 
         if (null == this.project) {
 
             if (null != other.getProject()) {
+
                 return false;
             }
         } else {
@@ -275,15 +310,25 @@ public final class TestLinkBean {
                 return false;
             }
 
-            if (!this.project.getId().equals(other.getProject().getId())) {
+            if (null == this.project.getId()) {
 
-                return false;
+                if (null != other.getProject().getId()) {
+
+                    return false;
+                }
+            } else {
+
+                if (!this.project.getId().equals(other.getProject().getId())) {
+
+                    return false;
+                }
             }
         }
 
         if (null == this.suite) {
 
             if (null != other.getSuite()) {
+
                 return false;
             }
         } else {
@@ -293,9 +338,18 @@ public final class TestLinkBean {
                 return false;
             }
 
-            if (!this.suite.getId().equals(other.getSuite().getId())) {
+            if (null == this.suite.getId()) {
 
-                return false;
+                if (null != other.getSuite().getId()) {
+
+                    return false;
+                }
+            } else {
+
+                if (!this.suite.getId().equals(other.getSuite().getId())) {
+
+                    return false;
+                }
             }
         }
 
@@ -311,4 +365,5 @@ public final class TestLinkBean {
         return "TestLinkBean [\nproject=" + this.project + ", \nplan=" + this.plan + ", \nbuild=" + this.build
                 + ", \nsuite=" + this.suite + ", \ntestCase=" + this.testCase + "\n]";
     }
+
 }

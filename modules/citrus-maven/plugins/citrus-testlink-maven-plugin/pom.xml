@@ -31,6 +31,12 @@
             <version>2.0</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-interactivity-api</artifactId>
+            <version>1.0-alpha-4</version>
+        </dependency>
+
+        <dependency>
             <groupId>br.eti.kinoshita</groupId>
             <artifactId>testlink-java-api</artifactId>
             <version>1.9.3-1</version>
@@ -40,9 +46,11 @@
             <artifactId>citrus-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
     </dependencies>
 
     <build>
+    
         <plugins>
             <plugin>
 				<!-- http://maven.apache.org/plugins/maven-compile-plugin/plugin-info.html -->
@@ -55,6 +63,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        
     </build>
 
 </project>
