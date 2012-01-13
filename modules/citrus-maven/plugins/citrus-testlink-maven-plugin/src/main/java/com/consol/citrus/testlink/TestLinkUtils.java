@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, January 2, 2012 (15:48) by: Matthias Beil
+ * last modified: Tuesday, January 3, 2012 (17:10) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -83,7 +83,8 @@ public abstract class TestLinkUtils {
             if (Character.isLowerCase(citrusName.charAt(0))) {
 
                 // set first character from lower case to upper case
-                final StringBuilder builder = new StringBuilder(Character.toUpperCase(citrusName.charAt(0)));
+                final StringBuilder builder = new StringBuilder(Character.toTitleCase(citrusName.substring(0, 1)
+                        .charAt(0)));
                 builder.append(citrusName.substring(1));
 
                 citrusName = builder.toString();

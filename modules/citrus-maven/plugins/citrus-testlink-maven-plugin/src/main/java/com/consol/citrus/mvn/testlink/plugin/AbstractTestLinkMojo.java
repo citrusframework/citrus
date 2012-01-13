@@ -44,6 +44,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      * URL pointing to the TestLink URL. The path to the XML-RPC call will be append.
      *
      * @parameter
+     * @required
      */
     protected String url;
 
@@ -52,6 +53,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      * be configured.
      *
      * @parameter
+     * @required
      */
     protected String devKey;
 
@@ -99,7 +101,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        // make sure all mandatory fields are set
+        // make sure all mandatory fields are set, in case not throws a MojoFailureException
         this.checkMandatoryFields();
 
         try {

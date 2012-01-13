@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, January 2, 2012 (19:36) by: Matthias Beil
+ * last modified: Tuesday, January 3, 2012 (13:18) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
 import java.util.List;
 
 import org.codehaus.plexus.components.interactivity.Prompter;
+
 import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.util.TestCaseCreator;
@@ -102,7 +103,8 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 final String tauthor = this.prompter.prompt(promptFirst.toString(), bean.getAuthor());
                 final String tdescription = this.prompter.prompt("Enter test description:", bean.getDescription());
                 final String ttargetPackage = this.prompter.prompt("Enter test package:", bean.getTargetPackage());
-                final String tframework = this.prompter.prompt("Choose unit test framework:", bean.getFramework());
+                final String tframework = this.prompter.prompt(
+                        "Choose unit test framework [testng | junit3 | junit4]:", bean.getFramework());
 
                 // ask for confirmation
                 final StringBuilder builder = new StringBuilder("\nTest creation for:");
