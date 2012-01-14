@@ -20,7 +20,7 @@
 package com.consol.citrus.mvn.testlink.plugin;
 
 import com.consol.citrus.testlink.TestLinkBean;
-import com.consol.citrus.testlink.TestLinkUtils;
+import com.consol.citrus.testlink.utils.TestLinkUtils;
 
 /**
  * Utility class for CITRUS static methods.

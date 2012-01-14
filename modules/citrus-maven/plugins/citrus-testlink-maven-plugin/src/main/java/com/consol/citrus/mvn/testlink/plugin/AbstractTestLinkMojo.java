@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, January 2, 2012 (19:35) by: Matthias Beil
+ * last modified: Friday, January 13, 2012 (19:43) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -28,7 +28,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import com.consol.citrus.testlink.TestLinkBean;
 import com.consol.citrus.testlink.TestLinkHandler;
-import com.consol.citrus.testlink.TestLinkHandlerImpl;
+import com.consol.citrus.testlink.impl.TestLinkHandlerImpl;
 
 /**
  * DRY: Do not repeat yourself. Regroup here all methods and variable needed for all Mojo classes.
@@ -107,7 +107,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
         try {
 
             // get new test link container
-            final TestLinkHandler container = new TestLinkHandlerImpl(this.url, this.devKey, this.getLog());
+            final TestLinkHandler container = new TestLinkHandlerImpl(this.url, this.devKey);
 
             // get all available test cases
             final List<TestLinkBean> testCaseList = container.readTestCases();
@@ -133,10 +133,6 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
                 // no valid TestLink test case(s) found
                 this.getLog().info("No TestLink test case(s) found!");
             }
-        } catch (final MojoExecutionException moex) {
-
-            // just re-throw incoming Mojo exception
-            throw moex;
         } catch (final Exception ex) {
 
             throw new MojoExecutionException("Exception caught for creating test case(s)!", ex);

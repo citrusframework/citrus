@@ -51,6 +51,11 @@
             <artifactId>citrus-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-testlink</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 
