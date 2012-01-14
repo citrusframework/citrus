@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>citrus</artifactId>
+        <groupId>com.consol.citrus</groupId>
+        <version>1.2.M2</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.consol.citrus</groupId>
+    <artifactId>citrus-testlink</artifactId>
+
+    <name>citrus-testlink</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>br.eti.kinoshita</groupId>
+            <artifactId>testlink-java-api</artifactId>
+            <version>1.9.3-1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
