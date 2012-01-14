@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Friday, January 13, 2012 (18:58) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (21:25) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -25,17 +25,31 @@ import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 import br.eti.kinoshita.testlinkjavaapi.model.TestSuite;
 
-
 /**
  * TestLink bean holding all relevant data for a given test case. It was found that actual a TestSuite is not needed.
  * Keep it anyway in case the TestSuite corresponding to the TestCase is needed.
  *
- * @author  Matthias Beil
- * @since   CITRUS 1.2 M2
+ * @author Matthias Beil
+ * @since CITRUS 1.2 M2
  */
 public final class TestLinkBean {
 
     // ~ Instance fields -----------------------------------------------------------------------------------------------
+
+    /** url. */
+    private String url;
+
+    /** key. */
+    private String key;
+
+    /** platform. */
+    private String platform;
+
+    /** notes. */
+    private String notes;
+
+    /** testCaseName. */
+    private String testCaseName;
 
     /** project. */
     private TestProject project;
@@ -65,9 +79,114 @@ public final class TestLinkBean {
     // ~ Methods -------------------------------------------------------------------------------------------------------
 
     /**
+     * Returns the value of the {@code url} field.
+     *
+     * @return {@code url} field.
+     */
+    public String getUrl() {
+
+        return this.url;
+    }
+
+    /**
+     * Sets the value of the {@code url} field.
+     *
+     * @param urlIn
+     *            field to set.
+     */
+    public void setUrl(final String urlIn) {
+
+        this.url = urlIn;
+    }
+
+    /**
+     * Returns the value of the {@code key} field.
+     *
+     * @return {@code key} field.
+     */
+    public String getKey() {
+
+        return this.key;
+    }
+
+    /**
+     * Sets the value of the {@code key} field.
+     *
+     * @param keyIn
+     *            field to set.
+     */
+    public void setKey(final String keyIn) {
+
+        this.key = keyIn;
+    }
+
+    /**
+     * Returns the value of the {@code platform} field.
+     *
+     * @return {@code platform} field.
+     */
+    public String getPlatform() {
+
+        return this.platform;
+    }
+
+    /**
+     * Sets the value of the {@code platform} field.
+     *
+     * @param platformIn
+     *            field to set.
+     */
+    public void setPlatform(final String platformIn) {
+
+        this.platform = platformIn;
+    }
+
+    /**
+     * Returns the value of the {@code notes} field.
+     *
+     * @return {@code notes} field.
+     */
+    public String getNotes() {
+
+        return this.notes;
+    }
+
+    /**
+     * Sets the value of the {@code notes} field.
+     *
+     * @param notesIn
+     *            field to set.
+     */
+    public void setNotes(final String notesIn) {
+
+        this.notes = notesIn;
+    }
+
+    /**
+     * Returns the value of the {@code test case name} field.
+     *
+     * @return {@code test case name} field.
+     */
+    public String getTestCaseName() {
+
+        return this.testCaseName;
+    }
+
+    /**
+     * Sets the value of the {@code test case name} field.
+     *
+     * @param testCaseNameIn
+     *            field to set.
+     */
+    public void setTestCaseName(final String testCaseNameIn) {
+
+        this.testCaseName = testCaseNameIn;
+    }
+
+    /**
      * Returns the value of the {@code project} field.
      *
-     * @return  {@code project} field.
+     * @return {@code project} field.
      */
     public TestProject getProject() {
 
@@ -77,7 +196,8 @@ public final class TestLinkBean {
     /**
      * Sets the value of the {@code project} field.
      *
-     * @param  projectIn  field to set.
+     * @param projectIn
+     *            field to set.
      */
     public void setProject(final TestProject projectIn) {
 
@@ -87,7 +207,7 @@ public final class TestLinkBean {
     /**
      * Returns the value of the {@code plan} field.
      *
-     * @return  {@code plan} field.
+     * @return {@code plan} field.
      */
     public TestPlan getPlan() {
 
@@ -97,7 +217,8 @@ public final class TestLinkBean {
     /**
      * Sets the value of the {@code plan} field.
      *
-     * @param  planIn  field to set.
+     * @param planIn
+     *            field to set.
      */
     public void setPlan(final TestPlan planIn) {
 
@@ -107,7 +228,7 @@ public final class TestLinkBean {
     /**
      * Returns the value of the {@code build} field.
      *
-     * @return  {@code build} field.
+     * @return {@code build} field.
      */
     public Build getBuild() {
 
@@ -117,7 +238,8 @@ public final class TestLinkBean {
     /**
      * Sets the value of the {@code build} field.
      *
-     * @param  buildIn  field to set.
+     * @param buildIn
+     *            field to set.
      */
     public void setBuild(final Build buildIn) {
 
@@ -127,7 +249,7 @@ public final class TestLinkBean {
     /**
      * Returns the value of the {@code suite} field.
      *
-     * @return  {@code suite} field.
+     * @return {@code suite} field.
      */
     public TestSuite getSuite() {
 
@@ -137,7 +259,8 @@ public final class TestLinkBean {
     /**
      * Sets the value of the {@code suite} field.
      *
-     * @param  suiteIn  field to set.
+     * @param suiteIn
+     *            field to set.
      */
     public void setSuite(final TestSuite suiteIn) {
 
@@ -147,7 +270,7 @@ public final class TestLinkBean {
     /**
      * Returns the value of the {@code test case} field.
      *
-     * @return  {@code test case} field.
+     * @return {@code test case} field.
      */
     public TestCase getTestCase() {
 
@@ -157,7 +280,8 @@ public final class TestLinkBean {
     /**
      * Sets the value of the {@code test case} field.
      *
-     * @param  testCaseIn  field to set.
+     * @param testCaseIn
+     *            field to set.
      */
     public void setTestCase(final TestCase testCaseIn) {
 
@@ -165,30 +289,32 @@ public final class TestLinkBean {
     }
 
     /**
-     * @see  Object#hashCode()
+     * @see Object#hashCode()
      */
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
 
         final int prime = 31;
         int result = 1;
-        result = (prime * result) +
-            (((null != this.build) && (null != this.build.getId())) ? this.build.getId().hashCode() : 0);
-        result = (prime * result) +
-            (((null != this.testCase) && (null != this.testCase.getId())) ? this.testCase.getId().hashCode() : 0);
-        result = (prime * result) +
-            (((null != this.plan) && (null != this.plan.getId())) ? this.plan.getId().hashCode() : 0);
-        result = (prime * result) +
-            (((null != this.project) && (null != this.project.getId())) ? this.project.getId().hashCode() : 0);
-        result = (prime * result) +
-            (((null != this.suite) && (null != this.suite.getId())) ? this.suite.getId().hashCode() : 0);
+        result = (prime * result)
+                + (((null != this.build) && (null != this.build.getId())) ? this.build.getId().hashCode() : 0);
+        result = (prime * result)
+                + (((null != this.testCase) && (null != this.testCase.getId())) ? this.testCase.getId().hashCode() : 0);
+        result = (prime * result)
+                + (((null != this.plan) && (null != this.plan.getId())) ? this.plan.getId().hashCode() : 0);
+        result = (prime * result)
+                + (((null != this.project) && (null != this.project.getId())) ? this.project.getId().hashCode() : 0);
+        result = (prime * result)
+                + (((null != this.suite) && (null != this.suite.getId())) ? this.suite.getId().hashCode() : 0);
 
         return result;
     }
 
     /**
-     * @see  Object#equals(Object)
+     * @see Object#equals(Object)
      */
-    @Override public boolean equals(final Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
 
         if (this == obj) {
 
@@ -351,12 +477,34 @@ public final class TestLinkBean {
     }
 
     /**
-     * @see  Object#toString();
+     * {@inheritDoc}
      */
-    @Override public String toString() {
 
-        return "TestLinkBean [\nproject=" + this.project + ", \nplan=" + this.plan + ", \nbuild=" + this.build +
-            ", \nsuite=" + this.suite + ", \ntestCase=" + this.testCase + "\n]";
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("TestLinkBean [url=");
+        builder.append(this.url);
+        builder.append(", key=");
+        builder.append(this.key);
+        builder.append(", platform=");
+        builder.append(this.platform);
+        builder.append(", notes=");
+        builder.append(this.notes);
+        builder.append(", project=");
+        builder.append(this.project);
+        builder.append(", plan=");
+        builder.append(this.plan);
+        builder.append(", build=");
+        builder.append(this.build);
+        builder.append(", suite=");
+        builder.append(this.suite);
+        builder.append(", testCase=");
+        builder.append(this.testCase);
+        builder.append("]");
+
+        return builder.toString();
     }
 
 }

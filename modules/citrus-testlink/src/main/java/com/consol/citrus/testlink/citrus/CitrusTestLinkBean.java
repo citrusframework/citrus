@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (13:28) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (20:58) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -38,20 +38,35 @@ public final class CitrusTestLinkBean {
     /** endTime. */
     private long endTime;
 
+    /** valid. */
+    private boolean valid;
+
+    /** testLinkVariables. */
+    private boolean testLinkVariables;
+
     /** success. */
     private Boolean success;
 
-    /** packageName. */
-    private String packageName;
+    /** id. */
+    private String id;
+
+    /** url. */
+    private String url;
+
+    /** key. */
+    private String key;
+
+    /** platform. */
+    private String platform;
+
+    /** notes. */
+    private String notes;
 
     /** citrusCase. */
     private TestCase citrusCase;
 
     /** tlkBean. */
     private TestLinkBean tlkBean;
-
-    /** failureCause. */
-    private Throwable failureCause;
 
     // ~ Constructors --------------------------------------------------------------------------------------------------
 
@@ -61,9 +76,59 @@ public final class CitrusTestLinkBean {
     public CitrusTestLinkBean() {
 
         super();
+
+        // assume bean is valid
+        this.valid = true;
+        this.testLinkVariables = false;
     }
 
     // ~ Methods -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the value of the {@code valid} field.
+     *
+     * @return {@code valid} field.
+     */
+    public boolean isValid() {
+
+        return this.valid;
+    }
+
+    /**
+     * Only allows to set this field to be {@code false}. As long as there is no reason to set this field to
+     * {@code false}, this bean only holds valid entries and is assumed to be valid.
+     *
+     * @param validIn
+     *            Set valid to {@code false}.
+     */
+    public void setValid(final boolean validIn) {
+
+        if (!validIn) {
+
+            this.valid = validIn;
+        }
+    }
+
+    /**
+     * Returns the value of the {@code test link variables} field.
+     *
+     * @return {@code test link variables} field.
+     */
+    public boolean hasTestLinkVariables() {
+
+        return this.testLinkVariables;
+    }
+
+    /**
+     * Sets the value of the {@code test link variables} field.
+     *
+     * @param testLinkVariablesIn
+     *            field to set.
+     */
+    public void setTestLinkVariables(final boolean testLinkVariablesIn) {
+
+        this.testLinkVariables = testLinkVariablesIn;
+    }
 
     /**
      * Returns the value of the {@code success} field.
@@ -133,20 +198,83 @@ public final class CitrusTestLinkBean {
      *
      * @return {@code package name} field.
      */
-    public String getPackageName() {
+    public String getId() {
 
-        return this.packageName;
+        return this.id;
     }
 
     /**
-     * Sets the value of the {@code package name} field.
+     * Sets the value of the {@code id} field.
      *
-     * @param packageNameIn
+     * @param idIn
      *            field to set.
      */
-    public void setPackageName(final String packageNameIn) {
+    public void setId(final String idIn) {
 
-        this.packageName = packageNameIn;
+        this.id = idIn;
+    }
+
+    /**
+     * Returns the value of the {@code url} field.
+     *
+     * @return {@code url} field.
+     */
+    public String getUrl() {
+
+        return this.url;
+    }
+
+    /**
+     * Sets the value of the {@code url} field.
+     *
+     * @param urlIn
+     *            field to set.
+     */
+    public void setUrl(final String urlIn) {
+
+        this.url = urlIn;
+    }
+
+    /**
+     * Returns the value of the {@code key} field.
+     *
+     * @return {@code key} field.
+     */
+    public String getKey() {
+
+        return this.key;
+    }
+
+    /**
+     * Sets the value of the {@code key} field.
+     *
+     * @param keyIn
+     *            field to set.
+     */
+    public void setKey(final String keyIn) {
+
+        this.key = keyIn;
+    }
+
+    /**
+     * Returns the value of the {@code platform} field.
+     *
+     * @return {@code platform} field.
+     */
+    public String getPlatform() {
+
+        return this.platform;
+    }
+
+    /**
+     * Sets the value of the {@code platform} field.
+     *
+     * @param platformIn
+     *            field to set.
+     */
+    public void setPlatform(final String platformIn) {
+
+        this.platform = platformIn;
     }
 
     /**
@@ -192,24 +320,24 @@ public final class CitrusTestLinkBean {
     }
 
     /**
-     * Returns the value of the {@code failure cause} field.
+     * Returns the value of the {@code notes} field.
      *
-     * @return {@code failure cause} field.
+     * @return {@code notes} field.
      */
-    public Throwable getFailureCause() {
+    public String getNotes() {
 
-        return this.failureCause;
+        return this.notes;
     }
 
     /**
-     * Sets the value of the {@code failure cause} field.
+     * Sets the value of the {@code notes} field.
      *
-     * @param failureCauseIn
+     * @param notesIn
      *            field to set.
      */
-    public void setFailureCause(final Throwable failureCauseIn) {
+    public void setNotes(final String notesIn) {
 
-        this.failureCause = failureCauseIn;
+        this.notes = notesIn;
     }
 
     /**
@@ -220,7 +348,7 @@ public final class CitrusTestLinkBean {
 
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((this.packageName == null) ? 0 : this.packageName.hashCode());
+        result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
 
         return result;
     }
@@ -245,12 +373,12 @@ public final class CitrusTestLinkBean {
 
         final CitrusTestLinkBean other = (CitrusTestLinkBean) obj;
 
-        if (this.packageName == null) {
+        if (this.id == null) {
 
-            if (other.packageName != null) {
+            if (other.id != null) {
                 return false;
             }
-        } else if (!this.packageName.equals(other.packageName)) {
+        } else if (!this.id.equals(other.id)) {
             return false;
         }
 
@@ -270,14 +398,20 @@ public final class CitrusTestLinkBean {
         builder.append(this.endTime);
         builder.append(", success=");
         builder.append(this.success);
-        builder.append(", packageName=");
-        builder.append(this.packageName);
+        builder.append(", id=");
+        builder.append(this.id);
+        builder.append(", url=");
+        builder.append(this.url);
+        builder.append(", key=");
+        builder.append(this.key);
+        builder.append(", platform=");
+        builder.append(this.platform);
         builder.append(", citrusCase=");
         builder.append(this.citrusCase);
         builder.append(", tlkBean=");
         builder.append(this.tlkBean);
-        builder.append(", failureCause=");
-        builder.append(this.failureCause);
+        builder.append(", notes=");
+        builder.append(this.notes);
         builder.append("]");
 
         return builder.toString();

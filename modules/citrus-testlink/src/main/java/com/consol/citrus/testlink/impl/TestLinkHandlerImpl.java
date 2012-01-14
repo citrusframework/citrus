@@ -15,34 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Friday, January 13, 2012 (18:57) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (21:26) by: Matthias Beil
  */
 package com.consol.citrus.testlink.impl;
 
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.testlink.TestLinkBean;
-import com.consol.citrus.testlink.TestLinkHandler;
-
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPI;
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException;
 import br.eti.kinoshita.testlinkjavaapi.model.Build;
 import br.eti.kinoshita.testlinkjavaapi.model.CustomField;
 import br.eti.kinoshita.testlinkjavaapi.model.ExecutionType;
+import br.eti.kinoshita.testlinkjavaapi.model.ReportTCResultResponse;
 import br.eti.kinoshita.testlinkjavaapi.model.ResponseDetails;
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase;
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 
+import com.consol.citrus.testlink.TestLinkBean;
+import com.consol.citrus.testlink.TestLinkHandler;
+
 /**
  * Implementation of interacting with TestLink.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -68,7 +68,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Constructor for {@code TestLinkHandlerImpl} class.
-     *
+     * 
      * @param urlIn
      *            URL to TestLink to which the path to the XML RPC will be added.
      * @param devKeyIn
@@ -78,7 +78,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
         super();
 
-        this.rpcUrl = (urlIn + TestLinkHandlerImpl.XML_RPC);
+        this.rpcUrl = urlIn;
         this.devKey = devKeyIn;
     }
 
@@ -132,9 +132,39 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public void writeToTestLink(final TestLinkBean bean) {
+
+        try {
+
+            final TestLinkAPI api = this.connect(bean.getUrl(), bean.getKey());
+
+            final TestCase testCase = bean.getTestCase();
+            final TestPlan testPlan = bean.getPlan();
+            final Build build = bean.getBuild();
+
+            final ReportTCResultResponse response = api.reportTCResult(testCase.getId(), testCase.getInternalId(),
+                    testPlan.getId(), testCase.getExecutionStatus(), build.getId(), build.getName(), bean.getNotes(),
+                    null, // guess
+                    null, // bug id
+                    null, // platform id
+                    bean.getPlatform(), // platform name
+                    null, // custom fields
+                    null);
+
+            LOGGER.info("CITRUS / TestLink response [ {} ] for test case [ {} ]", response.getMessage(),
+                    bean.getTestCaseName());
+        } catch (final Exception ex) {
+
+            LOGGER.error("Exception while trying to write to TestLink with bean [ {} ]\n", bean, ex);
+        }
+    }
+
+    /**
      * Get for each test plan the latest build. For this build get all test suite(s) and for each test suite get all
      * test case(s).
-     *
+     * 
      * @param testCaseList
      *            List to add new test case(s).
      * @param project
@@ -168,7 +198,8 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                 } else {
 
                     // inform user that this is not an active test plan
-                    TestLinkHandlerImpl.LOGGER.info("Skipping test plan [ " + plan.getName() + " ] as it is not active!");
+                    TestLinkHandlerImpl.LOGGER.info("Skipping test plan [ " + plan.getName()
+                            + " ] as it is not active!");
                 }
             }
         }
@@ -176,7 +207,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Handle all test case(s) for the latest build for the given test plan of the given project.
-     *
+     * 
      * @param testCaseList
      *            List to add new test case(s).
      * @param project
@@ -243,14 +274,14 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Establish connection to TestLink. A new connection object is created and returned.
-     *
+     * 
      * @param rpcUrlIn
      *            URL pointing to TestLink XML-RPC.
      * @param key
      *            Development key as generated in TestLink.
-     *
+     * 
      * @return Newly created {@link TestLinkAPI} object.
-     *
+     * 
      * @throws TestLinkAPIException
      *             MojoExecutionException Thrown in case the connection could not be established.
      */
@@ -259,7 +290,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
         try {
 
             // build final URL
-            final URL testlinkUrl = new URL(rpcUrlIn);
+            final URL testlinkUrl = new URL(rpcUrlIn + TestLinkHandlerImpl.XML_RPC);
 
             // get new connection using URL and development key
             return new TestLinkAPI(testlinkUrl, key);
@@ -274,10 +305,10 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Read all test project(s) catching any exceptions.
-     *
+     * 
      * @param api
      *            Connection object for TestLink.
-     *
+     * 
      * @return Array of {@link TestProject} in case there was no error and there are some element(s) otherwise
      *         {@code null} is returned.
      */
@@ -302,12 +333,12 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     /**
      * Read all test plan(s) catching any exceptions and allowing to continue for next project in case this one has a
      * problem.
-     *
+     * 
      * @param api
      *            Connection object for TestLink.
      * @param projectID
      *            Test project ID.
-     *
+     * 
      * @return Array of {@link TestPlan} in case there was no error and there are some element(s) otherwise {@code null}
      *         is returned.
      */
@@ -332,12 +363,12 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Read all test case(s) catching any exceptions and allowing to continue in case this one has a problem.
-     *
+     * 
      * @param api
      *            Connection object for TestLink.
      * @param planID
      *            Test plan ID. This test plan ID is from the latest build for the given test plan.
-     *
+     * 
      * @return Array of {@link TestCase} in case there was no error and there are some element(s) otherwise {@code null}
      *         is returned. Return also all manually test case, so the user is informed about skipping those.
      */
@@ -364,12 +395,12 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Read CITRUS custom field for this test case.
-     *
+     * 
      * @param api
      *            Connection object for TestLink.
      * @param testCase
      *            Test case for which the custom field is to be read.
-     *
+     * 
      * @return {@link CustomField} if there was a not null custom field and the value was not null or empty. Otherwise
      *         {@code null} is returned.
      */

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (13:29) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (19:25) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.testlink.citrus.CitrusTestLinkBean;
+import com.consol.citrus.testlink.citrus.CitrusTestLinkFactory;
+import com.consol.citrus.testlink.citrus.CitrusTestLinkHandler;
 import com.consol.citrus.testlink.utils.CitrusTestLinkUtils;
 
 /**
@@ -51,6 +53,18 @@ public class TestLinkListener implements TestListener {
 
     // ~ Instance fields -----------------------------------------------------------------------------------------------
 
+    /** testLinkUrl. */
+    private String testLinkUrl;
+
+    /** testLinkKey. */
+    private String testLinkKey;
+
+    /** testLinkPlatform. */
+    private String testLinkPlatform;
+
+    /** handler. */
+    private final CitrusTestLinkHandler handler;
+
     /** citrusMap. */
     private final ConcurrentMap<String, CitrusTestLinkBean> citrusMap;
 
@@ -63,6 +77,7 @@ public class TestLinkListener implements TestListener {
 
         super();
 
+        this.handler = CitrusTestLinkFactory.getHandler();
         this.citrusMap = new ConcurrentHashMap<String, CitrusTestLinkBean>();
     }
 
@@ -80,7 +95,8 @@ public class TestLinkListener implements TestListener {
 
         try {
 
-            final CitrusTestLinkBean bean = CitrusTestLinkUtils.createCitrusBean(citrusCase);
+            final CitrusTestLinkBean bean = CitrusTestLinkUtils.createCitrusBean(citrusCase, this.testLinkUrl,
+                    this.testLinkKey, this.testLinkPlatform);
 
             if (null == bean) {
 
@@ -89,7 +105,7 @@ public class TestLinkListener implements TestListener {
                 return;
             }
 
-            if (this.citrusMap.containsKey(bean.getPackageName())) {
+            if (this.citrusMap.containsKey(bean.getId())) {
 
                 LOGGER.warn(
                         "Citrus bean for test case [ {} ] already exist, can not handle multiple citrus test cases",
@@ -99,47 +115,10 @@ public class TestLinkListener implements TestListener {
             }
 
             bean.setStartTime(System.currentTimeMillis());
-            this.citrusMap.put(bean.getPackageName(), bean);
+            this.citrusMap.put(bean.getId(), bean);
         } catch (final Exception ex) {
 
             LOGGER.error("Exception caught while initialization of CITRUS / TestLink handling for test case [ {} ]",
-                    citrusCase, ex);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void onTestFinish(final TestCase citrusCase) {
-
-        try {
-
-            final String id = CitrusTestLinkUtils.buildPackageName(citrusCase);
-
-            if ((null == id) || (id.isEmpty())) {
-
-                LOGGER.error("Could not create an identifier while finishing test case [ {} ]", citrusCase);
-
-                return;
-            }
-
-            if (!this.citrusMap.containsKey(id)) {
-
-                LOGGER.warn("Citrus bean for identifier [ {} ] while finishing for test case [ {} ] not found", id,
-                        citrusCase);
-
-                return;
-            }
-
-            final CitrusTestLinkBean bean = this.citrusMap.get(id);
-
-            // TODO: Write result to TestLink
-            LOGGER.info("CITRUS / TestLink [ {} ]", bean);
-
-            this.citrusMap.remove(id);
-        } catch (final Exception ex) {
-
-            LOGGER.error("Exception caught while finishing CITRUS / TestLink handling for test case [ {} ]",
                     citrusCase, ex);
         }
     }
@@ -169,6 +148,89 @@ public class TestLinkListener implements TestListener {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public void onTestFinish(final TestCase citrusCase) {
+
+        CitrusTestLinkBean bean = null;
+
+        try {
+
+            final String id = CitrusTestLinkUtils.buildId(citrusCase);
+
+            if ((null == id) || (id.isEmpty())) {
+
+                LOGGER.error("Could not create an identifier while finishing test case [ {} ]", citrusCase);
+
+                return;
+            }
+
+            if (!this.citrusMap.containsKey(id)) {
+
+                LOGGER.warn("Citrus bean for identifier [ {} ] while finishing for test case [ {} ] not found", id,
+                        citrusCase);
+
+                return;
+            }
+
+            bean = this.citrusMap.get(id);
+
+            if (null != bean.getSuccess()) {
+
+                // finally write to TestLink
+                this.handler.writeToTestLink(bean);
+            }
+        } catch (final Exception ex) {
+
+            LOGGER.error("Exception caught while finishing CITRUS / TestLink handling for test case [ {} ]",
+                    citrusCase, ex);
+        } finally {
+
+            // make sure that in each case the CITRUS map is freed
+            if (null != bean) {
+
+                if (!bean.equals(this.citrusMap.remove(bean.getId()))) {
+
+                    LOGGER.error("Could not remove CITRUS / TestLink bean [ {} ]", bean);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the value of the {@code test link url} field.
+     *
+     * @param testLinkUrlIn
+     *            field to set.
+     */
+    public void setTestLinkUrl(final String testLinkUrlIn) {
+
+        this.testLinkUrl = testLinkUrlIn;
+    }
+
+    /**
+     * Sets the value of the {@code test link key} field.
+     *
+     * @param testLinkKeyIn
+     *            field to set.
+     */
+    public void setTestLinkKey(final String testLinkKeyIn) {
+
+        this.testLinkKey = testLinkKeyIn;
+    }
+
+    /**
+     * Sets the value of the {@code test link platform} field.
+     *
+     * @param testLinkPlatformIn
+     *            field to set.
+     */
+    public void setTestLinkPlatform(final String testLinkPlatformIn) {
+
+        this.testLinkPlatform = testLinkPlatformIn;
+    }
+
+    /**
      * DOCUMENT ME!
      *
      * @param citrusCase
@@ -184,7 +246,7 @@ public class TestLinkListener implements TestListener {
 
         try {
 
-            final String id = CitrusTestLinkUtils.buildPackageName(citrusCase);
+            final String id = CitrusTestLinkUtils.buildId(citrusCase);
 
             if ((null == id) || (id.isEmpty())) {
 
@@ -203,8 +265,9 @@ public class TestLinkListener implements TestListener {
 
             final CitrusTestLinkBean bean = this.citrusMap.get(id);
             bean.setSuccess(state);
-            bean.setFailureCause(cause);
             bean.setEndTime(System.currentTimeMillis());
+
+            CitrusTestLinkUtils.buildNotes(bean, cause);
         } catch (final Exception ex) {
 
             LOGGER.error("Exception caught while setting {} of CITRUS / TestLink handling for test case [ {} ]",

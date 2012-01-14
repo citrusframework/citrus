@@ -15,12 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (12:20) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (16:01) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
-
-import com.consol.citrus.TestCase;
-import com.consol.citrus.testlink.TestLinkBean;
 
 /**
  * DOCUMENT ME!
@@ -32,15 +29,18 @@ public interface CitrusTestLinkHandler {
 
     // ~ Methods -------------------------------------------------------------------------------------------------------
 
-
     /**
      * DOCUMENT ME!
      *
-     * @param citrusCase
+     * @param citrusBean
      *            DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * @param url
+     *            DOCUMENT ME!
+     * @param key
+     *            DOCUMENT ME!
+     * @param platform
+     *            DOCUMENT ME!
      */
-    TestLinkBean convert(final TestCase citrusCase);
+    void writeToTestLink(final CitrusTestLinkBean citrusBean);
 
 }

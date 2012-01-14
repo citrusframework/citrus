@@ -1,5 +1,5 @@
 /*
- * File: TestLinkEnum.java
+ * File: CitrusTestLinkEnum.java
  *
  * Copyright (c) 2006-2012 the original author or authors.
  *
@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (08:51) by: Matthias Beil
+ * last modified: Saturday, January 14, 2012 (17:37) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -28,34 +28,31 @@ package com.consol.citrus.testlink.citrus;
 public enum CitrusTestLinkEnum {
 
     /** URL for accessing TestLink. */
-    Url("testlink.url"),
+    Url("testlink.url", true),
 
     /** Developer key needed for accessing TestLink. */
-    Key("testlink.key"),
+    Key("testlink.key", true),
 
     /** TestPlan ID. */
-    PlanId("testlink.testplan.id"),
+    PlanId("testlink.testplan.id", true),
 
     /** Build ID. */
-    BuildId("testlink.build.id"),
+    BuildId("testlink.build.id", true),
 
     /** Name of Build. */
-    BuildName("testlink.build.name"),
+    BuildName("testlink.build.name", false),
 
     /** TestCase ID. */
-    CaseId("testlink.testcase.id"),
+    CaseId("testlink.testcase.id", true),
 
     /** TestCase internal ID. */
-    CaseInternalId("testlink.testcase.internal.id"),
-
-    /** TestCase notes. */
-    CaseNotes("testlink.testcase.notes"),
+    CaseInternalId("testlink.testcase.internal.id", false),
 
     /** TestCase platform. */
-    CasePlatform("testlink.testcase.platform"),
+    CasePlatform("testlink.testcase.platform", false);
 
-    /** TestCase execution status. */
-    CaseExecutionStatus("testlink.testcase.execution.status");
+    /** mandatory. */
+    private final boolean mandatory;
 
     /** key. */
     private final String key;
@@ -65,10 +62,13 @@ public enum CitrusTestLinkEnum {
      *
      * @param keyIn
      *            Key value to use for CITRUS variables.
+     * @param mandatoryIn
+     *            Defines if this value is mandatory ({@code true}) or not ({@code false}).
      */
-    private CitrusTestLinkEnum(final String keyIn) {
+    private CitrusTestLinkEnum(final String keyIn, final boolean mandatoryIn) {
 
         this.key = keyIn;
+        this.mandatory = mandatoryIn;
     }
 
     /**
@@ -79,6 +79,16 @@ public enum CitrusTestLinkEnum {
     public String getKey() {
 
         return this.key;
+    }
+
+    /**
+     * Returns the value of the {@code mandatory} field.
+     *
+     * @return {@code mandatory} field.
+     */
+    public boolean isMandatory() {
+
+        return this.mandatory;
     }
 
 }
