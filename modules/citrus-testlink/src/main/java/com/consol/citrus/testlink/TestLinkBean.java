@@ -15,19 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (21:25) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (10:05) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
+import java.util.List;
+
 import br.eti.kinoshita.testlinkjavaapi.model.Build;
+import br.eti.kinoshita.testlinkjavaapi.model.Platform;
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase;
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 import br.eti.kinoshita.testlinkjavaapi.model.TestSuite;
 
 /**
- * TestLink bean holding all relevant data for a given test case. It was found that actual a TestSuite is not needed.
- * Keep it anyway in case the TestSuite corresponding to the TestCase is needed.
+ * TestLink bean holding all relevant data for a given test case. Member variables are for reading and writing to
+ * TestLink.
  *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
@@ -42,7 +45,7 @@ public final class TestLinkBean {
     /** key. */
     private String key;
 
-    /** platform. */
+    /** Single platform needed for writing to TestLink. */
     private String platform;
 
     /** notes. */
@@ -65,6 +68,9 @@ public final class TestLinkBean {
 
     /** testCase. */
     private TestCase testCase;
+
+    /** Platform list used for creating a test case. */
+    private List<Platform> platformList;
 
     // ~ Constructors --------------------------------------------------------------------------------------------------
 
@@ -289,6 +295,27 @@ public final class TestLinkBean {
     }
 
     /**
+     * Returns the value of the {@code platform list} field.
+     *
+     * @return {@code platform list} field.
+     */
+    public List<Platform> getPlatformList() {
+
+        return this.platformList;
+    }
+
+    /**
+     * Sets the value of the {@code platform list} field.
+     *
+     * @param platformListIn
+     *            field to set.
+     */
+    public void setPlatformList(final List<Platform> platformListIn) {
+
+        this.platformList = platformListIn;
+    }
+
+    /**
      * @see Object#hashCode()
      */
     @Override
@@ -302,10 +329,6 @@ public final class TestLinkBean {
                 + (((null != this.testCase) && (null != this.testCase.getId())) ? this.testCase.getId().hashCode() : 0);
         result = (prime * result)
                 + (((null != this.plan) && (null != this.plan.getId())) ? this.plan.getId().hashCode() : 0);
-        result = (prime * result)
-                + (((null != this.project) && (null != this.project.getId())) ? this.project.getId().hashCode() : 0);
-        result = (prime * result)
-                + (((null != this.suite) && (null != this.suite.getId())) ? this.suite.getId().hashCode() : 0);
 
         return result;
     }
@@ -417,69 +440,12 @@ public final class TestLinkBean {
             }
         }
 
-        if (null == this.project) {
-
-            if (null != other.getProject()) {
-
-                return false;
-            }
-        } else {
-
-            if (null == other.getProject()) {
-
-                return false;
-            }
-
-            if (null == this.project.getId()) {
-
-                if (null != other.getProject().getId()) {
-
-                    return false;
-                }
-            } else {
-
-                if (!this.project.getId().equals(other.getProject().getId())) {
-
-                    return false;
-                }
-            }
-        }
-
-        if (null == this.suite) {
-
-            if (null != other.getSuite()) {
-
-                return false;
-            }
-        } else {
-
-            if (null == other.getSuite()) {
-
-                return false;
-            }
-
-            if (null == this.suite.getId()) {
-
-                if (null != other.getSuite().getId()) {
-
-                    return false;
-                }
-            } else {
-
-                if (!this.suite.getId().equals(other.getSuite().getId())) {
-
-                    return false;
-                }
-            }
-        }
-
         return true;
     }
 
     /**
      * {@inheritDoc}
      */
-
     @Override
     public String toString() {
 
@@ -492,6 +458,8 @@ public final class TestLinkBean {
         builder.append(this.platform);
         builder.append(", notes=");
         builder.append(this.notes);
+        builder.append(", testCaseName=");
+        builder.append(this.testCaseName);
         builder.append(", project=");
         builder.append(this.project);
         builder.append(", plan=");
@@ -502,6 +470,8 @@ public final class TestLinkBean {
         builder.append(this.suite);
         builder.append(", testCase=");
         builder.append(this.testCase);
+        builder.append(", platformList=");
+        builder.append(this.platformList);
         builder.append("]");
 
         return builder.toString();

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (21:02) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (10:10) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -60,9 +60,20 @@ public final class CitrusTestlinkHandlerImpl implements CitrusTestLinkHandler {
      */
     public CitrusTestlinkHandlerImpl() {
 
+        this(new TestLinkHandlerImpl());
+    }
+
+    /**
+     * Constructor for {@code CitrusTestlinkHandlerImpl} class.
+     *
+     * @param handlerIn
+     *            Allows to set the handler. May be used for testing purposes.
+     */
+    public CitrusTestlinkHandlerImpl(final TestLinkHandler handlerIn) {
+
         super();
 
-        this.handler = new TestLinkHandlerImpl(null, null);
+        this.handler = handlerIn;
     }
 
     // ~ Methods -------------------------------------------------------------------------------------------------------

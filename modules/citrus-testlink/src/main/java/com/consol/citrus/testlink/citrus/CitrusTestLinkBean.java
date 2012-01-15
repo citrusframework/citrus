@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (20:58) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (10:16) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -396,6 +396,10 @@ public final class CitrusTestLinkBean {
         builder.append(this.startTime);
         builder.append(", endTime=");
         builder.append(this.endTime);
+        builder.append(", valid=");
+        builder.append(this.valid);
+        builder.append(", testLinkVariables=");
+        builder.append(this.testLinkVariables);
         builder.append(", success=");
         builder.append(this.success);
         builder.append(", id=");
@@ -406,12 +410,12 @@ public final class CitrusTestLinkBean {
         builder.append(this.key);
         builder.append(", platform=");
         builder.append(this.platform);
+        builder.append(", notes=");
+        builder.append(this.notes);
         builder.append(", citrusCase=");
         builder.append(this.citrusCase);
         builder.append(", tlkBean=");
         builder.append(this.tlkBean);
-        builder.append(", notes=");
-        builder.append(this.notes);
         builder.append("]");
 
         return builder.toString();

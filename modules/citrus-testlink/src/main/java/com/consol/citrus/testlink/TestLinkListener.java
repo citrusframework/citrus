@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (19:25) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (10:15) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -28,19 +28,19 @@ import org.slf4j.LoggerFactory;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.testlink.citrus.CitrusTestLinkBean;
-import com.consol.citrus.testlink.citrus.CitrusTestLinkFactory;
 import com.consol.citrus.testlink.citrus.CitrusTestLinkHandler;
+import com.consol.citrus.testlink.citrus.CitrusTestlinkHandlerImpl;
 import com.consol.citrus.testlink.utils.CitrusTestLinkUtils;
 
 /**
  * Implements the {@link TestListener} interface which will be called during the execution of a CITRUS test. The
  * behavior is of a normal reporting element, behalf of the finish method which tries to write the result to TestLink in
  * case it is a CITRUS / TestLink test case. This is verified by checking if all mandatory TestLink variables are set.
- *
+ * 
  * <p>
  * Make sure to catch in each method all exceptions, to avoid to crash a test case during this reporting behavior.
  * </p>
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -75,9 +75,20 @@ public class TestLinkListener implements TestListener {
      */
     public TestLinkListener() {
 
+        this(new CitrusTestlinkHandlerImpl());
+    }
+
+    /**
+     * Constructor for {@code TestLinkListener} class.
+     * 
+     * @param handlerIn
+     *            Implementation of {@link CitrusTestLinkHandler} interface. May be used for testing purposes.
+     */
+    public TestLinkListener(final CitrusTestLinkHandler handlerIn) {
+
         super();
 
-        this.handler = CitrusTestLinkFactory.getHandler();
+        this.handler = handlerIn;
         this.citrusMap = new ConcurrentHashMap<String, CitrusTestLinkBean>();
     }
 
@@ -85,7 +96,7 @@ public class TestLinkListener implements TestListener {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * <p>
      * As was seen during the development, there is no context element available at this point of reporting, so there is
      * no possibility to access TestLink at this point.
@@ -199,7 +210,7 @@ public class TestLinkListener implements TestListener {
 
     /**
      * Sets the value of the {@code test link url} field.
-     *
+     * 
      * @param testLinkUrlIn
      *            field to set.
      */
@@ -210,7 +221,7 @@ public class TestLinkListener implements TestListener {
 
     /**
      * Sets the value of the {@code test link key} field.
-     *
+     * 
      * @param testLinkKeyIn
      *            field to set.
      */
@@ -221,7 +232,7 @@ public class TestLinkListener implements TestListener {
 
     /**
      * Sets the value of the {@code test link platform} field.
-     *
+     * 
      * @param testLinkPlatformIn
      *            field to set.
      */
@@ -232,7 +243,7 @@ public class TestLinkListener implements TestListener {
 
     /**
      * DOCUMENT ME!
-     *
+     * 
      * @param citrusCase
      *            DOCUMENT ME!
      * @param state

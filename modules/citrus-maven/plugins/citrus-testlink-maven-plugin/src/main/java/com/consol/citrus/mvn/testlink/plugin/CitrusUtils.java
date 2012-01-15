@@ -65,7 +65,7 @@ public abstract class CitrusUtils {
         final String testCaseName = TestLinkUtils.getCitrusTestCaseName(bean);
 
         // make sure there is a test case name
-        if (null != testCaseName) {
+        if ((null != testCaseName) && (!testCaseName.isEmpty())) {
 
             // create new CITRUS bean
             final CitrusBean cbean = new CitrusBean();

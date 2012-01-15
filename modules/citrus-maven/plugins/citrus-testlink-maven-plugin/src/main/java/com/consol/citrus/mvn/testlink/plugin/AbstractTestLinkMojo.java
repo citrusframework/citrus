@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Friday, January 13, 2012 (19:43) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (11:54) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -86,6 +86,32 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      */
     protected String framework;
 
+    /** handler. */
+    private final TestLinkHandler handler;
+
+    // ~ Constructors --------------------------------------------------------------------------------------------------
+
+    /**
+     * Constructor for {@code AbstractTestLinkMojo} class.
+     */
+    public AbstractTestLinkMojo() {
+
+        this(new TestLinkHandlerImpl());
+    }
+
+    /**
+     * Constructor for {@code AbstractTestLinkMojo} class.
+     *
+     * @param handlerIn
+     *            Handler implementing {@link TestLinkHandler} interface. May be used for test purposes.
+     */
+    public AbstractTestLinkMojo(final TestLinkHandler handlerIn) {
+
+        super();
+
+        this.handler = handlerIn;
+    }
+
     // ~ Methods -------------------------------------------------------------------------------------------------------
 
     /**
@@ -106,11 +132,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
 
         try {
 
-            // get new test link container
-            final TestLinkHandler container = new TestLinkHandlerImpl(this.url, this.devKey);
-
             // get all available test cases
-            final List<TestLinkBean> testCaseList = container.readTestCases();
+            final List<TestLinkBean> testCaseList = this.handler.readTestCases(this.url, this.devKey);
 
             // make sure there are some test case(s)
             if ((null != testCaseList) && (!testCaseList.isEmpty())) {

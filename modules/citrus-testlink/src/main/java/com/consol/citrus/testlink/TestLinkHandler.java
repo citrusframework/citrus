@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (20:36) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (10:07) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -36,12 +36,17 @@ public interface TestLinkHandler {
     /**
      * Read all test case(s) from TestLink and returns them as a list.
      *
+     * @param url
+     *            DOCUMENT ME!
+     * @param key
+     *            DOCUMENT ME!
+     *
      * @return List of TestLink beans.
      *
      * @throws TestLinkAPIException
      *             Thrown in case of some error interacting with TestLink.
      */
-    List<TestLinkBean> readTestCases() throws TestLinkAPIException;
+    List<TestLinkBean> readTestCases(final String url, final String key) throws TestLinkAPIException;
 
     /**
      * DOCUMENT ME!

@@ -15,19 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Friday, January 13, 2012 (18:59) by: Matthias Beil
+ * last modified: Sunday, January 15, 2012 (13:03) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
 
-import java.util.List;
-
 import com.consol.citrus.testlink.TestLinkBean;
-
-import br.eti.kinoshita.testlinkjavaapi.model.CustomField;
 
 /**
  * Utility class for TestLink static methods.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -37,6 +33,12 @@ public abstract class TestLinkUtils {
 
     /** CITRUS_CUSTOM_FIELD. */
     public static final String CITRUS_CUSTOM_FIELD = "CITRUS";
+
+    /** TEST_CASE_PREFIX. */
+    public static final String TEST_CASE_PREFIX = "CitTlk";
+
+    /** REPLACE_CHRS. */
+    public static final String REPLACE_CHRS = "- ";
 
     // ~ Constructors --------------------------------------------------------------------------------------------------
 
@@ -52,10 +54,10 @@ public abstract class TestLinkUtils {
 
     /**
      * Verify if the given bean is not null and that the test case element is not null.
-     *
+     * 
      * @param bean
      *            {@link TestLinkBean} object to test.
-     *
+     * 
      * @return {@code True} if bean is not null and test case element is not null.
      */
     public static final boolean isValidTestLinkBean(final TestLinkBean bean) {
@@ -67,16 +69,16 @@ public abstract class TestLinkUtils {
      * Build from the CITRUS custom field value the name of the CITRUS test case. Use for this the custom field value
      * and append the version of the TestLink test case. This to make sure that the TestLink immutable version behavior
      * is reflected in the CITRUS test case.
-     *
+     * 
      * @param bean
      *            {@link TestLinkBean} object holding the needed information.
-     *
+     * 
      * @return Name of the CITRUS test case or in case of some error {@code null} is returned.
      */
     public static final String getCitrusTestCaseName(final TestLinkBean bean) {
 
         // get CITRUS custom field value
-        String citrusName = TestLinkUtils.getCustomFieldValue(bean, TestLinkUtils.CITRUS_CUSTOM_FIELD);
+        String citrusName = buildTestCaseName(bean);
 
         // make sure it is a valid value string
         if ((null != citrusName) && (!citrusName.isEmpty())) {
@@ -108,37 +110,64 @@ public abstract class TestLinkUtils {
     }
 
     /**
-     * Iterates over all custom field(s) and returns the value of the wanted custom field.
-     *
+     * Build name of test case as used to create a CITRUS test case.
+     * 
      * @param bean
      *            {@link TestLinkBean} object holding the needed information.
-     * @param customFieldKey
-     *            Name of the custom field to search for.
-     *
-     * @return {@code custom field value} if the custom field could be found otherwise {@code null}.
+     * 
+     * @return Name of test case which will be used to create a CITRUS test case.
      */
-    public static final String getCustomFieldValue(final TestLinkBean bean, final String customFieldKey) {
+    public static final String buildTestCaseName(final TestLinkBean bean) {
 
-        // make sure the incoming bean is valid
-        if (TestLinkUtils.isValidTestLinkBean(bean)) {
+        if (null != bean) {
 
-            // get list of custom fields
-            final List<CustomField> customList = bean.getTestCase().getCustomFields();
+            final StringBuilder builder = new StringBuilder();
 
-            // iterate over all custom fields
-            for (final CustomField field : customList) {
+            if (null != bean.getProject()) {
 
-                // try to find the field which matches the custom field key
-                if (field.getName().equalsIgnoreCase(customFieldKey)) {
+                final String prefix = bean.getProject().getPrefix();
 
-                    // return the value regardless if it is null and / or empty
-                    return field.getValue();
+                if ((null != prefix) && (!prefix.isEmpty())) {
+
+                    prefix.replace(REPLACE_CHRS, "");
+
+                    if (!prefix.isEmpty()) {
+
+                        builder.append(prefix);
+                    } else {
+
+                        builder.append(TEST_CASE_PREFIX);
+                    }
+                } else {
+
+                    builder.append(TEST_CASE_PREFIX);
                 }
+
+                if (null != bean.getProject().getId()) {
+
+                    builder.append("Prj");
+                    builder.append(bean.getProject().getId());
+                }
+            } else {
+
+                builder.append(TEST_CASE_PREFIX);
             }
+
+            if ((null != bean.getPlan()) && (null != bean.getPlan().getId())) {
+
+                builder.append("Plan");
+                builder.append(bean.getPlan().getId());
+            }
+
+            if ((null != bean.getTestCase()) && (null != bean.getTestCase().getId())) {
+
+                builder.append("Tc");
+                builder.append(bean.getTestCase().getId());
+            }
+
+            return builder.toString();
         }
 
-        // nothing can be done, so return null
         return null;
     }
-
 }
