@@ -15,32 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (16:01) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (11:49) by: Matthias Beil
  */
-package com.consol.citrus.testlink.citrus;
+package com.consol.citrus.testlink;
 
 /**
- * DOCUMENT ME!
+ * Interface defining methods for handling CITRUS to TestLink functionality.
  *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
 public interface CitrusTestLinkHandler {
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Write CITRUS TestLink bean to TestLink. Returning in the bean the result of writing to
+     * TestLink.
      *
-     * @param citrusBean
-     *            DOCUMENT ME!
-     * @param url
-     *            DOCUMENT ME!
-     * @param key
-     *            DOCUMENT ME!
-     * @param platform
-     *            DOCUMENT ME!
+     * @param bean
+     *            CITRUS TestLink bean holding all values to write to TestLink.
      */
-    void writeToTestLink(final CitrusTestLinkBean citrusBean);
+    void writeToTestLink(final CitrusTestLinkBean bean);
 
 }

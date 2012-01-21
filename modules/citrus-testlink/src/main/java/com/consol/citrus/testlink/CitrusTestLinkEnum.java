@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (17:37) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (20:03) by: Matthias Beil
  */
-package com.consol.citrus.testlink.citrus;
+package com.consol.citrus.testlink;
 
 /**
  * Enumeration for CITRUS / TestLink constants.
@@ -27,14 +27,17 @@ package com.consol.citrus.testlink.citrus;
  */
 public enum CitrusTestLinkEnum {
 
-    /** URL for accessing TestLink. */
+    /** URL for accessing TestLink. URL without XML-RPC part. */
     Url("testlink.url", true),
 
     /** Developer key needed for accessing TestLink. */
     Key("testlink.key", true),
 
+    /** Flag indicating if test should be written to TestLink. Defaults to {@code true}. */
+    WriteToTestLink("testlink.write", true),
+
     /** TestPlan ID. */
-    PlanId("testlink.testplan.id", true),
+    TestPlanId("testlink.testplan.id", true),
 
     /** Build ID. */
     BuildId("testlink.build.id", true),
@@ -43,13 +46,19 @@ public enum CitrusTestLinkEnum {
     BuildName("testlink.build.name", false),
 
     /** TestCase ID. */
-    CaseId("testlink.testcase.id", true),
+    TestCaseId("testlink.testcase.id", true),
 
     /** TestCase internal ID. */
-    CaseInternalId("testlink.testcase.internal.id", false),
+    TestCaseInternalId("testlink.testcase.internal.id", false),
+
+    /** Notes in case of success. */
+    NotesSuccess("testlink.notes.success", false),
+
+    /** Notes in case of an failure, will be used as a prefix. */
+    NotesFailure("testlink.notes.failure", false),
 
     /** TestCase platform. */
-    CasePlatform("testlink.testcase.platform", false);
+    TestCasePlatform("testlink.testcase.platform", false);
 
     /** mandatory. */
     private final boolean mandatory;

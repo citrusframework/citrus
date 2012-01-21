@@ -15,33 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 14, 2012 (19:23) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (21:19) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testlink.citrus.CitrusTestLinkBean;
+import com.consol.citrus.testlink.CitrusTestLinkBean;
+import com.consol.citrus.testlink.CitrusTestLinkEnum;
 
 /**
- * DOCUMENT ME!
+ * Utility class for handling CITRUS to TestLink functionality.
  *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
 public abstract class CitrusTestLinkUtils {
 
-    // ~ Static fields/initializers ------------------------------------------------------------------------------------
-
-    /** log. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CitrusTestLinkUtils.class);
-
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code CitrusTestLinkUtils} class.
@@ -51,15 +41,51 @@ public abstract class CitrusTestLinkUtils {
         super();
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Check if this CITRUS test case should write his result to TestLink. Use a boolean for this so
+     * in CITRUS this can be set by some means of global variable.
      *
      * @param citrusCase
-     *            DOCUMENT ME!
+     *            CITRUS test case holding the test case variables.
      *
-     * @return DOCUMENT ME!
+     * @return {@code True} in case the {@link CitrusTestLinkEnum#WriteToTestLink} value is defined
+     *         and is set to {@code true}. In all other case {@code false} is returned.
+     */
+    public static final boolean writeToTestLink(final TestCase citrusCase) {
+
+        // make sure there are some test case variables
+        if ((null != citrusCase) && (null != citrusCase.getTestContext())
+                && (null != citrusCase.getTestContext().getVariables())) {
+
+            // check if write to TestLink variable is defined
+            if (citrusCase.getTestContext().getVariables()
+                    .containsKey(CitrusTestLinkEnum.WriteToTestLink.getKey())) {
+
+                // get value and convert it to a Boolean
+                final Object obj = citrusCase.getTestContext().getVariables()
+                        .get(CitrusTestLinkEnum.WriteToTestLink.getKey());
+
+                final Boolean write = ConvertUtils.convertToBoolean(obj);
+
+                if (null != write) {
+
+                    return write.booleanValue();
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Build the ID of the CITRUS test case. This ID is made up of the package and test case name.
+     *
+     * @param citrusCase
+     *            CITRUS test case.
+     *
+     * @return The CITRUS ID allowing to identify this test case uniquely.
      */
     public static final String buildId(final TestCase citrusCase) {
 
@@ -76,22 +102,26 @@ public abstract class CitrusTestLinkUtils {
     }
 
     /**
-     * DOCUMENT ME!
+     * Create a new CITRUS to TestLink bean, which must hold all data needed to write the result to
+     * TestLink.
      *
      * @param citrusCase
-     *            DOCUMENT ME!
+     *            CITRUS test case.
      * @param url
-     *            DOCUMENT ME!
+     *            TestLink URL coming from the properties of the TestLink listener, if provided.
      * @param key
-     *            DOCUMENT ME!
+     *            TestLink development key from the properties of the TestLink listener, if provided.
      * @param platform
-     *            DOCUMENT ME!
+     *            The TestLink platform to be used from the properties of the TestLink listener, if
+     *            provided.
      *
-     * @return DOCUMENT ME!
+     * @return Newly create CITRUS to TestLink bean holding all predefined values. In case of an error
+     *         {@code null} is returned.
      */
-    public static final CitrusTestLinkBean createCitrusBean(final TestCase citrusCase, final String url,
-            final String key, final String platform) {
+    public static final CitrusTestLinkBean createCitrusBean(final TestCase citrusCase,
+            final String url, final String key, final String platform) {
 
+        // get ID to allow to identify this bean
         final String id = buildId(citrusCase);
 
         if ((null == id) || (id.isEmpty())) {
@@ -100,9 +130,9 @@ public abstract class CitrusTestLinkUtils {
         }
 
         final CitrusTestLinkBean bean = new CitrusTestLinkBean();
-        bean.setId(id);
-        bean.setCitrusCase(citrusCase);
 
+        // preset with values from test listener, if they are defined
+        bean.setId(id);
         bean.setUrl(url);
         bean.setKey(key);
         bean.setPlatform(platform);
@@ -111,126 +141,57 @@ public abstract class CitrusTestLinkUtils {
     }
 
     /**
-     * DOCUMENT ME!
+     * Build note and assign it depending on the success information. If there is no success
+     * information available, no notes will be set.
      *
      * @param bean
-     *            DOCUMENT ME!
-     * @param cause
-     *            DOCUMENT ME!
+     *            CITRUS TestLink bean.
      */
-    public static final void buildNotes(final CitrusTestLinkBean bean, final Throwable cause) {
+    public static final void buildNotes(final CitrusTestLinkBean bean) {
 
+        // make sure there is some success / failure information
         if ((null == bean) || (null == bean.getSuccess())) {
 
             return;
         }
 
-        final StringBuilder builder = new StringBuilder("Execution time took '");
-        builder.append(bean.getEndTime() - bean.getStartTime());
-        builder.append("' milliseconds");
-
-        if (!bean.getSuccess().booleanValue() && (null != cause)) {
-
-            builder.append("\nFailure due to [ \n");
-            builder.append(throwableToString(cause));
-            builder.append(" ]\n");
-        }
-
-        bean.setNotes(builder.toString());
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param cause
-     *            DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static final String throwableToString(final Throwable cause) {
-
         final StringBuilder builder = new StringBuilder();
 
-        if (null != cause) {
+        // always add the execution duration
+        builder.append("Execution duration for CITRUS test case [ ");
+        builder.append(bean.getId());
+        builder.append(" ] was [ ");
+        builder.append(bean.getEndTime() - bean.getStartTime());
+        builder.append(" ] milliseconds.");
 
-            PrintWriter writer = null;
-            ByteArrayOutputStream baos = null;
+        if (bean.getSuccess().booleanValue()) {
 
-            try {
+            // handle success note
+            if ((null != bean.getNotesSuccess()) && (!bean.getNotesSuccess().isEmpty())) {
 
-                baos = new ByteArrayOutputStream();
-                writer = new PrintWriter(baos);
-
-                cause.printStackTrace(writer);
-                builder.append(baos.toString());
-            } catch (final Exception ex) {
-
-                LOGGER.error("Exception caught while converting throwable [ {} ]", cause, ex);
-            } finally {
-
-                if (null != writer) {
-
-                    try {
-
-                        writer.close();
-                    } catch (final Exception ex) {
-
-                        LOGGER.error("Exception caught while closing print writer for throwable [ {} ]", cause);
-                    }
-                }
+                builder.append("\n");
+                builder.append(bean.getNotesSuccess());
             }
-        }
 
-        return builder.toString();
-    }
+            bean.setNotesSuccess(builder.toString());
+        } else {
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param obj
-     *            DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static final Integer convertToInteger(final Object obj) {
+            // handle failure note
+            if ((null != bean.getNotesFailure()) && (!bean.getNotesFailure().isEmpty())) {
 
-        final String val = convertToString(obj);
-
-        if ((null != val) && (!val.isEmpty())) {
-
-            try {
-
-                return Integer.decode(val);
-            } catch (final Exception ex) {
-
-                LOGGER.error("Could not convert [ {} ] to an integer!", obj, ex);
+                builder.append("\n");
+                builder.append(bean.getNotesFailure());
             }
+
+            if (null != bean.getCause()) {
+
+                builder.append("\nFailure due to [ \n");
+                builder.append(ConvertUtils.throwableToString(bean.getCause()));
+                builder.append("\n ]");
+            }
+
+            bean.setNotesFailure(builder.toString());
         }
-
-        return null;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param obj
-     *            DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    public static final String convertToString(final Object obj) {
-
-        if (null == obj) {
-
-            return null;
-        }
-
-        if (obj instanceof String) {
-
-            return (String) obj;
-        }
-
-        return obj.toString();
     }
 
 }

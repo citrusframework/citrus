@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 15, 2012 (12:18) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (22:31) by: Matthias Beil
  */
 package com.consol.citrus.testlink.impl;
 
@@ -23,31 +23,34 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPI;
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException;
 import br.eti.kinoshita.testlinkjavaapi.model.Build;
-import br.eti.kinoshita.testlinkjavaapi.model.ExecutionType;
+import br.eti.kinoshita.testlinkjavaapi.model.ExecutionStatus;
 import br.eti.kinoshita.testlinkjavaapi.model.Platform;
 import br.eti.kinoshita.testlinkjavaapi.model.ReportTCResultResponse;
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase;
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 
-import com.consol.citrus.testlink.TestLinkBean;
-import com.consol.citrus.testlink.TestLinkHandler;
+import com.consol.citrus.testlink.CitrusTestLinkBean;
+import com.consol.citrus.testlink.CitrusTestLinkHandler;
+import com.consol.citrus.testlink.TestLinkCitrusBean;
+import com.consol.citrus.testlink.TestLinkCitrusHandler;
 
 /**
  * Implementation of interaction with TestLink.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public final class TestLinkHandlerImpl implements TestLinkHandler {
+public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusTestLinkHandler {
 
-    // ~ Static fields/initializers ------------------------------------------------------------------------------------
+    // ~ Static fields/initializers --------------------------------------------------------------
 
     /** XML_RPC. */
     private static final String XML_RPC = "/lib/api/xmlrpc.php";
@@ -55,7 +58,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     /** log. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TestLinkHandlerImpl.class);
 
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code TestLinkHandlerImpl} class.
@@ -65,17 +68,63 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
         super();
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public List<TestLinkBean> readTestCases(final String url, final String key) throws TestLinkAPIException {
+    public void writeToTestLink(final CitrusTestLinkBean bean) {
 
         try {
 
-            // make sure the returned list is never null
-            final List<TestLinkBean> testCaseList = new ArrayList<TestLinkBean>();
+            final String notes;
+            final ExecutionStatus status;
+
+            // depending on the success of the CITRUS test case set status and notes
+            if (bean.getSuccess().booleanValue()) {
+
+                status = ExecutionStatus.PASSED;
+                notes = bean.getNotesSuccess();
+            } else {
+
+                status = ExecutionStatus.FAILED;
+                notes = bean.getNotesFailure();
+            }
+
+            // establish connection to TestLink
+            final TestLinkAPI api = this.connect(bean.getUrl(), bean.getKey());
+
+            // set result and read response
+            final ReportTCResultResponse response = api.reportTCResult(bean.getTestCaseId(),
+                    bean.getTestCaseInternalId(), bean.getTestPlanId(), status, bean.getBuildId(),
+                    bean.getBuildName(), notes, null, // guess
+                    null, // bug id
+                    null, // platform id
+                    bean.getPlatform(), // platform name
+                    null, // custom fields
+                    null);
+
+            // set response
+            bean.setResponseState(Boolean.TRUE);
+            bean.addResponse(response.getMessage());
+        } catch (final Exception ex) {
+
+            // set response to failure
+            bean.setResponseState(Boolean.FALSE);
+            bean.addResponse("Exception caught while writing to TestLink");
+            bean.setResponseCause(ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<TestLinkCitrusBean> readTestCases(final String url, final String key) {
+
+        // make sure the returned list is never null
+        final List<TestLinkCitrusBean> beanList = new ArrayList<TestLinkCitrusBean>();
+
+        try {
 
             // open connection to TestLink, there seems to be no close method
             final TestLinkAPI api = this.connect(url, key);
@@ -89,11 +138,12 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                 // iterate over all projects
                 for (final TestProject project : projects) {
 
-                    // make sure that project is active, but ignore isPublic flag as this is for testing
+                    // make sure that project is active,
+                    // but ignore isPublic flag as this is for testing
                     if (project.isActive().booleanValue()) {
 
                         // get build for project and get test case(s)
-                        this.handleBuild(testCaseList, project, api);
+                        this.handleBuild(beanList, project, api, url);
                     } else {
 
                         // inform user that this is not an active project
@@ -101,64 +151,29 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                     }
                 }
             }
-
-            return testCaseList;
-        } catch (final TestLinkAPIException tlex) {
-
-            // just do nothing, as this exception was already handled
-            throw tlex;
         } catch (final Exception ex) {
 
-            throw new TestLinkAPIException("Error while reading test case(s) from TestLink!", ex);
+            LOGGER.error("Error while reading test case(s) from TestLink!", ex);
         }
+
+        return beanList;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void writeToTestLink(final TestLinkBean bean) {
-
-        try {
-
-            // establish connection to TestLink
-            final TestLinkAPI api = this.connect(bean.getUrl(), bean.getKey());
-
-            final TestCase testCase = bean.getTestCase();
-            final TestPlan testPlan = bean.getPlan();
-            final Build build = bean.getBuild();
-
-            // set result and read response
-            final ReportTCResultResponse response = api.reportTCResult(testCase.getId(), testCase.getInternalId(),
-                    testPlan.getId(), testCase.getExecutionStatus(), build.getId(), build.getName(), bean.getNotes(),
-                    null, // guess
-                    null, // bug id
-                    null, // platform id
-                    bean.getPlatform(), // platform name
-                    null, // custom fields
-                    null);
-
-            // log result of writing to TestLink
-            LOGGER.info("CITRUS / TestLink response [ {} ] for test case [ {} ]", response.getMessage(),
-                    bean.getTestCaseName());
-        } catch (final Exception ex) {
-
-            // allow for logging of developer key, as this key is known in each test case of configuration
-            LOGGER.error("Exception while trying to write to TestLink with bean [ {} ]\n", bean, ex);
-        }
-    }
-
-    /**
-     * Get for each test plan the latest build. For this build get all test suite(s) and for each test suite get all
-     * test case(s).
-     *
+     * Get for each test plan the latest build. For this build get all test suite(s) and for each test
+     * suite get all test case(s).
+     * 
      * @param testCaseList
      *            List to add new test case(s).
      * @param project
      *            Project for getting test plans for.
      * @param api
      *            Connection object for TestLink.
+     * @param url
+     *            TestLink URL without the XML-RPC part, in the TestLinkAPI the full URL is saved.
      */
-    private void handleBuild(final List<TestLinkBean> testCaseList, final TestProject project, final TestLinkAPI api) {
+    private void handleBuild(final List<TestLinkCitrusBean> testCaseList, final TestProject project,
+            final TestLinkAPI api, final String url) {
 
         // get test plan(s) for this project
         final TestPlan[] plans = this.readTestPlans(api, project.getId());
@@ -172,14 +187,25 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                 // make sure the test plan is active
                 if (plan.isActive().booleanValue()) {
 
-                    // get the latest build for this test plan as only one single build should be assign for a test plan
+                    // get the latest build for this test plan,
+                    // as only one single build should be assign for a test plan
                     final Build build = api.getLatestBuildForTestPlan(plan.getId());
 
                     // make sure there is a build and a corresponding test plan ID
                     if ((null != build) && (null != build.getTestPlanId())) {
 
+                        if (!plan.getId().equals(build.getTestPlanId())) {
+
+                            // do not know what to do when this happens log it to see if it happens
+                            if (LOGGER.isDebugEnabled()) {
+                                LOGGER.debug(
+                                        "Test plan ID is [ {} ] but build test plan ID is [ {} ]?",
+                                        plan.getId(), build.getTestPlanId());
+                            }
+                        }
+
                         // handle all test case(s)
-                        this.handleTestCases(testCaseList, project, plan, build, api);
+                        this.handleTestCases(testCaseList, project, plan, build, api, url);
                     }
                 } else {
 
@@ -192,7 +218,7 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
 
     /**
      * Handle all test case(s) for the latest build for the given test plan of the given project.
-     *
+     * 
      * @param beanList
      *            List to add new test case(s).
      * @param project
@@ -203,9 +229,11 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
      *            Build for this test case(s).
      * @param api
      *            Connection object for TestLink.
+     * @param url
+     *            TestLink URL without the XML-RPC part, in the TestLinkAPI the full URL is saved.
      */
-    private void handleTestCases(final List<TestLinkBean> beanList, final TestProject project, final TestPlan plan,
-            final Build build, final TestLinkAPI api) {
+    private void handleTestCases(final List<TestLinkCitrusBean> beanList, final TestProject project,
+            final TestPlan plan, final Build build, final TestLinkAPI api, final String url) {
 
         // get all test case(s) for each test suite
         final TestCase[] cases = this.readTestCases(api, build.getTestPlanId());
@@ -213,46 +241,65 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
         // make sure there are some test case(s)
         if (null != cases) {
 
-            // iterate over all test case(s)
+            // iterate over all test case(s), regardless if marked to be manually or automatically
             for (final TestCase testCase : cases) {
 
-                // only consider using test case(s) which are marked to be executed automatically
-                if (ExecutionType.AUTOMATED == testCase.getExecutionType()) {
+                // create new TestLink CITRUS bean
+                final TestLinkCitrusBean bean = new TestLinkCitrusBean();
 
-                    // set values which seems not to be set by the TestLinkAPI
-                    testCase.setTestProjectId(project.getId());
+                // fill fields with values
+                bean.setBuildId(build.getId());
+                bean.setBuildName(build.getName());
 
-                    // add this test case to the returning result list
-                    final TestLinkBean bean = new TestLinkBean();
+                bean.setKey(api.getDevKey());
 
-                    bean.setBuild(build);
-                    bean.setPlan(plan);
-                    bean.setProject(project);
-                    bean.setTestCase(testCase);
-                    bean.setPlatformList(this.readPlatforms(api, plan.getId()));
+                // testLink URL without XML-RPC part, as this will be stored in the CITRUS variables
+                bean.setUrl(url);
 
-                    // add bean to list
-                    beanList.add(bean);
-                } else {
+                // preset with some value
+                bean.setNotesFailure("failure-to-be-defined");
+                bean.setNotesSuccess("success-to-be-defined");
 
-                    // inform user that there are some manually executable test case(s)
-                    LOGGER.info("Skipping test case [ {} ] as it is a manually executable test case!",
-                            testCase.getName());
+                bean.setTestCaseId(testCase.getId());
+                bean.setTestCaseInternalId(testCase.getInternalId());
+
+                final String summary = testCase.getSummary();
+
+                if ((null != summary) && (!summary.isEmpty())) {
+
+                    // description will be used as a XML string, so escape this string
+                    bean.setTestCaseDesc(StringEscapeUtils.escapeXml(summary));
                 }
+
+                bean.setTestCaseName(testCase.getName());
+                bean.setTestCaseVersion(testCase.getVersion());
+
+                bean.setTestPlanId(plan.getId());
+                bean.setTestPlanName(plan.getName());
+
+                bean.setTestProjectId(project.getId());
+                bean.setTestProjectName(project.getName());
+                bean.setTestProjectPrefix(project.getPrefix());
+
+                // try to get all platform(s)
+                this.readPlatforms(bean, api, build.getTestPlanId());
+
+                // add this test case to the returning result list
+                beanList.add(bean);
             }
         }
     }
 
     /**
      * Establish connection to TestLink. A new connection object is created and returned.
-     *
+     * 
      * @param url
      *            URL pointing to TestLink XML-RPC.
      * @param key
      *            Development key as generated in TestLink.
-     *
+     * 
      * @return Newly created {@link TestLinkAPI} object.
-     *
+     * 
      * @throws TestLinkAPIException
      *             MojoExecutionException Thrown in case the connection could not be established.
      */
@@ -272,18 +319,19 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
             throw tlex;
         } catch (final Exception ex) {
 
-            throw new TestLinkAPIException("Could not connect to TestLink with URL [ " + rpcUrl + " ]", ex);
+            throw new TestLinkAPIException("Could not connect to TestLink with URL [ " + rpcUrl
+                    + " ]", ex);
         }
     }
 
     /**
      * Read all test project(s) catching any exceptions.
-     *
+     * 
      * @param api
      *            Connection object for TestLink.
-     *
-     * @return Array of {@link TestProject} in case there was no error and there are some element(s) otherwise
-     *         {@code null} is returned.
+     * 
+     * @return Array of {@link TestProject} in case there was no error and there are some element(s)
+     *         otherwise {@code null} is returned.
      */
     private TestProject[] readTestProjects(final TestLinkAPI api) {
 
@@ -307,79 +355,89 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
     }
 
     /**
-     * Read all test plan(s) catching any exceptions and allowing to continue for next project in case this one has a
-     * problem.
-     *
+     * Read all test plan(s) catching any exceptions and allowing to continue for next project in case
+     * this one has a problem.
+     * 
      * @param api
      *            Connection object for TestLink.
      * @param projectId
      *            Test project ID.
-     *
-     * @return Array of {@link TestPlan} in case there was no error and there are some element(s) otherwise {@code null}
-     *         is returned.
+     * 
+     * @return Array of {@link TestPlan} in case there was no error and there are some element(s)
+     *         otherwise {@code null} is returned.
      */
     private TestPlan[] readTestPlans(final TestLinkAPI api, final Integer projectId) {
 
         try {
 
+            // get all TestLink test plan(s) for this test project ID
             final TestPlan[] plans = api.getProjectTestPlans(projectId);
 
+            // check if there are some test plan(s)
             if ((null != plans) && (plans.length > 0)) {
 
+                // there are some test plan(s), return them
                 return plans;
             }
         } catch (final Exception ex) {
 
-            LOGGER.error("Exception caught while reading test plan(s) for test project ID [ {} ]!", projectId, ex);
+            LOGGER.error("Exception caught while reading test plan(s) for test project ID [ {} ]!",
+                    projectId, ex);
         }
 
+        // there was some error, return null
         return null;
     }
 
     /**
-     * Read all test case(s) catching any exceptions and allowing to continue in case this one has a problem.
-     *
+     * Read all test case(s) catching any exceptions and allowing to continue in case this one has a
+     * problem.
+     * 
      * @param api
      *            Connection object for TestLink.
      * @param planId
      *            Test plan ID. This test plan ID is from the latest build for the given test plan.
-     *
-     * @return Array of {@link TestCase} in case there was no error and there are some element(s) otherwise {@code null}
-     *         is returned. Return also all manually test case, so the user is informed about skipping those.
+     * 
+     * @return Array of {@link TestCase} in case there was no error and there are some element(s)
+     *         otherwise {@code null} is returned. Return also all manually test case, so the user is
+     *         informed about skipping those.
      */
     private TestCase[] readTestCases(final TestLinkAPI api, final Integer planId) {
 
         try {
 
             // use this API call as there is only need for a test plan ID and it is possible to expand
-            final TestCase[] cases = api.getTestCasesForTestPlan(planId, null, null, null, null, null, null, null,
-                    null, Boolean.TRUE);
+            final TestCase[] cases = api.getTestCasesForTestPlan(planId, null, null, null, null,
+                    null, null, null, null, Boolean.TRUE);
 
+            // make sure there are some TestLink test case(s)
             if ((null != cases) && (cases.length > 0)) {
 
+                // return TestLink test case(s)
                 return cases;
             }
         } catch (final Exception ex) {
 
-            LOGGER.error("Exception caught while reading test case(s) for test plan ID [ {} ]!",planId, ex);
+            LOGGER.error("Exception caught while reading test case(s) for test plan ID [ {} ]!",
+                    planId, ex);
         }
 
+        // there was some error, return null
         return null;
     }
 
     /**
      * Read platforms for test plan. The platform is needed when writing to TestLink.
-     *
+     * 
+     * @param bean
+     *            TestLink CITRUS bean for adding platform name(s).
      * @param api
      *            Connection object for TestLink.
      * @param planId
      *            Test plan ID. This test plan ID is from the latest build for the given test plan.
-     *
-     * @return List of retrieved platforms. Will never be {@code null}.
      */
-    private List<Platform> readPlatforms(final TestLinkAPI api, final Integer planId) {
-
-        final List<Platform> result = new ArrayList<Platform>();
+    private void readPlatforms(final TestLinkCitrusBean bean, final TestLinkAPI api,
+            final Integer planId) {
 
         try {
 
@@ -392,15 +450,15 @@ public final class TestLinkHandlerImpl implements TestLinkHandler {
                 // add all platform(s) to the result list
                 for (final Platform platform : platforms) {
 
-                    result.add(platform);
+                    // add name of platform
+                    bean.addPlatform(platform.getName());
                 }
             }
         } catch (final Exception ex) {
 
-            LOGGER.error("Exception caught while reading platform(s) for test plan ID [ {} ]!", planId, ex);
+            LOGGER.error("Exception caught while reading platform(s) for test plan ID [ {} ]!",
+                    planId, ex);
         }
-
-        return result;
     }
 
 }

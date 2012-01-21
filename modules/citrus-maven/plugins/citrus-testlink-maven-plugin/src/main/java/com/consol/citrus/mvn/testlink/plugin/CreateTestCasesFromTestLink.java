@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Tuesday, January 3, 2012 (13:18) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (17:26) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -32,8 +32,8 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
  * Get all test cases from TestLink and create for each test case a CITRUS test case.
  *
  * <p>
- * Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode
- * the parameters are given as command line arguments.
+ * Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In
+ * non-interactive mode the parameters are given as command line arguments.
  * </p>
  *
  * @author Matthias Beil
@@ -42,7 +42,7 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
  */
 public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
-    // ~ Instance fields -----------------------------------------------------------------------------------------------
+    // ~ Instance fields -------------------------------------------------------------------------
 
     /**
      * Prompter utility class injected by the Plexus IoC implementation.
@@ -52,7 +52,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
      */
     private Prompter prompter;
 
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code CreateTestCasesFromTestLink} class.
@@ -62,7 +62,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
         super();
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -101,10 +101,13 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 promptFirst.append("\nEnter test author:");
 
                 final String tauthor = this.prompter.prompt(promptFirst.toString(), bean.getAuthor());
-                final String tdescription = this.prompter.prompt("Enter test description:", bean.getDescription());
-                final String ttargetPackage = this.prompter.prompt("Enter test package:", bean.getTargetPackage());
-                final String tframework = this.prompter.prompt(
-                        "Choose unit test framework [testng | junit3 | junit4]:", bean.getFramework());
+                final String tdescription = this.prompter.prompt("Enter test description:", bean
+                        .getTestLink().getTestCaseDesc());
+                final String ttargetPackage = this.prompter.prompt("Enter test package:",
+                        bean.getTargetPackage());
+                final String tframework = this.prompter
+                        .prompt("Choose unit test framework [testng | junit3 | junit4]:",
+                                bean.getFramework());
 
                 // ask for confirmation
                 final StringBuilder builder = new StringBuilder("\nTest creation for:");
@@ -138,12 +141,13 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 // replace values with new values
                 bean.setAuthor(tauthor);
                 bean.setCreate(true);
-                bean.setDescription(tdescription);
+                bean.getTestLink().setTestCaseDesc(tdescription);
                 bean.setFramework(tframework);
                 bean.setTargetPackage(ttargetPackage);
             } catch (final Exception ex) {
 
-                this.getLog().error("Exception caught for CITRUS test case [ " + bean.getName() + " ]", ex);
+                this.getLog().error(
+                        "Exception caught for CITRUS test case [ " + bean.getName() + " ]", ex);
             }
         }
     }
@@ -162,7 +166,8 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             // make sure that only test case(s) which were confirmed are generated
             if (bean.isCreate()) {
 
-                // all parameters are set, so set JAVA and TEST file and check for overwriting the test case
+                // all parameters are set, so set JAVA and TEST file and check for overwriting the
+                // test case
                 this.handleFiles(bean);
 
                 // make sure that even now the CITRUS test case should be created
@@ -173,15 +178,17 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
                         // build CITRUS test case creator using CITRUS core functionality
                         final TestCaseCreator creator = TestCaseCreator.build()
-                                .withFramework(UnitFramework.fromString(bean.getFramework())).withName(bean.getName())
-                                .withAuthor(bean.getAuthor()).withDescription(bean.getDescription())
+                                .withFramework(UnitFramework.fromString(bean.getFramework()))
+                                .withName(bean.getName()).withAuthor(bean.getAuthor())
+                                .withDescription(bean.getTestLink().getTestCaseDesc())
                                 .usePackage(bean.getTargetPackage());
 
                         // create CITRUS test case, overwrites available test case
                         creator.createTestCase();
 
                         // there was no exception, so the generation was successful
-                        final StringBuilder builder = new StringBuilder("\n\nSuccessfully created new test case");
+                        final StringBuilder builder = new StringBuilder(
+                                "\n\nSuccessfully created new test case");
                         builder.append("\nframework: ");
                         builder.append(bean.getFramework());
                         builder.append("\nname: ");
@@ -189,7 +196,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                         builder.append("\nauthor: ");
                         builder.append(bean.getAuthor());
                         builder.append("\ndescription: ");
-                        builder.append(bean.getDescription());
+                        builder.append(bean.getTestLink().getTestCaseDesc());
                         builder.append("\npackage: ");
                         builder.append(bean.getTargetPackage());
                         builder.append("\n\n");
@@ -197,7 +204,8 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                         this.getLog().info(builder.toString());
                     } catch (final Exception ex) {
 
-                        this.getLog().error("Exception caught for creating test case [ " + bean + " ]", ex);
+                        this.getLog().error(
+                                "Exception caught for creating test case [ " + bean + " ]", ex);
                     }
                 } else {
 
@@ -207,14 +215,15 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             } else {
 
                 // test case was not confirmed
-                this.getLog().info("Skipping creation of CITRUS test case [ " + bean.getName() + " ]");
+                this.getLog()
+                        .info("Skipping creation of CITRUS test case [ " + bean.getName() + " ]");
             }
         }
     }
 
     /**
-     * Handle the JAVA and TEST files. Make sure an available test case is not overwritten and the whole test case is
-     * lost.
+     * Handle the JAVA and TEST files. Make sure an available test case is not overwritten and the
+     * whole test case is lost.
      *
      * @param bean
      *            CITRUS test case bean.
@@ -259,8 +268,8 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 } catch (final Exception ex) {
 
                     this.getLog().error(
-                            "Exception caught while asking for overwritting, skipping test case [ " + bean.getName()
-                                    + " ]", ex);
+                            "Exception caught while asking for overwritting, skipping test case [ "
+                                    + bean.getName() + " ]", ex);
 
                     // this test case should not be created
                     bean.setCreate(false);

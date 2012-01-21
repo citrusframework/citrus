@@ -1,5 +1,5 @@
 /*
- * File: TestLinkHandler.java
+ * File: TestLinkCitrusHandler.java
  *
  * Copyright (c) 2006-2012 the original author or authors.
  *
@@ -15,13 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 15, 2012 (10:07) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (12:05) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
 import java.util.List;
-
-import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException;
 
 /**
  * Handler handles interaction with TestLink.
@@ -29,31 +27,20 @@ import br.eti.kinoshita.testlinkjavaapi.TestLinkAPIException;
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public interface TestLinkHandler {
+public interface TestLinkCitrusHandler {
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * Read all test case(s) from TestLink and returns them as a list.
      *
      * @param url
-     *            DOCUMENT ME!
+     *            TestLink URL.
      * @param key
-     *            DOCUMENT ME!
+     *            Development key needed for authorization.
      *
-     * @return List of TestLink beans.
-     *
-     * @throws TestLinkAPIException
-     *             Thrown in case of some error interacting with TestLink.
+     * @return List of TestLink CITRUS beans. Will never be {@code null}, but might be empty.
      */
-    List<TestLinkBean> readTestCases(final String url, final String key) throws TestLinkAPIException;
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param bean
-     *            DOCUMENT ME!
-     */
-    void writeToTestLink(final TestLinkBean bean);
+    List<TestLinkCitrusBean> readTestCases(final String url, final String key);
 
 }

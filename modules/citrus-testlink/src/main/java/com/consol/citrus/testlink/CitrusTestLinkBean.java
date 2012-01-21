@@ -15,22 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 15, 2012 (10:16) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (20:54) by: Matthias Beil
  */
-package com.consol.citrus.testlink.citrus;
+package com.consol.citrus.testlink;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testlink.TestLinkBean;
 
 /**
- * Bean for handling CITRUS and TestLink exchange.
+ * Bean holding all values for CITRUS to TestLink handling.
  *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public final class CitrusTestLinkBean {
+public final class CitrusTestLinkBean extends AbstractTestLinkBean {
 
-    // ~ Instance fields -----------------------------------------------------------------------------------------------
+    // ~ Instance fields -------------------------------------------------------------------------
 
     /** startTime. */
     private long startTime;
@@ -41,34 +43,28 @@ public final class CitrusTestLinkBean {
     /** valid. */
     private boolean valid;
 
-    /** testLinkVariables. */
-    private boolean testLinkVariables;
-
     /** success. */
     private Boolean success;
+
+    /** responseState. */
+    private Boolean responseState;
 
     /** id. */
     private String id;
 
-    /** url. */
-    private String url;
+    /** response. */
+    private final List<String> responseList;
 
-    /** key. */
-    private String key;
+    /** citrusTestCase. */
+    private TestCase citrusTestCase;
 
-    /** platform. */
-    private String platform;
+    /** cause. */
+    private Throwable cause;
 
-    /** notes. */
-    private String notes;
+    /** responseCause. */
+    private Throwable responseCause;
 
-    /** citrusCase. */
-    private TestCase citrusCase;
-
-    /** tlkBean. */
-    private TestLinkBean tlkBean;
-
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code CitrusTestLinkBean} class.
@@ -77,12 +73,11 @@ public final class CitrusTestLinkBean {
 
         super();
 
-        // assume bean is valid
         this.valid = true;
-        this.testLinkVariables = false;
+        this.responseList = new ArrayList<String>();
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * Returns the value of the {@code valid} field.
@@ -95,8 +90,8 @@ public final class CitrusTestLinkBean {
     }
 
     /**
-     * Only allows to set this field to be {@code false}. As long as there is no reason to set this field to
-     * {@code false}, this bean only holds valid entries and is assumed to be valid.
+     * Only allows to set this field to be {@code false}. As long as there is no reason to set this
+     * field to {@code false}, this bean only holds valid entries and is assumed to be valid.
      *
      * @param validIn
      *            Set valid to {@code false}.
@@ -107,27 +102,6 @@ public final class CitrusTestLinkBean {
 
             this.valid = validIn;
         }
-    }
-
-    /**
-     * Returns the value of the {@code test link variables} field.
-     *
-     * @return {@code test link variables} field.
-     */
-    public boolean hasTestLinkVariables() {
-
-        return this.testLinkVariables;
-    }
-
-    /**
-     * Sets the value of the {@code test link variables} field.
-     *
-     * @param testLinkVariablesIn
-     *            field to set.
-     */
-    public void setTestLinkVariables(final boolean testLinkVariablesIn) {
-
-        this.testLinkVariables = testLinkVariablesIn;
     }
 
     /**
@@ -215,129 +189,111 @@ public final class CitrusTestLinkBean {
     }
 
     /**
-     * Returns the value of the {@code url} field.
+     * Returns the value of the {@code citrus test case} field.
      *
-     * @return {@code url} field.
+     * @return {@code citrus test case} field.
      */
-    public String getUrl() {
+    public TestCase getCitrusTestCase() {
 
-        return this.url;
+        return this.citrusTestCase;
     }
 
     /**
-     * Sets the value of the {@code url} field.
+     * Sets the value of the {@code citrus test case} field.
      *
-     * @param urlIn
+     * @param citrusTestCaseIn
      *            field to set.
      */
-    public void setUrl(final String urlIn) {
+    public void setCitrusTestCase(final TestCase citrusTestCaseIn) {
 
-        this.url = urlIn;
+        this.citrusTestCase = citrusTestCaseIn;
     }
 
     /**
-     * Returns the value of the {@code key} field.
+     * Returns the value of the {@code response} field.
      *
-     * @return {@code key} field.
+     * @return {@code response} field.
      */
-    public String getKey() {
+    public List<String> getResponseList() {
 
-        return this.key;
+        return this.responseList;
     }
 
     /**
-     * Sets the value of the {@code key} field.
+     * Sets the value of the {@code response} field.
      *
-     * @param keyIn
+     * @param responseIn
      *            field to set.
      */
-    public void setKey(final String keyIn) {
+    public void addResponse(final String responseIn) {
 
-        this.key = keyIn;
+        if ((null != responseIn) && (!responseIn.isEmpty())) {
+
+            this.responseList.add(responseIn);
+        }
     }
 
     /**
-     * Returns the value of the {@code platform} field.
+     * Returns the value of the {@code response state} field.
      *
-     * @return {@code platform} field.
+     * @return {@code response state} field.
      */
-    public String getPlatform() {
+    public Boolean getResponseState() {
 
-        return this.platform;
+        return this.responseState;
     }
 
     /**
-     * Sets the value of the {@code platform} field.
+     * Sets the value of the {@code response state} field.
      *
-     * @param platformIn
+     * @param responseStateIn
      *            field to set.
      */
-    public void setPlatform(final String platformIn) {
+    public void setResponseState(final Boolean responseStateIn) {
 
-        this.platform = platformIn;
+        this.responseState = responseStateIn;
     }
 
     /**
-     * Returns the value of the {@code citrus case} field.
+     * Returns the value of the {@code response cause} field.
      *
-     * @return {@code citrus case} field.
+     * @return {@code response cause} field.
      */
-    public TestCase getCitrusCase() {
+    public Throwable getResponseCause() {
 
-        return this.citrusCase;
+        return this.responseCause;
     }
 
     /**
-     * Sets the value of the {@code citrus case} field.
+     * Sets the value of the {@code response cause} field.
      *
-     * @param citrusCaseIn
+     * @param responseCauseIn
      *            field to set.
      */
-    public void setCitrusCase(final TestCase citrusCaseIn) {
+    public void setResponseCause(final Throwable responseCauseIn) {
 
-        this.citrusCase = citrusCaseIn;
+        this.responseCause = responseCauseIn;
     }
 
     /**
-     * Returns the value of the {@code tlk bean} field.
+     * Returns the value of the {@code cause} field.
      *
-     * @return {@code tlk bean} field.
+     * @return {@code cause} field.
      */
-    public TestLinkBean getTlkBean() {
+    public Throwable getCause() {
 
-        return this.tlkBean;
+        return this.cause;
     }
 
     /**
-     * Sets the value of the {@code tlk bean} field.
+     * Sets the value of the {@code cause} field.
      *
-     * @param tlkBeanIn
+     * @param causeIn
      *            field to set.
      */
-    public void setTlkBean(final TestLinkBean tlkBeanIn) {
+    public void setCause(final Throwable causeIn) {
 
-        this.tlkBean = tlkBeanIn;
-    }
-
-    /**
-     * Returns the value of the {@code notes} field.
-     *
-     * @return {@code notes} field.
-     */
-    public String getNotes() {
-
-        return this.notes;
-    }
-
-    /**
-     * Sets the value of the {@code notes} field.
-     *
-     * @param notesIn
-     *            field to set.
-     */
-    public void setNotes(final String notesIn) {
-
-        this.notes = notesIn;
+        this.cause = causeIn;
     }
 
     /**
@@ -347,7 +303,7 @@ public final class CitrusTestLinkBean {
     public int hashCode() {
 
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
 
         return result;
@@ -363,7 +319,7 @@ public final class CitrusTestLinkBean {
             return true;
         }
 
-        if (obj == null) {
+        if (!super.equals(obj)) {
             return false;
         }
 
@@ -398,24 +354,40 @@ public final class CitrusTestLinkBean {
         builder.append(this.endTime);
         builder.append(", valid=");
         builder.append(this.valid);
-        builder.append(", testLinkVariables=");
-        builder.append(this.testLinkVariables);
         builder.append(", success=");
         builder.append(this.success);
+        builder.append(", responseState=");
+        builder.append(this.responseState);
         builder.append(", id=");
         builder.append(this.id);
-        builder.append(", url=");
-        builder.append(this.url);
-        builder.append(", key=");
-        builder.append(this.key);
-        builder.append(", platform=");
-        builder.append(this.platform);
-        builder.append(", notes=");
-        builder.append(this.notes);
-        builder.append(", citrusCase=");
-        builder.append(this.citrusCase);
-        builder.append(", tlkBean=");
-        builder.append(this.tlkBean);
+        builder.append(", responseList=");
+        builder.append(this.responseList);
+        builder.append(", citrusTestCase=");
+        builder.append(this.citrusTestCase);
+        builder.append(", cause=");
+        builder.append(this.cause);
+        builder.append(", responseCause=");
+        builder.append(this.responseCause);
+        builder.append(", isValid()=");
+        builder.append(this.isValid());
+        builder.append(", getSuccess()=");
+        builder.append(this.getSuccess());
+        builder.append(", getStartTime()=");
+        builder.append(this.getStartTime());
+        builder.append(", getEndTime()=");
+        builder.append(this.getEndTime());
+        builder.append(", getId()=");
+        builder.append(this.getId());
+        builder.append(", getCitrusTestCase()=");
+        builder.append(this.getCitrusTestCase());
+        builder.append(", getResponseList()=");
+        builder.append(this.getResponseList());
+        builder.append(", getResponseState()=");
+        builder.append(this.getResponseState());
+        builder.append(", getResponseCause()=");
+        builder.append(this.getResponseCause());
+        builder.append(", getCause()=");
+        builder.append(this.getCause());
         builder.append("]");
 
         return builder.toString();

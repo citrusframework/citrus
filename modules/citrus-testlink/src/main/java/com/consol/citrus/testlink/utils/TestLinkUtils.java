@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 15, 2012 (13:03) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (21:28) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
 
-import com.consol.citrus.testlink.TestLinkBean;
+import com.consol.citrus.testlink.TestLinkCitrusBean;
 
 /**
  * Utility class for TestLink static methods.
@@ -29,7 +29,7 @@ import com.consol.citrus.testlink.TestLinkBean;
  */
 public abstract class TestLinkUtils {
 
-    // ~ Static fields/initializers ------------------------------------------------------------------------------------
+    // ~ Static fields/initializers --------------------------------------------------------------
 
     /** CITRUS_CUSTOM_FIELD. */
     public static final String CITRUS_CUSTOM_FIELD = "CITRUS";
@@ -40,7 +40,7 @@ public abstract class TestLinkUtils {
     /** REPLACE_CHRS. */
     public static final String REPLACE_CHRS = "- ";
 
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code TestLinkUtils} class.
@@ -50,32 +50,32 @@ public abstract class TestLinkUtils {
         super();
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * Verify if the given bean is not null and that the test case element is not null.
      * 
      * @param bean
-     *            {@link TestLinkBean} object to test.
+     *            {@link TestLinkCitrusBean} object to test.
      * 
      * @return {@code True} if bean is not null and test case element is not null.
      */
-    public static final boolean isValidTestLinkBean(final TestLinkBean bean) {
+    public static final boolean isValidTestLinkBean(final TestLinkCitrusBean bean) {
 
-        return ((null != bean) && (null != bean.getTestCase()));
+        return ((null != bean) && (null != bean.getTestCaseId()));
     }
 
     /**
-     * Build from the CITRUS custom field value the name of the CITRUS test case. Use for this the custom field value
-     * and append the version of the TestLink test case. This to make sure that the TestLink immutable version behavior
-     * is reflected in the CITRUS test case.
+     * Build from the CITRUS custom field value the name of the CITRUS test case. Use for this the
+     * custom field value and append the version of the TestLink test case. This to make sure that the
+     * TestLink immutable version behavior is reflected in the CITRUS test case.
      * 
      * @param bean
-     *            {@link TestLinkBean} object holding the needed information.
+     *            {@link TestLinkCitrusBean} object holding the needed information.
      * 
      * @return Name of the CITRUS test case or in case of some error {@code null} is returned.
      */
-    public static final String getCitrusTestCaseName(final TestLinkBean bean) {
+    public static final String getCitrusTestCaseName(final TestLinkCitrusBean bean) {
 
         // get CITRUS custom field value
         String citrusName = buildTestCaseName(bean);
@@ -87,19 +87,20 @@ public abstract class TestLinkUtils {
             if (Character.isLowerCase(citrusName.charAt(0))) {
 
                 // set first character from lower case to upper case
-                final StringBuilder builder = new StringBuilder(Character.toTitleCase(citrusName.substring(0, 1)
-                        .charAt(0)));
+                final StringBuilder builder = new StringBuilder(Character.toTitleCase(citrusName
+                        .substring(0, 1).charAt(0)));
                 builder.append(citrusName.substring(1));
 
                 citrusName = builder.toString();
             }
 
-            // append test case version, this is to make sure the immutable version handling of TestLink is preserved
+            // append test case version, this is to make sure the immutable version handling of
+            // TestLink is preserved
             final StringBuilder builder = new StringBuilder(citrusName);
 
             // use a V to mark the used version
             builder.append("V");
-            builder.append(bean.getTestCase().getVersion());
+            builder.append(bean.getTestCaseVersion());
 
             // return the final test case name for this given test case
             return builder.toString();
@@ -113,61 +114,73 @@ public abstract class TestLinkUtils {
      * Build name of test case as used to create a CITRUS test case.
      * 
      * @param bean
-     *            {@link TestLinkBean} object holding the needed information.
+     *            {@link TestLinkCitrusBean} object holding the needed information.
      * 
      * @return Name of test case which will be used to create a CITRUS test case.
      */
-    public static final String buildTestCaseName(final TestLinkBean bean) {
+    public static final String buildTestCaseName(final TestLinkCitrusBean bean) {
 
+        // make sure there is a bean
         if (null != bean) {
 
             final StringBuilder builder = new StringBuilder();
 
-            if (null != bean.getProject()) {
+            // see if there is a project prefix
+            if (null != bean.getTestProjectPrefix()) {
 
-                final String prefix = bean.getProject().getPrefix();
+                final String prefix = bean.getTestProjectPrefix();
 
                 if ((null != prefix) && (!prefix.isEmpty())) {
 
+                    // there is a project prefix, make sure to remove not allowed characters
                     prefix.replace(REPLACE_CHRS, "");
 
                     if (!prefix.isEmpty()) {
 
+                        // there is still some prefix, use it
                         builder.append(prefix);
                     } else {
 
+                        // use default prefix
                         builder.append(TEST_CASE_PREFIX);
                     }
                 } else {
 
+                    // there was no project prefix, use default prefix
                     builder.append(TEST_CASE_PREFIX);
                 }
 
-                if (null != bean.getProject().getId()) {
+                if (null != bean.getTestProjectId()) {
 
+                    // add project id
                     builder.append("Prj");
-                    builder.append(bean.getProject().getId());
+                    builder.append(bean.getTestProjectId());
                 }
             } else {
 
+                // use default prefix
                 builder.append(TEST_CASE_PREFIX);
             }
 
-            if ((null != bean.getPlan()) && (null != bean.getPlan().getId())) {
+            if (null != bean.getTestPlanId()) {
 
+                // add test plan id
                 builder.append("Plan");
-                builder.append(bean.getPlan().getId());
+                builder.append(bean.getTestPlanId());
             }
 
-            if ((null != bean.getTestCase()) && (null != bean.getTestCase().getId())) {
+            if (null != bean.getTestCaseId()) {
 
+                // add test case id
                 builder.append("Tc");
-                builder.append(bean.getTestCase().getId());
+                builder.append(bean.getTestCaseId());
             }
 
             return builder.toString();
         }
 
+        // there was some kind of error, return null
         return null;
     }
+
 }

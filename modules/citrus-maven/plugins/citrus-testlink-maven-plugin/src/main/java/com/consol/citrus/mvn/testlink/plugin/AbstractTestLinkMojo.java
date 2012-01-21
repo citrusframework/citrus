@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 15, 2012 (11:54) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (17:20) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -26,8 +26,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.consol.citrus.testlink.TestLinkBean;
-import com.consol.citrus.testlink.TestLinkHandler;
+import com.consol.citrus.testlink.TestLinkCitrusBean;
 import com.consol.citrus.testlink.impl.TestLinkHandlerImpl;
 
 /**
@@ -38,7 +37,7 @@ import com.consol.citrus.testlink.impl.TestLinkHandlerImpl;
  */
 public abstract class AbstractTestLinkMojo extends AbstractMojo {
 
-    // ~ Instance fields -----------------------------------------------------------------------------------------------
+    // ~ Instance fields -------------------------------------------------------------------------
 
     /**
      * URL pointing to the TestLink URL. The path to the XML-RPC call will be append.
@@ -49,8 +48,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
     protected String url;
 
     /**
-     * Development needed for authorization to TestLink. This must be generated within TestLink. For this TestLink must
-     * be configured.
+     * Development needed for authorization to TestLink. This must be generated within TestLink. For
+     * this TestLink must be configured.
      *
      * @parameter
      * @required
@@ -58,8 +57,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
     protected String devKey;
 
     /**
-     * The test author. Use as default {@code TestLink}. TestLink Java API seems not to return the author login
-     * information.
+     * The test author. Use as default {@code TestLink}. TestLink Java API seems not to return the
+     * author login information.
      *
      * @parameter expression="${author}" default-value="TestLink"
      */
@@ -80,16 +79,17 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
     protected boolean interactiveMode;
 
     /**
-     * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
+     * Which unit test framework to use for test execution (default: testng; options: testng, junit3,
+     * junit4)
      *
      * @parameter expression="${framework}" default-value="testng"
      */
     protected String framework;
 
     /** handler. */
-    private final TestLinkHandler handler;
+    private final TestLinkHandlerImpl handler;
 
-    // ~ Constructors --------------------------------------------------------------------------------------------------
+    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code AbstractTestLinkMojo} class.
@@ -103,16 +103,17 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      * Constructor for {@code AbstractTestLinkMojo} class.
      *
      * @param handlerIn
-     *            Handler implementing {@link TestLinkHandler} interface. May be used for test purposes.
+     *            Handler implementing {@link TestLinkHandlerImpl} interface. May be used for test
+     *            purposes.
      */
-    public AbstractTestLinkMojo(final TestLinkHandler handlerIn) {
+    public AbstractTestLinkMojo(final TestLinkHandlerImpl handlerIn) {
 
         super();
 
         this.handler = handlerIn;
     }
 
-    // ~ Methods -------------------------------------------------------------------------------------------------------
+    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * The CITRUS test case list is finally created, now see what to do with those test cases.
@@ -133,7 +134,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
         try {
 
             // get all available test cases
-            final List<TestLinkBean> testCaseList = this.handler.readTestCases(this.url, this.devKey);
+            final List<TestLinkCitrusBean> testCaseList = this.handler.readTestCases(this.url,
+                    this.devKey);
 
             // make sure there are some test case(s)
             if ((null != testCaseList) && (!testCaseList.isEmpty())) {
@@ -190,16 +192,16 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      *
      * @return Newly created CITRUS bean list, will never be {@code null}.
      */
-    private List<CitrusBean> buildCitrusBeanList(final List<TestLinkBean> testLinkList) {
+    private List<CitrusBean> buildCitrusBeanList(final List<TestLinkCitrusBean> testLinkList) {
 
         // create CITRUS bean list, which will returned in each case
         final List<CitrusBean> citrusList = new ArrayList<CitrusBean>();
 
         // previously made sure that there are some elements
-        for (final TestLinkBean tbean : testLinkList) {
+        for (final TestLinkCitrusBean tbean : testLinkList) {
 
             // create CITRUS test case bean
-            final CitrusBean bean = CitrusUtils.createCitrusBean(this.interactiveMode, tbean);
+            final CitrusBean bean = CitrusUtils.createCitrusBean(tbean, this.interactiveMode);
 
             // make sure it is not null
             if (null != bean) {
@@ -207,7 +209,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
                 // check here if the test case name is valid, as this can be logged here
                 if (CitrusUtils.isValidTestCaseName(bean.getName())) {
 
-                    // the test case name is valid, add the remaining variables to the CITRUS test case bean
+                    // the test case name is valid, add the remaining variables to the CITRUS test
+                    // case bean
                     bean.setAuthor(this.author);
                     bean.setFramework(this.framework);
                     bean.setTargetPackage(this.targetPackage);
@@ -216,7 +219,8 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
                     citrusList.add(bean);
                 } else {
 
-                    // make user aware that CITRUS test case name does not match the Java class naming convention
+                    // make user aware that CITRUS test case name does not match the Java class naming
+                    // convention
                     this.getLog().warn(
                             "Skipping CITRUS test case as the test case name [ " + bean.getName()
                                     + " ] does not conform to the java class name reg.exp. [ "
@@ -227,11 +231,11 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
                 // there was some error with the test case, log this
                 if (null != tbean) {
 
-                    this.getLog().warn("Invalid test case [ " + tbean.getTestCase() + " ]");
+                    this.getLog().warn("Invalid TestLink test case [ " + tbean + " ]");
                 } else {
 
                     // ??? no test case at all ???
-                    this.getLog().error("Test case is null!");
+                    this.getLog().error("TestLink test case is null!?");
                 }
             }
         }

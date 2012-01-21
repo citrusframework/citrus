@@ -15,17 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, January 2, 2012 (17:06) by: Matthias Beil
+ * last modified: Saturday, January 21, 2012 (17:15) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
 import com.consol.citrus.CitrusConstants;
 
+
 /**
  * Enumeration defining the default file values for the different kind of files used by CITRUS.
- * 
- * @author Matthias Beil
- * @since CITRUS 1.2 M2
+ *
+ * @author  Matthias Beil
+ * @since   CITRUS 1.2 M2
  */
 public enum CitrusFileEnum {
 
@@ -37,8 +38,8 @@ public enum CitrusFileEnum {
 
     /**
      * Returns the value of the {@code path} field.
-     * 
-     * @return {@code path} field.
+     *
+     * @return  {@code path} field.
      */
     public String getPath() {
 
@@ -47,8 +48,8 @@ public enum CitrusFileEnum {
 
     /**
      * Returns the value of the {@code extension} field.
-     * 
-     * @return {@code extension} field.
+     *
+     * @return  {@code extension} field.
      */
     public String getExtension() {
 
@@ -63,11 +64,9 @@ public enum CitrusFileEnum {
 
     /**
      * Constructor for {@code CitrusFileEnum} class.
-     * 
-     * @param pathIn
-     *            Default path.
-     * @param extensionIn
-     *            Default extension.
+     *
+     * @param  pathIn       Default path.
+     * @param  extensionIn  Default extension.
      */
     private CitrusFileEnum(final String pathIn, final String extensionIn) {
 
