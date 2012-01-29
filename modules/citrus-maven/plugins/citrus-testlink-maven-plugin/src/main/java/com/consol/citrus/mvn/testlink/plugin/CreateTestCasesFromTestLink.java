@@ -15,9 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (17:26) by: Matthias Beil
+ * last modified: Sunday, January 29, 2012 (13:33) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 import java.util.List;
 
@@ -79,6 +85,14 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
         // finally build the CITRUS test cases
         this.buildTestCases(beanList);
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("\nDo not forget to add the following to the CITRUS context:\n\n");
+        builder.append(CitrusUtils.buildTestListener(beanList.get(0), "    "));
+        builder.append("\n");
+
+        this.getLog().info(builder.toString());
     }
 
     /**
@@ -166,8 +180,8 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             // make sure that only test case(s) which were confirmed are generated
             if (bean.isCreate()) {
 
-                // all parameters are set, so set JAVA and TEST file and check for overwriting the
-                // test case
+                // all parameters are set,
+                // so set JAVA and TEST file and check for overwriting the test case
                 this.handleFiles(bean);
 
                 // make sure that even now the CITRUS test case should be created
@@ -185,6 +199,10 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
                         // create CITRUS test case, overwrites available test case
                         creator.createTestCase();
+
+                        // set JAVA and TEST file
+                        CitrusUtils.setFiles(bean);
+                        this.addVariables(bean);
 
                         // there was no exception, so the generation was successful
                         final StringBuilder builder = new StringBuilder(
@@ -295,6 +313,94 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
                 // avoid creation of test case
                 bean.setCreate(false);
+            }
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param bean
+     *            DOCUMENT ME!
+     */
+    private void addVariables(final CitrusBean bean) {
+
+        final File file = new File(bean.getTestFileName());
+
+        if (!file.exists() || !file.canWrite() || (file.length() <= 0)) {
+
+            // there is no file, return
+            return;
+        }
+
+        BufferedReader reader = null;
+        final StringBuilder builder = new StringBuilder();
+
+        try {
+
+            reader = new BufferedReader(new FileReader(file));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (line.contains("</description>")) {
+
+                    builder.append(line);
+                    builder.append("\n");
+
+                    builder.append("\n");
+                    builder.append(CitrusUtils.buildVariables(bean, "        "));
+                } else if (line.contains("variable")) {
+
+                    // ignore lines containing variable definitions
+                } else {
+
+                    builder.append(line);
+                    builder.append("\n");
+                }
+            }
+        } catch (final Exception ex) {
+
+            this.getLog().error("Error trying to read from file [ " + file.getAbsolutePath() + " ]",
+                    ex);
+        } finally {
+
+            if (reader != null) {
+
+                try {
+
+                    reader.close();
+                } catch (final Exception ex) {
+
+                    this.getLog().error(
+                            "Error while closing file [ " + file.getAbsolutePath() + " ]", ex);
+                }
+            }
+        }
+
+        BufferedWriter writer = null;
+
+        try {
+
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(builder.toString());
+        } catch (final Exception ex) {
+
+            this.getLog().error("Error trying to write to file [ " + file.getAbsolutePath() + " ]",
+                    ex);
+        } finally {
+
+            if (writer != null) {
+
+                try {
+
+                    writer.close();
+                } catch (final Exception ex) {
+
+                    this.getLog().error(
+                            "Error while closing file [ " + file.getAbsolutePath() + " ]", ex);
+                }
             }
         }
     }

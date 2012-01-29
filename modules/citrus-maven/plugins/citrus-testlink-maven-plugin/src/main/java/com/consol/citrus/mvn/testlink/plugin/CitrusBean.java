@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (18:44) by: Matthias Beil
+ * last modified: Saturday, January 28, 2012 (11:21) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -316,6 +316,141 @@ public final class CitrusBean {
             // allow overwriting of key / value pairs
             this.variables.put(key, value);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((this.author == null) ? 0 : this.author.hashCode());
+        result = (prime * result) + (this.create ? 1231 : 1237);
+        result = (prime * result) + ((this.framework == null) ? 0 : this.framework.hashCode());
+        result = (prime * result) + ((this.name == null) ? 0 : this.name.hashCode());
+        result = (prime * result)
+                + ((this.targetPackage == null) ? 0 : this.targetPackage.hashCode());
+        result = (prime * result) + ((this.testLink == null) ? 0 : this.testLink.hashCode());
+        result = (prime * result) + ((this.variables == null) ? 0 : this.variables.hashCode());
+
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final CitrusBean other = (CitrusBean) obj;
+
+        if (this.author == null) {
+
+            if (other.author != null) {
+                return false;
+            }
+        } else if (!this.author.equals(other.author)) {
+            return false;
+        }
+
+        if (this.create != other.create) {
+            return false;
+        }
+
+        if (this.framework == null) {
+
+            if (other.framework != null) {
+                return false;
+            }
+        } else if (!this.framework.equals(other.framework)) {
+            return false;
+        }
+
+        if (this.name == null) {
+
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!this.name.equals(other.name)) {
+            return false;
+        }
+
+        if (this.targetPackage == null) {
+
+            if (other.targetPackage != null) {
+                return false;
+            }
+        } else if (!this.targetPackage.equals(other.targetPackage)) {
+            return false;
+        }
+
+        if (this.testLink == null) {
+
+            if (other.testLink != null) {
+                return false;
+            }
+        } else if (!this.testLink.equals(other.testLink)) {
+            return false;
+        }
+
+        if (this.variables == null) {
+
+            if (other.variables != null) {
+                return false;
+            }
+        } else if (!this.variables.equals(other.variables)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("CitrusBean [create=");
+        builder.append(this.create);
+        builder.append(", javaFileValid=");
+        builder.append(this.javaFileValid);
+        builder.append(", testFileValid=");
+        builder.append(this.testFileValid);
+        builder.append(", name=");
+        builder.append(this.name);
+        builder.append(", author=");
+        builder.append(this.author);
+        builder.append(", targetPackage=");
+        builder.append(this.targetPackage);
+        builder.append(", framework=");
+        builder.append(this.framework);
+        builder.append(", javaFileName=");
+        builder.append(this.javaFileName);
+        builder.append(", testFileName=");
+        builder.append(this.testFileName);
+        builder.append(", testLink=");
+        builder.append(this.testLink);
+        builder.append(", variables=");
+        builder.append(this.variables);
+        builder.append("]");
+
+        return builder.toString();
     }
 
 }

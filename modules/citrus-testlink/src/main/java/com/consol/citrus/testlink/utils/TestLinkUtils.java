@@ -23,7 +23,7 @@ import com.consol.citrus.testlink.TestLinkCitrusBean;
 
 /**
  * Utility class for TestLink static methods.
- * 
+ *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -54,10 +54,10 @@ public abstract class TestLinkUtils {
 
     /**
      * Verify if the given bean is not null and that the test case element is not null.
-     * 
+     *
      * @param bean
      *            {@link TestLinkCitrusBean} object to test.
-     * 
+     *
      * @return {@code True} if bean is not null and test case element is not null.
      */
     public static final boolean isValidTestLinkBean(final TestLinkCitrusBean bean) {
@@ -69,10 +69,10 @@ public abstract class TestLinkUtils {
      * Build from the CITRUS custom field value the name of the CITRUS test case. Use for this the
      * custom field value and append the version of the TestLink test case. This to make sure that the
      * TestLink immutable version behavior is reflected in the CITRUS test case.
-     * 
+     *
      * @param bean
      *            {@link TestLinkCitrusBean} object holding the needed information.
-     * 
+     *
      * @return Name of the CITRUS test case or in case of some error {@code null} is returned.
      */
     public static final String getCitrusTestCaseName(final TestLinkCitrusBean bean) {
@@ -112,10 +112,10 @@ public abstract class TestLinkUtils {
 
     /**
      * Build name of test case as used to create a CITRUS test case.
-     * 
+     *
      * @param bean
      *            {@link TestLinkCitrusBean} object holding the needed information.
-     * 
+     *
      * @return Name of test case which will be used to create a CITRUS test case.
      */
     public static final String buildTestCaseName(final TestLinkCitrusBean bean) {
@@ -149,31 +149,16 @@ public abstract class TestLinkUtils {
                     // there was no project prefix, use default prefix
                     builder.append(TEST_CASE_PREFIX);
                 }
-
-                if (null != bean.getTestProjectId()) {
-
-                    // add project id
-                    builder.append("Prj");
-                    builder.append(bean.getTestProjectId());
-                }
             } else {
 
                 // use default prefix
                 builder.append(TEST_CASE_PREFIX);
             }
 
-            if (null != bean.getTestPlanId()) {
+            if (null != bean.getTestCaseExternalId()) {
 
-                // add test plan id
-                builder.append("Plan");
-                builder.append(bean.getTestPlanId());
-            }
-
-            if (null != bean.getTestCaseId()) {
-
-                // add test case id
-                builder.append("Tc");
-                builder.append(bean.getTestCaseId());
+                // add external id
+                builder.append(bean.getTestCaseExternalId());
             }
 
             return builder.toString();

@@ -15,15 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (22:31) by: Matthias Beil
+ * last modified: Saturday, January 28, 2012 (13:35) by: Matthias Beil
  */
 package com.consol.citrus.testlink.impl;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.xmlrpc.XmlRpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +37,11 @@ import br.eti.kinoshita.testlinkjavaapi.model.ExecutionStatus;
 import br.eti.kinoshita.testlinkjavaapi.model.Platform;
 import br.eti.kinoshita.testlinkjavaapi.model.ReportTCResultResponse;
 import br.eti.kinoshita.testlinkjavaapi.model.TestCase;
+import br.eti.kinoshita.testlinkjavaapi.model.TestLinkMethods;
+import br.eti.kinoshita.testlinkjavaapi.model.TestLinkParams;
 import br.eti.kinoshita.testlinkjavaapi.model.TestPlan;
 import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
+import br.eti.kinoshita.testlinkjavaapi.util.Util;
 
 import com.consol.citrus.testlink.CitrusTestLinkBean;
 import com.consol.citrus.testlink.CitrusTestLinkHandler;
@@ -284,6 +290,9 @@ public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusT
                 // try to get all platform(s)
                 this.readPlatforms(bean, api, build.getTestPlanId());
 
+                // add test case values which are not set in the normal test case call
+                this.addMissingValues(bean, api);
+
                 // add this test case to the returning result list
                 beanList.add(bean);
             }
@@ -458,6 +467,66 @@ public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusT
 
             LOGGER.error("Exception caught while reading platform(s) for test plan ID [ {} ]!",
                     planId, ex);
+        }
+    }
+
+    /**
+     * In the actual {@code 1.9.3-1} release of the TestLink Java API the external ID is not returned.
+     * The external ID is needed to build the Web ID which is displayed in the Web interface and
+     * allows to identify the test case. This information will be used to make up the test case name.
+     * Additionally add also the author name of this test case.
+     * 
+     * @param bean
+     *            Bean where to add the missing informations. Needs to have the test case ID and
+     *            version ID set.
+     * @param api
+     *            Allows to call the TestLink API.
+     */
+    private void addMissingValues(final TestLinkCitrusBean bean, final TestLinkAPI api) {
+
+        try {
+
+            // build request parameters
+            final Map<String, Object> executionData = new HashMap<String, Object>();
+
+            executionData.put(TestLinkParams.testCaseId.toString(), bean.getTestCaseId());
+            executionData.put(TestLinkParams.testCaseExternalId.toString(), null);
+            executionData.put(TestLinkParams.version.toString(), bean.getTestCaseVersion());
+
+            // execute call to TestLink
+            final Object response = api.executeXmlRpcCall(TestLinkMethods.getTestCase.toString(),
+                    executionData);
+
+            // make sure there is some response
+            if (null != response) {
+
+                // make sure the response is a object array
+                if (!(response instanceof String)) {
+
+                    // convert it to a map
+                    final Object[] objArr = (Object[]) response;
+
+                    @SuppressWarnings("unchecked")
+                    final Map<String, Object> map = (Map<String, Object>) objArr[0];
+
+                    // get external ID value
+                    bean.setTestCaseExternalId(Util.getInteger(map, "tc_external_id"));
+
+                    // build author name
+                    final StringBuilder builder = new StringBuilder();
+                    builder.append(Util.getString(map, "author_first_name"));
+                    builder.append(" ");
+                    builder.append(Util.getString(map, "author_last_name"));
+
+                    bean.setTestCaseAuthor(builder.toString());
+                } else {
+
+                    LOGGER.warn("TestLink response for external ID was [ {} ]", response);
+                }
+            }
+        } catch (final XmlRpcException xmlrpcex) {
+
+            LOGGER.error("Error getting external ID", xmlrpcex);
         }
     }
 

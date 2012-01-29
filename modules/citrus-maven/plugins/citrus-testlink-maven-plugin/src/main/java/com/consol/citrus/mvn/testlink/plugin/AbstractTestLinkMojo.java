@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (17:20) by: Matthias Beil
+ * last modified: Sunday, January 29, 2012 (10:01) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 
 import com.consol.citrus.testlink.TestLinkCitrusBean;
 import com.consol.citrus.testlink.impl.TestLinkHandlerImpl;
@@ -67,7 +68,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
     /**
      * Which package (folder structure) is assigned to this test. Defaults to "com.consol.citrus"
      *
-     * @parameter expression="${targetPackage}" default-value="com.consol.citrus"
+     * @parameter expression="${targetPackage}"
      */
     protected String targetPackage;
 
@@ -85,6 +86,13 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      * @parameter expression="${framework}" default-value="testng"
      */
     protected String framework;
+
+    /**
+     * Get the values of the actual project to extract the group ID value.
+     *
+     * @parameter default-value="${project}"
+     */
+    private MavenProject mavenProject;
 
     /** handler. */
     private final TestLinkHandlerImpl handler;
@@ -209,11 +217,22 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
                 // check here if the test case name is valid, as this can be logged here
                 if (CitrusUtils.isValidTestCaseName(bean.getName())) {
 
-                    // the test case name is valid, add the remaining variables to the CITRUS test
-                    // case bean
-                    bean.setAuthor(this.author);
+                    // the test case name is valid,
+                    // add the remaining variables to the CITRUS test case bean
+                    if (null == bean.getAuthor()) {
+
+                        bean.setAuthor(this.author);
+                    }
+
+                    if ((null != this.targetPackage) && (!this.targetPackage.isEmpty())) {
+
+                        bean.setTargetPackage(this.targetPackage);
+                    } else {
+
+                        bean.setTargetPackage(this.mavenProject.getGroupId());
+                    }
+
                     bean.setFramework(this.framework);
-                    bean.setTargetPackage(this.targetPackage);
 
                     // add bean to CITRUS bean list
                     citrusList.add(bean);

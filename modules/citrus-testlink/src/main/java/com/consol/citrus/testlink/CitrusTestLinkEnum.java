@@ -21,7 +21,7 @@ package com.consol.citrus.testlink;
 
 /**
  * Enumeration for CITRUS / TestLink constants.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -41,9 +41,6 @@ public enum CitrusTestLinkEnum {
 
     /** Build ID. */
     BuildId("testlink.build.id", true),
-
-    /** Name of Build. */
-    BuildName("testlink.build.name", false),
 
     /** TestCase ID. */
     TestCaseId("testlink.testcase.id", true),
@@ -68,7 +65,7 @@ public enum CitrusTestLinkEnum {
 
     /**
      * Constructor for {@code TestLinkEnum} class.
-     *
+     * 
      * @param keyIn
      *            Key value to use for CITRUS variables.
      * @param mandatoryIn
@@ -82,7 +79,7 @@ public enum CitrusTestLinkEnum {
 
     /**
      * Returns the value of the {@code key} field.
-     *
+     * 
      * @return {@code key} field.
      */
     public String getKey() {
@@ -92,12 +89,11 @@ public enum CitrusTestLinkEnum {
 
     /**
      * Returns the value of the {@code mandatory} field.
-     *
+     * 
      * @return {@code mandatory} field.
      */
     public boolean isMandatory() {
 
         return this.mandatory;
     }
-
 }

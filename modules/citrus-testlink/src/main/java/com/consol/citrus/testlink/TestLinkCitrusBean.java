@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (20:19) by: Matthias Beil
+ * last modified: Saturday, January 28, 2012 (13:23) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -35,6 +35,9 @@ public final class TestLinkCitrusBean extends AbstractTestLinkBean {
     /** testProjectId. */
     private Integer testProjectId;
 
+    /** testCaseExternalId. */
+    private Integer testCaseExternalId;
+
     /** testCaseVersion. */
     private Integer testCaseVersion;
 
@@ -49,6 +52,9 @@ public final class TestLinkCitrusBean extends AbstractTestLinkBean {
 
     /** testCaseName. */
     private String testCaseName;
+
+    /** testCaseAuthor. */
+    private String testCaseAuthor;
 
     /** testCaseDesc. */
     private String testCaseDesc;
@@ -110,6 +116,48 @@ public final class TestLinkCitrusBean extends AbstractTestLinkBean {
     public void setTestCaseVersion(final Integer testCaseVersionIn) {
 
         this.testCaseVersion = testCaseVersionIn;
+    }
+
+    /**
+     * Returns the value of the {@code test case external id} field.
+     * 
+     * @return {@code test case external id} field.
+     */
+    public Integer getTestCaseExternalId() {
+
+        return this.testCaseExternalId;
+    }
+
+    /**
+     * Sets the value of the {@code test case external id} field.
+     * 
+     * @param testCaseExternalIdIn
+     *            field to set.
+     */
+    public void setTestCaseExternalId(final Integer testCaseExternalIdIn) {
+
+        this.testCaseExternalId = testCaseExternalIdIn;
+    }
+
+    /**
+     * Returns the value of the {@code test case author} field.
+     * 
+     * @return {@code test case author} field.
+     */
+    public String getTestCaseAuthor() {
+
+        return this.testCaseAuthor;
+    }
+
+    /**
+     * Sets the value of the {@code test case author} field.
+     * 
+     * @param testCaseAuthorIn
+     *            field to set.
+     */
+    public void setTestCaseAuthor(final String testCaseAuthorIn) {
+
+        this.testCaseAuthor = testCaseAuthorIn;
     }
 
     /**
@@ -306,6 +354,8 @@ public final class TestLinkCitrusBean extends AbstractTestLinkBean {
         final StringBuilder builder = new StringBuilder();
         builder.append("TestLinkCitrusBean [testProjectId=");
         builder.append(this.testProjectId);
+        builder.append(", testCaseExternalId=");
+        builder.append(this.testCaseExternalId);
         builder.append(", testCaseVersion=");
         builder.append(this.testCaseVersion);
         builder.append(", testProjectName=");
@@ -316,26 +366,32 @@ public final class TestLinkCitrusBean extends AbstractTestLinkBean {
         builder.append(this.testPlanName);
         builder.append(", testCaseName=");
         builder.append(this.testCaseName);
+        builder.append(", testCaseAuthor=");
+        builder.append(this.testCaseAuthor);
         builder.append(", testCaseDesc=");
         builder.append(this.testCaseDesc);
         builder.append(", platformList=");
         builder.append(this.platformList);
-        builder.append(", getTestProjectId()=");
-        builder.append(this.getTestProjectId());
-        builder.append(", getTestCaseVersion()=");
-        builder.append(this.getTestCaseVersion());
-        builder.append(", getTestProjectName()=");
-        builder.append(this.getTestProjectName());
-        builder.append(", getTestPlanName()=");
-        builder.append(this.getTestPlanName());
-        builder.append(", getTestProjectPrefix()=");
-        builder.append(this.getTestProjectPrefix());
-        builder.append(", getTestCaseName()=");
-        builder.append(this.getTestCaseName());
-        builder.append(", getPlatformList()=");
-        builder.append(this.getPlatformList());
-        builder.append(", getTestCaseDesc()=");
-        builder.append(this.getTestCaseDesc());
+        builder.append(", getUrl()=");
+        builder.append(this.getUrl());
+        builder.append(", getKey()=");
+        builder.append(this.getKey());
+        builder.append(", getPlatform()=");
+        builder.append(this.getPlatform());
+        builder.append(", getTestPlanId()=");
+        builder.append(this.getTestPlanId());
+        builder.append(", getBuildId()=");
+        builder.append(this.getBuildId());
+        builder.append(", getBuildName()=");
+        builder.append(this.getBuildName());
+        builder.append(", getTestCaseId()=");
+        builder.append(this.getTestCaseId());
+        builder.append(", getTestCaseInternalId()=");
+        builder.append(this.getTestCaseInternalId());
+        builder.append(", getNotesSuccess()=");
+        builder.append(this.getNotesSuccess());
+        builder.append(", getNotesFailure()=");
+        builder.append(this.getNotesFailure());
         builder.append("]");
 
         return builder.toString();

@@ -30,6 +30,14 @@
             <artifactId>maven-plugin-api</artifactId>
             <version>2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-interactivity-api</artifactId>

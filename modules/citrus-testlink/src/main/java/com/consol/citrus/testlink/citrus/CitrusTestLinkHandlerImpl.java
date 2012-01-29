@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (22:15) by: Matthias Beil
+ * last modified: Sunday, January 29, 2012 (12:16) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -31,7 +31,7 @@ import com.consol.citrus.testlink.utils.ConvertUtils;
 
 /**
  * Implement handling of CITRUS to TestLink functionality.
- * 
+ *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -55,7 +55,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
 
     /**
      * Constructor for {@code CitrusTestlinkHandlerImpl} class.
-     * 
+     *
      * @param handlerIn
      *            Allows to set the handler. May be used for testing purposes.
      */
@@ -97,7 +97,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
 
     /**
      * Handle all missing variables.
-     * 
+     *
      * @param bean
      *            Bean holding all needed variables.
      */
@@ -114,9 +114,6 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
             if (CitrusTestLinkEnum.BuildId.getKey().equals(entry.getKey())) {
 
                 bean.setBuildId(this.handleInteger(bean, entry, CitrusTestLinkEnum.BuildId));
-            } else if (CitrusTestLinkEnum.BuildName.getKey().equals(entry.getKey())) {
-
-                bean.setBuildName(this.handleString(bean, entry, CitrusTestLinkEnum.BuildName));
             } else if (CitrusTestLinkEnum.TestCaseId.getKey().equals(entry.getKey())) {
 
                 bean.setTestCaseId(this.handleInteger(bean, entry, CitrusTestLinkEnum.TestCaseId));
@@ -149,7 +146,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
     /**
      * Add TestLink URL to bean, if there is a value. As it is a mandatory element, if the value is
      * not set, the bean is marked as being invalid.
-     * 
+     *
      * @param bean
      *            CITRUS TestLink bean for setting value.
      * @param entry
@@ -178,7 +175,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
     /**
      * Add TestLink key to bean, if there is a value. As it is a mandatory element, if the value is
      * not set, the bean is marked as being invalid.
-     * 
+     *
      * @param bean
      *            CITRUS TestLink bean for setting value.
      * @param entry
@@ -206,14 +203,14 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
 
     /**
      * Handle conversion of string. Additionally check if string is mandatory.
-     * 
+     *
      * @param bean
      *            CITRUS TestLink bean for setting value.
      * @param entry
      *            Entry element holding the CITRUS test case value.
      * @param tenum
      *            Enumeration holding key and mandatory flag.
-     * 
+     *
      * @return Converted object as string, which might be {@code null}.
      */
     private String handleString(final CitrusTestLinkBean bean, final Entry<String, Object> entry,
@@ -238,14 +235,14 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
 
     /**
      * Handle conversion of integer. Additionally check if integer is mandatory.
-     * 
+     *
      * @param bean
      *            CITRUS TestLink bean for setting value.
      * @param entry
      *            Entry element holding the CITRUS test case value.
      * @param tenum
      *            Enumeration holding key and mandatory flag.
-     * 
+     *
      * @return Converted object as integer, which might be {@code null}.
      */
     private Integer handleInteger(final CitrusTestLinkBean bean, final Entry<String, Object> entry,

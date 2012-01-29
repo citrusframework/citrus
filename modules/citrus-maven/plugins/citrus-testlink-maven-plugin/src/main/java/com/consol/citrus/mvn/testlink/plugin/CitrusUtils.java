@@ -15,18 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (19:05) by: Matthias Beil
+ * last modified: Sunday, January 29, 2012 (13:24) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
+import java.util.Map.Entry;
+
 import com.consol.citrus.testlink.CitrusTestLinkEnum;
+import com.consol.citrus.testlink.CitrusTestLinkListener;
 import com.consol.citrus.testlink.TestLinkCitrusBean;
 import com.consol.citrus.testlink.utils.ConvertUtils;
 import com.consol.citrus.testlink.utils.TestLinkUtils;
 
 /**
  * Utility class for CITRUS static methods.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -52,14 +55,14 @@ public abstract class CitrusUtils {
     /**
      * Create a new {@link CitrusBean} and copying values from the provided {@link TestLinkCitrusBean}
      * bean, but only if a test case name is given.
-     *
+     * 
      * @param bean
      *            Bean holding some values for the new CITRUS test bean.
      * @param interActive
      *            Allows to set if the CITRUS test case should be set automatically. If the
      *            interactive mode is chosen, the user is in charge of defining this value, otherwise
      *            it is set to true.
-     *
+     * 
      * @return Newly created {@link CitrusBean} if the test case name is available otherwise
      *         {@code null} is returned in case of some error.
      */
@@ -79,6 +82,7 @@ public abstract class CitrusUtils {
             cbean.setCreate(!interActive);
             cbean.setName(testCaseName);
             cbean.setTestLink(bean);
+            cbean.setAuthor(bean.getTestCaseAuthor());
 
             updateVariables(cbean);
 
@@ -92,10 +96,10 @@ public abstract class CitrusUtils {
     /**
      * Checks if the provided test case name is valid. As this name is used to generate the Java test
      * class, the provided name must match the regular expression for a Java class name.
-     *
+     * 
      * @param name
      *            Name of provided test case name.
-     *
+     * 
      * @return {@code valid test case name} field.
      */
     public static final boolean isValidTestCaseName(final String name) {
@@ -113,7 +117,7 @@ public abstract class CitrusUtils {
 
     /**
      * Set file(s) for this CITRUS test case. Try to set the Java and Test file(s).
-     *
+     * 
      * @param bean
      *            CITRUS test case bean.
      */
@@ -152,7 +156,94 @@ public abstract class CitrusUtils {
 
     /**
      * DOCUMENT ME!
-     *
+     * 
+     * @param bean
+     *            DOCUMENT ME!
+     * @param indent
+     *            DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public static final String buildVariables(final CitrusBean bean, final String indent) {
+
+        final StringBuilder builder = new StringBuilder();
+
+        builder.append(indent);
+        builder.append("<variables>\n");
+
+        for (final Entry<String, String> entry : bean.getVariables().entrySet()) {
+
+            builder.append(indent);
+            builder.append("    <variable name=\"");
+            builder.append(entry.getKey());
+            builder.append("\" value=\"");
+            builder.append(entry.getValue());
+            builder.append("\" />\n");
+        }
+
+        builder.append(indent);
+        builder.append("</variables>\n");
+
+        return builder.toString();
+    }
+
+    /**
+     * DOCUMENT ME!
+     * 
+     * @param bean
+     *            DOCUMENT ME!
+     * @param indent
+     *            DOCUMENT ME!
+     * 
+     * @return DOCUMENT ME!
+     */
+    public static final String buildTestListener(final CitrusBean bean, final String indent) {
+
+        // <bean class="com.consol.citrus.testlink.CitrusTestLinkListener">
+        // <property name="testLinkUrl" value="http://localhost/testlink" />
+        // <property name="testLinkKey" value="92276a295519160993cd7e3d64d8494b" />
+        // <property name="testLinkPlatform" value="EIMB Development" />
+        // </bean>
+
+        final StringBuilder builder = new StringBuilder();
+
+        builder.append(indent);
+
+        builder.append("<bean class=\"");
+        builder.append(CitrusTestLinkListener.class.getCanonicalName());
+        builder.append("\">\n");
+
+        builder.append(indent);
+        builder.append("   ");
+        builder.append("<property name=\"testLinkUrl\" value=\"");
+        builder.append(bean.getTestLink().getUrl());
+        builder.append("\" />\n");
+
+        builder.append(indent);
+        builder.append("   ");
+        builder.append("<property name=\"testLinkKey\" value=\"");
+        builder.append(bean.getTestLink().getKey());
+        builder.append("\" />\n");
+
+        if ((null != bean.getTestLink().getPlatform())
+                && (!bean.getTestLink().getPlatform().isEmpty())) {
+
+            builder.append(indent);
+            builder.append("   ");
+            builder.append("<property name=\"testLinkPlatform\" value=\"");
+            builder.append(bean.getTestLink().getPlatform());
+            builder.append("\" />\n");
+        }
+
+        builder.append(indent);
+        builder.append("</bean>\n");
+
+        return builder.toString();
+    }
+
+    /**
+     * DOCUMENT ME!
+     * 
      * @param bean
      *            DOCUMENT ME!
      */
@@ -166,9 +257,6 @@ public abstract class CitrusUtils {
 
         bean.addVariable(CitrusTestLinkEnum.BuildId.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getBuildId()));
-
-        bean.addVariable(CitrusTestLinkEnum.BuildName.getKey(),
-                ConvertUtils.convertToString(bean.getTestLink().getBuildName()));
 
         bean.addVariable(CitrusTestLinkEnum.Key.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getKey()));
@@ -198,7 +286,7 @@ public abstract class CitrusUtils {
 
     /**
      * DOCUMENT ME!
-     *
+     * 
      * @param bean
      *            DOCUMENT ME!
      * @param defValue

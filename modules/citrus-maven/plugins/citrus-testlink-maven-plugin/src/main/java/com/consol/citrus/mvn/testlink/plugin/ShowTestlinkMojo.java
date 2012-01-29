@@ -20,7 +20,6 @@
 package com.consol.citrus.mvn.testlink.plugin;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * Show all available info's from {@code TestLink}. For this the URL to TestLink and the generated
@@ -97,6 +96,10 @@ public class ShowTestlinkMojo extends AbstractTestLinkMojo {
         builder.append(bean.getTestLink().getTestPlanName());
         builder.append(" ]\n");
 
+        builder.append("   TestLink Build [ ");
+        builder.append(bean.getTestLink().getBuildName());
+        builder.append(" ]\n");
+
         this.buildMetaData(bean, builder);
         this.buildVariables(bean, builder);
 
@@ -153,18 +156,7 @@ public class ShowTestlinkMojo extends AbstractTestLinkMojo {
 
         builder.append("\n------------ CITRUS Variables ------------\n");
 
-        builder.append("<variables>\n");
-
-        for (final Entry<String, String> entry : bean.getVariables().entrySet()) {
-
-            builder.append("  <variable name=\"");
-            builder.append(entry.getKey());
-            builder.append("\" value=\"");
-            builder.append(entry.getValue());
-            builder.append("\" />\n");
-        }
-
-        builder.append("</variables>\n");
+        builder.append(CitrusUtils.buildVariables(bean, "  "));
 
         if (bean.getTestLink().getPlatformList().size() > 1) {
 
