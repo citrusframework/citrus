@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 29, 2012 (10:01) by: Matthias Beil
+ * last modified: Monday, February 20, 2012 (09:29) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -136,7 +136,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        // make sure all mandatory fields are set, in case not throws a MojoFailureException
+        // make sure all mandatory fields are set, if not throws a MojoFailureException
         this.checkMandatoryFields();
 
         try {
@@ -202,7 +202,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
      */
     private List<CitrusBean> buildCitrusBeanList(final List<TestLinkCitrusBean> testLinkList) {
 
-        // create CITRUS bean list, which will returned in each case
+        // create CITRUS bean list, which will be returned in each case
         final List<CitrusBean> citrusList = new ArrayList<CitrusBean>();
 
         // previously made sure that there are some elements

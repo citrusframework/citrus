@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 29, 2012 (13:24) by: Matthias Beil
+ * last modified: Monday, February 20, 2012 (10:08) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -29,7 +29,7 @@ import com.consol.citrus.testlink.utils.TestLinkUtils;
 
 /**
  * Utility class for CITRUS static methods.
- * 
+ *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -55,14 +55,14 @@ public abstract class CitrusUtils {
     /**
      * Create a new {@link CitrusBean} and copying values from the provided {@link TestLinkCitrusBean}
      * bean, but only if a test case name is given.
-     * 
+     *
      * @param bean
      *            Bean holding some values for the new CITRUS test bean.
      * @param interActive
      *            Allows to set if the CITRUS test case should be set automatically. If the
      *            interactive mode is chosen, the user is in charge of defining this value, otherwise
      *            it is set to true.
-     * 
+     *
      * @return Newly created {@link CitrusBean} if the test case name is available otherwise
      *         {@code null} is returned in case of some error.
      */
@@ -84,8 +84,10 @@ public abstract class CitrusUtils {
             cbean.setTestLink(bean);
             cbean.setAuthor(bean.getTestCaseAuthor());
 
+            // update rest of variables
             updateVariables(cbean);
 
+            // return newly created bean
             return cbean;
         }
 
@@ -96,11 +98,12 @@ public abstract class CitrusUtils {
     /**
      * Checks if the provided test case name is valid. As this name is used to generate the Java test
      * class, the provided name must match the regular expression for a Java class name.
-     * 
+     *
      * @param name
      *            Name of provided test case name.
-     * 
-     * @return {@code valid test case name} field.
+     *
+     * @return {@code True} if the provided name matches the Java class name regular expression
+     *         otherwise {@code false} is returned..
      */
     public static final boolean isValidTestCaseName(final String name) {
 
@@ -117,7 +120,7 @@ public abstract class CitrusUtils {
 
     /**
      * Set file(s) for this CITRUS test case. Try to set the Java and Test file(s).
-     * 
+     *
      * @param bean
      *            CITRUS test case bean.
      */
@@ -155,19 +158,21 @@ public abstract class CitrusUtils {
     }
 
     /**
-     * DOCUMENT ME!
-     * 
+     * Build string holding all CITRUS TestLink variables. This is needed for showing the TestLink
+     * values but also for adding them to the newly created CITRUS test case.
+     *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean holding the TestLink parameters.
      * @param indent
-     *            DOCUMENT ME!
-     * 
-     * @return DOCUMENT ME!
+     *            Blanks holding the indention distance.
+     *
+     * @return String holding all available TestLink parameters. Will never be null, may be empty.
      */
     public static final String buildVariables(final CitrusBean bean, final String indent) {
 
         final StringBuilder builder = new StringBuilder();
 
+        builder.append("\n");
         builder.append(indent);
         builder.append("<variables>\n");
 
@@ -188,25 +193,20 @@ public abstract class CitrusUtils {
     }
 
     /**
-     * DOCUMENT ME!
-     * 
+     * Build string holding the bean definition for the CITRUS listener to use.
+     *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean holding values for URL and Key.
      * @param indent
-     *            DOCUMENT ME!
-     * 
-     * @return DOCUMENT ME!
+     *            Indention.
+     *
+     * @return String holding the bean definition as needed by the CITRUS configuration XML file.
      */
     public static final String buildTestListener(final CitrusBean bean, final String indent) {
 
-        // <bean class="com.consol.citrus.testlink.CitrusTestLinkListener">
-        // <property name="testLinkUrl" value="http://localhost/testlink" />
-        // <property name="testLinkKey" value="92276a295519160993cd7e3d64d8494b" />
-        // <property name="testLinkPlatform" value="EIMB Development" />
-        // </bean>
-
         final StringBuilder builder = new StringBuilder();
 
+        builder.append("\n");
         builder.append(indent);
 
         builder.append("<bean class=\"");
@@ -242,18 +242,12 @@ public abstract class CitrusUtils {
     }
 
     /**
-     * DOCUMENT ME!
-     * 
+     * Update variables with TestLink parameters.
+     *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean holding the TestLink parameters.
      */
     private static final void updateVariables(final CitrusBean bean) {
-
-        if (null == bean) {
-
-            // quit joking!
-            return;
-        }
 
         bean.addVariable(CitrusTestLinkEnum.BuildId.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getBuildId()));
@@ -285,12 +279,12 @@ public abstract class CitrusUtils {
     }
 
     /**
-     * DOCUMENT ME!
-     * 
+     * As platform is a list, use the first entry or the default value.
+     *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean to update with platform information.
      * @param defValue
-     *            DOCUMENT ME!
+     *            Default value, if available.
      */
     private static final void addPlatformVariable(final CitrusBean bean, final String defValue) {
 
@@ -298,6 +292,7 @@ public abstract class CitrusUtils {
 
         if (!bean.getTestLink().getPlatformList().isEmpty()) {
 
+            // use first entry, allow later for changing this value
             platform = bean.getTestLink().getPlatformList().get(0);
         } else {
 

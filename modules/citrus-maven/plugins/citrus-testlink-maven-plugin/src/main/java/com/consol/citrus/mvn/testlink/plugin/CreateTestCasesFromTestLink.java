@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 29, 2012 (13:33) by: Matthias Beil
+ * last modified: Monday, February 20, 2012 (09:40) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -318,10 +318,12 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
     }
 
     /**
-     * DOCUMENT ME!
+     * Add TestLink variables to the newly created CITRUS test case. Add variables after the
+     * description tag, as this is required by the XSD definition of CITRUS. In case this changes,
+     * make sure to adapt it here as well.
      *
      * @param bean
-     *            DOCUMENT ME!
+     *            CITRUS test case bean.
      */
     private void addVariables(final CitrusBean bean) {
 
@@ -346,10 +348,12 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
 
                 if (line.contains("</description>")) {
 
+                    // write description line
                     builder.append(line);
                     builder.append("\n");
 
-                    builder.append("\n");
+                    // start to write CITRUS TestLink variables
+                    // the indention is some experimental value
                     builder.append(CitrusUtils.buildVariables(bean, "        "));
                 } else if (line.contains("variable")) {
 

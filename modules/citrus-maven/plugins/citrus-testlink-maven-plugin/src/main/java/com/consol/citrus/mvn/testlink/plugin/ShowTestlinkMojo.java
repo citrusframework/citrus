@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (19:59) by: Matthias Beil
+ * last modified: Monday, February 20, 2012 (11:32) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -69,12 +69,12 @@ public class ShowTestlinkMojo extends AbstractTestLinkMojo {
     }
 
     /**
-     * DOCUMENT ME!
+     * Starting point of creating the log string of all CITRUS TestLink relevant data.
      *
      * @param bean
-     *            DOCUMENT ME!
+     *            Holding all CITRUS TestLink data.
      *
-     * @return DOCUMENT ME!
+     * @return String holding all data.
      */
     private String buildBeanInfo(final CitrusBean bean) {
 
@@ -114,12 +114,13 @@ public class ShowTestlinkMojo extends AbstractTestLinkMojo {
     }
 
     /**
-     * DOCUMENT ME!
+     * Meta data part holding all meta data not directly needed for CITRUS test case. Allows to
+     * identify the TestLink test case.
      *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean holding all CITRUS TestLink parameters.
      * @param builder
-     *            DOCUMENT ME!
+     *            String builder to add those meta data.
      */
     private void buildMetaData(final CitrusBean bean, final StringBuilder builder) {
 
@@ -145,12 +146,12 @@ public class ShowTestlinkMojo extends AbstractTestLinkMojo {
     }
 
     /**
-     * DOCUMENT ME!
+     * Add CITRUS variables to string builder. If there are more platforms, those are added as well.
      *
      * @param bean
-     *            DOCUMENT ME!
+     *            Bean holding all CITRUS TestLink parameters.
      * @param builder
-     *            DOCUMENT ME!
+     *            String builder to add data.
      */
     private void buildVariables(final CitrusBean bean, final StringBuilder builder) {
 
