@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 
@@ -92,7 +93,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
-            if (MessageUtils.isSpringInternalHeader(headerName)) {
+            if (MessageUtils.isSpringInternalHeader(headerName) || headerName.equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                 continue;
             }
             //check if header expression is variable or function

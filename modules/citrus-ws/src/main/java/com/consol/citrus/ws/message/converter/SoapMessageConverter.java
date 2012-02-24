@@ -37,6 +37,7 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.transform.StringResult;
 
+import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
@@ -120,7 +121,7 @@ public class SoapMessageConverter {
      * @param soapMessage the web service message.
      * @param messageBuilder the response message builder.
      */
-    private void handleSoapHeaders(SoapMessage soapMessage, MessageBuilder<?> messageBuilder) {
+    private void handleSoapHeaders(SoapMessage soapMessage, MessageBuilder<?> messageBuilder) throws TransformerException {
         SoapHeader soapHeader = soapMessage.getSoapHeader();
         
         if (soapHeader != null) {
@@ -142,6 +143,15 @@ public class SoapMessageConverter {
                     messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
                 }
             }
+        }
+        
+        if (soapHeader.getSource() != null) {
+            StringResult headerData = new StringResult();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(soapHeader.getSource(), headerData);
+            
+            messageBuilder.setHeader(CitrusMessageHeaders.HEADER_CONTENT, headerData.toString());
         }
     }
     

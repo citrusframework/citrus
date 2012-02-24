@@ -221,7 +221,15 @@
             <xs:element name="header" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="element" maxOccurs="unbounded">
+                        <xs:choice minOccurs="0">
+                            <xs:element name="data" type="xs:string"/>
+                            <xs:element name="resource">
+                                <xs:complexType>
+                                    <xs:attribute name="file" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>
                                 <xs:attribute name="value" type="xs:string" use="required"/>
