@@ -82,7 +82,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
                 } else if (line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
                     doBody(buffered);
                 } else {
-                    buffered.write(PropertyUtils.replacePropertiesInString(line, props).getBytes());
+                    buffered.write((PropertyUtils.replacePropertiesInString(line, props) + "\n").getBytes("UTF-8"));
                 }
             }
         } catch (TransformerException e) {

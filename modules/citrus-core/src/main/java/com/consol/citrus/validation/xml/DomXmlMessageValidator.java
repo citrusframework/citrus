@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.*;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
@@ -40,6 +41,7 @@ import org.xml.sax.SAXParseException;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.*;
+import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
@@ -93,7 +95,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             Message<?> controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
-                validateMessageHeader(controlMessage.getHeaders(), receivedMessage.getHeaders(), context);
+                validateMessageHeader(controlMessage.getHeaders(), receivedMessage.getHeaders(), validationContext, context);
             }
 
             log.info("XML message validation successful: All values OK");
@@ -122,7 +124,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     protected void validateMessageHeader(MessageHeaders controlHeaders,
             MessageHeaders receivedHeaders,
+            XmlMessageValidationContext validationContext,
             TestContext context) {
+        
+        if (controlHeaders.containsKey(CitrusMessageHeaders.HEADER_CONTENT)) {
+            Assert.isTrue(receivedHeaders.containsKey(CitrusMessageHeaders.HEADER_CONTENT), "Missing header XML fragment in received message");
+            
+            validateXmlHeaderFragment(receivedHeaders.get(CitrusMessageHeaders.HEADER_CONTENT).toString(), 
+                    controlHeaders.get(CitrusMessageHeaders.HEADER_CONTENT).toString(), validationContext, context);
+        }
+        
         ControlMessageValidator validatorDelegate = new ControlMessageValidator();
         validatorDelegate.validateMessageHeader(controlHeaders, receivedHeaders, context);
     }
@@ -378,6 +389,34 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         validateXmlTree(received, source, validationContext, namespaceContextBuilder.buildContext(
                 receivedMessage, validationContext.getNamespaces()), context);
+    }
+    
+    /**
+     * Validates XML header fragment data.
+     * @param receivedHeaderData
+     * @param controlHeaderData
+     * @param validationContext
+     * @param context
+     */
+    private void validateXmlHeaderFragment(String receivedHeaderData, String controlHeaderData,
+            XmlMessageValidationContext validationContext, TestContext context) {
+        log.info("Start XML header data validation ...");
+
+        Document received = XMLUtils.parseMessagePayload(receivedHeaderData);
+        Document source = XMLUtils.parseMessagePayload(controlHeaderData);
+
+        XMLUtils.stripWhitespaceNodes(received);
+        XMLUtils.stripWhitespaceNodes(source);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Received header data:\n" + XMLUtils.serialize(received));
+            log.debug("Control header data:\n" + XMLUtils.serialize(source));
+        }
+
+        validateXmlTree(received, source, validationContext, 
+                namespaceContextBuilder.buildContext(MessageBuilder.withPayload(receivedHeaderData).build(), validationContext.getNamespaces()), 
+                context);
+        
     }
 
     /**

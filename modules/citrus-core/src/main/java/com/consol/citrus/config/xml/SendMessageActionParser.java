@@ -27,7 +27,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 
@@ -79,19 +78,6 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
     @Override
     protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
         super.parseHeaderElements(actionElement, messageBuilder);
-        
-        Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
-        if (headerElement != null) {
-            Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");
-            if (headerDataElement != null) {
-                messageBuilder.setMessageHeaderData(DomUtils.getTextValue(headerDataElement));
-            }
-
-            Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
-            if (headerResourceElement != null) {
-                messageBuilder.setMessageHeaderResource(FileUtils.getResourceFromFilePath(headerResourceElement.getAttribute("file")));
-            }
-        }
     }
 
     /**

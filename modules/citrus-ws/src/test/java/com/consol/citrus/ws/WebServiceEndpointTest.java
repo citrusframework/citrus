@@ -93,6 +93,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -159,6 +160,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -229,6 +231,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(soapRequestHeaders.iterator()).once();
         
@@ -327,6 +330,7 @@ public class WebServiceEndpointTest {
         expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
         
         expect(soapRequestEnvelope.getHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -396,6 +400,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -485,6 +490,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -573,6 +579,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -659,6 +666,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -748,6 +756,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -821,6 +830,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -901,6 +911,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -982,6 +993,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -1064,6 +1076,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -1137,6 +1150,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
@@ -1223,6 +1237,7 @@ public class WebServiceEndpointTest {
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
         expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
