@@ -83,6 +83,21 @@
                 <entry key="randomEnumValue">
                     <bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"/>
                 </entry>
+                <entry key="randomUUID">
+                    <bean class="com.consol.citrus.functions.core.RandomUUIDFunction"/>
+                </entry>
+                <entry key="cdataSection">
+                    <bean class="com.consol.citrus.functions.core.CreateCDataSectionFunction"/>
+                </entry>
+                <entry key="escapeXml">
+                    <bean class="com.consol.citrus.functions.core.EscapeXmlFunction"/>
+                </entry>
+                <entry key="encodeBase64">
+                    <bean class="com.consol.citrus.functions.core.EncodeBase64Function"/>
+                </entry>
+                <entry key="decodeBase64">
+                    <bean class="com.consol.citrus.functions.core.DecodeBase64Function"/>
+                </entry>
 			</map>
 		</property>
 	</bean>
