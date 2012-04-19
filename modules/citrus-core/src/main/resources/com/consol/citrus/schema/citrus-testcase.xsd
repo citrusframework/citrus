@@ -53,7 +53,7 @@
     <xs:complexType name="sendActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
-            <xs:element name="message">
+            <xs:element name="message" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:choice>
@@ -96,6 +96,20 @@
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>
                                 <xs:attribute name="value" type="xs:string" use="required"/>
+								<xs:attribute name="type" use="optional">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Integer"/>
+											<xs:enumeration value="Long"/>
+											<xs:enumeration value="Float"/>
+											<xs:enumeration value="Double"/>
+											<xs:enumeration value="Byte"/>
+											<xs:enumeration value="Short"/>
+											<xs:enumeration value="Boolean"/>
+											<xs:enumeration value="String"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -728,7 +742,7 @@
                     </xs:element>
                 </xs:choice>
                 <xs:choice>
-                    <xs:element name="xslt-data" type="xs:string"></xs:element>
+                    <xs:element name="xslt-data" type="xs:string"/>
                     <xs:element name="xslt-resource">
                         <xs:complexType>
                             <xs:attribute name="file" type="xs:string" use="required" />
