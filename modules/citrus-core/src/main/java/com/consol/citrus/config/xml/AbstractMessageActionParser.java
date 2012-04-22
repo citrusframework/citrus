@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -155,7 +156,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new HashMap<String, Object>();
-        Map<String, Class> messageHeadersClasses = new HashMap<String, Class>();
+
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
@@ -165,17 +166,11 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 String value = headerValue.getAttribute("value");
                 String type = headerValue.getAttribute("type");
 
-                messageHeaders.put(name, value);
-                messageHeadersClasses.put(name,String.class);
-                if (type != null)
-                {
-                    try {
-                        messageHeadersClasses.put(name, Class.forName("java.lang."+type));
-                    } catch (ClassNotFoundException e) {
-                        // keep String Default
-                    }
+                if (StringUtils.hasText(type)) {
+                    value = MessageHeaderType.createTypedValue(type, value);
                 }
-
+                
+                messageHeaders.put(name, value);
             }
             
             Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");
@@ -189,7 +184,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);
-            messageBuilder.setMessageHeaderTypes(messageHeadersClasses);
         }
     }
     

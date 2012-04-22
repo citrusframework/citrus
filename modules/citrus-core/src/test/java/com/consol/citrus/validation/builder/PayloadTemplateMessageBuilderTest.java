@@ -97,6 +97,40 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     }
     
     @Test
+    public void testMessageBuilderWithHeaderTypes() {
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put("intValue", "{integer}:5");
+        headers.put("longValue", "{long}:5");
+        headers.put("floatValue", "{float}:5.0");
+        headers.put("doubleValue", "{double}:5.0");
+        headers.put("boolValue", "{boolean}:true");
+        headers.put("shortValue", "{short}:5");
+        headers.put("byteValue", "{byte}:1");
+        headers.put("stringValue", "{string}:5.0");
+        messageBuilder.setMessageHeaders(headers);
+        
+        Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
+        
+        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("intValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("intValue"), new Integer(5));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("longValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("longValue"), new Long(5));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("floatValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("floatValue"), new Float(5.0f));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("doubleValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("doubleValue"), new Double(5.0));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("boolValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("boolValue"), new Boolean(true));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("shortValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("shortValue"), new Short("5"));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("byteValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("byteValue"), new Byte("1"));
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("stringValue"));
+        Assert.assertEquals(resultingMessage.getHeaders().get("stringValue"), new String("5.0"));
+    }
+    
+    @Test
     public void testMessageBuilderWithHeadersVariableSupport() {
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("operation", "${operation}");

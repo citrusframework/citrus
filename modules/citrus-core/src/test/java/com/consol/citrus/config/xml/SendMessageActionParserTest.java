@@ -20,6 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
@@ -33,7 +34,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() {
-        assertActionCount(5);
+        assertActionCount(6);
         assertActionClassAndName(SendMessageAction.class, "send");
         
         PayloadTemplateMessageBuilder messageBuilder;
@@ -100,5 +101,24 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         
         Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().size(), 1);
         Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().get("/TestMessage/text()"), "newValue");
+        
+        // 6th action
+        action = getNextTestActionFromTest();
+        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        
+        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 8);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("intValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.INTEGER.getName() + MessageHeaderType.TYPE_SUFFIX + "5");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("longValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.LONG.getName() + MessageHeaderType.TYPE_SUFFIX + "10");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("floatValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.FLOAT.getName() + MessageHeaderType.TYPE_SUFFIX + "10.0");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("doubleValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.DOUBLE.getName() + MessageHeaderType.TYPE_SUFFIX + "10.0");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("byteValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.BYTE.getName() + MessageHeaderType.TYPE_SUFFIX + "1");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("shortValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.SHORT.getName() + MessageHeaderType.TYPE_SUFFIX + "10");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("boolValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.BOOLEAN.getName() + MessageHeaderType.TYPE_SUFFIX + "true");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("stringValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.STRING.getName() + MessageHeaderType.TYPE_SUFFIX + "Hello Citrus");
+        
+        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
     }
 }

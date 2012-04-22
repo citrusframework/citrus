@@ -96,20 +96,20 @@
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>
                                 <xs:attribute name="value" type="xs:string" use="required"/>
-								<xs:attribute name="type" use="optional">
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="Integer"/>
-											<xs:enumeration value="Long"/>
-											<xs:enumeration value="Float"/>
-											<xs:enumeration value="Double"/>
-											<xs:enumeration value="Byte"/>
-											<xs:enumeration value="Short"/>
-											<xs:enumeration value="Boolean"/>
-											<xs:enumeration value="String"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:attribute>
+                                <xs:attribute name="type">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="integer"/>
+                                            <xs:enumeration value="long"/>
+                                            <xs:enumeration value="float"/>
+                                            <xs:enumeration value="double"/>
+                                            <xs:enumeration value="byte"/>
+                                            <xs:enumeration value="short"/>
+                                            <xs:enumeration value="boolean"/>
+                                            <xs:enumeration value="string"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>

@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -43,10 +44,6 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
-
-    /** The control header types expected for this message */
-    private Map<String, Class> messageHeaderTypes;
-
 
     /** The message header as a file resource */
     private Resource messageHeaderResource;
@@ -70,17 +67,13 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
 
-            if (messageHeaderTypes != null)
-            {
-                for (Map.Entry<String, Object> entry : headers.entrySet()) {
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    Class clazz = messageHeaderTypes.get(key);
-                    if (clazz != null)
-                    {
-                        Constructor constr = clazz.getConstructor(new Class[] { String.class});
-                        entry.setValue(constr.newInstance(value));
-                    }
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                String value = entry.getValue().toString();
+                
+                if (MessageHeaderType.isTyped(value)) {
+                    MessageHeaderType type = MessageHeaderType.fromTypedValue(value);
+                    Constructor<?> constr = type.getHeaderClass().getConstructor(new Class[] { String.class });
+                    entry.setValue(constr.newInstance(MessageHeaderType.removeTypeDefinition(value)));
                 }
             }
             
@@ -135,14 +128,6 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      */
     public void setMessageHeaders(Map<String, Object> messageHeaders) {
         this.messageHeaders = messageHeaders;
-    }
-
-    /**
-     * Sets the message header types for this control message.
-     * @param messageHeaderTypes the controlMessageHeaderTypes to set
-     */
-    public void setMessageHeaderTypes(Map<String, Class> messageHeaderTypes) {
-        this.messageHeaderTypes = messageHeaderTypes;
     }
 
     /**
