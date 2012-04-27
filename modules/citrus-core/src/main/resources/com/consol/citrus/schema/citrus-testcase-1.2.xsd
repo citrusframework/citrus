@@ -53,7 +53,7 @@
     <xs:complexType name="sendActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
-            <xs:element name="message" minOccurs="0">
+            <xs:element name="message">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:choice>
