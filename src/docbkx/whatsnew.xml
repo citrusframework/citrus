@@ -109,6 +109,13 @@
     executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
   </section>
   
+  <section id="whatsnew-functions">
+    <title>New functions</title>
+    
+    <para>We introduced some new default Citrus functions that will ease the testers life. This includes commonly used functions like encoding/decoding base64 bindary data, escaping XML and generating 
+    random Java UUID values. See <xref linkend="functions-random-uuid"/> for detail descriptions.</para>
+  </section>
+  
   <section id="whatsnew-bugfixes">
     <title>Bugfixes</title>
     

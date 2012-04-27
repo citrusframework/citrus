@@ -26,6 +26,14 @@
         <artifactId>commons-cli</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
     	<groupId>javax.jms</groupId>
     	<artifactId>jms</artifactId>
     </dependency>

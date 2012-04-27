@@ -31,9 +31,20 @@
 			<variable name="max" value="citrus:maximum('3', '4', '5')"/>
 			<variable name="sum" value="citrus:sum('3', '4', '5')"/>
 			<variable name="abs" value="citrus:absolute('-3')"/>
+            <variable name="randomUUID" value="citrus:randomUUID()"/>
+            <variable name="cdata" value="citrus:cdataSection('Hallo Test Framework')"/>
+            <variable name="encodeBase64" value="citrus:encodeBase64('Test Framework')"/>
+            <variable name="decodeBase64" value="citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=')"/>
 		</variables>
         <actions>
         	<echo><message>citrus:concat('Today is: ', ${date})</message></echo>
+            <echo>
+                <message>
+                    <![CDATA[
+                        citrus:escapeXml('<Message>Hallo Test Framework</Message>')                        
+                    ]]>
+                </message>
+            </echo>
             <trace-variables/>
         </actions>
     </testcase>

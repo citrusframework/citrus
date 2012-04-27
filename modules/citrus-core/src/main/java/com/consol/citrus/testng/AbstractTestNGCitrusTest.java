@@ -107,7 +107,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Runs tasks before tests.
      * @param testContext the test context.
      */
-    @BeforeClass(dependsOnMethods = "springTestContextPrepareTestInstance")
+    @BeforeClass(alwaysRun=true, dependsOnMethods = "springTestContextPrepareTestInstance")
     public void beforeTest(ITestContext testContext) {
         if (beforeTest != null) {
             try {

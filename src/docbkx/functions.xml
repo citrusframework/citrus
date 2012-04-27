@@ -431,4 +431,63 @@
         </para>
         <programlisting>&lt;variable name="httpStatusCodeMessage" value="custom:getHttpStatusMessage('500')" /&gt;</programlisting>
     </section> 
+    
+    <section id="functions-random-uuid">
+        <title>citrus:randomUUID()</title>
+        
+        <para>The function will generate a random Java UUID.</para>
+        
+        <programlisting>&lt;variable name=&quot;uuid&quot; value=&quot;citrus:randomUUID()&quot;/&gt;</programlisting>
+        
+        <para>uuid = <emphasis>98fbd7b0-832e-4b85-b9d2-e0113ee88356</emphasis></para>
+    </section>
+    
+    <section id="functions-encode-base64">
+        <title>citrus:encodeBase64()</title>
+        
+        <para>The function will encode a string to binary data using base64 hexadecimal encoding.</para>
+        
+        <programlisting>&lt;variable name=&quot;encoded&quot; value=&quot;citrus:encodeBase64('Hallo Testframework')&quot;/&gt;</programlisting>
+        
+        <para>encoded = <emphasis>VGVzdCBGcmFtZXdvcms=</emphasis></para>
+    </section>
+    
+    <section id="functions-decode-base64">
+        <title>citrus:decodeBase64()</title>
+        
+        <para>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</para>
+        
+        <programlisting>&lt;variable name=&quot;decoded&quot; value=&quot;citrus:encodeBase64('VGVzdCBGcmFtZXdvcms=')&quot;/&gt;</programlisting>
+        
+        <para>decoded = <emphasis>Hallo Testframework</emphasis></para>
+    </section>
+    
+    <section id="functions-escape-xml">
+        <title>citrus:escapeXml()</title>
+        
+        <para>If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all
+        XML special characters.</para>
+        
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;
+        &lt;![CDATA[
+            citrus:escapeXml('&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;')                        
+        ]]&gt;
+    &lt;/message&gt;
+&lt;/echo&gt;</programlisting>
+        
+        <para><emphasis>&amp;lt;Message&amp;gt;Hallo Test Framework&amp;lt;/Message&amp;gt;</emphasis></para>
+    </section>
+    
+    <section id="functions-cdata-section">
+        <title>citrus:cdataSection()</title>
+        
+        <para>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems
+        when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this
+        case the next function ships very usefull.</para>
+        
+        <programlisting>&lt;variable name=&quot;cdata&quot; value=&quot;citrus:cdataSection('payload')&quot;/&gt;</programlisting>
+        
+        <para>cdata = <emphasis>&lt;![CDATA[payload]]&gt;</emphasis></para>
+    </section>
 </chapter>
