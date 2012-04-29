@@ -15,19 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (21:21) by: Matthias Beil
+ * last modified: Sunday, April 29, 2012 (15:22) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for converting functionality.
- *
+ * 
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -52,10 +53,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert a {@link Throwable} to a string.
-     *
+     * 
      * @param cause
      *            Throwable to convert, if {@code null} an empty string is returned.
-     *
+     * 
      * @return Convert throwable or return an empty string in case there was some kind of error.
      */
     public static final String throwableToString(final Throwable cause) {
@@ -65,26 +66,26 @@ public abstract class ConvertUtils {
         // make sure the cause is available
         if (null != cause) {
 
-            PrintWriter writer = null;
-            ByteArrayOutputStream baos = null;
+            PrintWriter printWriter = null;
+            Writer writer = null;
 
             try {
 
-                baos = new ByteArrayOutputStream();
-                writer = new PrintWriter(baos);
+                writer = new StringWriter();
+                printWriter = new PrintWriter(writer);
 
-                cause.printStackTrace(writer);
-                builder.append(baos.toString());
+                cause.printStackTrace(printWriter);
+                builder.append(writer.toString());
             } catch (final Exception ex) {
 
                 LOGGER.error("Exception caught while converting throwable [ {} ]", cause, ex);
             } finally {
 
-                if (null != writer) {
+                if (null != printWriter) {
 
                     try {
 
-                        writer.close();
+                        printWriter.close();
                     } catch (final Exception ex) {
 
                         LOGGER.error(
@@ -101,10 +102,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert value of object into a {@link String}.
-     *
+     * 
      * @param obj
      *            Object for which the value should be converted.
-     *
+     * 
      * @return Value of object as a string or {@code null} in case of an error.
      */
     public static final String convertToString(final Object obj) {
@@ -128,10 +129,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert object value to a {@link Boolean}.
-     *
+     * 
      * @param obj
      *            Object for which the value should be converted.
-     *
+     * 
      * @return Value of object as a boolean or {@code null} in case of an error.
      */
     public static final Boolean convertToBoolean(final Object obj) {
@@ -152,10 +153,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert object value to an {@link Integer}.
-     *
+     * 
      * @param obj
      *            Object for which the value should be converted.
-     *
+     * 
      * @return Value of object as an integer or {@code null} in case of an error.
      */
     public static final Integer convertToInteger(final Object obj) {

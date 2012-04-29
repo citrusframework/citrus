@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (17:15) by: Matthias Beil
+ * last modified: Sunday, April 29, 2012 (13:00) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
+import java.io.Closeable;
 import java.io.File;
-
 
 /**
  * Utility class for CITRUS file static methods.
  *
- * @author  Matthias Beil
- * @since   CITRUS 1.2 M2
+ * @author Matthias Beil
+ * @since CITRUS 1.2 M2
  */
 public abstract class CitrusFileUtils {
 
@@ -55,10 +55,12 @@ public abstract class CitrusFileUtils {
      * implementation is needed here. Manually watch that this implementation does not differentiate
      * from the CITRUS core implementation.
      *
-     * @param   fileEnum  Type of file name to generate.
-     * @param   bean      CITRUS test case bean holding the name and target package of the file.
+     * @param fileEnum
+     *            Type of file name to generate.
+     * @param bean
+     *            CITRUS test case bean holding the name and target package of the file.
      *
-     * @return  Newly created file name depending on file type, test case name and target package.
+     * @return Newly created file name depending on file type, test case name and target package.
      */
     public static final String buildFileName(final CitrusFileEnum fileEnum, final CitrusBean bean) {
 
@@ -74,10 +76,11 @@ public abstract class CitrusFileUtils {
     /**
      * Verify if file given by this file name exists, is a file, can be read and has some content.
      *
-     * @param   fileName  Name of file.
+     * @param fileName
+     *            Name of file.
      *
-     * @return  {@code True} if file name is not empty, file exists, is a file, can be read and has a
-     *          length greater zero.
+     * @return {@code True} if file name is not empty, file exists, is a file, can be read and has a
+     *         length greater zero.
      */
     public static final boolean isValidFile(final String fileName) {
 
@@ -97,10 +100,11 @@ public abstract class CitrusFileUtils {
     /**
      * Get the absolute file name of the file. Makes sure the file is valid.
      *
-     * @param   fileName  File name to get the absolute path for.
+     * @param fileName
+     *            File name to get the absolute path for.
      *
-     * @return  {@code Absolute path} for the given file or {@code null} if the file name is not valid
-     *          or the file is not valid.
+     * @return {@code Absolute path} for the given file or {@code null} if the file name is not valid
+     *         or the file is not valid.
      */
     public static final String getAbsolutePath(final String fileName) {
 
@@ -115,6 +119,26 @@ public abstract class CitrusFileUtils {
 
         // either file name or file are not valid, return null
         return null;
+    }
+
+    /**
+     * Close any object of instance {@link Closeable}.
+     *
+     * @param obj
+     *            Instance of closeable.
+     */
+    public static final void close(final Object obj) {
+
+        if (obj instanceof Closeable) {
+
+            try {
+
+                ((Closeable) obj).close();
+            } catch (final Exception ex) {
+
+                // ignore exception
+            }
+        }
     }
 
 }

@@ -336,13 +336,13 @@ public class CitrusTestLinkListener implements TestListener {
             if (bean.getResponseState().booleanValue()) {
 
                 // YEAH it was
-                LOGGER.info("Writing to TestLink was successful for [ {} ]", bean.getId());
+                LOGGER.info("+++===+++ Writing to TestLink was successful for [ {} ] +++===+++", bean.getId());
             } else {
 
                 // there was some error writing to TestLink, log it
                 final StringBuilder builder = new StringBuilder();
 
-                builder.append("Failure writing to TestLink");
+                builder.append("+++===+++ Failure writing to TestLink");
 
                 if (!bean.getResponseList().isEmpty()) {
 
@@ -362,7 +362,7 @@ public class CitrusTestLinkListener implements TestListener {
 
                     builder.append("Exception caught:\n");
                     builder.append(ConvertUtils.throwableToString(bean.getResponseCause()));
-                    builder.append("\n");
+                    builder.append("\n\n+++===+++\n");
                 }
 
                 LOGGER.error(builder.toString());

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, February 20, 2012 (10:08) by: Matthias Beil
+ * last modified: Sunday, April 29, 2012 (09:58) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -58,16 +58,11 @@ public abstract class CitrusUtils {
      *
      * @param bean
      *            Bean holding some values for the new CITRUS test bean.
-     * @param interActive
-     *            Allows to set if the CITRUS test case should be set automatically. If the
-     *            interactive mode is chosen, the user is in charge of defining this value, otherwise
-     *            it is set to true.
      *
      * @return Newly created {@link CitrusBean} if the test case name is available otherwise
      *         {@code null} is returned in case of some error.
      */
-    public static final CitrusBean createCitrusBean(final TestLinkCitrusBean bean,
-            final boolean interActive) {
+    public static final CitrusBean createCitrusBean(final TestLinkCitrusBean bean) {
 
         // get test case name
         final String testCaseName = TestLinkUtils.getCitrusTestCaseName(bean);
@@ -78,8 +73,8 @@ public abstract class CitrusUtils {
             // create new CITRUS bean
             final CitrusBean cbean = new CitrusBean();
 
-            // if interactive is false, then the test case will be created automatically
-            cbean.setCreate(!interActive);
+            // allow for creation of test
+            cbean.setCreate(true);
             cbean.setName(testCaseName);
             cbean.setTestLink(bean);
             cbean.setAuthor(bean.getTestCaseAuthor());

@@ -73,13 +73,6 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
     protected String targetPackage;
 
     /**
-     * Whether to run this command in interactive mode. Defaults to "true".
-     *
-     * @parameter expression="${interactiveMode}" default-value="true"
-     */
-    protected boolean interactiveMode;
-
-    /**
      * Which unit test framework to use for test execution (default: testng; options: testng, junit3,
      * junit4)
      *
@@ -209,7 +202,7 @@ public abstract class AbstractTestLinkMojo extends AbstractMojo {
         for (final TestLinkCitrusBean tbean : testLinkList) {
 
             // create CITRUS test case bean
-            final CitrusBean bean = CitrusUtils.createCitrusBean(tbean, this.interactiveMode);
+            final CitrusBean bean = CitrusUtils.createCitrusBean(tbean);
 
             // make sure it is not null
             if (null != bean) {

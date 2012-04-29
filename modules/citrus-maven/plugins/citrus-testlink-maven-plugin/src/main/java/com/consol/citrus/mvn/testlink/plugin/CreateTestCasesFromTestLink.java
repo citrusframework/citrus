@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Monday, February 20, 2012 (09:40) by: Matthias Beil
+ * last modified: Sunday, April 29, 2012 (14:13) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -28,9 +28,11 @@ import java.io.FileWriter;
 import java.util.List;
 
 import org.codehaus.plexus.components.interactivity.Prompter;
+import org.codehaus.plexus.components.interactivity.PrompterException;
 
 import org.springframework.util.CollectionUtils;
 
+import com.consol.citrus.testlink.CitrusTestLinkEnum;
 import com.consol.citrus.util.TestCaseCreator;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
@@ -76,17 +78,13 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
     @Override
     public void handleCitrusTestCases(final List<CitrusBean> beanList) {
 
-        // check if interactive mode is active
-        if (this.interactiveMode) {
-
-            // ask the user for each test case
-            this.askUser(beanList);
-        }
+        // ask the user for each test case
+        this.askUser(beanList);
 
         // finally build the CITRUS test cases
         this.buildTestCases(beanList);
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         builder.append("\nDo not forget to add the following to the CITRUS context:\n\n");
         builder.append(CitrusUtils.buildTestListener(beanList.get(0), "    "));
@@ -109,132 +107,20 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             // make sure each CITRUS test case is handled and an exception handled for each test case
             try {
 
-                // prompt for changes
-                final StringBuilder promptFirst = new StringBuilder("\n\nEdit parameters for test: ");
-                promptFirst.append(bean.getName());
-                promptFirst.append("\nEnter test author:");
+                this.handleFiles(bean);
 
-                final String tauthor = this.prompter.prompt(promptFirst.toString(), bean.getAuthor());
-                final String tdescription = this.prompter.prompt("Enter test description:", bean
-                        .getTestLink().getTestCaseDesc());
-                final String ttargetPackage = this.prompter.prompt("Enter test package:",
-                        bean.getTargetPackage());
-                final String tframework = this.prompter
-                        .prompt("Choose unit test framework [testng | junit3 | junit4]:",
-                                bean.getFramework());
+                if (!bean.isCreate()) {
 
-                // ask for confirmation
-                final StringBuilder builder = new StringBuilder("\nTest creation for:");
-                builder.append("\nframework: ");
-                builder.append(tframework);
-                builder.append("\nname: ");
-                builder.append(bean.getName());
-                builder.append("\nauthor: ");
-                builder.append(tauthor);
-                builder.append("\ndescription: ");
-                builder.append(tdescription);
-                builder.append("\npackage: ");
-                builder.append(ttargetPackage);
-                builder.append("\n\nCreate test case [ ");
-                builder.append(bean.getName());
-                builder.append(" ]");
-
-                final String confirm = this.prompter.prompt(builder.toString(),
-                        CollectionUtils.arrayToList(new String[] { "y", "n" }), "y");
-
-                // check if confirmation failed
-                if ("n".equalsIgnoreCase(confirm)) {
-
-                    // this test case should not be created
-                    bean.setCreate(false);
-
-                    // continue with next CITRUS test case
                     continue;
                 }
 
-                // replace values with new values
-                bean.setAuthor(tauthor);
-                bean.setCreate(true);
-                bean.getTestLink().setTestCaseDesc(tdescription);
-                bean.setFramework(tframework);
-                bean.setTargetPackage(ttargetPackage);
+                // prompt for changes and variables
+                this.promptForChanges(bean);
+                this.promptForVariables(bean);
             } catch (final Exception ex) {
 
                 this.getLog().error(
                         "Exception caught for CITRUS test case [ " + bean.getName() + " ]", ex);
-            }
-        }
-    }
-
-    /**
-     * Build for all CITRUS test case bean a CITRUS test case.
-     *
-     * @param beanList
-     *            List of CITRUS test case bean(s).
-     */
-    private void buildTestCases(final List<CitrusBean> beanList) {
-
-        // made sure previously that list is not null and not empty
-        for (final CitrusBean bean : beanList) {
-
-            // make sure that only test case(s) which were confirmed are generated
-            if (bean.isCreate()) {
-
-                // all parameters are set,
-                // so set JAVA and TEST file and check for overwriting the test case
-                this.handleFiles(bean);
-
-                // make sure that even now the CITRUS test case should be created
-                if (bean.isCreate()) {
-
-                    // handle each test case by it own, so all test case(s) are handled
-                    try {
-
-                        // build CITRUS test case creator using CITRUS core functionality
-                        final TestCaseCreator creator = TestCaseCreator.build()
-                                .withFramework(UnitFramework.fromString(bean.getFramework()))
-                                .withName(bean.getName()).withAuthor(bean.getAuthor())
-                                .withDescription(bean.getTestLink().getTestCaseDesc())
-                                .usePackage(bean.getTargetPackage());
-
-                        // create CITRUS test case, overwrites available test case
-                        creator.createTestCase();
-
-                        // set JAVA and TEST file
-                        CitrusUtils.setFiles(bean);
-                        this.addVariables(bean);
-
-                        // there was no exception, so the generation was successful
-                        final StringBuilder builder = new StringBuilder(
-                                "\n\nSuccessfully created new test case");
-                        builder.append("\nframework: ");
-                        builder.append(bean.getFramework());
-                        builder.append("\nname: ");
-                        builder.append(bean.getName());
-                        builder.append("\nauthor: ");
-                        builder.append(bean.getAuthor());
-                        builder.append("\ndescription: ");
-                        builder.append(bean.getTestLink().getTestCaseDesc());
-                        builder.append("\npackage: ");
-                        builder.append(bean.getTargetPackage());
-                        builder.append("\n\n");
-
-                        this.getLog().info(builder.toString());
-                    } catch (final Exception ex) {
-
-                        this.getLog().error(
-                                "Exception caught for creating test case [ " + bean + " ]", ex);
-                    }
-                } else {
-
-                    // test case should not be overwritten
-                    this.getLog().info("NOT overwriting CITRUS test case [ " + bean.getName() + " ]");
-                }
-            } else {
-
-                // test case was not confirmed
-                this.getLog()
-                        .info("Skipping creation of CITRUS test case [ " + bean.getName() + " ]");
             }
         }
     }
@@ -254,47 +140,9 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
         // make sure that at least one file is available
         if (bean.isJavaFileValid() || bean.isTestFileValid()) {
 
-            // see if interactive mode is active
-            if (this.interactiveMode) {
+            // ask if test case should be overwritten
+            try {
 
-                // check if test case should be overwritten
-                try {
-
-                    final StringBuilder builder = new StringBuilder("\n\nTest case JAVA file [ ");
-                    builder.append(bean.getJavaFileName());
-                    builder.append(" ] exists [ ");
-                    builder.append(bean.isJavaFileValid());
-                    builder.append(" ]\n");
-                    builder.append("Test case TEST file [ ");
-                    builder.append(bean.getTestFileName());
-                    builder.append(" ] exists [ ");
-                    builder.append(bean.isTestFileValid());
-                    builder.append(" ]\n\n");
-                    builder.append("Do you want to skip this test case [ ");
-                    builder.append(bean.getName());
-                    builder.append(" ] and NOT overwrite it");
-
-                    final String confirm = this.prompter.prompt(builder.toString(),
-                            CollectionUtils.arrayToList(new String[] { "y", "n" }), "y");
-
-                    // check if confirmation is true
-                    if ("y".equalsIgnoreCase(confirm)) {
-
-                        // this test case should not be created
-                        bean.setCreate(false);
-                    }
-                } catch (final Exception ex) {
-
-                    this.getLog().error(
-                            "Exception caught while asking for overwritting, skipping test case [ "
-                                    + bean.getName() + " ]", ex);
-
-                    // this test case should not be created
-                    bean.setCreate(false);
-                }
-            } else {
-
-                // in automatic mode do not overwrite the available test case, inform user
                 final StringBuilder builder = new StringBuilder("\n\nTest case JAVA file [ ");
                 builder.append(bean.getJavaFileName());
                 builder.append(" ] exists [ ");
@@ -304,15 +152,191 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 builder.append(bean.getTestFileName());
                 builder.append(" ] exists [ ");
                 builder.append(bean.isTestFileValid());
-                builder.append(" ]\n");
-                builder.append("As the interactive mode is deactivated, skip test case [ ");
+                builder.append(" ]\n\n");
+                builder.append("Do you want to skip this test case [ ");
                 builder.append(bean.getName());
-                builder.append(" ] as otherwise this test case will be overwritten!");
+                builder.append(" ] and NOT overwrite it");
 
-                this.getLog().info(builder.toString());
+                final String confirm = this.prompter.prompt(builder.toString(),
+                        CollectionUtils.arrayToList(new String[] { "y", "n" }), "y");
 
-                // avoid creation of test case
+                // check if confirmation is true
+                if ("y".equalsIgnoreCase(confirm)) {
+
+                    // this test case should not be created
+                    bean.setCreate(false);
+                }
+            } catch (final Exception ex) {
+
+                this.getLog().error(
+                        "Exception caught while asking for overwritting, skipping test case [ "
+                                + bean.getName() + " ]", ex);
+
+                // this test case should not be created
                 bean.setCreate(false);
+            }
+        }
+    }
+
+    /**
+     * Prompt for changes.
+     *
+     * @param bean
+     *            CITRUS test case bean.
+     *
+     * @throws PrompterException
+     *             Thrown in case of an error.
+     */
+    private void promptForChanges(final CitrusBean bean) throws PrompterException {
+
+        final StringBuilder promptFirst = new StringBuilder("\n\nEdit parameters for test: ");
+        promptFirst.append(bean.getName());
+        promptFirst.append("\nEnter test author:");
+
+        final String tauthor = this.prompter.prompt(promptFirst.toString(), bean.getAuthor());
+        final String tdescription = this.prompter.prompt("Enter test description:", bean
+                .getTestLink().getTestCaseDesc());
+        final String ttargetPackage = this.prompter.prompt("Enter test package:",
+                bean.getTargetPackage());
+        final String tframework = this.prompter.prompt(
+                "Choose unit test framework [testng | junit3 | junit4]:", bean.getFramework());
+
+        // ask for confirmation
+        final StringBuilder builder = new StringBuilder("\nTest creation for:");
+        builder.append("\nframework: ");
+        builder.append(tframework);
+        builder.append("\nname: ");
+        builder.append(bean.getName());
+        builder.append("\nauthor: ");
+        builder.append(tauthor);
+        builder.append("\ndescription: ");
+        builder.append(tdescription);
+        builder.append("\npackage: ");
+        builder.append(ttargetPackage);
+        builder.append("\n\nCreate test case [ ");
+        builder.append(bean.getName());
+        builder.append(" ]");
+
+        final String confirm = this.prompter.prompt(builder.toString(),
+                CollectionUtils.arrayToList(new String[] { "y", "n" }), "y");
+
+        // check if confirmation failed
+        if ("n".equalsIgnoreCase(confirm)) {
+
+            // this test case should not be created
+            bean.setCreate(false);
+        } else {
+
+            // replace values with new values
+            bean.setAuthor(tauthor);
+            bean.getTestLink().setTestCaseDesc(tdescription);
+            bean.setFramework(tframework);
+            bean.setTargetPackage(ttargetPackage);
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param bean
+     *            DOCUMENT ME!
+     *
+     * @throws PrompterException
+     *             DOCUMENT ME!
+     */
+    private void promptForVariables(final CitrusBean bean) throws PrompterException {
+
+        final StringBuilder promptFirst = new StringBuilder("\n\nEdit variables for test: ");
+        promptFirst.append(bean.getName());
+        promptFirst.append("\nEnter success text:");
+
+        final String notesSuccess = this.prompter.prompt(promptFirst.toString(), bean.getVariables()
+                .get(CitrusTestLinkEnum.NotesSuccess.getKey()));
+        final String notesFailure = this.prompter.prompt("Enter failure text:", bean.getVariables()
+                .get(CitrusTestLinkEnum.NotesFailure.getKey()));
+        final String platform = this.prompter.prompt("Choose platform", bean.getTestLink()
+                .getPlatformList(),
+                bean.getVariables().get(CitrusTestLinkEnum.TestCasePlatform.getKey()));
+
+        // ask for confirmation
+        StringBuilder builder = new StringBuilder("\nVariables:");
+        builder.append("\nSuccess notes: ");
+        builder.append(notesSuccess);
+        builder.append("\nFailure notes: ");
+        builder.append(notesFailure);
+        builder.append("\nPlatform: ");
+        builder.append(platform);
+        builder.append("\n\nConfirm variables: ");
+
+        final String confirm = this.prompter.prompt(builder.toString(),
+                CollectionUtils.arrayToList(new String[] { "y", "n" }), "y");
+
+        // check for confirmation
+        if ("y".equalsIgnoreCase(confirm)) {
+
+            // replace values with new values
+            bean.getVariables().put(CitrusTestLinkEnum.NotesSuccess.getKey(), notesSuccess);
+            bean.getVariables().put(CitrusTestLinkEnum.NotesFailure.getKey(), notesFailure);
+            bean.getVariables().put(CitrusTestLinkEnum.TestCasePlatform.getKey(), platform);
+        }
+    }
+
+    /**
+     * Build for all CITRUS test case bean a CITRUS test case.
+     *
+     * @param beanList
+     *            List of CITRUS test case bean(s).
+     */
+    private void buildTestCases(final List<CitrusBean> beanList) {
+
+        // previously make sure that list is not null and not empty
+        for (final CitrusBean bean : beanList) {
+
+            // make sure that only test case(s) which were confirmed are generated
+            if (bean.isCreate()) {
+
+                // handle each test case by it own, so all test case(s) are handled
+                try {
+
+                    // build CITRUS test case creator using CITRUS core functionality
+                    final TestCaseCreator creator = TestCaseCreator.build()
+                            .withFramework(UnitFramework.fromString(bean.getFramework()))
+                            .withName(bean.getName()).withAuthor(bean.getAuthor())
+                            .withDescription(bean.getTestLink().getTestCaseDesc())
+                            .usePackage(bean.getTargetPackage());
+
+                    // create CITRUS test case, overwrites available test case
+                    creator.createTestCase();
+
+                    // set JAVA and TEST file
+                    CitrusUtils.setFiles(bean);
+                    this.addVariables(bean);
+
+                    // there was no exception, so the generation was successful
+                    final StringBuilder builder = new StringBuilder(
+                            "\n\nSuccessfully created new test case");
+                    builder.append("\nframework: ");
+                    builder.append(bean.getFramework());
+                    builder.append("\nname: ");
+                    builder.append(bean.getName());
+                    builder.append("\nauthor: ");
+                    builder.append(bean.getAuthor());
+                    builder.append("\ndescription: ");
+                    builder.append(bean.getTestLink().getTestCaseDesc());
+                    builder.append("\npackage: ");
+                    builder.append(bean.getTargetPackage());
+                    builder.append("\n\n");
+
+                    this.getLog().info(builder.toString());
+                } catch (final Exception ex) {
+
+                    this.getLog().error("Exception caught for creating test case [ " + bean + " ]",
+                            ex);
+                }
+            } else {
+
+                // test case should not be overwritten
+                this.getLog().info("NOT overwriting CITRUS test case [ " + bean.getName() + " ]");
             }
         }
     }
@@ -358,6 +382,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                 } else if (line.contains("variable")) {
 
                     // ignore lines containing variable definitions
+                    // removing them by this
                 } else {
 
                     builder.append(line);
@@ -366,21 +391,10 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             }
         } catch (final Exception ex) {
 
-            this.getLog().error("Error trying to read from file [ " + file.getAbsolutePath() + " ]",
-                    ex);
+            this.getLog().error("Error while working on file [ " + file.getAbsolutePath() + " ]", ex);
         } finally {
 
-            if (reader != null) {
-
-                try {
-
-                    reader.close();
-                } catch (final Exception ex) {
-
-                    this.getLog().error(
-                            "Error while closing file [ " + file.getAbsolutePath() + " ]", ex);
-                }
-            }
+            CitrusFileUtils.close(reader);
         }
 
         BufferedWriter writer = null;
@@ -395,17 +409,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                     ex);
         } finally {
 
-            if (writer != null) {
-
-                try {
-
-                    writer.close();
-                } catch (final Exception ex) {
-
-                    this.getLog().error(
-                            "Error while closing file [ " + file.getAbsolutePath() + " ]", ex);
-                }
-            }
+            CitrusFileUtils.close(writer);
         }
     }
 
