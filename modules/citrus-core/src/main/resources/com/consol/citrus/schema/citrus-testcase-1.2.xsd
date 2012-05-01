@@ -321,6 +321,7 @@
             <xs:element ref="echo"/>
             <xs:element ref="expect-timeout"/>
             <xs:element ref="purge-jms-queues"/>
+            <xs:element ref="purge-channel"/>
             <xs:element ref="call-template"/>
             <xs:element ref="input"/>
             <xs:element ref="iterate"/>
@@ -501,6 +502,21 @@
             </xs:sequence>
             <xs:attribute name="connection-factory" type="xs:string"/>
             <xs:attribute name="receive-timeout" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="purge-channel">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="description" minOccurs="0"/>
+                <xs:element name="channel" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="ref" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="message-selector" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 

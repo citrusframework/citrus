@@ -109,6 +109,18 @@
     executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
   </section>
   
+  <section id="whatsnew-actions">
+    <title>New test actions</title>
+    
+    <para>We introduced some completely new test actions in this release for you. The new actions are listed below:</para> 
+    
+    <itemizedlist>
+        <listitem>Purge message channel action (<xref linkend="actions-purge-channels"/>)</listitem>
+    </itemizedlist>
+    
+    <para>See <xref linkend="actions"/> for detailed instructions how to use the new actions.</para>
+  </section>
+  
   <section id="whatsnew-functions">
     <title>New functions</title>
     
