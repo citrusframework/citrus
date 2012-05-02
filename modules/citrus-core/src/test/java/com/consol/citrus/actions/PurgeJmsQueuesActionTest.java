@@ -63,7 +63,7 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         
         expect(session.createQueue("myQueue")).andReturn(queue).once();
         
-        expect(session.createConsumer(queue)).andReturn(messageConsumer).times(3);
+        expect(session.createConsumer(queue)).andReturn(messageConsumer).once();
         expect(messageConsumer.receive(100L)).andReturn(jmsRequest).times(2).andReturn(null);
         
         replay(connectionFactory, connection, session, messageConsumer);

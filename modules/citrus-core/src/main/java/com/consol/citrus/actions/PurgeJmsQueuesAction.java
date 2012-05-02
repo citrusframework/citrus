@@ -54,6 +54,9 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /** Time to wait until timeout in ms */
     private long receiveTimeout = 100;
+    
+    /** Wait some time between message consumption in ms */
+    private long sleepTime = 350;
 
     /**
      * Logger
@@ -123,21 +126,22 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             log.debug("Try to purge queue " + destinationName);
         }
 
-        MessageConsumer messageConsumer = null;
+        MessageConsumer messageConsumer = session.createConsumer(destination);
         try {
             javax.jms.Message message;
             do {
-                messageConsumer = session.createConsumer(destination);
-
-                message = (receiveTimeout >= 0) ? messageConsumer
-                        .receive(receiveTimeout) : messageConsumer.receive();
+                message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
     
-                if (message != null && log.isDebugEnabled()) {
+                if (message != null) {
                     log.debug("Removed message from queue " + destinationName);
+                    
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        log.warn("Interrupted during wait", e);
+                    }
                 }
             } while (message != null);
-    
-            JmsUtils.closeMessageConsumer(messageConsumer);
         } finally {
             JmsUtils.closeMessageConsumer(messageConsumer);
         }
@@ -240,6 +244,22 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      */
     public long getReceiveTimeout() {
         return receiveTimeout;
+    }
+
+    /**
+     * Sets the sleepTime.
+     * @param sleepTime the sleepTime to set
+     */
+    public void setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
+    }
+
+    /**
+     * Gets the sleepTime.
+     * @return the sleepTime the sleepTime to get.
+     */
+    public long getSleepTime() {
+        return sleepTime;
     }
 
 }
