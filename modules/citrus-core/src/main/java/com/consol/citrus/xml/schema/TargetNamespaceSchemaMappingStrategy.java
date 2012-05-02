@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.xml;
+package com.consol.citrus.xml.schema;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
+
 /**
- * Class defining how to map schemas to namespace values.
+ * Mapping strategy checks on target namespaces in schemas to find matching schema
+ * instance.
  * 
  * @author Christoph Deppisch
  */
-public class TargetNamespaceSchemaMappingStrategy implements XsdSchemaMappingStrategy {
+public class TargetNamespaceSchemaMappingStrategy extends AbstractSchemaMappingStrategy {
 
-    /**
-     * @see com.consol.citrus.xml.XsdSchemaMappingStrategy#getSchema(java.util.List, java.lang.String)
-     */
-    public XsdSchema getSchema(List<XsdSchema> schemas, String namespace) {
+    @Override
+    public XsdSchema getSchema(List<XsdSchema> schemas, String namespace, String elementName) {
         for (XsdSchema schema : schemas) {
-            if (schema.getTargetNamespace().equals(namespace)) {
+            if (StringUtils.hasText(schema.getTargetNamespace()) && 
+                    schema.getTargetNamespace().equals(namespace)) {
                 return schema;
             }
         }
         
         return null;
     }
-    
 }

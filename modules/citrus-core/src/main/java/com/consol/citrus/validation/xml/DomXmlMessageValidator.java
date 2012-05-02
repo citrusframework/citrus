@@ -239,13 +239,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             log.info("Starting XML schema validation ...");
 
-            XsdSchema schema = schemaRepository.getSchemaByNamespace(doc.getFirstChild().getNamespaceURI());
-
-            Assert.notNull(schema, "No schema found in schemaRepository for namespace '" +
-                    doc.getFirstChild().getNamespaceURI() + "'");
-
+            XsdSchema schema = schemaRepository.findSchema(doc);
             XmlValidator validator = schema.createValidator();
-
             SAXParseException[] results = validator.validate(new DOMSource(doc));
 
             if (results.length == 0) {
