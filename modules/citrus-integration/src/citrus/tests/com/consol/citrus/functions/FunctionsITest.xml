@@ -35,6 +35,8 @@
             <variable name="cdata" value="citrus:cdataSection('Hallo Test Framework')"/>
             <variable name="encodeBase64" value="citrus:encodeBase64('Test Framework')"/>
             <variable name="decodeBase64" value="citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=')"/>
+            <variable name="digestAuthHeader" value="citrus:digestAuthHeader('username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5')"/>
+            <variable name="localHostAddress" value="citrus:localHostAddress()"/>
 		</variables>
         <actions>
         	<echo><message>citrus:concat('Today is: ', ${date})</message></echo>

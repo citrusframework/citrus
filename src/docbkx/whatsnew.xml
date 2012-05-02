@@ -125,7 +125,18 @@
     <title>New functions</title>
     
     <para>We introduced some new default Citrus functions that will ease the testers life. This includes commonly used functions like encoding/decoding base64 bindary data, escaping XML and generating 
-    random Java UUID values. See <xref linkend="functions-random-uuid"/> for detail descriptions.</para>
+    random Java UUID values. These are the new functions in this release:</para>
+    
+    <itemizedlist>
+        <listitem>citrus:randomUUID()</listitem>
+        <listitem>citrus:cdataSection()</listitem>
+        <listitem>citrus:encodeBase64()</listitem>
+        <listitem>citrus:decodeBase64()</listitem>
+        <listitem>citrus:digestAuthHeader()</listitem>
+        <listitem>citrus:localHostAddress()</listitem>
+    </itemizedlist>
+    
+    <para>See <xref linkend="functions"/> for detail descriptions of each function.</para>
   </section>
   
   <section id="whatsnew-bugfixes">
