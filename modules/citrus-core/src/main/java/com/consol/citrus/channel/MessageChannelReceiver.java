@@ -23,15 +23,17 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.core.PollableChannel;
+import org.springframework.integration.core.*;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageReceiver;
+import com.consol.citrus.message.MessageReceiver;
 
 /**
  * Receive messages from {@link com.consol.citrus.message.MessageChannel} instance.
@@ -59,6 +61,9 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     /** Channel resolver instance */
     private ChannelResolver channelResolver;
     
+    /** Maximum number of retries when receiving messages with timeout */
+    private int maxRetries = 5;
+    
     /**
      * @see MessageReceiver#receive(long)
      * @throws ActionTimeoutException
@@ -85,8 +90,47 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        throw new UnsupportedOperationException("MessagingTemplate " +
-        		"does not support selected receiving.");
+        if (getDestinationChannel() instanceof QueueChannel) {
+            log.info("Receiving message from: " + getDestinationChannelName() + "(" + selector + ")");
+           
+            MessageSelector messageSelector = new HeaderMatchingMessageSelector(selector);
+            QueueChannel queueChannel = ((QueueChannel)getDestinationChannel());
+
+            Message<?> message = null;
+            
+            if (timeout <= 0) {
+                message = queueChannel.receiveSelected(messageSelector);
+            } else {
+                long timeoutInterval = timeout / maxRetries;
+                int retryIndex = 1;
+                
+                while ((message = queueChannel.receiveSelected(messageSelector)) == null
+                        && retryIndex < maxRetries) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("No message received for selector (" + selector + ") - retrying in " + timeoutInterval + " ms");
+                    }
+                    
+                    try {
+                        Thread.sleep(timeoutInterval);
+                    } catch (InterruptedException e) {
+                        log.warn("Thread interrupted while waiting for retry", e);
+                    }
+                    
+                    retryIndex++;
+                }
+            }
+            
+            if (message == null) {
+                throw new ActionTimeoutException("Action timeout while receiving message from channel '"
+                        + getDestinationChannelName() + "(" + selector + ")'");
+            }
+            
+            return message;
+        } else {
+            throw new UnsupportedOperationException("Message channel type '" + channel.getClass() + 
+            		"' does not support selective receive operations. Use selective queue channel " +
+            		"implementation supporting message selection!");
+        }
     }
     
     /**
@@ -141,6 +185,23 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         }
         
         return channelResolver.resolveChannelName(channelName);
+    }
+    
+    /**
+     * Sets the maximum number of retries while asking for the response message.
+     * @param maxRetries the maxRetries to set
+     */
+    public void setMaxRetries(int maxRetries) {
+        Assert.isTrue(maxRetries > 0, "Maximum number of retries must be a positive number > 0");
+        this.maxRetries = maxRetries;
+    }
+    
+    /**
+     * Gets the maxRetries.
+     * @return the maxRetries the maxRetries to get.
+     */
+    public int getMaxRetries() {
+        return maxRetries;
     }
 
     /**
@@ -214,4 +275,5 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     public ChannelResolver getChannelResolver() {
         return channelResolver;
     }
+
 }

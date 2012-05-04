@@ -23,13 +23,13 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.core.PollableChannel;
+import org.springframework.integration.core.*;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 
 /**
@@ -183,32 +183,103 @@ public class MessageChannelReceiverTest {
         
         try {
             messageChannelReceiver.receive();
+            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
-            verify(messagingTemplate, channel);
-            return;
         }
         
-        Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+        verify(messagingTemplate, channel);
     }
     
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelected() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
         messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
+        messageChannelReceiver.setReceiveTimeout(0L);
+
+        try {
+            messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
+            Assert.fail("Missing exception due to unsupported operation");
+        } catch (UnsupportedOperationException e) {
+            Assert.assertNotNull(e.getMessage());
+        }
         
-        messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
+        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
+        reset(queueChannel);
+        
+        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
+                            .andReturn(message).once();
+        
+        replay(queueChannel);
+        
+        messageChannelReceiver.setChannel(queueChannel);
+        Message receivedMessage = messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
+        
+        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
+        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        verify(queueChannel);
     }
     
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithTimeout() {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
         messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
         messageChannelReceiver.setChannel(channel);
         
-        messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 10000L);
+        try {
+            messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 2500L);
+            Assert.fail("Missing exception due to unsupported operation");
+        } catch (UnsupportedOperationException e) {
+            Assert.assertNotNull(e.getMessage());
+        }
+        
+        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
+        reset(queueChannel);
+        
+        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
+                            .andReturn(null).times(2) // force retry
+                            .andReturn(message).once();
+        
+        replay(queueChannel);
+        
+        messageChannelReceiver.setChannel(queueChannel);
+        Message receivedMessage = messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 2500L);
+        
+        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
+        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        verify(queueChannel);
+    }
+    
+    @Test
+    public void testReceiveSelectedNoMessageWithTimeout() {
+        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
+        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
+        
+        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        
+        reset(queueChannel);
+        
+        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
+                            .andReturn(null).times(5); // force retries
+        
+        replay(queueChannel);
+        
+        messageChannelReceiver.setChannel(queueChannel);
+        
+        try {
+            messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 1500L);
+            Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
+        } catch(ActionTimeoutException e) {
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
+        }
+        
+        verify(queueChannel);
     }
 }
