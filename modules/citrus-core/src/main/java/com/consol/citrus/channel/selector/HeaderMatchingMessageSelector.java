@@ -30,10 +30,14 @@ import com.consol.citrus.message.MessageSelectorBuilder;
  * matching header elements are present in message header and its value matches the expected value
  * the message is accepted.
  * 
+ * Also delegating to root QName message selector when header element refers to 
+ * root element name {@link RootQNameMessageSelector}.
+ * 
  * @author Christoph Deppisch
  */
 public class HeaderMatchingMessageSelector implements MessageSelector {
 
+    /** List of header elements to match */
     private Map<String, String> matchingHeaders;
     
     /**
@@ -52,7 +56,18 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
         MessageHeaders messageHeaders = message.getHeaders();
         
         for (Entry<String, String> matchEntry : matchingHeaders.entrySet()) {
-            if (!messageHeaders.containsKey(matchEntry.getKey())) {
+            String namePart = matchEntry.getKey();
+            
+            // delegate to root QName message selector if necessary
+            if (namePart.equals(RootQNameMessageSelector.ROOT_QNAME_HEADER_SELECTOR)) {
+                if (!(new RootQNameMessageSelector(matchEntry.getValue())).accept(message)) {
+                    return false;
+                } else {
+                    continue;
+                }
+            }
+            
+            if (!messageHeaders.containsKey(namePart)) {
                 return false;
             }
             

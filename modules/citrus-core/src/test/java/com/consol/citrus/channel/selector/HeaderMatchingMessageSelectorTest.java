@@ -57,4 +57,35 @@ public class HeaderMatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }
+    
+    @Test
+    public void testRootQNameDelegation() {
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo = 'bar' AND root-element = 'FooTest'");
+        
+        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+        
+        new HeaderMatchingMessageSelector("root-element = 'FooTest'");
+        
+        acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
 }
