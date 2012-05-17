@@ -16,8 +16,7 @@
 
 package com.consol.citrus.message;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -74,6 +73,31 @@ public class MessageSelectorBuilder {
         }
 
         return new MessageSelectorBuilder(buf.toString());
+    }
+    
+    /**
+     * Constructs a key value map from selector string representation.
+     * @return
+     */
+    public Map<String, String> toKeyValueMap() {
+        Map<String, String> valueMap = new HashMap<String, String>();
+        String[] tokens;
+        
+        if (selectorString.contains("AND")) {
+            StringTokenizer tok = new StringTokenizer(selectorString, "AND");
+            while (tok.hasMoreElements()) {
+                String selectorItem = tok.nextElement().toString();
+                tokens = selectorItem.split("=");
+                
+                valueMap.put(tokens[0].trim(), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
+            }
+        } else {
+            tokens = selectorString.split("=");
+            
+            valueMap.put(tokens[0].trim(), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
+        }
+        
+        return valueMap;
     }
     
     /**

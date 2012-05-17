@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="actions-purge">
+<section id="actions-purge-jms">
     <title>Purging JMS destinations</title>
 
     <para>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending
@@ -7,7 +7,7 @@
     good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some 
     reason are then removed so that the following test case is not offended.</para>
     
-    <para>So we need to purge some JMS queues in out test case. This can be done with following action definition:</para>
+    <para>So we need to purge some JMS queues in our test case. This can be done with following action definition:</para>
     
     <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
   &lt;actions&gt;

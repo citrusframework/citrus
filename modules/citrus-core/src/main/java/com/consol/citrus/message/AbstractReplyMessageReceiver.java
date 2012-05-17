@@ -22,6 +22,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
+import org.springframework.util.Assert;
 
 /**
  * Abstract base class for reply message receiver implementations. In addition to the usual
@@ -75,11 +76,7 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
         
         long timeoutInterval = timeout / maxRetries;
         int retryIndex = 1;
-        while ((message = receiveSelected(selector)) == null) {
-            if (retryIndex == maxRetries) {
-                break;
-            }
-            
+        while ((message = receiveSelected(selector)) == null && retryIndex < maxRetries) {
             if (log.isDebugEnabled()) {
                 log.debug("Reply message did not arrive yet - waiting " + timeoutInterval + " ms before next try");
             }
@@ -125,6 +122,7 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
      * @param maxRetries the maxRetries to set
      */
     public void setMaxRetries(int maxRetries) {
+        Assert.isTrue(maxRetries > 0, "Maximum number of retries must be a positive number > 0");
         this.maxRetries = maxRetries;
     }
 }

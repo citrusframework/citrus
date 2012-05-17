@@ -58,6 +58,26 @@
                     <header name="operation" variable="operation"/>
                 </extract>
             </send>
+            
+            <send with="myMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="intValue" value="5" type="integer"/>
+                    <element name="longValue" value="10" type="long"/>
+                    <element name="floatValue" value="10.0" type="float"/>
+                    <element name="doubleValue" value="10.0" type="double"/>
+                    <element name="byteValue" value="1" type="byte"/>
+                    <element name="shortValue" value="10" type="short"/>
+                    <element name="boolValue" value="true" type="boolean"/>
+                    <element name="stringValue" value="Hello Citrus" type="string"/>
+                </header>
+            </send>
         </actions>
     </testcase>
     

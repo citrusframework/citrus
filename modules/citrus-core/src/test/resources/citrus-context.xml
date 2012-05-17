@@ -61,4 +61,9 @@
     <bean id="mockListener" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.report.TestSuiteListener"/>
     </bean>
+    
+    <bean id="mockChannel" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
+    </bean>
+    
 </beans>

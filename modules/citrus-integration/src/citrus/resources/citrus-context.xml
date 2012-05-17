@@ -304,6 +304,15 @@
     
     <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
     
+    <citrus:message-channel-sender id="channelRequestSender" 
+                                   channel="greetings"/>
+    
+    <citrus:message-channel-receiver id="channelResponseReceiver" 
+                                     channel="greetings"
+                                     receive-timeout="5000"/>
+                                     
+    <bean id="greetings" class="com.consol.citrus.channel.QueueChannel"/>
+    
     <!-- Utility beans -->
     <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">
         <property name="connectionFactory" ref="connectionFactory"/>

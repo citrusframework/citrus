@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.xml;
+package com.consol.citrus.xml.schema;
 
 import java.util.List;
 
 import org.springframework.xml.xsd.XsdSchema;
+import org.w3c.dom.Document;
 
 /**
- * Interface for namespace to schema mapping strategies.
+ * Interface for schema mapping strategies used in schema repository.
  * 
  * @author Christoph Deppisch
  */
 public interface XsdSchemaMappingStrategy {
+    
     /**
-     * Get the schema for given namespace.
+     * Gets the schema for given namespace or root element name.
+     * 
      * @param schemas list of available schemas.
-     * @param namespace
+     * @param doc document instance to validate.
      * @return
      */
-    XsdSchema getSchema(List<XsdSchema> schemas, String namespace);
+    XsdSchema getSchema(List<XsdSchema> schemas, Document doc);
 }

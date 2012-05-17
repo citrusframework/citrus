@@ -16,7 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.io.*;
 import java.util.*;
 
 import org.springframework.dao.DataAccessException;

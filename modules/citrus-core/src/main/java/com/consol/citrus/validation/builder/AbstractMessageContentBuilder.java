@@ -19,6 +19,8 @@ package com.consol.citrus.validation.builder;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
@@ -29,6 +31,7 @@ import org.springframework.util.StringUtils;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -41,7 +44,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
-    
+
     /** The message header as a file resource */
     private Resource messageHeaderResource;
 
@@ -63,6 +66,16 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                String value = entry.getValue().toString();
+                
+                if (MessageHeaderType.isTyped(value)) {
+                    MessageHeaderType type = MessageHeaderType.fromTypedValue(value);
+                    Constructor<?> constr = type.getHeaderClass().getConstructor(new Class[] { String.class });
+                    entry.setValue(constr.newInstance(MessageHeaderType.removeTypeDefinition(value)));
+                }
+            }
             
             String headerContent = null;
             if (messageHeaderResource != null) {
@@ -79,6 +92,14 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             
             return headers;
         } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (InvocationTargetException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (NoSuchMethodException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (IllegalAccessException e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
+        } catch (InstantiationException e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
     }

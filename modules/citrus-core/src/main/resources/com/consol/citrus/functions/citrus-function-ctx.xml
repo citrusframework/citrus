@@ -98,6 +98,12 @@
                 <entry key="decodeBase64">
                     <bean class="com.consol.citrus.functions.core.DecodeBase64Function"/>
                 </entry>
+                <entry key="digestAuthHeader">
+                    <bean class="com.consol.citrus.functions.core.DigestAuthHeaderFunction"/>
+                </entry>
+                <entry key="localHostAddress">
+                    <bean class="com.consol.citrus.functions.core.LocalHostAddressFunction"/>
+                </entry>
 			</map>
 		</property>
 	</bean>

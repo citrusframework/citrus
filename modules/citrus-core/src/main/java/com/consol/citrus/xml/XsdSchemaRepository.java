@@ -21,7 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.xml.xsd.XsdSchema;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
 
 /**
  * Schema repository holding a set of XML schema resources known in the test scope.
@@ -36,15 +41,23 @@ public class XsdSchemaRepository {
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
     
     /**
-     * Retrieve the schema for a given namespace.
-     * 
-     * @param namespace
-     * @return
+     * Find the matching schema for a given message namespace or root element
+     * name.
+     * @param doc the document instance to validate.
+     * @return the matching schema instance
      * @throws IOException
      * @throws SAXException
      */
-    public XsdSchema getSchemaByNamespace(String namespace) throws IOException, SAXException {
-        return schemaMappingStrategy.getSchema(schemas, namespace);
+    public XsdSchema findSchema(Document doc) throws IOException, SAXException {
+        XsdSchema schema = schemaMappingStrategy.getSchema(schemas, doc);
+        
+        if (schema == null) {
+            throw new CitrusRuntimeException("Unable to find proper XML schema definition for element " + 
+                        doc.getFirstChild().getLocalName() + "(" + doc.getFirstChild().getNamespaceURI() + ") " +
+                        "add schema to schema repository or disable schema validation for this message");
+        }
+        
+        return schema;
     }
 
     /**

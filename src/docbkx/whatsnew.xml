@@ -109,11 +109,34 @@
     executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
   </section>
   
+  <section id="whatsnew-actions">
+    <title>New test actions</title>
+    
+    <para>We introduced some completely new test actions in this release for you. The new actions are listed below:</para> 
+    
+    <itemizedlist>
+        <listitem>Purge message channel action (<xref linkend="actions-purge-channels"/>)</listitem>
+    </itemizedlist>
+    
+    <para>See <xref linkend="actions"/> for detailed instructions how to use the new actions.</para>
+  </section>
+  
   <section id="whatsnew-functions">
     <title>New functions</title>
     
     <para>We introduced some new default Citrus functions that will ease the testers life. This includes commonly used functions like encoding/decoding base64 bindary data, escaping XML and generating 
-    random Java UUID values. See <xref linkend="functions-random-uuid"/> for detail descriptions.</para>
+    random Java UUID values. These are the new functions in this release:</para>
+    
+    <itemizedlist>
+        <listitem>citrus:randomUUID()</listitem>
+        <listitem>citrus:cdataSection()</listitem>
+        <listitem>citrus:encodeBase64()</listitem>
+        <listitem>citrus:decodeBase64()</listitem>
+        <listitem>citrus:digestAuthHeader()</listitem>
+        <listitem>citrus:localHostAddress()</listitem>
+    </itemizedlist>
+    
+    <para>See <xref linkend="functions"/> for detail descriptions of each function.</para>
   </section>
   
   <section id="whatsnew-bugfixes">

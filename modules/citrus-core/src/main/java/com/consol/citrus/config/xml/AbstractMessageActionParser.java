@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -93,7 +94,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     /**
      * Parses message payload template information given in message element.
      * @param messageElement
-     * @param payloadTemplateMessageBuilder
      */
     private PayloadTemplateMessageBuilder parsePayloadTemplateBuilder(Element messageElement) {
         PayloadTemplateMessageBuilder messageBuilder = null;
@@ -132,7 +132,6 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     /**
      * Parses the xs:any payload elements nested in message element.
      * @param messageElement
-     * @param payloadTemplateMessageBuilder
      */
     private PayloadTemplateMessageBuilder parsePayloadElement(Element messageElement) {
         PayloadTemplateMessageBuilder messageBuilder = null;
@@ -157,11 +156,21 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new HashMap<String, Object>();
+
         if (headerElement != null) {
             List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
             for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
                 Element headerValue = (Element) iter.next();
-                messageHeaders.put(headerValue.getAttribute("name"), headerValue.getAttribute("value"));
+                
+                String name = headerValue.getAttribute("name");
+                String value = headerValue.getAttribute("value");
+                String type = headerValue.getAttribute("type");
+
+                if (StringUtils.hasText(type)) {
+                    value = MessageHeaderType.createTypedValue(type, value);
+                }
+                
+                messageHeaders.put(name, value);
             }
             
             Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="MessageChannelTest">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2012-05-03</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2012-05-03T00:00:00</last-updated-on>
+		</meta-info>
+    
+        <description>Test sends messages to a message channel and receives these messages with
+        message selectors in reverse order.</description>
+		
+        <actions>
+            <send with="channelRequestSender">
+                <message>
+                    <data>Hello Citrus</data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </send>
+            
+            <send with="channelRequestSender">
+                <message>
+                    <data>Goodbye Citrus</data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </send>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="Operation" value="sayGoodbye"/>
+                </selector>
+                <message type="plaintext">
+                    <data>Goodbye Citrus</data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </receive>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="Operation" value="sayHello"/>
+                </selector>
+                <message type="plaintext">
+                    <data>Hello Citrus</data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
