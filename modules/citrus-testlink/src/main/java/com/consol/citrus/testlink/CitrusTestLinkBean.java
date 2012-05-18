@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (20:54) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (17:40) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -75,6 +75,9 @@ public final class CitrusTestLinkBean extends AbstractTestLinkBean {
 
         this.valid = true;
         this.responseList = new ArrayList<String>();
+
+        this.startTime = System.currentTimeMillis();
+        this.endTime = this.startTime;
     }
 
     // ~ Methods ---------------------------------------------------------------------------------

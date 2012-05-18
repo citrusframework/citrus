@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, April 29, 2012 (15:22) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (17:44) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
 
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for converting functionality.
- * 
+ *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
@@ -53,10 +53,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert a {@link Throwable} to a string.
-     * 
+     *
      * @param cause
      *            Throwable to convert, if {@code null} an empty string is returned.
-     * 
+     *
      * @return Convert throwable or return an empty string in case there was some kind of error.
      */
     public static final String throwableToString(final Throwable cause) {
@@ -78,21 +78,10 @@ public abstract class ConvertUtils {
                 builder.append(writer.toString());
             } catch (final Exception ex) {
 
-                LOGGER.error("Exception caught while converting throwable [ {} ]", cause, ex);
+                LOGGER.error("Exception caught while converting throwable [ " + cause + " ]", ex);
             } finally {
 
-                if (null != printWriter) {
-
-                    try {
-
-                        printWriter.close();
-                    } catch (final Exception ex) {
-
-                        LOGGER.error(
-                                "Exception caught while closing print writer for throwable [ {} ]",
-                                cause);
-                    }
-                }
+                FileUtils.close(printWriter);
             }
         }
 
@@ -102,10 +91,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert value of object into a {@link String}.
-     * 
+     *
      * @param obj
      *            Object for which the value should be converted.
-     * 
+     *
      * @return Value of object as a string or {@code null} in case of an error.
      */
     public static final String convertToString(final Object obj) {
@@ -129,10 +118,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert object value to a {@link Boolean}.
-     * 
+     *
      * @param obj
      *            Object for which the value should be converted.
-     * 
+     *
      * @return Value of object as a boolean or {@code null} in case of an error.
      */
     public static final Boolean convertToBoolean(final Object obj) {
@@ -153,10 +142,10 @@ public abstract class ConvertUtils {
 
     /**
      * Convert object value to an {@link Integer}.
-     * 
+     *
      * @param obj
      *            Object for which the value should be converted.
-     * 
+     *
      * @return Value of object as an integer or {@code null} in case of an error.
      */
     public static final Integer convertToInteger(final Object obj) {
@@ -173,7 +162,37 @@ public abstract class ConvertUtils {
                 return Integer.decode(val);
             } catch (final Exception ex) {
 
-                LOGGER.error("Could not convert [ {} ] to an integer!", obj, ex);
+                LOGGER.error("Could not convert [ " + obj + " ] to an integer!", ex);
+            }
+        }
+
+        // there was some kind of error, return null
+        return null;
+    }
+
+    /**
+     * Convert object value to an {@link Long}.
+     *
+     * @param obj
+     *            Object for which the value should be converted.
+     *
+     * @return Value of object as a long or {@code null} in case of an error.
+     */
+    public static final Long convertToLong(final Object obj) {
+
+        // convert object to string, in case of an long the toString method does the job
+        final String val = convertToString(obj);
+
+        // make sure there is some reasonable value
+        if ((null != val) && (!val.isEmpty())) {
+
+            try {
+
+                // decode value
+                return Long.decode(val);
+            } catch (final Exception ex) {
+
+                LOGGER.error("Could not convert [ " + obj + " ] to long!", ex);
             }
         }
 

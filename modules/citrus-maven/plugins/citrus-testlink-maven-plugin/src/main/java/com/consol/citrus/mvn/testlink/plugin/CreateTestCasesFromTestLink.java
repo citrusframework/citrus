@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, April 29, 2012 (14:13) by: Matthias Beil
+ * last modified: Thursday, May 17, 2012 (12:13) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -33,6 +33,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 
 import com.consol.citrus.testlink.CitrusTestLinkEnum;
+import com.consol.citrus.testlink.utils.FileUtils;
 import com.consol.citrus.util.TestCaseCreator;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
@@ -394,7 +395,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
             this.getLog().error("Error while working on file [ " + file.getAbsolutePath() + " ]", ex);
         } finally {
 
-            CitrusFileUtils.close(reader);
+            FileUtils.close(reader);
         }
 
         BufferedWriter writer = null;
@@ -409,7 +410,7 @@ public class CreateTestCasesFromTestLink extends AbstractTestLinkMojo {
                     ex);
         } finally {
 
-            CitrusFileUtils.close(writer);
+            FileUtils.close(writer);
         }
     }
 

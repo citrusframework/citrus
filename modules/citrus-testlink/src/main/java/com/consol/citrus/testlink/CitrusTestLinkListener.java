@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (20:56) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (10:52) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.report.TestListener;
+import com.consol.citrus.testlink.citrus.CitrusTestLinkFileHandlerImpl;
 import com.consol.citrus.testlink.citrus.CitrusTestLinkHandlerImpl;
 import com.consol.citrus.testlink.utils.CitrusTestLinkUtils;
 import com.consol.citrus.testlink.utils.ConvertUtils;
@@ -34,11 +35,11 @@ import com.consol.citrus.testlink.utils.ConvertUtils;
 /**
  * Implements the {@link TestListener} interface which will be called during the execution of a CITRUS
  * test. The behavior is of a normal reporting element, behalf of the finish method which tries to
- * write the result to TestLink in case it is a CITRUS / TestLink test case.
+ * write the result to TestLink or a file, in case it is a CITRUS / TestLink test case.
  *
  * <p>
- * Make sure to catch in each method all exceptions, to avoid to crash a CITRUS test case during this
- * reporting life cycle.
+ * <b>Make sure to catch in each method all exceptions, to avoid to crash a CITRUS test case during
+ * this reporting life cycle.</b>
  * </p>
  *
  * @author Matthias Beil
@@ -53,17 +54,23 @@ public class CitrusTestLinkListener implements TestListener {
 
     // ~ Instance fields -------------------------------------------------------------------------
 
+    /** writeToFile. */
+    private boolean writeToFile = false;
+
     /** testLinkUrl. */
     private String testLinkUrl;
 
     /** testLinkKey. */
     private String testLinkKey;
 
-    /** testLinkPlatform. */
-    private String testLinkPlatform;
+    /** directoryPath. */
+    private String directoryPath;
 
     /** handler. */
     private final CitrusTestLinkHandler handler;
+
+    /** fileHandler. */
+    private final CitrusTestLinkFileHandler fileHandler;
 
     /** citrusMap. */
     private final ConcurrentMap<String, CitrusTestLinkBean> citrusMap;
@@ -75,21 +82,24 @@ public class CitrusTestLinkListener implements TestListener {
      */
     public CitrusTestLinkListener() {
 
-        this(new CitrusTestLinkHandlerImpl());
+        this(new CitrusTestLinkHandlerImpl(), new CitrusTestLinkFileHandlerImpl());
     }
 
     /**
-     * Constructor for {@code TestLinkListener} class.
+     * Constructor for {@code TestLinkListener} class. May be used for testing purposes.
      *
      * @param handlerIn
-     *            Implementation of {@link CitrusTestLinkHandler} interface. May be used for testing
-     *            purposes.
+     *            Handler to write CITRUS test case result directly to TestLink.
+     * @param fileHandlerIn
+     *            File handler to write a CITRUS test case result to a file.
      */
-    public CitrusTestLinkListener(final CitrusTestLinkHandler handlerIn) {
+    public CitrusTestLinkListener(final CitrusTestLinkHandler handlerIn,
+            final CitrusTestLinkFileHandler fileHandlerIn) {
 
         super();
 
         this.handler = handlerIn;
+        this.fileHandler = fileHandlerIn;
         this.citrusMap = new ConcurrentHashMap<String, CitrusTestLinkBean>();
     }
 
@@ -111,7 +121,7 @@ public class CitrusTestLinkListener implements TestListener {
             // as there is no context, no CITRUS variables are available,
             // so get in each case a CITRUS / TestLink bean
             final CitrusTestLinkBean bean = CitrusTestLinkUtils.createCitrusBean(citrusCase,
-                    this.testLinkUrl, this.testLinkKey, this.testLinkPlatform);
+                    this.testLinkUrl, this.testLinkKey);
 
             // make sure there is a CITRUS TestLink bean
             if (null == bean) {
@@ -180,19 +190,7 @@ public class CitrusTestLinkListener implements TestListener {
             // build CITRUS ID to find bean in CITRUS map
             final String id = CitrusTestLinkUtils.buildId(citrusCase);
 
-            if ((null == id) || (id.isEmpty())) {
-
-                LOGGER.error("Could not create an identifier while finishing test case [ {} ]",
-                        citrusCase);
-
-                return;
-            }
-
-            if (!this.citrusMap.containsKey(id)) {
-
-                LOGGER.warn(
-                        "Citrus bean for identifier [ {} ] while finishing for test case [ {} ] not found",
-                        id, citrusCase);
+            if (this.isInValidMapId(id, citrusCase, "finish")) {
 
                 return;
             }
@@ -200,18 +198,29 @@ public class CitrusTestLinkListener implements TestListener {
             // CITRUS bean must be here
             bean = this.citrusMap.get(id);
 
-            // check if this CITRUS test case must write to TestLink and
+            // check if this CITRUS test case must be written to TestLink and
             // that either success or failure was called
             if (CitrusTestLinkUtils.writeToTestLink(citrusCase) && (null != bean.getSuccess())) {
 
                 // add CITRUS test case with all variables to CITRUS TestLink bean
                 bean.setCitrusTestCase(citrusCase);
 
-                // finally write to TestLink
-                this.handler.writeToTestLink(bean);
+                // prepare bean, may throw an exception
+                this.handler.prepareWriteToTestLink(bean);
 
-                // inform about the response
-                this.handleResponse(bean);
+                // see if test case must be written to a file
+                if (this.writeToFile) {
+
+                    // write CITRUS test result to a file in the given directory
+                    this.fileHandler.writeToFile(bean, this.directoryPath);
+                } else {
+
+                    // write to TestLink
+                    this.handler.writeToTestLink(bean);
+
+                    // inform about the response from TestLink
+                    this.handleResponse(bean);
+                }
             }
         } catch (final Exception ex) {
 
@@ -230,6 +239,28 @@ public class CitrusTestLinkListener implements TestListener {
                 }
             }
         }
+    }
+
+    /**
+     * Sets the value of the {@code write to file} field.
+     *
+     * @param writeToFileIn
+     *            field to set.
+     */
+    public void setWriteToFile(final boolean writeToFileIn) {
+
+        this.writeToFile = writeToFileIn;
+    }
+
+    /**
+     * Sets the value of the {@code directory path} field.
+     *
+     * @param directoryPathIn
+     *            field to set.
+     */
+    public void setDirectoryPath(final String directoryPathIn) {
+
+        this.directoryPath = directoryPathIn;
     }
 
     /**
@@ -255,17 +286,6 @@ public class CitrusTestLinkListener implements TestListener {
     }
 
     /**
-     * Sets the value of the {@code test link platform} field.
-     *
-     * @param testLinkPlatformIn
-     *            field to set.
-     */
-    public void setTestLinkPlatform(final String testLinkPlatformIn) {
-
-        this.testLinkPlatform = testLinkPlatformIn;
-    }
-
-    /**
      * Handle for success, skipping and failure the setting of the status.
      *
      * @param citrusCase
@@ -285,20 +305,9 @@ public class CitrusTestLinkListener implements TestListener {
             // build CITRUS ID
             final String id = CitrusTestLinkUtils.buildId(citrusCase);
 
-            if ((null == id) || (id.isEmpty())) {
+            if (this.isInValidMapId(id, citrusCase, desc)) {
 
-                LOGGER.error("Could not create an identifier for {} of test case [ {} ]", desc,
-                        citrusCase);
-
-                return;
-            }
-
-            if (!this.citrusMap.containsKey(id)) {
-
-                LOGGER.warn(
-                        "Citrus bean for identifier [ {} ] for {} for test case [ {} ] not found",
-                        new Object[] { id, desc, citrusCase });
-
+                // Invalid id, just return, logging was done in the method
                 return;
             }
 
@@ -316,7 +325,7 @@ public class CitrusTestLinkListener implements TestListener {
         } catch (final Exception ex) {
 
             LOGGER.error(
-                    "Exception caught while setting {} of CITRUS / TestLink handling for test case [ {} ]",
+                    "Exception caught while setting state [ {} ] of CITRUS / TestLink handling for test case [ {} ]",
                     new Object[] { desc, citrusCase }, ex);
         }
     }
@@ -329,6 +338,9 @@ public class CitrusTestLinkListener implements TestListener {
      */
     private void handleResponse(final CitrusTestLinkBean bean) {
 
+        // there was some error writing to TestLink, log it
+        final StringBuilder builder = new StringBuilder();
+
         // check if there was some writing to TestLink
         if (null != bean.getResponseState()) {
 
@@ -336,62 +348,74 @@ public class CitrusTestLinkListener implements TestListener {
             if (bean.getResponseState().booleanValue()) {
 
                 // YEAH it was
-                LOGGER.info("+++===+++ Writing to TestLink was successful for [ {} ] +++===+++", bean.getId());
-            } else {
+                LOGGER.info("+++===+++ Writing to TestLink was successful for [ {} ] +++===+++",
+                        bean.getId());
 
-                // there was some error writing to TestLink, log it
-                final StringBuilder builder = new StringBuilder();
+                // done with logging
+                return;
+            }
+        }
 
-                builder.append("+++===+++ Failure writing to TestLink");
+        builder.append("\n+++===+++\n");
+        builder.append("Failure writing to TestLink");
 
-                if (!bean.getResponseList().isEmpty()) {
+        if (!bean.getResponseList().isEmpty()) {
 
-                    builder.append(" due to \n");
+            builder.append(" due to \n");
 
-                    for (final String response : bean.getResponseList()) {
+            for (final String response : bean.getResponseList()) {
 
-                        builder.append(response);
-                        builder.append("\n");
-                    }
-                } else {
-
-                    builder.append("!\n");
-                }
-
-                if (null != bean.getResponseCause()) {
-
-                    builder.append("Exception caught:\n");
-                    builder.append(ConvertUtils.throwableToString(bean.getResponseCause()));
-                    builder.append("\n\n+++===+++\n");
-                }
-
-                LOGGER.error(builder.toString());
+                builder.append(response);
+                builder.append("\n");
             }
         } else {
 
-            // check if there is some information during handling to write to TestLink
-            if (!bean.getResponseList().isEmpty()) {
-
-                final StringBuilder builder = new StringBuilder();
-
-                builder.append("Error trying to write to TestLink due to \n");
-
-                for (final String response : bean.getResponseList()) {
-
-                    builder.append(response);
-                    builder.append("\n");
-                }
-
-                if (null != bean.getResponseCause()) {
-
-                    builder.append("Exception caught:\n");
-                    builder.append(ConvertUtils.throwableToString(bean.getResponseCause()));
-                    builder.append("\n");
-                }
-
-                LOGGER.error(builder.toString());
-            }
+            builder.append("!\n");
         }
+
+        if (null != bean.getResponseCause()) {
+
+            builder.append("\nException caught:\n");
+            builder.append(ConvertUtils.throwableToString(bean.getResponseCause()));
+            builder.append("\n");
+        }
+
+        builder.append("\n+++===+++\n");
+
+        LOGGER.error(builder.toString());
+    }
+
+    /**
+     * Checks if the given id is invalid.
+     *
+     * @param id
+     *            Value to check if it is invalid.
+     * @param citrusCase
+     *            Use for logging purposes.
+     * @param desc
+     *            State description.
+     *
+     * @return {@code False} if the id is valid, otherwise {@code True} is returned.
+     */
+    private boolean isInValidMapId(final String id, final TestCase citrusCase, final String desc) {
+
+        if ((null == id) || (id.isEmpty())) {
+
+            LOGGER.error("No identifier for state [ {} ] of test case [ {} ]", desc, citrusCase);
+
+            return true;
+        }
+
+        if (!this.citrusMap.containsKey(id)) {
+
+            LOGGER.warn(
+                    "Citrus bean for identifier [ {} ] for state [ {} ] for test case [ {} ] not found",
+                    new Object[] { id, desc, citrusCase });
+
+            return true;
+        }
+
+        return false;
     }
 
 }

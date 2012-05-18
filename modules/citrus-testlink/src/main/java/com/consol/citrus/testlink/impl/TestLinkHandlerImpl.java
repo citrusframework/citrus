@@ -44,9 +44,9 @@ import br.eti.kinoshita.testlinkjavaapi.model.TestProject;
 import br.eti.kinoshita.testlinkjavaapi.util.Util;
 
 import com.consol.citrus.testlink.CitrusTestLinkBean;
-import com.consol.citrus.testlink.CitrusTestLinkHandler;
 import com.consol.citrus.testlink.TestLinkCitrusBean;
 import com.consol.citrus.testlink.TestLinkCitrusHandler;
+import com.consol.citrus.testlink.TestLinkHandler;
 
 /**
  * Implementation of interaction with TestLink.
@@ -54,17 +54,13 @@ import com.consol.citrus.testlink.TestLinkCitrusHandler;
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusTestLinkHandler {
-
-    // ~ Static fields/initializers --------------------------------------------------------------
+public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, TestLinkHandler {
 
     /** XML_RPC. */
     private static final String XML_RPC = "/lib/api/xmlrpc.php";
 
     /** log. */
     private static final Logger LOGGER = LoggerFactory.getLogger(TestLinkHandlerImpl.class);
-
-    // ~ Constructors ----------------------------------------------------------------------------
 
     /**
      * Constructor for {@code TestLinkHandlerImpl} class.
@@ -73,8 +69,6 @@ public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusT
 
         super();
     }
-
-    // ~ Methods ---------------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -529,5 +523,4 @@ public final class TestLinkHandlerImpl implements TestLinkCitrusHandler, CitrusT
             LOGGER.error("Error getting external ID", xmlrpcex);
         }
     }
-
 }

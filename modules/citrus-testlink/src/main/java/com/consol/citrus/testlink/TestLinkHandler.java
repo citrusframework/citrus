@@ -1,5 +1,5 @@
 /*
- * File: CitrusTestLinkHandler.java
+ * File: TestLinkHandler.java
  *
  * Copyright (c) 2006-2012 the original author or authors.
  *
@@ -15,32 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Friday, May 18, 2012 (10:41) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (10:33) by: Matthias Beil
  */
 package com.consol.citrus.testlink;
 
 /**
  * Interface defining methods for handling CITRUS to TestLink functionality.
- * 
+ *
  * @author Matthias Beil
  * @since CITRUS 1.2 M2
  */
-public interface CitrusTestLinkHandler {
+public interface TestLinkHandler {
 
     // ~ Methods ---------------------------------------------------------------------------------
 
     /**
-     * Prepare the setting of the CITRUS test case bean before writing them to TestLink.
-     * 
-     * @param bean
-     *            Bean to update with all needed values.
-     */
-    void prepareWriteToTestLink(final CitrusTestLinkBean bean);
-
-    /**
      * Write CITRUS TestLink bean to TestLink. Returning in the bean the result of writing to
      * TestLink.
-     * 
+     *
      * @param bean
      *            CITRUS TestLink bean holding all values to write to TestLink.
      */

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, April 29, 2012 (09:58) by: Matthias Beil
+ * last modified: Thursday, May 17, 2012 (12:12) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
@@ -25,6 +25,7 @@ import com.consol.citrus.testlink.CitrusTestLinkEnum;
 import com.consol.citrus.testlink.CitrusTestLinkListener;
 import com.consol.citrus.testlink.TestLinkCitrusBean;
 import com.consol.citrus.testlink.utils.ConvertUtils;
+import com.consol.citrus.testlink.utils.FileUtils;
 import com.consol.citrus.testlink.utils.TestLinkUtils;
 
 /**
@@ -128,26 +129,26 @@ public abstract class CitrusUtils {
             String fileName = CitrusFileUtils.buildFileName(CitrusFileEnum.JAVA, bean);
 
             // check if this file is valid
-            bean.setJavaFileValid(CitrusFileUtils.isValidFile(fileName));
+            bean.setJavaFileValid(FileUtils.isValidFile(fileName));
 
             // the JAVA file is valid
             if (bean.isJavaFileValid()) {
 
                 // set the absolute file path of the JAVA file
-                bean.setJavaFileName(CitrusFileUtils.getAbsolutePath(fileName));
+                bean.setJavaFileName(FileUtils.getAbsolutePath(fileName));
             }
 
             // see for the TEST file
             fileName = CitrusFileUtils.buildFileName(CitrusFileEnum.TEST, bean);
 
             // check if this file is valid
-            bean.setTestFileValid(CitrusFileUtils.isValidFile(fileName));
+            bean.setTestFileValid(FileUtils.isValidFile(fileName));
 
             // the TEST file is valid
             if (bean.isTestFileValid()) {
 
                 // set the absolute file path of the TEST file
-                bean.setTestFileName(CitrusFileUtils.getAbsolutePath(fileName));
+                bean.setTestFileName(FileUtils.getAbsolutePath(fileName));
             }
         }
     }
@@ -247,9 +248,6 @@ public abstract class CitrusUtils {
         bean.addVariable(CitrusTestLinkEnum.BuildId.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getBuildId()));
 
-        bean.addVariable(CitrusTestLinkEnum.Key.getKey(),
-                ConvertUtils.convertToString(bean.getTestLink().getKey()));
-
         bean.addVariable(CitrusTestLinkEnum.NotesFailure.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getNotesFailure()));
 
@@ -266,9 +264,6 @@ public abstract class CitrusUtils {
 
         bean.addVariable(CitrusTestLinkEnum.TestPlanId.getKey(),
                 ConvertUtils.convertToString(bean.getTestLink().getTestPlanId()));
-
-        bean.addVariable(CitrusTestLinkEnum.Url.getKey(),
-                ConvertUtils.convertToString(bean.getTestLink().getUrl()));
 
         bean.addVariable(CitrusTestLinkEnum.WriteToTestLink.getKey(), Boolean.TRUE.toString());
     }

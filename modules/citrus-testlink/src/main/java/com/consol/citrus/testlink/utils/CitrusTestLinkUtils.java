@@ -15,9 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Saturday, January 21, 2012 (21:19) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (17:35) by: Matthias Beil
  */
 package com.consol.citrus.testlink.utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.testlink.CitrusTestLinkBean;
@@ -30,6 +33,11 @@ import com.consol.citrus.testlink.CitrusTestLinkEnum;
  * @since CITRUS 1.2 M2
  */
 public abstract class CitrusTestLinkUtils {
+
+    // ~ Static fields/initializers --------------------------------------------------------------
+
+    /** DATE_FORMAT. */
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSS";
 
     // ~ Constructors ----------------------------------------------------------------------------
 
@@ -111,15 +119,12 @@ public abstract class CitrusTestLinkUtils {
      *            TestLink URL coming from the properties of the TestLink listener, if provided.
      * @param key
      *            TestLink development key from the properties of the TestLink listener, if provided.
-     * @param platform
-     *            The TestLink platform to be used from the properties of the TestLink listener, if
-     *            provided.
      *
      * @return Newly create CITRUS to TestLink bean holding all predefined values. In case of an error
      *         {@code null} is returned.
      */
     public static final CitrusTestLinkBean createCitrusBean(final TestCase citrusCase,
-            final String url, final String key, final String platform) {
+            final String url, final String key) {
 
         // get ID to allow to identify this bean
         final String id = buildId(citrusCase);
@@ -135,7 +140,6 @@ public abstract class CitrusTestLinkUtils {
         bean.setId(id);
         bean.setUrl(url);
         bean.setKey(key);
-        bean.setPlatform(platform);
 
         return bean;
     }
@@ -158,7 +162,11 @@ public abstract class CitrusTestLinkUtils {
         final StringBuilder builder = new StringBuilder();
 
         // always add the execution duration
-        builder.append("Execution duration for CITRUS test case [ ");
+        builder.append("Execution [ ");
+
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        builder.append(sdf.format(new Date(bean.getEndTime())));
+        builder.append(" ] duration for CITRUS test case [ ");
         builder.append(bean.getId());
         builder.append(" ] was [ ");
         builder.append(bean.getEndTime() - bean.getStartTime());

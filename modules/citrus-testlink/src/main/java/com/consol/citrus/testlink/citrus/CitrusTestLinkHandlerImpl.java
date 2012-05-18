@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, January 29, 2012 (12:16) by: Matthias Beil
+ * last modified: Friday, May 18, 2012 (10:42) by: Matthias Beil
  */
 package com.consol.citrus.testlink.citrus;
 
@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import com.consol.citrus.testlink.CitrusTestLinkBean;
 import com.consol.citrus.testlink.CitrusTestLinkEnum;
 import com.consol.citrus.testlink.CitrusTestLinkHandler;
+import com.consol.citrus.testlink.TestLinkHandler;
 import com.consol.citrus.testlink.impl.TestLinkHandlerImpl;
 import com.consol.citrus.testlink.utils.CitrusTestLinkUtils;
 import com.consol.citrus.testlink.utils.ConvertUtils;
@@ -40,7 +41,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
     // ~ Instance fields -------------------------------------------------------------------------
 
     /** handler. */
-    private final CitrusTestLinkHandler handler;
+    private final TestLinkHandler handler;
 
     // ~ Constructors ----------------------------------------------------------------------------
 
@@ -59,7 +60,7 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
      * @param handlerIn
      *            Allows to set the handler. May be used for testing purposes.
      */
-    public CitrusTestLinkHandlerImpl(final CitrusTestLinkHandler handlerIn) {
+    public CitrusTestLinkHandlerImpl(final TestLinkHandler handlerIn) {
 
         super();
 
@@ -71,22 +72,28 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
     /**
      * {@inheritDoc}
      */
+    public void prepareWriteToTestLink(final CitrusTestLinkBean bean) {
+
+        // fill bean with all available values
+        this.handleCitrusTestLinkBean(bean);
+
+        // check if all mandatory variables are set
+        if (bean.isValid()) {
+
+            // after all variables are set build notes
+            CitrusTestLinkUtils.buildNotes(bean);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void writeToTestLink(final CitrusTestLinkBean bean) {
 
         try {
 
-            // fill bean with all available values
-            this.handleCitrusTestLinkBean(bean);
-
-            // check if all mandatory variables are set
-            if (bean.isValid()) {
-
-                // after all variables are set build notes
-                CitrusTestLinkUtils.buildNotes(bean);
-
-                // finally try to write to TestLink
-                this.handler.writeToTestLink(bean);
-            }
+            // finally try to write to TestLink
+            this.handler.writeToTestLink(bean);
         } catch (final Exception ex) {
 
             // this allows to also catch NPE, so do not check against null
@@ -124,15 +131,9 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
             } else if (CitrusTestLinkEnum.TestCasePlatform.getKey().equals(entry.getKey())) {
 
                 bean.setPlatform(this.handleString(bean, entry, CitrusTestLinkEnum.TestCasePlatform));
-            } else if (CitrusTestLinkEnum.Key.getKey().equals(entry.getKey())) {
-
-                this.key(bean, entry);
             } else if (CitrusTestLinkEnum.TestPlanId.getKey().equals(entry.getKey())) {
 
                 bean.setTestPlanId(this.handleInteger(bean, entry, CitrusTestLinkEnum.TestPlanId));
-            } else if (CitrusTestLinkEnum.Url.getKey().equals(entry.getKey())) {
-
-                this.url(bean, entry);
             } else if (CitrusTestLinkEnum.NotesSuccess.getKey().equals(entry.getKey())) {
 
                 bean.setNotesSuccess(this.handleString(bean, entry, CitrusTestLinkEnum.NotesSuccess));
@@ -140,64 +141,6 @@ public final class CitrusTestLinkHandlerImpl implements CitrusTestLinkHandler {
 
                 bean.setNotesFailure(this.handleString(bean, entry, CitrusTestLinkEnum.NotesFailure));
             }
-        }
-    }
-
-    /**
-     * Add TestLink URL to bean, if there is a value. As it is a mandatory element, if the value is
-     * not set, the bean is marked as being invalid.
-     *
-     * @param bean
-     *            CITRUS TestLink bean for setting value.
-     * @param entry
-     *            Entry element holding the CITRUS test case value.
-     */
-    private void url(final CitrusTestLinkBean bean, final Entry<String, Object> entry) {
-
-        // see if there is a value in the CITRUS variables
-        final String str = ConvertUtils.convertToString(entry.getValue());
-
-        if ((null != str) && (!str.isEmpty())) {
-
-            bean.setUrl(str);
-        }
-
-        // check if there is a TestLink URL, as this value is mandatory
-        if ((null == bean.getUrl()) || (bean.getUrl().isEmpty())) {
-
-            // element is mandatory, so bean is invalid
-            bean.setValid(false);
-            bean.addResponse("CITRUS / TestLink variable [ " + CitrusTestLinkEnum.Url.getKey()
-                    + " ] is mandatory but is either null or empty!");
-        }
-    }
-
-    /**
-     * Add TestLink key to bean, if there is a value. As it is a mandatory element, if the value is
-     * not set, the bean is marked as being invalid.
-     *
-     * @param bean
-     *            CITRUS TestLink bean for setting value.
-     * @param entry
-     *            Entry element holding the CITRUS test case value.
-     */
-    private void key(final CitrusTestLinkBean bean, final Entry<String, Object> entry) {
-
-        // see if there is a value in the CITRUS variables
-        final String str = ConvertUtils.convertToString(entry.getValue());
-
-        if ((null != str) && (!str.isEmpty())) {
-
-            bean.setKey(str);
-        }
-
-        // check if there is a TestLink key, as this value is mandatory
-        if ((null == bean.getKey()) || (bean.getKey().isEmpty())) {
-
-            // element is mandatory, so bean is invalid
-            bean.setValid(false);
-            bean.addResponse("CITRUS / TestLink variable [ " + CitrusTestLinkEnum.Key.getKey()
-                    + " ] is mandatory but is either null or empty!");
         }
     }
 

@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * last modified: Sunday, April 29, 2012 (13:00) by: Matthias Beil
+ * last modified: Thursday, May 17, 2012 (12:11) by: Matthias Beil
  */
 package com.consol.citrus.mvn.testlink.plugin;
 
-import java.io.Closeable;
-import java.io.File;
+import com.consol.citrus.testlink.utils.FileUtils;
 
 /**
  * Utility class for CITRUS file static methods.
@@ -29,14 +28,6 @@ import java.io.File;
  * @since CITRUS 1.2 M2
  */
 public abstract class CitrusFileUtils {
-
-    // ~ Static fields/initializers --------------------------------------------------------------
-
-    /** CHAR_PATH_SEPARATOR. */
-    public static final char CHAR_PATH_SEPARATOR = '/';
-
-    /** STRING_PATH_SEPARATOR. */
-    public static final String STRING_PATH_SEPARATOR = "/";
 
     // ~ Constructors ----------------------------------------------------------------------------
 
@@ -65,80 +56,12 @@ public abstract class CitrusFileUtils {
     public static final String buildFileName(final CitrusFileEnum fileEnum, final CitrusBean bean) {
 
         final StringBuilder builder = new StringBuilder(fileEnum.getPath());
-        builder.append(bean.getTargetPackage().replace('.', CitrusFileUtils.CHAR_PATH_SEPARATOR));
-        builder.append(CitrusFileUtils.STRING_PATH_SEPARATOR);
+        builder.append(bean.getTargetPackage().replace('.', FileUtils.CHAR_PATH_SEPARATOR));
+        builder.append(FileUtils.STRING_PATH_SEPARATOR);
         builder.append(bean.getName());
         builder.append(fileEnum.getExtension());
 
         return builder.toString();
-    }
-
-    /**
-     * Verify if file given by this file name exists, is a file, can be read and has some content.
-     *
-     * @param fileName
-     *            Name of file.
-     *
-     * @return {@code True} if file name is not empty, file exists, is a file, can be read and has a
-     *         length greater zero.
-     */
-    public static final boolean isValidFile(final String fileName) {
-
-        // make sure file name is not null or empty
-        if ((null != fileName) && (!fileName.isEmpty())) {
-
-            final File file = new File(fileName);
-
-            // criteria for a valid file
-            return (file.exists() && file.isFile() && file.canRead() && (file.length() > 0L));
-        }
-
-        // there was no file name, so return null
-        return false;
-    }
-
-    /**
-     * Get the absolute file name of the file. Makes sure the file is valid.
-     *
-     * @param fileName
-     *            File name to get the absolute path for.
-     *
-     * @return {@code Absolute path} for the given file or {@code null} if the file name is not valid
-     *         or the file is not valid.
-     */
-    public static final String getAbsolutePath(final String fileName) {
-
-        // make sure file name and file are valid
-        if (CitrusFileUtils.isValidFile(fileName)) {
-
-            final File file = new File(fileName);
-
-            // return absolute file path
-            return file.getAbsolutePath();
-        }
-
-        // either file name or file are not valid, return null
-        return null;
-    }
-
-    /**
-     * Close any object of instance {@link Closeable}.
-     *
-     * @param obj
-     *            Instance of closeable.
-     */
-    public static final void close(final Object obj) {
-
-        if (obj instanceof Closeable) {
-
-            try {
-
-                ((Closeable) obj).close();
-            } catch (final Exception ex) {
-
-                // ignore exception
-            }
-        }
     }
 
 }
