@@ -32,22 +32,28 @@ public interface TestAction {
     void execute(TestContext context);
 
     /**
-     * Name of TestAction injected as Spring bean name
+     * Name of test action injected as Spring bean name
      * @return name as String
      */
     String getName();
 
     /**
-     * Name of TestAction injected as Spring bean name
+     * Name of test action injected as Spring bean name
      * @return name as String
      */
     void setName(String name);
 
     /**
-     * Description of TestAction
+     * Description of this test action
      * @return description as String
      */
     String getDescription();
+    
+    /** 
+     * Description setter.
+     * @param description
+     */
+    void setDescription(String description);
     
     /**
      * Checks if this action is disabled.
@@ -55,4 +61,5 @@ public interface TestAction {
      * @return true if action is marked disabled.
      */
     boolean isDisabled(TestContext context);
+    
 }
