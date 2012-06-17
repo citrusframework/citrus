@@ -57,5 +57,18 @@
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
+    
+    <bean id="marshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="book">http://www.consol.com/schemas/bookregistry</prop>
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/consol/citrus/samples/bookregistry/castor/bookregistry-mapping.xml</value>
+            </list>
+        </property>
+    </bean>
         
 </beans>

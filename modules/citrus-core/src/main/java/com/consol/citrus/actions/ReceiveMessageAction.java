@@ -31,6 +31,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 
@@ -59,6 +60,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /** MessageValidator responsible for message validation */
     private MessageValidator<? extends ValidationContext> validator;
+    
+    /** Callback able to additionally validate received message */
+    private ValidationCallback validationCallback;
     
     /** List of validation contexts for this receive action */
     private List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -154,7 +158,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param receivedMessage
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws IOException {
-        if (validator != null) {
+        if (validationCallback != null) {
+            validationCallback.validate(receivedMessage);
+        } else if (validator != null) {
             validator.validateMessage(receivedMessage, context, validationContexts);
         } else {
             List<MessageValidator<? extends ValidationContext>> validators = 
@@ -301,5 +307,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public List<ValidationContext> getValidationContexts() {
         return validationContexts;
+    }
+
+    /**
+     * Gets the validationCallback.
+     * @return the validationCallback the validationCallback to get.
+     */
+    public ValidationCallback getValidationCallback() {
+        return validationCallback;
+    }
+
+    /**
+     * Sets the validationCallback.
+     * @param validationCallback the validationCallback to set
+     */
+    public void setValidationCallback(ValidationCallback validationCallback) {
+        this.validationCallback = validationCallback;
     }
 }
