@@ -30,7 +30,7 @@ import com.consol.citrus.util.BooleanExpressionParser;
  * boolean expressions that define the conditioning.
  *
  * @author Matthias Beil
- * @since CITRUS 1.2
+ * @since 1.2
  */
 public class Conditional extends AbstractActionContainer {
 
