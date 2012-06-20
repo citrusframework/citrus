@@ -17,8 +17,7 @@
 package com.consol.citrus.validation.xml;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -31,13 +30,8 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
-import edu.emory.mathcs.backport.java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 
 /**
  * @author Christoph Deppisch
