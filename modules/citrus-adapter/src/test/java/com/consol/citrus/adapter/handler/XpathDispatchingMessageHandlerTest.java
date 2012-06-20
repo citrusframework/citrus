@@ -68,8 +68,7 @@ public class XpathDispatchingMessageHandlerTest {
                 "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
         handler.setXpathMappingExpression("//I_DO_NOT_EXIST");
 
-        Message<?> response = handler.handleMessage(
-                MessageBuilder.withPayload(
+        handler.handleMessage(MessageBuilder.withPayload(
                     "<MessageBody>emptyResponse</MessageBody>").build());
     }
 
@@ -83,8 +82,7 @@ public class XpathDispatchingMessageHandlerTest {
                 "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
         handler.setXpathMappingExpression("//MessageBody/Content");
 
-        Message<?> response = handler.handleMessage(
-                MessageBuilder.withPayload(
+        handler.handleMessage(MessageBuilder.withPayload(
                     "<MessageBody>NO_BEAN_DEFINED_FOR_ME</MessageBody>").build());
     }
 }
