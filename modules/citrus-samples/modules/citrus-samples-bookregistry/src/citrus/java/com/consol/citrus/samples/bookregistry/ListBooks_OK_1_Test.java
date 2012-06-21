@@ -30,7 +30,7 @@ import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTest;
  */
 public class ListBooks_OK_1_Test extends DemoAwareTestNGCitrusTest {
     
-    BookRegistryDemo demo = new BookRegistryDemo();
+    private BookRegistryDemo demo = new BookRegistryDemo();
     
     @Test
     public void listBooks_OK_1_Test(ITestContext testContext) {
