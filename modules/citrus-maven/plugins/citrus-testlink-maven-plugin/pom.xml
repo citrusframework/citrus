@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>citrus-maven</artifactId>
+        <groupId>com.consol.citrus.mvn</groupId>
+        <version>1.2.M2</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.consol.citrus.mvn</groupId>
+    <artifactId>citrus-testlink-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <name>citrus-testlink-maven-plugin</name>
+    <description>Citrus Testlink Maven Plugin</description>
+
+    <dependencies>
+        <!-- When initiating TestLinkAPI the common log is needed,
+             but for some reason this dependency is declared as provided,
+             so the scope compile must be set. -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-interactivity-api</artifactId>
+            <version>1.0-alpha-4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>br.eti.kinoshita</groupId>
+            <artifactId>testlink-java-api</artifactId>
+            <version>1.9.3-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-testlink</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <!-- http://maven.apache.org/plugins/maven-compile-plugin/plugin-info.html -->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <!-- Version is required as mvn has currently a problem updating. -->
+                <!-- Managed version is 2.3.1, so removed the version. -->
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>

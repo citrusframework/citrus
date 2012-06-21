@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
@@ -16,8 +16,8 @@
       <name>Apache License, Version 2.0</name>
       <url>LICENSE.txt</url>
       <distribution>manual</distribution>
-      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software 
-      (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references 
+      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software
+      (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references
       list. You may also use our "Tested using Citrus" logo in your online or printed documentation.</comments>
     </license>
   </licenses>
@@ -42,6 +42,7 @@
     <module>modules/citrus-samples</module>
     <module>modules/citrus-ant-tasks</module>
     <module>modules/citrus-maven</module>
+    <module>modules/citrus-testlink</module>
   </modules>
 
   <developers>
@@ -121,7 +122,7 @@
     <name>ConSol* Consulting&amp;Solutions GmbH</name>
     <url>http://www.consol.com/</url>
   </organization>
-  
+
   <mailingLists>
     <mailingList>
       <name>Project Announcments</name>
@@ -139,14 +140,14 @@
       <post>citrus-dev-l@consol.de</post>
     </mailingList>
   </mailingLists>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.0.5.RELEASE</spring.version>
     <spring.ws.version>2.0.0.RELEASE</spring.ws.version>
     <spring.integration.version>2.0.3.RELEASE</spring.integration.version>
   </properties>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -281,7 +282,7 @@
         <artifactId>spring-integration-http</artifactId>
         <version>${spring.integration.version}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
@@ -297,7 +298,7 @@
         <artifactId>junit</artifactId>
         <version>4.7</version>
       </dependency>
-    
+
       <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-core</artifactId>
@@ -309,25 +310,25 @@
           </exclusion>
         </exclusions>
       </dependency>
-      
+
       <dependency>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty</artifactId>
         <version>7.0.0.pre5</version>
       </dependency>
-      
+
       <dependency>
         <groupId>com.googlecode.json-simple</groupId>
         <artifactId>json-simple</artifactId>
         <version>1.1</version>
       </dependency>
-      
+
       <dependency> <!-- Required by spring-aspect but optionally declared -->
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjweaver</artifactId>
         <version>1.6.8</version>
       </dependency>
-      
+
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -350,7 +351,7 @@
         <version>1.1.1</version>
         <scope>provided</scope>
       </dependency>
-      
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>hsqldb</groupId>
@@ -385,14 +386,14 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- Global dependencies -->  
+  <!-- Global dependencies -->
   <dependencies>
     <!-- Compile scope -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+
     <!-- Test scope -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -420,7 +421,7 @@
         <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <pluginManagement>
       <plugins>
@@ -551,7 +552,7 @@
             <excludeSubProjects>false</excludeSubProjects>
           </configuration>
         </plugin>
-        
+
         <plugin>
           <groupId>com.agilejava.docbkx</groupId>
           <artifactId>docbkx-maven-plugin</artifactId>
@@ -616,7 +617,7 @@
       </releases>
     </repository>
   </repositories>
-        
+
   <profiles>
     <!-- TIBCO specific module, only built when activated -->
     <profile>
@@ -628,7 +629,7 @@
             <activeByDefault>false</activeByDefault>
         </activation>
     </profile>
-    
+
     <!-- Distribution Management -->
     <profile>
       <id>release-inhouse</id>
@@ -643,7 +644,7 @@
         </snapshotRepository>
       </distributionManagement>
     </profile>
-    
+
     <profile>
       <id>release-labs</id>
       <distributionManagement>
@@ -657,7 +658,7 @@
         </snapshotRepository>
       </distributionManagement>
     </profile>
-    
+
     <profile>
       <id>site-local</id>
       <distributionManagement>
@@ -670,7 +671,7 @@
         <site.url>http://www.citrusframework.org</site.url>
       </properties>
     </profile>
-    
+
     <profile>
       <id>site-inhouse</id>
       <distributionManagement>
@@ -683,7 +684,7 @@
         <site.url>http://build.int.consol.de/citrus</site.url>
       </properties>
     </profile>
-    
+
     <profile>
       <id>site-labs</id>
       <distributionManagement>
@@ -696,7 +697,7 @@
         <site.url>http://www.citrusframework.org</site.url>
       </properties>
     </profile>
-    
+
     <profile>
       <id>site</id>
       <build>
@@ -739,9 +740,9 @@
                   <admonGraphicsPath>file:${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
                   <calloutGraphicsPath>file:${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
-                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
+                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf"
                           tofile="${project.basedir}/target/site/reference/pdf/citrus-reference.pdf" failonerror="true" />
-                  </postProcess>                    
+                  </postProcess>
                 </configuration>
                 <goals>
                   <goal>generate-pdf</goal>
@@ -777,7 +778,7 @@
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/config</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
@@ -795,7 +796,7 @@
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/testcase</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
@@ -813,7 +814,7 @@
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/http/config</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-http/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
@@ -831,7 +832,7 @@
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/ws/config</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
@@ -849,7 +850,7 @@
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${basedir}/target/site/schema/ws/testcase</outputDirectory>
-                  <resources>          
+                  <resources>
                     <resource>
                       <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
@@ -866,7 +867,7 @@
           </plugin>
         </plugins>
       </build>
-  
+
       <!-- Reports common to *all* projects. Top-level project needs some
            special aggregation reports. -->
       <reporting>
@@ -956,7 +957,7 @@
         </plugins>
       </reporting>
     </profile>
-    
+
     <profile>
       <id>assembly</id>
       <build>
@@ -999,9 +1000,9 @@
                   <admonGraphicsPath>file:${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
                   <calloutGraphicsPath>file:${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
                   <postProcess>
-                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
+                    <copy file="${project.basedir}/target/docbkx/pdf/index.pdf"
                           tofile="${project.basedir}/target/doc/pdf/citrus-reference.pdf" failonerror="true" />
-                  </postProcess>                    
+                  </postProcess>
                 </configuration>
                 <goals>
                   <goal>generate-pdf</goal>
@@ -1022,7 +1023,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
         <id>assembly-bundle</id>
         <build>
@@ -1038,7 +1039,7 @@
             </plugins>
         </build>
     </profile>
-    
+
     <profile>
       <id>maven-3</id>
       <activation>
