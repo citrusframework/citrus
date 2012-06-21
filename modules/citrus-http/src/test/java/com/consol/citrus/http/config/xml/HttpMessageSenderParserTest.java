@@ -19,7 +19,7 @@ package com.consol.citrus.http.config.xml;
 import java.util.Map;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.http.client.CommonsClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,7 +41,7 @@ public class HttpMessageSenderParserTest extends AbstractBeanDefinitionParserTes
         HttpMessageSender messageSender = messageSenders.get("httpMessageSender1");
         Assert.assertNotNull(messageSender.getRestTemplate());
         Assert.assertEquals(messageSender.getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertTrue(messageSender.getRestTemplate().getRequestFactory() instanceof CommonsClientHttpRequestFactory);
+        Assert.assertTrue(messageSender.getRestTemplate().getRequestFactory() instanceof HttpComponentsClientHttpRequestFactory);
         Assert.assertEquals(messageSender.getRequestMethod(), HttpMethod.POST);
         Assert.assertNull(messageSender.getCorrelator());
         

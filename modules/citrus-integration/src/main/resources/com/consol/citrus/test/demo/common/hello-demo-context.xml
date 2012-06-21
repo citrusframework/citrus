@@ -12,9 +12,10 @@
 
     <context:annotation-config />
     
-    <int:poller id="poller" default="true">
-        <int:interval-trigger interval="100"/>
-    </int:poller>
+    <int:poller id="poller" 
+                fixed-rate="100" 
+                max-messages-per-poll="1" 
+                default="true" />
     
     <int:logging-channel-adapter id="logger" level="DEBUG"/>
     

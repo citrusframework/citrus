@@ -31,6 +31,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.*;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -294,10 +295,10 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         public <T> T getBean(Class<T> requiredType) throws BeansException {
             return applicationContext.getBean(requiredType);
         }
-        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type) {
+        public String[] getBeanNamesForType(Class<?> type) {
             return applicationContext.getBeanNamesForType(type);
         }
-        public String[] getBeanNamesForType(@SuppressWarnings("rawtypes") Class type,
+        public String[] getBeanNamesForType(Class<?> type,
                 boolean includeNonSingletons, boolean allowEagerInit) {
             return applicationContext.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
         }
@@ -305,7 +306,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 throws BeansException {
             return applicationContext.getBean(name, args);
         }
-        public boolean isTypeMatch(String name, @SuppressWarnings("rawtypes") Class targetType)
+        public boolean isTypeMatch(String name, Class<?> targetType)
                 throws NoSuchBeanDefinitionException {
             return false;
         }
@@ -315,6 +316,9 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         }
         public ServletContext getServletContext() {
             return null;
+        }
+        public Environment getEnvironment() {
+            return applicationContext.getEnvironment();
         }
     }
 

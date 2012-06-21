@@ -32,8 +32,9 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
  *
  * @author Christoph Deppisch
  * @since 2007
- * @deprecated
+ * @deprecated since Citrus 1.2, in favor of using {@link DomXmlMessageValidator}
  */
+@Deprecated
 public class DefaultXMLMessageValidator implements MessageValidator<XmlMessageValidationContext> {
     
     @Autowired

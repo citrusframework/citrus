@@ -79,4 +79,10 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
         
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+    }
 }

@@ -8,7 +8,7 @@
   <section id="whatsnew-spring">
     <title>Spring version update</title>
     
-    <para>We have some major version upgrades in our Spring dependencies. We are now using Spring 3.0.x, Spring Integration 2.0.x and SpringWS 2.0.x. This upgrade 
+    <para>We have some major version upgrades in our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0. This upgrade 
     was overdue for some time and is definitely worth it. With these upgrades we had to apply some changes in our API, too. This is because we are using the Spring classes a lot
     in our code. See the upgrade guide in this chapter for all significant changes that might affect your project.</para>
   </section>
@@ -153,8 +153,8 @@
     
     <itemizedlist mark="opencircle">
         <listitem>
-            <para><emphasis>Spring version update</emphasis> We did some major version upgrades on our Spring dependencies. We are now using Spring 3.0.x, Spring Integration 2.0.x and SpringWS 2.0.x.
-            These new major releases bring some code changes in our API which might take effect on your code, too. So be patient and update your code, it is definitely worth it!</para>
+            <para><emphasis>Spring version update</emphasis> We did some major version upgrades on our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0.
+            These new major releases bring some code changes in our Citrus API which might affect your code and configuration, too. So please update your configuration, it is definitely worth it!</para>
         </listitem>
         <listitem>
             <para><emphasis>Spring Integration headers:</emphasis> With 2.0.x version Spring Integration has removed the internal header prefix (&quot;springintegration_&quot;).

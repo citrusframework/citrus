@@ -25,8 +25,6 @@ import javax.persistence.*;
 @Table(name = "FBS_FLIGHT")
 public class Flight {
     
-    private static final long serialVersionUID = 1L;
-    
     @Id
     @Column(name = "FLIGHT_ID")
     private String flightId;

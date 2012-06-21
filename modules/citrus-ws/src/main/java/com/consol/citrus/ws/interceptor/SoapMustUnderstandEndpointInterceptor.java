@@ -72,11 +72,19 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
             throws Exception {
         return true;
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) 
+            throws Exception {
+    }
+    
     /**
      * @param acceptedHeaders the acceptedHeaders to set
      */
     public void setAcceptedHeaders(List<String> acceptedHeaders) {
         this.acceptedHeaders = acceptedHeaders;
     }
+    
 }

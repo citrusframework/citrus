@@ -6,15 +6,15 @@
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
     xmlns:http="http://www.springframework.org/schema/integration/http"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context 
-            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/context/spring-context.xsd
 			http://www.springframework.org/schema/integration
-			http://www.springframework.org/schema/integration/spring-integration-2.0.xsd
+			http://www.springframework.org/schema/integration/spring-integration.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.0.xsd
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
             http://www.springframework.org/schema/integration/http
-            http://www.springframework.org/schema/integration/http/spring-integration-http-2.0.xsd">
+            http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
     
     <context:annotation-config />
     
@@ -80,7 +80,7 @@
                           http-method="POST"
                           expected-response-type="java.lang.String"
                           charset="UTF-8"
-                          request-timeout="1000"
+                          reply-timeout="1000"
                           reply-channel="confirmedFlightsXML"
                           header-mapper="httpHeaderMapper"/>
     

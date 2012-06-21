@@ -177,9 +177,7 @@
         <programlisting>&lt;file:inbound-channel-adapter  id=&quot;fileIn&quot; 
                  channel=&quot;fileInputChannel&quot;
                  directory=&quot;file:${some.directory.property}&quot;&gt;
-    &lt;si:poller&gt;
-        &lt;si:interval-trigger time-unit=&quot;MILLISECONDS&quot; interval=&quot;100&quot; /&gt;
-    &lt;/si:poller&gt;
+    &lt;si:poller fixed-rate=&quot;100&quot;/&gt;
 &lt;/file:inbound-channel-adapter&gt;
 
 &lt;si:channel id=&quot;fileInputChannel&quot;&gt;

@@ -87,7 +87,7 @@ public class HttpMessageSender implements MessageSender {
      */
     public HttpMessageSender() {
         restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
     
     /**
@@ -138,7 +138,7 @@ public class HttpMessageSender implements MessageSender {
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
         
         informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
-                                                       response.getBody(), 
+                                                       response.getBody() != null ? response.getBody() : "", 
                                                        response.getStatusCode()), message);
     }
     
@@ -262,7 +262,7 @@ public class HttpMessageSender implements MessageSender {
         public void handleError(ClientHttpResponse response) throws IOException {
             if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
                 informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
-                                                           response.getBody(), 
+                                                           response.getBody() != null ? response.getBody() : "", 
                                                            response.getStatusCode()), requestMessage);
             } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
                 new DefaultResponseErrorHandler().handleError(response);

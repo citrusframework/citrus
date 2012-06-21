@@ -10,9 +10,10 @@
             http://www.springframework.org/schema/integration/jms
             http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd">
 
-    <int:poller id="poller" default="true">
-       <int:interval-trigger interval="1000"/>
-    </int:poller>
+    <int:poller id="poller" 
+                fixed-rate="1000" 
+                max-messages-per-poll="1" 
+                default="true" />
     
     <jms:message-driven-channel-adapter id="helloReqeustIn" destination-name="Demo.Hello.Request.Queue" channel="helloRequestsXML"/>
     

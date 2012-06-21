@@ -15,7 +15,16 @@
   </properties>
   
   <body>
-    <release version="1.2-SNAPSHOT" date="11.08.2011" description="Latest snapshot release">
+    <release version="1.2" date="01.07.2012" description="1.2 release">
+        <action dev="christophd" type="update">
+          #352 Upgrade to Spring 3.1.1
+        </action>
+        <action dev="christophd" type="update">
+          #353 Upgrade to Spring WS 2.1.0
+        </action>
+        <action dev="christophd" type="update">
+          #354 Upgrade to Spring Integration 2.1.2
+        </action>
         <action dev="cwied" type="add">
           #348 Custom validation matchers
         </action>

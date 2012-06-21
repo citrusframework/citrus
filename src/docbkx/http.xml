@@ -95,7 +95,7 @@
     &lt;!-- Custom error handler --&gt;
   &lt;/property&gt;
   &lt;property name=&quot;requestFactory&quot;&gt;
-    &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
+    &lt;bean class=&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;&gt;
       &lt;property name=&quot;readTimeout&quot; value=&quot;9000&quot; /&gt;
     &lt;/bean&gt;
   &lt;/property&gt;
@@ -503,35 +503,37 @@ Server: Jetty(7.0.0.pre5)
                               request-method=&quot;POST&quot;
                               request-url=&quot;http://localhost:8080/test&quot;
                               reply-handler=&quot;testHttpReplyMessageHandler&quot;
-                              request-factory=&quot;userCredentialsClientRequestFactory&quot;/&gt;
+                              request-factory=&quot;basicAuthClientRequestFactory&quot;/&gt;
   
 &lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
 
-&lt;bean id=&quot;userCredentialsClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.UserCredentialsClientHttpRequestFactory&quot;&gt;
-  &lt;property name=&quot;targetRequestFactory&quot;&gt;
-    &lt;bean class=&quot;org.springframework.http.client.CommonsClientHttpRequestFactory&quot;&gt;
-        &lt;constructor-arg&gt;
-            &lt;bean id=&quot;httpClient&quot; class=&quot;org.apache.commons.httpclient.HttpClient&quot;&gt;
-                &lt;constructor-arg&gt;
-                    &lt;bean id=&quot;httpClientParams&quot; class=&quot;org.apache.commons.httpclient.params.HttpClientParams&quot;&gt;
-                        &lt;property name=&quot;authenticationPreemptive&quot; value=&quot;true&quot;/&gt;
-                        &lt;property name=&quot;connectionManagerClass&quot;
-                                  value=&quot;org.apache.commons.httpclient.MultiThreadedHttpConnectionManager&quot;/&gt;
-                    &lt;/bean&gt;
-                &lt;/constructor-arg&gt;
-            &lt;/bean&gt;
-        &lt;/constructor-arg&gt;
-    &lt;/bean&gt;
+&lt;bean id=&quot;basicAuthClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory&quot;&gt;
+  &lt;property name=&quot;authScope&quot;&gt;
+      &lt;bean class=&quot;org.apache.http.auth.AuthScope&quot;&gt;
+        &lt;constructor-arg value=&quot;localhost&quot;/&gt;
+        &lt;constructor-arg value=&quot;8072&quot;/&gt;
+        &lt;constructor-arg value=&quot;&quot;/&gt;
+        &lt;constructor-arg value=&quot;basic&quot;/&gt;
+      &lt;/bean&gt;
   &lt;/property&gt;
   &lt;property name=&quot;credentials&quot;&gt;
-    &lt;bean class=&quot;org.apache.commons.httpclient.UsernamePasswordCredentials&quot;&gt;
+    &lt;bean class=&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;&gt;
         &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
         &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
     &lt;/bean&gt;      
   &lt;/property&gt;  
 &lt;/bean&gt;</programlisting>
+
+        <important><para>Since Citrus has upgraded to Spring 3.1.x the Jakarta commons Http client is deprecated with Citrus version 1.2. The formerly used 
+        UserCredentialsClientHttpRequestFactory is therefore also deprecated and will not continue with next versions. Please update your configuration if you are coming from 
+        Citrus 1.1 or earlier versions.</para></important>
         
-        <para>The above configuration results in Http client requests with authentication headers properly set for basic authentication. See the following example request and have a look
+        <para>The above configuration results in Http client requests with authentication headers properly set for basic authentication. The client request factory takes care on adding the proper
+        basic authentication header to each request that is sent with this Citrus message sender. Citrus uses preemtive authentication. The message sender only sends a single request to the server with
+        all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope in the client 
+        request factory so Citrus can setup an authentication cache within the Http context in order to have preemtive authentication.</para>
+        
+        <para>See the following example request that is created by the Citrus message sender and have a look
         at the <emphasis>Authorization</emphasis> header which gets automatically set for all requsts.</para>
         
         <programlisting>POST /test HTTP/1.1
@@ -546,8 +548,8 @@ Content-Length: 175
   &lt;text&gt;Hello HttpServer&lt;/text&gt;
 &lt;/testRequestMessage&gt;</programlisting>
     
-        <tip><para>Of course you can simple set the <emphasis>Authorization</emphasis> header on your own for each request. 
-        You just have to use base64 encoding for the username:password phrase.</para>
+        <tip><para>Of course you can also set the <emphasis>Authorization</emphasis> header on your own for each request in your send action definition. 
+        Be aware of using the correct basic authentication header syntax with base64 encoding for the username:password phrase.</para>
         
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;

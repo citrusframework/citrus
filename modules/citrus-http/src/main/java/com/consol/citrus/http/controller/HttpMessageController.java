@@ -40,6 +40,9 @@ import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.MessageUtils;
 
 /**
+ * Message controller implementation handling all incoming requests by forwarding to a message 
+ * handler for further processing.
+ * 
  * @author Christoph Deppisch
  */
 @Controller
@@ -58,43 +61,43 @@ public class HttpMessageController {
     /** Default content type for response generation */
     private String contentType = "text/plain";
     
-    @RequestMapping(method = { RequestMethod.GET })
+    @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
     public ResponseEntity<String> handleGetRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.GET, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.POST })
+    @RequestMapping(value= "**", method = { RequestMethod.POST })
     @ResponseBody
     public ResponseEntity<String> handlePostRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.POST, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.PUT })
+    @RequestMapping(value= "**", method = { RequestMethod.PUT })
     @ResponseBody
     public ResponseEntity<String> handlePutRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.PUT, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.DELETE })
+    @RequestMapping(value= "**", method = { RequestMethod.DELETE })
     @ResponseBody
     public ResponseEntity<String> handleDeleteRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.DELETE, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.OPTIONS })
+    @RequestMapping(value= "**", method = { RequestMethod.OPTIONS })
     @ResponseBody
     public ResponseEntity<String> handleOptionsRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.OPTIONS, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.HEAD })
+    @RequestMapping(value= "**", method = { RequestMethod.HEAD })
     @ResponseBody
     public ResponseEntity<String> handleHeadRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.HEAD, requestEntity);
     }
     
-    @RequestMapping(method = { RequestMethod.TRACE })
+    @RequestMapping(value= "**", method = { RequestMethod.TRACE })
     @ResponseBody
     public ResponseEntity<String> handleTraceRequest(HttpEntity<String> requestEntity) {
         return handleRequestInternal(HttpMethod.TRACE, requestEntity);

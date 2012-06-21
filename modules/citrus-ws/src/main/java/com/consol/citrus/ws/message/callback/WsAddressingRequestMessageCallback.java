@@ -18,12 +18,12 @@ package com.consol.citrus.ws.message.callback;
 
 import java.net.URI;
 
-import org.springframework.core.JdkVersion;
 import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
-import org.springframework.ws.soap.addressing.messageid.*;
+import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
+import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.version.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -91,12 +91,7 @@ public class WsAddressingRequestMessageCallback extends SoapRequestMessageCallba
      * Get the message id generation strategy.
      * @return
      */
-    @SuppressWarnings("deprecation")
     private MessageIdStrategy getMessageIdStrategy() {
-        if (JdkVersion.getMajorJavaVersion() > JdkVersion.JAVA_14) {
-            return new UuidMessageIdStrategy();
-        } else {
-            return new RandomGuidMessageIdStrategy();
-        }
+        return new UuidMessageIdStrategy();
     }
 }
