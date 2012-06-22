@@ -90,11 +90,11 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        if (getDestinationChannel() instanceof QueueChannel) {
+        if (getDestinationChannel() instanceof MessageSelectingQueueChannel) {
             log.info("Receiving message from: " + getDestinationChannelName() + "(" + selector + ")");
            
             MessageSelector messageSelector = new HeaderMatchingMessageSelector(selector);
-            QueueChannel queueChannel = ((QueueChannel)getDestinationChannel());
+            MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel)getDestinationChannel());
 
             Message<?> message = null;
             

@@ -60,7 +60,7 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testRootQNameDelegation() {
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo = 'bar' AND root-element = 'FooTest'");
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -74,7 +74,7 @@ public class HeaderMatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
         
-        new HeaderMatchingMessageSelector("root-element = 'FooTest'");
+        new HeaderMatchingMessageSelector("root-qname = 'FooTest'");
         
         acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -82,6 +82,22 @@ public class HeaderMatchingMessageSelectorTest {
                 .build();
         
         declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+    
+    @Test
+    public void testRootQNameDelegationWithNamespace() {
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'");
+        
+        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/fooschema\"><text>foo</text></FooTest>")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/barschema\"><text>bar</text></FooTest>")
                 .setHeader("operation", "foo")
                 .build();
         

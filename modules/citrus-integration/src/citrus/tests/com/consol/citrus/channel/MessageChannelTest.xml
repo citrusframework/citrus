@@ -54,6 +54,114 @@
                     <element name="Operation" value="sayHello"/>
                 </header>
             </receive>
+            
+            <echo>
+                <message>Test root qname message selector</message>
+            </echo>
+            
+            <send with="channelRequestSender">
+                <message>
+                    <payload>
+                        <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </send>
+            
+            <send with="channelRequestSender">
+                <message>
+                    <payload>
+                        <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </send>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="root-qname" value="GoodbyeMessage"/>
+                </selector>
+                <message schema-validation="false">
+                    <payload>
+                        <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </receive>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="root-qname" value="HelloMessage"/>
+                </selector>
+                <message schema-validation="false">
+                    <payload>
+                        <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </receive>
+            
+            <echo>
+                <message>Test root qname message selector with namespaces</message>
+            </echo>
+            
+            <send with="channelRequestSender">
+                <message>
+                    <payload>
+                        <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </send>
+            
+            <send with="channelRequestSender">
+                <message>
+                    <payload>
+                        <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </send>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="root-qname" value="{http://citrusframework.org/goodbyeschema}GoodbyeMessage"/>
+                </selector>
+                <message schema-validation="false">
+                    <payload>
+                        <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayGoodbye"/>
+                </header>
+            </receive>
+            
+            <receive with="channelResponseReceiver">
+                <selector>
+                    <element name="root-qname" value="{http://citrusframework.org/helloschema}HelloMessage"/>
+                </selector>
+                <message schema-validation="false">
+                    <payload>
+                        <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </receive>
         </actions>
     </testcase>
 </spring:beans>

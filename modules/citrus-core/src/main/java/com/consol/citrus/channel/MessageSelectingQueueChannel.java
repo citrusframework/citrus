@@ -19,6 +19,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.springframework.integration.Message;
+import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.util.Assert;
 
@@ -27,14 +28,14 @@ import org.springframework.util.Assert;
  * 
  * @author Christoph Deppisch
  */
-public class QueueChannel extends org.springframework.integration.channel.QueueChannel {
+public class MessageSelectingQueueChannel extends QueueChannel {
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;
     
     /**
      * Create a channel with the specified queue.
      */
-    public QueueChannel(BlockingQueue<Message<?>> queue) {
+    public MessageSelectingQueueChannel(BlockingQueue<Message<?>> queue) {
         super(queue);
         
         this.queue = queue;
@@ -43,7 +44,7 @@ public class QueueChannel extends org.springframework.integration.channel.QueueC
     /**
      * Create a channel with the specified queue capacity.
      */
-    public QueueChannel(int capacity) {
+    public MessageSelectingQueueChannel(int capacity) {
         this(new LinkedBlockingQueue<Message<?>>(capacity));
         
         Assert.isTrue(capacity > 0, "The capacity must be a positive integer. " +
@@ -53,7 +54,7 @@ public class QueueChannel extends org.springframework.integration.channel.QueueC
     /**
      * Default constructor.
      */
-    public QueueChannel() {
+    public MessageSelectingQueueChannel() {
         this(new LinkedBlockingQueue<Message<?>>());
     }
     

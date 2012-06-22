@@ -82,6 +82,13 @@
         <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
     </xs:complexType>
     
+    <xs:element name="message-channel">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="capacity" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="message-channel-sender" type="messageChannelAdapterType"/>
     
     <xs:element name="message-channel-receiver">

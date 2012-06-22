@@ -109,6 +109,13 @@
     executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
   </section>
   
+  <section id="whatsnew-channel-selector">
+    <title>Support for message selectors on message channels</title>
+    
+    <para>Spring Integration message channels do not support message selectors like JMS queues do for example. With Citrus 1.2 we implemented a solution for this issue with a special message channel
+    implementation. So you can use the message selector feature also when using message channels. Go to <xref linkend="message-channel-selector-support"/> for details.</para>
+  </section>
+  
   <section id="whatsnew-actions">
     <title>New test actions</title>
     

@@ -40,7 +40,7 @@ public class RootQNameMessageSelector implements MessageSelector {
     private QName rootQName;
     
     /** Special identifyer combining header selector with this implementation */
-    public static final String ROOT_QNAME_HEADER_SELECTOR = "root-element";
+    public static final String ROOT_QNAME_HEADER_SELECTOR = "root-qname";
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RootQNameMessageSelector.class);

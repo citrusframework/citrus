@@ -45,6 +45,19 @@ public abstract class BeanDefinitionParserUtils {
             builder.addPropertyValue(propertyName, propertyValue);
         }
     }
+    
+    /**
+     * Sets the property value on bean definition as constructor argument in case value 
+     * is not null.
+     * 
+     * @param builder the bean definition to be configured
+     * @param propertyValue the property value
+     */
+    public static void setConstructorArgValue(BeanDefinitionBuilder builder, String propertyValue) {
+        if (StringUtils.hasText(propertyValue)) {
+            builder.addConstructorArgValue(propertyValue);
+        }
+    }
 
     /**
      * Sets the property reference on bean definition in case reference 

@@ -16,6 +16,33 @@
   
   <body>
     <release version="1.2" date="01.07.2012" description="1.2 release">
+        <action dev="christophd" type="add">
+          #363 Typed message headers
+        </action>
+        <action dev="christophd" type="add">
+          #362 Purge message channel action
+        </action>
+        <action dev="christophd" type="add">
+          #361 Schema mapping strategy chain
+        </action>
+        <action dev="christophd" type="add">
+          #360 Root QName schema mapping strategy
+        </action>
+        <action dev="christophd" type="add">
+          #359 Local host address function
+        </action>
+        <action dev="christophd" type="add">
+          #358 Function for digest authentication header creation
+        </action>
+        <action dev="christophd" type="add">
+          #356 Message selector support for message channels
+        </action>
+        <action dev="christophd" type="add">
+          #357 Root QName message selector on message channels
+        </action>
+        <action dev="christophd" type="fix">
+          #355 Fixed JBoss Maven repository
+        </action>
         <action dev="christophd" type="update">
           #352 Upgrade to Spring 3.1.1
         </action>

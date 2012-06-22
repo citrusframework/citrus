@@ -304,7 +304,7 @@
                                      channel="greetings"
                                      receive-timeout="5000"/>
                                      
-    <bean id="greetings" class="com.consol.citrus.channel.QueueChannel"/>
+    <citrus:message-channel id="greetings" capacity="5"/>
     
     <!-- Utility beans -->
     <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">

@@ -127,6 +127,56 @@
         request with reply messages sent by Citrus.</para>
     </section>
     
+    <section id="message-channel-selector-support">
+        <title>Message selectors on channels</title>
+        
+        <para>Unfortunately Spring Integration message channels do not support message selectors on header values as described in <xref linkend="message-selector"/>. With Citrus version 1.2
+        we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel
+        implementation in our configuration.</para>
+        
+        <programlisting>&lt;citrus:message-channel id=&quot;orders&quot; capacity=&quot;5&quot;/&gt;</programlisting>
+        
+        <para>The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! 
+        Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in <xref linkend="message-selector"/> and
+        you will see that it works.</para>
+        
+        <para>In addition to that we have implemented another message filter possibility on message channels. You can use the XML root QName of your message as selection criteria.
+        Let's see how this works in a small example:</para>
+        
+        <para>We have two different XML messages on a message channel waiting to be picked up by a consumer.</para>
+        
+        <programlisting>&lt;HelloMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Hello Citrus&lt;/HelloMessage&gt;
+&lt;GoodbyeMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Goodbye Citrus&lt;/GoodbyeMessage&gt;</programlisting>
+
+        <para>We would like to pick up the <emphasis>GoodbyeMessage</emphasis> in our test case. The <emphasis>HelloMessage</emphasis> should be left on the message channel as we are not interested
+        in it right now. We can define a root qname message selector in the receive action like this:</para>
+        
+        <programlisting>&lt;receive with=&quot;channelReceiver&quot;&gt;
+    &lt;selector&gt;
+        &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
+    &lt;/selector&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;GoodbyeMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Goodbye Citrus&lt;/GoodbyeMessage&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+    
+        <para>The Citrus receiver picks up the <emphasis>GoodbyeMessage</emphasis> from the channel selected via the root qname of the XML message payload. Of course you can also combine message header
+        selectors and root qname selectors as shown in this example below where a message header <emphasis>sequenceId</emphasis> is added to the selection logic.</para>
+        
+        <programlisting>&lt;selector&gt;
+    &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
+    &lt;element name=&quot;sequenceId&quot; value=&quot;1234&quot;/&gt;
+&lt;/selector&gt;</programlisting>
+        
+        <para>As we deal with XML qname values, we can also use namespaces in our selector root qname selection.</para>
+        
+        <programlisting>&lt;selector&gt;
+    &lt;element name=&quot;root-qname&quot; value=&quot;{http://citrusframework.org/schema}GoodbyeMessage&quot;/&gt;
+&lt;/selector&gt;</programlisting>
+    </section>
+    
     <section id="connecting-to-adapters">
         <title>Connecting with Spring Integration Adapters</title>
         

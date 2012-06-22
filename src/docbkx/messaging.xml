@@ -507,7 +507,7 @@
         
         <para>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry 
         situations where the application's error handling automatically tries to solve a communication problem that occurred 
-        during previous test cases. As a result the EAI application keeps sending messages that are not valid any more for the currently 
+        during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently 
         running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
         received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer informations 
         etc.).</para>
@@ -524,10 +524,11 @@
 &lt;/selector&gt;</programlisting>
         
         <para>This example shows how selectors work. The selector will only accept messages that meet the correlation id and the operation 
-        in the header values. All other messages are ignored. The selector elements are associated to each other using logical AND
-        (e.g. where correlationId = 'Lx1x123456789' AND operation = 'getOrders').</para>
+        in the header values. All other messages on the message destination are ignored. The selector elements are automatically associated to 
+        each other using the logical AND operator. This means that the message selector string would look like this: <emphasis>correlationId = 'Lx1x123456789' AND operation = 'getOrders'</emphasis>.</para>
         
-        <para>You can also define a selector string yourself that gives you more power in constructing the selection logic.</para>
+        <para>Instead of using several elements in the selector you can also define a selector string directly which gives you more power in constructing the selection logic yourself. This way
+        you can use <emphasis>OR</emphasis> logical operators, too.</para>
         
         <programlisting>&lt;selector&gt;
     &lt;value&gt;
@@ -536,9 +537,13 @@
 &lt;/selector&gt;</programlisting>
         
         <important>
-            <para>In case you want to run tests in parallel you will need to specify message selectors, otherwise the different tests running 
-            at the same time will steal messages from each other. In parallel test execution several test cases will listen for messages at 
-            the same time.</para>
+            <para>In case you want to run tests in parallel message selectors become essential in your test cases. The different tests running 
+            at the same time will steal messages from each other when you lack of message selection mechanisms.</para>
+        </important>
+        
+        <important>
+            <para>Previously only JMS message destinations offered support for message selectors! With Citrus version 1.2 we introduced message selector support for 
+            Spring Integration message channels, too (see <xref linkend="message-channel-selector-support"/>).</para>
         </important>
     </section>
     

@@ -207,7 +207,7 @@ public class MessageChannelReceiverTest {
             Assert.assertNotNull(e.getMessage());
         }
         
-        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
         Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
         reset(queueChannel);
         
@@ -239,7 +239,7 @@ public class MessageChannelReceiverTest {
             Assert.assertNotNull(e.getMessage());
         }
         
-        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
         Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
         reset(queueChannel);
         
@@ -262,7 +262,7 @@ public class MessageChannelReceiverTest {
         MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
         messageChannelReceiver.setMessagingTemplate(messagingTemplate);
         
-        QueueChannel queueChannel = EasyMock.createMock(QueueChannel.class);
+        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
         
         reset(queueChannel);
         
