@@ -195,6 +195,53 @@
         </section>
     </section>
     
+    <section id="schema-definition-overrule">
+        <title>Schema definition overruling</title>
+        
+        <para>Now it is time to talk about schema definition settings on test action level. We have learned before that Citrus tries to automatically find a matching schema definition
+        in some schema repository. There comes a time where you as a tester just have to pick the right schema definition by yourself. You can overrule all schema mapping strategies in Citrus
+        by directly setting the desired schema in your receiving message action.</para>
+        
+        <programlisting>&lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
+    &lt;message schema=&quot;helloSchema&quot;&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
+             value=&quot;${requestTag}&quot;/&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
+             value=&quot;${correlationId}&quot;/&gt;
+        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;
+
+&lt;bean id=&quot;helloSchema&quot; class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
+    &lt;property name=&quot;xsd&quot; 
+         value=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+
+        <para>In the example above the tester explicitly sets a schema definition in the receive action (schema=&quot;helloSchema&quot;). The attribute value refers to named schema bean 
+        somewhere in the applciation context. This overrules all schema mapping strategies used in the central schema repository as the given schema is directly used for validation. This feature 
+        is helpful when dealing with different schema versions at the same time where the schema repository can not help you anymore.</para>
+        
+        <para>Another possibility would be to set a custom schema repository at this point. This means you can have more than one schema repository in your Citrus project 
+        and you pick the right one by yourself in the receive action.</para>
+        
+        <programlisting>&lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
+    &lt;message schema-repository=&quot;mySpecialSchemaRepository&quot;&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
+             value=&quot;${requestTag}&quot;/&gt;
+        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
+             value=&quot;${correlationId}&quot;/&gt;
+        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+        <para>The <emphasis>schema-repository</emphasis> attribute refers to a bean of type <emphasis>com.consol.citrus.xml.XsdSchemaRepository</emphasis> somewhere in the applicaiton context.</para>
+        
+        <important>
+            <para>In case you have several schema repositories in your project do always define a default repository (name=&quot;schemaRepository&quot;). This helps Citrus to always find at least
+            one repository to consult with.</para>
+        </important>
+    </section>
+    
     <section id="dtd-validation">
         <title>DTD validation</title>
         
