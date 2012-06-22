@@ -31,7 +31,8 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.variable.*;
+import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * Bean definition parser for receive action in test case.
@@ -168,6 +169,16 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             String schemaValidation = messageElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
                 context.setSchemaValidation(Boolean.valueOf(schemaValidation));
+            }
+            
+            String schema = messageElement.getAttribute("schema");
+            if (StringUtils.hasText(schema)) {
+                context.setSchema(schema);
+            }
+            
+            String schemaRepository = messageElement.getAttribute("schema-repository");
+            if (StringUtils.hasText(schemaRepository)) {
+                context.setSchemaRepository(schemaRepository);
             }
             
             Set<String> ignoreExpressions = new HashSet<String>();

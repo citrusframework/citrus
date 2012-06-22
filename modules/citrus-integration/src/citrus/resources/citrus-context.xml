@@ -30,6 +30,18 @@
         </property>
     </bean>
     
+    <bean id="helloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
+    </bean>
+    
+    <bean id="helloSchemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <ref bean="helloSchema"/>
+            </list>
+        </property>
+    </bean>
+    
     <context:property-placeholder location="classpath:citrus.properties"/>
 	
     <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">

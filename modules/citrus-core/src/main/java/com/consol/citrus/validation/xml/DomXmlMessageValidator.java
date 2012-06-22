@@ -25,7 +25,10 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
@@ -60,17 +63,20 @@ import com.consol.citrus.xml.xpath.XPathUtils;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> {
+public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
     
     @Autowired
-    private XsdSchemaRepository schemaRepository;
+    private List<XsdSchemaRepository> schemaRepositories;
 
     @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+
+    /** Root application context this validator is defined in */
+    private ApplicationContext applicationContext;
 
     /**
      * Validates the message with test context and xml validation context.
@@ -85,7 +91,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         try {
             if (validationContext.isSchemaValidationEnabled()) {
-                validateXMLSchema(receivedMessage);
+                validateXMLSchema(receivedMessage, validationContext);
                 validateDTD(validationContext.getDTDResource(), receivedMessage);
             }
 
@@ -224,8 +230,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Validate message with a XML schema.
      *
      * @param receivedMessage
+     * @param validationContext
      */
-    protected void validateXMLSchema(Message<?> receivedMessage) {
+    protected void validateXMLSchema(Message<?> receivedMessage, XmlMessageValidationContext validationContext) {
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
             return;
         }
@@ -239,7 +246,27 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             log.info("Starting XML schema validation ...");
 
-            XsdSchema schema = schemaRepository.findSchema(doc);
+            XsdSchema schema = null;
+            if (validationContext.getSchema() != null) {
+                schema = applicationContext.getBean(validationContext.getSchema(), XsdSchema.class);
+            } else if (validationContext.getSchemaRepository() != null) {
+                schema = applicationContext.getBean(validationContext.getSchemaRepository(), XsdSchemaRepository.class).findSchema(doc);
+            } else if (schemaRepositories.size() == 1) {
+                schema = schemaRepositories.get(0).findSchema(doc);
+            } else {
+                for (XsdSchemaRepository repository : schemaRepositories) {
+                    if (repository.getName().equals(XsdSchemaRepository.DEFAULT_REPOSITORY_NAME)) {
+                        schema = repository.findSchema(doc);
+                    }
+                }
+                
+                if (schema == null) {
+                    throw new CitrusRuntimeException("When using multiple schema repositories in context, " +
+                    		"you either need to define which repository should be used or you need to define a default repository " +
+                    		"(name=\"" + XsdSchemaRepository.DEFAULT_REPOSITORY_NAME + "\")");
+                }
+            }
+            
             XmlValidator validator = schema.createValidator();
             SAXParseException[] results = validator.validate(new DOMSource(doc));
 
@@ -935,7 +962,18 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Set the schema repository holding all known schema definition files.
      * @param schemaRepository the schemaRepository to set
      */
-    public void setSchemaRepository(XsdSchemaRepository schemaRepository) {
-        this.schemaRepository = schemaRepository;
+    public void addSchemaRepository(XsdSchemaRepository schemaRepository) {
+        if (schemaRepositories == null) {
+            schemaRepositories = new ArrayList<XsdSchemaRepository>();
+        }
+        
+        schemaRepositories.add(schemaRepository);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

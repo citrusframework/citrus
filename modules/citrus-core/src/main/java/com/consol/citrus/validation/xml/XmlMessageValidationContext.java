@@ -47,6 +47,12 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     /** Should message be validated with its schema definition */
     private boolean schemaValidation = true;
     
+    /** Explicit schema repository to use for this validation */
+    private String schemaRepository;
+    
+    /** Explicit schema instance to use for this validation */
+    private String schema;
+    
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
@@ -142,6 +148,38 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
      */
     public void setSchemaValidation(boolean schemaValidation) {
         this.schemaValidation = schemaValidation;
+    }
+
+    /**
+     * Gets the schemaRepository.
+     * @return the schemaRepository the schemaRepository to get.
+     */
+    public String getSchemaRepository() {
+        return schemaRepository;
+    }
+
+    /**
+     * Sets the schemaRepository.
+     * @param schemaRepository the schemaRepository to set
+     */
+    public void setSchemaRepository(String schemaRepository) {
+        this.schemaRepository = schemaRepository;
+    }
+
+    /**
+     * Gets the schema.
+     * @return the schema the schema to get.
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * Sets the schema.
+     * @param schema the schema to set
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
 }

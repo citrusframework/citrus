@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -33,7 +34,13 @@ import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
  * 
  * @author Christoph Deppisch
  */
-public class XsdSchemaRepository {
+public class XsdSchemaRepository implements BeanNameAware {
+    /** The default repository name */
+    public static final String DEFAULT_REPOSITORY_NAME = "schemaRepository";
+    
+    /** This repositories name in the Spring application context */
+    private String name = DEFAULT_REPOSITORY_NAME;
+    
     /** List of schema resources */
     private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
     
@@ -82,5 +89,20 @@ public class XsdSchemaRepository {
      */
     public void setSchemaMappingStrategy(XsdSchemaMappingStrategy schemaMappingStrategy) {
         this.schemaMappingStrategy = schemaMappingStrategy;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the name.
+     * @return the name the name to get.
+     */
+    public String getName() {
+        return name;
     }
 }

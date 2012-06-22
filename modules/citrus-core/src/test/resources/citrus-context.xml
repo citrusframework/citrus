@@ -11,7 +11,27 @@
 	 
     <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
 	 
-    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
+    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+                    <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="testSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
+    </bean>
+    
+    <bean id="testSchemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+        <property name="schemas">
+            <list>
+                <ref bean="testSchema"/>
+            </list>
+        </property>
+    </bean>
     
 	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">

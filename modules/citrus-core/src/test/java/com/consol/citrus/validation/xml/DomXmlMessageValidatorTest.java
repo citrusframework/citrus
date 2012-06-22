@@ -21,14 +21,17 @@ import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
@@ -37,6 +40,10 @@ import com.consol.citrus.xml.XsdSchemaRepository;
  * @author Christoph Deppisch
  */
 public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
+    
+    @Autowired
+    private DomXmlMessageValidator validator;
+    
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
@@ -54,9 +61,78 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         
         schemaRepository.getSchemas().add(schema);
         
-        validator.setSchemaRepository(schemaRepository);
+        validator.addSchemaRepository(schemaRepository);
         
-        validator.validateXMLSchema(message);
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
+    }
+    
+    @Test
+    public void validateWithExplicitXMLSchema() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                        + "<correlationId>Kx1R123456789</correlationId>"
+                        + "<bookingId>Bx1G987654321</bookingId>"
+                        + "<test>Hello TestFramework</test>"
+                    + "</message>").build();
+        
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setSchema("testSchema"); // defined as bean in application context
+        validator.validateXMLSchema(message, validationContext);
+    }
+    
+    @Test
+    public void validateWithExplicitXMLSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                        + "<correlationId>Kx1R123456789</correlationId>"
+                        + "<bookingId>Bx1G987654321</bookingId>"
+                        + "<test>Hello TestFramework</test>"
+                    + "</message>").build();
+        
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setSchemaRepository("testSchemaRepository"); // defined as bean in application context
+        validator.validateXMLSchema(message, validationContext);
+    }
+    
+    @Test
+    public void validateWithDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                        + "<correlationId>Kx1R123456789</correlationId>"
+                        + "<bookingId>Bx1G987654321</bookingId>"
+                        + "<test>Hello TestFramework</test>"
+                    + "</message>").build();
+        
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
+    }
+    
+    @Test
+    public void validateMissingDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                        + "<correlationId>Kx1R123456789</correlationId>"
+                        + "<bookingId>Bx1G987654321</bookingId>"
+                        + "<test>Hello TestFramework</test>"
+                    + "</message>").build();
+        
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        schemaRepository.setBeanName("schemaRepository1");
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
+        SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
+        schema.afterPropertiesSet();
+        
+        schemaRepository.getSchemas().add(schema);
+        
+        validator.addSchemaRepository(schemaRepository);
+        
+        XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
+        schemaRepository2.setBeanName("schemaRepository2");
+        validator.addSchemaRepository(schemaRepository2);
+        
+        try {
+            validator.validateXMLSchema(message, new XmlMessageValidationContext());
+            Assert.fail("Missing exception due to missing default schema repository");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("need to define a default repository"));
+        }
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -77,9 +153,9 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         
         schemaRepository.getSchemas().add(schema);
         
-        validator.setSchemaRepository(schemaRepository);
+        validator.addSchemaRepository(schemaRepository);
         
-        validator.validateXMLSchema(message);
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
     }
     
     @Test
