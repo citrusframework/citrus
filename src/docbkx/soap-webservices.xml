@@ -218,11 +218,11 @@
     <section id="soap-header">
         <title>SOAP headers</title>
         
-        <para>SOAP defines several header variations that we discuss in this section. First of all we deal with the special 
-        <emphasis>SOAPAction</emphasis> header. If we want to set this SOAPAction header when sending WebService messages we simply need to use 
+        <para>SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special 
+        <emphasis>SOAP action</emphasis> header. In case we need to set this SOAP action header we simply need to use 
         the special header key called <literal>citrus_soap_action</literal> in our test. This is because in general the sending test action in Citrus 
         is generic for all transport types, but the SOAP action header is specific for the SOAP transport. The special header key in combination with a 
-        underlying WebService message sender constructs the SOAPAction in the SOAP message as intended.</para>
+        underlying WebService message sender constructs the SOAP action in the SOAP message as intended.</para>
         
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
@@ -256,6 +256,43 @@
         <programlisting>&lt;header&gt;
     &lt;resource file=&quot;classpath:request-soap-header.xml&quot;/&gt;
 &lt;/header&gt;</programlisting>
+
+        <para>This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP
+        message header validation. You define expected SOAP headers, SOAP action and XML fragments and Citrus will match incoming request to that. Just
+        use <emphasis>citrus_soap_action</emphasis> header key in your receiving message action and you validate this SOAP header accordingly.</para>
+        
+        <para>When validating SOAP header XML fragments you need to define the whole XML header fragment as expected header data like this:</para>
+        
+        <programlisting>&lt;receive with=&quot;soapMessageHandler&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;![CDATA[
+                &lt;c:ResponseMessage xmlns:c=&quot;http://citrusframework.org/schema&quot;&gt;
+                  &lt;c:resultCode&gt;OK&lt;/c:resultCode&gt;
+                &lt;/c:ResponseMessage&gt;
+        ]]&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;SOAP-ENV:Header 
+                    xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+                    &lt;c:customHeader xmlns:c=&quot;http://citrusframework.org/headerschema&quot;&gt;
+                        &lt;c:correlationId&gt;${correlationId}&lt;/c:correlationId&gt;
+                        &lt;c:applicationId&gt;${applicationId}&lt;/c:applicationId&gt;
+                        &lt;c:trackingId&gt;${trackingId}&lt;/c:trackingId&gt;
+                        &lt;c:serviceId&gt;${serviceId}&lt;/c:serviceId&gt;
+                        &lt;c:interfaceVersion&gt;1.0&lt;/c:interfaceVersion&gt;
+                        &lt;c:timestamp&gt;@ignore@&lt;/c:timestamp&gt;
+                    &lt;/c:customHeader&gt;
+                &lt;/SOAP-ENV:Header&gt;
+            ]]&gt;
+        &lt;/data&gt;
+        &lt;element name=&quot;citrus_soap_action&quot; value=&quot;doResponse&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+            
+        <para>As you see the SOAP XML header validation can combine header element and XML fragement validation. This is also likely
+        to be used when dealing with WS-Security message headers.</para>        
     </section>
     
     <section id="soap-mime-headers">

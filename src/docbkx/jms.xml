@@ -247,4 +247,27 @@
         components in Citrus. Just add this attribute in order to switch to JMS topics in a publish-subscribe domain.</para>
     </section>
     
+    <section id="jms-headers">
+        <title>JMS message headers</title>
+        
+        <para>The JMS specification defines a set of special message header entries that can go into your JMS message. These JMS headers are stored differently in a JMS message
+        header than other custom header entries do. Therefore these special header values should be set in a special syntax that we discuss in the next paragraphs.</para>
+        
+        <programlisting>&lt;header&gt;
+    &lt;element name=&quot;jms_correlationId&quot; value=&quot;${correlationId}&quot;/&gt;
+    &lt;element name=&quot;jms_messageId&quot; value=&quot;${messageId}&quot;/&gt;
+    &lt;element name=&quot;jms_redelivered&quot; value=&quot;${redelivered}&quot;/&gt;
+    &lt;element name=&quot;jms_timestamp&quot; value=&quot;${timestamp}&quot;/&gt;
+&lt;/header&gt;</programlisting>
+
+        <para>As you see all JMS specific message headers use the <emphasis>jms_</emphasis> prefix. This prefix comes from Spring Integration message header mappers that 
+        take care of setting those headers in the JMS message header properly.</para>
+        
+        <para>Typing of message header entries may also be of interest in order to meet the JMS standards of typed message headers. For instance the following message header 
+        is of type double and is therefore transfered via JMS as a double value.</para>
+        
+        <programlisting>&lt;header&gt;
+    &lt;element name=&quot;amount&quot; value=&quot;19.75&quot; type=&quot;double&quot;/&gt;
+&lt;/header&gt;</programlisting>
+    </section>
 </chapter>
