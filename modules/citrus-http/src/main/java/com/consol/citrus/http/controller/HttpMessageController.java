@@ -61,6 +61,9 @@ public class HttpMessageController {
     /** Default content type for response generation */
     private String contentType = "text/plain";
     
+    /** Hold the latest response message for message tracing reasons */
+    private ResponseEntity<String> latestResponse;
+    
     @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
     public ResponseEntity<String> handleGetRequest(HttpEntity<String> requestEntity) {
@@ -191,7 +194,9 @@ public class HttpMessageController {
             status = HttpStatus.valueOf(Integer.valueOf(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE).toString()));
         }
         
-        return new ResponseEntity<String>(responseMessage.getPayload().toString(), httpHeaders, status);
+        latestResponse = new ResponseEntity<String>(responseMessage.getPayload().toString(), httpHeaders, status);
+        
+        return latestResponse;
     }
 
     /**
@@ -224,5 +229,13 @@ public class HttpMessageController {
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    /**
+     * Gets the latestResponse.
+     * @return the latestResponse the latestResponse to get.
+     */
+    public ResponseEntity<String> getLatestResponse() {
+        return latestResponse;
     }
 }

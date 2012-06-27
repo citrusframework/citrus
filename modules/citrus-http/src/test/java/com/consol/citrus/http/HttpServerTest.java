@@ -2,6 +2,7 @@ package com.consol.citrus.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
@@ -10,16 +11,19 @@ import org.mortbay.jetty.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+
 /**
  * Simple unit test for HttpServer
  * @author jza
  */
-public class HttpServerTest {
+public class HttpServerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void startupAndShutdownTest() throws IOException {
         HttpServer server = new HttpServer();
         server.setPort(8095);
+        server.setApplicationContext(applicationContext);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 
         server.startup();

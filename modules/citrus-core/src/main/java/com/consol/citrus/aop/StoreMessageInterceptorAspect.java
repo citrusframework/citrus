@@ -29,14 +29,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * Aspect can store received messages to the file system in order to track 
  * the message flow.
  * 
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.2, in favor of using {@link MessageTracingTestListener}
  */
 @Aspect
+@Deprecated
 public class StoreMessageInterceptorAspect {
     /**
      * Logger

@@ -75,6 +75,8 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
                     ErrorHandlingStrategy.fromName(element.getAttribute("error-strategy")));
         }
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("interceptors"), "interceptors");
+        
         return builder.getBeanDefinition();
     }
 }

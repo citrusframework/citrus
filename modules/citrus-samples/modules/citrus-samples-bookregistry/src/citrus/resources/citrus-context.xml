@@ -42,6 +42,9 @@
     <util:list id="clientInterceptors">
         <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
     </util:list>
+    
+    <!-- Listeners -->
+    <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
   
     <!-- Message Sender/Receiver -->
     <citrus-ws:message-sender id="bookRegistryRequestMessageSender" 

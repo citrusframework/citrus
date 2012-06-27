@@ -43,6 +43,7 @@
             <xs:attribute name="rest-template" type="xs:string"/>
             <xs:attribute name="charset" type="xs:string"/>
             <xs:attribute name="content-type" type="xs:string"/>
+            <xs:attribute name="interceptors" type="xs:string"/>
             <xs:attribute name="error-strategy">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">

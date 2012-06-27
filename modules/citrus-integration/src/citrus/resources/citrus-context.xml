@@ -70,6 +70,9 @@
         </property>
     </bean>
     
+    <!-- Listeners -->
+    <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+    
     <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     <bean id="groovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
@@ -86,10 +89,11 @@
             </props>
         </property>
     </bean>
-
+    
     <!-- SOAP WebService settings -->
     <citrus-ws:jetty-server id="jettyServer" port="8071"
                                              auto-start="true"
+                                             root-parent-context="true"
                                              context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                                              resource-base="src/citrus/resources"/>
 
@@ -177,7 +181,12 @@
                                 request-method="POST"
                                 content-type="text/xml"
                                 reply-handler="httpResponseReceiver"
-                                request-factory="basicAuthClientRequestFactory"/>
+                                request-factory="basicAuthClientRequestFactory"
+                                interceptors="httpClientInterceptors"/>
+    
+    <util:list id="httpClientInterceptors">
+        <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
+    </util:list>
   
     <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
       <property name="authScope">
@@ -200,7 +209,8 @@
                                 request-url="http://localhost:8073/test" 
                                 request-method="POST"
                                 content-type="text/xml"
-                                reply-handler="httpResponseReceiver"/>
+                                reply-handler="httpResponseReceiver"
+                                interceptors="httpClientInterceptors"/>
   
     <citrus-http:reply-message-handler id="httpResponseReceiver"/>
     

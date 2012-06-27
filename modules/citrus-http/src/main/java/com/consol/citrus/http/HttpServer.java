@@ -37,6 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.report.MessageTracingTestListener;
 import com.consol.citrus.server.AbstractServer;
 
 /**
@@ -127,6 +129,17 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             servletMapping.setPathSpec("/*");
             
             servletHandler.addServletMapping(servletMapping);
+            
+            //Add request caching filter when message tracing is enabled
+            if (applicationContext.getBeansOfType(MessageTracingTestListener.class).size() > 0) {
+                FilterMapping filterMapping = new FilterMapping();
+                filterMapping.setFilterName("request-caching-filter");
+                filterMapping.setPathSpec("/*");
+                
+                FilterHolder filterHolder = new FilterHolder(new RequestCachingServletFilter());
+                filterHolder.setName("request-caching-filter");
+                servletHandler.addFilter(filterHolder, filterMapping);
+            }
             
             context.setServletHandler(servletHandler);
             

@@ -83,13 +83,21 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(InputStream inputStream) throws IOException {
-        BufferedInputStream reader = new BufferedInputStream(inputStream);
+        BufferedInputStream reader = null;
         StringBuilder builder = new StringBuilder();
         
-        byte[] contents = new byte[1024];
-        int bytesRead=0;
-        while( (bytesRead = reader.read(contents)) != -1){
-            builder.append(new String(contents, 0, bytesRead));
+        try {
+            reader = new BufferedInputStream(inputStream);
+            
+            byte[] contents = new byte[1024];
+            int bytesRead=0;
+            while( (bytesRead = reader.read(contents)) != -1){
+                builder.append(new String(contents, 0, bytesRead));
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
         }
         
         return builder.toString();

@@ -433,4 +433,12 @@ public class HttpMessageSender implements MessageSender {
         return headerMapper;
     }
 
+    /**
+     * Sets the interceptors on this implementation's rest template.
+     * @param interceptors the interceptors to set
+     */
+    public void setInterceptors(List<ClientHttpRequestInterceptor> interceptors) {
+        restTemplate.setInterceptors(interceptors);
+    }
+
 }

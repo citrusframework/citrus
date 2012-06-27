@@ -18,7 +18,6 @@ package com.consol.citrus.ws.interceptor;
 
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Endpoint interceptor implementation logging incoming WebService requests and respective responses to
@@ -36,14 +35,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write request message to logger.
      */
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        if (log.isDebugEnabled()) {
-            if (messageContext.getRequest() instanceof SoapMessage) {
-                logSoapMessage("Endpoint handling SOAP request:\n", 
-                        ((SoapMessage) messageContext.getRequest()).getEnvelope().getSource());
-            } else {
-                logWebServiceMessage("Endppint handling request:\n", messageContext.getRequest());
-            }
-        }
+        logRequest("Received SOAP request:\n", messageContext);
         
         return true;
     }
@@ -52,14 +44,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write response message to logger.
      */
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        if (messageContext.hasResponse() && log.isDebugEnabled()) {
-            if (messageContext.getResponse() instanceof SoapMessage) {
-                logSoapMessage("Endpoint sending SOAP response:\n", 
-                        ((SoapMessage) messageContext.getResponse()).getEnvelope().getSource());
-            } else {
-                logWebServiceMessage("Endpoint sending response:\n", messageContext.getResponse());
-            }
-        }
+        logResponse("Sending SOAP response:\n", messageContext);
         
         return true;
     }
@@ -68,14 +53,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write fault message to logger.
      */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        if (messageContext.hasResponse() && log.isDebugEnabled()) {
-            if (messageContext.getResponse() instanceof SoapMessage) {
-                logSoapMessage("Endpoint handling SOAP fault:\n", 
-                        ((SoapMessage) messageContext.getResponse()).getEnvelope().getSource());
-            } else {
-                logWebServiceMessage("Endpoint handling fault:\n", messageContext.getResponse());
-            }
-        }
+        logResponse("Endpoint sending SOAP fault:\n", messageContext);
         
         return true;
     }
