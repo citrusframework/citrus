@@ -37,26 +37,31 @@ public final class ValidationMatcherUtils {
      * This method resolves a custom falidationMatcher to its respective result.
      * @param validationMatcherExpression to evaluate.
      * @param fieldName the name of the field
-     * @throws ValidationException
      * @return evaluated control value
      */
     public static void resolveValidationMatcher(String fieldName, String fieldValue, 
             String validationMatcherExpression, TestContext context) {
         String expression = VariableUtils.cutOffVariablesPrefix(cutOffValidationMatchersPrefix(validationMatcherExpression));
         
-        String prefix = expression.substring(0, expression.indexOf(':') + 1);
-        String controlString = expression.substring(expression.indexOf('(') + 1, expression.length() - 1);
-        String validationMatcher = expression.substring(expression.indexOf(':') + 1, expression.indexOf('('));
+        int bodyStart = expression.indexOf('(');
+        
+        String prefix = "";
+        if (expression.indexOf(':') > 0 && expression.indexOf(':') < bodyStart) {
+            prefix = expression.substring(0, expression.indexOf(':') + 1);
+        }
+
+        String matcherValue = expression.substring(bodyStart + 1, expression.length() - 1);
+        String matcherName = expression.substring(prefix.length(), bodyStart);
 
         ValidationMatcherLibrary library = context.getValidationMatcherRegistry().getLibraryForPrefix(prefix);
 
-        controlString = VariableUtils.replaceVariablesInString(controlString, context, false);
-        controlString = FunctionUtils.replaceFunctionsInString(controlString, context);
-        if (controlString.contains("\'")) {
-            controlString = controlString.substring(controlString.indexOf('\'') + 1, controlString.lastIndexOf('\''));
+        matcherValue = VariableUtils.replaceVariablesInString(matcherValue, context, false);
+        matcherValue = FunctionUtils.replaceFunctionsInString(matcherValue, context);
+        if (matcherValue.startsWith("\'") && matcherValue.endsWith("\'")) {
+            matcherValue = matcherValue.substring(1, matcherValue.length() - 1);
         }
 
-        library.getValidationMatcher(validationMatcher).validate(fieldName, fieldValue, controlString);
+        library.getValidationMatcher(matcherName).validate(fieldName, fieldValue, matcherValue);
     }
     
     

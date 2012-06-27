@@ -34,6 +34,10 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
     public void testResolveDefaultValidationMatcher() {
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@equalsIgnoreCase('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase('value')}@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${equalsIgnoreCase(value)}@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "John's", "@equalsIgnoreCase('John's')@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "", "@equalsIgnoreCase('')@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "prefix:value", "@equalsIgnoreCase('prefix:value')@", context);
     }
     
     @Test
@@ -43,11 +47,15 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
         validationMatcher.validate("field", "value", "value");
         expectLastCall().times(3);
         
+        validationMatcher.validate("field", "prefix:value", "prefix:value");
+        expectLastCall().once();
+        
         replay(validationMatcher);
         
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher('value')@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@foo:customMatcher(value)@", context);
         ValidationMatcherUtils.resolveValidationMatcher("field", "value", "@${foo:customMatcher('value')}@", context);
+        ValidationMatcherUtils.resolveValidationMatcher("field", "prefix:value", "@foo:customMatcher('prefix:value')@", context);
         
         verify(validationMatcher);
     }
