@@ -16,6 +16,12 @@
   
   <body>
     <release version="1.2" date="01.07.2012" description="1.2 release">
+        <action dev="christophd" type="fix">
+          #366 Fixed issue with JSONArray and simple object values
+        </action>
+        <action dev="christophd" type="add">
+          #365 Message tracing log files
+        </action>    
         <action dev="christophd" type="add">
           #364 Schema mappings on receive action definition
         </action>
