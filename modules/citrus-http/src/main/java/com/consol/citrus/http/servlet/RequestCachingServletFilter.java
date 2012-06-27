@@ -61,7 +61,11 @@ public class RequestCachingServletFilter extends OncePerRequestFilter {
         @Override
         public ServletInputStream getInputStream() throws IOException {
             if (body == null) {
-                body = FileCopyUtils.copyToByteArray(super.getInputStream());
+                if (super.getInputStream() != null) {
+                    body = FileCopyUtils.copyToByteArray(super.getInputStream());
+                } else {
+                    body = new byte[] {};
+                }
             }
             return new RequestCachingInputStream();
         }

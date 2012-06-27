@@ -181,7 +181,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
         public InputStream getBody() throws IOException {
             if (this.body == null) {
-                this.body = FileCopyUtils.copyToByteArray(this.response.getBody());
+                if (response.getBody() != null) {
+                    this.body = FileCopyUtils.copyToByteArray(response.getBody());
+                } else {
+                    body = new byte[] {};
+                }
             }
             return new ByteArrayInputStream(this.body);
         }
