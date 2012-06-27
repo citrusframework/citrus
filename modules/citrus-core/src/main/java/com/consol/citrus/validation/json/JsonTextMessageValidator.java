@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.json;
 
 import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -100,7 +100,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 "' but was '" + receivedJson.size() + "'");
         
         for (Iterator it = controlJson.entrySet().iterator(); it.hasNext();) {
-            Entry controlJsonEntry = (Entry)it.next();
+            Map.Entry controlJsonEntry = (Map.Entry) it.next();
             
             Assert.isTrue(receivedJson.containsKey(controlJsonEntry.getKey()), 
                     "Missing JSON entry: + '" + controlJsonEntry.getKey() + "'");
@@ -154,8 +154,20 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                         "expected " + jsonArrayControl.size() + " but was " + jsonArrayReceived.size());
                 
                 for (int i = 0; i < jsonArrayControl.size(); i++) {
-                    validateJson((JSONObject) jsonArrayReceived.get(i), 
-                            (JSONObject) jsonArrayControl.get(i), context);
+                    if (jsonArrayControl.get(i).getClass().isAssignableFrom(JSONObject.class)) {
+                        Assert.isTrue(jsonArrayReceived.get(i).getClass().isAssignableFrom(JSONObject.class), 
+                                "Value types not equal for entry: '" + jsonArrayControl.get(i) + "'" +
+                                        ", expected '" + JSONObject.class.getName() + "' " +
+                                        "but was '" + jsonArrayReceived.get(i).getClass().getName() + "'");
+                        
+                        validateJson((JSONObject) jsonArrayReceived.get(i),
+                                (JSONObject) jsonArrayControl.get(i), context);
+                    } else {
+                        Assert.isTrue(jsonArrayControl.get(i).equals(jsonArrayReceived.get(i)),
+                                "Values not equal for entry: '" + jsonArrayControl.get(i) + "'" +
+                                        ", expected '" + jsonArrayControl.get(i) + "' " +
+                                        "but was '" + jsonArrayReceived.get(i) + "'");
+                    }
                 }
             } else {
                 Assert.isTrue(controlJsonEntry.getValue().equals(receivedJson.get(controlJsonEntry.getKey())), 
