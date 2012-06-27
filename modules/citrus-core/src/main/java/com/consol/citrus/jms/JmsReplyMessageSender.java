@@ -20,11 +20,13 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.*;
+import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * This JMS message sender is quite similar to Spring's AbstractJmsTemplateBasedAdapter that is 
@@ -42,6 +44,9 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
 
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
+    
+    @Autowired(required=false)
+    private MessageTracingTestListener messageTracingTestListener;
     
     /**
      * Logger
@@ -80,6 +85,10 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
         }
         
         getJmsTemplate().convertAndSend(replyDestination, replyMessage);
+        
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Send JMS reply message:\n" + replyMessage.toString());
+        }
         
         log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
     }

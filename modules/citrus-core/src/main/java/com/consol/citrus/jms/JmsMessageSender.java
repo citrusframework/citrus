@@ -18,10 +18,12 @@ package com.consol.citrus.jms;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * {@link MessageSender} implementation publishes message to a JMS destination.
@@ -34,6 +36,9 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
+    
+    @Autowired(required=false)
+    private MessageTracingTestListener messageTracingTestListener;
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
@@ -48,8 +53,12 @@ public class JmsMessageSender extends AbstractJmsAdapter implements MessageSende
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
         }
-
+        
         getJmsTemplate().convertAndSend(message);
+        
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Send JMS message:\n" + message.toString());
+        }
         
         log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
     }

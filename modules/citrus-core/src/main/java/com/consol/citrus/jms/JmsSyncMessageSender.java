@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
@@ -35,6 +36,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * Synchronous message sender implementation for JMS. Sender publishes messages to a JMS destination and
@@ -87,6 +89,9 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
 
     /** Message sender name */
     private String name;
+    
+    @Autowired(required=false)
+    private MessageTracingTestListener messageTracingTestListener;
 
     /**
      * Logger
@@ -106,6 +111,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
 
         if (log.isDebugEnabled()) {
             log.debug("Message to send is:\n" + message.toString());
+        }
+        
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Send synchronous JMS message:\n" + message.toString());
         }
 
         MessageProducer messageProducer = null;
@@ -152,6 +161,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param requestMessage the initial request message.
      */
     protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Received synchronous JMS reply message:\n" + responseMessage.toString());
+        }
+        
         if (replyMessageHandler != null) {
             log.info("Informing reply message handler for further processing");
 

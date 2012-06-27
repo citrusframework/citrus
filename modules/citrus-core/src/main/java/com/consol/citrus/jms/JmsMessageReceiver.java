@@ -18,11 +18,13 @@ package com.consol.citrus.jms;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.message.GenericMessage;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * {@link MessageReceiver} implementation consumes messages from aJMS destination. Destination
@@ -33,6 +35,9 @@ import com.consol.citrus.message.MessageReceiver;
 public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageReceiver {
     /** Receive timeout */
     private long receiveTimeout = 5000L;
+    
+    @Autowired(required=false)
+    private MessageTracingTestListener messageTracingTestListener;
     
     /**
      * Logger
@@ -64,6 +69,10 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         
         if (log.isDebugEnabled()) {
             log.debug("Received message is:\n" + receivedMessage.toString());
+        }
+        
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Received JMS message:\n" + receivedMessage.toString());
         }
         
         return receivedMessage;
