@@ -53,6 +53,9 @@
                 <entry key="matchesDatePattern">
                     <bean class="com.consol.citrus.validation.matcher.core.DatePatternValidationMatcher"/>
                 </entry>
+                <entry key="matchesXml">
+                  <bean class="com.consol.citrus.validation.matcher.core.XmlValidationMatcher"/>
+                </entry>
             </map>
         </property>
     </bean>
