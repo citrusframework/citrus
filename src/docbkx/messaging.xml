@@ -528,11 +528,11 @@
         each other using the logical AND operator. This means that the message selector string would look like this: <emphasis>correlationId = 'Lx1x123456789' AND operation = 'getOrders'</emphasis>.</para>
         
         <para>Instead of using several elements in the selector you can also define a selector string directly which gives you more power in constructing the selection logic yourself. This way
-        you can use <emphasis>OR</emphasis> logical operators, too.</para>
+        you can use <emphasis>AND</emphasis> logical operators yourself.</para>
         
         <programlisting>&lt;selector&gt;
     &lt;value&gt;
-        correlationId = 'Cx1x123456789' OR correlationId = 'Cx1x987654321'
+        correlationId = 'Cx1x123456789' AND messageId = '987654321'
     &lt;/value&gt;
 &lt;/selector&gt;</programlisting>
         
