@@ -21,17 +21,11 @@ import java.util.Map.Entry;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.util.Assert;
-
-import com.consol.citrus.message.MessageSelectorBuilder;
 
 /**
  * Message selector matches one or more header elements with the message header. Only in case all 
  * matching header elements are present in message header and its value matches the expected value
  * the message is accepted.
- * 
- * Also delegating to root QName message selector when header element refers to 
- * root element name {@link RootQNameMessageSelector}.
  * 
  * @author Christoph Deppisch
  */
@@ -43,10 +37,8 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
     /**
      * Default constructor using fields.
      */
-    public HeaderMatchingMessageSelector(String selector) {
-        this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
-        
-        Assert.isTrue(matchingHeaders.size() > 0, "Missing matching message headers for this selector");
+    public HeaderMatchingMessageSelector(Map<String, String> matchingHeaders) {
+        this.matchingHeaders = matchingHeaders;
     }
     
     /**
@@ -58,20 +50,11 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
         for (Entry<String, String> matchEntry : matchingHeaders.entrySet()) {
             String namePart = matchEntry.getKey();
             
-            // delegate to root QName message selector if necessary
-            if (namePart.equals(RootQNameMessageSelector.ROOT_QNAME_HEADER_SELECTOR)) {
-                if (!(new RootQNameMessageSelector(matchEntry.getValue())).accept(message)) {
-                    return false;
-                } else {
-                    continue;
-                }
-            }
-            
             if (!messageHeaders.containsKey(namePart)) {
                 return false;
             }
             
-            if (!messageHeaders.get(matchEntry.getKey()).equals(matchEntry.getValue())) {
+            if (!messageHeaders.get(namePart).equals(matchEntry.getValue())) {
                 return false;
             }
         }

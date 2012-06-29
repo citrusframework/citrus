@@ -29,7 +29,7 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
+import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageReceiver;
@@ -93,7 +93,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         if (getDestinationChannel() instanceof MessageSelectingQueueChannel) {
             log.info("Receiving message from: " + getDestinationChannelName() + "(" + selector + ")");
            
-            MessageSelector messageSelector = new HeaderMatchingMessageSelector(selector);
+            MessageSelector messageSelector = new DispatchingMessageSelector(selector);
             MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel)getDestinationChannel());
 
             Message<?> message = null;

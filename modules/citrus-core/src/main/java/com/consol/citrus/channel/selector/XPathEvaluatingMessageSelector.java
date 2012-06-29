@@ -15,45 +15,42 @@
  */
 package com.consol.citrus.channel.selector;
 
-import javax.xml.namespace.QName;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Message selector accepts XML messages according to specified root element QName.
  * 
  * @author Christoph Deppisch
+ * @since 1.2
  */
-public class RootQNameMessageSelector implements MessageSelector {
+public class XPathEvaluatingMessageSelector implements MessageSelector {
 
-    /** Target message XML root QName to look for */
-    private QName rootQName;
+    /** Expression to evaluate for acceptance */
+    private final String expression;
+    
+    private final String control;
     
     /** Special selector element name identifying this message selector implementation */
-    public static final String ROOT_QNAME_SELECTOR_ELEMENT = "root-qname";
+    public static final String XPATH_SELECTOR_ELEMENT = "xpath:";
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RootQNameMessageSelector.class);
+    private static Logger log = LoggerFactory.getLogger(XPathEvaluatingMessageSelector.class);
     
     /**
      * Default constructor using fields.
      */
-    public RootQNameMessageSelector(String qNameString) {
-        if (QNameUtils.validateQName(qNameString)) {
-            this.rootQName = QNameUtils.parseQNameString(qNameString);
-        } else {
-            throw new CitrusRuntimeException("Invalid root QName string '" + qNameString + "'");
-        }
+    public XPathEvaluatingMessageSelector(String expression, String control) {
+        this.control = control;
+        this.expression = expression.substring(XPATH_SELECTOR_ELEMENT.length());
     }
     
     /**
@@ -65,14 +62,19 @@ public class RootQNameMessageSelector implements MessageSelector {
         try {
             doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
         } catch (LSException e) {
-            log.warn("Root QName message selector ignoring not well-formed XML message payload", e);
+            log.warn("XPath evaluating message selector ignoring not well-formed XML message payload", e);
             return false; // non XML message - not accepted
         }
         
-        if (StringUtils.hasText(rootQName.getNamespaceURI())) {
-            return rootQName.equals(QNameUtils.getQNameForNode(doc.getFirstChild())); 
-        } else {
-            return rootQName.getLocalPart().equals(doc.getFirstChild().getLocalName());
+        try {
+            return XPathUtils.evaluateAsString(doc, expression, null).equals(control);
+        } catch (CitrusRuntimeException e) {
+            if (e.getMessage().startsWith("Can not evaluate xpath expression") || 
+                    e.getMessage().startsWith("No result for XPath expression")) {
+                return false;
+            } else {
+                throw e;
+            }
         }
     }
 

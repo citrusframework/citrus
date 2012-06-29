@@ -27,7 +27,7 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelector() {
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("operation = 'foo'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("operation = 'foo'");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
@@ -43,7 +43,7 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testHeaderMatchingSelectorAndOperation() {
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo = 'bar' AND operation = 'foo'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND operation = 'foo'");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
@@ -60,21 +60,22 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testRootQNameDelegation() {
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo")
                 .build();
         
-        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+        Message<String> declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+                .setHeader("foo", "bar")
                 .setHeader("operation", "foo")
                 .build();
         
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
         
-        new HeaderMatchingMessageSelector("root-qname = 'FooTest'");
+        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'");
         
         acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -91,7 +92,7 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testRootQNameDelegationWithNamespace() {
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/fooschema\"><text>foo</text></FooTest>")
                 .setHeader("operation", "foo")
@@ -100,6 +101,29 @@ public class HeaderMatchingMessageSelectorTest {
         Message<String> declineMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/barschema\"><text>bar</text></FooTest>")
                 .setHeader("operation", "foo")
                 .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+    
+    @Test
+    public void testXPathEvaluationDelegation() {
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://FooTest/text = 'foobar'");
+        
+        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest><text>barfoo</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+        
+        messageSelector = new DispatchingMessageSelector("xpath://FooTest/text = 'foobar'");
         
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
