@@ -28,10 +28,12 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated since 1.2
  */
+@Deprecated
 public class StoreMessageInterceptorAspectTest extends AbstractTestNGUnitTest {
     @Autowired
-    StoreMessageInterceptorAspect storageAspect;
+    private StoreMessageInterceptorAspect storageAspect;
     
     @Override
     @BeforeMethod
