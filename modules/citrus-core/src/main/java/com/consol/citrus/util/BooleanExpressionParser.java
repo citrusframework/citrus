@@ -31,14 +31,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 @SuppressWarnings("unchecked")
 public final class BooleanExpressionParser {
-    /** List of operators */
-    private static Stack<String> operators = new Stack<String>();
     
-    /** List of values */
-    private static Stack<String> values = new Stack<String>();
-
-    /** List of known operators for this class */
-    private static List<String> knownOperators = new ArrayList<String>(
+    /** List of known operators */
+    private static final List<String> OPERATORS = new ArrayList<String>(
             CollectionUtils.arrayToList(new String[]{"(", "=", "and", "or", "lt", "lt=", "gt", "gt=", ")"}));
     
     /**
@@ -59,6 +54,8 @@ public final class BooleanExpressionParser {
      * @return
      */
     public static boolean evaluate(String expression) {
+        Stack<String> operators = new Stack<String>();
+        Stack<String> values = new Stack<String>();
         boolean result = true;
 
         char actChar;
@@ -136,7 +133,7 @@ public final class BooleanExpressionParser {
      * @throws CitrusRuntimeException
      */
     private static String validateOperator(String operator) {
-        if (!knownOperators.contains(operator)) {
+        if (!OPERATORS.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
         return operator;
