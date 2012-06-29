@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -55,6 +56,6 @@ public class SendMessageBuilderTest {
         Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getMessageSender(), messageSender);
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(1)).getMessageBuilder(), "0.5");
+        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(1)).getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
     }
 }
