@@ -32,11 +32,24 @@ public class XPathEvaluatingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo><text>foobar</text></Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Bar><text>foobar</text></Bar>").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
         
         messageSelector = new XPathEvaluatingMessageSelector("xpath://ns:Foo/ns:text", "foobar");
         
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns:Foo xmlns:ns=\"http://citrusframework.org/schema\"><ns:text>foobar</ns:text></ns:Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<ns1:Foo xmlns:ns1=\"http://citrusframework.org/schema\"><ns1:text>foobar</ns1:text></ns1:Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Bar><text>foobar</text></Bar>").build()));
+        
+        messageSelector = new XPathEvaluatingMessageSelector("xpath://{http://citrusframework.org/schema}Foo/{http://citrusframework.org/schema}text", "foobar");
+        
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns:Foo xmlns:ns=\"http://citrusframework.org/schema\"><ns:text>foobar</ns:text></ns:Foo>").build()));
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns1:Foo xmlns:ns1=\"http://citrusframework.org/schema\"><ns1:text>foobar</ns1:text></ns1:Foo>").build()));
+        
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/unknown\"><text>foobar</text></Foo>").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<ns:Foo xmlns:ns=\"http://citrusframework.org/unknown\"><ns:text>foobar</ns:text></ns:Foo>").build()));
+        
+        messageSelector = new XPathEvaluatingMessageSelector("xpath://{http://citrusframework.org/schema}Foo/{http://citrusframework.org/schema2}text", "foobar");
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns1:Foo xmlns:ns1=\"http://citrusframework.org/schema\" xmlns:ns2=\"http://citrusframework.org/schema2\"><ns2:text>foobar</ns2:text></ns1:Foo>").build()));
     }
 }

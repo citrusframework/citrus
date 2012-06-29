@@ -15,6 +15,9 @@
  */
 package com.consol.citrus.channel.selector;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -27,7 +30,9 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelector() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("operation = 'foo'");
+        Map<String, String> headerMatchers = new HashMap<String, String>();
+        headerMatchers.put("operation", "foo");
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
@@ -43,7 +48,10 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testHeaderMatchingSelectorAndOperation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND operation = 'foo'");
+        Map<String, String> headerMatchers = new HashMap<String, String>();
+        headerMatchers.put("foo", "bar");
+        headerMatchers.put("operation", "foo");
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
@@ -58,74 +66,4 @@ public class HeaderMatchingMessageSelectorTest {
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }
     
-    @Test
-    public void testRootQNameDelegation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'");
-        
-        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Message<String> declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-        
-        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'");
-        
-        acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo")
-                .build();
-        
-        declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-    
-    @Test
-    public void testRootQNameDelegationWithNamespace() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'");
-        
-        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/fooschema\"><text>foo</text></FooTest>")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/barschema\"><text>bar</text></FooTest>")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-    
-    @Test
-    public void testXPathEvaluationDelegation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://FooTest/text = 'foobar'");
-        
-        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest><text>barfoo</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo")
-                .build();
-        
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-        
-        messageSelector = new DispatchingMessageSelector("xpath://FooTest/text = 'foobar'");
-        
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
 }

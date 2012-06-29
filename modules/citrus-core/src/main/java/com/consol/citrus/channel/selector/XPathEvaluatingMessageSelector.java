@@ -15,19 +15,26 @@
  */
 package com.consol.citrus.channel.selector;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessageSelector;
+import org.springframework.xml.xpath.XPathExpressionFactory;
+import org.springframework.xml.xpath.XPathParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSException;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
- * Message selector accepts XML messages according to specified root element QName.
+ * Message selector accepts XML messages in case XPath expression evaluation result matches
+ * the expected value. With this selector someone can select messages aaccording to a message payload XML 
+ * element value for instance.
+ * 
+ * Syntax is xpath://root/element
  * 
  * @author Christoph Deppisch
  * @since 1.2
@@ -62,19 +69,25 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
         try {
             doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
         } catch (LSException e) {
-            log.warn("XPath evaluating message selector ignoring not well-formed XML message payload", e);
+            log.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
             return false; // non XML message - not accepted
         }
         
         try {
-            return XPathUtils.evaluateAsString(doc, expression, null).equals(control);
-        } catch (CitrusRuntimeException e) {
-            if (e.getMessage().startsWith("Can not evaluate xpath expression") || 
-                    e.getMessage().startsWith("No result for XPath expression")) {
-                return false;
+            Map<String, String> namespaces = XPathUtils.getDynamicNamespaces(expression);
+            
+            if (!namespaces.isEmpty()) {
+                return XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(expression, namespaces), namespaces)
+                        .evaluateAsString(doc).equals(control);
             } else {
-                throw e;
+                return XPathExpressionFactory.createXPathExpression(expression, XMLUtils.lookupNamespaces(doc))
+                        .evaluateAsString(doc).equals(control);
             }
+            
+            
+        } catch (XPathParseException e) {
+            log.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
+            return false; // wrong XML message - not accepted
         }
     }
 

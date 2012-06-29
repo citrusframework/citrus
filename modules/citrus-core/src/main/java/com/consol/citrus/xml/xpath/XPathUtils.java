@@ -16,6 +16,9 @@
 
 package com.consol.citrus.xml.xpath;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.*;
@@ -39,6 +42,13 @@ public abstract class XPathUtils {
 
     /** XPath expression factory */
     private static XPathFactory xPathFactory;
+    
+    /** Dynamic namespace prefix suffix */
+    public static final String DYNAMIC_NS_START = "{";
+    public static final String DYNAMIC_NS_END = "}";
+    
+    /** Dynamic namespace prefix */
+    private static final String DYNAMIC_NS_PREFIX = "dns";
 
     static {
         xPathFactory = XPathFactory.newInstance();
@@ -48,6 +58,48 @@ public abstract class XPathUtils {
      * Prevent instantiation.
      */
     private XPathUtils() {
+    }
+    
+    public static Map<String, String> getDynamicNamespaces(String expression) {
+        Map<String, String> namespaces = new HashMap<String, String>();
+        
+        if (expression.contains(DYNAMIC_NS_START) && expression.contains(DYNAMIC_NS_END)) {
+            String[] tokens = expression.split("\\" + DYNAMIC_NS_START);
+            
+            for (int i = 1; i < tokens.length; i++) {
+                String namespace = tokens[i].substring(0, tokens[i].indexOf(DYNAMIC_NS_END));
+                
+                if (!namespaces.containsValue(namespace)) {
+                    namespaces.put(DYNAMIC_NS_PREFIX + i, namespace);
+                }
+            }
+        }
+        
+        return namespaces;
+    }
+    
+    /**
+     * Replaces all dynamic namespaces in a XPath expression with respective prefixes 
+     * in namespace map.
+     * 
+     * XPath: //{http://sample.org/foo}foo/{http://sample.org/bar}bar results in //ns1:foo/ns2:bar where
+     * the namespace map contains ns1 and ns2.
+     * 
+     * @param expression
+     * @param namespaces
+     * @return
+     */
+    public static String replaceDynamicNamespaces(String expression, Map<String, String> namespaces) {
+        String expressionResult = expression;
+        
+        for (Entry<String, String> namespaceEntry : namespaces.entrySet()) {
+            if (expressionResult.contains(DYNAMIC_NS_START + namespaceEntry.getValue() + DYNAMIC_NS_END)) {
+                expressionResult = expressionResult.replaceAll("\\" + DYNAMIC_NS_START + namespaceEntry.getValue().replace(".", "\\.") + "\\" + DYNAMIC_NS_END, 
+                        namespaceEntry.getKey() + ":");
+            }
+        }
+        
+        return expressionResult;
     }
 
     /**
