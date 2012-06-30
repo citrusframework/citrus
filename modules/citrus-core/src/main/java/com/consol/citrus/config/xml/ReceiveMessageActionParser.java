@@ -56,7 +56,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             
             builder.addPropertyReference("messageReceiver", messageReceiverReference);
         } else {
-            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
+            throw new BeanCreationException("Missing proper message receiver reference - attriute should not be empty");
         }
         
         DescriptionElementParser.doParse(element, builder);
@@ -66,21 +66,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
         
-        Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
-        if (messageSelectorElement != null) {
-            Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
-            if (selectorStringElement != null) {
-                builder.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
-            }
-
-            Map<String, String> messageSelector = new HashMap<String, String>();
-            List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
-            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
-                Element selectorElement = (Element) iter.next();
-                messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
-            }
-            builder.addPropertyValue("messageSelector", messageSelector);
-        }
+        parseMessageSelector(element, builder);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         
@@ -105,6 +91,29 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Added message selector if set.
+     * @param element
+     * @param builder
+     */
+    private void parseMessageSelector(Element element, BeanDefinitionBuilder builder) {
+        Element messageSelectorElement = DomUtils.getChildElementByTagName(element, "selector");
+        if (messageSelectorElement != null) {
+            Element selectorStringElement = DomUtils.getChildElementByTagName(messageSelectorElement, "value");
+            if (selectorStringElement != null) {
+                builder.addPropertyValue("messageSelectorString", DomUtils.getTextValue(selectorStringElement));
+            }
+
+            Map<String, String> messageSelector = new HashMap<String, String>();
+            List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
+            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
+                Element selectorElement = (Element) iter.next();
+                messageSelector.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
+            }
+            builder.addPropertyValue("messageSelector", messageSelector);
+        }
     }
 
     /**
