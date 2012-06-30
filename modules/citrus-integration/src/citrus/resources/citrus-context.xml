@@ -78,6 +78,7 @@
     <bean id="groovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
     <bean id="plainTextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
     <bean id="jsonTextMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
+    <bean id="groovyJsonMessageValidator" class="com.consol.citrus.validation.script.GroovyJsonMessageValidator"/>
     
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
     

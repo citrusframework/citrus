@@ -19,9 +19,6 @@ package com.consol.citrus.script;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
-import java.io.IOException;
-
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -103,13 +100,9 @@ public class GroovyAction extends AbstractTestAction {
             }
 
             log.info("Groovy script execution successfully");
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (CompilationFailedException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
+        } catch (CitrusRuntimeException e) {
+            throw e;
+        } catch (Exception e) {
             throw new CitrusRuntimeException(e);
         }
     }
