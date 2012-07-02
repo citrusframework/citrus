@@ -34,7 +34,7 @@ public class SendMessageBuilderTest {
     
     @Test
     public void testNG() {
-        CitrusTestNGTestCaseBuilder builder = new CitrusTestNGTestCaseBuilder() {
+        CitrusTestBuilder builder = new CitrusTestBuilder() {
             @Override
             protected void configure() {
                 send(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
@@ -46,7 +46,6 @@ public class SendMessageBuilderTest {
             }
         };
         
-        builder.initialize();
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 2);

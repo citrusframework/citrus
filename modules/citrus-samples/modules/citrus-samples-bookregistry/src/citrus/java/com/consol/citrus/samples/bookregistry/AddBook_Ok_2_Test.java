@@ -26,18 +26,21 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
-import com.consol.citrus.dsl.CitrusTestNGTestCaseBuilder;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.samples.CitrusSamplesDemo;
 import com.consol.citrus.samples.bookregistry.model.*;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.CitrusTest;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
 
 /**
  *
  * @author Christoph Deppisch
  */
-public class AddBook_Ok_2_Test extends CitrusTestNGTestCaseBuilder {
+public class AddBook_Ok_2_Test extends AbstractTestNGCitrusTest {
 
     private BookRegistryDemo demo = new BookRegistryDemo();
     
@@ -53,9 +56,8 @@ public class AddBook_Ok_2_Test extends CitrusTestNGTestCaseBuilder {
     private CastorMarshaller marshaller;
     
     @Test
-    @Override
     public void runTest(ITestContext testContext) {
-        super.runTest(testContext);
+        executeTest(testContext);
     }
     
     @BeforeSuite(alwaysRun = true)
@@ -72,23 +74,30 @@ public class AddBook_Ok_2_Test extends CitrusTestNGTestCaseBuilder {
         getDemo().stop();
     }
     
-    @Override
-    protected void configure() {
-        String isbn = "978-0596517335";
+    @CitrusTest
+    public TestCase getTest() {
+        CitrusTestBuilder builder = new CitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                String isbn = "978-0596517335";
+                
+                send()
+                    .with(bookRequestMessageSender)
+                    .payload(createAddBookRequestMessage(isbn), marshaller)
+                    .header("citrus_soap_action", "addBook");
+                
+                receive()
+                    .with(bookResponseMessageHandler)
+                    .validationCallback(new AbstractValidationCallback<AddBookResponseMessage>(marshaller) {
+                        @Override
+                        public void validate(AddBookResponseMessage response, MessageHeaders headers) {
+                            Assert.assertTrue(response.isSuccess());
+                        }
+                    });
+            }
+        };
         
-        send()
-            .with(bookRequestMessageSender)
-            .payload(createAddBookRequestMessage(isbn), marshaller)
-            .header("citrus_soap_action", "addBook");
-        
-        receive()
-            .with(bookResponseMessageHandler)
-            .validationCallback(new AbstractValidationCallback<AddBookResponseMessage>(marshaller) {
-                @Override
-                public void validate(AddBookResponseMessage response, MessageHeaders headers) {
-                    Assert.assertTrue(response.isSuccess());
-                }
-            });
+        return builder.getTestCase();
     }
 
     /**

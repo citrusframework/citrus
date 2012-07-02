@@ -28,7 +28,7 @@ public class SleepBuilderTest {
     
     @Test
     public void testNG() {
-        CitrusTestNGTestCaseBuilder builder = new CitrusTestNGTestCaseBuilder() {
+        CitrusTestBuilder builder = new CitrusTestBuilder() {
             @Override
             protected void configure() {
                 sleep(0.5);
@@ -36,7 +36,6 @@ public class SleepBuilderTest {
             }
         };
         
-        builder.initialize();
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
