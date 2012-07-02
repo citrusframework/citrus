@@ -20,22 +20,21 @@ import java.util.*;
 
 import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
- * Test case builder offers methods to add test actions in Java DSL language.
+ * Test case builder offers methods for constructing a test case with several
+ * test actions in Java DSL language.
+ * 
  * @author Christoph Deppisch
  */
-public abstract class CitrusTestNGTestCaseBuilder extends AbstractTestNGCitrusTest {
+public abstract class CitrusTestBuilder {
 
     /** This builders test case */
     private TestCase testCase;
@@ -44,28 +43,15 @@ public abstract class CitrusTestNGTestCaseBuilder extends AbstractTestNGCitrusTe
     private Map<String, String> variables = new LinkedHashMap<String, String>();
     
     /**
-     * Initialize Citrus test case object.
+     * Default constructor.
      */
-    protected void initialize() {
+    public CitrusTestBuilder() {
         testCase = new TestCase();
         testCase.setBeanName(this.getClass().getSimpleName());
         testCase.setName(this.getClass().getSimpleName());
         testCase.setPackageName(this.getClass().getPackage().getName());
         
         testCase.setVariableDefinitions(variables);
-    }
-    
-    @Test
-    public void runTest(ITestContext testContext) {
-        executeTest(testContext);
-    }
-    
-    @Override
-    protected void executeTest(ITestContext testContext) {
-        initialize();
-        configure();
-        
-        super.executeTest(testContext);
     }
     
     /**
@@ -304,9 +290,12 @@ public abstract class CitrusTestNGTestCaseBuilder extends AbstractTestNGCitrusTe
         
         testCase.getFinallyChain().addAll(CollectionUtils.arrayToList(actions));
     }
-    
-    @Override
-    protected TestCase getTestCase() {
+
+    /**
+     * Gets the testCase.
+     * @return the testCase the testCase to get.
+     */
+    public TestCase getTestCase() {
         return testCase;
     }
 }

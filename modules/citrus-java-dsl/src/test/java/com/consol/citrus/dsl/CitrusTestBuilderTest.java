@@ -24,13 +24,12 @@ import com.consol.citrus.TestCaseMetaInfo.Status;
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseBuilderTest {
+public class CitrusTestBuilderTest {
     
     @Test
     public void testNG() {
         FooTest builder = new FooTest();
         
-        builder.initialize();
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
@@ -43,7 +42,7 @@ public class TestCaseBuilderTest {
         Assert.assertEquals(builder.getTestCase().getMetaInfo().getStatus(), Status.FINAL);
     }
     
-    private static class FooTest extends CitrusTestNGTestCaseBuilder {
+    private static class FooTest extends CitrusTestBuilder {
         @Override
         protected void configure() {
             description("This is a Test");

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.testng;
 
+import java.lang.reflect.Method;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -24,6 +26,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.*;
@@ -212,14 +215,25 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return the new test case.
      */
     protected TestCase getTestCase() {
-        ClassPathXmlApplicationContext ctx = createApplicationContext();
         TestCase testCase = null;
-        try {
-            testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
-            testCase.setPackageName(this.getClass().getPackage().getName());
-        } catch (NoSuchBeanDefinitionException e) {
-            throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+        
+        for (Method method : this.getClass().getMethods()) {
+            if (method.getAnnotation(CitrusTest.class) != null) {
+                testCase = (TestCase) ReflectionUtils.invokeMethod(method, this);
+            }
         }
+        
+        if (testCase == null) {
+            ClassPathXmlApplicationContext ctx = createApplicationContext();
+            
+            try {
+                testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
+                testCase.setPackageName(this.getClass().getPackage().getName());
+            } catch (NoSuchBeanDefinitionException e) {
+                throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            }
+        }
+        
         return testCase;
     }
 

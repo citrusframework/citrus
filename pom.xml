@@ -35,6 +35,7 @@
 
   <modules>
     <module>modules/citrus-core</module>
+    <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-adapter</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-ws</module>
