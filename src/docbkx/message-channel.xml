@@ -140,18 +140,21 @@
         Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in <xref linkend="message-selector"/> and
         you will see that it works.</para>
         
-        <para>In addition to that we have implemented another message filter possibility on message channels. You can use the XML root QName of your message as selection criteria.
-        Let's see how this works in a small example:</para>
+        <para>In addition to that we have implemented other message filter possibilities on message channels that we discuss in the next sections.</para>
         
-        <para>We have two different XML messages on a message channel waiting to be picked up by a consumer.</para>
-        
-        <programlisting>&lt;HelloMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Hello Citrus&lt;/HelloMessage&gt;
+        <section id="root-qname-message-selector">
+            <title>Root QName Message Selector</title>
+            <para>You can use the XML root QName of your message as selection criteria. Let's see how this works in a small example:</para>
+            
+            <para>We have two different XML messages on a message channel waiting to be picked up by a consumer.</para>
+            
+            <programlisting>&lt;HelloMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Hello Citrus&lt;/HelloMessage&gt;
 &lt;GoodbyeMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;Goodbye Citrus&lt;/GoodbyeMessage&gt;</programlisting>
 
-        <para>We would like to pick up the <emphasis>GoodbyeMessage</emphasis> in our test case. The <emphasis>HelloMessage</emphasis> should be left on the message channel as we are not interested
-        in it right now. We can define a root qname message selector in the receive action like this:</para>
-        
-        <programlisting>&lt;receive with=&quot;channelReceiver&quot;&gt;
+            <para>We would like to pick up the <emphasis>GoodbyeMessage</emphasis> in our test case. The <emphasis>HelloMessage</emphasis> should be left on the message channel as we are not interested
+            in it right now. We can define a root qname message selector in the receive action like this:</para>
+            
+            <programlisting>&lt;receive with=&quot;channelReceiver&quot;&gt;
     &lt;selector&gt;
         &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
     &lt;/selector&gt;
@@ -161,20 +164,59 @@
         &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
-    
-        <para>The Citrus receiver picks up the <emphasis>GoodbyeMessage</emphasis> from the channel selected via the root qname of the XML message payload. Of course you can also combine message header
-        selectors and root qname selectors as shown in this example below where a message header <emphasis>sequenceId</emphasis> is added to the selection logic.</para>
         
-        <programlisting>&lt;selector&gt;
+            <para>The Citrus receiver picks up the <emphasis>GoodbyeMessage</emphasis> from the channel selected via the root qname of the XML message payload. Of course you can also combine message header
+            selectors and root qname selectors as shown in this example below where a message header <emphasis>sequenceId</emphasis> is added to the selection logic.</para>
+            
+            <programlisting>&lt;selector&gt;
     &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
     &lt;element name=&quot;sequenceId&quot; value=&quot;1234&quot;/&gt;
 &lt;/selector&gt;</programlisting>
-        
-        <para>As we deal with XML qname values, we can also use namespaces in our selector root qname selection.</para>
-        
-        <programlisting>&lt;selector&gt;
+            
+            <para>As we deal with XML qname values, we can also use namespaces in our selector root qname selection.</para>
+            
+            <programlisting>&lt;selector&gt;
     &lt;element name=&quot;root-qname&quot; value=&quot;{http://citrusframework.org/schema}GoodbyeMessage&quot;/&gt;
 &lt;/selector&gt;</programlisting>
+        </section>
+        
+        <section id="xpath-evaluating-message-selector">
+            <title>XPath Evaluating Message Selector</title>
+            
+            <para>It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message channel. The XPath expression outcome must
+            match an expected value and only then the message is consumed form the channel.</para>
+            
+            <para>The syntax for the XPath expression is to be defined as the element name like this:</para>
+            
+            <programlisting>&lt;selector&gt;
+    &lt;element name=&quot;xpath://Order/status&quot; value=&quot;pending&quot;/&gt;
+&lt;/selector&gt;</programlisting>
+
+            <para>The message selector looks for order messages with <emphasis>status=&quot;pending&quot;</emphasis> in the message payload. This means that following messages would get 
+            accepted/declined by the message selector.</para>
+            
+            <programlisting>&lt;Order&gt;&lt;status&gt;pending&lt;/status&gt;&lt;/Order&gt; = ACCEPTED
+&lt;Order&gt;&lt;status&gt;finished&lt;/status&gt;&lt;/Order&gt; = NOT ACCEPTED</programlisting>
+
+            <para>Of course you can also use XML namespaces in your XPath expressions when selecting messages from channels.</para>
+            
+            <programlisting>&lt;selector&gt;
+    &lt;element name=&quot;xpath://ns1:Order/ns1:status&quot; value=&quot;pending&quot;/&gt;
+&lt;/selector&gt;</programlisting>
+
+            <para>Namespace prefixes must match the incoming message - otherwise the XPath expression will not work as expected. In our example the message should look like this:</para>
+            
+            <programlisting>&lt;ns1:Order xmlns:ns1=&quot;http://www.citrusframework.org/schema&quot;&gt;&lt;ns1:status&gt;pending&lt;/ns1:status&gt;&lt;/ns1:Order&gt;</programlisting>
+            
+            <para>Knowing the correct XML namespace prefix is not always easy. If you are not sure which namespace prefix to choose Citrus ships with a dynamic namespace replacement 
+            for XPath expressions. The XPath expression looks like this and is most flexible:</para>
+            
+            <programlisting>&lt;selector&gt;
+    &lt;element name=&quot;xpath://{http://www.citrusframework.org/schema}:Order/{http://www.citrusframework.org/schema}:status&quot; value=&quot;pending&quot;/&gt;
+&lt;/selector&gt;</programlisting>
+    
+            <para>This will match all incoming messages regardless the XML namespace prefix that is used.</para>
+        </section>
     </section>
     
     <section id="connecting-to-adapters">

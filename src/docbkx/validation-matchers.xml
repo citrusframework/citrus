@@ -41,6 +41,52 @@
     
     <para>See now the following sections describing the default validation matchers in Citrus.</para>
     
+    <section id="validation-matcher-xml">
+        <title>matchesXml()</title>
+        
+        <para>The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The
+        matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:</para>
+        
+        <programlisting>&lt;GetCustomerMessage&gt;
+      &lt;CustomerDetails&gt;
+          &lt;Id&gt;5&lt;/Id&gt;
+          &lt;Name&gt;Christoph&lt;/Name&gt;
+          &lt;Configuration&gt;&lt;![CDATA[
+            &lt;config&gt;
+                &lt;premium&gt;true&lt;/premium&gt;
+                &lt;last-login&gt;2012-02-24T23:34:23&lt;/last-login&gt;
+                &lt;link&gt;http://www.citrusframework.org/customer/5&lt;/link&gt;
+            &lt;/config&gt;
+          ]]&gt;&lt;/Configuration&gt;
+      &lt;/CustomerDetails&gt;
+&lt;/GetCustomerMessage&gt;</programlisting>
+
+        <para>As you can see the message payload contains some configuration as nested XML data in a CDATA section. We could validate this CDATA section as static character sequence comparison, true. But 
+        the &lt;last-login&gt; timestamp changes its value continuously. This breaks the static validation for CDATA elements in XML. Fortunately the new XML validation matcher provides a solution for us:</para>
+        
+        <programlisting>&lt;message&gt;
+    &lt;data&gt;
+        &lt;![CDATA[
+            &lt;GetCustomerMessage&gt;
+                  &lt;CustomerDetails&gt;
+                      &lt;Id&gt;5&lt;/Id&gt;
+                      &lt;Name&gt;Christoph&lt;/Name&gt;
+                      &lt;Configuration&gt;citrus:cdataSection('@matchesXml('&lt;config&gt;
+                            &lt;premium&gt;${isPremium}&lt;/premium&gt;
+                            &lt;last-login&gt;@ignore@&lt;/last-login&gt;
+                            &lt;link&gt;http://www.citrusframework.org/customer/5&lt;/link&gt;
+                        &lt;/config&gt;')@')&lt;/Configuration&gt;
+                  &lt;/CustomerDetails&gt;
+            &lt;/GetCustomerMessage&gt;
+        ]]&gt;
+    &lt;/data&gt;
+&lt;/message&gt;</programlisting>
+
+        <para>With the validation matcher you are able to validate the nested XML with full validation power. Ignoring elements is possible and we can also use variables in our control XML.</para>
+        
+        <note>Nested CDATA elements within other CDATA sections are not allowed by XML standard. This is why we create the nested CDATA section on the fly with the function cdataSection().</note>
+    </section>
+    
     <section id="validation-matcher-equals">
         <title>equalsIgnoreCase()</title>
         
