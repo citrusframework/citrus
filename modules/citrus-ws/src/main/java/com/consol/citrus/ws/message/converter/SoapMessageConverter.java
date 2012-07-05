@@ -130,6 +130,15 @@ public class SoapMessageConverter {
                 SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
                 messageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
             }
+            
+            if (soapHeader.getSource() != null) {
+                StringResult headerData = new StringResult();
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.transform(soapHeader.getSource(), headerData);
+                
+                messageBuilder.setHeader(CitrusMessageHeaders.HEADER_CONTENT, headerData.toString());
+            }
         }
         
         if (StringUtils.hasText(soapMessage.getSoapAction())) {
@@ -143,15 +152,6 @@ public class SoapMessageConverter {
                     messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
                 }
             }
-        }
-        
-        if (soapHeader.getSource() != null) {
-            StringResult headerData = new StringResult();
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.transform(soapHeader.getSource(), headerData);
-            
-            messageBuilder.setHeader(CitrusMessageHeaders.HEADER_CONTENT, headerData.toString());
         }
     }
     
