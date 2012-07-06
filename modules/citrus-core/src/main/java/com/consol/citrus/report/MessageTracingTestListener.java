@@ -57,13 +57,18 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     
     /** List of messages to trace */
     private List<String> messages = new ArrayList<String>();
+    
+    /** Locking object for synchronization */
+    private Object lockObject = new Object();
             
     /**
      * {@inheritDoc}
      */
     @Override
     public void onTestStart(TestCase test) {
-        messages.clear();
+        synchronized (lockObject) {
+            messages.clear();
+        }
     }
     
     /**
@@ -80,9 +85,11 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
             
             writer.write(SEPARATOR + NEWLINE + NEWLINE);
             
-            for (String message : messages) {
-                writer.write(message);
-                writer.write(NEWLINE + SEPARATOR + NEWLINE + NEWLINE);
+            synchronized (lockObject) {
+                for (String message : messages) {
+                    writer.write(message);
+                    writer.write(NEWLINE + SEPARATOR + NEWLINE + NEWLINE);
+                }
             }
             
             writer.flush();
@@ -104,7 +111,9 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
      * @param message the message content.
      */
     public void traceMessage(String message) {
-        messages.add(message);
+        synchronized (lockObject) {
+            messages.add(message);
+        }
     }
 
     /**
