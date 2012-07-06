@@ -7,33 +7,16 @@ Citrus ANT tasks
   You can execute Citrus tests with ANT. The Citrus ANT tasks simplify the test execution so you just include predefined tasks 
   into your project's 'build.xml'.
   
-  <<Upcoming stable release>>: 1.2
+  <<Latest stable release>>: 1.2
   
-  Stable milestone for upcoming version 1.2:
-  
-  * citrus-ant-tasks-1.2.M2.jar ({{{./dist/citrus-ant-tasks-1.2.M2.jar}download}})
-  
-  * citrus-ant-tasks-1.2.M1.jar ({{{./dist/citrus-ant-tasks-1.2.M1.jar}download}})
-  
-  []
-  
-  Frequent snapshot version:
-  
-  * citrus-ant-tasks-1.2-SNAPSHOT.jar ({{{./dist/citrus-ant-tasks-1.2-SNAPSHOT.jar}download}})
- 
-  []
-  
-  <<Latest stable release>>: 1.1
-  
-  * citrus-ant-tasks-1.1.jar ({{{./dist/citrus-ant-tasks-1.1.jar}download}})
+  * citrus-ant-tasks-1.2.jar ({{{./dist/citrus-ant-tasks-1.2.jar}download}})
   
   []
   
   <<Older versions>>:
-  
-  Version 1.0 (Note: This version is licensed under GPLv3).
-  
-  * citrus-ant-tasks-1.0.jar ({{{./dist/citrus-ant-tasks-1.0.jar}download}})
+
+  * citrus-ant-tasks-1.1.jar ({{{./dist/citrus-ant-tasks-1.1.jar}download}})
+  * citrus-ant-tasks-1.0.jar, Note: Licensed under GPLv3 ({{{./dist/citrus-ant-tasks-1.0.jar}download}})
   
   []
   

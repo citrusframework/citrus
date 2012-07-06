@@ -4,50 +4,29 @@
  
 Download Citrus
 
-  Citrus 1.2.M2 is the latest stable release representing the first milestone of version 1.2. You may also go for the snapshot version 
-  which is always up to date with the latest changes and bugfixes. All available versions and production releases are listed below:
+  Citrus 1.2 is the latest stable release . You may also go for the latest snapshot versions 
+  of Citrus always being up to date with development changes. All available versions and production 
+  releases are listed below:
   
-  <<Upcoming stable release>>: 1.2
+  <<Latest stable release>>: 1.2
   
-  The milestone releases provide stable versions with the latest changes for the upcoming Citrus version.
+  Version 1.2 is the current stable release.
   
-  * citrus-1.2.M2-with-dependencies ({{{./dist/citrus-1.2.M2-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2.M2-with-dependencies.tar.gz}tar.gz}})
+  * citrus-1.2-with-dependencies ({{{./dist/citrus-1.2-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2-with-dependencies.tar.gz}tar.gz}})
   
-  * citrus-1.2.M2-src ({{{./dist/citrus-1.2.M2-src.zip}zip}}/{{{./dist/citrus-1.2.M2-src.tar.gz}tar.gz}})
-  
-  []
-  
-  * citrus-1.2.M1-with-dependencies ({{{./dist/citrus-1.2.M1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2.M1-with-dependencies.tar.gz}tar.gz}})
-  
-  * citrus-1.2.M1-src ({{{./dist/citrus-1.2.M1-src.zip}zip}}/{{{./dist/citrus-1.2.M1-src.tar.gz}tar.gz}})
-  
-  []
-  
-  The frequent snapshot release keeps you up-to-date with the latest changes and bufixes.
-  
-  * citrus-1.2-SNAPSHOT-with-dependencies ({{{./dist/citrus-1.2-SNAPSHOT-with-dependencies.zip}zip}}/{{{./dist/citrus-1.2-SNAPSHOT-with-dependencies.tar.gz}tar.gz}})
-  
-  * citrus-1.2-SNAPSHOT-src ({{{./dist/citrus-1.2-SNAPSHOT-src.zip}zip}}/{{{./dist/citrus-1.2-SNAPSHOT-src.tar.gz}tar.gz}})
+  * citrus-1.2-src ({{{./dist/citrus-1.2-src.zip}zip}}/{{{./dist/citrus-1.2-src.tar.gz}tar.gz}})
   
   []
 
-  <<Latest stable release>>: 1.1
-  
-  Version 1.1 is the current stable release.
-  
-  * citrus-1.1-with-dependencies ({{{./dist/citrus-1.1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.1-with-dependencies.tar.gz}tar.gz}})
-  
-  * citrus-1.1-src ({{{./dist/citrus-1.1-src.zip}zip}}/{{{./dist/citrus-1.1-src.tar.gz}tar.gz}})
-  
-  []
-  
   <<Older versions>>
 
-  Version 1.0 (Note: This version is licensed under GPLv3).
-  
-  * citrus-1.0-with-dependencies ({{{./dist/citrus-1.0-with-dependencies.zip}zip}}/{{{./dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
-  
-  * citrus-1.0-src ({{{./dist/citrus-1.0-src.zip}zip}}/{{{./dist/citrus-1.0-src.tar.gz}tar.gz}})
+  * citrus-1.1-with-dependencies ({{{./dist/citrus-1.1-with-dependencies.zip}zip}}/{{{./dist/citrus-1.1-with-dependencies.tar.gz}tar.gz}})
+
+  * citrus-1.1-src ({{{./dist/citrus-1.1-src.zip}zip}}/{{{./dist/citrus-1.1-src.tar.gz}tar.gz}})
+
+  * citrus-1.0-with-dependencies, Note: Licensed under GPLv3 ({{{./dist/citrus-1.0-with-dependencies.zip}zip}}/{{{./dist/citrus-1.0-with-dependencies.tar.gz}tar.gz}})
+
+  * citrus-1.0-src, Note: Licensed under GPLv3 ({{{./dist/citrus-1.0-src.zip}zip}}/{{{./dist/citrus-1.0-src.tar.gz}tar.gz}})
   
   []
     
