@@ -22,10 +22,10 @@
       </p>
       
       <div id="download">
-        <a href="dist/citrus-1.1-with-dependencies.zip"><img src="images/download.png" alt="Download"/></a>
+        <a href="dist/citrus-1.2-with-dependencies.zip"><img src="images/download.png" alt="Download"/></a>
         <div>
-          <span id="download"><a href="dist/citrus-1.1-with-dependencies.zip">Download<br/>Citrus</a></span><br/>
-          <span id="download_text">Download the latest release 1.1</span><br/>
+          <span id="download"><a href="dist/citrus-1.2-with-dependencies.zip">Download<br/>Citrus</a></span><br/>
+          <span id="download_text">Download the latest release 1.2</span><br/>
           <span id="download_more"><a href="download.html">More Downloads</a></span>
         </div>
       </div>
