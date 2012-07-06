@@ -503,11 +503,11 @@ Server: Jetty(7.0.0.pre5)
                               request-method=&quot;POST&quot;
                               request-url=&quot;http://localhost:8080/test&quot;
                               reply-handler=&quot;testHttpReplyMessageHandler&quot;
-                              request-factory=&quot;basicAuthClientRequestFactory&quot;/&gt;
+                              request-factory=&quot;basicAuthFactory&quot;/&gt;
   
 &lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
 
-&lt;bean id=&quot;basicAuthClientRequestFactory&quot; class=&quot;com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory&quot;&gt;
+&lt;bean id=&quot;basicAuthFactory&quot; class=&quot;com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory&quot;&gt;
   &lt;property name=&quot;authScope&quot;&gt;
       &lt;bean class=&quot;org.apache.http.auth.AuthScope&quot;&gt;
         &lt;constructor-arg value=&quot;localhost&quot;/&gt;

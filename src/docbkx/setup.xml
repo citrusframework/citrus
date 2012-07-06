@@ -18,45 +18,93 @@
     project setup. In case you already use Maven it is most suitable for you to include Citrus as a test-scoped dependency.</para>
     
     <para>As Maven handles all project dependencies automatically you do not need to download any Citrus project artifacts in 
-    advance. If you are new to Maven please refer to the official Maven documentation to find out how to set up a Maven project. 
-    Once there is a proper Maven project available we just add some Citrus project dependencies in our Maven pom.xml like follows.</para>
+    advance. If you are new to Maven please refer to the official Maven documentation to find out how to set up a Maven project.</para> 
     
-    <itemizedlist>
-        <listitem>
-            <para>We add Citrus as test-scoped project dependency to the project POM (pom.xml)</para>
-            
-            <programlisting>&lt;dependency&gt;
+    <section id="setup-maven-archetype">
+        <title>Use Citrus Maven archetype</title>
+        
+        <para>If you start from scratch or in case you would like to have Citrus operating in a separate Maven module you can use the Citrus 
+        Maven archetype to create a new Maven project. The archetype will setup a basic Citrus project structure with basic settings and files.</para>
+        
+        <programlisting>mvn archetype:generate -DarchetypeCatalog=http://citrusframework.org
+        
+Choose archetype:
+1: http://citrusframework.org -> citrus-archetype (Basic archetype for Citrus integration test project)
+Choose a number: 1 
+
+Define value for groupId: com.consol.citrus.samples
+Define value for artifactId: citrus-sample
+Define value for version: 1.0-SNAPSHOT
+Define value for package: com.consol.citrus.samples</programlisting>
+        
+        <para>We load the archetype information from "http://citrusframework.org" and choose the Citrus basic archetype. Now you have 
+        to define several values for your project: the groupId, the artifactId, the package and the project version. After that we are done! Maven created a Citrus project structure
+        for us which is ready for testing. You should see the following basic project folder structure.</para>
+  
+        <programlisting>citrus-sample
+  |   + src
+  |   |   + main
+  |   |    |   + java
+  |   |    |   + resources
+  |   |   + citrus
+  |   |    |   + java
+  |   |    |   + resources
+  |   |    |   + tests
+  pom.xml</programlisting>
+  
+        <para>The Citrus project is absolutely ready for testing. With Maven we can build, package, install and test our project right away without any adjustments. 
+        Try to execute the following commands:</para>
+        
+        <programlisting>mvn integration-test 
+mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
+        
+        <note>
+            <para>If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial
+            on <ulink url="http://www.citrusframework.org/tutorials.html">http://www.citfrusframework.org</ulink>.</para>
+        </note>
+    </section>
+    
+    <section id="setup-maven-integration">
+        <title>Add Citrus to existing Maven project</title>
+        <para>In case you already have a proper Maven project you can also integrate Citrus with it. Just add the Citrus project dependencies in your Maven pom.xml 
+        as a dependency like follows.</para>
+        
+        <itemizedlist>
+            <listitem>
+                <para>We add Citrus as test-scoped project dependency to the project POM (pom.xml)</para>
+                
+                <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
-  &lt;version&gt;1.1&lt;/version&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</programlisting>
-        </listitem>
-        <listitem>
-            <para>Add the citrus Maven plugin to your project</para>
-            
-            <programlisting>&lt;plugin&gt;
+            </listitem>
+            <listitem>
+                <para>Add the citrus Maven plugin to your project</para>
+                
+                <programlisting>&lt;plugin&gt;
   &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.1&lt;/version&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
   &lt;configuration&gt;
     &lt;author&gt;Donald Duck&lt;/author&gt;
     &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
   &lt;/configuration&gt;
 &lt;/plugin&gt;</programlisting>
-        </listitem>
-    </itemizedlist>
-    
-    <para>Now that we have added Citrus to our Maven project we can start writing new test cases with the Citrus Maven
-    plugin:</para>
-    
-    <programlisting>mvn citrus:create-test</programlisting>
+            </listitem>
+        </itemizedlist>
         
-    <para>Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecylce. 
-    The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample
-    surefire configuration for Citrus.</para>
+        <para>Now that we have added Citrus to our Maven project we can start writing new test cases with the Citrus Maven
+        plugin:</para>
+        
+        <programlisting>mvn citrus:create-test</programlisting>
             
-    <programlisting>&lt;plugin&gt;
+        <para>Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecylce. 
+        The tests will be included into your projects integration-test phase using the Maven surefire plugin. Here is a sample
+        surefire configuration for Citrus.</para>
+                
+        <programlisting>&lt;plugin&gt;
   &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
   &lt;version&gt;2.4.3&lt;/version&gt;
   &lt;configuration&gt;
@@ -75,10 +123,10 @@
     &lt;/execution&gt;
   &lt;/executions&gt;
 &lt;/plugin&gt;</programlisting>
-    
-    <para>The Citrus source directories are defined as test sources like follows:</para>
-            
-    <programlisting>&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+        
+        <para>The Citrus source directories are defined as test sources like follows:</para>
+                
+        <programlisting>&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
 &lt;testResources&gt;
   &lt;testResource&gt;
     &lt;directory&gt;src/citrus/java&lt;/directory&gt;
@@ -98,19 +146,20 @@
     &lt;/excludes&gt;
   &lt;/testResource&gt;
 &lt;/testResources&gt;</programlisting>
-
-    <para>Now everything is set up and you can call the usual Maven <emphasis>install</emphasis> goal (mvn clean install) 
-    in order to build your project. The Citrus integration tests are executed automatically during the build process. 
-    Besides that you can call the Maven integration-test phase explicitly to execute all Citrus tests or a specific test 
-    by its name:</para>
     
-    <programlisting>mvn integration-test 
+        <para>Now everything is set up and you can call the usual Maven <emphasis>install</emphasis> goal (mvn clean install) 
+        in order to build your project. The Citrus integration tests are executed automatically during the build process. 
+        Besides that you can call the Maven integration-test phase explicitly to execute all Citrus tests or a specific test 
+        by its name:</para>
+        
+        <programlisting>mvn integration-test 
 mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
-    
-    <note>
-        <para>If you need additional assistance in setting up a Citrus Maven project please visit the official Maven tutorial
-        on <ulink url="http://www.citrusframework.org/tutorials.html">http://www.citfrusframework.org</ulink>.</para>
-    </note>
+        
+        <note>
+            <para>If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial
+            on <ulink url="http://www.citrusframework.org/tutorials.html">http://www.citfrusframework.org</ulink>.</para>
+        </note>
+      </section>
   </section>
   
   <section id="setup-using-ant">

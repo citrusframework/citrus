@@ -206,13 +206,14 @@
 
             <para>Namespace prefixes must match the incoming message - otherwise the XPath expression will not work as expected. In our example the message should look like this:</para>
             
-            <programlisting>&lt;ns1:Order xmlns:ns1=&quot;http://www.citrusframework.org/schema&quot;&gt;&lt;ns1:status&gt;pending&lt;/ns1:status&gt;&lt;/ns1:Order&gt;</programlisting>
+            <programlisting>&lt;ns1:Order xmlns:ns1=&quot;http://citrus.org/schema&quot;&gt;&lt;ns1:status&gt;pending&lt;/ns1:status&gt;&lt;/ns1:Order&gt;</programlisting>
             
             <para>Knowing the correct XML namespace prefix is not always easy. If you are not sure which namespace prefix to choose Citrus ships with a dynamic namespace replacement 
             for XPath expressions. The XPath expression looks like this and is most flexible:</para>
             
             <programlisting>&lt;selector&gt;
-    &lt;element name=&quot;xpath://{http://www.citrusframework.org/schema}:Order/{http://www.citrusframework.org/schema}:status&quot; value=&quot;pending&quot;/&gt;
+    &lt;element name=&quot;xpath://{http://citrus.org/schema}:Order/{http://citrus.org/schema}:status&quot; 
+                value=&quot;pending&quot;/&gt;
 &lt;/selector&gt;</programlisting>
     
             <para>This will match all incoming messages regardless the XML namespace prefix that is used.</para>

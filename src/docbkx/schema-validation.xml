@@ -96,20 +96,20 @@
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
 
-            <para>The <emphasis>sayHello.xsd</emphasis> schema file defines a target namespace (http://www.consol.de/schemas/samples/sayHello.xsd):</para>
+            <para>The <emphasis>sayHello.xsd</emphasis> schema file defines a target namespace (http://consol.de/schemas/sayHello.xsd):</para>
             
             <programlisting>&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
-     xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;
-     targetNamespace=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;
+     xmlns=&quot;http://consol.de/schemas/sayHello.xsd&quot;
+     targetNamespace=&quot;http://consol.de/schemas/sayHello.xsd&quot;
      elementFormDefault=&quot;qualified&quot;
      attributeFormDefault=&quot;unqualified&quot;&gt;
      
 &lt;/xs:schema&gt;</programlisting>
 
-            <para>Incoming request messages should also have the target namespace set (xmlns=http://www.consol.de/schemas/samples/sayHello.xsd) and this is how Citrus matches
+            <para>Incoming request messages should also have the target namespace set in the root element and this is how Citrus matches
             the right schema file in the repository.</para>
             
-            <programlisting>&lt;HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd"&gt;
+            <programlisting>&lt;HelloRequest xmlns="http://consol.de/schemas/sayHello.xsd"&gt;
    &lt;MessageId&gt;123456789&lt;/MessageId&gt;
    &lt;CorrelationId&gt;1000&lt;/CorrelationId&gt;
    &lt;User&gt;Christoph&lt;/User&gt;

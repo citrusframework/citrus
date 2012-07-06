@@ -28,7 +28,7 @@
                   &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
                   &lt;property name=&quot;statements&quot;&gt;
                       &lt;list&gt;
-                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250), DESCRIPTION char(250))&lt;/value&gt;
+                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/value&gt;
                       &lt;/list&gt;
                   &lt;/property&gt;
               &lt;/bean&gt;

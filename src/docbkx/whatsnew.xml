@@ -189,36 +189,36 @@
             <para>For example where you had a Citrus test suite before</para>
             
             <programlisting>&lt;bean id="myTestSuite" class=&quot;com.consol.citrus.TestSuite&quot;&gt;
-      &lt;property name=&quot;tasksBefore&quot;&gt;
-          &lt;list&gt;
-              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
-                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
-                  &lt;property name=&quot;statements&quot;&gt;
-                      &lt;list&gt;
-                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250), DESCRIPTION char(250))&lt;/value&gt;
-                      &lt;/list&gt;
-                  &lt;/property&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
+    &lt;property name=&quot;tasksBefore&quot;&gt;
+        &lt;list&gt;
+            &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
+                &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
+                &lt;property name=&quot;statements&quot;&gt;
+                    &lt;list&gt;
+                        &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/value&gt;
+                    &lt;/list&gt;
+                &lt;/property&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
             
             <para>you can now just use this Spring bean explicitly to define a sequence of actions before the test suite:</para>
             
             <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeSuite&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
-                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
-                  &lt;property name=&quot;statements&quot;&gt;
-                      &lt;list&gt;
-                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250), DESCRIPTION char(250))&lt;/value&gt;
-                      &lt;/list&gt;
-                  &lt;/property&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
+    &lt;property name=&quot;actions&quot;&gt;
+        &lt;list&gt;
+            &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
+                &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
+                &lt;property name=&quot;statements&quot;&gt;
+                    &lt;list&gt;
+                        &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/value&gt;
+                    &lt;/list&gt;
+                &lt;/property&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
             
             <para>See <xref linkend="testsuite"/> for details on this configuration changes.</para>
         </listitem>
@@ -231,23 +231,22 @@
                         port=&quot;8073&quot; 
                         uri=&quot;/test&quot; 
                         deamon=&quot;false&quot; 
-                        message-handler=&quot;jmsForwardingMessageHandler&quot;
+                        message-handler=&quot;jmsMessageHandler&quot;
                         auto-start=&quot;true&quot;/&gt;
                         
-    &lt;bean id=&quot;jmsForwardingMessageHandler&quot; class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
-        &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Citrus.Http.Request.Forward&quot;/&gt;
-        &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Citrus.Http.Request.Ack&quot;/&gt;
-        &lt;property name=&quot;connectionFactory&quot;&gt;
-            &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-                &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
-            &lt;/bean&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;fallbackMessageHandlerDelegate&quot;&gt;
-            &lt;bean class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
-        &lt;/property&gt;
-        &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
-    &lt;/bean&gt;
-            </programlisting>
+&lt;bean id=&quot;jmsMessageHandler&quot; class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
+    &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Citrus.Http.Request.Forward&quot;/&gt;
+    &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Citrus.Http.Request.Ack&quot;/&gt;
+    &lt;property name=&quot;connectionFactory&quot;&gt;
+        &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+            &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
+        &lt;/bean&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;fallbackMessageHandlerDelegate&quot;&gt;
+        &lt;bean class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
+&lt;/bean&gt;</programlisting>
             
             <para>You now give a Spring servlet context file where all server related configuration is done. In this context you define Spring MVC components and especially the HttpMessageController 
             which is able to handle REST Http requests (GET, PUT, DELETE, POST, etc.). This gives us more flexibility and more powerful REST server configurations with Spring MVC. Next example gives
@@ -259,25 +258,24 @@
       context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
       resource-base=&quot;src/citrus/resources&quot;/&gt;
             
-  &lt;!-- REST controller for handling requests in citrus-servlet-context.xml --&gt;
-  &lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
-    &lt;property name=&quot;messageHandler&quot;&gt;
-        &lt;bean id=&quot;jmsForwardingMessageHandler&quot; class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
-            &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Citrus.Http.Request.Forward&quot;/&gt;
-            &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Citrus.Http.Request.Ack&quot;/&gt;
-            &lt;property name=&quot;connectionFactory&quot;&gt;
-                &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
-                    &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
-                &lt;/bean&gt;
-            &lt;/property&gt;
-            &lt;property name=&quot;fallbackMessageHandlerDelegate&quot;&gt;
-                &lt;bean class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
-            &lt;/property&gt;
-            &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
-        &lt;/bean&gt;
-    &lt;/property&gt;
-  &lt;/bean&gt;
-            </programlisting>
+&lt;!-- REST controller for handling requests in citrus-servlet-context.xml --&gt;
+&lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
+  &lt;property name=&quot;messageHandler&quot;&gt;
+      &lt;bean id=&quot;jmsMessageHandler&quot; class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
+          &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Citrus.Http.Request.Forward&quot;/&gt;
+          &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Citrus.Http.Request.Ack&quot;/&gt;
+          &lt;property name=&quot;connectionFactory&quot;&gt;
+              &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+                  &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
+              &lt;/bean&gt;
+          &lt;/property&gt;
+          &lt;property name=&quot;fallbackMessageHandlerDelegate&quot;&gt;
+              &lt;bean class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;
+          &lt;/property&gt;
+          &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
+      &lt;/bean&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
         </listitem>
         <listitem>
             <para><emphasis>JUnit vs. TestNG:</emphasis> We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add

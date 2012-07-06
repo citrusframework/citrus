@@ -497,17 +497,21 @@
         <para>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices.
         Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</para>
         
-        <programlisting>&lt;variable name=&quot;digest&quot; value=&quot;citrus:digestAuthHeader('username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5')&quot;/&gt;</programlisting>
+        <programlisting>&lt;variable name=&quot;digest&quot; 
+  value=&quot;citrus:digestAuthHeader('username', 'password', 'authRealm', 'acegi', 
+                            'POST', 'http://127.0.0.1:8080', 'citrus', 'md5')&quot;/&gt;</programlisting>
         
         <para>A possible digest authentication header value looks like this:</para>
         
-        <para>digest = <emphasis>&lt;Digest username=username,realm=authRealm,nonce=MTMzNTk1ODc4MzY3MjozZjQ0Mjg0OTQ0MDIzNDM4NGYzOTk5NGViNDAzNDc5NQ==,uri=http://localhost:8080,response=51f98cfe3b070eb52c24a64fa84fc597,opaque=b29a3099fe2e30ae7b6e580c6ac6482c,algorithm=md5&gt;</emphasis></para>
+        <programlisting>&lt;Digest username=foo,realm=arealm,nonce=MTMzNT,
+uri=http://127.0.0.1:8080,response=51f98c,opaque=b29a30,algorithm=md5&gt;</programlisting>
         
         <para>You can use these digest headers in messages sent by Citrus like this:</para>
         
         <programlisting>&lt;header&gt;
   &lt;element name=&quot;citrus_http_Authorization&quot; 
-              value=&quot;vflig:digestAuthHeader('${username}','${password}','${authRealm}','${nonceKey}','POST','${uri}','${opaque}','${algorithm}')&quot;/&gt;
+    value=&quot;vflig:digestAuthHeader('${username}','${password}','${authRealm}',
+                            '${nonceKey}','POST','${uri}','${opaque}','${algorithm}')&quot;/&gt;
 &lt;/header&gt;  
         </programlisting>
         

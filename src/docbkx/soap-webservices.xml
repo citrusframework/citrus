@@ -314,7 +314,7 @@
     &lt;message&gt;
         &lt;data&gt;
             &lt;![CDATA[
-                &lt;ns0:SoapMessageRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                &lt;ns0:SoapMessageRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
                     &lt;ns0:Operation&gt;Validate mime headers&lt;/ns0:Operation&gt;
                 &lt;/ns0:SoapMessageRequest&gt;
             ]]&gt;
@@ -367,7 +367,7 @@
         &lt;ws:fault-string&gt;Invalid request&lt;/ws:fault-string&gt;
         &lt;ws:fault-detail&gt;
             &lt;![CDATA[
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
                     &lt;ns0:MessageId&gt;${messageId}&lt;/ns0:MessageId&gt;
                     &lt;ns0:CorrelationId&gt;${correlationId}&lt;/ns0:CorrelationId&gt;
                     &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
@@ -401,7 +401,7 @@ Server: Jetty(7.0.0.pre5)
             &lt;faultcode xmlns:citrus=&quot;http://www.citrusframework.org/faults&quot;&gt;citrus:TEC-1000&lt;/faultcode&gt;
             &lt;faultstring xml:lang=&quot;en&quot;&gt;Invalid request&lt;/faultstring&gt;
             &lt;detail&gt;
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
                     &lt;ns0:MessageId&gt;9277832563&lt;/ns0:MessageId&gt;
                     &lt;ns0:CorrelationId&gt;4346806225&lt;/ns0:CorrelationId&gt;
                     &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
@@ -580,7 +580,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;message&gt;
         &lt;data&gt;
             &lt;![CDATA[
-                &lt;ns0:SoapFaultForcingRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                &lt;ns0:SoapFaultForcingRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
                     &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
                 &lt;/ns0:SoapFaultForcingRequest&gt;
             ]]&gt;
@@ -593,7 +593,7 @@ Server: Jetty(7.0.0.pre5)
         &lt;data&gt;
             &lt;![CDATA[
                 &lt;SOAP-ENV:Fault xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-                    &lt;faultcode xmlns:CITRUS=&quot;http://www.citrusframework.org/faults&quot;&gt;CITRUS:${soapFaultCode}&lt;/faultcode&gt;
+                    &lt;faultcode xmlns:CITRUS=&quot;http://citrus.org/soap&quot;&gt;CITRUS:${soapFaultCode}&lt;/faultcode&gt;
                     &lt;faultstring xml:lang=&quot;en&quot;&gt;${soapFaultString}&lt;/faultstring&gt;
                 &lt;/SOAP-ENV:Fault&gt;
             ]]&gt;
@@ -620,7 +620,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;message&gt;
         &lt;data&gt;
             &lt;![CDATA[
-                &lt;ns0:SoapMessageWithAttachment xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                &lt;ns0:SoapMessageWithAttachment xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
                     &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
                 &lt;/ns0:SoapMessageWithAttachment&gt;
             ]]&gt;
@@ -654,7 +654,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;message&gt;
         &lt;data&gt;
             &lt;![CDATA[
-                &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
                     &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
                 &lt;/ns0:SoapMessageWithAttachmentRequest&gt;
             ]]&gt;
@@ -677,8 +677,8 @@ Server: Jetty(7.0.0.pre5)
                 instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator
                 is set as normal Spring bean with the respective identifier.</para>
                 
-                <programlisting>&lt;bean id=&quot;mySoapAttachmentValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;        
-&lt;bean id=&quot;soapAttachmentValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;</programlisting>
+                <programlisting>&lt;bean id=&quot;soapAttachmentValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;
+&lt;bean id=&quot;mySoapAttachmentValidator&quot; class=&quot;com.company.ws.validation.MySoapAttachmentValidator&quot;/&gt;</programlisting>
                 
                 <para>You can define several validator instanes in the Citrus configuration. The validator with the general id="soapAttachmentValidator" is the default validator 
                 for all actions that do not explicitly set a validator instance. Citrus offers a set of validator implementations. The SimpleSoapAttachmentValidator will use a simple
@@ -803,7 +803,7 @@ Server: Jetty(7.0.0.pre5)
   &lt;message&gt;
     &lt;data&gt;
       &lt;![CDATA[
-        &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+        &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
           &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
         &lt;/ns0:SoapMessageWithAttachmentRequest&gt;
       ]]&gt;
@@ -825,7 +825,7 @@ Server: Jetty(7.0.0.pre5)
   &lt;message&gt;
     &lt;data&gt;
       &lt;![CDATA[
-        &lt;ns0:SoapMessageWithAttachmentResponse xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+        &lt;ns0:SoapMessageWithAttachmentResponse xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
           &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
           &lt;ns0:Success&gt;true&lt;/ns0:Success&gt;
         &lt;/ns0:SoapMessageWithAttachmentResponse&gt;
