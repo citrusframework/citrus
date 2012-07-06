@@ -18,7 +18,7 @@
         </fileset>
     </path>
     
-	<typedef resource="citrustasks" classpath="../lib/citrus-ant-tasks-1.2.M2.jar"/>
+	<typedef resource="citrustasks" classpath="../lib/citrus-ant-tasks-1.2.jar"/>
 	
 	<target name="compile.tests">
 	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>

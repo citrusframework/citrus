@@ -5,7 +5,7 @@
   <parent>
     <artifactId>citrus-maven</artifactId>
     <groupId>com.consol.citrus.mvn</groupId>
-    <version>1.2.M2</version>
+    <version>1.2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   
