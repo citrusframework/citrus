@@ -16,21 +16,15 @@ Documentation
     
     []
     
-    <<Upcoming release>>: 1.2
+    <<Latest stable release>>: 1.2
     
-    * Reference: {{{./reference/html/index.html}HTML}} | {{{./reference/pdf/citrus-reference.pdf}PDF}}
+    * Version 1.2: {{{./reference/html/index.html}HTML}} | {{{./reference/pdf/citrus-reference-1.2.pdf}PDF}}
     
-    []
+    <<Older versions>>:
     
-    <<Latest stable release>>: 1.1
+    * Version 1.1: {{{./reference/1.1/html_single/index.html}HTML}} | {{{./reference/1.1/pdf/citrus-reference-1.1.pdf}PDF}}
     
-    * Reference: {{{./reference/1.1/html_single/index.html}HTML}} | {{{./reference/1.1/pdf/citrus-reference.pdf}PDF}}
-    
-    []
-    
-    <<Older versions>>: 1.0
-    
-    * Reference: {{{./reference/1.0/html_single/index.html}HTML}} | {{{./reference/1.0/pdf/citrus-reference.pdf}PDF}}
+    * Version 1.0: {{{./reference/1.0/html_single/index.html}HTML}} | {{{./reference/1.0/pdf/citrus-reference-1.0.pdf}PDF}}
     
     []
             
