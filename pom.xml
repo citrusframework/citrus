@@ -44,6 +44,7 @@
     <module>modules/citrus-samples</module>
     <module>modules/citrus-ant-tasks</module>
     <module>modules/citrus-maven</module>
+    <module>modules/citrus-admin</module>
   </modules>
 
   <developers>
