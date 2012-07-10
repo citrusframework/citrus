@@ -378,7 +378,7 @@
         &lt;RequestMessage&gt;
             &lt;MessageHeader&gt;
                 &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
+                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
                 &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
                 &lt;VersionId&gt;2&lt;/VersionId&gt;
             &lt;/MessageHeader&gt;
