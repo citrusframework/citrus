@@ -18,15 +18,14 @@ package com.consol.citrus.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.*;
 
 /**
  * Abstract base class for {@link Server} implementations.
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractServer implements Server, InitializingBean, BeanNameAware {
+public abstract class AbstractServer implements Server, InitializingBean, DisposableBean, BeanNameAware {
     /** Name of this server (will be injected through Spring) */
     private String name = "";
     
@@ -104,6 +103,15 @@ public abstract class AbstractServer implements Server, InitializingBean, BeanNa
     public void afterPropertiesSet() throws Exception {
         if (autoStart) {
             start();
+        }
+    }
+    
+    /**
+     * @see org.springframework.beans.factory.DisposableBean#destroy()
+     */
+    public void destroy() throws Exception {
+        if (isRunning()) {
+            shutdown();
         }
     }
 
