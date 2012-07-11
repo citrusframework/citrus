@@ -8,7 +8,7 @@
     <description>Contains the root context. Gets loaded via ContextLoaderListener in web.xml</description>
 
     <!-- Imports application module spring context files -->
-    <import resource="classpath*:/META-INF/citrus-*-context.xml"/>
+    <import resource="classpath*:/META-INF/citrus-admin-context.xml"/>
 
     <!-- Used for autowiring -->
     <context:annotation-config/>
