@@ -213,7 +213,7 @@ public final class Citrus {
                         }
                         
                         //replace operating system path separator and translate to class package string
-                        fileName = fileName.substring(startDir.length()).replace(File.separatorChar, '.');
+                        fileName = fileName.substring(startDir.startsWith(File.separator) ? startDir.length()-1 : startDir.length()).replace(File.separatorChar, '.');
                         
                         if (log.isDebugEnabled()) {
                             log.debug("Found test '" + fileName + "'");
