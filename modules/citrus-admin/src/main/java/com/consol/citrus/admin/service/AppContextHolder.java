@@ -16,7 +16,12 @@
 
 package com.consol.citrus.admin.service;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.TestContextManager;
+
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
  * Singleton bean holding the application context for this Citrus project. Singleton in applciation context so all participating
@@ -27,7 +32,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class AppContextHolder {
     
     /** Citrus application context */
-    private ClassPathXmlApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
+    
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(AppContextHolder.class);
     
     /**
      * Gets the current application context. If not loaded before we initialize the 
@@ -35,9 +43,9 @@ public class AppContextHolder {
      * 
      * @return
      */
-    public ClassPathXmlApplicationContext getApplicationContext() {
+    public ApplicationContext getApplicationContext() {
         if (applicationContext == null) {
-            applicationContext = loadApplicationContext();
+            loadApplicationContext();
         }
         
         return applicationContext;
@@ -46,22 +54,41 @@ public class AppContextHolder {
     /**
      * Loads the basic Citrus application context with all necessary parent context files.
      */
-    private ClassPathXmlApplicationContext loadApplicationContext() {
-        return new ClassPathXmlApplicationContext(new String[] { "classpath:com/consol/citrus/spring/root-application-ctx.xml", 
-                "classpath:citrus-context.xml", 
-                "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
-                "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"});
+    private ApplicationContext loadApplicationContext() {
+        TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
+            @Override
+            public void prepareTestInstance(Object testInstance) throws Exception {
+                applicationContext = getTestContext().getApplicationContext();
+            }
+        };
+        
+        try {
+            testContextManager.prepareTestInstance(null);
+        } catch (Exception e) {
+            log.error("Failed to load application context", e);
+        }
+        
+        return applicationContext;
     }
 
     /**
      * Stops and destroy this application context.
      */
     public void destroyApplicationContext() {
-        if (applicationContext != null) {
-            applicationContext.stop();
-            applicationContext.destroy();
-            applicationContext = null;
+        TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
+            @Override
+            public void prepareTestInstance(Object testInstance) throws Exception {
+                getTestContext().markApplicationContextDirty();
+            }
+        };
+        
+        try {
+            testContextManager.prepareTestInstance(null);
+        } catch (Exception e) {
+            log.error("Failed to stop application context", e);
         }
+        
+        applicationContext = null;
     }
     
 }

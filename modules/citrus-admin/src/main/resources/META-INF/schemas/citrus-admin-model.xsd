@@ -60,12 +60,14 @@
     <xs:complexType name="ServerInstanceType">
         <xs:sequence>
             <xs:element name="name" type="xs:string" />
+            <xs:element name="port" type="xs:integer"/>
         </xs:sequence>
     </xs:complexType>
     
     <xs:complexType name="TestCaseInfoType">
         <xs:sequence>
             <xs:element name="name" type="xs:string" />
+            <xs:element name="package-name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     

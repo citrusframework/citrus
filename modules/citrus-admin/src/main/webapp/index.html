@@ -8,6 +8,8 @@
     <meta name="author" content="ConSol Software GmbH">
 
     <script src="javascript/support/jquery.js"></script>
+    <script src="javascript/support/underscore.js"></script>
+    <script src="javascript/support/curl.js"></script>
     <script src="javascript/support/backbone.js"></script>
     <script src="javascript/support/handlebars.js"></script>
     <script src="javascript/citrus-admin.js"></script>
@@ -41,20 +43,21 @@
           <a class="brand" href="#">Citrus Admin</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a id="nav_context" href="#">Application Context</a></li>
+              <li><a id="nav_testcases" href="#testcases">Tests</a></li>
+              <li><a id="nav_about" href="#about">About</a></li>
+              <li><a id="nav_contact" href="#contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
         
-    <div class="container" style="width: 1170px;">
-
+    <div id="app-context-view" class="container" style="width: 1170px;">
       <div class="hero-unit">
         <h1>Citrus Administration</h1>
-        <p>This is an administration graphical user interface for Citrus. Start the application context below and you will see all message senders/receivers as well as server instances in scope.</p>
+        <p>This is an administration graphical user interface for Citrus projects. Start the application context below and you will see all 
+        available message senders/receivers as well as server instances in scope of this project.</p>
         <p>
             <a id="load-context" class="btn btn-success btn-large">Start application context »</a>
             <a id="stop-context" class="btn btn-danger btn-large" style="display: none;">Stop application context »</a>
@@ -62,7 +65,6 @@
         </p>
       </div>
 
-      <!-- Example row of columns -->
       <div class="row">
         <div class="span4">
           <h2>Message Sender</h2>
@@ -71,7 +73,7 @@
         <div class="span4">
           <h2>Message Receiver</h2>
           <p id="message-receivers"></p>
-       </div>
+        </div>
         <div class="span4">
           <h2>Server Instances</h2>
           <p id="server-instances"></p>
@@ -83,7 +85,19 @@
       <footer>
         <p>&copy; ConSol Software GmbH 2012</p>
       </footer>
+    </div>
+    
+    <div id="test-cases-view" class="container" style="display: none;width: 1170px;">
+      <div class="page-header">
+        <h1>Tests <small>Available test cases in this project</small></h1>
+      </div>
+      <p id="test-cases"></p>
 
+      <hr>
+
+      <footer>
+        <p>&copy; ConSol Software GmbH 2012</p>
+      </footer>
     </div>
   </body>
 </html>
