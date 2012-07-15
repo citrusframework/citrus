@@ -17,11 +17,13 @@
 package com.consol.citrus.admin.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.cli.GnuParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +67,18 @@ public class TestCaseController {
         }
         
         return testCaseList;
+    }
+    
+    @RequestMapping(value="/{package}/{name}", method = { RequestMethod.GET })
+    @ResponseBody
+    public String getTestCase(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
+        Resource testFile = FileUtils.getResourceFromFilePath(System.getProperty(WORKING_DIRECTORY) + File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + ".xml");
+        
+        try {
+            return FileUtils.readToString(testFile);
+        } catch (IOException e) {
+            return "Failed to load test case file: " + e.getMessage();
+        }
     }
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })

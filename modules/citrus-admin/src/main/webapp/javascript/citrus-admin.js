@@ -101,13 +101,31 @@ $(document).ready(function() {
             		  packageName = test.packageName;
             	  }
             	  
-            	  $('#test-cases').prepend('<tr class="test-case"><td></td><td style="padding-left: 35px;">' + test.name + '</td><td><a id="' + test.name + '" class="btn btn-success run-test">Run test</a></td></tr>');
+            	  $('#test-cases').prepend('<tr class="test-case"><td style="padding-left: 35px;"><p id="' + test.name + '" test-package="' + test.packageName + '"><strong>' + test.name + '</strong></p></td><td><a id="' + test.name + '" class="btn btn-success run-test">Run test</a></td></tr>');
             	  
-            	  $('#' + test.name).click(function() {
+            	  $('a#' + test.name).click(function() {
             		  jQuery.ajax({
             	          url: "testcase/execute/" + $(this).attr('id'),
             	          type: 'GET',
-            	          dataType: "html"
+            	          dataType: "html",
+            	          success: function(testResult) {
+            	        	  
+            	          }
+            	      });
+            	  });
+            	  
+            	  $('p#' + test.name).click(function() {
+            		  $('pre.test-case-code').remove();
+            		  $(this).parent().append('<pre class="prettyprint linenums test-case-code">Loading test ...</pre>');
+            		  
+            		  jQuery.ajax({
+            	          url: "testcase/" + $(this).attr('test-package') + "/" + $(this).attr('id'),
+            	          type: 'GET',
+            	          dataType: "html",
+            	          success: function(fileContent) {
+            	        	  $('pre.test-case-code').text(fileContent);
+            	        	  prettyPrint();
+            	          }
             	      });
             	  });
               });

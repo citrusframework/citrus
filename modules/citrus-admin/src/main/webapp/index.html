@@ -12,11 +12,14 @@
     <script src="javascript/support/curl.js"></script>
     <script src="javascript/support/backbone.js"></script>
     <script src="javascript/support/handlebars.js"></script>
+    <script src="javascript/support/prettify.js"></script>
     <script src="javascript/citrus-admin.js"></script>
 
     <link rel="stylesheet/less" href="styles/bootstrap.less">
     <link rel="stylesheet/less" href="styles/citrus-admin.less">
     <script src="javascript/support/less.js"></script>
+    
+    <link href="styles/prettify.css" type="text/css" rel="stylesheet" />
     
     <style type="text/css">
         body {
@@ -68,23 +71,17 @@
       <div class="row">
         <div class="span4">
           <h2>Message Sender</h2>
-          <p id="message-senders"></p>
+          <div id="message-senders"></div>
         </div>
         <div class="span4">
           <h2>Message Receiver</h2>
-          <p id="message-receivers"></p>
+          <div id="message-receivers"></div>
         </div>
         <div class="span4">
           <h2>Server Instances</h2>
-          <p id="server-instances"></p>
+          <div id="server-instances"></div>
         </div>
       </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; ConSol Software GmbH 2012</p>
-      </footer>
     </div>
     
     <div id="testcases-view" class="container" style="display: none;width: 1170px;">
@@ -92,17 +89,11 @@
         <h1>Tests <small>Available test cases in this project</small></h1>
       </div>
       
-      <p class="well">Found <strong id="cnt-tests">0</strong> test cases available for this Citrus project. You can execute single tests
-      or test packages below.</p>
+      <p class="well">Found <strong id="cnt-tests">0</strong> test cases available for this Citrus project. You can execute a test
+      or a complete test package below. Click on a test name in order to see the content of the test file.</p>
       
       <table id="test-cases" class="table table-condensed">
       </table>
-
-      <hr>
-
-      <footer>
-        <p>&copy; ConSol Software GmbH 2012</p>
-      </footer>
     </div>
   </body>
 </html>
