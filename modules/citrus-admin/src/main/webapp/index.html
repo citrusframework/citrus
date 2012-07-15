@@ -53,7 +53,7 @@
       </div>
     </div>
         
-    <div id="app-context-view" class="container" style="width: 1170px;">
+    <div id="context-view" class="container" style="width: 1170px;">
       <div class="hero-unit">
         <h1>Citrus Administration</h1>
         <p>This is an administration graphical user interface for Citrus projects. Start the application context below and you will see all 
@@ -87,11 +87,16 @@
       </footer>
     </div>
     
-    <div id="test-cases-view" class="container" style="display: none;width: 1170px;">
+    <div id="testcases-view" class="container" style="display: none;width: 1170px;">
       <div class="page-header">
         <h1>Tests <small>Available test cases in this project</small></h1>
       </div>
-      <p id="test-cases"></p>
+      
+      <p class="well">Found <strong id="cnt-tests">0</strong> test cases available for this Citrus project. You can execute single tests
+      or test packages below.</p>
+      
+      <table id="test-cases" class="table table-condensed">
+      </table>
 
       <hr>
 

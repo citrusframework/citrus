@@ -18,6 +18,11 @@
  * Main Loader setting up citrus-admin
  */
 
+var changeNavigation = function(clicked) {
+	$('ul.nav li').removeClass('active');
+	clicked.parent().addClass('active');
+}
+
 $(document).ready(function() {
   $('#load-context').click(function() {
 	  $('img#load-context-progress').show('fast');
@@ -68,13 +73,15 @@ $(document).ready(function() {
   });
   
   $('#nav_context').click(function() {
-	  $('#test-cases-view').hide();
-	  $('#app-context-view').show();
+	  changeNavigation($(this));
+	  $('#testcases-view').hide();
+	  $('#context-view').show();
   });
   
   $('#nav_testcases').click(function() {
-	  $('#app-context-view').hide();
-	  $('#test-cases-view').show();
+	  changeNavigation($(this));
+	  $('#context-view').hide();
+	  $('#testcases-view').show();
 	  
 	  jQuery.ajax({
           url: "testcase",
@@ -88,13 +95,13 @@ $(document).ready(function() {
               $.each(response.testCaseInfos, function(index, test) {
             	  if (test.packageName != packageName) {
             		  if (packageName) {
-            			  $('#test-cases').prepend('<h2 class="test-package">' + packageName + '</h2>');
+            			  $('#test-cases').prepend('<tr class="test-package"><td colspan="2"><b>' + packageName + '</b></td></tr>');
             		  }
             		  
             		  packageName = test.packageName;
             	  }
             	  
-            	  $('#test-cases').prepend('<p class="test-case" style="margin-left: 20px;">' + test.name + ' <a id="' + test.name + '" class="btn btn-success run-test">Run test »</a></p>');
+            	  $('#test-cases').prepend('<tr class="test-case"><td></td><td style="padding-left: 35px;">' + test.name + '</td><td><a id="' + test.name + '" class="btn btn-success run-test">Run test</a></td></tr>');
             	  
             	  $('#' + test.name).click(function() {
             		  jQuery.ajax({
@@ -106,8 +113,10 @@ $(document).ready(function() {
               });
               
               if (packageName) {
-    			  $('#test-cases').prepend('<h2 class="test-package">' + packageName + '</h2>');
+    			  $('#test-cases').prepend('<tr class="test-package"><td colspan="2"><b>' + packageName + '</b></td></tr>');
     		  }
+              
+              $('#cnt-tests').text(response.testCaseInfos.length);
           }
 	  });
   });
