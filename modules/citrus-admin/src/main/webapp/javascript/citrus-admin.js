@@ -101,7 +101,7 @@ $(document).ready(function() {
             		  packageName = test.packageName;
             	  }
             	  
-            	  $('#test-cases').prepend('<tr class="test-case"><td style="padding-left: 35px;"><p id="' + test.name + '" test-package="' + test.packageName + '"><strong>' + test.name + '</strong></p></td><td><a id="' + test.name + '" class="btn btn-success run-test">Run test</a></td></tr>');
+            	  $('#test-cases').prepend('<tr class="test-case"><td style="padding-left: 35px;"><p id="' + test.name + '" test-package="' + test.packageName + '"><strong>' + test.name + '</strong></p></td><td><a id="' + test.name + '" class="btn btn-success run-test"><i class="icon-play icon-white"></i></a></td></tr>');
             	  
             	  $('a#' + test.name).click(function() {
             		  jQuery.ajax({

@@ -23,7 +23,7 @@
     <bean id="applicationConversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
      
     <!-- Handles HTTP GET requests for /static/** by efficiently serving up static resources -->
-    <mvc:resources location="/images/, /styles/, /js/" mapping="/static/**"/>
+    <mvc:resources location="/images/, /styles/, /javascript/" mapping="/static/**"/>
     
     <!-- Allows for mapping the DispatcherServlet to "/" by forwarding static resource requests to the container's default Servlet -->
     <mvc:default-servlet-handler/>
