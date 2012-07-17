@@ -16,22 +16,25 @@
 
 package com.consol.citrus.admin.controller;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.GnuParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusCliOptions;
-import com.consol.citrus.admin.model.TestCaseInfoType;
-import com.consol.citrus.admin.model.TestCaseList;
+import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.service.AppContextHolder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -49,7 +52,10 @@ public class TestCaseController {
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCaseController.class);
-
+    
+    @Autowired
+    AppContextHolder appContextHolder;
+    
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public TestCaseList list(HttpEntity<String> requestEntity) {
@@ -83,15 +89,36 @@ public class TestCaseController {
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public ResponseEntity<?> execute(@PathVariable("name") String testName) {
+    public TestResult execute(@PathVariable("name") String testName) {
+        TestResult result = new TestResult();
+        TestCaseInfoType testCaseInfo = new TestCaseInfoType();
+        testCaseInfo.setName(testName);
+        result.setTestCase(testCaseInfo);
+        
         try {
             Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", System.getProperty(WORKING_DIRECTORY) }));
             citrus.run();
+            
+            result.setSuccess(true);
         } catch (Exception e) {
             log.warn("Failed to execute Citrus test case '" + testName + "'", e);
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+            result.setSuccess(false);
+            
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(os));
+            result.setStackTrace("Caused by: " + os.toString());
+            
+            if (e instanceof CitrusRuntimeException) {
+                result.setFailureStack(((CitrusRuntimeException)e).getFailureStackAsString());
+            }
         }
         
-        return new ResponseEntity<String>(HttpStatus.OK);
+        Map<String, TestReporter> reporters = appContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);
+        for (TestReporter reporter : reporters.values()) {
+            reporter.clearTestResults();
+        }
+        
+        return result;
     }
 }

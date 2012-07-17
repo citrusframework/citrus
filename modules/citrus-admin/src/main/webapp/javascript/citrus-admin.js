@@ -101,20 +101,37 @@ $(document).ready(function() {
             		  packageName = test.packageName;
             	  }
             	  
-            	  $('#test-cases').prepend('<tr class="test-case"><td style="padding-left: 35px;"><p id="' + test.name + '" test-package="' + test.packageName + '"><strong>' + test.name + '</strong></p></td><td><a id="' + test.name + '" class="btn btn-success run-test"><i class="icon-play icon-white"></i></a></td></tr>');
+            	  $('#test-cases').prepend('<tr class="test-case"><td style="padding-left: 35px;"><p id="' + test.name + '"><i id="' + test.name + '" test-package="' + test.packageName + '" class="icon-list-alt"></i>&nbsp;&nbsp;<strong>' + test.name + '</strong></p></td><td><a id="' + test.name + '" class="btn btn-success run-test"><i class="icon-play icon-white"></i></a></td></tr>');
             	  
             	  $('a#' + test.name).click(function() {
+            		  $('div.alert').hide('fast');
+            		  $('div.alert').remove();
+            		  var id = $(this).attr('id');
+            		  $('p#' + id).append('<div class="alert"><strong>Running test!</strong> Run Citrus test case ... <img src="images/ajax-loader.gif" alt="ajax-loader.gif" class="ajax-loader"/></div>');
+            		  
             		  jQuery.ajax({
             	          url: "testcase/execute/" + $(this).attr('id'),
             	          type: 'GET',
-            	          dataType: "html",
+            	          dataType: "json",
             	          success: function(testResult) {
+            	        	  $('div.alert').hide('fast');
+            	        	  $('div.alert').remove();
             	        	  
+            	        	  var id = testResult.testCase.name;
+            	        	  
+            	        	  if (testResult.success) {
+            	        		  $('p#' + id).append('<div class="alert alert-success" style="display:none;"><a class="close" data-dismiss="alert">×</a><strong>SUCCESS!</strong> ' + id + ' was executed successfully!</div>');
+            	        	  } else {
+            	        		  $('p#' + id).append('<div class="alert alert-error" style="display:none;"><a class="close" data-dismiss="alert">×</a><strong>FAILED!</strong> ' + id + ' failed!<p>' + testResult.failureStack + '</p><p>' + testResult.stackTrace + '</p></div>');
+            	        	  }
+            	        	  
+            	        	  $('div.alert').alert(); // enable alert dismissal
+            	        	  $('div.alert').show('fast');
             	          }
             	      });
             	  });
             	  
-            	  $('p#' + test.name).click(function() {
+            	  $('i#' + test.name).click(function() {
             		  $('pre.test-case-code').remove();
             		  $(this).parent().append('<pre class="prettyprint linenums test-case-code">Loading test ...</pre>');
             		  
@@ -124,6 +141,12 @@ $(document).ready(function() {
             	          dataType: "html",
             	          success: function(fileContent) {
             	        	  $('pre.test-case-code').text(fileContent);
+            	        	  $('pre.test-case-code').prepend('<a class="close close-code">×</a>');
+            	        	  
+            	        	  $('a.close-code').click(function() {
+                    			  $('pre.test-case-code').remove();
+                    		  });
+            	        	  
             	        	  prettyPrint();
             	          }
             	      });

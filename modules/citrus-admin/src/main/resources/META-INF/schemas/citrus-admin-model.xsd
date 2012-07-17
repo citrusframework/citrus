@@ -43,6 +43,17 @@
         </xs:complexType>
     </xs:element>
     
+    <xs:element name="test-result">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="test-case" type="TestCaseInfoType"/>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="stack-trace" type="xs:string"/>
+                <xs:element name="failure-stack" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <!-- TYPES -->
 
 	<xs:complexType name="MessageSenderType">

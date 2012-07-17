@@ -75,6 +75,13 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         symbol.setDecimalSeparator('.');
         decFormat.setDecimalFormatSymbols(symbol);
     }
+    
+    /**
+     * @see com.consol.citrus.report.TestReporter#clearTestResults()
+     */
+    public void clearTestResults() {
+        testResults = new TestResults();
+    }
 
     /**
      * @see com.consol.citrus.report.TestReporter#generateTestResults()

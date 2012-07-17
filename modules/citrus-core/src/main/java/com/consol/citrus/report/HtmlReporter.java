@@ -80,6 +80,13 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         symbol.setDecimalSeparator('.');
         decFormat.setDecimalFormatSymbols(symbol);
     }
+    
+    /**
+     * @see com.consol.citrus.report.TestReporter#clearTestResults()
+     */
+    public void clearTestResults() {
+        testResults = new TestResults();
+    }
 
     /**
      * @see com.consol.citrus.report.TestReporter#generateTestResults()
@@ -373,4 +380,5 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             this.description = description;
         }
     }
+    
 }
