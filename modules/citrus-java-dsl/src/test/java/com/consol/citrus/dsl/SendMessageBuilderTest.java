@@ -44,7 +44,26 @@ public class SendMessageBuilderTest {
             protected void configure() {
                 send(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
                     .with(messageSender);
-                
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+    }
+    
+    @Test
+    public void testSendBuilderWithPayloadString() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
                 send()
                     .with(messageSender)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -53,14 +72,14 @@ public class SendMessageBuilderTest {
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SendMessageAction.class);
         
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getName(), SendMessageAction.class.getSimpleName());
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getMessageSender(), messageSender);
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(1)).getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
     }
     
     @Test
@@ -87,8 +106,9 @@ public class SendMessageBuilderTest {
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getName(), SendMessageAction.class.getSimpleName());
-        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getMessageSender(), messageSender);
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessageSender(), messageSender);
         
         verify(applicationContext);
     }
