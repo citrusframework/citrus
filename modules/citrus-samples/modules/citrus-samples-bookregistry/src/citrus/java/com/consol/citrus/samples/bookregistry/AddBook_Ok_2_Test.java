@@ -24,23 +24,19 @@ import org.springframework.integration.MessageHeaders;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.samples.CitrusSamplesDemo;
 import com.consol.citrus.samples.bookregistry.model.*;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.testng.CitrusTest;
+import com.consol.citrus.samples.common.DemoAwareTestNGCitrusTestBuilder;
 import com.consol.citrus.validation.MarshallingValidationCallback;
 
 /**
- *
  * @author Christoph Deppisch
  */
-public class AddBook_Ok_2_Test extends AbstractTestNGCitrusTest {
+public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
 
     private BookRegistryDemo demo = new BookRegistryDemo();
     
@@ -57,49 +53,25 @@ public class AddBook_Ok_2_Test extends AbstractTestNGCitrusTest {
     
     @Test
     public void runTest(ITestContext testContext) {
+        String isbn = "978-citrus:randomNumber(10)";
+        
+        send()
+            .with(bookRequestMessageSender)
+            .payload(createAddBookRequestMessage(isbn), marshaller)
+            .header("citrus_soap_action", "addBook");
+        
+        receive()
+            .with(bookResponseMessageHandler)
+            .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
+                @Override
+                public void validate(AddBookResponseMessage response, MessageHeaders headers) {
+                    Assert.assertTrue(response.isSuccess());
+                }
+            });
+        
         executeTest(testContext);
     }
     
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
-        getDemo().start();
-        
-        super.beforeSuite(testContext);
-    }
-    
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        super.afterSuite(testContext);
-        
-        getDemo().stop();
-    }
-    
-    @CitrusTest
-    public TestCase getTest() {
-        CitrusTestBuilder builder = new CitrusTestBuilder() {
-            @Override
-            protected void configure() {
-                String isbn = "978-0596517335";
-                
-                send()
-                    .with(bookRequestMessageSender)
-                    .payload(createAddBookRequestMessage(isbn), marshaller)
-                    .header("citrus_soap_action", "addBook");
-                
-                receive()
-                    .with(bookResponseMessageHandler)
-                    .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
-                        @Override
-                        public void validate(AddBookResponseMessage response, MessageHeaders headers) {
-                            Assert.assertTrue(response.isSuccess());
-                        }
-                    });
-            }
-        };
-        
-        return builder.getTestCase();
-    }
-
     /**
      * @param isbn
      * @return

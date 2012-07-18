@@ -19,32 +19,28 @@ package com.consol.citrus.dsl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.EchoAction;
 
 /**
  * @author Christoph Deppisch
  */
-public class SleepBuilderTest {
+public class EchoBuilderTest {
     
     @Test
-    public void testSleepBuilder() {
+    public void testEchoBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                echo("Hello Citrus!");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), EchoAction.class);
         
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(0)).getName(), SleepAction.class.getSimpleName());
-        
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(0)).getDelay(), "0.5");
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(1)).getDelay(), "0.5");
+        Assert.assertEquals(((EchoAction)builder.getTestCase().getActions().get(0)).getName(), EchoAction.class.getSimpleName());
+        Assert.assertEquals(((EchoAction)builder.getTestCase().getActions().get(0)).getMessage(), "Hello Citrus!");
     }
 }

@@ -18,9 +18,11 @@ package com.consol.citrus.dsl;
 
 import java.io.IOException;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.actions.SendMessageAction;
@@ -30,17 +32,30 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 
 /**
- *
+ * Action definition creates a send message action with several message payload and header 
+ * constructing build methods.
+ * 
  * @author Christoph Deppisch
  */
 public class SendMessageActionDefinition extends AbstractActionDefinition<SendMessageAction> {
 
+    /** Citrus base application context */
+    private ApplicationContext applicationContext;
+    
     /**
      * Default constructor with test action.
      * @param action
      */
-    public SendMessageActionDefinition(SendMessageAction action) {
+    public SendMessageActionDefinition(SendMessageAction action, ApplicationContext ctx) {
         super(action);
+        this.applicationContext = ctx;
+    }
+    
+    public SendMessageActionDefinition with(String messageSenderName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        
+        action.setMessageSender(applicationContext.getBean(messageSenderName, MessageSender.class));
+        return this;
     }
     
     /**
