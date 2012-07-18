@@ -34,7 +34,7 @@ import com.consol.citrus.samples.CitrusSamplesDemo;
 import com.consol.citrus.samples.bookregistry.model.*;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.testng.CitrusTest;
-import com.consol.citrus.validation.callback.AbstractValidationCallback;
+import com.consol.citrus.validation.MarshallingValidationCallback;
 
 /**
  *
@@ -88,7 +88,7 @@ public class AddBook_Ok_2_Test extends AbstractTestNGCitrusTest {
                 
                 receive()
                     .with(bookResponseMessageHandler)
-                    .validationCallback(new AbstractValidationCallback<AddBookResponseMessage>(marshaller) {
+                    .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
                         @Override
                         public void validate(AddBookResponseMessage response, MessageHeaders headers) {
                             Assert.assertTrue(response.isSuccess());
