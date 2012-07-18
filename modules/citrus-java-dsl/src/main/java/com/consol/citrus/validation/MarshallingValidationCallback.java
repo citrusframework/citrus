@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.callback;
+package com.consol.citrus.validation;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +30,13 @@ import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.validation.callback.ValidationCallback;
 
 /**
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationCallback<T> implements ValidationCallback {
+public abstract class MarshallingValidationCallback<T> implements ValidationCallback {
 
     /** Unmarshaller */
     private final Unmarshaller unmarshaller;
@@ -43,7 +44,7 @@ public abstract class AbstractValidationCallback<T> implements ValidationCallbac
     /**
      * Default constructor with unmarshaller.
      */
-    public AbstractValidationCallback(Unmarshaller unmarshaller) {
+    public MarshallingValidationCallback(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
     
@@ -51,6 +52,11 @@ public abstract class AbstractValidationCallback<T> implements ValidationCallbac
         validate(unmarshalMessage(message), message.getHeaders());
     }
     
+    /**
+     * Subclasses must override this method for validation.
+     * @param message marshalled message payload object.
+     * @param headers message headers
+     */
     public abstract void validate(T message, MessageHeaders headers); 
     
     @SuppressWarnings("unchecked")
