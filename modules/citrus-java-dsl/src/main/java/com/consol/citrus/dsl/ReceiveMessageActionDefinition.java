@@ -18,8 +18,10 @@ package com.consol.citrus.dsl;
 
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.Assert;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
@@ -36,7 +38,8 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
- * Receive message action definition offers configuration methods for test action.
+ * Receive message action definition offers configuration methods for a receive test action. Build options 
+ * include construction of control message payload and headers as well as value extraction.
  * 
  * @author Christoph Deppisch
  */
@@ -50,12 +53,22 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     
     private XpathPayloadVariableExtractor xpathExtractor;
     
+    private ApplicationContext applicationContext;
+    
     /**
      * Default constructor using test action.
      * @param action
      */
-    public ReceiveMessageActionDefinition(ReceiveMessageAction action) {
+    public ReceiveMessageActionDefinition(ReceiveMessageAction action, ApplicationContext ctx) {
         super(action);
+        this.applicationContext = ctx;
+    }
+    
+    public ReceiveMessageActionDefinition with(String messageReceiverName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        
+        action.setMessageReceiver(applicationContext.getBean(messageReceiverName, MessageReceiver.class));
+        return this;
     }
     
     /**

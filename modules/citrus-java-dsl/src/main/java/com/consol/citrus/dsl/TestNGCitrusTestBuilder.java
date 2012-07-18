@@ -20,10 +20,12 @@ import java.util.*;
 
 import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
+import org.testng.ITestContext;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -34,7 +36,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
  * 
  * @author Christoph Deppisch
  */
-public abstract class CitrusTestBuilder {
+public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
 
     /** This builders test case */
     private TestCase testCase;
@@ -45,7 +47,7 @@ public abstract class CitrusTestBuilder {
     /**
      * Default constructor.
      */
-    public CitrusTestBuilder() {
+    public TestNGCitrusTestBuilder() {
         testCase = new TestCase();
         testCase.setBeanName(this.getClass().getSimpleName());
         testCase.setName(this.getClass().getSimpleName());
@@ -54,10 +56,18 @@ public abstract class CitrusTestBuilder {
         testCase.setVariableDefinitions(variables);
     }
     
+    @Override
+    protected void executeTest(ITestContext testContext) {
+        configure();
+        super.executeTest(testContext);
+    }
+    
     /**
-     * Configures the test case with test action sequence.
+     * Configures the test case with test actions. Subclasses may override this method in order
+     * to contribute test actions to this test case.
      */
-    protected abstract void configure();
+    protected void configure() {
+    }
     
     /**
      * Adds description to the test case. 
@@ -121,7 +131,7 @@ public abstract class CitrusTestBuilder {
     protected SendMessageActionDefinition send() {
         SendMessageAction action = new SendMessageAction();
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition(action);
+        return new SendMessageActionDefinition(action, applicationContext);
     }
     
     /**
@@ -148,7 +158,7 @@ public abstract class CitrusTestBuilder {
         
         testCase.addTestAction(action);
         
-        return new SendMessageActionDefinition(action);
+        return new SendMessageActionDefinition(action, applicationContext);
     }
     
     /**
@@ -159,7 +169,7 @@ public abstract class CitrusTestBuilder {
     protected ReceiveMessageActionDefinition receive() {
         ReceiveMessageAction action = new ReceiveMessageAction();
         testCase.addTestAction(action);
-        return new ReceiveMessageActionDefinition(action);
+        return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
     /**
@@ -176,7 +186,7 @@ public abstract class CitrusTestBuilder {
         
         testCase.addTestAction(action);
         
-        return new ReceiveMessageActionDefinition(action);
+        return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
     /**

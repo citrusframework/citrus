@@ -16,7 +16,10 @@
 
 package com.consol.citrus.dsl;
 
+import static org.easymock.EasyMock.*;
+
 import org.easymock.EasyMock;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,9 +35,11 @@ public class SendMessageBuilderTest {
     
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
+    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    
     @Test
-    public void testNG() {
-        CitrusTestBuilder builder = new CitrusTestBuilder() {
+    public void testSendBuilder() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
                 send(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
@@ -56,5 +61,35 @@ public class SendMessageBuilderTest {
         
         Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getMessageSender(), messageSender);
         Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(1)).getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+    }
+    
+    @Test
+    public void testSendBuilderWithSenderName() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                send()
+                    .with("fooMessageSender")
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext);
+        
+        expect(applicationContext.getBean("fooMessageSender", MessageSender.class)).andReturn(messageSender).once();
+        
+        replay(applicationContext);
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(((SendMessageAction)builder.getTestCase().getActions().get(0)).getMessageSender(), messageSender);
+        
+        verify(applicationContext);
     }
 }

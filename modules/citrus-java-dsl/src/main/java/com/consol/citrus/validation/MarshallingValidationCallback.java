@@ -33,7 +33,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.callback.ValidationCallback;
 
 /**
- *
+ * Validation callback automatically unmarshalling message payload so we work with
+ * Java objects for validation.
+ *  
  * @author Christoph Deppisch
  */
 public abstract class MarshallingValidationCallback<T> implements ValidationCallback {
