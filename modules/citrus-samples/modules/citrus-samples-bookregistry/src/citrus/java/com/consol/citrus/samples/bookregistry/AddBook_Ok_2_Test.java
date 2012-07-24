@@ -26,7 +26,9 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.actions.TraceTimeAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.samples.CitrusSamplesDemo;
@@ -53,22 +55,38 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
     private CastorMarshaller marshaller;
     
     @Test
-    public void runTest(ITestContext testContext) {
+    public void runTest(ITestContext testContext) throws ClassNotFoundException {
         String isbn = "978-citrus:randomNumber(10)";
         
-        send()
-            .with(bookRequestMessageSender)
-            .payload(createAddBookRequestMessage(isbn), marshaller)
-            .header("citrus_soap_action", "addBook");
+//        send()
+//            .with(bookRequestMessageSender)
+//            .payload(createAddBookRequestMessage(isbn), marshaller)
+//            .header("citrus_soap_action", "addBook");
+//        
+//        receive()
+//            .with(bookResponseMessageHandler)
+//            .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
+//                @Override
+//                public void validate(AddBookResponseMessage response, MessageHeaders headers) {
+//                    Assert.assertTrue(response.isSuccess());
+//                }
+//            });      
+//        traceTime("Bulbasaur");
+//        sleep(2.0);
+//        traceTime("Bulbasaur");
+//        traceTime("Pikachu");
+//        sleep(1.5);
+//        traceTime("Pikachu");
+//        traceTime("Bulbasaur");
+//        traceTime();
+//        sleep(3.0);
+//        traceTime("Pikachu");
+//        traceTime("Bulbasaur");
+//        traceTime();
+        input().message("Gib was ein: ").variable("INPUT").validAnswer("JA", "NEIN", "VIELLEICHT");
+        echo("${INPUT}");
         
-        receive()
-            .with(bookResponseMessageHandler)
-            .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
-                @Override
-                public void validate(AddBookResponseMessage response, MessageHeaders headers) {
-                    Assert.assertTrue(response.isSuccess());
-                }
-            });
+
        
         createVariables()
             	.add("Var1", "124452")
@@ -81,6 +99,7 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
             	.trace("isbn")
             	;
          
+
         
         //catchException("com.consol.citrus.exceptions.CitrusRuntimeException", traceVariables().trace(isbn), traceVariables().trace("Var1"));
         executeTest(testContext);
