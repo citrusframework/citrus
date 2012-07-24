@@ -123,6 +123,19 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return action;
     }
     
+    protected TraceTimeAction traceTime(String timer) {
+    	TraceTimeAction action = new TraceTimeAction();
+    	
+    	action.track(timer);
+    	testCase.addTestAction(action);
+    	
+    	return action;
+    }
+    
+    protected TraceTimeAction traceTime() {
+    	return traceTime(TraceTimeAction.DEFAULT);
+    }
+    
     /**
      * Basic send method just returning a new empty send action 
      * definition for further configuration.
@@ -189,6 +202,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
+    protected JavaActionDefinition java(String className) {
+    	JavaAction action = new JavaAction();
+    	action.setClassName(className);
+    	testCase.addTestAction(action);
+    	return new JavaActionDefinition(action);
+    }
+    
     /**
      * Add sleep action with time in milliseconds.
      * @param time
@@ -213,6 +233,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         testCase.addTestAction(action);
         
         return action;
+    }
+    
+    protected InputActionDefinition input() {
+    	InputAction action = new InputAction();
+    	testCase.addTestAction(action);
+    	return new InputActionDefinition(action);
+    	
     }
     
     /**
