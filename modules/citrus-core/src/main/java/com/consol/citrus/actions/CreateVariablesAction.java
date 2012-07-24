@@ -48,7 +48,7 @@ public class CreateVariablesAction extends AbstractTestAction {
         for (Entry<String, String> entry : variables.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-
+            
             if (value.startsWith("script:<")) {
                 String scriptEngine = value.substring("script:<".length(), value.indexOf('>'));
                 value = VariableUtils.getValueFromScript(scriptEngine,

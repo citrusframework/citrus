@@ -114,6 +114,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     /**
      * Creates a new echo action.
      * @param message
+     * @return
      */
     protected EchoAction echo(String message) {
         EchoAction action = new EchoAction();
@@ -121,6 +122,18 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         testCase.addTestAction(action);
         
         return action;
+    }
+    /**
+     * Creates a new fail action.
+     * @param message
+     * @return
+     */
+    protected FailAction fail(String message){
+    	FailAction action = new FailAction();
+    	action.setMessage(message);
+    	testCase.addTestAction(action);
+    	
+    	return action;
     }
     
     /**
@@ -189,6 +202,30 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
+   /**
+    * Action creating new test variables during a test.
+    * @return
+    */
+    protected CreateVariablesActionDefinition createVariables(){
+    	CreateVariablesAction action = new CreateVariablesAction();
+    	
+    	testCase.addTestAction(action);
+    	
+    	return new CreateVariablesActionDefinition(action, applicationContext);	
+    }
+    
+    /**
+     * Action that prints variable values to the console/logger
+     * @return
+     */
+    protected TraceVariablesActionDefinition traceVariables(){
+    	TraceVariablesAction action = new TraceVariablesAction();
+    	
+    	testCase.addTestAction(action);
+    	
+    	return new TraceVariablesActionDefinition(action);
+    }
+    
     /**
      * Add sleep action with time in milliseconds.
      * @param time
@@ -215,6 +252,51 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return action;
     }
     
+    /**
+     * Assert exception to happen in nested test action.
+     * @param testAction the nested testAction
+     * @param message the message to set
+     * @param exception the exception to set
+     * @return
+     */
+    protected Assert assertException(TestAction testAction, String message, Class<? extends Throwable> exception)
+    {
+    	Assert action = new Assert();
+    	action.setAction(testAction);
+    	action.setMessage(message);
+    	action.setException(exception);
+    		
+    	testCase.getActions().remove((testCase.getActions().size()) -1);
+    	testCase.addTestAction(action);
+    	
+		return action;
+    	
+    }
+    /**
+     * Action catches possible exceptions in nested test actions.
+     * @param exception the exception to be caught
+     * @param actions nested test actions
+     * @return
+     */
+    protected Catch catchException(String exception, TestAction ... actions)
+    {
+    	Catch container = new Catch();
+    	container.setException(exception);
+    	
+    	for (TestAction action : actions) {
+            if (action instanceof AbstractActionDefinition<?>) {
+                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
+                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
+            } else {
+                testCase.getActions().remove(action);
+                container.addTestAction(action);
+            }
+        }
+        
+        testCase.getActions().add(container);
+        
+        return container;
+    }
     /**
      * Adds sequential container with nested test actions.
      * @param actions

@@ -26,6 +26,7 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.samples.CitrusSamplesDemo;
@@ -68,8 +69,22 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
                     Assert.assertTrue(response.isSuccess());
                 }
             });
+       
+        createVariables()
+            	.add("Var1", "124452")
+            	.add("Var2","3345346")
+            	.add("isbn",  "citrus:randomNumber(10)");
+            	;
+            
+         traceVariables()
+            	.trace("Var1")
+            	.trace("isbn")
+            	;
+         
         
+        //catchException("com.consol.citrus.exceptions.CitrusRuntimeException", traceVariables().trace(isbn), traceVariables().trace("Var1"));
         executeTest(testContext);
+        
     }
     
     /**
