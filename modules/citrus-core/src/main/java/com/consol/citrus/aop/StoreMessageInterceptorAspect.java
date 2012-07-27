@@ -36,7 +36,7 @@ import com.consol.citrus.report.MessageTracingTestListener;
  * the message flow.
  * 
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.2, in favor of using {@link MessageTracingTestListener}
+ * @deprecated since 1.2, in favor of using {@link MessageTracingTestListener}
  */
 @Aspect
 @Deprecated

@@ -34,7 +34,7 @@ import com.consol.citrus.report.TestListeners;
  * test listener support and loads the root application context files for Citrus.
  * 
  * @author Christoph Deppisch
- * @deprecated as of Citrus 1.2, in favor of using {@link AbstractJUnit4CitrusTest}
+ * @deprecated since 1.2, in favor of using {@link AbstractJUnit4CitrusTest}
  */
 @Deprecated
 @TestExecutionListeners({TestSuiteAwareExecutionListener.class})

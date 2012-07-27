@@ -31,7 +31,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Matthias Beil
- * @since CITRUS 1.2
+ * @since 1.2
  */
 public class ConditionalTest extends AbstractTestNGUnitTest {
 

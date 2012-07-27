@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Matthias Beil
- * @since CITRUS 1.2
+ * @since 1.2
  */
 public class ConditionalParserTest extends AbstractActionParserTest<Conditional> {
 

@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * user credentials for basic authentication.
  * 
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.2, in favor of using {@link BasicAuthClientHttpRequestFactory}
+ * @deprecated since 1.2, in favor of using {@link BasicAuthClientHttpRequestFactory}
  */
 @Deprecated
 public class UserCredentialsClientHttpRequestFactory implements FactoryBean<CommonsClientHttpRequestFactory> {

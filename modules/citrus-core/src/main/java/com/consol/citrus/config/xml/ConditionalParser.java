@@ -29,7 +29,7 @@ import com.consol.citrus.container.Conditional;
  * Bean definition parser for selection container in test case.
  *
  * @author Matthias Beil
- * @since CITRUS 1.2
+ * @since 1.2
  */
 public class ConditionalParser implements BeanDefinitionParser {
 
