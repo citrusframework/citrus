@@ -14,6 +14,12 @@
            http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
+    <!-- Used for autowiring -->
+    <context:annotation-config/>
+    
+    <!-- Register MBeans -->
+    <context:mbean-export default-domain="com.consol.citrus.admin"/>
+    
     <!-- Auto detected POJOs labeled with the @Controller annotation -->
     <context:component-scan base-package="com.consol.citrus.admin.controller"/>
     
