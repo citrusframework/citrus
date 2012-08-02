@@ -86,8 +86,6 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         try {
             action.execute(context);
-            
-            throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
         } catch (SoapFaultClientException e) {
             log.info("Validating SOAP fault ...");
             
@@ -99,6 +97,8 @@ public class AssertSoapFault extends AbstractActionContainer {
             
             log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
             log.info("SOAP fault validation successful");
+            
+            return;
         } catch (RuntimeException e) {
             throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
                     SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
@@ -106,6 +106,8 @@ public class AssertSoapFault extends AbstractActionContainer {
             throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
                     SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
         }
+        
+        throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
     }
 
     /**
