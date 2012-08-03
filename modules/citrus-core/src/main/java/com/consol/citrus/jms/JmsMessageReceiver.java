@@ -105,6 +105,10 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
             log.debug("Received message is:\n" + receivedMessage.toString());
         }
         
+        if (messageTracingTestListener != null) {
+            messageTracingTestListener.traceMessage("Received JMS message:\n" + receivedMessage.toString());
+        }
+        
         return receivedMessage;
     }
 
