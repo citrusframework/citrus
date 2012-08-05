@@ -16,6 +16,15 @@
     <citrus:message-channel-receiver id="messageChannelReceiver3"
                                      message-channel-template="messageChannelTemplate"/>
     
+    <citrus:message-channel-receiver id="messageChannelReceiver4"
+                                     channel-resolver="channelResolver"
+                                     channel-name="channelName"
+                                     actor="testActor"/>
+                                                                      
+    <bean id="testActor" class="com.consol.citrus.TestActor">
+        <property name="name" value="TESTACTOR"/>
+    </bean>
+    
     <bean id="messageChannelTemplate" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>
     </bean>

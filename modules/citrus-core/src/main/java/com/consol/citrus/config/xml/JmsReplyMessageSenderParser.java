@@ -79,6 +79,8 @@ public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyReference(builder, 
                 element.getAttribute("reply-message-correlator"), "correlator");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
         return builder.getBeanDefinition();
     }
 

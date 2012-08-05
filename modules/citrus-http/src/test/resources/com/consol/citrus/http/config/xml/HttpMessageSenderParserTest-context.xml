@@ -23,6 +23,15 @@
                                 rest-template="restTemplate"
                                 reply-handler="httpReplyMessageHandler"
                                 reply-message-correlator="replyMessageCorrelator"/>
+                                
+    <citrus-http:message-sender id="httpMessageSender4"
+                                request-url="http://localhost:8080/test" 
+                                reply-handler="httpReplyMessageHandler"
+                                actor="testActor"/>
+    
+    <bean id="testActor" class="com.consol.citrus.TestActor">
+        <property name="name" value="TESTACTOR"/>
+    </bean>
     
     <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>

@@ -23,6 +23,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.http.message.HttpMessageSender;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 
@@ -35,7 +36,7 @@ public class HttpMessageSenderParserTest extends AbstractBeanDefinitionParserTes
     public void testFailActionParser() {
         Map<String, HttpMessageSender> messageSenders = beanDefinitionContext.getBeansOfType(HttpMessageSender.class);
         
-        Assert.assertEquals(messageSenders.size(), 3);
+        Assert.assertEquals(messageSenders.size(), 4);
         
         // 1st message sender
         HttpMessageSender messageSender = messageSenders.get("httpMessageSender1");
@@ -63,5 +64,10 @@ public class HttpMessageSenderParserTest extends AbstractBeanDefinitionParserTes
         Assert.assertEquals(messageSender.getRequestUrl(), "http://localhost:8080/test");
         Assert.assertNotNull(messageSender.getCorrelator());
         Assert.assertEquals(messageSender.getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
+        
+        // 4th message sender
+        messageSender = messageSenders.get("httpMessageSender4");
+        Assert.assertNotNull(messageSender.getActor());
+        Assert.assertEquals(messageSender.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

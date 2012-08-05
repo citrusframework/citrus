@@ -48,6 +48,9 @@ public class MessageChannelReceiverParser extends AbstractMessageChannelTemplate
         BeanDefinitionParserUtils.setPropertyValue(builder, 
                 element.getAttribute("receive-timeout"), "receiveTimeout");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("actor"), "actor");
+        
         return builder;
     }
     

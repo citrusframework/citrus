@@ -77,6 +77,8 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("interceptors"), "interceptors");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
         return builder.getBeanDefinition();
     }
 }

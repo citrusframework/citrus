@@ -22,6 +22,8 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Bean definition parser for jms-reply-message-handler configuration.
  * 
@@ -36,6 +38,8 @@ public class JmsReplyMessageReceiverParser extends AbstractBeanDefinitionParser 
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.jms.JmsReplyMessageReceiver");
+        
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
         
         return builder.getBeanDefinition();
     }

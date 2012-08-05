@@ -19,6 +19,14 @@
                                  jms-template="jmsTemplate"
                                  reply-message-correlator="replyMessageCorrelator"/>
     
+    <citrus:jms-sync-message-receiver id="jmsSyncMessageReceiver4"
+                                 destination-name="JMS.Queue.Test"
+                                 actor="testActor"/>
+    
+    <bean id="testActor" class="com.consol.citrus.TestActor">
+        <property name="name" value="TESTACTOR"/>
+    </bean>
+    
     <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
     </bean>

@@ -60,6 +60,7 @@
     <xs:element name="jms-reply-message-handler">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="actor" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -70,6 +71,7 @@
             <xs:attribute name="reply-message-correlator" type="xs:string"/>
             <xs:attribute name="connection-factory" type="xs:string"/>
             <xs:attribute name="jms-template" type="xs:string"/>
+            <xs:attribute name="actor" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -80,6 +82,7 @@
         <xs:attribute name="connection-factory" type="xs:string"/>
         <xs:attribute name="jms-template" type="xs:string"/>
         <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+        <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
     
     <xs:element name="message-channel">
@@ -127,6 +130,7 @@
     <xs:element name="message-channel-reply-handler">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="actor" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -136,6 +140,7 @@
             <xs:attribute name="reply-channel-holder" type="xs:string"/>
             <xs:attribute name="reply-message-correlator" type="xs:string"/>
             <xs:attribute name="message-channel-template" type="xs:string"/>
+            <xs:attribute name="actor" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -145,5 +150,6 @@
         <xs:attribute name="channel" type="xs:string"/>
         <xs:attribute name="channel-name" type="xs:string"/>
         <xs:attribute name="channel-resolver" type="xs:string"/>
+        <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
 </xs:schema>

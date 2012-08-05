@@ -49,6 +49,8 @@ public class ReplyMessageChannelSenderParser extends AbstractMessageChannelTempl
         BeanDefinitionParserUtils.setPropertyReference(builder, 
                 element.getAttribute("reply-message-correlator"), "correlator");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
         return builder;
     }
 

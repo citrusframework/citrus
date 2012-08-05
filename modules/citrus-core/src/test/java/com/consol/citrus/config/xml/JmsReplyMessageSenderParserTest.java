@@ -21,6 +21,7 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.JmsReplyMessageSender;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 
@@ -33,7 +34,7 @@ public class JmsReplyMessageSenderParserTest extends AbstractBeanDefinitionParse
     public void testFailActionParser() {
         Map<String, JmsReplyMessageSender> messageSenders = beanDefinitionContext.getBeansOfType(JmsReplyMessageSender.class);
         
-        Assert.assertEquals(messageSenders.size(), 3);
+        Assert.assertEquals(messageSenders.size(), 4);
         
         // 1st message sender
         JmsReplyMessageSender messageSender = messageSenders.get("jmsReplyMessageSender1");
@@ -60,5 +61,10 @@ public class JmsReplyMessageSenderParserTest extends AbstractBeanDefinitionParse
         Assert.assertNull(messageSender.getDestination());
         Assert.assertNotNull(messageSender.getReplyDestinationHolder());
         Assert.assertNull(messageSender.getCorrelator());
+        
+        // 4th message sender
+        messageSender = messageSenders.get("jmsReplyMessageSender4");
+        Assert.assertNotNull(messageSender.getActor());
+        Assert.assertEquals(messageSender.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.channel.MessageChannelSender;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 
@@ -33,7 +34,7 @@ public class MessageChannelSenderParserTest extends AbstractBeanDefinitionParser
     public void testFailActionParser() {
         Map<String, MessageChannelSender> messageSenders = beanDefinitionContext.getBeansOfType(MessageChannelSender.class);
         
-        Assert.assertEquals(messageSenders.size(), 3);
+        Assert.assertEquals(messageSenders.size(), 4);
         
         // 1st message sender
         MessageChannelSender messageSender = messageSenders.get("messageChannelSender1");
@@ -52,5 +53,10 @@ public class MessageChannelSenderParserTest extends AbstractBeanDefinitionParser
         Assert.assertNull(messageSender.getChannelName());
         Assert.assertNull(messageSender.getChannel());
         Assert.assertNull(messageSender.getChannelResolver());
+        
+        // 4th message sender
+        messageSender = messageSenders.get("messageChannelSender4");
+        Assert.assertNotNull(messageSender.getActor());
+        Assert.assertEquals(messageSender.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

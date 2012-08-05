@@ -18,6 +18,8 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.Message;
 
+import com.consol.citrus.TestActor;
+
 /**
  * Abstract base class for message receiver implementations.
  * 
@@ -27,6 +29,9 @@ public abstract class AbstractMessageReceiver implements MessageReceiver {
 
     /** Receive timeout in ms */
     private long receiveTimeout = 5000L;
+    
+    /** The test actor linked to this message receiver */
+    private TestActor actor;
     
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
@@ -66,6 +71,22 @@ public abstract class AbstractMessageReceiver implements MessageReceiver {
      */
     public long getReceiveTimeout() {
         return receiveTimeout;
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
     }
     
 }

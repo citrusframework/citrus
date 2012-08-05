@@ -5,6 +5,12 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
     
-    <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver"/>
-                                 
+    <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver1"/>
+
+    <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver2"
+                                      actor="testActor"/>
+        
+    <bean id="testActor" class="com.consol.citrus.TestActor">
+        <property name="name" value="TESTACTOR"/>
+    </bean>
 </beans>

@@ -18,6 +18,8 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.Message;
 
+import com.consol.citrus.TestActor;
+
 /**
  * Message receiver interface declares message receiving methods.
  * @author Christoph Deppisch
@@ -50,4 +52,10 @@ public interface MessageReceiver {
      * @return
      */
     Message<?> receiveSelected(String selector, long timeout);
+    
+    /**
+     * Gets the receiving actor.
+     * @return
+     */
+    TestActor getActor();
 }

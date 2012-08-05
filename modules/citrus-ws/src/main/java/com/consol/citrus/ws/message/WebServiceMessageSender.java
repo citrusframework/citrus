@@ -33,6 +33,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.transform.StringResult;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -60,6 +61,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     
     /** Should http errors be handled with reply message handler or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
+    
+    /** Test actor linked to this message sender */
+    private TestActor actor;
     
     /**
      * Logger
@@ -251,5 +255,45 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      */
     public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
         this.errorHandlingStrategy = errorHandlingStrategy;
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator the correlator to get.
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
+    }
+
+    /**
+     * Gets the endpointResolver.
+     * @return the endpointResolver the endpointResolver to get.
+     */
+    public EndpointUriResolver getEndpointResolver() {
+        return endpointResolver;
+    }
+
+    /**
+     * Gets the addressingHeaders.
+     * @return the addressingHeaders the addressingHeaders to get.
+     */
+    public WsAddressingHeaders getAddressingHeaders() {
+        return addressingHeaders;
     }
 }

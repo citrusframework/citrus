@@ -18,6 +18,8 @@ package com.consol.citrus.message;
 
 import org.springframework.integration.Message;
 
+import com.consol.citrus.TestActor;
+
 /**
  * Basic message sender interface. Message senders are capable of publishing messages to a 
  * specific message endpoint. Each message transport may have dedicated message sender implementations.
@@ -30,6 +32,12 @@ public interface MessageSender {
      * @param message the message object to send.
      */
     void send(Message<?> message);
+    
+    /**
+     * Gets the sending actor.
+     * @return
+     */
+    TestActor getActor();
     
     /**
      * Enumeration representing the different error handling strategies for this

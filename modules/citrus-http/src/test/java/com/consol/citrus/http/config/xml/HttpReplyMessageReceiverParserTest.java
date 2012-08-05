@@ -21,6 +21,7 @@ import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.http.message.HttpReplyMessageReceiver;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 
@@ -33,7 +34,14 @@ public class HttpReplyMessageReceiverParserTest extends AbstractBeanDefinitionPa
     public void testFailActionParser() {
         Map<String, HttpReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(HttpReplyMessageReceiver.class);
         
-        Assert.assertEquals(messageReceivers.size(), 1);
-        Assert.assertTrue(messageReceivers.containsKey("httpReplyMessageReceiver"));
+        Assert.assertEquals(messageReceivers.size(), 2);
+        Assert.assertTrue(messageReceivers.containsKey("httpReplyMessageReceiver1"));
+        
+        Assert.assertTrue(messageReceivers.containsKey("httpReplyMessageReceiver2"));
+        
+        // 2nd message receiver
+        HttpReplyMessageReceiver messageReceiver = messageReceivers.get("httpReplyMessageReceiver2");
+        Assert.assertNotNull(messageReceiver.getActor());
+        Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

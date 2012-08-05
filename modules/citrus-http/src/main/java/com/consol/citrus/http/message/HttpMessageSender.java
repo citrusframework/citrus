@@ -31,6 +31,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.*;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -76,6 +77,9 @@ public class HttpMessageSender implements MessageSender {
     
     /** Should http errors be handled with reply message handler or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
+    
+    /** Test actor linked to this message sender */
+    private TestActor actor;
     
     /**
      * Logger
@@ -439,6 +443,22 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setInterceptors(List<ClientHttpRequestInterceptor> interceptors) {
         restTemplate.setInterceptors(interceptors);
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
     }
 
 }

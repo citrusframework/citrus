@@ -18,8 +18,9 @@ package com.consol.citrus.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Bean definition parser for message-channel-sender configuration.
@@ -36,23 +37,17 @@ public class MessageChannelSenderParser extends AbstractMessageChannelTemplateAw
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
                 .genericBeanDefinition("com.consol.citrus.channel.MessageChannelSender");
         
-        String channel = element.getAttribute("channel");
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel"), "channel");
         
-        if (StringUtils.hasText(channel)) {
-            builder.addPropertyReference("channel", channel);
-        }
+        BeanDefinitionParserUtils.setPropertyValue(builder, 
+                element.getAttribute("channel-name"), "channelName");
         
-        String channelName = element.getAttribute("channel-name");
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("channel-resolver"), "channelResolver");
         
-        if (StringUtils.hasText(channelName)) {
-            builder.addPropertyValue("channelName", channelName);
-        }
-        
-        String channelResolver = element.getAttribute("channel-resolver");
-        
-        if (StringUtils.hasText(channelResolver)) {
-            builder.addPropertyReference("channelResolver", channelResolver);
-        }
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("actor"), "actor");
         
         return builder;
     }

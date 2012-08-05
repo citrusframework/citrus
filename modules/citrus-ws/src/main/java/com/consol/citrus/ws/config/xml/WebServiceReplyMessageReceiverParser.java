@@ -22,6 +22,8 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Parser for reply message receiver component in Citrus ws namespace.
  * 
@@ -33,7 +35,9 @@ public class WebServiceReplyMessageReceiverParser extends AbstractBeanDefinition
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
             .genericBeanDefinition("com.consol.citrus.ws.message.WebServiceReplyMessageReceiver");
-    
-    return builder.getBeanDefinition();
+        
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
+        return builder.getBeanDefinition();
     }
 }

@@ -108,6 +108,8 @@ public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser 
                     ErrorHandlingStrategy.fromName(element.getAttribute("fault-strategy")));
         }
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
         return builder.getBeanDefinition();
     }
 }

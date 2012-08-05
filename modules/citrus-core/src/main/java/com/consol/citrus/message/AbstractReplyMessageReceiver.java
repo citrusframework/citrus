@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 
+import com.consol.citrus.TestActor;
+
 /**
  * Abstract base class for reply message receiver implementations. In addition to the usual
  * {@link MessageReceiver} functionality this class implements the {@link ReplyMessageHandler} interface.
@@ -41,6 +43,9 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
     
     /** Maximum number of retries when waiting for synchronous reply message to arrive */
     private int maxRetries = 5;
+    
+    /** The test actor linked with this reply message receiver */
+    private TestActor actor;
     
     /**
      * Logger
@@ -124,5 +129,21 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
     public void setMaxRetries(int maxRetries) {
         Assert.isTrue(maxRetries > 0, "Maximum number of retries must be a positive number > 0");
         this.maxRetries = maxRetries;
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
     }
 }

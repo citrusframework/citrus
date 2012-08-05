@@ -69,6 +69,8 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("pub-sub-domain"), "pubSubDomain");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+        
         return builder.getBeanDefinition();
     }
     

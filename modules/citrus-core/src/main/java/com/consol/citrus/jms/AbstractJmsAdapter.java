@@ -29,6 +29,8 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 
+import com.consol.citrus.TestActor;
+
 /**
  * Basic adapter class for JMS communication. The adapter uses Spring's {@link JmsTemplate}.
  * 
@@ -59,6 +61,9 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
     
     /** Use topics instead of queues */
     private boolean pubSubDomain = false;
+    
+    /** Test actor linked to this message sender */
+    private TestActor actor;
     
     /**
      * Logger
@@ -245,5 +250,21 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
         }
         
         return jmsTemplate;
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
     }
 }

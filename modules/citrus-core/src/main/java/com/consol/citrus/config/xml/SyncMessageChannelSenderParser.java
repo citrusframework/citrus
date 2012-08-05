@@ -55,6 +55,9 @@ public class SyncMessageChannelSenderParser extends AbstractMessageChannelTempla
         BeanDefinitionParserUtils.setPropertyReference(builder, 
                 element.getAttribute("reply-message-correlator"), "correlator");
         
+        BeanDefinitionParserUtils.setPropertyReference(builder, 
+                element.getAttribute("actor"), "actor");
+        
         return builder;
     }
 

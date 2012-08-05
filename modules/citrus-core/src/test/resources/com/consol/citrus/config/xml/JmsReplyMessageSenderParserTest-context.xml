@@ -17,6 +17,14 @@
                                  jms-template="jmsTemplate"
                                  reply-destination-holder="replyDestinationHolder"/>
     
+    <citrus:jms-reply-message-sender id="jmsReplyMessageSender4"
+                                 reply-destination-holder="replyDestinationHolder"
+                                 actor="testActor"/>
+    
+    <bean id="testActor" class="com.consol.citrus.TestActor">
+        <property name="name" value="TESTACTOR"/>
+    </bean>
+    
     <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
     </bean>
