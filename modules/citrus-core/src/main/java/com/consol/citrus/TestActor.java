@@ -22,6 +22,7 @@ package com.consol.citrus;
  * the simulated communication parts in a test.
  *  
  * @author Christoph Deppisch
+ * @since 1.3
  */
 public class TestActor {
     /** The name of this actor*/

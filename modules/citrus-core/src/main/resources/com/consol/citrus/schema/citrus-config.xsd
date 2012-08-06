@@ -20,6 +20,14 @@
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
    
+    <xs:element name="actor">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="jms-message-sender" type="jmsAdapterType"/>
     
     <xs:element name="jms-message-receiver">

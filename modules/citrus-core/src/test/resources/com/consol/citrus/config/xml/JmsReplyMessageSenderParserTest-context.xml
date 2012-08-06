@@ -21,9 +21,7 @@
                                  reply-destination-holder="replyDestinationHolder"
                                  actor="testActor"/>
     
-    <bean id="testActor" class="com.consol.citrus.TestActor">
-        <property name="name" value="TESTACTOR"/>
-    </bean>
+    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
     
     <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
