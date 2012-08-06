@@ -77,6 +77,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
@@ -111,6 +112,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("variable", "text-value");
@@ -146,6 +148,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("expression", "//root/element/sub-elementA");
@@ -179,6 +182,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("variable", "B");
@@ -216,6 +220,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -264,6 +269,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -310,6 +316,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -358,6 +365,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -399,6 +407,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");
@@ -453,6 +462,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         context.getVariables().put("variableA", "initial");

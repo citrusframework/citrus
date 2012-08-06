@@ -42,6 +42,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 		
 		reset(messageReceiver);
         expect(messageReceiver.receive(1000L)).andReturn(null).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
 		receiveTimeout.execute(context);
@@ -58,6 +59,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive(500L)).andReturn(null).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveTimeout.execute(context);
@@ -75,6 +77,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive(1000L)).andReturn(message).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         try {
@@ -95,6 +98,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 1000L)).andReturn(null).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveTimeout.execute(context);

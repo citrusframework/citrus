@@ -78,6 +78,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -118,6 +119,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -158,6 +160,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -194,6 +197,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -235,6 +239,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -282,6 +287,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();

@@ -70,6 +70,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -108,6 +110,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -130,6 +134,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         messageSender.send((Message)anyObject());
         expectLastCall().once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -165,6 +171,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -203,6 +211,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -240,6 +250,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -275,6 +287,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -309,6 +323,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -347,6 +363,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         soapMessageAction.execute(context);
@@ -383,6 +401,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         

@@ -165,6 +165,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDisabled(TestContext context) {
+        if (getActor() == null && messageReceiver.getActor() != null) {
+            return messageReceiver.getActor().isDisabled();
+        }
+        
+        return super.isDisabled(context);
+    }
 
     /**
      * Setter for messageSelector.

@@ -61,6 +61,18 @@ public class SendMessageAction extends AbstractTestAction {
         
         messageSender.send(message);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDisabled(TestContext context) {
+        if (getActor() == null && messageSender.getActor() != null) {
+            return messageSender.getActor().isDisabled();
+        }
+        
+        return super.isDisabled(context);
+    }
 
     /**
      * Create message to be sent.

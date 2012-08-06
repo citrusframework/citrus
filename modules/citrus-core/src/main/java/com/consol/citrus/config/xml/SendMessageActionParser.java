@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 
@@ -55,6 +56,8 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         }
         
         DescriptionElementParser.doParse(element, builder);
+        
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         

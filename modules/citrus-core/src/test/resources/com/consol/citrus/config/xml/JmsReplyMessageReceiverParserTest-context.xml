@@ -10,5 +10,5 @@
     <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver2"
                                       actor="testActor"/>
         
-    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
+    <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

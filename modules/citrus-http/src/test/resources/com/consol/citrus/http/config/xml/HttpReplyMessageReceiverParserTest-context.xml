@@ -12,5 +12,5 @@
     <citrus-http:reply-message-handler id="httpReplyMessageReceiver2"
                 actor="testActor"/>
     
-    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
+    <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

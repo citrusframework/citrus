@@ -75,6 +75,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -108,6 +109,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -141,6 +143,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -173,6 +176,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -207,6 +211,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -240,6 +245,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -273,6 +279,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -306,6 +313,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -339,6 +347,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -372,6 +381,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();

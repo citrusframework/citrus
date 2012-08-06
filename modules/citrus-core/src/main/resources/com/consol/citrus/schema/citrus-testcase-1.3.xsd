@@ -129,6 +129,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
+        <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="receiveActionType">
@@ -289,6 +290,7 @@
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
         <xs:attribute name="timeout" type="xs:int"/>
+        <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="scriptDefinitionType">

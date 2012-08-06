@@ -76,6 +76,7 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         + "</html>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -113,6 +114,7 @@ public class XhtmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         + "</html>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();

@@ -21,7 +21,7 @@
                                      channel-name="channelName"
                                      actor="testActor"/>
                                                                       
-    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
+    <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
     
     <bean id="messageChannelTemplate" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>

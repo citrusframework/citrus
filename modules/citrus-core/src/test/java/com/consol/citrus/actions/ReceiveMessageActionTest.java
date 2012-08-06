@@ -73,6 +73,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
 		reset(messageReceiver);
 		expect(messageReceiver.receive()).andReturn(controlMessage).once();
+		expect(messageReceiver.getActor()).andReturn(null).anyTimes();
 		replay(messageReceiver);
 		
 		List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -102,6 +103,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -137,6 +139,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -174,6 +177,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -204,6 +208,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -235,6 +240,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -267,6 +273,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -297,6 +304,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -332,6 +340,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -367,6 +376,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -405,6 +415,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -445,6 +456,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -484,6 +496,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -520,6 +533,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -556,6 +570,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -590,6 +605,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -624,6 +640,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -668,6 +685,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -703,6 +721,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -736,6 +755,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -771,6 +791,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -806,6 +827,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -845,6 +867,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         validationContext.setSchemaValidation(false);
@@ -883,6 +906,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -925,6 +949,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         validationContext.setSchemaValidation(false);
@@ -969,6 +994,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         validationContext.setSchemaValidation(false);
@@ -1013,6 +1039,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         validationContext.setSchemaValidation(false);
@@ -1061,6 +1088,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         validationContext.setSchemaValidation(false);
@@ -1097,6 +1125,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive(5000L)).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1130,6 +1159,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receiveSelected(messageSelectorString)).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1165,6 +1195,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receiveSelected(messageSelectorString, 5000L)).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1199,6 +1230,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'")).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -1235,6 +1267,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1258,6 +1291,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(null).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1293,6 +1327,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1322,6 +1357,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1356,6 +1392,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1383,6 +1420,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).once();
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
@@ -1411,6 +1449,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(messageReceiver);
         expect(messageReceiver.receive()).andReturn(controlMessage).times(2);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 

@@ -17,7 +17,7 @@
     <citrus:sync-message-channel-receiver id="syncMessageChannelReceiver3"
                                           message-channel-template="messageChannelTemplate"/>
     
-    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
+    <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
     
     <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>

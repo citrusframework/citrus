@@ -28,8 +28,8 @@ public class TestActor {
     /** The name of this actor*/
     private String name;
     
-    /** Marks if this test actor should participate in tests */
-    private boolean enabled = true;
+    /** Marks if this test actor should not participate in tests */
+    private boolean disabled = false;
 
     /**
      * Gets the name.
@@ -48,18 +48,20 @@ public class TestActor {
     }
 
     /**
-     * Gets the enabled.
-     * @return the enabled the enabled to get.
+     * Gets the disabled.
+     * @return the disabled the disabled to get.
      */
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isDisabled() {
+        return disabled;
     }
 
     /**
-     * Sets the enabled.
-     * @param enabled the enabled to set
+     * Sets the disabled.
+     * @param disabled the disabled to set
      */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
+
+    
 }

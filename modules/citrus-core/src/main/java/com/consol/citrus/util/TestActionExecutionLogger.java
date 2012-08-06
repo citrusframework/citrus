@@ -50,23 +50,50 @@ public final class TestActionExecutionLogger {
     public static void logTestAction(TestAction action) {
         StringBuilder builder = new StringBuilder();
         
-        builder.append("Executing: <");
+        if (action instanceof TestActionContainer) {
+            builder.append("Execute test container '");
+        } else {
+            builder.append("Execute test action: '");
+        }
         
         if (action.getName() != null) {
             builder.append(action.getName());
-            
-            if (log.isDebugEnabled() && StringUtils.hasText(action.getDescription())) {
-                builder.append("(" + action.getDescription() + ")");
-            }
         } else {
             builder.append(action.getClass().getName());
         }
-
-        builder.append(">");
+        
+        builder.append("'");
         
         if (action instanceof TestActionContainer) {
-            builder.append(" container with " + ((TestActionContainer)action).getActionCount() + " embedded actions");
+            builder.append(" with " + ((TestActionContainer)action).getActionCount() + " embedded actions");
         }
+        
+        if (log.isDebugEnabled() && StringUtils.hasText(action.getDescription())) {
+            builder.append("\n+++" + action.getDescription() + "+++\n");
+        }
+
+        log.info(builder.toString());
+    }
+
+    /**
+     * @param action
+     */
+    public static void logDisabledTestAction(TestAction action) {
+        StringBuilder builder = new StringBuilder();
+        
+        if (action instanceof TestActionContainer) {
+            builder.append("Skip disabled test container '");
+        } else {
+            builder.append("Skip disabled test action: '");
+        }
+        
+        if (action.getName() != null) {
+            builder.append(action.getName());
+        } else {
+            builder.append(action.getClass().getName());
+        }
+        
+        builder.append("'");
         
         log.info(builder.toString());
     }

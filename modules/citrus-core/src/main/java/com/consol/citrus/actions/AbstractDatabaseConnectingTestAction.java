@@ -26,6 +26,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TestActionExecutionLogger;
@@ -56,6 +57,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     
     /** Constant representing SQL comment */
     protected static final String SQL_COMMENT = "--";
+    
+    /** This actions explicit test actor */
+    private TestActor actor;
 
     /**
      * Do basic logging and delegate execution to subclass.
@@ -71,6 +75,17 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      */
     public abstract void doExecute(TestContext context);
 
+    /**
+     * Checks if this test action is disabled. Delegates to test actor defined
+     * for this test action by default. Subclasses may add additional disabled logic here.
+     * 
+     * @param context the current test context.
+     * @return
+     */
+    public boolean isDisabled(TestContext context) {
+        return actor.isDisabled();
+    }
+    
     /**
      * Reads SQL statements from external file resource. File resource can hold several
      * multi-line statements and comments.
@@ -207,5 +222,21 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      */
     public List<String> getStatements() {
         return statements;
+    }
+
+    /**
+     * Gets the actor.
+     * @return the actor the actor to get.
+     */
+    public TestActor getActor() {
+        return actor;
+    }
+
+    /**
+     * Sets the actor.
+     * @param actor the actor to set
+     */
+    public void setActor(TestActor actor) {
+        this.actor = actor;
     }
 }

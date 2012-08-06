@@ -77,6 +77,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -109,6 +110,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -141,6 +143,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -174,6 +177,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -206,6 +210,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -238,6 +243,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -270,6 +276,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -302,6 +309,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -334,6 +342,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -366,6 +375,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -407,6 +417,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -448,6 +459,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -495,6 +507,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -536,6 +549,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -577,6 +591,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -618,6 +633,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -659,6 +675,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -708,6 +725,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -757,6 +775,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -804,6 +823,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();

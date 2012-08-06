@@ -20,7 +20,7 @@
                                  destination-name="JMS.Queue.Test"
                                  actor="testActor"/>
     
-    <citrus:actor id="testActor" name="TESTACTOR" enabled="true"/>
+    <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
     
     <!-- JMS connection factories -->
     <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">

@@ -48,4 +48,11 @@ public interface TestAction {
      * @return description as String
      */
     String getDescription();
+    
+    /**
+     * Checks if this action is disabled.
+     * @param context the current test context.
+     * @return true if action is marked disabled.
+     */
+    boolean isDisabled(TestContext context);
 }

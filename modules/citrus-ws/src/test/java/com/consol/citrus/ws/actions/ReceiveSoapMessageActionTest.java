@@ -81,6 +81,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -129,6 +130,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -176,6 +178,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -207,6 +210,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         expect(messageReceiver.receive()).andReturn(controlMessage);
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -254,6 +258,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -303,6 +308,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
@@ -352,6 +358,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         });
         
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver, attachmentValidator);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();

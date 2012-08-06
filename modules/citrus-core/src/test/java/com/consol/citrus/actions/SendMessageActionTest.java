@@ -78,6 +78,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
 		
+		expect(messageSender.getActor()).andReturn(null).anyTimes();
+		
 		replay(messageSender);
 		
 		sendAction.execute(context);
@@ -114,6 +116,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -156,7 +160,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
 		
-		replay(messageSender);
+		expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
+        replay(messageSender);
 		
 		sendAction.execute(context);
 		
@@ -199,6 +205,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -235,6 +243,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -275,6 +285,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -314,6 +326,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -350,6 +364,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -394,6 +410,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -436,6 +454,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -482,6 +502,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -527,6 +549,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -568,6 +592,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -613,6 +639,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -631,6 +659,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         try {
@@ -658,6 +688,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         try {
@@ -716,6 +748,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -745,6 +779,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -783,6 +819,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -819,6 +857,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -857,6 +897,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendAction.execute(context);
@@ -879,6 +921,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         messageSender.send((Message)anyObject());
         expectLastCall().once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -920,6 +964,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         

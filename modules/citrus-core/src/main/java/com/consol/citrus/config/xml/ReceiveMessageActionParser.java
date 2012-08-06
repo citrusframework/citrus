@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -60,6 +61,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         }
         
         DescriptionElementParser.doParse(element, builder);
+        
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
         String receiveTimeout = element.getAttribute("timeout");
         if (StringUtils.hasText(receiveTimeout)) {

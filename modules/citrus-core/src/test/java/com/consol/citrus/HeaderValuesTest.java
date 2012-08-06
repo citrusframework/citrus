@@ -68,6 +68,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -115,6 +116,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -164,6 +166,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -213,6 +216,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -261,6 +265,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -310,6 +315,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -359,6 +365,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         .build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();

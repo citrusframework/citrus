@@ -73,6 +73,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -104,6 +105,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -135,6 +137,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -166,6 +169,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -197,6 +201,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -228,6 +233,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -259,6 +265,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -290,6 +297,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -321,6 +329,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -352,6 +361,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -388,6 +398,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -424,6 +435,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -461,6 +473,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -499,6 +512,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -535,6 +549,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -571,6 +586,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -608,6 +624,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -646,6 +663,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -684,6 +702,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</ns0:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -722,6 +741,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -760,6 +780,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -799,6 +820,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                     + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
@@ -839,6 +861,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -877,6 +900,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
@@ -915,6 +939,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();

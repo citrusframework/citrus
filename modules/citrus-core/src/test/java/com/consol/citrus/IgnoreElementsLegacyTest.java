@@ -65,6 +65,7 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         receiveMessageBean = new ReceiveMessageAction();
@@ -133,6 +134,7 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
                         + "</root>").build();
         
         expect(messageReceiver.receive()).andReturn(message);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
         replay(messageReceiver);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();

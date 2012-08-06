@@ -41,7 +41,7 @@ public class TestActorParser implements BeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("name"), "name");
         
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("enabled"), "enabled");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("disabled"), "disabled");
         
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
         

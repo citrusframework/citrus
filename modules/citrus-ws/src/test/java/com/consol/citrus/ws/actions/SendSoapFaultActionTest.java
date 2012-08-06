@@ -63,6 +63,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendSoapFaultAction.execute(context);
@@ -93,6 +95,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
                 return null;
             }
         }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
         
         replay(messageSender);
         
@@ -129,6 +133,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         sendSoapFaultAction.execute(context);
@@ -145,6 +151,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         sendSoapFaultAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
         replay(messageSender);
         
         try {
