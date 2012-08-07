@@ -23,6 +23,7 @@
     <toc/>
     <xi:include href='preface.xml'/>
     <xi:include href='whatsnew.xml'/>
+    <xi:include href='what-happend.xml'/>
     <xi:include href='introduction.xml'/>
     <xi:include href='setup.xml'/>
     
@@ -44,6 +45,7 @@
     <xi:include href='tibco.xml'/>
     <xi:include href='schema-validation.xml'/>
     <xi:include href='meta-info.xml'/>
+    <xi:include href='test-actors.xml'/>
     <xi:include href='debug-messages.xml'/>
     <xi:include href='reporting.xml'/>
     
