@@ -30,6 +30,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
@@ -60,6 +61,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 		ReceiveMessageAction receiveAction = new ReceiveMessageAction();
 		receiveAction.setMessageReceiver(messageReceiver);
 		
+		TestActor testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+        
+        receiveAction.setActor(testActor);
+        
 		receiveAction.setValidator(validator);
 		PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -1475,6 +1481,61 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(newContext);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    public void testDisabledReceiveMessage() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        
+        receiveAction.setValidator(validator);
+        
+        TestActor disabledActor = new TestActor();
+        disabledActor.setDisabled(true);
+        receiveAction.setActor(disabledActor);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        reset(messageReceiver);
+        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
+        replay(messageReceiver);
+        
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+        
+        verify(messageReceiver);
+    }
+    
+    @Test
+    public void testDisabledReceiveMessageByMessageReceiver() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageReceiver(messageReceiver);
+        
+        receiveAction.setValidator(validator);
+        
+        TestActor disabledActor = new TestActor();
+        disabledActor.setDisabled(true);
+        
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        reset(messageReceiver);
+        expect(messageReceiver.getActor()).andReturn(disabledActor).times(2);
+        replay(messageReceiver);
+        
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
         
         verify(messageReceiver);
     }

@@ -70,6 +70,16 @@
         </property>
     </bean>
     
+    <!-- Test Actors -->
+    <citrus:actor id="helloClient" 
+                  name="HELLO_CLIENT" disabled="false"/>
+    
+    <citrus:actor id="helloServer" 
+                  name="HELLO_SERVER" disabled="false"/>
+                  
+    <citrus:actor id="disabledActor" 
+                  name="DISABLED_ACTOR" disabled="true"/>
+    
     <!-- Listeners -->
     <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
     
@@ -183,7 +193,8 @@
                                 content-type="text/xml"
                                 reply-handler="httpResponseReceiver"
                                 request-factory="basicAuthClientRequestFactory"
-                                interceptors="httpClientInterceptors"/>
+                                interceptors="httpClientInterceptors"
+                                actor="helloClient"/>
     
     <util:list id="httpClientInterceptors">
         <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
@@ -217,7 +228,7 @@
     
     <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
     
-    <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}"/>
+    <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}" actor="helloServer"/>
     
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

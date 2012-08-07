@@ -19,7 +19,7 @@
     
         <actions>
             <parallel>
-	            <send with="httpMessageSender">
+	            <send with="httpMessageSender" actor="helloClient">
 	            	<message>
 	            		<data>
 	            			<![CDATA[
@@ -38,7 +38,7 @@
 	            </send>
               
                 <sequential>
-                    <receive with="httpRequestReceiver">
+                    <receive with="httpRequestReceiver" actor="helloClient">
                         <message>
                             <data>
                                 <![CDATA[
@@ -61,7 +61,7 @@
                         </extract>
                     </receive>
     	            
-    	            <send with="httpResponseSender">
+    	            <send with="httpResponseSender" actor="helloServer">
     	            	<message>
     	            		<data>
     	            			<![CDATA[
@@ -83,7 +83,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpResponseReceiver" actor="helloServer">
             	<message>
             		<data>
             			<![CDATA[

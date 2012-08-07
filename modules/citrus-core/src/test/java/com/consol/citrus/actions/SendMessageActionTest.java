@@ -30,6 +30,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -54,6 +55,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		SendMessageAction sendAction = new SendMessageAction();
 		sendAction.setMessageSender(messageSender);
 		
+		TestActor testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+        
+        sendAction.setActor(testActor);
+        
 		PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
 		messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		
@@ -966,6 +972,55 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         }).once();
         
         expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    public void testDisabledSendMessage() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        
+        TestActor disabledActor = new TestActor();
+        disabledActor.setDisabled(true);
+        sendAction.setActor(disabledActor);
+        
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        sendAction.setMessageBuilder(messageBuilder);
+        
+        reset(messageSender);
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
+        replay(messageSender);
+        
+        sendAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    public void testDisabledSendMessageByMessageSender() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageSender(messageSender);
+        
+        TestActor disabledActor = new TestActor();
+        disabledActor.setDisabled(true);
+        
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        
+        sendAction.setMessageBuilder(messageBuilder);
+        
+        reset(messageSender);
+        
+        expect(messageSender.getActor()).andReturn(disabledActor).times(2);
         
         replay(messageSender);
         
