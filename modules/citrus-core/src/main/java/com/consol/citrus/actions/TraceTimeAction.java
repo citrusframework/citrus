@@ -1,9 +1,7 @@
 package com.consol.citrus.actions;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import org.slf4j.Logger;
@@ -18,7 +16,7 @@ public class TraceTimeAction extends AbstractTestAction {
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(SleepAction.class);
-    private Queue<String> watchedTimers = new LinkedList<String>();
+    private final Queue<String> watchedTimers = new LinkedList<String>();
 	
 	@Override
     public void doExecute(TestContext context) {

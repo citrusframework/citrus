@@ -48,7 +48,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.setName("MyTestCase");
         
         final String message = "Hello TestFramework!";
-        testcase.setVariableDefinitions(Collections.singletonMap("text", message));
+        testcase.setVariableDefinitions(Collections.singletonMap("text", (Object)message));
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override
@@ -66,7 +66,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.setName("MyTestCase");
         
         final String message = "Hello TestFramework!";
-        testcase.setVariableDefinitions(Collections.singletonMap("text", message));
+        testcase.setVariableDefinitions(Collections.singletonMap("text", (Object)message));
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override

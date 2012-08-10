@@ -68,7 +68,7 @@ public class Template extends AbstractTestAction {
 
         TestContext innerContext;
         
-        //decide wheather to use global test context or not
+        //decide whether to use global test context or not
         if (globalContext) {
             innerContext = context;
         } else {

@@ -44,7 +44,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
         
-        testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
+        testcase.setVariableDefinitions(Collections.singletonMap("test1Var", (Object)456));
         
         testcase.execute(createTestContext());
         
@@ -56,7 +56,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         TestCase testcase2 = new TestCase();
         testcase2.setName("MyTestCase2");
         
-        testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
+        testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", (Object)456));
         
         testcase2.execute(createTestContext());
         
