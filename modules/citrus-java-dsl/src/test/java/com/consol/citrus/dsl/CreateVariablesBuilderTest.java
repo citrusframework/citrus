@@ -4,7 +4,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.CreateVariablesAction;
-import com.consol.citrus.actions.SleepAction;
 
 public class CreateVariablesBuilderTest 
 {
@@ -25,8 +24,7 @@ public class CreateVariablesBuilderTest
 	Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), CreateVariablesAction.class);
 	
 	Assert.assertEquals(((CreateVariablesAction)builder.getTestCase().getActions().get(0)).getName(), CreateVariablesAction.class.getSimpleName());
-	System.out.println(((CreateVariablesAction)builder.getTestCase().getActions().get(0)).getVariables());
-	Assert.assertEquals(((CreateVariablesAction)builder.getTestCase().getActions().get(0)).getVariables(), "{TestVariable=TestValue}");
+	Assert.assertEquals(((CreateVariablesAction)builder.getTestCase().getActions().get(0)).getVariables().toString(), "{TestVariable=TestValue}");
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.consol.citrus.dsl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.actions.StartServerAction;
@@ -14,6 +15,10 @@ public class StartServerActionDefinition extends AbstractActionDefinition<StartS
 	public StartServerActionDefinition serverList(List<Server> serverList) {
 		action.setServerList(serverList);
 		return this;
+	}
+	
+	public StartServerActionDefinition serverList(Server... servers) {
+		return serverList(Arrays.asList(servers));
 	}
 	
 	public StartServerActionDefinition server(Server server) {
