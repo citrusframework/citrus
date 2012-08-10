@@ -166,7 +166,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new ExecuteSQLQueryActionDefinition(action);
     }
     
-    protected ReceiveTimeoutActionDefinition expectTimeout() {
+    protected ReceiveTimeoutActionDefinition receiveTimeout() {
     	ReceiveTimeoutAction action = new ReceiveTimeoutAction();
     	testCase.addTestAction(action);
     	return new ReceiveTimeoutActionDefinition(action);

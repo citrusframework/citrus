@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.JavaAction;
 
 public class JavaBuilderTest {
-	
 	@Test
 	public void testJavaBuilder() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		final List<Object> constructorArgs = new ArrayList<Object>();

@@ -17,8 +17,7 @@ public class TraceVariablesActionDefinition extends AbstractActionDefinition<Tra
 
     }
 
-	public TraceVariablesActionDefinition trace(String name){
-		
+	public TraceVariablesActionDefinition trace(String name) {
 		variableNames.add(name);
 		action.setVariableNames(variableNames);
 		return this;		
