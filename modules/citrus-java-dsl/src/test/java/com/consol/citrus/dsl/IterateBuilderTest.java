@@ -20,10 +20,12 @@ public class IterateBuilderTest {
         
         assertEquals(builder.getTestCase().getActions().size(), 1);
         assertEquals(builder.getTestCase().getActions().get(0).getClass(), Iterate.class);
+        assertEquals(builder.getTestCase().getActions().get(0).getName(), Iterate.class.getSimpleName());
         
-        assertEquals(((Iterate)(builder.getTestCase().getActions().get(0))).getIndexName(), "i");
-        assertEquals(((Iterate)(builder.getTestCase().getActions().get(0))).getCondition(), "i lt 5");
-        assertEquals(((Iterate)(builder.getTestCase().getActions().get(0))).getStep(), 1);
-        assertEquals(((Iterate)(builder.getTestCase().getActions().get(0))).getIndex(), 0);
+        Iterate container = (Iterate)builder.getTestCase().getActions().get(0);   
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getCondition(), "i lt 5");
+        assertEquals(container.getStep(), 1);
+        assertEquals(container.getIndex(), 0);
 	}
 }
