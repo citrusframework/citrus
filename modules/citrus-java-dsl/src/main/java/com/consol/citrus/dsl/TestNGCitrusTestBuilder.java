@@ -129,7 +129,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      	
      	testCase.addTestAction(action);
      	
-     	return new CreateVariablesActionDefinition(action, applicationContext);	
+     	return new CreateVariablesActionDefinition(action);	
      }
      
     /**
@@ -145,6 +145,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return action;
     }
     
+    /**
+     * Creates a new executePLSQL action definition
+     * for further configuration.
+     * @param dataSource
+     * @return
+     */
     protected ExecutePLSQLActionDefinition executePLSQL(DataSource dataSource) {
     	ExecutePLSQLAction action = new ExecutePLSQLAction();
     	action.setDataSource(dataSource);
@@ -152,6 +158,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new ExecutePLSQLActionDefinition(action);
     }
     
+    /**
+     * Creates a new executeSQL action definition
+     * for further configuration.
+     * @param dataSource
+     * @return
+     */
     protected ExecuteSQLActionDefinition executeSQL(DataSource dataSource) {
     	ExecuteSQLAction action = new ExecuteSQLAction();
     	action.setDataSource(dataSource);
@@ -159,6 +171,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new ExecuteSQLActionDefinition(action);
     }
     
+    /**
+     * Creates a new executesqlquery action definition 
+     * for further configuration.
+     * @param dataSource
+     * @return
+     */
     protected ExecuteSQLQueryActionDefinition executeSQLQuery(DataSource dataSource) {
     	ExecuteSQLQueryAction action = new ExecuteSQLQueryAction();
     	action.setDataSource(dataSource);
@@ -166,6 +184,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new ExecuteSQLQueryActionDefinition(action);
     }
     
+    /**
+     * Creates a new receive timeout action definition
+     * for further configuration.
+     * @return
+     */
     protected ReceiveTimeoutActionDefinition receiveTimeout() {
     	ReceiveTimeoutAction action = new ReceiveTimeoutAction();
     	testCase.addTestAction(action);
@@ -185,12 +208,22 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return action;
     }
     
+    /**
+     * Creates a new input action.
+     * @return
+     */
     protected InputActionDefinition input() {
     	InputAction action = new InputAction();
     	testCase.addTestAction(action);
     	return new InputActionDefinition(action);
     }
     
+    /**
+     * Creates a new java action definition
+     * for further configuration.
+     * @param className
+     * @return
+     */
     protected JavaActionDefinition java(String className) {
     	JavaAction action = new JavaAction();
     	action.setClassName(className);
@@ -198,6 +231,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new JavaActionDefinition(action);
     }
     
+    /**
+     * Creates a new load properties action.
+     * @param fileName the file to set
+     * @return
+     */
     protected LoadPropertiesAction load(String fileName) {
     	LoadPropertiesAction action = new LoadPropertiesAction();
     	action.setFile(fileName);
@@ -205,6 +243,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return action;
     }
     
+    /**
+     * Creates a new purge jms queues action definition
+     * for further configuration.
+     * @param connectionFactory
+     * @return
+     */
     protected PurgeJMSQueuesActionDefinition purgeJMSQueues(ConnectionFactory connectionFactory) {
     	PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
     	action.setConnectionFactory(connectionFactory);
@@ -212,6 +256,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new PurgeJMSQueuesActionDefinition(action);
     }
     
+    /**
+     * Creates a new purge message channel action definition
+     * for further configuration.
+     * @param beanFactory
+     * @return
+     */
     protected PurgeMessageChannelActionDefinition purgeMessageChannels(BeanFactory beanFactory) {
     	PurgeMessageChannelAction action = new PurgeMessageChannelAction();
     	action.setBeanFactory(beanFactory);
@@ -311,18 +361,33 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return action;
     }
     
+    /**
+     * Creates a new start server action definition
+     * for further configuration.
+     * @return
+     */
     protected StartServerActionDefinition startServer() {
     	StartServerAction action = new StartServerAction();
     	testCase.addTestAction(action);
     	return new StartServerActionDefinition(action);
     }
     
+    /**
+     * Creates a new stop server action definition
+     * for further configuration.
+     * @return
+     */
     protected StopServerActionDefinition stopServer() {
     	StopServerAction action = new StopServerAction();
     	testCase.addTestAction(action);
     	return new StopServerActionDefinition(action);
     }
     
+    /**
+     * Creates a new stop time action.
+     * @param period 
+     * @return
+     */
     protected StopTimeAction stopTime(String period) {
     	StopTimeAction action = new StopTimeAction();
     	action.setId(period);
@@ -330,6 +395,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new StopTimeAction();
     }
     
+    /**
+     * Creates a new trace time action.
+     * @param timer
+     * @return
+     */
     protected TraceTimeAction traceTime(String timer) {
     	TraceTimeAction action = new TraceTimeAction();
     	
@@ -339,12 +409,17 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return action;
     }
     
+    /**
+     * Creates a new trace time action with a default time line.
+     * @return
+     */
     protected TraceTimeAction traceTime() {
     	return traceTime(TraceTimeAction.DEFAULT);
     }
     
     /**
-     * Action that prints variable values to the console/logger
+     * Creates a new trace variables action definition
+     * that prints variable values to the console/logger.
      * @return
      */
     protected TraceVariablesActionDefinition traceVariables(){
@@ -355,10 +430,26 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new TraceVariablesActionDefinition(action);
 	}
     
+    /**
+     * Creates a new groovy action definition
+     * for further configuration.
+     * @return
+     */
     protected GroovyActionDefinition groovy() {
     	GroovyAction action = new GroovyAction();
     	testCase.addTestAction(action);
     	return new GroovyActionDefinition(action);
+    }
+    
+    /**
+     * Creates a new transform action definition
+     * for further configuration.
+     * @return
+     */
+    protected TransformActionDefinition transform(){
+    	TransformAction action = new TransformAction();
+    	testCase.addTestAction(action);
+    	return new TransformActionDefinition(action);
     }
     
     /**
@@ -378,9 +469,9 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	testCase.getActions().remove((testCase.getActions().size()) -1);
     	testCase.addTestAction(action);
     	
-		return action;
-    	
+		return action;	
     }
+    
     /**
      * Action catches possible exceptions in nested test actions.
      * @param exception the exception to be caught
@@ -407,6 +498,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return container;
     }
     
+    /**
+     * Adds conditional container with nested test actions.
+     * @param actions
+     * @return
+     */
     protected ConditionalDefinition conditional(TestAction ... actions) {
     	Conditional container = new Conditional();
     	
@@ -471,6 +567,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return container;
     }
     
+    /**
+     * Adds repeat on error until true container with nested test actions.
+     * @param actions
+     * @return
+     */
     protected RepeatOnErrorUntilTrueDefinition repeatOnErrorUntilTrue(TestAction... actions) {
     	RepeatOnErrorUntilTrue container = new RepeatOnErrorUntilTrue();
     	
@@ -488,6 +589,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new RepeatOnErrorUntilTrueDefinition(container);
     }
     
+    /**
+     * Adds repeat until true container with nested test actions.
+     * @param actions
+     * @return
+     */
     protected RepeatUntilTrueDefinition repeatUntilTrue(TestAction... actions) {
     	RepeatUntilTrue container = new RepeatUntilTrue();
     	
@@ -505,6 +611,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new RepeatUntilTrueDefinition(container);
     }
     
+    /**
+     * Adds sequence after suite container with nested test actions.
+     * @param actions
+     * @return
+     */
     protected SequenceAfterSuiteDefinition sequenceAfterSuite(TestAction... actions) {
     	SequenceAfterSuite container = new SequenceAfterSuite();
     	
@@ -522,6 +633,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new SequenceAfterSuiteDefinition(container);
     }
     
+    /**
+     * Adds sequence before suite container with nested test actions.
+     * @param actions
+     * @return
+     */
     protected SequenceBeforeSuiteDefinition sequenceBeforeSuite(TestAction... actions) {
     	SequenceBeforeSuite container = new SequenceBeforeSuite();
     	
@@ -539,6 +655,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     	return new SequenceBeforeSuiteDefinition(container);
     }
     
+    /**
+     * Adds sequence before container with nested test actions. 
+     * @param actions
+     * @return
+     */
     protected SequenceBeforeTest sequenceBeforeTest(TestAction... actions) {
     	SequenceBeforeTest container = new SequenceBeforeTest();
     	
@@ -579,6 +700,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         return container;
     }
     
+    /**
+     * Adds template container with nested test actions.
+     * @param templateName
+     * @param actions
+     * @return
+     */
     protected TemplateDefinition template(String templateName, TestAction... actions) {
     	Template container = new Template();
     	container.setName(templateName);

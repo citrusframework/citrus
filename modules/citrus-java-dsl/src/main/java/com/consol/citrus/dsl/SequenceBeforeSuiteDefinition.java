@@ -10,11 +10,19 @@ public class SequenceBeforeSuiteDefinition extends AbstractActionDefinition<Sequ
 	    super(action);
     }
 
+	/**
+     * Sets the testSuiteListener.
+     * @param testSuiteListener the testSuiteListener to set
+     */
 	public SequenceBeforeSuiteDefinition testSuiteListener(TestSuiteListeners testSuiteListener) {
 		action.setTestSuiteListener(testSuiteListener);
 		return this;
 	}
 	
+	/**
+     * Sets the afterSuiteActions.
+     * @param afterSuiteActions the afterSuiteActions to set
+     */
 	public SequenceBeforeSuiteDefinition afterSuiteActions(SequenceAfterSuite afterSuiteActions) {
 		action.setAfterSuiteActions(afterSuiteActions);
 		return this;

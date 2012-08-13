@@ -12,7 +12,7 @@ public class FailBuilderTest {
 			TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
 			@Override
 			protected void configure(){
-				fail("This test shall not pass.");
+				fail("This test will fail.");
 			}
 		};
 		
@@ -24,6 +24,6 @@ public class FailBuilderTest {
 		
 		FailAction action = (FailAction)builder.getTestCase().getActions().get(0);
 		Assert.assertEquals(action.getName(), FailAction.class.getSimpleName());
-        Assert.assertEquals(action.getMessage(), "This test shall not pass.");
+        Assert.assertEquals(action.getMessage(), "This test will fail.");
 		}
 }
