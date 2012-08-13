@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+//import com.consol.citrus.util.TypeParser;
 
 /**
  * Action to enable class invocation through java reflection
@@ -62,7 +63,7 @@ public class JavaAction extends AbstractTestAction {
             if (instance == null) {
                 instance = getObjectInstanceFromClass(context);
             }
-
+            
             Class<?>[] methodTypes = new Class<?>[methodArgs.size()];
             Object[] methodObjects = new Object[methodArgs.size()];
             for (int i = 0; i < methodArgs.size(); i++) {
@@ -90,7 +91,7 @@ public class JavaAction extends AbstractTestAction {
                     methodObjects[i] = methodArgs.get(i);
                 }
             }
-
+            
             invokeMethod(methodTypes, methodObjects);
         } catch (RuntimeException e) {
             throw new CitrusRuntimeException("Failed to invoke Java method due to runtime error", e);

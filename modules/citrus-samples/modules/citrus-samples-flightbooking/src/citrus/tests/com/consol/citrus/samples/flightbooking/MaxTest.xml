@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="MaxTest">
+        <meta-info>
+            <author>Max Argyo</author>
+            <creationdate>2012-03-08</creationdate>
+            <status>FINAL</status>
+        </meta-info>
+        
+        <variables>
+            <variable name="id" value="x"></variable>
+        </variables>
+        
+        <actions>
+            <parallel>
+                <iterate index="i" condition="i lt= 5">
+                    <create-variables>
+                        <variable name="id" value="citrus:concat(${id},'1')"></variable>
+                    </create-variables>
+                </iterate>
+                <iterate index="in" condition="in lt= 5">
+                    <create-variables>
+                        <variable name="id" value="citrus:concat(${id},'2')"></variable>
+                    </create-variables>
+                </iterate>
+                <iterate index="ind" condition="ind lt= 5">
+                    <create-variables>
+                        <variable name="id" value="citrus:concat(${id},'3')"></variable>
+                    </create-variables>
+                </iterate>
+                <iterate index="indb" condition="indb lt= 5">
+                    <create-variables>
+                        <variable name="id" value="citrus:concat(${id},'4')"></variable>
+                    </create-variables>
+                </iterate>
+            </parallel>
+            <echo>
+                <message>FINAL ID IS ${id}</message>
+            </echo>
+        </actions>
+   </testcase>
+</spring:beans>

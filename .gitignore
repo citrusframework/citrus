@@ -12,4 +12,5 @@ test-output
 bin
 .codepro
 .pmd
+*.msgs
 
