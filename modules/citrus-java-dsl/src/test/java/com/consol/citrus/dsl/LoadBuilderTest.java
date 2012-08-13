@@ -20,8 +20,8 @@ public class LoadBuilderTest {
             Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
             Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
             
-            Assert.assertEquals(((LoadPropertiesAction)builder.getTestCase().getActions().get(0)).getName(), LoadPropertiesAction.class.getSimpleName());
-            
-            Assert.assertEquals(((LoadPropertiesAction)builder.getTestCase().getActions().get(0)).getFile(), "TestFile.txt");
+            LoadPropertiesAction action = (LoadPropertiesAction)builder.getTestCase().getActions().get(0);
+            Assert.assertEquals(action.getName(), LoadPropertiesAction.class.getSimpleName());
+            Assert.assertEquals(action.getFile(), "TestFile.txt");
 	}
 }

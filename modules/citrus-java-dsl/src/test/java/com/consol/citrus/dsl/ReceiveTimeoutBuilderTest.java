@@ -29,10 +29,10 @@ public class ReceiveTimeoutBuilderTest {
 		 Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
 	     Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
 	     
-	     Assert.assertEquals(((ReceiveTimeoutAction)builder.getTestCase().getActions().get(0)).getName(), ReceiveTimeoutAction.class.getSimpleName());
-	     
-	     Assert.assertEquals(((ReceiveTimeoutAction)builder.getTestCase().getActions().get(0)).getMessageReceiver(), messageReceiver);
-	     Assert.assertEquals(((ReceiveTimeoutAction)builder.getTestCase().getActions().get(0)).getMessageSelector(),"TestMessageSelectorString"); 
-	     Assert.assertEquals(((ReceiveTimeoutAction)builder.getTestCase().getActions().get(0)).getTimeout(), 5000);
+	     ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.getTestCase().getActions().get(0);
+	     Assert.assertEquals(action.getName(), ReceiveTimeoutAction.class.getSimpleName());
+	     Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+	     Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
+	     Assert.assertEquals(action.getTimeout(), 5000);
 	}
 }

@@ -42,9 +42,9 @@ public class SleepBuilderTest {
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
         Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
         
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(0)).getName(), SleepAction.class.getSimpleName());
-        
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(0)).getDelay(), "0.5");
-        Assert.assertEquals(((SleepAction)builder.getTestCase().getActions().get(1)).getDelay(), "0.5");
+        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
+        Assert.assertEquals(action.getDelay(), "0.5");
+        Assert.assertEquals(action.getDelay(), "0.5");
     }
 }

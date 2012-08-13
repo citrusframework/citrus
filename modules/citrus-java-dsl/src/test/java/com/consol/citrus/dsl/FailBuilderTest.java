@@ -22,7 +22,8 @@ public class FailBuilderTest {
 		Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
 		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), FailAction.class);
 		
-		Assert.assertEquals(((FailAction)builder.getTestCase().getActions().get(0)).getName(), FailAction.class.getSimpleName());
-        Assert.assertEquals(((FailAction)builder.getTestCase().getActions().get(0)).getMessage(), "This test shall not pass.");
+		FailAction action = (FailAction)builder.getTestCase().getActions().get(0);
+		Assert.assertEquals(action.getName(), FailAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessage(), "This test shall not pass.");
 		}
 }

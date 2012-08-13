@@ -24,10 +24,10 @@ public class InputBuilderTest {
             Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
             Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), InputAction.class);
             
-            Assert.assertEquals(((InputAction)builder.getTestCase().getActions().get(0)).getName(), InputAction.class.getSimpleName());
-            
-            Assert.assertEquals(((InputAction)builder.getTestCase().getActions().get(0)).getMessage(), "TestMessage");
-            Assert.assertEquals(((InputAction)builder.getTestCase().getActions().get(0)).getValidAnswers(), "Yes/No/Maybe");
-            Assert.assertEquals(((InputAction)builder.getTestCase().getActions().get(0)).getVariable(), "TestVariable");
+            InputAction action = (InputAction)builder.getTestCase().getActions().get(0);
+            Assert.assertEquals(action.getName(), InputAction.class.getSimpleName());
+            Assert.assertEquals(action.getMessage(), "TestMessage");
+            Assert.assertEquals(action.getValidAnswers(), "Yes/No/Maybe");
+            Assert.assertEquals(action.getVariable(), "TestVariable");
 	}
 }

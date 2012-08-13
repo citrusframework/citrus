@@ -21,7 +21,8 @@ public class StopTimeBuilderTest {
 	Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
 	Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), StopTimeAction.class);
 	
-	Assert.assertEquals(((StopTimeAction)builder.getTestCase().getActions().get(0)).getName(), StopTimeAction.class.getSimpleName());
-    Assert.assertEquals(((StopTimeAction)builder.getTestCase().getActions().get(0)).getId(), "TestId");
+	StopTimeAction action = (StopTimeAction)builder.getTestCase().getActions().get(0);
+	Assert.assertEquals(action.getName(), StopTimeAction.class.getSimpleName());
+    Assert.assertEquals(action.getId(), "TestId");
 	}
 }
