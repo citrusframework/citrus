@@ -57,6 +57,13 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     public void execute(TestContext context) {
         throw new IllegalStateException("Test action definition must not be executed");
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDisabled(TestContext context) {
+        return false;
+    }
 
     /**
      * {@inheritDoc}
