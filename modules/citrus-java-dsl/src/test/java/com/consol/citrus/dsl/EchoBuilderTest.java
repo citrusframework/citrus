@@ -40,7 +40,8 @@ public class EchoBuilderTest {
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), EchoAction.class);
         
-        Assert.assertEquals(((EchoAction)builder.getTestCase().getActions().get(0)).getName(), EchoAction.class.getSimpleName());
-        Assert.assertEquals(((EchoAction)builder.getTestCase().getActions().get(0)).getMessage(), "Hello Citrus!");
+        EchoAction action = (EchoAction)builder.getTestCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), EchoAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessage(), "Hello Citrus!");
     }
 }

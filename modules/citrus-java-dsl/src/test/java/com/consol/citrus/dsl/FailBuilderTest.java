@@ -19,32 +19,27 @@ package com.consol.citrus.dsl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.FailAction;
 
-/**
- * @author Christoph Deppisch
- */
-public class SleepBuilderTest {
-    
+public class FailBuilderTest {
+
     @Test
-    public void testSleepBuilder() {
+    public void testFailBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                fail("This test will fail.");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), FailAction.class);
+        
+        FailAction action = (FailAction)builder.getTestCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), FailAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessage(), "This test will fail.");
     }
 }

@@ -24,6 +24,7 @@ import com.consol.citrus.context.TestContext;
  * generics.
  * 
  * @author Christoph Deppisch
+ * @since 1.3
  */
 public class AbstractActionDefinition<T extends TestAction> implements TestAction {
 

@@ -19,32 +19,31 @@ package com.consol.citrus.dsl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.InputAction;
 
-/**
- * @author Christoph Deppisch
- */
-public class SleepBuilderTest {
-    
+public class InputBuilderTest {
+
     @Test
-    public void testSleepBuilder() {
+    public void TestInputBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                input()
+                    .message("TestMessage")
+                    .result("TestVariable")
+                    .answers("Yes", "No", "Maybe");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), InputAction.class);
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        InputAction action = (InputAction)builder.getTestCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), InputAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessage(), "TestMessage");
+        Assert.assertEquals(action.getValidAnswers(), "Yes/No/Maybe");
+        Assert.assertEquals(action.getVariable(), "TestVariable");
     }
 }

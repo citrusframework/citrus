@@ -19,32 +19,28 @@ package com.consol.citrus.dsl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.CreateVariablesAction;
 
-/**
- * @author Christoph Deppisch
- */
-public class SleepBuilderTest {
-    
+public class CreateVariablesBuilderTest {
+
     @Test
-    public void testSleepBuilder() {
+    public void testCreateVariablesBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                variables().add("foo", "bar")
+                           .add("text", "Hello Citrus!");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), CreateVariablesAction.class);
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        CreateVariablesAction action = (CreateVariablesAction)builder.getTestCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), CreateVariablesAction.class.getSimpleName());
+        Assert.assertEquals(action.getVariables().toString(), "{foo=bar, text=Hello Citrus!}");
+        
     }
 }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.*;
@@ -44,10 +44,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /** List of queue names to be purged */
-    private List<String> queueNames = Collections.emptyList();
+    private List<String> queueNames = new ArrayList<String>();
 
     /** List of queues to be purged */
-    private List<Queue> queues = Collections.emptyList();
+    private List<Queue> queues = new ArrayList<Queue>();
     
     /** ConnectionFactory */
     private ConnectionFactory connectionFactory;

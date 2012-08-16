@@ -45,16 +45,22 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
     /**
      * Default constructor with test action.
      * @param action
+     * @param ctx
      */
     public SendMessageActionDefinition(SendMessageAction action, ApplicationContext ctx) {
         super(action);
         this.applicationContext = ctx;
     }
     
-    public SendMessageActionDefinition with(String messageSenderName) {
+    /**
+     * Sets the message sender name to use.
+     * @param messageSender
+     * @return
+     */
+    public SendMessageActionDefinition with(String messageSender) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
         
-        action.setMessageSender(applicationContext.getBean(messageSenderName, MessageSender.class));
+        action.setMessageSender(applicationContext.getBean(messageSender, MessageSender.class));
         return this;
     }
     

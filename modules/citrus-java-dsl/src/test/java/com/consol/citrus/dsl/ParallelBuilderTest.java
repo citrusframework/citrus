@@ -16,35 +16,33 @@
 
 package com.consol.citrus.dsl;
 
-import org.testng.Assert;
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.Parallel;
 
-/**
- * @author Christoph Deppisch
- */
-public class SleepBuilderTest {
-    
+public class ParallelBuilderTest {
     @Test
-    public void testSleepBuilder() {
+    public void testParallelBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                parallel(echo("${var}"), 
+                        sleep(2.0), 
+                        echo("ASDF"));
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        assertEquals(builder.getTestCase().getActions().size(), 1);
+        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Parallel.class);
+        assertEquals(builder.getTestCase().getActions().get(0).getName(), Parallel.class.getSimpleName());
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        Parallel container = (Parallel)builder.getTestCase().getActions().get(0); 
+        assertEquals(container.getActions().size(), 3);
+        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }
 }

@@ -39,7 +39,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private List<TestAction> finallyChain = new ArrayList<TestAction>();
 
     /** Tests variables */
-    private Map<String, String> variableDefinitions = new HashMap<String, String>();
+    private Map<String, ?> variableDefinitions = new HashMap<String, Object>();
 
     /** Test context */
     private TestContext context;
@@ -70,12 +70,12 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         /* build up the global test variables in TestContext by
          * getting the names and the current values of all variables */
-        for (Entry<String, String> entry : variableDefinitions.entrySet()) {
+        for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            Object value = entry.getValue();
 
             //check if value is a variable or function (and resolve it accordingly)
-            value = context.resolveDynamicValue(value);
+            value = context.resolveDynamicValue(value.toString());
 
             context.setVariable(key, value);
         }
@@ -120,7 +120,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Setter for variables.
      * @param variableDefinitions
      */
-    public void setVariableDefinitions(Map<String, String> variableDefinitions) {
+    public void setVariableDefinitions(Map<String, ?> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
     }
 
@@ -138,8 +138,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         buf.append("[testVariables:");
 
-        for (Entry<String, String> entry : variableDefinitions.entrySet()) {
-            buf.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
+        for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
+            buf.append(entry.getKey()).append("=").append(entry.getValue().toString()).append(";");
         }
 
         buf.append("] ");

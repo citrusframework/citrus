@@ -16,8 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +41,10 @@ import com.consol.citrus.context.TestContext;
  */
 public class PurgeMessageChannelAction extends AbstractTestAction implements InitializingBean, BeanFactoryAware {
     /** List of channel names to be purged */
-    private List<String> channelNames = Collections.emptyList();
+    private List<String> channelNames = new ArrayList<String>();
 
     /** List of channels to be purged */
-    private List<MessageChannel> channels = Collections.emptyList();
+    private List<MessageChannel> channels = new ArrayList<MessageChannel>();
     
     /** The parent bean factory used for channel name resolving */
     private BeanFactory beanFactory;
@@ -176,6 +175,22 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      */
     public void setMessageSelector(MessageSelector messageSelector) {
         this.messageSelector = messageSelector;
+    }
+
+    /**
+     * Gets the channelResolver.
+     * @return the channelResolver the channelResolver to get.
+     */
+    public ChannelResolver getChannelResolver() {
+        return channelResolver;
+    }
+
+    /**
+     * Sets the channelResolver.
+     * @param channelResolver the channelResolver to set
+     */
+    public void setChannelResolver(ChannelResolver channelResolver) {
+        this.channelResolver = channelResolver;
     }
 
 }

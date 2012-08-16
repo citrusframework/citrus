@@ -16,60 +16,59 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 
 /**
- * @author Christoph Deppisch
+ * @author Max Argyo, Giulia DelBravo
  * @since 1.3
  */
-public class IterateDefinition extends AbstractActionDefinition<Iterate> {
+public class RepeatOnErrorUntilTrueDefinition extends AbstractActionDefinition<RepeatOnErrorUntilTrue> {
 
-    /**
+	/**
      * Default constructor using action container.
      * @param action
      */
-    public IterateDefinition(Iterate action) {
-        super(action);
+	public RepeatOnErrorUntilTrueDefinition(RepeatOnErrorUntilTrue action) {
+	    super(action);
     }
-    
-    /**
+
+	/**
      * Adds a condition to this iterate container.
      * @param condition
      * @return
      */
-    public IterateDefinition condition(String condition) {
-        action.setCondition(condition);
-        return this;
-    }
-    
-    /**
+	public RepeatOnErrorUntilTrueDefinition until(String condition) {
+		action.setCondition(condition);
+		return this;
+	}
+	
+	/**
      * Sets the index variable name.
      * @param name
      * @return
      */
-    public IterateDefinition index(String name) {
-        action.setIndexName(name);
-        return this;
-    }
-    
-    /**
+	public RepeatOnErrorUntilTrueDefinition index(String indexName) {
+		action.setIndexName(indexName);
+		return this;
+	}
+	
+	/**
      * Sets the index start value.
      * @param index
      * @return
      */
-    public IterateDefinition startsWith(int index) {
-        action.setIndex(index);
-        return this;
-    }
-    
-    /**
-     * Sets the step for each iteration.
-     * @param step
-     * @return
-     */
-    public IterateDefinition step(int step) {
-        action.setStep(step);
-        return this;
-    }
-
+	public RepeatOnErrorUntilTrueDefinition startsWith(int index) {
+		action.setIndex(index);
+		return this;
+	}
+	
+	/**
+	 * Sets the auto sleep time in between repeats.
+	 * @param autoSleep
+	 * @return
+	 */
+	public RepeatOnErrorUntilTrueDefinition autoSleep(long autoSleep) {
+		action.setAutoSleep(autoSleep);
+		return this;
+	}
 }

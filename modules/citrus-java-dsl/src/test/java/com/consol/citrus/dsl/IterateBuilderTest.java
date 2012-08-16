@@ -16,35 +16,36 @@
 
 package com.consol.citrus.dsl;
 
-import org.testng.Assert;
+import static org.testng.Assert.*;
+
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.container.Iterate;
 
-/**
- * @author Christoph Deppisch
- */
-public class SleepBuilderTest {
-    
+public class IterateBuilderTest {
     @Test
-    public void testSleepBuilder() {
+    public void testIterateBuilder() {      
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                sleep(0.5);
-                sleep(500);
+                iterate(variables().add("index", "${i}"))
+                    .index("i")
+                    .startsWith(0)
+                    .step(1)
+                    .condition("i lt 5");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        assertEquals(builder.getTestCase().getActions().size(), 1);
+        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Iterate.class);
+        assertEquals(builder.getTestCase().getActions().get(0).getName(), Iterate.class.getSimpleName());
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        Iterate container = (Iterate)builder.getTestCase().getActions().get(0);   
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getCondition(), "i lt 5");
+        assertEquals(container.getStep(), 1);
+        assertEquals(container.getIndex(), 0);
     }
 }

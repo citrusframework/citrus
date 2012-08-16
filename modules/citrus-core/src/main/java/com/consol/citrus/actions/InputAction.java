@@ -52,6 +52,9 @@ public class InputAction extends AbstractTestAction {
 
     /** Valid answers, tokenized by '/' character */
     private String validAnswers;
+    
+    /** Separates valid answer possibilities */
+    public static final String ANSWER_SEPARATOR = "/";
 
     @Override
     public void doExecute(TestContext context) {
@@ -93,7 +96,7 @@ public class InputAction extends AbstractTestAction {
      * @return
      */
     private boolean checkAnswer(String input) {
-        StringTokenizer tok = new StringTokenizer(validAnswers, "/");
+        StringTokenizer tok = new StringTokenizer(validAnswers, ANSWER_SEPARATOR);
 
         while (tok.hasMoreTokens()) {
             if (tok.nextElement().toString().trim().equalsIgnoreCase(input.trim())) {
