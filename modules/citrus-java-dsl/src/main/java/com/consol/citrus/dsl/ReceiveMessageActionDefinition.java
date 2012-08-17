@@ -44,14 +44,17 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
  */
 public class ReceiveMessageActionDefinition extends AbstractActionDefinition<ReceiveMessageAction> {
 
+    /** Message type for this action definition */
     private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
     
+    /** Validation context used in this action definition */
     private ControlMessageValidationContext validationContext;
     
+    /** Variable extractors filled within this action definition */
     private MessageHeaderVariableExtractor headerExtractor;
-    
     private XpathPayloadVariableExtractor xpathExtractor;
     
+    /** Basic application context */
     private ApplicationContext applicationContext;
     
     /**
@@ -202,8 +205,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     }
     
     /**
-     * Extract message element vie XPath from message payload as new test variable.
-     * @param headerName
+     * Extract message element via XPath from message payload as new test variable.
+     * @param xpath
      * @param variable
      * @return
      */

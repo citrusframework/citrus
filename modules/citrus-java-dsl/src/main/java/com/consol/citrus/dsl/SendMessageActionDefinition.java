@@ -31,6 +31,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -40,6 +42,10 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
  */
 public class SendMessageActionDefinition extends AbstractActionDefinition<SendMessageAction> {
 
+    /** Variable extractors filled within this definition */
+    private MessageHeaderVariableExtractor headerExtractor;
+    private XpathPayloadVariableExtractor xpathExtractor;
+    
     /**
      * Default constructor with test action.
      * @param action
@@ -151,6 +157,40 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             action.setMessageBuilder(messageBuilder);
         }
         
+        return this;
+    }
+    
+    /**
+     * Extract message header entry as variable before message is sent.
+     * @param headerName
+     * @param variable
+     * @return
+     */
+    public SendMessageActionDefinition extractFromHeader(String headerName, String variable) {
+        if (headerExtractor == null) {
+            headerExtractor = new MessageHeaderVariableExtractor();
+            
+            action.getVariableExtractors().add(headerExtractor);
+        }
+        
+        headerExtractor.getHeaderMappings().put(headerName, variable);
+        return this;
+    }
+    
+    /**
+     * Extract message element via XPath from payload before message is sent.
+     * @param xpath
+     * @param variable
+     * @return
+     */
+    public SendMessageActionDefinition extractFromPayload(String xpath, String variable) {
+        if (xpathExtractor == null) {
+            xpathExtractor = new XpathPayloadVariableExtractor();
+            
+            action.getVariableExtractors().add(xpathExtractor);
+        }
+        
+        xpathExtractor.getxPathExpressions().put(xpath, variable);
         return this;
     }
     

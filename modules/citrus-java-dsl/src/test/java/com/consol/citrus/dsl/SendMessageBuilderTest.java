@@ -28,6 +28,8 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -60,6 +62,11 @@ public class SendMessageBuilderTest {
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
     }
     
     @Test
@@ -82,6 +89,10 @@ public class SendMessageBuilderTest {
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
     }
     
     @Test
@@ -104,6 +115,11 @@ public class SendMessageBuilderTest {
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadResource(), resource);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
     }
     
     @Test
@@ -134,5 +150,91 @@ public class SendMessageBuilderTest {
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
         verify(applicationContext);
+    }
+    
+    @Test
+    public void testSendBuilderWithHeaders() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                send(messageSender)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .header("operation", "foo")
+                    .header("language", "eng");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("language"), "eng");
+    }
+    
+    @Test
+    public void testReceiveBuilderExtractFromPayload() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                send(messageSender)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .extractFromPayload("/TestRequest/Message", "text")
+                    .extractFromPayload("/TestRequest/Message/@lang", "language");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+    }
+    
+    @Test
+    public void testReceiveBuilderExtractFromHeader() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                send(messageSender)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .extractFromHeader("operation", "ops")
+                    .extractFromHeader("requestId", "id");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
     }
 }

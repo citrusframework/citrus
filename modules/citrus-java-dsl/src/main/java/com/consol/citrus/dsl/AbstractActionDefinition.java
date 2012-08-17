@@ -43,7 +43,7 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
         action.setDescription(description);
         return this;
     }
-
+    
     /**
      * Gets the action.
      * @return the action the action to get.
@@ -55,42 +55,42 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     /**
      * {@inheritDoc}
      */
-    public void execute(TestContext context) {
+    public final void execute(TestContext context) {
         throw new IllegalStateException("Test action definition must not be executed");
     }
     
     /**
      * {@inheritDoc}
      */
-    public boolean isDisabled(TestContext context) {
+    public final boolean isDisabled(TestContext context) {
         return false;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getName() {
+    public final String getName() {
         return action.getName();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setName(String name) {
+    public final void setName(String name) {
         action.setName(name);
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getDescription() {
+    public final String getDescription() {
         return action.getDescription();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setDescription(String description) {
+    public final void setDescription(String description) {
         action.setDescription(description);
     }
     
