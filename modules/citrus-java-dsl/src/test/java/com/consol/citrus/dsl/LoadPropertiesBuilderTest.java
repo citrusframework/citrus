@@ -21,13 +21,13 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.LoadPropertiesAction;
 
-public class LoadBuilderTest {
+public class LoadPropertiesBuilderTest {
     @Test
     public void TestLoadBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                load("TestFile.txt");
+                load("classpath:test.properties");
             }
         };
             
@@ -38,6 +38,6 @@ public class LoadBuilderTest {
         
         LoadPropertiesAction action = (LoadPropertiesAction)builder.getTestCase().getActions().get(0);
         Assert.assertEquals(action.getName(), LoadPropertiesAction.class.getSimpleName());
-        Assert.assertEquals(action.getFile(), "TestFile.txt");
+        Assert.assertEquals(action.getFile(), "classpath:test.properties");
     }
 }

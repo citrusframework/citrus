@@ -16,11 +16,14 @@
 
 package com.consol.citrus.dsl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 
 /**
@@ -69,19 +72,58 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 	/**
      * Set expected control result set. Keys represent the column names, values
      * the expected values.
-     *
-     * @param controlResultSet
+     * @param column
+     * @param values
      */
 	public ExecuteSQLQueryActionDefinition validate(String column, String ... values) {
 		action.getControlResultSet().put(column, Arrays.asList(values));
 		return this;
 	}
 	
+	/**
+     * Validate SQL result set via validation script, for instance Groovy.
+     * @param script
+     * @param type
+     */
+    public ExecuteSQLQueryActionDefinition validateScript(String script, String type) {
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(script, type);
+        action.setScriptValidationContext(scriptValidationContext);
+        return this;
+    }
+    
+    /**
+     * Validate SQL result set via validation script, for instance Groovy.
+     * @param scriptResource
+     * @param type
+     */
+    public ExecuteSQLQueryActionDefinition validateScript(Resource scriptResource, String type) {
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(scriptResource, type);
+        action.setScriptValidationContext(scriptValidationContext);
+        return this;
+    }
+    
+    /**
+     * Validate SQL result set via validation script, for instance Groovy.
+     * @param script
+     */
+    public ExecuteSQLQueryActionDefinition groovy(String script) {
+        return validateScript(script, ScriptTypes.GROOVY);
+    }
+    
+    /**
+     * Validate SQL result set via validation script, for instance Groovy.
+     * @param scriptResource
+     */
+    public ExecuteSQLQueryActionDefinition groovy(Resource scriptResource) {
+        return validateScript(scriptResource, ScriptTypes.GROOVY);
+    }
+	
 	 /**
      * User can extract column values to test variables. Map holds column names (keys) and
      * respective target variable names (values).
      *
-     * @param variablesMap the variables to be created out of database values
+     * @param columnName
+     * @param variableName
      */
 	public ExecuteSQLQueryActionDefinition extract(String columnName, String variableName) {
 		action.getExtractVariables().put(columnName, variableName);
@@ -89,7 +131,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 	}
 	
 	/**
-     * Sets the validator.
+     * Sets an explicit validator implementation for this action.
      * @param validator the validator to set
      */
 	public ExecuteSQLQueryActionDefinition validator(SqlResultSetScriptValidator validator) {

@@ -20,6 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,13 +38,15 @@ public class SendMessageBuilderTest {
     
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     
+    private Resource resource = EasyMock.createMock(Resource.class);
+    
     @Test
     public void testSendBuilder() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                send(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
-                    .with(messageSender);
+                send(messageSender)
+                    .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
             }
         };
         
@@ -60,13 +63,34 @@ public class SendMessageBuilderTest {
     }
     
     @Test
-    public void testSendBuilderWithPayloadString() {
+    public void testSendBuilderWithPayloadData() {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                send()
-                    .with(messageSender)
+                send(messageSender)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        
+        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+    }
+    
+    @Test
+    public void testSendBuilderWithPayloadResource() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                send(messageSender)
+                    .payload(resource);
             }
         };
         
@@ -87,8 +111,7 @@ public class SendMessageBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                send()
-                    .with("fooMessageSender")
+                send("fooMessageSender")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };

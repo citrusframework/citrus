@@ -17,17 +17,18 @@
 package com.consol.citrus.dsl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 
@@ -39,38 +40,34 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
  */
 public class SendMessageActionDefinition extends AbstractActionDefinition<SendMessageAction> {
 
-    /** Citrus base application context */
-    private ApplicationContext applicationContext;
-    
     /**
      * Default constructor with test action.
      * @param action
-     * @param ctx
      */
-    public SendMessageActionDefinition(SendMessageAction action, ApplicationContext ctx) {
+    public SendMessageActionDefinition(SendMessageAction action) {
         super(action);
-        this.applicationContext = ctx;
     }
     
     /**
-     * Sets the message sender name to use.
-     * @param messageSender
+     * Sets the message instance to send.
+     * @param message
      * @return
      */
-    public SendMessageActionDefinition with(String messageSender) {
-        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+    protected SendMessageActionDefinition message(Message<String> message) {
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData(message.getPayload());
         
-        action.setMessageSender(applicationContext.getBean(messageSender, MessageSender.class));
-        return this;
-    }
-    
-    /**
-     * Adds message sender reference to this definitions test action.
-     * @param messageSender
-     * @return
-     */
-    public SendMessageActionDefinition with(MessageSender messageSender) {
-        action.setMessageSender(messageSender);
+        Map<String, Object> headers = new HashMap<String, Object>();
+        for (String headerName : message.getHeaders().keySet()) {
+            if (!MessageUtils.isSpringInternalHeader(headerName)) {
+                headers.put(headerName, message.getHeaders().get(headerName));
+            }
+        }
+        
+        messageBuilder.setMessageHeaders(headers);
+        
+        action.setMessageBuilder(messageBuilder);
+        
         return this;
     }
     
@@ -110,6 +107,12 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         return this;
     }
     
+    /**
+     * Sets payload POJO object with marshaller.
+     * @param payload
+     * @param marshaller
+     * @return
+     */
     public SendMessageActionDefinition payload(Object payload, Marshaller marshaller) {
         StringResult result = new StringResult();
         
@@ -150,5 +153,5 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         
         return this;
     }
-
+    
 }

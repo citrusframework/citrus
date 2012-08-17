@@ -56,6 +56,7 @@ public class JavaBuilderTest {
         Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
         
         Assert.assertEquals(action.getClassName(), "com.consol.citrus.dsl.util.JavaTest");
+        Assert.assertNull(action.getInstance());
         Assert.assertEquals(action.getMethodName(), "add");
         Assert.assertEquals(action.getMethodArgs().size(), 1);
     }
@@ -83,6 +84,35 @@ public class JavaBuilderTest {
         Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
         
         Assert.assertEquals(action.getClassName(), EchoAction.class.getSimpleName());
+        Assert.assertNull(action.getInstance());
+        Assert.assertEquals(action.getMethodName(), "execute");
+        Assert.assertEquals(action.getMethodArgs().size(), 1);
+    }
+    
+    @Test
+    public void testJavaBuilderWithObjectInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        final List<Object> methodArgs = new ArrayList<Object>();
+        methodArgs.add(new TestContext());
+        
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            public void configure() {
+                java(new EchoAction())
+                      .methodArgs(methodArgs)
+                      .method("execute");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), JavaAction.class);
+        
+        JavaAction action = ((JavaAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
+        
+        Assert.assertNull(action.getClassName());
+        Assert.assertNotNull(action.getInstance());
         Assert.assertEquals(action.getMethodName(), "execute");
         Assert.assertEquals(action.getMethodArgs().size(), 1);
     }

@@ -21,7 +21,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
 
 /**
- * 
  * @author Christoph Deppisch
  */
 public abstract class AbstractIteratingTestAction extends AbstractActionContainer {

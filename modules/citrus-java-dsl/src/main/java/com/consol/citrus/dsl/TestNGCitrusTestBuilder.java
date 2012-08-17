@@ -22,7 +22,6 @@ import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
 import org.testng.ITestContext;
 
@@ -30,12 +29,11 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.util.MessageUtils;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.ws.actions.AssertSoapFault;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -247,13 +245,25 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
-     * Creates a new load properties action.
-     * @param fileName the file to set
+     * Creates a new Java action definition from Java object instance.
+     * @param instance
      * @return
      */
-    protected LoadPropertiesAction load(String fileName) {
+    protected JavaActionDefinition java(Object instance) {
+        JavaAction action = new JavaAction();
+        action.setInstance(instance);
+        testCase.addTestAction(action);
+        return new JavaActionDefinition(action);
+    }
+    
+    /**
+     * Creates a new load properties action.
+     * @param filePath path to properties file.
+     * @return
+     */
+    protected LoadPropertiesAction load(String filePath) {
         LoadPropertiesAction action = new LoadPropertiesAction();
-        action.setFile(fileName);
+        action.setFile(filePath);
         testCase.addTestAction(action);
         return action;
     }
@@ -284,69 +294,55 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
-     * Basic receive method creates empty receive action definition 
-     * for further configuration.
+     * Creates receive message action definition with message receiver instance.
+     * @param messageReceiver
      * @return
      */
-    protected ReceiveMessageActionDefinition receive() {
+    protected ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
         ReceiveMessageAction action = new ReceiveMessageAction();
+        action.setMessageReceiver(messageReceiver);
+        
         testCase.addTestAction(action);
         return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
     /**
-     * Receive message action definition with control message.
-     * @param controlMessage
+     * Creates receive message action definition with messsage receiver name.
+     * @param messageReceiverName
+     * @return
      */
-    protected ReceiveMessageActionDefinition receive(Message<?> controlMessage) {
+    protected ReceiveMessageActionDefinition receive(String messageReceiverName) {
         ReceiveMessageAction action = new ReceiveMessageAction();
-        
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setControlMessage(controlMessage);
-        
-        action.getValidationContexts().add(validationContext);
+        action.setMessageReceiver(applicationContext.getBean(messageReceiverName, MessageReceiver.class));
         
         testCase.addTestAction(action);
-        
         return new ReceiveMessageActionDefinition(action, applicationContext);
     }
     
     /**
-     * Basic send method just returning a new empty send action 
-     * definition for further configuration.
+     * Create send message action definition with message sender instance.
+     * @param messageSender
      * @return
      */
-    protected SendMessageActionDefinition send() {
+    protected SendMessageActionDefinition send(MessageSender messageSender) {
         SendMessageAction action = new SendMessageAction();
+        action.setMessageSender(messageSender);
+        
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition(action, applicationContext);
+        return new SendMessageActionDefinition(action);
     }
     
     /**
-     * Send action definition with message payload and message headers.
-     * @param message
+     * Create send message action definition with message sender name.
+     * @param messageSenderName
      * @return
      */
-    protected SendMessageActionDefinition send(Message<String> message) {
+    protected SendMessageActionDefinition send(String messageSenderName) {
         SendMessageAction action = new SendMessageAction();
-        
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData(message.getPayload());
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
-        for (String headerName : message.getHeaders().keySet()) {
-            if (!MessageUtils.isSpringInternalHeader(headerName)) {
-                headers.put(headerName, message.getHeaders().get(headerName));
-            }
-        }
-        
-        messageBuilder.setMessageHeaders(headers);
-        
-        action.setMessageBuilder(messageBuilder);
+        action.setMessageSender(applicationContext.getBean(messageSenderName, MessageSender.class));
         
         testCase.addTestAction(action);
-        
-        return new SendMessageActionDefinition(action, applicationContext);
+        return new SendMessageActionDefinition(action);
     }
     
     /**
@@ -513,16 +509,14 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @param exception the exception to set
      * @return
      */
-    protected Assert assertException(TestAction testAction, String message, Class<? extends Throwable> exception) {
+    protected AssertDefinition assertException(TestAction testAction) {
         Assert action = new Assert();
         action.setAction(testAction);
-        action.setMessage(message);
-        action.setException(exception);
             
         testCase.getActions().remove((testCase.getActions().size()) -1);
         testCase.addTestAction(action);
         
-        return action;  
+        return new AssertDefinition(action);
     }
     
     /**
@@ -558,6 +552,22 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      */
     protected Catch catchException(Class<? extends Throwable> exception, TestAction ... actions) {
         return catchException(exception.getName(), actions);
+    }
+    
+    /**
+     * Assert SOAP fault during action execution.
+     * 
+     * @param testAction
+     * @return
+     */
+    protected AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
+       AssertSoapFault action = new AssertSoapFault();
+       action.setAction(testAction);
+       
+       testCase.getActions().remove((testCase.getActions().size()) -1);
+       testCase.addTestAction(action);
+       
+       return new AssertSoapFaultDefinition(action);  
     }
     
     /**

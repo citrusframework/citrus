@@ -52,4 +52,12 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
     public Message<T> buildMessageContent(TestContext context) {
         return message;
     }
+
+    /**
+     * Gets the message.
+     * @return the message the message to get.
+     */
+    public Message<T> getMessage() {
+        return message;
+    }
 }

@@ -55,13 +55,11 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
     public void runTest(ITestContext testContext) {
         String isbn = "978-citrus:randomNumber(10)";
         
-        send()
-            .with(bookRequestMessageSender)
+        send(bookRequestMessageSender)
             .payload(createAddBookRequestMessage(isbn), marshaller)
             .header("citrus_soap_action", "addBook");
         
-        receive()
-            .with(bookResponseMessageHandler)
+        receive(bookResponseMessageHandler)
             .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
                 @Override
                 public void validate(AddBookResponseMessage response, MessageHeaders headers) {

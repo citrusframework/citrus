@@ -25,7 +25,6 @@ import org.springframework.util.Assert;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
@@ -64,23 +63,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         this.applicationContext = ctx;
     }
     
-    public ReceiveMessageActionDefinition with(String messageReceiverName) {
-        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        
-        action.setMessageReceiver(applicationContext.getBean(messageReceiverName, MessageReceiver.class));
-        return this;
-    }
-    
-    /**
-     * Adds message receiver reference to this definitions test action.
-     * @param messageReceiver
-     * @return
-     */
-    public ReceiveMessageActionDefinition with(MessageReceiver messageReceiver) {
-        action.setMessageReceiver(messageReceiver);
-        return this;
-    }
-    
     /**
      * Adds a custom timeout to this message receiving action. 
      * @param receiveTimeout
@@ -96,7 +78,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param controlMessage
      * @return
      */
-    public ReceiveMessageActionDefinition validate(Message<?> controlMessage) {
+    public ReceiveMessageActionDefinition message(Message<?> controlMessage) {
         if (messageType.equals(MessageType.XML)) {
             validationContext = new XmlMessageValidationContext();
             validationContext.setControlMessage(controlMessage);
@@ -113,21 +95,21 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     }
     
     /**
-     * Expect message payload.
+     * Expect this message payload data in received message.
      * @param payload
      * @return
      */
-    public ReceiveMessageActionDefinition validatePayload(String payload) {
-        return validate(MessageBuilder.withPayload(payload).build());
+    public ReceiveMessageActionDefinition payload(String payload) {
+        return message(MessageBuilder.withPayload(payload).build());
     }
     
     /**
-     * Expect message header entry.
+     * Expect this message header entry in received message.
      * @param name
      * @param value
      * @return
      */
-    public ReceiveMessageActionDefinition validateHeader(String name, Object value) {
+    public ReceiveMessageActionDefinition header(String name, Object value) {
         if (validationContext != null) {
             if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
                 ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessageHeaders().put(name, value);
@@ -149,9 +131,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageType
      * @return
      */
-    public ReceiveMessageActionDefinition type(MessageType messageType) {
+    public ReceiveMessageActionDefinition messageType(MessageType messageType) {
         this.messageType = messageType;
-        action.setMessageType(messageType.toString().toLowerCase());
+        action.setMessageType(messageType.toString());
         return this;
     }
     
@@ -160,7 +142,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageSelector
      * @return
      */
-    public ReceiveMessageActionDefinition select(String messageSelector) {
+    public ReceiveMessageActionDefinition selector(String messageSelector) {
         action.setMessageSelectorString(messageSelector);
         
         return this;
@@ -171,7 +153,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageSelector
      * @return
      */
-    public ReceiveMessageActionDefinition select(Map<String, String> messageSelector) {
+    public ReceiveMessageActionDefinition selector(Map<String, String> messageSelector) {
         action.setMessageSelector(messageSelector);
         
         return this;
@@ -183,6 +165,21 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition validator(MessageValidator<? extends ValidationContext> validator) {
+        action.setValidator(validator);
+        return this;
+    }
+    
+    /**
+     * Sets explicit message validator by name.
+     * @param validatorName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ReceiveMessageActionDefinition validator(String validatorName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        
+        MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
+        
         action.setValidator(validator);
         return this;
     }

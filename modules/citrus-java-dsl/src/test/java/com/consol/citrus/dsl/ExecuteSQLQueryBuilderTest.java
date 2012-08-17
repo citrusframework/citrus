@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 
 public class ExecuteSQLQueryBuilderTest {   
@@ -58,6 +59,7 @@ public class ExecuteSQLQueryBuilderTest {
         Assert.assertEquals(action.getControlResultSet().entrySet().iterator().next().toString(), "COLUMN=[value]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "COLUMN=variable");
+        Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertEquals(action.getSqlResource(), resource);
         Assert.assertEquals(action.getValidator(), validator);
@@ -69,9 +71,9 @@ public class ExecuteSQLQueryBuilderTest {
         @Override
         protected void configure() {
             query(dataSource)
-                .statement("stmnt1")
-                .statement("stmnt2")
-                .statement("stmnt3")
+                .statement("stmt1")
+                .statement("stmt2")
+                .statement("stmt3")
                 .validate("COLUMN", "value1", "value2")
                 .extract("COLUMN", "variable")
                 .validator(validator);
@@ -91,8 +93,125 @@ public class ExecuteSQLQueryBuilderTest {
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "COLUMN=variable");
         Assert.assertEquals(action.getStatements().size(), 3);
-        Assert.assertEquals(action.getStatements().toString(), "[stmnt1, stmnt2, stmnt3]");
+        Assert.assertEquals(action.getStatements().toString(), "[stmt1, stmt2, stmt3]");
+        Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertEquals(action.getValidator(), validator);
+    }
+    
+    @Test
+    public void testValidationScript() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        @Override
+        protected void configure() {
+            query(dataSource)
+                .statement("stmt")
+                .validateScript("assert row[0].COLUMN == 'value1'", ScriptTypes.GROOVY);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        
+        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getControlResultSet().size(), 0);
+        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assert.assertNotNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().toString(), "[stmt]");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+    
+    @Test
+    public void testValidationScriptResource() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        @Override
+        protected void configure() {
+            query(dataSource)
+                .statement("stmt")
+                .validateScript(resource, ScriptTypes.GROOVY);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        
+        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getControlResultSet().size(), 0);
+        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assert.assertNotNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
+        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().toString(), "[stmt]");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+    
+    @Test
+    public void testGroovyValidationScript() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        @Override
+        protected void configure() {
+            query(dataSource)
+                .statement("stmt")
+                .groovy("assert row[0].COLUMN == 'value1'");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        
+        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getControlResultSet().size(), 0);
+        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assert.assertNotNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().toString(), "[stmt]");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+    
+    @Test
+    public void testGroovyValidationScriptResource() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        @Override
+        protected void configure() {
+            query(dataSource)
+                .statement("stmt")
+                .groovy(resource);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        
+        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getControlResultSet().size(), 0);
+        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assert.assertNotNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
+        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().toString(), "[stmt]");
+        Assert.assertEquals(action.getDataSource(), dataSource);
     }
 }

@@ -30,7 +30,9 @@ public class AssertBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertException(echo("${foo}"), "Unknown variable 'foo'", CitrusRuntimeException.class);
+                assertException(echo("${foo}"))
+                    .exception(CitrusRuntimeException.class)
+                    .message("Unknown variable 'foo'");
             }
         };
         

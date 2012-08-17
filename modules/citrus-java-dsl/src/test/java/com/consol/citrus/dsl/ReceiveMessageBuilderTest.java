@@ -18,6 +18,9 @@ package com.consol.citrus.dsl;
 
 import static org.easymock.EasyMock.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.support.MessageBuilder;
@@ -26,7 +29,15 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.ControlMessageValidationContext;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -42,8 +53,8 @@ public class ReceiveMessageBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                receive(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
-                    .with(messageReceiver);
+                receive(messageReceiver)
+                    .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
             }
         };
         
@@ -55,9 +66,16 @@ public class ReceiveMessageBuilderTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
     }
     
     @Test
@@ -65,9 +83,8 @@ public class ReceiveMessageBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                receive()
-                    .with(messageReceiver)
-                    .validatePayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
         
@@ -79,9 +96,15 @@ public class ReceiveMessageBuilderTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
     }
     
     @Test
@@ -89,9 +112,8 @@ public class ReceiveMessageBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                receive()
-                    .with("fooMessageReceiver")
-                    .validatePayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+                receive("fooMessageReceiver")
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
         
@@ -111,7 +133,321 @@ public class ReceiveMessageBuilderTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         verify(applicationContext);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithTimeout() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .timeout(1000L);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getReceiveTimeout(), 1000L);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithHeaders() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .header("operation", "sayHello")
+                    .header("foo", "bar");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("foo"));
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidator() {
+        final PlainTextMessageValidator validator = new PlainTextMessageValidator();
+        
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.PLAINTEXT)
+                    .payload("TestMessage")
+                    .header("operation", "sayHello")
+                    .validator(validator);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(action.getValidator(), validator);
+        
+        ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidatorName() {
+        final PlainTextMessageValidator validator = new PlainTextMessageValidator();
+        
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.PLAINTEXT)
+                    .payload("TestMessage")
+                    .header("operation", "sayHello")
+                    .validator("plainTextValidator");
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext);
+        
+        expect(applicationContext.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
+        
+        replay(applicationContext);
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(action.getValidator(), validator);
+        
+        ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        
+        verify(applicationContext);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithSelector() {
+        final Map<String, String> messageSelector = new HashMap<String, String>();
+        messageSelector.put("operation", "sayHello");
+        
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .selector(messageSelector);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        
+        Assert.assertEquals(action.getMessageSelector(), messageSelector);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithSelectorExpression() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .selector("operation = 'sayHello'");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        
+        Assert.assertTrue(action.getMessageSelector().isEmpty());
+        Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
+    }
+    
+    @Test
+    public void testReceiveBuilderExtractFromPayload() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .extractFromPayload("/TestRequest/Message", "text")
+                    .extractFromPayload("/TestRequest/Message/@lang", "language");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+    }
+    
+    @Test
+    public void testReceiveBuilderExtractFromHeader() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .extractFromHeader("operation", "ops")
+                    .extractFromHeader("requestId", "id");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+    }
+    
+    @Test
+    public void testReceiveBuilderExtractCombined() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .extractFromHeader("operation", "ops")
+                    .extractFromHeader("requestId", "id")
+                    .extractFromPayload("/TestRequest/Message", "text")
+                    .extractFromPayload("/TestRequest/Message/@lang", "language");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+        
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidationCallback() {
+        final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
+        
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.PLAINTEXT)
+                    .payload("TestMessage")
+                    .header("operation", "sayHello")
+                    .validationCallback(callback);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(action.getValidationCallback(), callback);
+        
+        ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
     }
 }
