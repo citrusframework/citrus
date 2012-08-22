@@ -33,7 +33,9 @@ import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.*;
+import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -294,6 +296,19 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
+     * Creates special SOAP receive message action definition with message receiver instance.
+     * @param messageReceiver
+     * @return
+     */
+    protected ReceiveSoapMessageActionDefinition receive(WebServiceReplyMessageReceiver messageReceiver) {
+        ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
+        action.setMessageReceiver(messageReceiver);
+        
+        testCase.addTestAction(action);
+        return new ReceiveSoapMessageActionDefinition(action, applicationContext);
+    }
+    
+    /**
      * Creates receive message action definition with message receiver instance.
      * @param messageReceiver
      * @return
@@ -303,7 +318,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         action.setMessageReceiver(messageReceiver);
         
         testCase.addTestAction(action);
-        return new ReceiveMessageActionDefinition(action, applicationContext);
+        return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
     
     /**
@@ -312,11 +327,34 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @return
      */
     protected ReceiveMessageActionDefinition receive(String messageReceiverName) {
-        ReceiveMessageAction action = new ReceiveMessageAction();
-        action.setMessageReceiver(applicationContext.getBean(messageReceiverName, MessageReceiver.class));
+        MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
+        
+        if (messageReceiver instanceof WebServiceReplyMessageReceiver) {
+            ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
+            action.setMessageReceiver(messageReceiver);
+            testCase.addTestAction(action);
+            
+            return new ReceiveSoapMessageActionDefinition(action, applicationContext);
+        } else {
+            ReceiveMessageAction action = new ReceiveMessageAction();
+            action.setMessageReceiver(messageReceiver);
+            testCase.addTestAction(action);
+            
+            return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+        }
+    }
+    
+    /**
+     * Create special SOAP send message action definition with message sender instance.
+     * @param messageSender
+     * @return
+     */
+    protected SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
+        SendSoapMessageAction action = new SendSoapMessageAction();
+        action.setMessageSender(messageSender);
         
         testCase.addTestAction(action);
-        return new ReceiveMessageActionDefinition(action, applicationContext);
+        return new SendSoapMessageActionDefinition(action);
     }
     
     /**
@@ -329,20 +367,31 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         action.setMessageSender(messageSender);
         
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition(action);
+        return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
     }
     
     /**
-     * Create send message action definition with message sender name.
+     * Create send message action definition with message sender name. According to message sender type
+     * we can create a SOAP specific message sending action.
      * @param messageSenderName
      * @return
      */
     protected SendMessageActionDefinition send(String messageSenderName) {
-        SendMessageAction action = new SendMessageAction();
-        action.setMessageSender(applicationContext.getBean(messageSenderName, MessageSender.class));
+        MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
         
-        testCase.addTestAction(action);
-        return new SendMessageActionDefinition(action);
+        if (messageSender instanceof WebServiceMessageSender) {
+            SendSoapMessageAction action = new SendSoapMessageAction();
+            action.setMessageSender(messageSender);
+            
+            testCase.addTestAction(action);
+            return new SendSoapMessageActionDefinition(action);
+        } else {
+            SendMessageAction action = new SendMessageAction();
+            action.setMessageSender(messageSender);
+            
+            testCase.addTestAction(action);
+            return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
+        }
     }
     
     /**

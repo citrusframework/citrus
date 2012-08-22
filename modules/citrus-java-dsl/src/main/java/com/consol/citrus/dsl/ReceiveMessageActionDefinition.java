@@ -19,22 +19,24 @@ package com.consol.citrus.dsl;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 
 /**
  * Receive message action definition offers configuration methods for a receive test action. Build options 
@@ -57,13 +59,19 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     /** Basic application context */
     private ApplicationContext applicationContext;
     
+    /** Handle for test action position in test case sequence use when switching to SOAP specific definition */
+    private PositionHandle positionHandle;
+    
     /**
-     * Default constructor using test action.
+     * Default constructor using test action, basic application context and position handle.
      * @param action
+     * @param ctx
+     * @param positionHandle
      */
-    public ReceiveMessageActionDefinition(ReceiveMessageAction action, ApplicationContext ctx) {
+    public ReceiveMessageActionDefinition(ReceiveMessageAction action, ApplicationContext ctx, PositionHandle positionHandle) {
         super(action);
         this.applicationContext = ctx;
+        this.positionHandle = positionHandle;
     }
     
     /**
@@ -82,17 +90,14 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition message(Message<?> controlMessage) {
-        if (messageType.equals(MessageType.XML)) {
-            validationContext = new XmlMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-            
-            action.getValidationContexts().add(validationContext);
-        } else {
-            validationContext = new ControlMessageValidationContext();
-            validationContext.setControlMessage(controlMessage);
-            
-            action.getValidationContexts().add(validationContext);
+        if (validationContext != null) {
+            throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
+        
+        initializeValidationContext();
+        
+        action.getValidationContexts().add(validationContext);
+        validationContext.setControlMessage(controlMessage);
         
         return this;
     }
@@ -103,7 +108,64 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition payload(String payload) {
-        return message(MessageBuilder.withPayload(payload).build());
+        if (validationContext != null) {
+            if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
+                ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(payload);
+            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                validationContext.setControlMessage(MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders()).build());
+            }
+        } else {
+            initializeValidationContext();
+            
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setPayloadData(payload);
+            validationContext.setMessageBuilder(messageBuilder);
+            action.getValidationContexts().add(validationContext);
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Creates new validation context according to message type.
+     */
+    private void initializeValidationContext() {
+        if (messageType.equals(MessageType.XML)) {
+            validationContext = new XmlMessageValidationContext();
+        } else {
+            validationContext = new ControlMessageValidationContext();
+        }
+    }
+
+    /**
+     * Expect this message payload data in received message.
+     * @param payloadResource
+     * @return
+     */
+    public ReceiveMessageActionDefinition payload(Resource payloadResource) {
+        if (validationContext != null) {
+            if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
+                ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadResource(payloadResource);
+            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.setPayloadResource(payloadResource);
+
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                messageBuilder.setMessageHeaders(message.getHeaders());
+                
+                validationContext.setMessageBuilder(messageBuilder);
+            }
+        } else {
+            initializeValidationContext();
+            
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setPayloadResource(payloadResource);
+            validationContext.setMessageBuilder(messageBuilder);
+            action.getValidationContexts().add(validationContext);
+        }
+        
+        return this;
     }
     
     /**
@@ -121,8 +183,11 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                 validationContext.setControlMessage(MessageBuilder.fromMessage(message).setHeader(name, value).build());
             }
         } else {
-            validationContext = new ControlMessageValidationContext();
-            validationContext.setControlMessage(MessageBuilder.withPayload("").setHeader(name, value).build());
+            initializeValidationContext();
+            
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.getMessageHeaders().put(name, value);
+            validationContext.setMessageBuilder(messageBuilder);
             action.getValidationContexts().add(validationContext);
         }
         
@@ -231,6 +296,30 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         action.setValidationCallback(callback);
         
         return this;
+    }
+    
+    /**
+     * Enable SOAP specific properties on this receiving message action.
+     * @return
+     */
+    public ReceiveSoapMessageActionDefinition soap() {
+        ReceiveSoapMessageAction receiveSoapMessageAction = new ReceiveSoapMessageAction();
+        
+        receiveSoapMessageAction.setActor(action.getActor());
+        receiveSoapMessageAction.setDescription(action.getDescription());
+        receiveSoapMessageAction.setMessageReceiver(action.getMessageReceiver());
+        receiveSoapMessageAction.setMessageSelector(action.getMessageSelector());
+        receiveSoapMessageAction.setMessageSelectorString(action.getMessageSelectorString());
+        receiveSoapMessageAction.setMessageType(action.getMessageType());
+        receiveSoapMessageAction.setReceiveTimeout(action.getReceiveTimeout());
+        receiveSoapMessageAction.setValidationCallback(action.getValidationCallback());
+        receiveSoapMessageAction.setValidationContexts(action.getValidationContexts());
+        receiveSoapMessageAction.setValidator(action.getValidator());
+        receiveSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
+        
+        positionHandle.switchTestAction(receiveSoapMessageAction);
+        
+        return new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction, applicationContext);
     }
 
 }

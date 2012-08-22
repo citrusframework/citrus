@@ -33,6 +33,7 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.ws.actions.SendSoapMessageAction;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -46,12 +47,17 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
     private MessageHeaderVariableExtractor headerExtractor;
     private XpathPayloadVariableExtractor xpathExtractor;
     
+    private PositionHandle positionHandle;
+    
     /**
      * Default constructor with test action.
      * @param action
+     * @param positionHandle
      */
-    public SendMessageActionDefinition(SendMessageAction action) {
+    public SendMessageActionDefinition(SendMessageAction action, PositionHandle positionHandle) {
         super(action);
+        
+        this.positionHandle = positionHandle;
     }
     
     /**
@@ -192,6 +198,24 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         
         xpathExtractor.getxPathExpressions().put(xpath, variable);
         return this;
+    }
+    
+    /**
+     * Enable SOAP specific properties on this message sending action.
+     * @return
+     */
+    public SendSoapMessageActionDefinition soap() {
+        SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
+        
+        sendSoapMessageAction.setActor(action.getActor());
+        sendSoapMessageAction.setDescription(action.getDescription());
+        sendSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
+        sendSoapMessageAction.setMessageSender(action.getMessageSender());
+        sendSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
+        
+        positionHandle.switchTestAction(sendSoapMessageAction);
+        
+        return new SendSoapMessageActionDefinition(sendSoapMessageAction);
     }
     
 }

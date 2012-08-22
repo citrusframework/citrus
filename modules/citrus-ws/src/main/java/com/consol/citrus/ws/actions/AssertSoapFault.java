@@ -42,6 +42,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
@@ -70,7 +71,7 @@ public class AssertSoapFault extends AbstractActionContainer {
     private String faultDetail;
     
     /** Soap fault validator implementaiton */
-    private SoapFaultValidator validator;
+    private SoapFaultValidator validator = new SimpleSoapFaultValidator();
     
     /** Message factory creating new soap messages */
     private SoapMessageFactory messageFactory;

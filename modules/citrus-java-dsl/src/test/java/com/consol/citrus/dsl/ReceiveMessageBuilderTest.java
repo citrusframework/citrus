@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,6 +33,7 @@ import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
@@ -45,6 +47,8 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 public class ReceiveMessageBuilderTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
+    
+    private Resource resource = EasyMock.createMock(Resource.class);
     
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     
@@ -103,8 +107,37 @@ public class ReceiveMessageBuilderTest {
         
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+    }
+    
+    @Test
+    public void testReceiveBuilderWithPayloadResource() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            protected void configure() {
+                receive(messageReceiver)
+                    .payload(resource);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadResource(), resource);
     }
     
     @Test
@@ -170,13 +203,19 @@ public class ReceiveMessageBuilderTest {
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("operation", "sayHello")
                     .header("foo", "bar");
+                
+                receive(messageReceiver)
+                    .header("operation", "sayHello")
+                    .header("foo", "bar")
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
         
         builder.configure();
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
@@ -186,10 +225,23 @@ public class ReceiveMessageBuilderTest {
         
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("foo"));
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
+        
+        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
     }
     
     @Test
@@ -221,9 +273,9 @@ public class ReceiveMessageBuilderTest {
         
         ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "TestMessage");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
     }
     
     @Test
@@ -263,9 +315,9 @@ public class ReceiveMessageBuilderTest {
         
         ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "TestMessage");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         
         verify(applicationContext);
     }
@@ -446,8 +498,8 @@ public class ReceiveMessageBuilderTest {
         
         ControlMessageValidationContext validationContext = (ControlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "TestMessage");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "TestMessage");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
     }
 }

@@ -26,6 +26,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 
 /**
@@ -47,7 +48,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private SoapAttachment controlAttachment = new SoapAttachment();
     
     /** SOAP attachment validator */
-    private SoapAttachmentValidator attachmentValidator;
+    private SoapAttachmentValidator attachmentValidator = new SimpleSoapAttachmentValidator();
     
     /**
      * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.Message, com.consol.citrus.context.TestContext)
@@ -135,14 +136,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      */
     public SoapAttachment getControlAttachment() {
         return controlAttachment;
-    }
-
-    /**
-     * Sets the controlAttachment.
-     * @param controlAttachment the controlAttachment to set
-     */
-    public void setControlAttachment(SoapAttachment controlAttachment) {
-        this.controlAttachment = controlAttachment;
     }
 
     /**
