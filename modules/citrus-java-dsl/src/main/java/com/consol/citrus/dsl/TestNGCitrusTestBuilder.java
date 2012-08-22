@@ -28,6 +28,7 @@ import org.testng.ITestContext;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.script.GroovyAction;
@@ -73,7 +74,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Configures the test case with test actions. Subclasses may override this method in order
      * to contribute test actions to this test case.
      */
-    protected void configure() {
+    public void configure() {
     }
     
     /**

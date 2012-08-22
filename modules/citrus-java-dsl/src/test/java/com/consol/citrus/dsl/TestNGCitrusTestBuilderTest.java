@@ -44,7 +44,7 @@ public class TestNGCitrusTestBuilderTest {
     
     private static class FooTest extends TestNGCitrusTestBuilder {
         @Override
-        protected void configure() {
+        public void configure() {
             description("This is a Test");
             author("Christoph");
             status(Status.FINAL);
