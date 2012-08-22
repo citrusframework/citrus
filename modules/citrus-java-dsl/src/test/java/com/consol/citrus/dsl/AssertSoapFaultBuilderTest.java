@@ -38,7 +38,7 @@ public class AssertSoapFaultBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertSoapFault(echo("${foo}"))
+                soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error");
             }
@@ -64,7 +64,7 @@ public class AssertSoapFaultBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertSoapFault(echo("${foo}"))
+                soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error")
                     .faultDetail("<detail>FooBar</detail>");
@@ -92,7 +92,7 @@ public class AssertSoapFaultBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertSoapFault(echo("${foo}"))
+                soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error")
                     .faultDetailResource(resource);
@@ -121,7 +121,7 @@ public class AssertSoapFaultBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertSoapFault(echo("${foo}"))
+                soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error")
                     .validator(soapFaultValidator);
@@ -149,7 +149,7 @@ public class AssertSoapFaultBuilderTest {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             protected void configure() {
-                assertSoapFault(echo("${foo}"))
+                soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error")
                     .messageFactory(messageFactory);

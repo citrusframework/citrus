@@ -609,7 +609,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @param testAction
      * @return
      */
-    protected AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
+    protected AssertSoapFaultDefinition soapFault(TestAction testAction) {
        AssertSoapFault action = new AssertSoapFault();
        action.setAction(testAction);
        
