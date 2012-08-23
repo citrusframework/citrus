@@ -119,6 +119,10 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
         variables.put(name, value);
     }
     
+    /**
+     * Get the test variables.
+     * @return
+     */
     protected Map<String, Object> getVariables() {
         return variables;
     }
