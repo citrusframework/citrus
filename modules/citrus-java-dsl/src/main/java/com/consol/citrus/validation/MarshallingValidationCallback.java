@@ -23,9 +23,11 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
@@ -41,7 +43,17 @@ import com.consol.citrus.validation.callback.ValidationCallback;
 public abstract class MarshallingValidationCallback<T> implements ValidationCallback {
 
     /** Unmarshaller */
-    private final Unmarshaller unmarshaller;
+    private Unmarshaller unmarshaller;
+    
+    /** Spring application context injected before validation callback is called */
+    private ApplicationContext applicationContext;
+    
+    /**
+     * Default constructor.
+     */
+    public MarshallingValidationCallback() {
+        super();
+    }
     
     /**
      * Default constructor with unmarshaller.
@@ -50,6 +62,9 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
         this.unmarshaller = unmarshaller;
     }
     
+    /**
+     * Validate message automatically unmarshalling message payload.
+     */
     public final void validate(Message<?> message) {
         validate(unmarshalMessage(message), message.getHeaders());
     }
@@ -63,6 +78,13 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
     
     @SuppressWarnings("unchecked")
     private T unmarshalMessage(Message<?> message) {
+        if (unmarshaller == null) {
+            Assert.notNull(applicationContext, "Marshalling validation callback requires marshaller instance " +
+            		"or Spring application context with nested bean definition of type marshaller");
+            
+            unmarshaller = applicationContext.getBean(Unmarshaller.class);
+        }
+        
         try {
             return (T) unmarshaller.unmarshal(getPayloadSource(message.getPayload()));
         } catch (IOException e) {
@@ -93,5 +115,13 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
         }
         
         return source;
+    }
+    
+    /**
+     * Sets the applicationContext.
+     * @param applicationContext the applicationContext to set
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 }

@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.oxm.castor.CastorMarshaller;
-import org.testng.Assert;
+import org.springframework.util.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
@@ -60,10 +60,10 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
             .header("citrus_soap_action", "addBook");
         
         receive(bookResponseMessageHandler)
-            .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(marshaller) {
+            .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>() {
                 @Override
                 public void validate(AddBookResponseMessage response, MessageHeaders headers) {
-                    Assert.assertTrue(response.isSuccess());
+                    Assert.isTrue(response.isSuccess());
                 }
             });
         

@@ -294,6 +294,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition validationCallback(ValidationCallback callback) {
+        callback.setApplicationContext(applicationContext);
         action.setValidationCallback(callback);
         
         return this;
