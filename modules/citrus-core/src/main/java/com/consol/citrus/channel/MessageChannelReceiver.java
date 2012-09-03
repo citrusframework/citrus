@@ -104,8 +104,9 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
                 long timeoutInterval = timeout / maxRetries;
                 int retryIndex = 1;
                 
-                while ((message = queueChannel.receiveSelected(messageSelector)) == null
-                        && retryIndex < maxRetries) {
+                message = queueChannel.receiveSelected(messageSelector);
+                
+                while (message == null && retryIndex < maxRetries) {
                     if (log.isDebugEnabled()) {
                         log.debug("No message received for selector (" + selector + ") - retrying in " + timeoutInterval + " ms");
                     }
@@ -116,6 +117,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
                         log.warn("Thread interrupted while waiting for retry", e);
                     }
                     
+                    message = queueChannel.receiveSelected(messageSelector);
                     retryIndex++;
                 }
             }

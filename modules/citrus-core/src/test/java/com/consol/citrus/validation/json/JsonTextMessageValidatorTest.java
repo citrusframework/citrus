@@ -178,8 +178,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
         } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected 3"));
-            Assert.assertTrue(e.getMessage().contains("but was 2"));
+            Assert.assertTrue(e.getMessage().contains("expected '3'"));
+            Assert.assertTrue(e.getMessage().contains("but was '2'"));
             
             return;
         }

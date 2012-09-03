@@ -166,7 +166,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      */
     protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
         if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Received synchronous JMS reply message:\n" + responseMessage != null ? responseMessage.toString() : "");
+            messageTracingTestListener.traceMessage("Received synchronous JMS reply message:\n" + (responseMessage != null ? responseMessage.toString() : ""));
         }
         
         if (replyMessageHandler != null) {

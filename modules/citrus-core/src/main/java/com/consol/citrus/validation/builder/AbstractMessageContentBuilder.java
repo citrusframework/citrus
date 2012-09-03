@@ -16,11 +16,9 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
@@ -91,15 +89,9 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             checkHeaderTypes(headers);
             
             return headers;
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to build message content", e);
-        } catch (InvocationTargetException e) {
-            throw new CitrusRuntimeException("Failed to build message content", e);
-        } catch (NoSuchMethodException e) {
-            throw new CitrusRuntimeException("Failed to build message content", e);
-        } catch (IllegalAccessException e) {
-            throw new CitrusRuntimeException("Failed to build message content", e);
-        } catch (InstantiationException e) {
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
     }

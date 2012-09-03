@@ -17,6 +17,7 @@
 package com.consol.citrus.channel.selector;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessageSelector;
@@ -66,12 +67,12 @@ public class DispatchingMessageSelector implements MessageSelector {
         
         //search for xpath selector name
         Set<String> foundXPathSelectors = new HashSet<String>();
-        for (String selectorName : matchingHeadersCopy.keySet()) {
-            if (selectorName.startsWith(XPathEvaluatingMessageSelector.XPATH_SELECTOR_ELEMENT)) {
-                foundXPathSelectors.add(selectorName);
+        for (Entry<String, String> headerEntry : matchingHeadersCopy.entrySet()) {
+            if (headerEntry.getKey().startsWith(XPathEvaluatingMessageSelector.XPATH_SELECTOR_ELEMENT)) {
+                foundXPathSelectors.add(headerEntry.getKey());
                 
                 // delegate to xpath evaluating message selector
-                if (!(new XPathEvaluatingMessageSelector(selectorName, matchingHeadersCopy.get(selectorName))).accept(message)) {
+                if (!(new XPathEvaluatingMessageSelector(headerEntry.getKey(), headerEntry.getValue())).accept(message)) {
                     success = false;
                 }
             }

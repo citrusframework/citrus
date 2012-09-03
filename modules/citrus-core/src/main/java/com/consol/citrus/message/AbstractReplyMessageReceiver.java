@@ -81,7 +81,10 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
         
         long timeoutInterval = timeout / maxRetries;
         int retryIndex = 1;
-        while ((message = receiveSelected(selector)) == null && retryIndex < maxRetries) {
+        
+        message = receiveSelected(selector);
+        
+        while (message == null && retryIndex < maxRetries) {
             if (log.isDebugEnabled()) {
                 log.debug("Reply message did not arrive yet - waiting " + timeoutInterval + " ms before next try");
             }
@@ -92,6 +95,7 @@ public abstract class AbstractReplyMessageReceiver implements MessageReceiver, R
                 log.warn("Thread interrupted while waiting for synchronous reply", e);
             }
             
+            message = receiveSelected(selector);
             retryIndex++;
         }
         

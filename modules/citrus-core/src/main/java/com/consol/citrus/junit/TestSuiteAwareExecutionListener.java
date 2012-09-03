@@ -47,7 +47,7 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
             if (done) { 
                 return; 
             } else {
-                done = true;
+                TestSuiteAwareExecutionListener.preparationDone();
             }
             
             ApplicationContext ctx = testContext.getApplicationContext();
@@ -78,6 +78,13 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
             
             Runtime.getRuntime().addShutdownHook(new Thread(new AfterSuiteShutdownHook(afterSuite, context, testSuiteListener)));
         }
+    }
+    
+    /**
+     * Static method setting done flag on execution listener.
+     */
+    private static void preparationDone() {
+        done = true;
     }
 
     /**

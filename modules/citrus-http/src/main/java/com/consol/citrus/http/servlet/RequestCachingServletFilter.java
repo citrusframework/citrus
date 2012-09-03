@@ -44,9 +44,9 @@ public class RequestCachingServletFilter extends OncePerRequestFilter {
     }
     
     /**
-     * Caching
+     * Caching wrapper saves request body data to cache when read.
      */
-    private final static class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    private static final class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
         /** Cached request data initialized when first read from input stream */
         private byte[] body;
         
@@ -67,14 +67,14 @@ public class RequestCachingServletFilter extends OncePerRequestFilter {
                     body = new byte[] {};
                 }
             }
-            return new RequestCachingInputStream();
+            return new RequestCachingInputStream(body);
         }
         
         /** Input stream uses cached request data */
-        private class RequestCachingInputStream extends ServletInputStream {
+        private final static class RequestCachingInputStream extends ServletInputStream {
             private final ByteArrayInputStream is;
 
-            private RequestCachingInputStream() {
+            private RequestCachingInputStream(byte[] body) {
                 this.is = new ByteArrayInputStream(body);
             }
 

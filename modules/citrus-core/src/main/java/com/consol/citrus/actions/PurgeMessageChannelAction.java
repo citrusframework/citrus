@@ -113,11 +113,16 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      */
     public void afterPropertiesSet() throws Exception {
         if (messageSelector == null) {
-            messageSelector = new MessageSelector() {
-                public boolean accept(Message<?> message) {
-                    return false; //when purging we have to use "false" in order to include all queues
-                }
-            };
+            messageSelector = new AllAcceptingMessageSelector();
+        }
+    }
+    
+    /**
+     * Special message selector accepts all messages on queue channel.
+     */
+    private static final class AllAcceptingMessageSelector implements MessageSelector {
+        public boolean accept(Message<?> message) {
+            return false; // use "false" in order to include/accept all messages on queue channel
         }
     }
 

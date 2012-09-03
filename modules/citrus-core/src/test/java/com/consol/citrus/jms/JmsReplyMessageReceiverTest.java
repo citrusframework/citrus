@@ -31,6 +31,8 @@ import com.consol.citrus.message.DefaultReplyMessageCorrelator;
  */
 public class JmsReplyMessageReceiverTest {
 
+    private int retryCount = 0;
+    
     @Test
     public void testOnReplyMessage() {
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver();
@@ -57,5 +59,48 @@ public class JmsReplyMessageReceiverTest {
         replyMessageReceiver.onReplyMessage(message, new DefaultReplyMessageCorrelator().getCorrelationKey(message));
         
         Assert.assertEquals(replyMessageReceiver.receiveSelected(new DefaultReplyMessageCorrelator().getCorrelationKey(message)), message);
+    }
+    
+    @Test
+    public void testReplyMessageRetries() {
+        retryCount = 0;
+        
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .build();
+        
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver() {
+            @Override
+            public Message<?> receiveSelected(String selector) {
+                retryCount++;
+                if (retryCount == 5) {
+                    return message;
+                } else {
+                    return null;
+                }
+            }
+        };
+        
+        Assert.assertEquals(retryCount, 0);
+        Assert.assertEquals(replyMessageReceiver.receive(3000), message);
+        Assert.assertEquals(retryCount, 5);
+    }
+    
+    @Test
+    public void testReplyMessageRetriesExceeded() {
+        retryCount = 0;
+        
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver() {
+            @Override
+            public Message<?> receiveSelected(String selector) {
+                retryCount++;
+                return null;
+            }
+        };
+        
+        replyMessageReceiver.setMaxRetries(3);
+        
+        Assert.assertEquals(retryCount, 0);
+        Assert.assertNull(replyMessageReceiver.receive(1000));
+        Assert.assertEquals(retryCount, 3);
     }
 }
