@@ -157,7 +157,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         builder.append(response);
         
         if (handler instanceof HttpMessageController) {
-            ResponseEntity<String> responseEntity = ((HttpMessageController)handler).getLatestResponse();
+            ResponseEntity<String> responseEntity = ((HttpMessageController)handler).getResponseCache();
             if (responseEntity != null) {
                 builder.append(NEWLINE);
                 builder.append(responseEntity.getBody());

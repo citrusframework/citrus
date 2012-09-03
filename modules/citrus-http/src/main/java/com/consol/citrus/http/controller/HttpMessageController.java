@@ -62,7 +62,7 @@ public class HttpMessageController {
     private String contentType = "text/plain";
     
     /** Hold the latest response message for message tracing reasons */
-    private ResponseEntity<String> latestResponse;
+    private ResponseEntity<String> responseCache;
     
     @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
@@ -194,9 +194,9 @@ public class HttpMessageController {
             status = HttpStatus.valueOf(Integer.valueOf(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE).toString()));
         }
         
-        latestResponse = new ResponseEntity<String>(responseMessage.getPayload().toString(), httpHeaders, status);
+        responseCache = new ResponseEntity<String>(responseMessage.getPayload().toString(), httpHeaders, status);
         
-        return latestResponse;
+        return responseCache;
     }
 
     /**
@@ -232,10 +232,10 @@ public class HttpMessageController {
     }
 
     /**
-     * Gets the latestResponse.
-     * @return the latestResponse the latestResponse to get.
+     * Gets the responseCache.
+     * @return the responseCache the responseCache to get.
      */
-    public ResponseEntity<String> getLatestResponse() {
-        return latestResponse;
+    public ResponseEntity<String> getResponseCache() {
+        return responseCache;
     }
 }
