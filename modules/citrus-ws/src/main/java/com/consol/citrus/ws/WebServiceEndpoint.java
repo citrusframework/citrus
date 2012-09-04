@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws;
 
+import java.io.IOException;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
@@ -38,6 +39,9 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultDefinitionEditor;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
@@ -92,6 +96,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
         //delegate request processing to message handler
         Message<?> replyMessage = messageHandler.handleMessage(requestMessage);
         
+        if (simulateHttpStatusCode(replyMessage)) {
+            return;
+        }
+        
         if (replyMessage != null && replyMessage.getPayload() != null) {
             log.info("Sending SOAP response:\n" + replyMessage.toString());
             
@@ -112,6 +120,32 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
     }
     
+    /**
+     * If Http status code is set on reply message headers simulate Http error with status code.
+     * No SOAP response is sent back in this case.
+     * @param replyMessage
+     * @return
+     * @throws IOException 
+     */
+    private boolean simulateHttpStatusCode(Message<?> replyMessage) throws IOException {
+        for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
+            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.HTTP_STATUS_CODE)) {
+                WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();
+                
+                int statusCode = Integer.valueOf(headerEntry.getValue().toString());
+                if (connection instanceof HttpServletConnection) {
+                    ((HttpServletConnection)connection).setFault(false);
+                    ((HttpServletConnection)connection).getHttpServletResponse().setStatus(statusCode);
+                    return true;
+                } else {
+                    log.warn("Unable to set custom Http status code on connection other than HttpServletConnection (" + connection.getClass().getName() + ")");
+                }
+            }
+        }
+        
+        return false;
+    }
+
     /**
      * Adds mime headers outside of SOAP envelope. Header entries that go to this header section 
      * must have internal http header prefix defined in {@link CitrusSoapMessageHeaders}.
@@ -142,12 +176,15 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage
      */
     private void addSoapBody(SoapMessage response, Message<?> replyMessage) throws TransformerException {
-        Source responseSource = getPayloadAsSource(replyMessage.getPayload());
-        
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        
-        transformer.transform(responseSource, response.getPayloadResult());
+        if (!(replyMessage.getPayload() instanceof String) || 
+                StringUtils.hasText(replyMessage.getPayload().toString())) {
+            Source responseSource = getPayloadAsSource(replyMessage.getPayload());
+            
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            
+            transformer.transform(responseSource, response.getPayloadResult());
+        }
     }
     
     /**
@@ -232,7 +269,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
         }
         
-        if (replyMessage.getPayload() instanceof String && 
+        if (!(replyMessage.getPayload() instanceof String) || 
                 StringUtils.hasText(replyMessage.getPayload().toString())) {
             SoapFaultDetail faultDetail = soapFault.addFaultDetail();
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -253,14 +290,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
             return (Source) replyPayload;
         } else if (replyPayload instanceof Document) {
             return new DOMSource((Document) replyPayload);
-        } else if (replyPayload instanceof String && StringUtils.hasText(replyPayload.toString())) {
+        } else if (replyPayload instanceof String) {
             return new StringSource((String) replyPayload);
         } else {
             throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
-                    "Supported types are " + 
-                    "'" + Source.class.getName() + "', " +
-                    "'" + Document.class.getName() + "'" + 
-                    ", or 'java.lang.String'");
+                    "Supported types are " + "'" + Source.class.getName() + "', " + "'" + Document.class.getName() + "'" + 
+                    ", or '" + String.class.getName() + "'");
         }
     }
 

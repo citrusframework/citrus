@@ -62,7 +62,7 @@ public class SoapResponseMessageCallbackTest {
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).once();
+        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -96,7 +96,7 @@ public class SoapResponseMessageCallbackTest {
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).once();
+        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -135,7 +135,7 @@ public class SoapResponseMessageCallbackTest {
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).once();
+        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -173,7 +173,7 @@ public class SoapResponseMessageCallbackTest {
         reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).once();
+        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -217,7 +217,7 @@ public class SoapResponseMessageCallbackTest {
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).once();
+        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();

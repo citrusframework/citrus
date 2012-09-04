@@ -88,7 +88,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -155,7 +155,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -226,7 +226,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -316,7 +316,7 @@ public class WebServiceEndpointTest {
         
         reset(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
 
-        expect(soapRequest.getEnvelope()).andReturn(soapRequestEnvelope).times(2);
+        expect(soapRequest.getEnvelope()).andReturn(soapRequestEnvelope).times(3);
         expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
@@ -326,8 +326,8 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
 
-        expect(soapRequestEnvelope.getBody()).andReturn(soapRequestBody).once();
-        expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequestEnvelope.getBody()).andReturn(soapRequestBody).times(2);
+        expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(soapRequestEnvelope.getHeader()).andReturn(soapRequestHeader).once();
         expect(soapRequestHeader.getSource()).andReturn(null).once();
@@ -395,7 +395,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -485,7 +485,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -574,7 +574,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -661,7 +661,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -751,7 +751,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -825,7 +825,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -906,7 +906,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -988,7 +988,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1071,7 +1071,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1145,7 +1145,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1232,7 +1232,7 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1280,5 +1280,65 @@ public class WebServiceEndpointTest {
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
         verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
+    }
+    
+    @Test
+    public void testEmptySoapMessageProcessing() throws Exception {
+        WebServiceEndpoint endpoint = new WebServiceEndpoint();
+
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        final Message<String> requestMessage = MessageBuilder.withPayload("")
+                                .copyHeaders(requestHeaders)
+                                .build();
+        
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        final Message<String> responseMessage = MessageBuilder.withPayload("")
+                                .copyHeaders(responseHeaders)
+                                .build();
+        
+        endpoint.setMessageHandler(new MessageHandler() {
+            public Message<?> handleMessage(Message<?> message) {
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                
+                return responseMessage;
+            }
+        });
+        
+        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
+        
+        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+        
+        StringResult soapResponsePayload = new StringResult();
+        
+        reset(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        
+        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        
+        expect(soapRequest.getPayloadSource()).andReturn(null).once();
+        
+        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        
+        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        
+        Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
+        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        
+        expect(soapRequest.getSoapAction()).andReturn(null).anyTimes();
+        
+        Set<Attachment> emptyAttachmentSet = Collections.emptySet();
+        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        
+        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+
+        replay(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        
+        endpoint.invoke(messageContext);
+        
+        Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
+        
+        verify(messageContext, soapRequest, soapRequestHeader, soapResponse);
     }
 }

@@ -82,7 +82,10 @@ public class SoapMessageConverter {
         Transformer transformer = transformerFactory.newTransformer();
         
         StringResult responsePayload = new StringResult();
-        transformer.transform(message.getPayloadSource(), responsePayload);
+        
+        if (message.getPayloadSource() != null) {
+            transformer.transform(message.getPayloadSource(), responsePayload);
+        }
         
         MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(responsePayload.toString());
         

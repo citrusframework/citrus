@@ -35,6 +35,9 @@ public abstract class CitrusSoapMessageHeaders {
     /** Special header prefix for http transport headers in SOAP message sender */
     public static final String HTTP_PREFIX = CitrusMessageHeaders.PREFIX + "http_";
     
+    /** Special status code header */
+    public static final String HTTP_STATUS_CODE = HTTP_PREFIX + "status_code";
+    
     /** SOAP action header name */
     public static final String SOAP_ACTION = SOAP_PREFIX + "action";
     
