@@ -35,7 +35,6 @@ import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
-import org.springframework.ws.soap.server.endpoint.SoapFaultDefinitionEditor;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -53,6 +52,7 @@ import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 
 /**
  * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
@@ -237,10 +237,9 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage
      */
     private void addSoapFault(SoapMessage response, Message<?> replyMessage) throws TransformerException {
-        SoapFaultDefinitionEditor definitionEditor = new SoapFaultDefinitionEditor();
-        definitionEditor.setAsText(replyMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT).toString());
+        SoapFaultDefinition definition = SoapFaultDefinitionHolder.fromString(
+                replyMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT).toString()).getSoapFaultDefinition();
         
-        SoapFaultDefinition definition = (SoapFaultDefinition)definitionEditor.getValue();
         SoapBody soapBody = response.getSoapBody();
         SoapFault soapFault = null;
         

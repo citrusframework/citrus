@@ -57,7 +57,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
-                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), "{http://citrusframework.org}ws:TEC-1000,Internal server error");
+                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
+                        "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}");
                 
                 return null;
             }
@@ -90,7 +91,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
-                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), "{http://citrusframework.org}ws:TEC-1000");
+                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
+                        "{{http://citrusframework.org}ws:TEC-1000}");
                 
                 return null;
             }
@@ -127,7 +129,8 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
-                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), "{http://citrusframework.org}ws:TEC-1000,Internal server error");
+                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
+                        "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}");
                 
                 return null;
             }

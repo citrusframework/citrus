@@ -25,6 +25,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 
 /**
  * Message builder implementation adding SOAP faults to the message.
@@ -46,15 +47,14 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
             throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
         }
         
-        String soapFaultString = context.replaceDynamicContentInString(faultCode);
+        SoapFaultDefinitionHolder soapFaultDefinitionHolder = new SoapFaultDefinitionHolder();
+        soapFaultDefinitionHolder.setFaultCode(context.replaceDynamicContentInString(faultCode));
         
         if (StringUtils.hasText(faultString)) {
-            soapFaultString += "," + context.replaceDynamicContentInString(faultString);
+            soapFaultDefinitionHolder.setFaultStringOrReason(context.replaceDynamicContentInString(faultString));
         }
 
-        //put special SOAP fault QName string to message headers. Citrus SOAP ws endpoint will
-        //take read the entry an generate the SOAP fauflt for us
-        headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultString);
+        headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultDefinitionHolder.toString());
         
         return headers;
     }

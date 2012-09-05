@@ -793,7 +793,7 @@ public class WebServiceEndpointTest {
                                 .build();
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "SERVER,Invalid request");
+        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request, because of unknown error}");
         final Message<String> responseMessage = MessageBuilder.withPayload("")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -848,7 +848,7 @@ public class WebServiceEndpointTest {
         
         expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
             public SoapFault answer() throws Throwable {
-                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
+                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request, because of unknown error");
                 
                 return soapFault;
             }
@@ -874,7 +874,7 @@ public class WebServiceEndpointTest {
                                 .build();
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "CLIENT,Invalid request");
+        responseHeaders.put("citrus_soap_fault", "{CLIENT}{Invalid request}");
         final Message<String> responseMessage = MessageBuilder.withPayload("")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -955,7 +955,7 @@ public class WebServiceEndpointTest {
                                 .build();
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "SERVER,Invalid request");
+        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
         final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><DetailMessage><text>This request was not OK!</text></DetailMessage>")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -1113,7 +1113,7 @@ public class WebServiceEndpointTest {
                                 .build();
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{http://www.consol.de/citrus}citrus:TEC-1000,Invalid request");
+        responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
         final Message<String> responseMessage = MessageBuilder.withPayload("")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -1199,7 +1199,7 @@ public class WebServiceEndpointTest {
                                 .build();
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{http://www.consol.de/citrus}citrus:TEC-1000,Invalid request");
+        responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
         final Message<String> responseMessage = MessageBuilder.withPayload("")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -1224,7 +1224,6 @@ public class WebServiceEndpointTest {
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         Soap12Body soapResponseBody = EasyMock.createMock(Soap12Body.class);
         final Soap12Fault soapFault = EasyMock.createMock(Soap12Fault.class);
-        
         
         StringResult soapResponsePayload = new StringResult();
         
