@@ -117,4 +117,27 @@ public class CitrusSshServer extends AbstractServer {
         }
     }
 
+    public void setPort(int pPort) {
+        port = pPort;
+    }
+
+    public void setUser(String pUser) {
+        user = pUser;
+    }
+
+    public void setPassword(String pPassword) {
+        password = pPassword;
+    }
+
+    public void setAllowedKeyPath(String pAllowedKeyPath) {
+        allowedKeyPath = pAllowedKeyPath;
+    }
+
+    public void setHostKeyPath(String pHostKeyPath) {
+        hostKeyPath = pHostKeyPath;
+    }
+
+    public void setMessageHandler(MessageHandler pMessageHandler) {
+        messageHandler = pMessageHandler;
+    }
 }

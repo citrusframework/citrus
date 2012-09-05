@@ -68,13 +68,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attrinute name="message-handler-ref" type="xs:string">
+          <xs:attribute name="message-handler-ref" type="xs:string">
             <xs:annotation>
               <xs:documentation>
                 Bean reference to a message handler which processes the incoming SSH request
               </xs:documentation>
             </xs:annotation>
-          </xs:attrinute>
+          </xs:attribute>
         </xs:complexType>
     </xs:element>
 </xs:schema>

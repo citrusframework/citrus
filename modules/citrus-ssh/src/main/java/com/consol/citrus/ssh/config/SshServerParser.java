@@ -42,7 +42,7 @@ public class SshServerParser extends AbstractBeanDefinitionParser {
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.ssh.SshServer");
+            .genericBeanDefinition("com.consol.citrus.ssh.CitrusSshServer");
 
         for (int i = 0;i < ATTRIBUTE_PROPERTY_MAPPING.length; i+=2) {
             String value = element.getAttribute(ATTRIBUTE_PROPERTY_MAPPING[i]);
