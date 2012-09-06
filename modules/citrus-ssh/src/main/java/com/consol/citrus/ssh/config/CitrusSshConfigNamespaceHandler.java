@@ -26,8 +26,10 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  */
 public class CitrusSshConfigNamespaceHandler extends NamespaceHandlerSupport {
 
+    /**
+     * {@inheritDoc}
+     */
     public void init() {
         registerBeanDefinitionParser("server", new SshServerParser());
     }
-
 }

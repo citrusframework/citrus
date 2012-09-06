@@ -1,10 +1,11 @@
 package com.consol.citrus.ssh;
 
+import static org.testng.Assert.*;
+
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyPair;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
@@ -14,7 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author roland
@@ -110,7 +111,10 @@ public class CitrusSshServerTest {
         }
     }
 
-
+    /**
+     * Prepare server instance.
+     * @param withPassword
+     */
     private void prepareServer(boolean withPassword) {
         setField("user", "roland");
         if (withPassword) {
@@ -120,25 +124,30 @@ public class CitrusSshServerTest {
         }
     }
 
+    /**
+     * Sets field in Java object via reflection.
+     * @param pKey
+     * @param pValue
+     */
     private void setField(String pKey, String pValue) {
         ReflectionTestUtils.setField(server,pKey,pValue);
     }
 
+    /**
+     * Finds a free port in port range.
+     * @return
+     */
     private int findFreePort() {
         for (int port=2234; port<3000; port++) {
-            try
-            {
+            try {
                 Socket socket = new Socket(InetAddress.getLocalHost(),port);
                 socket.close();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 return port;
             }
         }
+        
         throw new IllegalStateException("No free port between 2234 and 3000 found");
     }
-
-
 
 }

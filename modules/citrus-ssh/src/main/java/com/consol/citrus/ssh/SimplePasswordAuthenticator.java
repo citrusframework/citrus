@@ -20,12 +20,14 @@ class SimplePasswordAuthenticator implements PasswordAuthenticator {
      * @param pUser user to verify against
      * @param pPassword password to check
      */
-    SimplePasswordAuthenticator(String pUser, String pPassword) {
+    public SimplePasswordAuthenticator(String pUser, String pPassword) {
         user = pUser;
         password = pPassword;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean authenticate(String pUser, String pPassword, ServerSession pSession) {
         return pUser != null && pUser.equals(user) && password.equals(pPassword);
     }

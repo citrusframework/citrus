@@ -1,12 +1,12 @@
 package com.consol.citrus.ssh;
 
+import static org.easymock.EasyMock.*;
+import static org.testng.AssertJUnit.assertEquals;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
-import com.thoughtworks.xstream.XStream;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.easymock.IArgumentMatcher;
@@ -15,8 +15,8 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
-import static org.testng.AssertJUnit.assertEquals;
+import com.consol.citrus.message.MessageHandler;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * @author roland
@@ -31,7 +31,6 @@ public class CitrusSshCommandTest {
     private static String COMMAND = "shutdown";
     private XStream xstream;
     private ExitCallback exitCallback;
-
 
     @BeforeMethod
     public void setup() {
@@ -51,6 +50,7 @@ public class CitrusSshCommandTest {
         xstream.alias("ssh-request",SshRequest.class);
         xstream.alias("ssh-response",SshResponse.class);
     }
+    
     @Test
     public void base() throws IOException {
         String input = "Hello world";
@@ -65,19 +65,6 @@ public class CitrusSshCommandTest {
 
         assertEquals(stdout.toByteArray(),output.getBytes());
         assertEquals(stderr.toByteArray(),error.getBytes());
-    }
-
-    private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
-        String request = xstream.toXML(new SshRequest(COMMAND, pInput));
-        SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
-        Message respMsg = MessageBuilder.withPayload(xstream.toXML(resp)).build();
-        expect(handler.handleMessage(eqMessage(request))).andReturn(respMsg);
-        replay(handler);
-
-        exitCallback.onExit(pExitCode);
-        replay(exitCallback);
-
-        cmd.setInputStream(createInputStream(pInput));
     }
 
     @Test
@@ -105,11 +92,37 @@ public class CitrusSshCommandTest {
 
         cmd.run();
     }
+    
+    /**
+     * Prepare actions.
+     * @param pInput
+     * @param pOutput
+     * @param pError
+     * @param pExitCode
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
+        String request = xstream.toXML(new SshRequest(COMMAND, pInput));
+        SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
+        Message respMsg = MessageBuilder.withPayload(xstream.toXML(resp)).build();
+        expect(handler.handleMessage(eqMessage(request))).andReturn(respMsg);
+        replay(handler);
 
-    public Message eqMessage(final String expected) {
+        exitCallback.onExit(pExitCode);
+        replay(exitCallback);
+
+        cmd.setInputStream(new ByteArrayInputStream(pInput.getBytes()));
+    }
+
+    /**
+     * Special report matcher for mocking reasons.
+     * @param expected
+     * @return
+     */
+    public Message<?> eqMessage(final String expected) {
         reportMatcher(new IArgumentMatcher() {
             public boolean matches(Object argument) {
-                Message msg = (Message) argument;
+                Message<?> msg = (Message<?>) argument;
                 String payload = (String) msg.getPayload();
                 return expected.equals(payload);
             }
@@ -119,12 +132,5 @@ public class CitrusSshCommandTest {
             }
         });
         return null;
-    }
-    private OutputStream createOutputStream(StringBuffer pBuffer) {
-        return new ByteArrayOutputStream();
-    }
-
-    private InputStream createInputStream(String input) {
-        return new ByteArrayInputStream(input.getBytes());
     }
 }

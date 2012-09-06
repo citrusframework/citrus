@@ -2,14 +2,14 @@ package com.consol.citrus.ssh;
 
 import java.io.*;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.FileUtils;
-import com.thoughtworks.xstream.XStream;
 import org.apache.sshd.server.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
+
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.util.FileUtils;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * A command for delegation to a message handler
@@ -19,20 +19,20 @@ import org.springframework.util.FileCopyUtils;
  */
 public class CitrusSshCommand implements Command, Runnable {
 
-    // Message handler for creating requests/responses
+    /** Message handler for creating requests/responses **/
     private MessageHandler messageHandler;
 
-    // Command to execute
+    /** Command to execute **/
     private String command;
 
-    // standard input/output/error streams;
+    /** standard input/output/error streams; **/
     private InputStream stdin;
     private OutputStream stdout, stderr;
 
-    // Callback to be used for signaling the exit status
+    /** Callback to be used for signaling the exit status **/
     private ExitCallback exitCallback;
 
-    // User on which behalf the command is executed
+    /** User on which behalf the command is executed **/
     private String user;
 
     /**
@@ -45,12 +45,17 @@ public class CitrusSshCommand implements Command, Runnable {
         command = pCommand;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void start(Environment env) throws IOException {
         user = env.getEnv().get(Environment.ENV_USER);
         new Thread(this, "CitrusSshCommand: " + command).start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void run() {
         try {
             String input = FileUtils.readToString(stdin);
@@ -66,6 +71,11 @@ public class CitrusSshCommand implements Command, Runnable {
         }
     }
 
+    /**
+     * Delegate to message handler implementation.
+     * @param pReq
+     * @return
+     */
     private SshResponse sendToMessageHandler(SshRequest pReq) {
         XStream xstream = createXstream();
         Message<?> response = messageHandler.handleMessage(
@@ -76,6 +86,10 @@ public class CitrusSshCommand implements Command, Runnable {
         return (SshResponse) xstream.fromXML(msgResp);
     }
 
+    /**
+     * Setup XML marshaller.
+     * @return
+     */
     private XStream createXstream() {
         XStream xstream = new XStream();
         xstream.alias("ssh-request",SshRequest.class);
@@ -83,10 +97,8 @@ public class CitrusSshCommand implements Command, Runnable {
         return xstream;
     }
 
-
     /** {@inheritDoc} */
     public void destroy() {
-
     }
 
     /** {@inheritDoc} */
@@ -111,12 +123,22 @@ public class CitrusSshCommand implements Command, Runnable {
 
     // ====================================================================
 
+    /**
+     * Copy character sequence to outbput stream.
+     * @param txt
+     * @param stream
+     * @throws IOException
+     */
     private void copyToStream(String txt, OutputStream stream) throws IOException {
         if (txt != null) {
             FileCopyUtils.copy(txt.getBytes(), stream);
         }
     }
 
+    /**
+     * Gets the command.
+     * @return
+     */
     public String getCommand() {
         return command;
     }

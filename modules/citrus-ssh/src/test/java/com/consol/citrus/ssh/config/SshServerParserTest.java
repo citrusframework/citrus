@@ -1,11 +1,9 @@
 package com.consol.citrus.ssh.config;
 
-import com.consol.citrus.ssh.config.SshServerParser;
-import org.springframework.test.util.ReflectionTestUtils;
+import static org.easymock.EasyMock.*;
+
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author roland

@@ -16,6 +16,5 @@ public class SimplePasswordAuthenticatorTest {
         SimplePasswordAuthenticator auth = new SimplePasswordAuthenticator("roland","secret");
         assertTrue(auth.authenticate("roland","secret",null));
         assertFalse(auth.authenticate("guenther","uebel",null));
-
     }
 }

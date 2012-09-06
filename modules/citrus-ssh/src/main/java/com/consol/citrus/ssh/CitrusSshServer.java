@@ -2,20 +2,18 @@ package com.consol.citrus.ssh;
 
 import java.io.IOException;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.server.AbstractServer;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.ResourceKeyPairProvider;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.CommandFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
+
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.server.AbstractServer;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -44,27 +42,27 @@ import org.springframework.util.StringUtils;
  */
 public class CitrusSshServer extends AbstractServer {
 
-    // Port to listen to
+    /** Port to listen to **/
     private int port = 22;
 
-    // User allowed to connect
+    /** User allowed to connect **/
     private String user;
 
-    // User's password or ...
+    /** User's password or ... **/
     private String password;
 
-    // ... path to its public key
-    // Use this to convert to PEM: ssh-keygen -f key.pub -e -m pem
+    /** ... path to its public key **/
+    /** Use this to convert to PEM: ssh-keygen -f key.pub -e -m pem **/
     private String allowedKeyPath;
 
-    // Path to our own host keys. If not provided, a default is used. The format of this
-    // file should be PEM, a serialized {@link KeyPair}.
+    /** Path to our own host keys. If not provided, a default is used. The format of this **/
+    /** file should be PEM, a serialized {@link KeyPair}. **/
     private String hostKeyPath;
 
-    // SSH server used
+    /** SSH server used **/
     private SshServer sshd;
 
-    // MessageHandler for validation purposes
+    /** MessageHandler for validation purposes **/
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
 
     @Override
@@ -117,27 +115,116 @@ public class CitrusSshServer extends AbstractServer {
         }
     }
 
-    public void setPort(int pPort) {
-        port = pPort;
+    /**
+     * Gets the port.
+     * @return the port the port to get.
+     */
+    public int getPort() {
+        return port;
     }
 
-    public void setUser(String pUser) {
-        user = pUser;
+    /**
+     * Sets the port.
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
     }
 
-    public void setPassword(String pPassword) {
-        password = pPassword;
+    /**
+     * Gets the user.
+     * @return the user the user to get.
+     */
+    public String getUser() {
+        return user;
     }
 
-    public void setAllowedKeyPath(String pAllowedKeyPath) {
-        allowedKeyPath = pAllowedKeyPath;
+    /**
+     * Sets the user.
+     * @param user the user to set
+     */
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public void setHostKeyPath(String pHostKeyPath) {
-        hostKeyPath = pHostKeyPath;
+    /**
+     * Gets the password.
+     * @return the password the password to get.
+     */
+    public String getPassword() {
+        return password;
     }
 
-    public void setMessageHandler(MessageHandler pMessageHandler) {
-        messageHandler = pMessageHandler;
+    /**
+     * Sets the password.
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+    /**
+     * Gets the allowedKeyPath.
+     * @return the allowedKeyPath the allowedKeyPath to get.
+     */
+    public String getAllowedKeyPath() {
+        return allowedKeyPath;
+    }
+
+    /**
+     * Sets the allowedKeyPath.
+     * @param allowedKeyPath the allowedKeyPath to set
+     */
+    public void setAllowedKeyPath(String allowedKeyPath) {
+        this.allowedKeyPath = allowedKeyPath;
+    }
+
+    /**
+     * Gets the hostKeyPath.
+     * @return the hostKeyPath the hostKeyPath to get.
+     */
+    public String getHostKeyPath() {
+        return hostKeyPath;
+    }
+
+    /**
+     * Sets the hostKeyPath.
+     * @param hostKeyPath the hostKeyPath to set
+     */
+    public void setHostKeyPath(String hostKeyPath) {
+        this.hostKeyPath = hostKeyPath;
+    }
+
+    /**
+     * Gets the sshd.
+     * @return the sshd the sshd to get.
+     */
+    public SshServer getSshd() {
+        return sshd;
+    }
+
+    /**
+     * Sets the sshd.
+     * @param sshd the sshd to set
+     */
+    public void setSshd(SshServer sshd) {
+        this.sshd = sshd;
+    }
+
+    /**
+     * Gets the messageHandler.
+     * @return the messageHandler the messageHandler to get.
+     */
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
+    }
+
+    /**
+     * Sets the messageHandler.
+     * @param messageHandler the messageHandler to set
+     */
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+
 }

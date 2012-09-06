@@ -1,16 +1,14 @@
 package com.consol.citrus.ssh;
 
 import java.io.*;
-import java.security.KeyPair;
 import java.security.PublicKey;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.sshd.common.KeyPairProvider;
-import org.apache.sshd.common.keyprovider.*;
 import org.apache.sshd.common.util.IoUtils;
 import org.apache.sshd.server.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.bouncycastle.openssl.PEMReader;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Public key authenticator which verifies a single provided public key. The public key
@@ -32,7 +30,7 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
      * @param pPublicKeyPath path to a single public key PEM, either in the filesystem or, if prefixed
      *                       with 'classpath:' taken from the classpath.
      */
-    SinglePublicKeyAuthenticator(String pUser, String pPublicKeyPath) {
+    public SinglePublicKeyAuthenticator(String pUser, String pPublicKeyPath) {
         user = pUser;
         InputStream is = null;
         try {
@@ -57,12 +55,18 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean authenticate(String pUser, PublicKey pKey, ServerSession pSession) {
         return user != null && user.equals(pUser) && allowedKey.equals(pKey);
     }
 
-    // Read the key with bouncycastle's PEM tools
+    /**
+     * Read the key with bouncycastle's PEM tools 
+     * @param is
+     * @return
+     */
     private PublicKey readKey(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
         PEMReader r = new PEMReader(isr);

@@ -18,6 +18,9 @@ import static org.testng.Assert.assertTrue;
  */
 public class SinglePublicKeyAuthenticatorTest {
 
+    /**
+     * Default constructor.
+     */
     public SinglePublicKeyAuthenticatorTest() {
         assertTrue(SecurityUtils.isBouncyCastleRegistered());
     }
@@ -45,33 +48,50 @@ public class SinglePublicKeyAuthenticatorTest {
         assertFalse(auth.authenticate("roland",pKey,null));
     }
 
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*com/consol/citrus/ssh/citrus.pem.*")
+    public void invalidKeyFormat() {
+        new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/citrus.pem");
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blubber\\.bla.*")
+    public void notInClasspath() {
+        new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/blubber.bla");
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/valid/path.*")
+    public void invalidFilePath() {
+        new SinglePublicKeyAuthenticator("roland","/no/valid/path");
+    }
+    
+    /**
+     * Gets public key instance from resource.
+     * @param pResource
+     * @return
+     * @throws IOException
+     */
+    private PublicKey getPublicKey(String pResource) throws IOException {
+        return getPublicKeyFromStream(getClass().getResourceAsStream(pResource));
+    }
+
+    /**
+     * Creates new temporary file from resource.
+     * @param pResource
+     * @return
+     * @throws IOException
+     */
     private File copyToTempFile(String pResource) throws IOException {
         File temp = File.createTempFile("citrus-ssh-test", "pem");
         FileCopyUtils.copy(getClass().getResourceAsStream(pResource),
                            new FileOutputStream(temp));
         return temp;
     }
-
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*com/consol/citrus/ssh/citrus.pem.*")
-    public void invalidKeyFormat() {
-        // This is a key pair
-        SinglePublicKeyAuthenticator auth = new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/citrus.pem");
-    }
-
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*blubber\\.bla.*")
-    public void notInClasspath() {
-        SinglePublicKeyAuthenticator auth = new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/blubber.bla");
-    }
-
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/valid/path.*")
-    public void invalidFilePath() {
-        SinglePublicKeyAuthenticator auth = new SinglePublicKeyAuthenticator("roland","/no/valid/path");
-
-    }
-    private PublicKey getPublicKey(String pResource) throws IOException {
-        return getPublicKeyFromStream(getClass().getResourceAsStream(pResource));
-    }
-
+    
+    /**
+     * Create public key instance from file input stream.
+     * @param is
+     * @return
+     * @throws IOException
+     */
     private PublicKey getPublicKeyFromStream(InputStream is) throws IOException {
         Reader reader = new InputStreamReader(is);
         return (PublicKey) new PEMReader(reader).readObject();
