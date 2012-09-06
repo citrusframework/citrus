@@ -202,7 +202,8 @@
         </mediaobject>
         
         <programlisting>&lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 
-                    destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;
+                    destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;
+                    receive-timeout=&quot;5000&quot;/&gt;
                                      
 &lt;citrus:jms-reply-message-sender id=&quot;getOrderReplySender&quot;
                     reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;</programlisting>
