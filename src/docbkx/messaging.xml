@@ -488,7 +488,7 @@
         
         <programlisting>&lt;extract&gt;
     &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
-    &lt;message name=&quot;//MessageBody/Customer/Id&quot; variable=&quot;customerId&quot;/&gt;
+    &lt;message path=&quot;//MessageBody/Customer/Id&quot; variable=&quot;customerId&quot;/&gt;
 &lt;/extract&gt;</programlisting>
         
         <para>As you can see Citrus is able to store both header and message payload content into test variables. It does not matter if you use new test variables 
