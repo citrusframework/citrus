@@ -79,7 +79,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             log.debug("Found inline PLSQL script " + script);
         }
 
-        StringTokenizer tok = new StringTokenizer(script, "/");
+        StringTokenizer tok = new StringTokenizer(script, getStatemendEndingCharacter());
         while (tok.hasMoreTokens()) {
             stmts.add(tok.nextToken().trim());
         }

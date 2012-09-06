@@ -44,9 +44,9 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
     private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
-    private static final String OUTPUT_DIRECTORY = "test-output/doc";
+    private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "doc";
     
-    protected String testDirectory = "src/citrus/tests";
+    protected String testDirectory = "src" + File.separator + "citrus" + File.separator + "tests";
     protected String testDocTemplate;
     protected String outputFile;
     
@@ -133,7 +133,7 @@ public abstract class AbstractTestDocGenerator implements TestDocGenerator {
             }
         }
         
-        return new FileOutputStream(file.getAbsolutePath() + "/" + fileName);
+        return new FileOutputStream(file.getAbsolutePath() + File.separator + fileName);
     }
 
     /**

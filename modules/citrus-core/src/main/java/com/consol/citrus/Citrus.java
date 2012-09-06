@@ -90,8 +90,8 @@ public final class Citrus {
         
         String testDirectory = cmdArgs.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
         
-        if (!testDirectory.endsWith("/")) {
-            testDirectory = testDirectory + "/";
+        if (!testDirectory.endsWith(File.separator)) {
+            testDirectory = testDirectory + File.separator;
         }
         
         XmlSuite suite = new XmlSuite();
@@ -234,7 +234,7 @@ public final class Citrus {
      */
     private static final class TestCaseFileNameFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
-            File tmp = new File(dir.getPath() + "/" + name);
+            File tmp = new File(dir.getPath() + File.separator + name);
 
             /* Only allowing XML files as spring configuration files */
             return (name.endsWith(XML_FILE_EXTENSION) || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");

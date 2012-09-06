@@ -129,11 +129,11 @@ public class TestCaseCreator {
         targetPackage = targetPackage.replace('.', '/');
         
         createFileFromTemplate(properties,
-                CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + "/" + name + ".xml",
+                CitrusConstants.DEFAULT_TEST_DIRECTORY + targetPackage + File.separator + name + ".xml",
                 getTemplateFileForXMLTest(xmlRequest != null && xmlResponse != null));
         
         createFileFromTemplate(properties, 
-                CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + "/" + name + ".java", 
+                CitrusConstants.DEFAULT_JAVA_DIRECTORY + targetPackage + File.separator + name + ".java", 
                 getTemplateFileForJavaClass());
     }
     

@@ -58,10 +58,10 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private static final Resource TEST_DETAIL_TEMPLATE = new ClassPathResource("test-detail.html", HtmlReporter.class);
     
     /** Output directory */
-    private static final String OUTPUT_DIRECTORY = "test-output/citrus-reports";
+    private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "citrus-reports";
     
     /** Resource files directory */
-    private static final String RESOURCE_DIRECTORY = OUTPUT_DIRECTORY + "/resources";
+    private static final String RESOURCE_DIRECTORY = OUTPUT_DIRECTORY + File.separator + "resources";
     
     /** Resulting HTML test report file name */    
     private static final String REPORT_FILE_NAME = "citrus-test-results.html";
@@ -239,7 +239,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         
         try {
             in = resource.getInputStream();
-            out = new FileOutputStream(RESOURCE_DIRECTORY + "/" + resource.getFilename());
+            out = new FileOutputStream(RESOURCE_DIRECTORY + File.separator + resource.getFilename());
             byte[] buffer = new byte[ 0xFFFF ];
             int len = in.read(buffer);
             while (len != -1) {
@@ -277,7 +277,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     private void createReportFile(String content) {
         Writer fileWriter = null;
         try {
-            fileWriter = new FileWriter(OUTPUT_DIRECTORY + "/" + REPORT_FILE_NAME);
+            fileWriter = new FileWriter(OUTPUT_DIRECTORY + File.separator + REPORT_FILE_NAME);
             fileWriter.append(content);
             fileWriter.flush();
         } catch (IOException e) {

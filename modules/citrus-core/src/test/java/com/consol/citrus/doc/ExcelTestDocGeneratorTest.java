@@ -16,6 +16,7 @@
 
 package com.consol.citrus.doc;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,7 +56,7 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
         
         creator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + "/" + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
@@ -87,7 +88,7 @@ public class ExcelTestDocGeneratorTest extends AbstractTestNGUnitTest {
         
         creator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + "/" + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
         Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));

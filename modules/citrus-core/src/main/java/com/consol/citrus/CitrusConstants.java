@@ -16,6 +16,8 @@
 
 package com.consol.citrus;
 
+import java.io.File;
+
 import com.consol.citrus.message.MessageType;
 
 /**
@@ -43,8 +45,8 @@ public final class CitrusConstants {
     public static final String DEFAULT_APPLICATIONCONTEXT = "citrus-context.xml";
 
     /** Default test directories */
-    public static final String DEFAULT_JAVA_DIRECTORY = "src/citrus/java/";
-    public static final String DEFAULT_TEST_DIRECTORY = "src/citrus/tests/";
+    public static final String DEFAULT_JAVA_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "java" + File.separator;
+    public static final String DEFAULT_TEST_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "tests" + File.separator;
     
     /** Default test name */
     public static final String DEFAULT_TEST_NAME = "citrus-test";

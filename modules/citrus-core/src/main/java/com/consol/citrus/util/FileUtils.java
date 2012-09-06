@@ -132,7 +132,7 @@ public abstract class FileUtils {
             File file = dirs.pop();
             File[] found = file.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
-                    File tmp = new File(dir.getPath() + "/" + name);
+                    File tmp = new File(dir.getPath() + File.separator + name);
 
                     /* Only allowing XML files as spring configuration files */
                     return (name.endsWith(".xml") || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
