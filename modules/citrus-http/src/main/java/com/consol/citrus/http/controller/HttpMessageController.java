@@ -51,7 +51,7 @@ public class HttpMessageController {
 
     /** Message handler for incoming requests, providing proper responses */
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
-    
+
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.inboundMapper();
     
@@ -131,12 +131,13 @@ public class HttpMessageController {
         customHeaders.put(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
         
         customHeaders.put(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
-        
-        Message<?> response = messageHandler.handleMessage(MessageBuilder.withPayload(requestEntity.getBody())
-                                            .copyHeaders(convertHeaderTypes(httpRequestHeaders))
-                                            .copyHeaders(customHeaders)
-                                            .build());
-        
+
+        Message<?> response = messageHandler.handleMessage(
+                MessageBuilder.withPayload(requestEntity.getBody())
+                              .copyHeaders(convertHeaderTypes(httpRequestHeaders))
+                              .copyHeaders(customHeaders)
+                              .build());
+
         return generateResponse(response);
     }
     
@@ -165,8 +166,8 @@ public class HttpMessageController {
 
     /**
      * Generates the Http response message from given Spring Integration message.
-     * @param response
-     * @return
+     * @param responseMessage message received from the message handler
+     * @return an HTTP entity as response
      */
     private ResponseEntity<String> generateResponse(Message<?> responseMessage) {
         if (responseMessage == null) {

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="SshServerITest">
+    <meta-info>
+      <author>roland</author>
+      <creationdate>2012-09-05</creationdate>
+      <status>DRAFT</status>
+      <last-updated-by>roland</last-updated-by>
+      <last-updated-on>2012-09-05T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Straight forward test for the SSH server
+    </description>
+
+    <variables>
+      <variable name="custom_header_id" value="123456789"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Contact the SSH server and issue a simple command with sending some standard input</message>
+      </echo>
+
+      <parallel>
+        <java class="com.consol.citrus.ssh.SshClient">
+          <method name="execute">
+            <argument>shutdown</argument>
+            <argument>input</argument>
+          </method>
+        </java>
+
+        <sequential>
+          <receive with="sshRequestReceiver">
+            <message>
+              <data>
+                <![CDATA[
+                    <ssh-request>
+                       <command>shutdown</command>
+                       <stdin>input</stdin>
+                    </ssh-request>
+                 ]]>
+              </data>
+            </message>
+            <extract>
+              <header name="jms_messageId" variable="correlation_id"/>
+            </extract>
+          </receive>
+
+          <send with="sshResponseSender">
+            <message>
+              <data>
+                <![CDATA[
+    	           	<ssh-response>
+    	           		<stdout>Hello Citrus</stdout>
+    	             	<exit>0</exit>
+    	           	</ssh-response>
+    	           ]]>
+              </data>
+            </message>
+            <header>
+              <element name="jms_correlationId" value="${correlation_id}"/>
+            </header>
+          </send>
+        </sequential>
+      </parallel>
+    </actions>
+  </testcase>
+</spring:beans>
