@@ -48,7 +48,7 @@ public class CitrusSshServerTest {
         server.start();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*public key.*/no/such/key\\.pem.*")
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/such/key\\.pem.*")
     public void invalidAuthKey() {
         setField("user","roland");
         setField("allowedKeyPath","classpath:/no/such/key.pem");

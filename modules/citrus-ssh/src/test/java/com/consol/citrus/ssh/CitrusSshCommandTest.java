@@ -106,11 +106,6 @@ public class CitrusSshCommandTest {
         cmd.run();
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void destroy() {
-        cmd.destroy();
-    }
-
     public Message eqMessage(final String expected) {
         reportMatcher(new IArgumentMatcher() {
             public boolean matches(Object argument) {

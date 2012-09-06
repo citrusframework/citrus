@@ -40,19 +40,20 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
                 String resource = pPublicKeyPath.substring(CLASSPATH_PREFIX.length());
                 is = getClass().getClassLoader().getResourceAsStream(resource);
                 if (is == null) {
-                    throw new CitrusRuntimeException("No public key found at in classpath at " + resource);
+                    throw new CitrusRuntimeException("No key resource found at classpath at " + resource);
                 }
             } else {
                 is = new FileInputStream(pPublicKeyPath);
             }
             allowedKey = readKey(is);
+            if (allowedKey == null) {
+                throw new CitrusRuntimeException("No public key found at " + pPublicKeyPath + ", although the file/resource exists. " +
+                                                 "It is probably not in a PEM form or contains more than only a public key.");
+            }
         } catch (FileNotFoundException e) {
-            allowedKey = null;
+            throw new CitrusRuntimeException("public key file does not exist at " + pPublicKeyPath);
         } finally {
             IoUtils.closeQuietly(is);
-        }
-        if (allowedKey == null) {
-            throw new CitrusRuntimeException("No key found at " + pPublicKeyPath);
         }
     }
 

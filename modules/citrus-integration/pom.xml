@@ -102,7 +102,13 @@
         <artifactId>httpclient</artifactId>
     </dependency>
 
-                
+    <!-- SSH library -->
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+    </dependency>
+
+
     <!-- Test scoped dependencies -->
     <dependency>
         <groupId>commons-dbcp</groupId>

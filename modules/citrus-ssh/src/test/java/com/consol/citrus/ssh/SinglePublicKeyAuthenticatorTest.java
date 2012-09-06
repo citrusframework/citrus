@@ -52,7 +52,7 @@ public class SinglePublicKeyAuthenticatorTest {
         return temp;
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*No key.*")
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*com/consol/citrus/ssh/citrus.pem.*")
     public void invalidKeyFormat() {
         // This is a key pair
         SinglePublicKeyAuthenticator auth = new SinglePublicKeyAuthenticator("roland","classpath:com/consol/citrus/ssh/citrus.pem");

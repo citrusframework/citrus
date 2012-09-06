@@ -227,16 +227,17 @@
                                 interceptors="httpClientInterceptors"/>
   
     <citrus-http:reply-message-handler id="httpResponseReceiver"/>
-    
-    <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
-    
-    <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}" actor="helloServer"/>
 
-    <!-- SSH setting -->
+  <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
+
+  <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}" actor="helloServer"/>
+
+  <!-- SSH setting -->
     <ssh:server id="sshServer"
-                allowed-key-path="classpath:com/consol/citrus/ssh/test_user.pem"
+                allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
                 user="roland"
                 port="9072"
+                auto-start="true"
                 message-handler-ref="sshMessageHandler"/>
 
     <bean id="sshMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
@@ -253,6 +254,8 @@
       <property name="replyTimeout" value="2000"/>
     </bean>
 
+  <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
+  <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}" />
 
   <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

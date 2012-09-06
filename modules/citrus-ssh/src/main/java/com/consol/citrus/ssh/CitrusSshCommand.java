@@ -86,7 +86,7 @@ public class CitrusSshCommand implements Command, Runnable {
 
     /** {@inheritDoc} */
     public void destroy() {
-        throw new CitrusRuntimeException("Destroy was called on the command");
+
     }
 
     /** {@inheritDoc} */
