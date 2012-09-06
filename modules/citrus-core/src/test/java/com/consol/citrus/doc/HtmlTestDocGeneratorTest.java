@@ -16,6 +16,7 @@
 
 package com.consol.citrus.doc;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.springframework.core.io.FileSystemResource;
@@ -50,7 +51,7 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         
         creator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + "/" + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
@@ -60,7 +61,13 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src/citrus/tests/com/consol/citrus/sample/SampleTest.xml\">SampleTest.xml</a>"));
+        Assert.assertTrue(docContent.contains("src" + File.separator + "citrus" + 
+                                                        File.separator + "tests" + 
+                                                        File.separator + "com" + 
+                                                        File.separator + "consol" + 
+                                                        File.separator + "citrus" + 
+                                                        File.separator + "sample" + 
+                                                        File.separator + "SampleTest.xml\">SampleTest.xml</a>"));
     }
     
     @Test
@@ -69,11 +76,16 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
                         .withLogo("test-logo.png")
                         .withOverviewTitle("CustomOverview")
                         .withPageTitle("CustomPageTitle")
-                        .useTestDirectory("src/citrus/tests/com/consol/citrus/sample");
+                        .useTestDirectory("src" + File.separator + "citrus" + 
+                                                    File.separator + "tests" + 
+                                                    File.separator + "com" + 
+                                                    File.separator + "consol" + 
+                                                    File.separator + "citrus" + 
+                                                    File.separator + "sample");
         
         creator.generateDoc();
         
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + "/" + creator.getOutputFile()));
+        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocGenerator.getOutputDirectory() + File.separator + creator.getOutputFile()));
         
         Assert.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
@@ -83,6 +95,13 @@ public class HtmlTestDocGeneratorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(docContent.contains(">Nr.</th>"));
         Assert.assertTrue(docContent.contains(">Test</th>"));
         Assert.assertTrue(docContent.contains("This is a sample test"));
-        Assert.assertTrue(docContent.contains("src/citrus/tests/com/consol/citrus/sample/SampleTest.xml\">SampleTest.xml</a>"));
+        Assert.assertTrue(docContent.contains("src" + File.separator + "citrus" + 
+                                                        File.separator + "tests" + 
+                                                        File.separator + "com" + 
+                                                        File.separator + "consol" + 
+                                                        File.separator + "citrus" + 
+                                                        File.separator + "sample" + 
+                                                        File.separator + "SampleTest.xml\">SampleTest.xml</a>"));
+        
     }
 }

@@ -101,10 +101,10 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapHeaderContent() throws TransformerException, IOException {
-        String soapHeaderContent = "<header>\n" +
-        		"<operation>unitTest</operation>\n" +
-        		"<messageId>123456789</messageId>\n" +
-        		"</header>";
+        String soapHeaderContent = "<header>" + 
+                            		"<operation>unitTest</operation>" + 
+                            		"<messageId>123456789</messageId>" + 
+                        		"</header>";
         
         Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
                                                     .setHeader(CitrusMessageHeaders.HEADER_CONTENT, soapHeaderContent)

@@ -120,10 +120,10 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapHeaderContent() throws TransformerException, IOException {
-        String soapHeaderContent = "<header>\n" +
-        		"<operation>unitTest</operation>\n" +
-        		"<messageId>123456789</messageId>\n" +
-        		"</header>";
+        String soapHeaderContent = "<header>" + 
+                        		"<operation>unitTest</operation>" + 
+                        		"<messageId>123456789</messageId>" + 
+                    		"</header>";
         
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
         
@@ -203,7 +203,7 @@ public class SoapResponseMessageCallbackTest {
     public void testSoapAttachment() throws TransformerException, IOException {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");
-        attachment.setContent("This is a SOAP attachment\nwith multi-line");
+        attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
         attachment.setContentType("plain/text");
         
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
