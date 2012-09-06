@@ -20,8 +20,7 @@ import javax.jms.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
@@ -316,6 +315,10 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
      * @throws Exception
      */
     public void afterPropertiesSet() throws Exception {
+        if (connectionFactory == null) {
+            throw new BeanCreationException("Missing required connectionFactory for JMS message broker connection!");
+        }
+        
         createConnection();
         createSession(connection);
         
