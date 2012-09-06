@@ -5,20 +5,14 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
   <testcase name="SshServerITest">
     <meta-info>
-      <author>roland</author>
+      <author>Roland</author>
       <creationdate>2012-09-05</creationdate>
-      <status>DRAFT</status>
+      <status>FINAL</status>
       <last-updated-by>roland</last-updated-by>
       <last-updated-on>2012-09-05T00:00:00</last-updated-on>
     </meta-info>
 
-    <description>
-      Straight forward test for the SSH server
-    </description>
-
-    <variables>
-      <variable name="custom_header_id" value="123456789"/>
-    </variables>
+    <description>Straight forward test for the SSH server</description>
 
     <actions>
       <echo>
@@ -67,6 +61,7 @@
           </send>
         </sequential>
       </parallel>
+      
     </actions>
   </testcase>
 </spring:beans>

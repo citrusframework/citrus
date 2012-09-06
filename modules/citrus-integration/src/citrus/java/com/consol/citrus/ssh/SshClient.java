@@ -29,7 +29,10 @@ public class SshClient {
     private int port;
     private static final long SCRIPT_TIMEOUT = 1000 * 60 * 5; // 5 minutes
 
-
+    /**
+     * Default constructor.
+     * @throws IOException
+     */
     public SshClient() throws IOException {
         jsch = new JSch();
         port = 9072;
@@ -39,6 +42,9 @@ public class SshClient {
         privateKeyFile = priv.getAbsolutePath();
     }
 
+    /**
+     * Connects to ssh server.
+     */
     public void connect() {
         if (session == null || !session.isConnected()) {
             try {
@@ -59,6 +65,12 @@ public class SshClient {
         }
     }
 
+    /**
+     * Executes ssh command.
+     * @param pCommand
+     * @param pInput
+     * @return
+     */
     public String execute(String pCommand, String pInput) {
         connect();
         ChannelExec ch = null;
@@ -92,14 +104,21 @@ public class SshClient {
         return outStream.toString();
     }
 
+    /**
+     * Disconnect from ssh server.
+     */
     public void disconnect() {
         if (session.isConnected()) {
             session.disconnect();
         }
     }
 
-    // ===============================================================================================
-
+    /**
+     * Open ssh channel.
+     * @param pCh
+     * @return
+     * @throws ResourceException
+     */
     private ChannelExec openChannelExec(ChannelExec pCh) throws ResourceException {
         try {
             pCh = (ChannelExec) session.openChannel("exec");
@@ -109,6 +128,11 @@ public class SshClient {
         return pCh;
     }
 
+    /**
+     * Finish command and wait for it.
+     * @param pCh
+     * @throws ResourceException
+     */
     private void waitCommandToFinish(ChannelExec pCh) throws ResourceException {
         final long until = System.currentTimeMillis() + SCRIPT_TIMEOUT;
 
@@ -125,6 +149,12 @@ public class SshClient {
         }
     }
 
+    /**
+     * Log to standard input.
+     * @param pCh
+     * @param pInput
+     * @throws ResourceException
+     */
     private void sendStandardInput(ChannelExec pCh, String pInput) throws ResourceException {
         OutputStream os = null;
         try {
@@ -143,6 +173,11 @@ public class SshClient {
         }
     }
 
+    /**
+     * Connect with channel.
+     * @param pCh
+     * @throws ResourceException
+     */
     private void doConnect(ChannelExec pCh) throws ResourceException {
         try {
             pCh.connect();

@@ -108,7 +108,6 @@
       <artifactId>jsch</artifactId>
     </dependency>
 
-
     <!-- Test scoped dependencies -->
     <dependency>
         <groupId>commons-dbcp</groupId>

@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
  * @since 05.09.12
  */
 public class SshServerITest extends AbstractTestNGCitrusTest {
+    
     @Test
     public void sshServerITest(ITestContext testContext) {
         executeTest(testContext);
