@@ -13,6 +13,13 @@
     not all interface partners get simulated by Citrus. If you like to read more about this concept follow the detailed instruction in <xref linkend="test-actors"/>.</para>
   </section>
   
+  <section id="whatsnew-soap-http-errors">
+    <title>Simulate Http error codes with SOAP</title>
+
+    <para>In case Citrus provides SOAP WebServices as a server we can now simulate Http error codes like 404 Not found and 500 Internal server error. This was not possible before so the SOAP server always responsed
+    with a proper SOAP response or SOAP fault. See <xref linkend="soap-http-errors"/> for details.</para>
+  </section>
+  
   <section id="whatsnew-actions">
     <title>New test actions</title>
     

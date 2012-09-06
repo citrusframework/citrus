@@ -605,6 +605,40 @@ Server: Jetty(7.0.0.pre5)
         </section>
     </section>
     
+    <section id="soap-http-errors">
+        <title>Simulate Http error codes with SOAP</title>
+        
+        <para>The SOAP server logic on Citrus is able to simulate pure Http error codes such as 404 &quot;Not found&quot; or 500 &quot;Internal server error&quot;. The good thing is that the Citrus server is 
+        able to receive a request for proper validation in a receive action and then simulate Http errors on demand.</para>
+        
+        <para>The mechanism on Http error code simulation is not different to the usual SOAP reuest/response handling in Citrus. We receive the request as usual and we provide a response with
+        a reply message sender. The Http error situation is simulated according to the special Http header <emphasis>citrus_http_status</emphasis> in the Citrus SOAP response definition. In case this header
+        is set to a value other than 200 OK the Citrus SOAP server sends an empty SOAP response with Http error status code set accordingly.</para>
+        
+        <programlisting>&lt;receive with="soapMessageReceiver"&gt;
+  &lt;message&gt;
+      &lt;data&gt;
+          &lt;![CDATA[
+              &lt;ns0:Message xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
+                  &lt;ns0:Text&gt;Hello SOAP server&lt;/ns0:Text&gt;
+              &lt;/ns0:Message&gt;
+          ]]&gt;
+      &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive>
+
+&lt;send with="soapResponseSender"&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name="citrus_http_status_code" value="500"/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
+
+        <para>The SOAP response must be empty and the Http status code is set to a value other than 200, like 500. This results in a Http error sent to the calling client with error 500 &quot;Internal server error&quot;.</para>
+    </section>
+    
     <section id="soap-attachments">
         <title>SOAP attachment support</title>
         
@@ -712,16 +746,67 @@ Server: Jetty(7.0.0.pre5)
             you do not need to worry about the JMS header encoding done in the SoapAttachmentAwareJmsMessageCallback, because the ws:attachment extension will do all magic for you.
             Just use a extended message receiving action as shown in the example at the beginning of this chapter and you are able to validate the SOAP attachment data.</para>
         </section>
+    </section>
+    
+    <section id="soap-basic-auth">
+        <title>Basic authentication with SOAP</title>
         
-        <section id="soap-ws-adressing">
-            <title>WS-Addressing support</title>
-            
-            <para>WebServices offer lots of technologies and standards within the context of WebServices. Some people call them WS-* specifications. One of these specifications deals 
-            with addressing WebServices. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</para>
-            
-            <para>In Citrus WebServiceMessageSender you can add those header information using the common configuration like this:</para>
-            
-            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+        <para>As a SOAP client you often have to use basic authentication in order to access a service. Basic authentication via Http stands for username/password authentication 
+        where the credentials are transmtted in the Http request header section as base64 encoded entry. As Citrus uses the WebService stack of the Spring framework we have to setup
+        basic authentication there. We set the user credentials on the HttpClient message sender which is used inside Spring's WebServivceTemplate.</para>
+        
+        <para>Citrus provides a comfortable way to set the Http message sender with basic authentication credentials on the WebServiceTemplate. Just see the following
+        example and learn how to do that.</para>
+        
+        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot;
+                              request-url=&quot;http://localhost:8090/test&quot; 
+                              reply-handler=&quot;soapResponseHandler&quot;
+                              message-sender=&quot;basicAuthMessageSender&quot;/&gt;
+  
+&lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;
+
+&lt;bean id=&quot;basicAuthMessageSender&quot; class=&quot;org.springframework.ws.transport.http.HttpComponentsMessageSender&quot;&gt;
+  &lt;property name=&quot;authScope&quot;&gt;
+      &lt;bean class=&quot;org.apache.http.auth.AuthScope&quot;&gt;
+        &lt;constructor-arg value=&quot;localhost&quot;/&gt;
+        &lt;constructor-arg value=&quot;8090&quot;/&gt;
+        &lt;constructor-arg value=&quot;&quot;/&gt;
+        &lt;constructor-arg value=&quot;basic&quot;/&gt;
+      &lt;/bean&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;credentials&quot;&gt;
+    &lt;bean class=&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;&gt;
+        &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
+        &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
+    &lt;/bean&gt;      
+  &lt;/property&gt;  
+&lt;/bean&gt;</programlisting>
+
+        <para>The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper
+        basic authentication header to each request that is sent with this Citrus message sender. By default preemtive authentication is used. The message sender only sends a single request to the server with
+        all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus 
+        can setup an authentication cache within the Http context in order to have preemtive authentication.</para>
+        
+        <tip><para>You can also skip the message sender configuration and set the <emphasis>Authorization</emphasis> header on each request in your send action definition on your own. 
+          Be aware of setting the header as Http mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the username:password phrase.</para>
+          
+          <programlisting>&lt;header&gt;
+    &lt;element name=&quot;citrus_http_Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
+&lt;/header&gt;</programlisting>
+
+          <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
+        </tip>
+    </section>
+    
+    <section id="soap-ws-adressing">
+        <title>WS-Addressing support</title>
+        
+        <para>The web service stack offers a lot of different technologies and standards within the context of WebServices. Some people speak of WS-* specifications. One of these specifications deals 
+        with addressing WebServices. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</para>
+        
+        <para>In Citrus WebServiceMessageSender you can add those header information using the common configuration like this:</para>
+        
+        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
                          request-url=&quot;http://localhost:8090/test&quot; 
                          reply-handler=&quot;soapResponseHandler&quot;
                          addressing-headers=&quot;wsAddressing200408&quot;/&gt;
@@ -748,16 +833,16 @@ Server: Jetty(7.0.0.pre5)
         &lt;/bean&gt;
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
-            
-            <note>
-                <para>The WS-Addressing specification knows several versions. Supported version are VERSION10 (WS-Addressing 1.0 May 2006) and VERSION200408 
-                (August 2004 edition of the WS-Addressing specification).</para>
-            </note>
-            
-            <para>The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request  with
-            ws addressing headers looks like follows:</para>
-            
-            <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+        
+        <note>
+            <para>The WS-Addressing specification knows several versions. Supported version are VERSION10 (WS-Addressing 1.0 May 2006) and VERSION200408 
+            (August 2004 edition of the WS-Addressing specification).</para>
+        </note>
+        
+        <para>The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request  with
+        ws addressing headers looks like follows:</para>
+        
+        <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
     &lt;SOAP-ENV:Header xmlns:wsa=&quot;http://schemas.xmlsoap.org/ws/2004/08/addressing&quot;&gt;
         &lt;wsa:To SOAP-ENV:mustUnderstand=&quot;1&quot;&gt;http://citrus.sample/server&lt;/wsa:To&gt;
         &lt;wsa:From&gt;
@@ -778,20 +863,19 @@ Server: Jetty(7.0.0.pre5)
         &lt;/cit:HelloRequest&gt;
     &lt;/SOAP-ENV:Body&gt;
 &lt;/SOAP-ENV:Envelope&gt;
-            </programlisting>
-            
-            <important>
-                <para>The message id property is automatically generated for each request. If you need to set a static message 
-                id you can do so in citrus-context message sender configuration.</para>
-            </important>
-        </section>
+        </programlisting>
+        
+        <important>
+            <para>The message id property is automatically generated for each request. If you need to set a static message 
+            id you can do so in citrus-context message sender configuration.</para>
+        </important>
     </section>
     
     <section id="soap-fork-mode">
-        <title>Handle synchronous SOAP responses</title>
+        <title>Synchronous SOAP fork mode</title>
         
         <para>SOAP over HTTP uses synchronous communictaion by nature. This means that sending a SOAP message in Citrus over HTTP will automatically 
-        block further test actions until the synchronous HTTP response from the server arrives. In test cases you may want to avoid this synchronous blocking
+        block further test actions until the synchronous HTTP response has been received. In test cases this synchronous blocking might cause problems
         for several reasons. A simple reason would be that you need to do further test actions in parallel to the synchronous HTTP SOAP communication (e.g. simulate another
         backend system in the test case).</para>
         
@@ -815,11 +899,10 @@ Server: Jetty(7.0.0.pre5)
         a separate Java Thread. You could reach the same behaviour with a complex &lt;parallel&gt;/&lt;sequential&gt; container construct, but forking the send action is much more
         straight forward.</para>
          
-        <important>It is higly recommended to use a proper <emphasis>&quot;timeout&quot;</emphasis> in the corresponding receive action for the synchronous SOAP response. As the sending 
-        action is forked it is possible that the receive action in the test asks for the response before the message actually was sent by the server. The result would be a broken test case 
-        whith a failing receive action, because of the missing response message. The <emphasis>&quot;timeout&quot;</emphasis> solves this problem as the receive action will wait for this 
-        time period and occasionally repeats to ask for the SOAP response message. The following sample receive action asks several times within the 10 second timeout period to receive the 
-        SOAP response.
+        <important>It is highly recommended to use a proper <emphasis>&quot;timeout&quot;</emphasis> setting on the SOAP receive action when using fork mode. The forked send operation might take 
+        some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message. 
+        A proper <emphasis>&quot;timeout&quot;</emphasis> setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. 
+        The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.
             <programlisting>
 &lt;ws:receive with=&quot;webServiceReplyHandler&quot; timeout=&quot;10000&quot;&gt;
   &lt;message&gt;

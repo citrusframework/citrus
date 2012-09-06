@@ -489,7 +489,7 @@ Server: Jetty(7.0.0.pre5)
         <para>Both ways of handling Http error messages on client side are valid for expecting the server to raise Http error codes. Choose the prefered way according to your test project requirements.</para>
     </section>
     
-    <section id="htp-basic-auth">
+    <section id="http-basic-auth">
         <title>Basic authentication</title>
         
         <para>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication 
@@ -549,11 +549,13 @@ Content-Length: 175
 &lt;/testRequestMessage&gt;</programlisting>
     
         <tip><para>Of course you can also set the <emphasis>Authorization</emphasis> header on your own for each request in your send action definition. 
-        Be aware of using the correct basic authentication header syntax with base64 encoding for the username:password phrase.</para>
+          Be aware of using the correct basic authentication header syntax with base64 encoding for the username:password phrase.</para>
         
-        <programlisting>&lt;header&gt;
+          <programlisting>&lt;header&gt;
     &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
 &lt;/header&gt;</programlisting>
+
+          <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
         </tip>
     </section>
 </chapter>
