@@ -67,5 +67,4 @@ public class SshRequest {
     public void setStdin(String stdin) {
         this.stdin = stdin;
     }
-
 }
