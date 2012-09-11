@@ -16,13 +16,16 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.message.AbstractReplyMessageReceiver;
+
+import com.consol.citrus.message.ReplyMessageReceiver;
 
 /**
  * Message receiver implementation for receiving WebService messages.
  * 
  * @author Christoph Deppisch
  */
-public class WebServiceReplyMessageReceiver extends AbstractReplyMessageReceiver {
+// NOTE: Left here, since this class is used for deciding a special treatment of ReceiveSoapMessageAction
+// in TestNGCitrusTestBuilder
+public class WebServiceReplyMessageReceiver extends ReplyMessageReceiver {
 
 }

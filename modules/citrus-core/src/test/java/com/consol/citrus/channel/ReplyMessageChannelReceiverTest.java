@@ -19,6 +19,7 @@ package com.consol.citrus.channel;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.message.ReplyMessageReceiver;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -33,7 +34,7 @@ public class ReplyMessageChannelReceiverTest {
 
     @Test
     public void testOnReplyMessage() {
-        ReplyMessageChannelReceiver replyMessageReceiver = new ReplyMessageChannelReceiver();
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -47,7 +48,7 @@ public class ReplyMessageChannelReceiverTest {
     
     @Test
     public void testOnReplyMessageWithCorrelatorKey() {
-        ReplyMessageChannelReceiver replyMessageReceiver = new ReplyMessageChannelReceiver();
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

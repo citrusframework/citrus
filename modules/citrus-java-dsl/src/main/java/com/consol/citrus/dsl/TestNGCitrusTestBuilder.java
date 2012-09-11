@@ -21,22 +21,20 @@ import java.util.*;
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
-import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
-import org.testng.ITestContext;
-
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.*;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
+import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
+import org.testng.ITestContext;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -305,7 +303,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @param messageReceiver
      * @return
      */
-    protected ReceiveSoapMessageActionDefinition receive(WebServiceReplyMessageReceiver messageReceiver) {
+    protected ReceiveSoapMessageActionDefinition receive(ReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
         action.setMessageReceiver(messageReceiver);
         
