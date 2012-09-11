@@ -32,7 +32,7 @@ import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 /**
  * Message receiver for SOAP messaging.
  * 
- * This special implementation offers SOAP attatchment valdation in addition to
+ * This special implementation offers SOAP attachment validation in addition to
  * the normal message receiver.
  * 
  * @author Christoph Deppisch
