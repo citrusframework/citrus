@@ -78,16 +78,15 @@ public class SoapMessageConverter {
      * @throws TransformerException
      */
     public Message<?> convert(WebServiceMessage message, MessageContext messageContext) throws IOException, TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        
-        StringResult responsePayload = new StringResult();
+        StringResult payloadResult = new StringResult();
         
         if (message.getPayloadSource() != null) {
-            transformer.transform(message.getPayloadSource(), responsePayload);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.transform(message.getPayloadSource(), payloadResult);
         }
         
-        MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(responsePayload.toString());
+        MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(payloadResult.toString());
         
         handleMessageProperties(messageContext, messageBuilder);
         
