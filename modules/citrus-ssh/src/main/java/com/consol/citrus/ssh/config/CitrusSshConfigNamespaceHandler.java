@@ -16,7 +16,6 @@
 
 package com.consol.citrus.ssh.config;
 
-import com.consol.citrus.ssh.config.SshServerParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -31,5 +30,7 @@ public class CitrusSshConfigNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("server", new SshServerParser());
+        registerBeanDefinitionParser("client", new SshClientParser());
+        registerBeanDefinitionParser("reply-handler", new SshReplyHandlerParser());
     }
 }

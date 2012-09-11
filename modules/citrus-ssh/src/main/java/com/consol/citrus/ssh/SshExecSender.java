@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.ssh;
 
 
@@ -52,6 +68,9 @@ public class SshExecSender extends AbstractMessageSender {
     // Timeout how long to wait for answering the request
     private long scriptTimeout = 1000 * 60 * 5; // 5 minutes
 
+    // Timeout how long to wait for a connection to connect
+    private int connectionTimeout = 1000 * 60 * 1; // 1 minute
+
     // --------------------------
     // Session for the SSH communication
     private Session session;
@@ -64,29 +83,19 @@ public class SshExecSender extends AbstractMessageSender {
         xstream = new XStream();
         xstream.alias("ssh-request",SshRequest.class);
         xstream.alias("ssh-response",SshResponse.class);
-
     }
 
 
     public void send(Message<?> message) {
         String payload = (String) message.getPayload();
-        String rUser = (String) message.getHeaders().get("user");
         SshRequest request = (SshRequest) xstream.fromXML(payload);
-        if (rUser == null) {
-            rUser = user;
-        }
-        if (rUser == null) {
-            throw new CitrusRuntimeException("No user given for connecting to SSH server");
-        }
 
         if (strictHostChecking) {
-            if (knownHosts == null) {
-                throw new CitrusRuntimeException("Strict host checking is enabled but no knownHosts given");
-            }
-            jsch.setKnownHosts(getInputStreamFromPath(knownHosts));
+            setKnownHosts();
         }
 
-        connect();
+        String rUser = getRemoteUser(message);
+        connect(rUser);
         ChannelExec ch = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ByteArrayOutputStream errStream = new ByteArrayOutputStream();
@@ -111,15 +120,45 @@ public class SshExecSender extends AbstractMessageSender {
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message response = MessageBuilder.withPayload(xstream.toXML(sshResp)).build();
+        Message response = MessageBuilder.withPayload(xstream.toXML(sshResp))
+                                         .setHeader("user",rUser).build();
         informReplyMessageHandler(response,message);
     }
 
-    private String getInputStreamFromPath(String pPath) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    private String getRemoteUser(Message<?> message) {
+        String rUser = (String) message.getHeaders().get("user");
+        if (rUser == null) {
+            // Use default uses
+            rUser = user;
+        }
+        if (rUser == null) {
+            throw new CitrusRuntimeException("No user given for connecting to SSH server");
+        }
+        return rUser;
     }
 
-    private String getPrivateKeyPath() {
+    private void setKnownHosts() {
+        if (knownHosts == null) {
+            throw new CitrusRuntimeException("Strict host checking is enabled but no knownHosts given");
+        }
+        try {
+            jsch.setKnownHosts(getInputStreamFromPath(knownHosts));
+        } catch (JSchException e) {
+            throw new CitrusRuntimeException("Cannot add known hosts from " + knownHosts + ": " + e,e);
+        } catch (FileNotFoundException e) {
+            throw new CitrusRuntimeException("Cannot find known hosts file " + knownHosts + ": " + e,e);
+        }
+    }
+
+    private InputStream getInputStreamFromPath(String pPath) throws FileNotFoundException {
+        if (pPath.startsWith("classpath:")) {
+            return getClass().getClassLoader().getResourceAsStream(pPath.substring("classpath:".length()));
+        } else {
+            return new FileInputStream(pPath);
+        }
+    }
+
+    private String getPrivateKeyPath() throws IOException {
         File priv = File.createTempFile("citrus-ssh-test","priv");
         FileCopyUtils.copy(getClass().getResourceAsStream("test_user.priv"), new FileOutputStream(priv));
         privateKeyPath = priv.getAbsolutePath();
@@ -128,18 +167,20 @@ public class SshExecSender extends AbstractMessageSender {
 
     // ===============================================================================================
 
-    private void connect() {
+    private void connect(String rUser) {
         if (session == null || !session.isConnected()) {
             try {
                 jsch.addIdentity(getPrivateKeyPath(),privateKeyPassword);
             } catch (JSchException e) {
-                throw new CitrusRuntimeException("Cannot open private key file name " + privateKeyPath + ": " + e,e);
+                throw new CitrusRuntimeException("Cannot add private key " + privateKeyPath + ": " + e,e);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Cannot open private key file " + privateKeyPath + ": " + e,e);
             }
             if (user == null) {
                 throw new CitrusRuntimeException("No user given for remote connection");
             }
             try {
-                session = jsch.getSession(user,host,port);
+                session = jsch.getSession(rUser,host,port);
                 session.setConfig("StrictHostKeyChecking",strictHostChecking ? "yes" : "no");
                 session.connect();
             } catch (JSchException e) {
@@ -147,7 +188,6 @@ public class SshExecSender extends AbstractMessageSender {
             }
         }
     }
-
 
     private void disconnect() {
         if (session.isConnected()) {
@@ -200,7 +240,11 @@ public class SshExecSender extends AbstractMessageSender {
 
     private void doConnect(ChannelExec pCh) throws ResourceException {
         try {
-            pCh.connect();
+            if (connectionTimeout != 0) {
+                pCh.connect(connectionTimeout);
+            } else {
+                pCh.connect();
+            }
         } catch (JSchException e) {
             throw new ResourceException("Cannot connect EXEC SSH channel: " + e,e);
         }

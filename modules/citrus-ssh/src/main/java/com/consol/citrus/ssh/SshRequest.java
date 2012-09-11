@@ -18,6 +18,7 @@ package com.consol.citrus.ssh;
 
 /**
  * POJO encapsulating an SSH request
+ *
  * @author roland
  * @since 05.09.12
  */
