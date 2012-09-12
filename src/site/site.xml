@@ -24,6 +24,8 @@
     <menu name="Citrus">
       <item name="Welcome" href="${site.url}/index.html"/>
       <item name="Introduction" href="${site.url}/introduction.html"/>
+      <item name="Features" href="${site.url}/features.html"/>
+      <item name="Support" href="${site.url}/support.html"/>
       <item name="Changes" href="${site.url}/changes-report.html"/>
     </menu>
     
@@ -53,9 +55,7 @@
     <menu name="Community">
       <item name="News" href="${site.url}/news.html"/>
       <item name="Forum" href="http://citrus.895196.n3.nabble.com/"/>
-      <item name="Mailing List" href="${site.url}/mail-lists.html"/>
       <item name="Contact" href="${site.url}/contact.html"/>
-      <item name="Reporting bugs" href="${site.url}/reporting-bugs.html"/>
     </menu>
 
     <menu name="Development">
