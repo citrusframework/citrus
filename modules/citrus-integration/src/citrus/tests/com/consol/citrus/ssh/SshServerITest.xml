@@ -20,7 +20,7 @@
       </echo>
 
       <parallel>
-        <java class="com.consol.citrus.ssh.SshClient">
+        <java class="com.consol.citrus.ssh.SshTestClient">
           <method name="execute">
             <argument>shutdown</argument>
             <argument>input</argument>

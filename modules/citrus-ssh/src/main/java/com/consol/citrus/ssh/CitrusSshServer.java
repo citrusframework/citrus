@@ -111,7 +111,7 @@ public class CitrusSshServer extends AbstractServer {
         // Setup message handler
         sshd.setCommandFactory(new CommandFactory() {
             public Command createCommand(String command) {
-                return new CitrusSshCommand(command,messageHandler);
+                return new SshCommand(command,messageHandler);
             }
         });
 
@@ -132,27 +132,11 @@ public class CitrusSshServer extends AbstractServer {
     }
 
     /**
-     * Gets the port.
-     * @return the port the port to get.
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
      * Sets the port.
      * @param port the port to set
      */
     public void setPort(int port) {
         this.port = port;
-    }
-
-    /**
-     * Gets the user.
-     * @return the user the user to get.
-     */
-    public String getUser() {
-        return user;
     }
 
     /**
@@ -164,27 +148,11 @@ public class CitrusSshServer extends AbstractServer {
     }
 
     /**
-     * Gets the password.
-     * @return the password the password to get.
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
      * Sets the password.
      * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    /**
-     * Gets the allowedKeyPath.
-     * @return the allowedKeyPath the allowedKeyPath to get.
-     */
-    public String getAllowedKeyPath() {
-        return allowedKeyPath;
     }
 
     /**
@@ -196,35 +164,11 @@ public class CitrusSshServer extends AbstractServer {
     }
 
     /**
-     * Gets the hostKeyPath.
-     * @return the hostKeyPath the hostKeyPath to get.
-     */
-    public String getHostKeyPath() {
-        return hostKeyPath;
-    }
-
-    /**
      * Sets the hostKeyPath.
      * @param hostKeyPath the hostKeyPath to set
      */
     public void setHostKeyPath(String hostKeyPath) {
         this.hostKeyPath = hostKeyPath;
-    }
-
-    /**
-     * Gets the sshd.
-     * @return the sshd the sshd to get.
-     */
-    public SshServer getSshd() {
-        return sshd;
-    }
-
-    /**
-     * Sets the sshd.
-     * @param sshd the sshd to set
-     */
-    public void setSshd(SshServer sshd) {
-        this.sshd = sshd;
     }
 
     /**

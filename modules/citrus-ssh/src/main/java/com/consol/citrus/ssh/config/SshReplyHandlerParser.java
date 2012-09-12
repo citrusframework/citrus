@@ -1,7 +1,6 @@
 package com.consol.citrus.ssh.config;
 
 import com.consol.citrus.message.ReplyMessageHandler;
-import com.consol.citrus.ssh.SshReplyHandler;
 
 /**
  * Parser for the reply handler of an SSH request

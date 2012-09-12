@@ -24,7 +24,6 @@ import com.consol.citrus.message.AbstractMessageSender;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.jcraft.jsch.*;
 import com.thoughtworks.xstream.XStream;
-import groovy.util.ResourceException;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
@@ -37,7 +36,7 @@ import org.springframework.util.StringUtils;
  * @author roland
  * @since 06.09.12
  */
-public class SshExecSender extends AbstractMessageSender {
+public class CitrusSshClient extends AbstractMessageSender {
 
     public static final String CLASSPATH_PREFIX = "classpath:";
     // SSH implementation
@@ -80,7 +79,7 @@ public class SshExecSender extends AbstractMessageSender {
     // Message parser
     private XStream xstream;
 
-    public SshExecSender() throws IOException {
+    public CitrusSshClient() {
         jsch = new JSch();
         xstream = new XStream();
         xstream.alias("ssh-request",SshRequest.class);
@@ -88,6 +87,11 @@ public class SshExecSender extends AbstractMessageSender {
     }
 
 
+    /**
+     * Send a message as SSH request. The message format is created from {@link CitrusSshServer}.
+     *
+     * @param message the message object to send.
+     */
     public void send(Message<?> message) {
         String payload = (String) message.getPayload();
         SshRequest request = (SshRequest) xstream.fromXML(payload);
@@ -113,8 +117,6 @@ public class SshExecSender extends AbstractMessageSender {
             }
             waitCommandToFinish(ch);
             rc = ch.getExitStatus();
-        } catch (ResourceException e) {
-            throw new CitrusRuntimeException("Cannot execute " + request.getCommand() + ": " + e,e);
         } finally {
             if (ch != null && ch.isConnected()) {
                 ch.disconnect();
@@ -144,7 +146,11 @@ public class SshExecSender extends AbstractMessageSender {
             throw new CitrusRuntimeException("Strict host checking is enabled but no knownHosts given");
         }
         try {
-            jsch.setKnownHosts(getInputStreamFromPath(knownHosts));
+            InputStream khIs = getInputStreamFromPath(knownHosts);
+            if (khIs == null) {
+                throw new CitrusRuntimeException("Cannot find knownHosts at " + knownHosts);
+            }
+            jsch.setKnownHosts(khIs);
         } catch (JSchException e) {
             throw new CitrusRuntimeException("Cannot add known hosts from " + knownHosts + ": " + e,e);
         } catch (FileNotFoundException e) {
@@ -165,7 +171,11 @@ public class SshExecSender extends AbstractMessageSender {
             return null;
         } else if (privateKeyPath.startsWith(CLASSPATH_PREFIX)) {
             File priv = File.createTempFile("citrus-ssh-test","priv");
-            FileCopyUtils.copy(getClass().getResourceAsStream(privateKeyPath.substring(CLASSPATH_PREFIX.length())), new FileOutputStream(priv));
+            InputStream is = getClass().getClassLoader().getResourceAsStream(privateKeyPath.substring(CLASSPATH_PREFIX.length()));
+            if (is == null) {
+                throw new CitrusRuntimeException("No private key found at " + privateKeyPath);
+            }
+            FileCopyUtils.copy(is, new FileOutputStream(priv));
             return priv.getAbsolutePath();
         } else {
             return privateKeyPath;
@@ -184,9 +194,6 @@ public class SshExecSender extends AbstractMessageSender {
                 throw new CitrusRuntimeException("Cannot add private key " + privateKeyPath + ": " + e,e);
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Cannot open private key file " + privateKeyPath + ": " + e,e);
-            }
-            if (user == null) {
-                throw new CitrusRuntimeException("No user given for remote connection");
             }
             try {
                 session = jsch.getSession(rUser,host,port);
@@ -207,16 +214,16 @@ public class SshExecSender extends AbstractMessageSender {
         }
     }
 
-    private ChannelExec openChannelExec(ChannelExec pCh) throws ResourceException {
+    private ChannelExec openChannelExec(ChannelExec pCh) throws CitrusRuntimeException {
         try {
             pCh = (ChannelExec) session.openChannel("exec");
         } catch (JSchException e) {
-            throw new ResourceException("Cannot open EXEC SSH channel: " + e,e);
+            throw new CitrusRuntimeException("Cannot open EXEC SSH channel: " + e,e);
         }
         return pCh;
     }
 
-    private void waitCommandToFinish(ChannelExec pCh) throws ResourceException {
+    private void waitCommandToFinish(ChannelExec pCh) {
         final long until = System.currentTimeMillis() + commandTimeout;
 
         try {
@@ -232,13 +239,13 @@ public class SshExecSender extends AbstractMessageSender {
         }
     }
 
-    private void sendStandardInput(ChannelExec pCh, String pInput) throws ResourceException {
+    private void sendStandardInput(ChannelExec pCh, String pInput) {
         OutputStream os = null;
         try {
             os = pCh.getOutputStream();
             os.write(pInput.getBytes());
         } catch (IOException e) {
-            throw new ResourceException("Cannot write to standard input of SSH channel: " + e,e);
+            throw new CitrusRuntimeException("Cannot write to standard input of SSH channel: " + e,e);
         } finally {
             if (os != null) {
                 try {
@@ -250,7 +257,7 @@ public class SshExecSender extends AbstractMessageSender {
         }
     }
 
-    private void doConnect(ChannelExec pCh) throws ResourceException {
+    private void doConnect(ChannelExec pCh) {
         try {
             if (connectionTimeout != 0) {
                 pCh.connect(connectionTimeout);
@@ -258,10 +265,54 @@ public class SshExecSender extends AbstractMessageSender {
                 pCh.connect();
             }
         } catch (JSchException e) {
-            throw new ResourceException("Cannot connect EXEC SSH channel: " + e,e);
+            throw new CitrusRuntimeException("Cannot connect EXEC SSH channel: " + e,e);
         }
     }
 
+    public void setHost(String pHost) {
+        host = pHost;
+    }
+
+    public void setPort(int pPort) {
+        port = pPort;
+    }
+
+    public void setUser(String pUser) {
+        user = pUser;
+    }
+
+    public void setPassword(String pPassword) {
+        password = pPassword;
+    }
+
+    public void setPrivateKeyPath(String pPrivateKeyPath) {
+        privateKeyPath = pPrivateKeyPath;
+    }
+
+    public void setPrivateKeyPassword(String pPrivateKeyPassword) {
+        privateKeyPassword = pPrivateKeyPassword;
+    }
+
+    public void setStrictHostChecking(boolean pStrictHostChecking) {
+        strictHostChecking = pStrictHostChecking;
+    }
+
+    public void setKnownHosts(String pKnownHosts) {
+        knownHosts = pKnownHosts;
+    }
+
+    public void setCommandTimeout(long pCommandTimeout) {
+        commandTimeout = pCommandTimeout;
+    }
+
+    public void setConnectionTimeout(int pConnectionTimeout) {
+        connectionTimeout = pConnectionTimeout;
+    }
+
+
+    // =========================================================
+
+    // UserInfo which simply returns a plain password
     private static class UserInfoWithPlainPassword implements UserInfo {
         private String password;
 

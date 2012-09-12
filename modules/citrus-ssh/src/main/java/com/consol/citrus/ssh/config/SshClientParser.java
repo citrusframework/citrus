@@ -1,7 +1,7 @@
 package com.consol.citrus.ssh.config;
 
 
-import com.consol.citrus.ssh.SshExecSender;
+import com.consol.citrus.ssh.CitrusSshClient;
 
 /**
  * Parse for SSH-client configuration
@@ -39,6 +39,6 @@ public class SshClientParser extends AbstractSshParser {
 
     @Override
     protected Class getBeanClass() {
-        return SshExecSender.class;
+        return CitrusSshClient.class;
     }
 }

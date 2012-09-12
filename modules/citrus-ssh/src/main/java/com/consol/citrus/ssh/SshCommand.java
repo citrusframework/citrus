@@ -33,7 +33,7 @@ import com.thoughtworks.xstream.XStream;
  * @author roland
  * @since 05.09.12
  */
-public class CitrusSshCommand implements Command, Runnable {
+public class SshCommand implements Command, Runnable {
 
     /** Message handler for creating requests/responses **/
     private MessageHandler messageHandler;
@@ -56,7 +56,7 @@ public class CitrusSshCommand implements Command, Runnable {
      * @param pCommand command performend
      * @param pMessageHandler message handler
      */
-    public CitrusSshCommand(String pCommand, MessageHandler pMessageHandler) {
+    public SshCommand(String pCommand, MessageHandler pMessageHandler) {
         messageHandler = pMessageHandler;
         command = pCommand;
     }

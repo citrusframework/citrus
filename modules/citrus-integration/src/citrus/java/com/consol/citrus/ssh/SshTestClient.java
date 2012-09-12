@@ -15,9 +15,9 @@ import org.springframework.util.FileCopyUtils;
  * @author roland
  * @since 05.09.12
  */
-public class SshClient {
+public class SshTestClient {
 
-    Logger log = LoggerFactory.getLogger(SshClient.class);
+    Logger log = LoggerFactory.getLogger(SshTestClient.class);
 
     // SSH implementation
     private JSch jsch;
@@ -33,7 +33,7 @@ public class SshClient {
      * Default constructor.
      * @throws IOException
      */
-    public SshClient() throws IOException {
+    public SshTestClient() throws IOException {
         jsch = new JSch();
         port = 9072;
         user = "roland";

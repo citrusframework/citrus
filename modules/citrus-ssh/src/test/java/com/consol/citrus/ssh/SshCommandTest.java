@@ -38,10 +38,10 @@ import com.thoughtworks.xstream.XStream;
  * @author roland
  * @since 05.09.12
  */
-public class CitrusSshCommandTest {
+public class SshCommandTest {
 
     private ByteArrayOutputStream stdout, stderr;
-    private CitrusSshCommand cmd;
+    private SshCommand cmd;
     private MessageHandler handler;
 
     private static String COMMAND = "shutdown";
@@ -51,7 +51,7 @@ public class CitrusSshCommandTest {
     @BeforeMethod
     public void setup() {
         handler = createMock(MessageHandler.class);
-        cmd = new CitrusSshCommand(COMMAND,handler);
+        cmd = new SshCommand(COMMAND,handler);
 
         stdout = new ByteArrayOutputStream();
         stderr = new ByteArrayOutputStream();
