@@ -613,19 +613,7 @@
     </pluginManagement>
   </build>
 
-
   <profiles>
-    <!-- TIBCO specific module, only built when activated -->
-    <profile>
-        <id>citrus-tibco</id>
-        <modules>
-            <module>modules/citrus-tibco</module>
-        </modules>
-        <activation>
-            <activeByDefault>false</activeByDefault>
-        </activation>
-    </profile>
-    
     <!-- Distribution Management -->
     <profile>
       <id>release-inhouse</id>
