@@ -16,8 +16,15 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.message.*;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
+import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -26,16 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch

@@ -19,6 +19,7 @@ package com.consol.citrus.jms;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.message.ReplyMessageReceiver;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -35,7 +36,7 @@ public class JmsReplyMessageReceiverTest {
     
     @Test
     public void testOnReplyMessage() {
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver();
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -49,7 +50,7 @@ public class JmsReplyMessageReceiverTest {
     
     @Test
     public void testOnReplyMessageWithCorrelatorKey() {
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver();
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -68,7 +69,7 @@ public class JmsReplyMessageReceiverTest {
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .build();
         
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver() {
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
             @Override
             public Message<?> receiveSelected(String selector) {
                 retryCount++;
@@ -89,7 +90,7 @@ public class JmsReplyMessageReceiverTest {
     public void testReplyMessageRetriesExceeded() {
         retryCount = 0;
         
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver() {
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
             @Override
             public Message<?> receiveSelected(String selector) {
                 retryCount++;
