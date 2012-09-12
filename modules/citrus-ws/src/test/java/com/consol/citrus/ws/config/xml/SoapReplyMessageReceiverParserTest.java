@@ -23,16 +23,16 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
-import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 
 /**
  * @author Christoph Deppisch
  */
-public class WebServiceReplyMessageReceiverParserTest extends AbstractBeanDefinitionParserTest {
+public class SoapReplyMessageReceiverParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
     public void testReplyMessageReceiverParser() {
-        Map<String, WebServiceReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(WebServiceReplyMessageReceiver.class);
+        Map<String, SoapReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(SoapReplyMessageReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 2);
         Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver1"));
@@ -40,7 +40,7 @@ public class WebServiceReplyMessageReceiverParserTest extends AbstractBeanDefini
         Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver2"));
         
         // 2nd message receiver
-        WebServiceReplyMessageReceiver messageReceiver = messageReceivers.get("webServiceReplyMessageReceiver2");
+        SoapReplyMessageReceiver messageReceiver = messageReceivers.get("webServiceReplyMessageReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }

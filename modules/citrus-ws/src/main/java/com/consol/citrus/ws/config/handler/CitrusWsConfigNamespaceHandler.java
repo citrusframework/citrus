@@ -30,7 +30,7 @@ public class CitrusWsConfigNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("jetty-server", new JettyServerParser());
         registerBeanDefinitionParser("message-sender", new WebServiceMessageSenderParser());
-        registerBeanDefinitionParser("reply-message-handler", new WebServiceReplyMessageReceiverParser());
+        registerBeanDefinitionParser("reply-message-handler", new SoapReplyMessageReceiverParser());
     }
 
 }

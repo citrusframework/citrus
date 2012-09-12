@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.ws.config.xml;
 
-import com.consol.citrus.message.ReplyMessageReceiver;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -24,26 +23,21 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 
 /**
- * Bean definition parser for jms-reply-message-handler configuration.
+ * Parser for reply message receiver component in Citrus ws namespace.
  * 
  * @author Christoph Deppisch
  */
-public class JmsReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
+public class SoapReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.AbstractBeanDefinitionParser#parseInternal(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition(ReplyMessageReceiver.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(SoapReplyMessageReceiver.class);
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
         
         return builder.getBeanDefinition();
     }
-
-   
 }
