@@ -20,12 +20,12 @@ package com.consol.citrus.ws.message;
 import com.consol.citrus.message.ReplyMessageReceiver;
 
 /**
- * Message receiver implementation for receiving WebService messages.
+ * Reply message receiver implementation for receiving SOAP WebService messages. We introduced this special subclass
+ * in order to separate message receiver definition for SOAP messages from other message protocols. This is 
+ * because we have special SOAP validation capabilities that can be used e.g. in Java DSL.
  * 
  * @author Christoph Deppisch
  */
-// NOTE: Left here, since this class is used for deciding a special treatment of ReceiveSoapMessageAction
-// in TestNGCitrusTestBuilder
-public class WebServiceReplyMessageReceiver extends ReplyMessageReceiver {
+public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
 
 }

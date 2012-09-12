@@ -24,7 +24,7 @@ import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -175,7 +175,7 @@ public class ReceiveSoapMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithReceiverName() {
-        WebServiceReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(WebServiceReplyMessageReceiver.class);
+        SoapReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(SoapReplyMessageReceiver.class);
         
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override

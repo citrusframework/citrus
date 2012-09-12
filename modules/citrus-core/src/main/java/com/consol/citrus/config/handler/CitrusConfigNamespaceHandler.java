@@ -36,14 +36,14 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("jms-message-receiver", new JmsMessageReceiverParser());
         registerBeanDefinitionParser("jms-sync-message-sender", new JmsSyncMessageSenderParser());
         registerBeanDefinitionParser("jms-sync-message-receiver", new JmsSyncMessageReceiverParser());
-        registerBeanDefinitionParser("jms-reply-message-handler", new JmsReplyMessageReceiverParser());
+        registerBeanDefinitionParser("jms-reply-message-handler", new ReplyMessageReceiverParser());
         registerBeanDefinitionParser("jms-reply-message-sender", new JmsReplyMessageSenderParser());
         registerBeanDefinitionParser("message-channel", new MessageSelectingQueueChannelParser());
         registerBeanDefinitionParser("message-channel-sender", new MessageChannelSenderParser());
         registerBeanDefinitionParser("message-channel-receiver", new MessageChannelReceiverParser());
         registerBeanDefinitionParser("sync-message-channel-sender", new SyncMessageChannelSenderParser());
         registerBeanDefinitionParser("sync-message-channel-receiver", new SyncMessageChannelReceiverParser());
-        registerBeanDefinitionParser("message-channel-reply-handler", new ReplyMessageChannelReceiverParser());
+        registerBeanDefinitionParser("message-channel-reply-handler", new ReplyMessageReceiverParser());
         registerBeanDefinitionParser("message-channel-reply-sender", new ReplyMessageChannelSenderParser());
     }
 
