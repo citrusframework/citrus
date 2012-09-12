@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import com.consol.citrus.TestActor;
 
 /**
- * Abstract base class for reply message receiver implementations. In addition to the usual
+ * Generic implementation for reply message receiver implementations. In addition to the usual
  * {@link MessageReceiver} functionality this class implements the {@link ReplyMessageHandler} interface.
  * 
  *  This means that synchronous message senders may invoke this receiver as soon as synchronous reply
@@ -36,7 +36,7 @@ import com.consol.citrus.TestActor;
  *  
  * @author Christoph Deppisch
  */
-public abstract class AbstractReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler {
+public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler {
 
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();

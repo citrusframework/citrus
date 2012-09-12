@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.ws.message;
 
-import com.consol.citrus.message.AbstractReplyMessageReceiver;
+
+import com.consol.citrus.message.ReplyMessageReceiver;
 
 /**
- * Receiver handles reply messages in synchronous JMS communication. A synchronous 
- * {@link com.consol.citrus.message.MessageSender} implementation sends and receives JMS messages. The reply message receiver
- * is invoked with the respective reply message.
- *  
+ * Reply message receiver implementation for receiving SOAP WebService messages. We introduced this special subclass
+ * in order to separate message receiver definition for SOAP messages from other message protocols. This is 
+ * because we have special SOAP validation capabilities that can be used e.g. in Java DSL.
+ * 
  * @author Christoph Deppisch
  */
-public class JmsReplyMessageReceiver extends AbstractReplyMessageReceiver {
+public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
 
 }

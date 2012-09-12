@@ -36,7 +36,7 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
-import com.consol.citrus.ws.message.WebServiceReplyMessageReceiver;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -305,7 +305,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @param messageReceiver
      * @return
      */
-    protected ReceiveSoapMessageActionDefinition receive(WebServiceReplyMessageReceiver messageReceiver) {
+    protected ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
         action.setMessageReceiver(messageReceiver);
         
@@ -334,7 +334,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     protected ReceiveMessageActionDefinition receive(String messageReceiverName) {
         MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
         
-        if (messageReceiver instanceof WebServiceReplyMessageReceiver) {
+        if (messageReceiver instanceof SoapReplyMessageReceiver) {
             ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
             action.setMessageReceiver(messageReceiver);
             testCase.addTestAction(action);
