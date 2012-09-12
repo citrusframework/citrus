@@ -4,15 +4,17 @@
     <title>Features</title>
   </properties>
   <head>
-    <script type="text/javascript" src="js/idea.js"></script>
-    <script type="text/javascript" language="JavaScript" src="http://idea.informer.com/tabn2v3.js"></script>
+    <script type="text/javascript" src="js/jira_features.js"></script>
+    
+    <link rel="stylesheet" href="css/jira-collector.css" type="text/css" />
   </head>
   <body>
     <section name="Features">
       <p>
         See below a list of features that Citrus provides as a test automation framework for enterprise integration testing. If you are missing a feature in Citrus
-        please help us and submit a <a href="http://citrus.idea.informer.com/proj/?mod=one" target="_blank">feature request</a>. You can also just <a href="http://citrus.idea.informer.com/proj/?mod=one" target="_blank">vote</a> 
-        for ideas and features, so we can start developing those things that are most relevant for you.
+        please help us and submit a <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">feature request</a>. You can also just vote 
+        for ideas and features on <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">http://citrusframework.atlassian.net</a>, so we can start 
+        developing those things that are most relevant to you.
       </p>
       
       <p>Control the test flow</p>
