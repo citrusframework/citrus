@@ -196,6 +196,70 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     }
     
     /**
+     * Expect this message header data in received message. Message header data is used in 
+     * SOAP messages as XML fragment for instance.
+     * @param data
+     * @return
+     */
+    public ReceiveMessageActionDefinition header(String data) {
+        if (validationContext != null) {
+            if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+                ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderData(data);
+            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                // convert to payload template message builder
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                messageBuilder.setPayloadData(message.getPayload().toString());
+                messageBuilder.getMessageHeaders().putAll(message.getHeaders());
+                messageBuilder.setMessageHeaderData(data);
+                validationContext.setMessageBuilder(messageBuilder);
+            }
+        } else {
+            initializeValidationContext();
+            
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setMessageHeaderData(data);
+            validationContext.setMessageBuilder(messageBuilder);
+            action.getValidationContexts().add(validationContext);
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Expect this message header data in received message from file resource. Message header data is used in 
+     * SOAP messages as XML fragment for instance.
+     * @param resource
+     * @return
+     */
+    public ReceiveMessageActionDefinition header(Resource resource) {
+        if (validationContext != null) {
+            if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+                ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderResource(resource);
+            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                // convert to payload template message builder
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                messageBuilder.setPayloadData(message.getPayload().toString());
+                messageBuilder.getMessageHeaders().putAll(message.getHeaders());
+                messageBuilder.setMessageHeaderResource(resource);
+                validationContext.setMessageBuilder(messageBuilder);
+            }
+        } else {
+            initializeValidationContext();
+            
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setMessageHeaderResource(resource);
+            validationContext.setMessageBuilder(messageBuilder);
+            action.getValidationContexts().add(validationContext);
+        }
+        
+        return this;
+    }
+    
+    /**
      * Sets a explicit message type for this receive action.
      * @param messageType
      * @return

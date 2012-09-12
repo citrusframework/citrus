@@ -150,7 +150,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
     }
 
     /**
-     * Adds message header to this definition's message sending action.
+     * Adds message header name value pair to this definition's message sending action.
      * @param name
      * @param value
      */
@@ -160,6 +160,42 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.getMessageHeaders().put(name, value);
+            
+            action.setMessageBuilder(messageBuilder);
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Adds message header data to this definition's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
+     * @param data
+     */
+    public SendMessageActionDefinition header(String data) {
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+            ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderData(data);
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setMessageHeaderData(data);
+            
+            action.setMessageBuilder(messageBuilder);
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Adds message header data as file resource to this definition's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
+     * @param resource
+     */
+    public SendMessageActionDefinition header(Resource resource) {
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+            ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderResource(resource);
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            messageBuilder.setMessageHeaderResource(resource);
             
             action.setMessageBuilder(messageBuilder);
         }
