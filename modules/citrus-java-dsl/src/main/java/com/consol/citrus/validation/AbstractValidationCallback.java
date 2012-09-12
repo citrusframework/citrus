@@ -28,10 +28,10 @@ import com.consol.citrus.validation.callback.ValidationCallback;
  *  
  * @author Christoph Deppisch
  */
-public abstract class BasicValidationCallback implements ValidationCallback {
+public abstract class AbstractValidationCallback implements ValidationCallback {
 
     /** Spring application context injected before validation callback is called */
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
     
     /**
      * Validate message automatically unmarshalling message payload.
@@ -41,12 +41,11 @@ public abstract class BasicValidationCallback implements ValidationCallback {
     }
     
     /**
-     * Subclasses can override this method for validation purpose.
-     * @param payload marshalled message payload object.
-     * @param headers message headers
+     * Subclasses do override this method for validation purpose.
+     * @param payload the message payload object.
+     * @param headers the message headers
      */
-    public void validate(Object payload, MessageHeaders headers) {
-    }
+    public abstract void validate(Object payload, MessageHeaders headers);
     
     /**
      * Sets the applicationContext.
