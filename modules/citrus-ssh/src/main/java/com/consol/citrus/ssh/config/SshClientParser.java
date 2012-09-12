@@ -20,8 +20,8 @@ public class SshClientParser extends AbstractSshParser {
                 "private-key-path","privateKeyPath",
                 "private-key-password","privateKeyPassword",
                 "strict-host-checking","strictHostChecking",
-                "known-hosts","knownHosts",
-                "script-timeout","scriptTimeout",
+                "known-hosts-path","knownHosts",
+                "command-timeout","commandTimeout",
                 "connection-timeout","connectionTimeout",
                 "user","user",
                 "password","password"

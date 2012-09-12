@@ -28,6 +28,7 @@ import groovy.util.ResourceException;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A SSH client which sends a request specified in a test-cast as SSH EXEC call to a target host
@@ -38,6 +39,7 @@ import org.springframework.util.FileCopyUtils;
  */
 public class SshExecSender extends AbstractMessageSender {
 
+    public static final String CLASSPATH_PREFIX = "classpath:";
     // SSH implementation
     private JSch jsch;
 
@@ -66,7 +68,7 @@ public class SshExecSender extends AbstractMessageSender {
     private String knownHosts;
 
     // Timeout how long to wait for answering the request
-    private long scriptTimeout = 1000 * 60 * 5; // 5 minutes
+    private long commandTimeout = 1000 * 60 * 5; // 5 minutes
 
     // Timeout how long to wait for a connection to connect
     private int connectionTimeout = 1000 * 60 * 1; // 1 minute
@@ -82,7 +84,7 @@ public class SshExecSender extends AbstractMessageSender {
         jsch = new JSch();
         xstream = new XStream();
         xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response",SshResponse.class);
+        xstream.alias("ssh-response", SshResponse.class);
     }
 
 
@@ -151,18 +153,23 @@ public class SshExecSender extends AbstractMessageSender {
     }
 
     private InputStream getInputStreamFromPath(String pPath) throws FileNotFoundException {
-        if (pPath.startsWith("classpath:")) {
-            return getClass().getClassLoader().getResourceAsStream(pPath.substring("classpath:".length()));
+        if (pPath.startsWith(CLASSPATH_PREFIX)) {
+            return getClass().getClassLoader().getResourceAsStream(pPath.substring(CLASSPATH_PREFIX.length()));
         } else {
             return new FileInputStream(pPath);
         }
     }
 
     private String getPrivateKeyPath() throws IOException {
-        File priv = File.createTempFile("citrus-ssh-test","priv");
-        FileCopyUtils.copy(getClass().getResourceAsStream("test_user.priv"), new FileOutputStream(priv));
-        privateKeyPath = priv.getAbsolutePath();
-        return privateKeyPath;
+        if (!StringUtils.hasText(privateKeyPath)) {
+            return null;
+        } else if (privateKeyPath.startsWith(CLASSPATH_PREFIX)) {
+            File priv = File.createTempFile("citrus-ssh-test","priv");
+            FileCopyUtils.copy(getClass().getResourceAsStream(privateKeyPath.substring(CLASSPATH_PREFIX.length())), new FileOutputStream(priv));
+            return priv.getAbsolutePath();
+        } else {
+            return privateKeyPath;
+        }
     }
 
     // ===============================================================================================
@@ -170,7 +177,9 @@ public class SshExecSender extends AbstractMessageSender {
     private void connect(String rUser) {
         if (session == null || !session.isConnected()) {
             try {
-                jsch.addIdentity(getPrivateKeyPath(),privateKeyPassword);
+                if (StringUtils.hasText(privateKeyPath)) {
+                    jsch.addIdentity(getPrivateKeyPath(),privateKeyPassword);
+                }
             } catch (JSchException e) {
                 throw new CitrusRuntimeException("Cannot add private key " + privateKeyPath + ": " + e,e);
             } catch (IOException e) {
@@ -181,6 +190,9 @@ public class SshExecSender extends AbstractMessageSender {
             }
             try {
                 session = jsch.getSession(rUser,host,port);
+                if (StringUtils.hasText(password)) {
+                    session.setUserInfo(new UserInfoWithPlainPassword(password));
+                }
                 session.setConfig("StrictHostKeyChecking",strictHostChecking ? "yes" : "no");
                 session.connect();
             } catch (JSchException e) {
@@ -205,7 +217,7 @@ public class SshExecSender extends AbstractMessageSender {
     }
 
     private void waitCommandToFinish(ChannelExec pCh) throws ResourceException {
-        final long until = System.currentTimeMillis() + scriptTimeout;
+        final long until = System.currentTimeMillis() + commandTimeout;
 
         try {
             while (!pCh.isClosed() && System.currentTimeMillis() < until) {
@@ -216,7 +228,7 @@ public class SshExecSender extends AbstractMessageSender {
         }
 
         if (!pCh.isClosed()) {
-            throw new CitrusRuntimeException("Timeout: Channel not finished within " + scriptTimeout + " ms");
+            throw new CitrusRuntimeException("Timeout: Channel not finished within " + commandTimeout + " ms");
         }
     }
 
@@ -247,6 +259,37 @@ public class SshExecSender extends AbstractMessageSender {
             }
         } catch (JSchException e) {
             throw new ResourceException("Cannot connect EXEC SSH channel: " + e,e);
+        }
+    }
+
+    private static class UserInfoWithPlainPassword implements UserInfo {
+        private String password;
+
+        public UserInfoWithPlainPassword(String pPassword) {
+            password = pPassword;
+        }
+
+        public String getPassphrase() {
+            return null;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public boolean promptPassword(String message) {
+            return false;
+        }
+
+        public boolean promptPassphrase(String message) {
+            return false;
+        }
+
+        public boolean promptYesNo(String message) {
+            return false;
+        }
+
+        public void showMessage(String message) {
         }
     }
 }

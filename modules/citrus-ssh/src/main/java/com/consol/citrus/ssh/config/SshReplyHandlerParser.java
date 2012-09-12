@@ -1,5 +1,6 @@
 package com.consol.citrus.ssh.config;
 
+import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.ssh.SshReplyHandler;
 
 /**
@@ -22,6 +23,6 @@ public class SshReplyHandlerParser extends AbstractSshParser {
 
     @Override
     protected Class getBeanClass() {
-        return SshReplyHandler.class;
+        return ReplyMessageHandler.class;
     }
 }
