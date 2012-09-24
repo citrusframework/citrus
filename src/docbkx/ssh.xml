@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ssh">
+    <title>SSH support</title>
+
+    <para>
+      In the spirit of other Citrus mock services, there is support for simulating an external SSH server as well
+      for connecting to SSH servers as an action during a test. SSH requests and responses are translated to
+      simple XML documents which can be validated and generated with the common Citrus mechanism. A real SSH daemon
+      can be fired up, taking a SSH EXEC request and translated it into a message of the following format:
+    </para>
+
+    <para>Citrus is able to connect with Http services and simulate RESTful WebServices servers. In the next sections you will learn
+    how to invoke Http services and how to handle REST Http requests in a test case. We deal with setting up a Http server in order to
+    accept client requests and provide proper Http responses with GET, PUT, DELETE or POST request method.</para>
+    
+    <note>
+        <para>Similar to the JMS specific configuration schema, Citrus provides a customized Http configuration schema that
+        is used in Spring configuration files. Simply include the http-config namespace in the configuration XML files as follows.</para>
+        
+        <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+   xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
+   xsi:schemaLocation=&quot;
+   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.citrusframework.org/schema/config 
+   http://www.citrusframework.org/schema/config/citrus-config.xsd
+   http://www.citrusframework.org/schema/http/config 
+   http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;&gt;
+       
+    [...]
+    
+&lt;/beans&gt;</programlisting>
+        
+        <para>Now you are ready to use the customized Http configuration elements with the 
+        citrus-http namespace prefix.</para>
+    </note>
+    
+    <section id="http-sender">
+        <title>Http message sender</title>
+        
+        <para>Citrus is able to invoke a Http service as client waiting for the response message from server. After that the response message goes 
+        through the validation process as usual. Let us see how a message sender for Http works:</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
+                               request-url=&quot;http://localhost:8090/test&quot; 
+                               request-method=&quot;POST&quot;
+                               content-type=&quot;application/xml&quot;
+                               reply-handler=&quot;httpResponseHandler&quot;/&gt;
+
+&lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;/&gt;</programlisting>
+        
+        <para>As Http communication is always synchronous we need a reply message handler in combination with the Http message-sender. It is not
+        very surprising that the sender also needs the <emphasis>request-url</emphasis> and a <emphasis>request-method</emphasis> as parameter. In addition
+        to that we can specify the content-type of the request we are about to send. The message sender builds the Http request and sends it to the Http server. 
+        The Http response is then provided to the reply handler as soon as it has arrived.</para>
+        
+        <para>The request method is statically set to <emphasis>POST</emphasis> in the example above. You can also set/overwrite the Http request method inside the 
+        sending test action which gives more flexibility. Use something like this in your test:</para>
+        
+        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;citrus_http_method&quot; value=&quot;PUT&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
+        
+        <tip><para>Citrus uses Spring's REST template mechanism for sending Http requests. This means you have great customizing opportunities with a special REST 
+        template configuration. You can think of basic Http authentication, read timeouts and special message factory implementations. Just use the custom REST template
+        attribute in message sender like this:</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot; 
+                               request-url=&quot;http://localhost:8090/test&quot; 
+                               request-method=&quot;POST&quot;
+                               content-type=&quot;text/plain&quot;
+                               rest-template=&quot;customizedRestTemplate&quot;
+                               reply-handler=&quot;httpResponseHandler&quot;/&gt;
+                               
+&lt;!-- Customized rest template --&gt;
+&lt;bean name=&quot;customizedRestTemplate&quot; class=&quot;org.springframework.web.client.RestTemplate&quot;&gt;
+  &lt;property name=&quot;messageConverters&quot;&gt;
+    &lt;util:list id=&quot;converter&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+          &lt;util:list id=&quot;types&quot;&gt;
+            &lt;value&gt;text/plain&lt;/value&gt;
+          &lt;/util:list&gt;
+        &lt;/property&gt;
+      &lt;/bean&gt;
+    &lt;/util:list&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;errorHandler&quot;&gt;
+    &lt;!-- Custom error handler --&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;requestFactory&quot;&gt;
+    &lt;bean class=&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;&gt;
+      &lt;property name=&quot;readTimeout&quot; value=&quot;9000&quot; /&gt;
+    &lt;/bean&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+        </programlisting>
+        </tip>
+        
+        <tip><para>And another tip for you regarding dynamic endpoint URI in Http message sender. Similar to the endpoint resolving mechanism in SOAP sending action you can dynamically set
+        the called endpoint URI on Http message sender. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
+        inside the test. See the next short example and you will see that it is very simple.</para>
+        
+        <programlisting>&lt;header&gt;
+    &lt;element name=&quot;citrus_endpoint_uri&quot; value=&quot;http://localhost:8080/customers/${customerId}&quot;/&gt;
+&lt;/header&gt;</programlisting>
+        
+        <para>The specific send action above will send its message to the dynamic endpoint (http://localhost:8080/customers/${customerId}) which is set in the header <emphasis>citrus_endpoint_uri</emphasis>. 
+        As you can see the endpoint contains a variable entry so you can reuse the same Http message sender with different endpoint URI. This is essential when calling RESTful WebServices where the 
+        URI contains parameters, identifiers and modifiers.</para></tip>
+    </section>
+    
+    <section id="http-server">
+        <title>Http server</title>
+        
+        <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is a little bit more complicated, because Citrus 
+        has to provide server functionality listening on a local port for client connections. Once a client connection 
+        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a preconfigured Jetty  
+        server instance with Spring web application context support.</para>
+        
+        <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 
+                port=&quot;8090&quot;
+                auto-start=&quot;true&quot;
+                context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
+                resource-base=&quot;src/citrus/resources&quot;/&gt;
+        </programlisting>
+        
+        <para>The Http Jetty server will automatically start when the Spring application context is loaded (auto-start=&quot;true&quot;). The basic connector is listening on
+        port 8090 for requests. The server automatically uses Spring application context loading on startup. The servlet context file is specified via classpath and hold all custom
+        configurations for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling
+        incoming requests (GET, PUT, DELETE, POST, etc.).</para>
+        
+        <programlisting>&lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping&quot;/&gt;
+  
+&lt;bean class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;
+  &lt;property name=&quot;messageConverters&quot;&gt;
+    &lt;util:list id=&quot;converters&quot;&gt;
+      &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;
+        &lt;property name=&quot;supportedMediaTypes&quot;&gt;
+          &lt;util:list&gt;
+            &lt;value&gt;text/xml&lt;/value&gt;
+          &lt;/util:list&gt;
+        &lt;/property&gt;
+      &lt;/bean&gt;
+    &lt;/util:list&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+      
+&lt;bean class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
+  &lt;property name=&quot;messageHandler&quot;&gt;
+      &lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+       class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;        
+  &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+        
+        <para>The beans above are responsible for proper Http server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives 
+        us a great customization and extension points. The important part is the message handler definition inside the HttpMessageController. Once a client request was accepted the 
+        message handler is responsible for generating a proper response to the client.</para>
+        
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
+          </imageobject>
+          
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
+          </imageobject>
+        </mediaobject>
+        
+        <para>Citrus provides several message handler implementations for different simulation strategies. With these message handler implementations you should be able to generate
+        proper response messages for the client in a test case. Let's have a look at them in the following sections.</para>
+        
+        <section id="http-message-handler-empty">
+            <title>Empty response producing message handler</title>
+            
+            <para>This is the simplest message handler you can think of. It simply provides an empty success response using the Http
+            response code 202. In the introducing example this message handler was used to provide response messages to the calling client.
+            The handler does not need any configurations or properties as it simply responds with an empty Http response.</para>
+            
+            <programlisting>&lt;bean id=&quot;emptyResponseProducingMessageHandler&quot; 
+  class=&quot;com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler&quot;/&gt;</programlisting>
+        </section>
+        
+        <section id="http-message-handler-static">
+            <title>Static response producing message handler</title>
+            
+            <para>The next more complex message handler will always return a static response message</para>
+            
+            <programlisting>&lt;bean 
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+    &lt;property name=&quot;messagePayload&quot;&gt;
+        &lt;value&gt;
+        &lt;![CDATA[
+            &lt;ns0:Response 
+                xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+            &lt;/ns0:Response&gt;
+        ]]&gt;
+        &lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;messageHeader&quot;&gt;
+      &lt;map&gt;
+        &lt;entry key=&quot;{http://www.consol.de/schemas/samples}ns0:Operation&quot; 
+                  value=&quot;sayHelloResponse&quot;/&gt;
+        &lt;entry key=&quot;{http://www.consol.de/schemas/samples}ns0:Request&quot; 
+                  value=&quot;HelloRequest&quot;/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+            
+            <para>The handler is configured with a static message payload and static response header values. The response to the client
+            is therefore always identical.</para>
+        </section>
+        
+        <section id="http-message-handler-xpath">
+            <title>Xpath dispatching message handler</title>
+            
+            <para>The idea behind the xpath-dispatching-message-handler is that the incoming requests are dispatched to several
+            message handlers depending on the existence of a specific node inside the message payload. The XPath expression will evaluate to
+            the parent of the deciding node and call the respective message handler. The message handler mapping is done by mapping the deciding node name to
+            a bean name in a message handler Spring configuration context. The separate context is loaded in advance. Let's see an example.</para>
+            
+            <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot; 
+  class=&quot;com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler&quot;&gt;
+    &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation/*&quot;/&gt;
+    &lt;property name=&quot;messageHandlerContext&quot; value=&quot;message-handler-context.xml&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+            
+            <para>The handler receives a XPath mapping expression as well as a Spring ApplicationContext file resource. The message handlers in this
+            ApplicationContext are mapped to the different values via their names. For instance an incoming request with 
+            <literal>//MessageBody/Operation/GetOrders</literal> would be handled by the message handler named "GetOrders". The available message handlers
+            are configured in the separate message-handler-context (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...). Here is an example.</para>
+            
+            <programlisting>&lt;bean name=&quot;GetOrders&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+    &lt;property name=&quot;messagePayload&quot; value=&quot;Your orders&quot;/&gt;
+&lt;/bean>
+&lt;bean name=&quot;SaveOrder&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+    &lt;property name=&quot;messagePayload&quot; value=&quot;Order saved&quot;/&gt;    
+&lt;/bean&gt;</programlisting>
+            
+            <tip>It is possible to ommit the xpath expression in the xpath dispatching message handler bean definition. If no xpath is provided, Citrus will take the first element node in the request into account.</tip>
+        </section>
+        
+        <section id="http-message-handler-jms">
+            <title>JMS connecting message handler</title>
+            
+            <para>The most powerful message handler is the JMS connecting message handler. Indeed this handler also provides the most 
+            flexibility. This handler will forward incoming request to a JMS destination and waiting for a proper response on a reply destination. 
+            A configured JMS message receiver can read this forwarded request internally over JMS and provide a proper response on the 
+            reply destination.</para>
+            
+            <programlisting>&lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
+         class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
+    &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
+    &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Queue.Response.Out&quot;/&gt;
+    &lt;property name=&quot;connectionFactory&quot;&gt;
+        &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+            &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
+        &lt;/bean&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+            
+            <tip>
+                <para>The samples section may help you get in touch with the http configuration and the JMS forwarding strategy 
+                (<xref linkend="samples"/>)</para>
+            </tip>
+        </section>
+    </section>
+    
+    <section id="http-headers">
+        <title>Http headers</title>
+        
+        <para>When dealing with Http request/response communication we always deal with Http specific headers. The Http protocol defines a group of header attributes that both client 
+        and server need to handle. You can set and validate these Http headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some Http headers are 
+        explicitly set before the request is sent.</para>
+        
+        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
+        
+        <para>We are able to set custom headers (<emphasis>CustomHeaderId</emphasis>) that go directly into the Http header section of the request. In addition to that testers can explicitly set Http reserved headers
+        such as <emphasis>Content-Type</emphasis>. Fortunately you do not have to set all headers on your own. Citrus will automatically set the required Http headers for the request. So we have the following Http request
+        which is sent to the server:</para>
+        
+        <programlisting>POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+CustomHeaderId: 123456789
+Accept-Charset: macroman
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8091
+Content-Length: 175
+&lt;testRequestMessage&gt;
+    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+&lt;/testRequestMessage&gt;</programlisting>
+        
+        <para>On server side testers are interested in validating the Http headers. Within Citrus receive action you simply define the expected header entries. The Http specific headers are automatically available for validation
+        as you can see in this example:</para>
+        
+        <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+        
+        <para>The test checks on custom headers and Http specific headers to meet the expected values.</para>
+        
+        <para>Now that we have accepted the client request and validated the contents we are able to send back a proper Http response message. Same thing here with Http specific headers. The Http protcol defines several headers marking the success or failure of
+        the server operation. In the test case you can set those headers for the response message with convention header names. See the following example to find out how that works for you.</para>
+        
+        <programlisting>&lt;send with=&quot;httpResponseSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testResponseMessage&gt;
+                    &lt;text&gt;Hello Citrus Client&lt;/text&gt;
+                &lt;/testResponseMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml&quot;/&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
+    &lt;/header&gt;
+&lt;/send&gt;</programlisting>
+        
+        <para>Once more we set the custom header entry (<emphasis>CustomHeaderId</emphasis>) and a Http reserved header (<emphasis>Content-Type</emphasis>) for the response message. On top of this we are able to set the response status for
+        the Http response. We use the reserved header names <emphasis>citrus_http_status_code</emphasis> in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as Http 
+        error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:</para>
+        
+        <programlisting>HTTP/1.1 200 OK
+Content-Type: text/xml;charset=UTF-8
+Accept-Charset: macroman
+Content-Length: 205
+Server: Jetty(7.0.0.pre5)
+&lt;testResponseMessage&gt;
+    &lt;text&gt;Hello Citrus Client&lt;/text&gt;
+&lt;/testResponseMessage&gt;</programlisting>
+        
+        <tip><para>You do not have to set the reason phrase all the time. It is sufficient to only set the Http status code. Citrus will automatically add the proper reason phrase for well known Http status codes.</para></tip>
+        
+        <para>The only thing that is missing right now is the validation of Http status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.</para>
+        
+        <programlisting>&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testResponseMessage&gt;
+                    &lt;text&gt;Hello Test Framework&lt;/text&gt;
+                &lt;/testResponseMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;200&quot;/&gt;
+        &lt;element name=&quot;citrus_http_version&quot; value=&quot;HTTP/1.1&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;OK&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+        
+        <para>Up to now we have used some of the basic Citrus reserved Http header names (citrus_http_status_code, citrus_http_version, citrus_http_reason_phrase). In Http RESTful WebServices some more header names are essential ofr
+        validation. These are request attributes like query parameters, context path and request URI. The Citrus server side REST message controller will automatically add all this information to the message header for you. So
+        all you need to do is validate the header entries in your test.</para>
+        
+        <para>The next example receives a Http GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume
+        the client to call <emphasis>http://localhost:8080/app/users?id=123456789</emphasis>. As a tester we need to validate the request method, request URI, context path and the query parameters.</para>
+        
+        <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;Host&quot; value=&quot;localhost:8080&quot;/&gt;
+        &lt;element name=&quot;Content-Type&quot; value=&quot;text/html&quot;/&gt;
+        &lt;element name=&quot;Accept&quot; value=&quot;text/xml,*/*&quot;/&gt;
+        &lt;element name=&quot;citrus_http_method&quot; value=&quot;GET&quot;/&gt;
+        &lt;element name=&quot;citrus_http_request_uri&quot; value=&quot;/app/users&quot;/&gt;
+        &lt;element name=&quot;citrus_http_context_path&quot; value=&quot;/app&quot;/&gt;
+        &lt;element name=&quot;citrus_http_query_params&quot; value=&quot;id=123456789&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+        
+        <tip><para>Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. 
+        The request URI always gives you the complete path that was called for this request.</para></tip>
+        
+        <important><para>Another important thing to notice is the usage of multiple query parameters that are put together using '&amp;' characters (e.g. http://localhost:8080/app/users?id=123456789&amp;name=foo). As the Citrus test case
+        is written in XML we have to escape the reserved '&amp;' with &amp;amp; entity (e.g. value=&quot;id=123456789&amp;amp;name=test&quot;).</para></important>
+        
+        <para>As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the Http header processing within Citrus. 
+        On both client and server side Citrus is able to set and validate Http specific header entries which is essential for simulating Http communication.</para>        
+    </section>
+    
+    <section id="http-error-handling">
+        <title>Http error handling</title>
+        
+        <para>So far we have received response messages with Http status code <emphasis>200 OK</emphasis>. How to deal with server errors like <emphasis>404 Not Found</emphasis> or <emphasis>500 Internal server error</emphasis>? The default Http message client
+        error strategy is to propagate server error response messages to the reply message handler for validation. We simply check on Http status code and status text for error validation.</para>
+        
+        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;
+            &lt;![CDATA[
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+&lt;/send&gt;
+        
+&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
+    &lt;message&gt;
+        &lt;data&gt;&lt;![CDATA[]]&gt;&lt;/data&gt;
+    &lt;/message&gt;
+    &lt;header&gt;
+        &lt;element name=&quot;citrus_http_status_code&quot; value=&quot;403&quot;/&gt;
+        &lt;element name=&quot;citrus_http_reason_phrase&quot; value=&quot;FORBIDDEN&quot;/&gt;
+    &lt;/header&gt;
+&lt;/receive&gt;</programlisting>
+
+        <para>The message data can be empty depending on the server logic for these error situations. If we receive additional error information as message payload just add validation assertions as usual.</para>
+        
+        <para>Instead of receiving such empty messages with checks on Http status header information we can change the error strategy in the message sender component in order to automatically raise exceptions 
+        on response messages other than <emphasis>200 OK</emphasis>. Therefore we go back to the Http message sender configuration for changing the error strategy.</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;httpMessageSender&quot;
+                              request-url=&quot;http://localhost:8080/test&quot;
+                              reply-handler=&quot;httpResponseReceiver&quot;
+                              error-strategy=&quot;throwsException&quot;/&gt;
+  
+&lt;citrus-http:reply-message-handler id=&quot;httpResponseReceiver&quot;/&gt;</programlisting>
+
+        <para>Now we expect an exception to be thrown because of the error response. Following from that we have to change our test case. 
+        Instead of receiving the error message with receive action we assert the client exception and check on the Http status code and status text.</para>
+        
+        <programlisting>&lt;assert exception=&quot;org.springframework.web.client.HttpClientErrorException&quot; 
+           message=&quot;403 Forbidden&quot;&gt;
+    &lt;send with=&quot;httpMessageSender&quot;&gt;
+        &lt;message&gt;
+            &lt;data&gt;
+                &lt;![CDATA[
+                    &lt;testRequestMessage&gt;
+                        &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                    &lt;/testRequestMessage&gt;
+                ]]&gt;
+            &lt;/data&gt;
+        &lt;/message&gt;
+    &lt;/send&gt;
+&lt;/assert&gt;</programlisting>
+
+        <para>Both ways of handling Http error messages on client side are valid for expecting the server to raise Http error codes. Choose the prefered way according to your test project requirements.</para>
+    </section>
+    
+    <section id="http-basic-auth">
+        <title>Basic authentication</title>
+        
+        <para>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication 
+        where the credentials are transmtted in the request header section as base64 encoding. As Citrus uses Spring's REST support with the RestTemplate and ClientHttpRequestFactory the
+        basic authentication is already covered. You simply have to set the user credentials on the HttpClient which is used inside the RestTemplate.</para>
+        
+        <para>Citrus gives a even more comfortable way to configure the basic authentication credentials on the RestTemplate's ClientHttpRequestFactory. Just see the following
+        example and learn how to do that.</para>
+        
+        <programlisting>&lt;citrus-http:message-sender id=&quot;testHttpMessageSender&quot;
+                              request-method=&quot;POST&quot;
+                              request-url=&quot;http://localhost:8080/test&quot;
+                              reply-handler=&quot;testHttpReplyMessageHandler&quot;
+                              request-factory=&quot;basicAuthFactory&quot;/&gt;
+  
+&lt;citrus-http:reply-message-handler id=&quot;testHttpReplyMessageHandler&quot;/&gt;
+
+&lt;bean id=&quot;basicAuthFactory&quot; class=&quot;com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory&quot;&gt;
+  &lt;property name=&quot;authScope&quot;&gt;
+      &lt;bean class=&quot;org.apache.http.auth.AuthScope&quot;&gt;
+        &lt;constructor-arg value=&quot;localhost&quot;/&gt;
+        &lt;constructor-arg value=&quot;8072&quot;/&gt;
+        &lt;constructor-arg value=&quot;&quot;/&gt;
+        &lt;constructor-arg value=&quot;basic&quot;/&gt;
+      &lt;/bean&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;credentials&quot;&gt;
+    &lt;bean class=&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;&gt;
+        &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
+        &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
+    &lt;/bean&gt;      
+  &lt;/property&gt;  
+&lt;/bean&gt;</programlisting>
+
+        <important><para>Since Citrus has upgraded to Spring 3.1.x the Jakarta commons Http client is deprecated with Citrus version 1.2. The formerly used 
+        UserCredentialsClientHttpRequestFactory is therefore also deprecated and will not continue with next versions. Please update your configuration if you are coming from 
+        Citrus 1.1 or earlier versions.</para></important>
+        
+        <para>The above configuration results in Http client requests with authentication headers properly set for basic authentication. The client request factory takes care on adding the proper
+        basic authentication header to each request that is sent with this Citrus message sender. Citrus uses preemtive authentication. The message sender only sends a single request to the server with
+        all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope in the client 
+        request factory so Citrus can setup an authentication cache within the Http context in order to have preemtive authentication.</para>
+        
+        <para>See the following example request that is created by the Citrus message sender and have a look
+        at the <emphasis>Authorization</emphasis> header which gets automatically set for all requsts.</para>
+        
+        <programlisting>POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+Accept-Charset: iso-8859-1, us-ascii, utf-8
+Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8080
+Content-Length: 175
+&lt;testRequestMessage&gt;
+  &lt;text&gt;Hello HttpServer&lt;/text&gt;
+&lt;/testRequestMessage&gt;</programlisting>
+    
+        <tip><para>Of course you can also set the <emphasis>Authorization</emphasis> header on your own for each request in your send action definition. 
+          Be aware of using the correct basic authentication header syntax with base64 encoding for the username:password phrase.</para>
+        
+          <programlisting>&lt;header&gt;
+    &lt;element name=&quot;Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
+&lt;/header&gt;</programlisting>
+
+          <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
+        </tip>
+    </section>
+</chapter>

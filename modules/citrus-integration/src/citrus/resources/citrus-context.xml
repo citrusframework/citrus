@@ -45,18 +45,18 @@
     </bean>
     
     <context:property-placeholder location="classpath:citrus.properties"/>
-	
-    <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-        <property name="persistent" value="false"/>
-        <property name="autoStart" value="true"/>
-    </bean>
-    
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-    </bean>
-    
-    <bean class="com.consol.citrus.variable.GlobalVariables">
+
+  <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
+    <property name="brokerURL" value="tcp://localhost:61616" />
+    <property name="persistent" value="false"/>
+    <property name="autoStart" value="true"/>
+  </bean>
+
+  <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616" />
+  </bean>
+
+  <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
                 <entry key="project.name" value="Citrus Integration Testing"/>
@@ -218,42 +218,70 @@
         </bean>      
       </property>  
     </bean>
-    
-    <citrus-http:message-sender id="httpMessageSenderStandalone" 
-                                request-url="http://localhost:8073/test" 
-                                request-method="POST"
-                                content-type="text/xml"
-                                reply-handler="httpResponseReceiver"
-                                interceptors="httpClientInterceptors"/>
-  
-    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
 
-    <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
+  <citrus-http:message-sender id="httpMessageSenderStandalone"
+                              request-url="http://localhost:8073/test"
+                              request-method="POST"
+                              content-type="text/xml"
+                              reply-handler="httpResponseReceiver"
+                              interceptors="httpClientInterceptors"/>
+
+  <citrus-http:reply-message-handler id="httpResponseReceiver"/>
+
+  <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
 
     <citrus:jms-message-sender id="httpResponseSender" destination-name="${jms.queue.http.request.ack}" actor="helloServer"/>
 
-    <!-- SSH setting -->
-    <citrus-ssh:server id="sshServer"
-                allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
-                user="roland"
-                port="9072"
-                auto-start="true"
-                message-handler-ref="sshMessageHandler"/>
+  <!-- SSH setting -->
+  <citrus-ssh:server id="sshServer"
+                     allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
+                     user="roland"
+                     port="9072"
+                     auto-start="true"
+                     message-handler-ref="sshMessageHandler"/>
 
-    <bean id="sshMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-        <property name="destinationName" value="${jms.queue.ssh.request.forward}"/>
-        <property name="replyDestinationName" value="${jms.queue.ssh.request.ack}"/>
-        <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="fallbackMessageHandlerDelegate">
-            <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
-        </property>
-        <property name="replyTimeout" value="2000"/>
-    </bean>
+  <bean id="sshMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
+    <property name="destinationName" value="${jms.queue.ssh.request.forward}"/>
+    <property name="replyDestinationName" value="${jms.queue.ssh.request.ack}"/>
+    <property name="connectionFactory" ref="connectionFactory"/>
+    <property name="fallbackMessageHandlerDelegate">
+      <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
+    </property>
+    <property name="replyTimeout" value="2000"/>
+  </bean>
 
-    <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
-    <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}" />
+  <citrus-ssh:client id="sshClient"
+                     port="9072"
+                     user="roland"
+                     private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
+                     strict-host-checking="false"
+                     host="localhost"
+                     reply-handler="sshResponseReceiver" />
 
-    <!-- JDBC data sources -->
+  <citrus-ssh:client id="sshClientWithWrongPrivateKey"
+                     port="9072"
+                     user="roland"
+                     private-key-path="classpath:com/consol/citrus/ssh/wrong_user.priv"
+                     private-key-password="consol"
+                     strict-host-checking="false"
+                     host="localhost"
+                     reply-handler="sshResponseReceiver" />
+
+  <citrus-ssh:client id="sshClientWithWrongUser"
+                     port="9072"
+                     user="blubber"
+                     private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
+                     strict-host-checking="false"
+                     host="localhost"
+                     reply-handler="sshResponseReceiver" />
+
+  <citrus-http:reply-message-handler id="sshResponseReceiver"/>
+
+
+  <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
+  <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}" />
+
+  <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
             <value>${jdbc.driver}</value>

@@ -18,14 +18,19 @@ package com.consol.citrus.ssh;
 
 import java.io.*;
 
-import org.apache.sshd.server.*;
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.FileCopyUtils;
-
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.FileUtils;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.QuickWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XppDriver;
+import org.apache.sshd.server.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.FileCopyUtils;
 
 /**
  * A command for delegation to a message handler
@@ -34,6 +39,10 @@ import com.thoughtworks.xstream.XStream;
  * @since 05.09.12
  */
 public class SshCommand implements Command, Runnable {
+
+    // Logger
+    private static Logger log = LoggerFactory.getLogger(SshCommand.class);
+
 
     /** Message handler for creating requests/responses **/
     private MessageHandler messageHandler;
@@ -107,14 +116,41 @@ public class SshCommand implements Command, Runnable {
      * @return
      */
     private XStream createXstream() {
-        XStream xstream = new XStream();
+        XStream xstream = new XStream(getXppDriver());
         xstream.alias("ssh-request",SshRequest.class);
         xstream.alias("ssh-response",SshResponse.class);
         return xstream;
     }
 
+    private XppDriver getXppDriver() {
+        return new XppDriver() {
+            public HierarchicalStreamWriter createWriter(Writer out) {
+                return new PrettyPrintWriter(out) {
+                    boolean cdata = false;
+                    public void startNode(String name, Class clazz){
+                        super.startNode(name, clazz);
+                        cdata = (name.equals("command") ||
+                                 name.equals("stdin")  ||
+                                 name.equals("stdout") ||
+                                 name.equals("stderr"));
+                    }
+                    protected void writeText(QuickWriter writer, String text) {
+                        if(cdata) {
+                            writer.write("<![CDATA[");
+                            writer.write(text);
+                            writer.write("]]>");
+                                } else {
+                            writer.write(text);
+                        }
+                    }
+                };
+            }
+        };
+    }
+
     /** {@inheritDoc} */
     public void destroy() {
+        log.warn("Destroy has been called");
     }
 
     /** {@inheritDoc} */
