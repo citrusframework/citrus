@@ -4,16 +4,15 @@ import java.io.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.jcraft.jsch.*;
-import com.thoughtworks.xstream.XStream;
 import org.easymock.IArgumentMatcher;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 /**
  * @author roland
@@ -24,7 +23,7 @@ public class CitrusSshClientTest {
     private static final String COMMAND = "ls";
     private static final String STDIN = "Hello world";
 
-    private XStream xstream;
+    private XmlMapper xstream;
     private JSch jsch;
     private CitrusSshClient client;
     private ByteArrayOutputStream outStream;
@@ -34,9 +33,7 @@ public class CitrusSshClientTest {
 
     @BeforeMethod
     public void setup() throws JSchException {
-        xstream = new XStream();
-        xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response", SshResponse.class);
+        xstream = new XmlMapper();
 
         jsch = createMock(JSch.class);
         client = new CitrusSshClient();

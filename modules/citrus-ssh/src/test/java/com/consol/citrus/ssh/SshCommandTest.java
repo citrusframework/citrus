@@ -16,13 +16,11 @@
 
 package com.consol.citrus.ssh;
 
-import static org.easymock.EasyMock.*;
-import static org.testng.AssertJUnit.assertEquals;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.message.MessageHandler;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.easymock.IArgumentMatcher;
@@ -31,8 +29,8 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.MessageHandler;
-import com.thoughtworks.xstream.XStream;
+import static org.easymock.EasyMock.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * @author roland
@@ -45,7 +43,7 @@ public class SshCommandTest {
     private MessageHandler handler;
 
     private static String COMMAND = "shutdown";
-    private XStream xstream;
+    private XmlMapper xmlMapper;
     private ExitCallback exitCallback;
 
     @BeforeMethod
@@ -61,10 +59,7 @@ public class SshCommandTest {
         exitCallback = createMock(ExitCallback.class);
         cmd.setExitCallback(exitCallback);
 
-
-        xstream = new XStream();
-        xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response",SshResponse.class);
+        xmlMapper = new XmlMapper();
     }
     
     @Test
@@ -118,9 +113,9 @@ public class SshCommandTest {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
-        String request = xstream.toXML(new SshRequest(COMMAND, pInput));
+        String request = xmlMapper.toXML(new SshRequest(COMMAND, pInput));
         SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
-        Message respMsg = MessageBuilder.withPayload(xstream.toXML(resp)).build();
+        Message respMsg = MessageBuilder.withPayload(xmlMapper.toXML(resp)).build();
         expect(handler.handleMessage(eqMessage(request))).andReturn(respMsg);
         replay(handler);
 

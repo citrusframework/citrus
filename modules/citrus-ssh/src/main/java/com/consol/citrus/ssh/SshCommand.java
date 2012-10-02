@@ -20,11 +20,6 @@ import java.io.*;
 
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.FileUtils;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.apache.sshd.server.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,51 +97,15 @@ public class SshCommand implements Command, Runnable {
      * @return
      */
     private SshResponse sendToMessageHandler(SshRequest pReq) {
-        XStream xstream = createXstream();
+        XmlMapper mapper = new XmlMapper();
         Message<?> response = messageHandler.handleMessage(
-                MessageBuilder.withPayload(xstream.toXML(pReq))
+                MessageBuilder.withPayload(mapper.toXML(pReq))
                               .setHeader("user", user)
                               .build());
         String msgResp = (String) response.getPayload();
-        return (SshResponse) xstream.fromXML(msgResp);
+        return (SshResponse) mapper.fromXML(msgResp);
     }
 
-    /**
-     * Setup XML marshaller.
-     * @return
-     */
-    private XStream createXstream() {
-        XStream xstream = new XStream(getXppDriver());
-        xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response",SshResponse.class);
-        return xstream;
-    }
-
-    private XppDriver getXppDriver() {
-        return new XppDriver() {
-            public HierarchicalStreamWriter createWriter(Writer out) {
-                return new PrettyPrintWriter(out) {
-                    boolean cdata = false;
-                    public void startNode(String name, Class clazz){
-                        super.startNode(name, clazz);
-                        cdata = (name.equals("command") ||
-                                 name.equals("stdin")  ||
-                                 name.equals("stdout") ||
-                                 name.equals("stderr"));
-                    }
-                    protected void writeText(QuickWriter writer, String text) {
-                        if(cdata) {
-                            writer.write("<![CDATA[");
-                            writer.write(text);
-                            writer.write("]]>");
-                                } else {
-                            writer.write(text);
-                        }
-                    }
-                };
-            }
-        };
-    }
 
     /** {@inheritDoc} */
     public void destroy() {

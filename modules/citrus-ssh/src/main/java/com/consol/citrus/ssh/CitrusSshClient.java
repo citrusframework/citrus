@@ -23,7 +23,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageSender;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.jcraft.jsch.*;
-import com.thoughtworks.xstream.XStream;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
@@ -77,13 +76,11 @@ public class CitrusSshClient extends AbstractMessageSender {
     private Session session;
 
     // Message parser
-    private XStream xstream;
+    private XmlMapper xmlMapper;
 
     public CitrusSshClient() {
         jsch = new JSch();
-        xstream = new XStream();
-        xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response", SshResponse.class);
+        xmlMapper = new XmlMapper();
     }
 
 
@@ -94,7 +91,7 @@ public class CitrusSshClient extends AbstractMessageSender {
      */
     public void send(Message<?> message) {
         String payload = (String) message.getPayload();
-        SshRequest request = (SshRequest) xstream.fromXML(payload);
+        SshRequest request = (SshRequest) xmlMapper.fromXML(payload);
 
         if (strictHostChecking) {
             setKnownHosts();
@@ -124,8 +121,8 @@ public class CitrusSshClient extends AbstractMessageSender {
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message response = MessageBuilder.withPayload(xstream.toXML(sshResp))
-                                         .setHeader("user",rUser).build();
+        Message response = MessageBuilder.withPayload(xmlMapper.toXML(sshResp))
+                                         .setHeader("user", rUser).build();
         informReplyMessageHandler(response,message);
     }
 

@@ -275,7 +275,7 @@
                      host="localhost"
                      reply-handler="sshResponseReceiver" />
 
-  <citrus-http:reply-message-handler id="sshResponseReceiver"/>
+  <citrus-ssh:reply-handler id="sshResponseReceiver"/>
 
 
   <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
