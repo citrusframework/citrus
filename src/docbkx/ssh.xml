@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ssh">
+    <title>SSH support</title>
+
+    <para>
+      In the spirit of other Citrus mock services, there is support for simulating an external SSH server as well
+      for connecting to SSH servers as an action during a test. SSH requests and responses are translated to
+      simple XML documents which can be validated and generated with the common Citrus mechanism. A real SSH daemon
+      can be fired up, taking a SSH EXEC request and translated it into a message of the following format:
+    </para>
+
+    <programlisting><![CDATA[
+      <ssh-request>
+        <command>cat - | sed -e 's/Hello/Hello SSH/'</command>
+        <stdin>Hello World</stdin>
+      </ssh-request>]]></programlisting>
+
+    <para>
+      This message can be validated with the usual Citrus
+      mechanism. The message handler associated with the server needs
+      to provide an appropriate answer in the following format:
+    </para>
+
+    <programlisting><![CDATA[
+      <ssh-response>
+        <stdout>Hello SSH World</stdout>
+        <stderr></stderr>
+        <exit>0</exit>
+      </ssh-response>]]></programlisting>
+
+    <para>
+      Beside simulating a full featured SSH server, Citrus also
+      provides an SSH client. This client uses the same request
+      message pattern, which is translated into a real SSH call to an 
+      SSH server. The SSH response received is tranlated into a
+      response message as shown above.
+    </para>
+
+    <para>
+      Both, SSH server and client along with their configuration
+      options are described in the following two sections. Examples
+      and usage patterns can be found in the integration tests for
+      Citrus itself. 
+    </para>
+
+    <section id="ssh-server">
+      <para>
+        Similar to the other Citrus backend systems, a Citrus SSH server
+        and client is configured in Citrus' Spring context. For the
+        configuration, a dedicated <literal>ssh</literal> namespace is
+        available. A namespace declaration can be put into the context's
+        top-level element:
+      </para>
+
+    <programlisting><![CDATA[
+     <beans 
+          ....
+          xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+          ....
+          xsi:schemaLocation="
+              ....
+              http://www.citrusframework.org/schema/ssh/config
+              http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
+              .... ">
+         ....
+      </beans>]]></programlisting>
+    
+    <para>
+      Given the above namespace declaration, adding an SSH-Server is
+      quite simple:
+    </para>
+    <programlisting><![CDATA[
+        <citrus-ssh:server id="sshServer"
+                     allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
+                     user="roland"
+                     port="9072"
+                     auto-start="true"
+                     message-handler-ref="sshMessageHandler"/>]]></programlisting>
+    <para>
+      <literal>message-handler-ref</literal> is the handler
+      which receives the SSH request as messages (in the request
+      format described above). Message handler are fully described in
+      <xref linkend="http-server"/> and message handlers described
+      there are supported.
+    </para>
+    <para>
+      The <literal>&lt;citrus-ssh:server&gt;</literal> supports the
+      following attributes:
+    </para>
+    <table>
+      <title>SSH Server Attributes</title>
+      <thead>
+        <tr>
+          <td>Attribute</td>
+          <td>Description</td>
+          <td>Example</td>
+        </tr>        
+      </thead>
+      <tr>
+        <td><literal>id</literal></td>
+        <td>
+          Name of the SSH server which identificates it uniquel within
+          the Citrus Spring context.
+        </td>
+        <td><literal>id="sshServer"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>host-key-path</literal></td>
+        <td>
+          Path to PEM encoded key pair (public and private key) which
+          is used as host key.  By default, a standard, pre-generate,
+          fixed keypair is used. The path can be specified either as
+          an file path, or, if prefixed with
+          <literal>classpath:</literal> is looked up from within the
+          classpath. The path the is relative from to the top-level
+          package, so no leading slash should be used.
+        </td>
+        <td><literal>hist-key-path="/etc/citrus_ssh_server.pem</literal></td>
+      </tr>
+      <tr>
+        <td><literal>user</literal></td>
+        <td>
+          User which is allowed to connect. 
+        </td>
+        <td><literal>user="roland"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>allowed-key-path</literal></td>
+        <td>
+          Path to a SSH public key stored in PEM format. These are the
+          keys, which are allowed to connect to the SSH server when
+          publickey authentication is used. It seves the same purpose
+          as <filename>authorized_keys</filename> for standard SSH
+          installations. The path can be specified either as an file
+          path, or, if prefixed with <literal>classpath:</literal> is
+          looked up from within the classpath. The path the is
+          relative from to the top-level package, so no leading slash
+          should be used.
+        </td>
+        <td><literal>allowed-key-path="classpath:test_user_pub.pem</literal></td>
+      </tr>
+      <tr>
+        <td><literal>password</literal></td>
+        <td>
+          Password which should be used when password authentication
+          is used. Both publickey authentication and password based
+          authentication can be used together in which case both
+          methods are tried in turn.
+        </td>
+        <td><literal>password="s!cr!t"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>host</literal></td>
+        <td>
+        </td>
+        <td><literal></literal></td>
+      </tr>
+      <tr>
+        <td><literal>port</literal></td>
+        <td>
+          Port on which to listen. The SSH server will bind on
+          localhost to this port.
+        </td>
+        <td><literal>port="9072"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>auto-start</literal></td>
+        <td>
+            Whether to start this SSH server automatically. Default is
+            <literal>true</literal>. If set to
+            <literal>false</literal>, a test action is responsible for
+            starting/stopping the server.
+        </td>
+        <td><literal>auto-start="true"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>message-handler-ref</literal></td>
+        <td>
+            Bean reference to a message handler which processes the
+            incoming SSH request. The message format for the request
+            and response are described above.
+        </td>
+        <td><literal>message-handler-ref="sshMessageHandler"</literal></td>
+      </tr>
+    </table>
+  </section>
+  
+   
+  <section id="ssh-client">
+    <para>
+      A Citrus SSH client is useful for testing agains a real SSH
+      server. It translates an SSH request message into a real SSH
+      call to a specific host, receives the result and translates it
+      back to a response message, which then can be validated by the
+      usual Citrus means. 
+    </para>
+
+    <para>
+      
+    </para>
+
+    <table>
+      <title>SSH Client Attributes</title>
+      <thead>
+        <tr>
+          <td>Attribute</td>
+          <td>Description</td>
+          <td>Example</td>
+        </tr>        
+      </thead>
+      <tr>
+        <td><literal>id</literal></td>
+        <td>
+          Id identifying the bean and used as reference from with test
+          descriptions. 
+        </td>
+        <td><literal>id="sshClient"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>host</literal></td>
+        <td>
+          Host to connect to for sending an SSH Exec request. Default is 'localhost'
+        </td>
+        <td><literal>host="localhost"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>port</literal></td>
+        <td>
+          Port to use. Default is 2222
+        </td>
+        <td><literal>port="9072"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>private-key-path</literal></td>
+        <td>
+          Path to a private key, which can be either a plain file path or an class resource
+          if prefixed with 'classpath:'.
+        </td>
+        <td><literal>private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>private-key-password</literal></td>
+        <td>
+            Optional password for the private key.        
+        </td>
+        <td><literal>password="s!cr!t"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>user</literal></td>
+        <td>
+          User used for connecting to the SSH server.
+        </td>
+        <td><literal>user="roland"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>password</literal></td>
+        <td>
+          Password used for password based authentication. Might be combined
+          with "private-key-path" in which case both authentication mechanism are tried.
+        </td>
+        <td><literal>password="ps!st</literal></td>
+      </tr>
+      <tr>
+        <td><literal>strict-host-checking</literal></td>
+        <td>
+          Whether the host key should be verified by looking it up in a 'known_hosts' file.
+          Default is false.          
+        </td>
+        <td><literal>strict-host-checking="true"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>known-hosts-path</literal></td>
+        <td>
+          Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as
+          a resource in the classpath.
+        </td>
+        <td><literal>known-hosts-path="/etc/ssh/known_hosts"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>command-timeout</literal></td>
+        <td>
+          Timeout in milliseconds for how long to wait for the SSH command to complete.
+          Default is 5 minutes.
+        </td>
+        <td><literal>command-timeout="300000"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>connection-timeout</literal></td>
+        <td>
+          Timeout in milliseconds for how long to for a connectiuon to connect.
+          Default is 1 minute.
+        </td>
+        <td><literal>connection-timeout="60000"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>reply-handler</literal></td>
+        <td>
+          Reference to reply handler which receives the SSH answer as
+          a message. This reply handler should be specified with
+          <literal>&lt;citrus-ssh:reply-handler&gt;</literal>. The
+          reply handler follows the typical Citrus semantics.
+        </td>
+        <td><literal>reply-handler="sshResponseReceiver"</literal></td>
+      </tr>
+      <tr>
+        <td><literal>actor</literal></td>
+        <td>
+          Actor used for switching groups of actions. 
+        </td>
+        <td><literal>actor="ssh-mock"</literal></td>
+      </tr>
+    </table>
+
+  </section>
+</chapter>

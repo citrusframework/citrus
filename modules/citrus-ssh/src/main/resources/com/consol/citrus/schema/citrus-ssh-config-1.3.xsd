@@ -49,7 +49,7 @@
           <xs:attribute name="user" type="xs:string">
             <xs:annotation>
               <xs:documentation>
-                User which is allowed to connect
+                User which is allowed to connect.
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -77,4 +77,121 @@
           </xs:attribute>
         </xs:complexType>
     </xs:element>
+
+  <xs:element name="client">
+    <xs:annotation>
+      <xs:documentation>Executes an SSH client request to a given server</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="host" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Host to connect to for sending an SSH Exec request. Default is 'localhost'
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="port" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Port to use. Default is 2222
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="private-key-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a private key, which can be either a plain file path or an class resource
+            if prefixed with 'classpath:'
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="private-key-password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Optional password for the private key
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="user" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            User used for connecting to the SSH server.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Password used for password based authentication. Might be combined
+            with "private-key-path" in which case both authentication mechanism are tried.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="strict-host-checking" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the host key should be verified by looking it up in a 'known_hosts' file.
+            Default is false.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="known-hosts-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as
+            a resource in the classpath.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="command-timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            Timeout in milliseconds for how long to wait for the SSH command to complete.
+            Default is 5 minutes.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="connection-timeout" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            Timeout in milliseconds for how long to for a connectiuon to connect.
+            Default is 1 minute.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="reply-handler" type="xs:string" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            Reference to reply handler which receives the SSH answer as a message.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="actor" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Actor used for switching groups of actions. See the reference documentation
+            for details.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="reply-handler">
+    <xs:annotation>
+      <xs:documentation>Reply handler for SSH client requests which needs to be connected to a ssh:client</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="actor" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Actor used for switching groups of actions. See the reference documentation
+            for details.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

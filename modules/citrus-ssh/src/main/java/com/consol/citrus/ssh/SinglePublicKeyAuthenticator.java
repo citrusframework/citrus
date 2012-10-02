@@ -65,7 +65,7 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
                                                  "It is probably not in a PEM form or contains more than only a public key.");
             }
         } catch (FileNotFoundException e) {
-            throw new CitrusRuntimeException("public key file does not exist at " + pPublicKeyPath);
+            throw new CitrusRuntimeException("public key file does not exist at " + pPublicKeyPath,e);
         } finally {
             IoUtils.closeQuietly(is);
         }

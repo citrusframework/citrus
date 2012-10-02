@@ -16,49 +16,51 @@
 
 package com.consol.citrus.ssh.config;
 
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import com.consol.citrus.ssh.CitrusSshServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
- * Parser for Http server implementation in Citrus http namespace.
+ * Parser for the configuration of an SSH server
  * 
- * @author Christoph Deppisch
+ * @author roland
  */
-public class SshServerParser extends AbstractBeanDefinitionParser {
+public class SshServerParser extends AbstractSshParser {
 
-    final static String ATTRIBUTE_PROPERTY_MAPPING[] = {
-            "port","port",
-            "auto-start","autoStart",
-            "host-key-path","hostKeyPath",
-            "user","user",
-            "password","password",
-            "allowed-key-path","allowedKeyPath",
-    };
+
+    /** {@inheritDoc} */
+    protected void parseExtra(BeanDefinitionBuilder builder,
+                                                Element element,
+                                                ParserContext pParserContext) {
+        // TODO: Allow an inner bean for specifying the message handler
+    }
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.ssh.CitrusSshServer");
+    /** {@inheritDoc} */
+    protected String[] getAttributePropertyMapping() {
+        return new String[] {
+                "port","port",
+                "auto-start","autoStart",
+                "host-key-path","hostKeyPath",
+                "user","user",
+                "password","password",
+                "allowed-key-path","allowedKeyPath",
+        };
 
-        for (int i = 0;i < ATTRIBUTE_PROPERTY_MAPPING.length; i+=2) {
-            String value = element.getAttribute(ATTRIBUTE_PROPERTY_MAPPING[i]);
-            if (StringUtils.hasText(value)) {
-                builder.addPropertyValue(ATTRIBUTE_PROPERTY_MAPPING[i+1], value);
-            }
-        }
+    }
 
-        // Setup message handler
+    @Override
+    protected String[] getAttributePropertyReferenceMapping() {
+        return new String[] {
+                "message-handler-ref","messageHandler"
+        };
+    }
 
-        // TODO: Allow an inner bean for specifying the message handler
-        String handlerRef = element.getAttribute("message-handler-ref");
-        if (StringUtils.hasText(handlerRef)) {
-            builder.addPropertyReference("messageHandler",handlerRef);
-        }
-
-        return builder.getBeanDefinition();
+    @Override
+    /** {@inheritDoc} */
+    protected Class getBeanClass() {
+        return CitrusSshServer.class;
     }
 }
