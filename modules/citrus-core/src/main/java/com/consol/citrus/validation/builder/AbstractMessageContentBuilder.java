@@ -145,4 +145,20 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     public Map<String, Object> getMessageHeaders() {
         return messageHeaders;
     }
+
+    /**
+     * Gets the messageHeaderResource.
+     * @return the messageHeaderResource the messageHeaderResource to get.
+     */
+    public Resource getMessageHeaderResource() {
+        return messageHeaderResource;
+    }
+
+    /**
+     * Gets the messageHeaderData.
+     * @return the messageHeaderData the messageHeaderData to get.
+     */
+    public String getMessageHeaderData() {
+        return messageHeaderData;
+    }
 }

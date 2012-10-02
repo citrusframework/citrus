@@ -246,6 +246,102 @@ public class ReceiveMessageDefinitionTest {
     }
     
     @Test
+    public void testReceiveBuilderWithHeaderData() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
+                
+                receive(messageReceiver)
+                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource());
+        
+        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource());
+    }
+    
+    @Test
+    public void testReceiveBuilderWithHeaderResource() {
+        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .header(resource);
+                
+                receive(messageReceiver)
+                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .header(resource);
+            }
+        };
+        
+        builder.configure();
+        
+        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
+        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource(), resource);
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData());
+        
+        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        
+        validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource(), resource);
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData());
+    }
+    
+    @Test
     public void testReceiveBuilderWithValidator() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
