@@ -114,6 +114,15 @@
     </dependency>
     
     <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-websocket</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <scope>compile</scope>
@@ -127,12 +136,10 @@
     <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <scope>provided</scope>
     </dependency>
   </dependencies>
   

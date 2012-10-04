@@ -53,22 +53,28 @@
               <webAppConfig>
                   <contextPath>/citrus-admin</contextPath>
               </webAppConfig>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>9080</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
               <useTestScope>true</useTestScope>
               <scanIntervalSeconds>5</scanIntervalSeconds>
               <systemProperties>
-                    <systemProperty>
-                      <name>file.encoding</name>
-                      <value>UTF-8</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <name>log4j.configuration</name>
-                      <value>log4j.xml</value>
-                    </systemProperty>
-                    <systemProperty>
-                      <name>working.directory</name>
-                      <value>${basedir}/src/citrus/tests</value>
-                    </systemProperty>
-                  </systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>UTF-8</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>log4j.configuration</name>
+                    <value>log4j.xml</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>working.directory</name>
+                    <value>${basedir}/src/citrus/tests</value>
+                  </systemProperty>
+              </systemProperties>
           </configuration>
         </plugin>
     </plugins>

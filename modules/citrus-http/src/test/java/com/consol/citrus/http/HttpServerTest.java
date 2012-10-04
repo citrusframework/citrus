@@ -23,7 +23,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.mortbay.jetty.HttpHeaders;
+import org.eclipse.jetty.http.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

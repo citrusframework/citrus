@@ -23,7 +23,19 @@ var changeNavigation = function(clicked) {
 	clicked.parent().addClass('active');
 }
 
+var output = $('body');
+var websocket;
+
+var webSocketInit = function() {
+	websocket = new WebSocket("ws://localhost:9080/citrus-admin/log/");
+    websocket.onopen = function(evt) { output.append('<p>Opened web socket connection</p>') };
+    websocket.onclose = function(evt) { output.append('<p>Closed web socket connection</p>') };
+    websocket.onmessage = function(evt) { output.append('<p>' + evt.data + '</p>') };
+    websocket.onerror = function(evt) { output.append('<p>Error: ' + evt.data + '</p>') };
+}
+
 $(document).ready(function() {
+  
   $('#load-context').click(function() {
 	  $('img#load-context-progress').show('fast');
 	  
@@ -109,6 +121,8 @@ $(document).ready(function() {
             		  var id = $(this).attr('id');
             		  $('p#' + id).append('<div class="alert"><strong>Running test!</strong> Run Citrus test case ... <img src="images/ajax-loader.gif" alt="ajax-loader.gif" class="ajax-loader"/></div>');
             		  
+            		  output = $('p#' + id);
+            		  
             		  jQuery.ajax({
             	          url: "testcase/execute/" + $(this).attr('id'),
             	          type: 'GET',
@@ -161,5 +175,7 @@ $(document).ready(function() {
           }
 	  });
   });
+  
+  webSocketInit();
   
 });

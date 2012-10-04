@@ -24,7 +24,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
 
 /**
- * Logger prints test action anem and description to the logging console.
+ * Logger prints test action name and description to the logging console.
  * Usually done before execution in test case.
  * 
  * @author Christoph Deppisch

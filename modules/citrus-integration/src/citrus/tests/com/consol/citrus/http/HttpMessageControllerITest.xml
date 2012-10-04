@@ -39,7 +39,7 @@
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
+                            <element name="Content-Type" value="text/html;charset=ISO-8859-1"/>
                             <element name="Accept" value="application/xml;charset=UTF-8"/>
                             <element name="citrus_http_method" value="GET"/>
                             <element name="citrus_http_request_uri" value="/"/>
@@ -79,7 +79,7 @@
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
+                            <element name="Content-Type" value="text/html;charset=ISO-8859-1"/>
                             <element name="Accept" value="application/xml;charset=UTF-8"/>
                             <element name="citrus_http_method" value="GET"/>
                             <element name="citrus_http_request_uri" value="citrus:concat('/test/user/', ${id})"/>
@@ -119,7 +119,7 @@
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
-                            <element name="Content-Type" value="text/html"/>
+                            <element name="Content-Type" value="text/html;charset=ISO-8859-1"/>
                             <element name="Accept" value="application/xml;charset=UTF-8"/>
                             <element name="citrus_http_method" value="GET"/>
                             <element name="citrus_http_request_uri" value="/test/user"/>

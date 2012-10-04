@@ -18,9 +18,14 @@ package com.consol.citrus.admin.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContextManager;
 
+import com.consol.citrus.admin.listener.LoggingTestActionListener;
+import com.consol.citrus.admin.listener.LoggingTestListener;
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
@@ -28,11 +33,18 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * beans can autowire this class and application context is only loaded once.
  * 
  * @author Christoph Deppisch
+ * @since 1.3
  */
 public class AppContextHolder {
     
     /** Citrus application context */
     private ApplicationContext applicationContext;
+    
+    @Autowired
+    private LoggingTestListener loggingTestListener;
+    
+    @Autowired
+    private LoggingTestActionListener loggingTestActionListener;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AppContextHolder.class);
@@ -59,6 +71,10 @@ public class AppContextHolder {
             @Override
             public void prepareTestInstance(Object testInstance) throws Exception {
                 applicationContext = getTestContext().getApplicationContext();
+                
+                // add special admin webapp test listeners
+                applicationContext.getBean(TestListeners.class).addTestListener(loggingTestListener);
+                applicationContext.getBean(TestActionListeners.class).addTestActionListener(loggingTestActionListener);
             }
         };
         
