@@ -16,12 +16,11 @@
 
 package com.consol.citrus.ssh;
 
-import static org.testng.Assert.*;
-
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyPair;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.sshd.SshServer;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
@@ -31,7 +30,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import static org.testng.Assert.*;
 
 /**
  * @author roland
@@ -39,7 +38,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class CitrusSshServerTest {
 
-    public static final int PORT = 2345;
 
     private CitrusSshServer server;
     private int port;
@@ -51,7 +49,7 @@ public class CitrusSshServerTest {
     @BeforeMethod
     public void beforeTest() {
         server = new CitrusSshServer();
-        ReflectionTestUtils.setField(server, "port", port);
+        server.setPort(port);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*user.*")
@@ -61,14 +59,14 @@ public class CitrusSshServerTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*password.*allowed-key-path.*")
     public void noPasswordOrKey() {
-        setField("user", "roland");
+        server.setUser("roland");
         server.start();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/no/such/key\\.pem.*")
     public void invalidAuthKey() {
-        setField("user","roland");
-        setField("allowedKeyPath","classpath:/no/such/key.pem");
+        server.setUser("roland");
+        server.setAllowedKeyPath("classpath:/no/such/key.pem");
         server.start();
     }
 
@@ -87,7 +85,7 @@ public class CitrusSshServerTest {
     @Test
     public void wrongHostKey() {
         prepareServer(true);
-        setField("hostKeyPath", "/never/existing/directory");
+        server.setHostKeyPath("/never/existing/directory");
         server.start();
         try {
             SshServer sshd = (SshServer) ReflectionTestUtils.getField(server, "sshd");
@@ -108,8 +106,8 @@ public class CitrusSshServerTest {
             SshServer sshd = (SshServer) ReflectionTestUtils.getField(server, "sshd");
             CommandFactory fact = sshd.getCommandFactory();
             Command cmd = fact.createCommand("shutdown now");
-            assertTrue(cmd instanceof CitrusSshCommand);
-            assertEquals(((CitrusSshCommand) cmd).getCommand(),"shutdown now");
+            assertTrue(cmd instanceof SshCommand);
+            assertEquals(((SshCommand) cmd).getCommand(),"shutdown now");
         } finally {
             server.stop();
         }
@@ -129,29 +127,18 @@ public class CitrusSshServerTest {
 
     /**
      * Prepare server instance.
-     * @param withPassword
      */
     private void prepareServer(boolean withPassword) {
-        setField("user", "roland");
+        server.setUser("roland");
         if (withPassword) {
-            setField("password","consol");
+            server.setPassword("consol");
         } else {
-            setField("allowedKeyPath","classpath:com/consol/citrus/ssh/allowed_test_key.pem");
+            server.setAllowedKeyPath("classpath:com/consol/citrus/ssh/allowed_test_key.pem");
         }
     }
 
     /**
-     * Sets field in Java object via reflection.
-     * @param pKey
-     * @param pValue
-     */
-    private void setField(String pKey, String pValue) {
-        ReflectionTestUtils.setField(server,pKey,pValue);
-    }
-
-    /**
      * Finds a free port in port range.
-     * @return
      */
     private int findFreePort() {
         for (int port=2234; port<3000; port++) {

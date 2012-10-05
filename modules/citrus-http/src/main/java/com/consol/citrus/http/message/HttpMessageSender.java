@@ -20,8 +20,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
+import com.consol.citrus.util.MessageUtils;
 import org.springframework.http.*;
 import org.springframework.http.client.*;
 import org.springframework.integration.Message;
@@ -31,13 +34,6 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.*;
 
-import com.consol.citrus.TestActor;
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
-import com.consol.citrus.util.MessageUtils;
-
 /**
  * Message sender implementation sending messages over Http.
  * 
@@ -46,7 +42,7 @@ import com.consol.citrus.util.MessageUtils;
  * 
  * @author Christoph Deppisch
  */
-public class HttpMessageSender implements MessageSender {
+public class HttpMessageSender extends AbstractMessageSender {
 
     /** Http url as service destination */
     private String requestUrl;
@@ -60,12 +56,6 @@ public class HttpMessageSender implements MessageSender {
     /** Default content type */
     private String contentType = "text/plain";
 
-    /** The reply message handler */
-    private ReplyMessageHandler replyMessageHandler;
-    
-    /** The reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
     /** The rest template */
     private RestTemplate restTemplate;
     
@@ -77,15 +67,7 @@ public class HttpMessageSender implements MessageSender {
     
     /** Should http errors be handled with reply message handler or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
-    
-    /** Test actor linked to this message sender */
-    private TestActor actor;
-    
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(HttpMessageSender.class);
-    
+
     /**
      * Default constructor.
      */
@@ -145,29 +127,13 @@ public class HttpMessageSender implements MessageSender {
                                                        response.getBody() != null ? response.getBody() : "", 
                                                        response.getStatusCode()), message);
     }
-    
-    /**
-     * Informs reply message handler for further processing 
-     * of reply message.
-     * @param responseMessage the reply message.
-     * @param requestMessage the initial request message.
-     */
-    protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
-        if (replyMessageHandler != null) {
-            log.info("Informing reply message handler for further processing");
-            
-            if (correlator != null) {
-                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
-            } else {
-                replyMessageHandler.onReplyMessage(responseMessage);
-            }
-        }
-    }
-    
+
     /**
      * Builds the actual integration message from HTTP response entity.
-     * @param response the HTTP response entity.
-     * @return
+     * @param headers HTTP headers which will be transformed into Message headers
+     * @param responseBody the HTTP body of the response
+     * @param statusCode HTTP status code received
+     * @return the response message
      */
     private Message<?> buildResponseMessage(HttpHeaders headers, Object responseBody, HttpStatus statusCode) {
         Map<String, ?> mappedHeaders = headerMapper.toHeaders(headers);
@@ -294,22 +260,6 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
-     * Set the reply message handler.
-     * @param replyMessageHandler the replyMessageHandler to set
-     */
-    public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
-        this.replyMessageHandler = replyMessageHandler;
-    }
-
-    /**
-     * Set the reply message correlator.
-     * @param correlator the correlator to set
-     */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
-    }
-
-    /**
      * Sets the endpoint uri resolver.
      * @param endpointUriResolver the endpointUriResolver to set
      */
@@ -406,14 +356,6 @@ public class HttpMessageSender implements MessageSender {
     }
 
     /**
-     * Gets the correlator.
-     * @return the correlator
-     */
-    public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
-    }
-
-    /**
      * Gets the restTemplate.
      * @return the restTemplate
      */
@@ -443,22 +385,6 @@ public class HttpMessageSender implements MessageSender {
      */
     public void setInterceptors(List<ClientHttpRequestInterceptor> interceptors) {
         restTemplate.setInterceptors(interceptors);
-    }
-
-    /**
-     * Gets the actor.
-     * @return the actor the actor to get.
-     */
-    public TestActor getActor() {
-        return actor;
-    }
-
-    /**
-     * Sets the actor.
-     * @param actor the actor to set
-     */
-    public void setActor(TestActor actor) {
-        this.actor = actor;
     }
 
 }

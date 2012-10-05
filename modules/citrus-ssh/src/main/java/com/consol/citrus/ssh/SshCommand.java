@@ -18,14 +18,14 @@ package com.consol.citrus.ssh;
 
 import java.io.*;
 
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.server.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
-
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.FileUtils;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * A command for delegation to a message handler
@@ -33,7 +33,11 @@ import com.thoughtworks.xstream.XStream;
  * @author roland
  * @since 05.09.12
  */
-public class CitrusSshCommand implements Command, Runnable {
+public class SshCommand implements Command, Runnable {
+
+    // Logger
+    private static Logger log = LoggerFactory.getLogger(SshCommand.class);
+
 
     /** Message handler for creating requests/responses **/
     private MessageHandler messageHandler;
@@ -56,7 +60,7 @@ public class CitrusSshCommand implements Command, Runnable {
      * @param pCommand command performend
      * @param pMessageHandler message handler
      */
-    public CitrusSshCommand(String pCommand, MessageHandler pMessageHandler) {
+    public SshCommand(String pCommand, MessageHandler pMessageHandler) {
         messageHandler = pMessageHandler;
         command = pCommand;
     }
@@ -93,28 +97,19 @@ public class CitrusSshCommand implements Command, Runnable {
      * @return
      */
     private SshResponse sendToMessageHandler(SshRequest pReq) {
-        XStream xstream = createXstream();
+        XmlMapper mapper = new XmlMapper();
         Message<?> response = messageHandler.handleMessage(
-                MessageBuilder.withPayload(xstream.toXML(pReq))
+                MessageBuilder.withPayload(mapper.toXML(pReq))
                               .setHeader("user", user)
                               .build());
         String msgResp = (String) response.getPayload();
-        return (SshResponse) xstream.fromXML(msgResp);
+        return (SshResponse) mapper.fromXML(msgResp);
     }
 
-    /**
-     * Setup XML marshaller.
-     * @return
-     */
-    private XStream createXstream() {
-        XStream xstream = new XStream();
-        xstream.alias("ssh-request",SshRequest.class);
-        xstream.alias("ssh-response",SshResponse.class);
-        return xstream;
-    }
 
     /** {@inheritDoc} */
     public void destroy() {
+        log.warn("Destroy has been called");
     }
 
     /** {@inheritDoc} */

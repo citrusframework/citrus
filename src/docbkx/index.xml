@@ -37,6 +37,7 @@
     <xi:include href='xpath.xml'/>
     <xi:include href='jms.xml'/>
     <xi:include href='http.xml'/>
+    <xi:include href='ssh.xml'/>
     <xi:include href='soap-webservices.xml'/>
     <xi:include href='message-channel.xml'/>
     <xi:include href='functions.xml'/>

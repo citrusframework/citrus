@@ -23,25 +23,25 @@
             </echo>
             
             <parallel>
-	            <send with="httpMessageSender" actor="helloClient">
-	            	<message>
-	            		<data>
-	            			<![CDATA[
+              <send with="httpMessageSender" actor="helloClient">
+                <message>
+                  <data>
+                    <![CDATA[
 	            				<testRequestMessage>
 	            					<text>Hello HttpServer</text>
 	            				</testRequestMessage>
 	            			]]>
-	            		</data>
-	            	</message>
-	            	<header>
-	          			<element name="CustomHeaderId" value="${custom_header_id}"/>
-                        <element name="Content-Type" value="text/xml"/>
-                        <element name="Accept" value="text/xml,*/*"/>
-                        <element name="citrus_http_method" value="POST"/>
-	          		</header>
-	            </send>
-              
-                <sequential>
+                  </data>
+                </message>
+                <header>
+                  <element name="CustomHeaderId" value="${custom_header_id}"/>
+                  <element name="Content-Type" value="text/xml"/>
+                  <element name="Accept" value="text/xml,*/*"/>
+                  <element name="citrus_http_method" value="POST"/>
+                </header>
+              </send>
+
+              <sequential>
                     <receive with="httpRequestReceiver" actor="helloClient">
                         <message>
                             <data>
@@ -86,26 +86,26 @@
     	            </send>
                 </sequential>
             </parallel>
-            
-            <receive with="httpResponseReceiver" actor="helloServer">
-            	<message>
-            		<data>
-            			<![CDATA[
+
+          <receive with="httpResponseReceiver" actor="helloServer">
+            <message>
+              <data>
+                <![CDATA[
             				<testResponseMessage>
             					<text>Hello Citrus</text>
             				</testResponseMessage>
             			]]>
-            		</data>
-            	</message>
-            	<header>
-           			<element name="CustomHeaderId" value="${custom_header_id}"/>
-           			<element name="citrus_http_status_code" value="200"/>
-           			<element name="citrus_http_version" value="HTTP/1.1"/>
-           			<element name="citrus_http_reason_phrase" value="OK"/>
-           		</header>
-            </receive>
-            
-            <echo>
+              </data>
+            </message>
+            <header>
+              <element name="CustomHeaderId" value="${custom_header_id}"/>
+              <element name="citrus_http_status_code" value="200"/>
+              <element name="citrus_http_version" value="HTTP/1.1"/>
+              <element name="citrus_http_reason_phrase" value="OK"/>
+            </header>
+          </receive>
+
+          <echo>
                 <message>Send Http request and respond with 404 status code</message>
             </echo>
             

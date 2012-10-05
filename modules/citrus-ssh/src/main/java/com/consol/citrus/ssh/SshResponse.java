@@ -17,7 +17,7 @@
 package com.consol.citrus.ssh;
 
 /**
- * POJO encapsulate a SSH response
+ * POJO encapsulate a SSH response. It is immutable.
  *
  * @author roland
  * @since 05.09.12
@@ -49,27 +49,11 @@ public class SshResponse {
     }
 
     /**
-     * Sets the stdout.
-     * @param stdout the stdout to set
-     */
-    public void setStdout(String stdout) {
-        this.stdout = stdout;
-    }
-
-    /**
      * Gets the stderr.
      * @return the stderr the stderr to get.
      */
     public String getStderr() {
         return stderr;
-    }
-
-    /**
-     * Sets the stderr.
-     * @param stderr the stderr to set
-     */
-    public void setStderr(String stderr) {
-        this.stderr = stderr;
     }
 
     /**
@@ -79,13 +63,4 @@ public class SshResponse {
     public int getExit() {
         return exit;
     }
-
-    /**
-     * Sets the exit.
-     * @param exit the exit to set
-     */
-    public void setExit(int exit) {
-        this.exit = exit;
-    }
-
 }
