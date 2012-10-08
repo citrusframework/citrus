@@ -64,6 +64,9 @@ public class AssertSoapFault extends AbstractActionContainer {
     /** OName representing fault code */
     private String faultCode = null;
     
+    /** Fault actor */
+    private String faultActor = null;
+    
     /** File resource describing fault detail */
     private Resource faultDetailResource;
     
@@ -147,6 +150,10 @@ public class AssertSoapFault extends AbstractActionContainer {
                 controlFault = soap12Fault;
             } else {
                     throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
+            }
+            
+            if (StringUtils.hasText(faultActor)) {
+                controlFault.setFaultActorOrRole(faultActor);
             }
         
             addFaultDetail(controlFault, context);
@@ -352,5 +359,21 @@ public class AssertSoapFault extends AbstractActionContainer {
      */
     public SoapMessageFactory getMessageFactory() {
         return messageFactory;
+    }
+
+    /**
+     * Gets the faultActor.
+     * @return the faultActor the faultActor to get.
+     */
+    public String getFaultActor() {
+        return faultActor;
+    }
+
+    /**
+     * Sets the faultActor.
+     * @param faultActor the faultActor to set
+     */
+    public void setFaultActor(String faultActor) {
+        this.faultActor = faultActor;
     }
 }

@@ -59,6 +59,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
         Assert.assertEquals(action.getFaultString(), "FaultString");
+        Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
         Assert.assertNull(action.getFaultDetailResource());
         

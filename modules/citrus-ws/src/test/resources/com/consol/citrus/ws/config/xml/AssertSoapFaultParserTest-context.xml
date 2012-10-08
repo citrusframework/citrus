@@ -22,7 +22,8 @@
             </ws:assert>
                         
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
-                       fault-string="FaultString">
+                       fault-string="FaultString"
+                       fault-actor="FaultActor">
                 <ws:fault-detail>
                   <![CDATA[FaultDetail]]>
                 </ws:fault-detail>

@@ -46,6 +46,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      */
     public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, TestContext context)
             throws ValidationException {
+        //fault string validation
         if (controlFault.getFaultStringOrReason() != null && 
                 !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
             if (controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
@@ -59,10 +60,23 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
             }
         }
         
+        //fault code validation
         if (StringUtils.hasText(controlFault.getFaultCode().getLocalPart())) {
             Assert.isTrue(controlFault.getFaultCode().equals(receivedFault.getFaultCode()), 
                     "SOAP fault validation failed! Fault code does not match - expected: '" +
                     controlFault.getFaultCode() + "' but was: '" + receivedFault.getFaultCode() + "'");
+        }
+        
+        //fault actor validation
+        if (StringUtils.hasText(controlFault.getFaultActorOrRole())) {
+            if (controlFault.getFaultActorOrRole().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                    controlFault.getFaultActorOrRole().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+                ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActorOrRole(), controlFault.getFaultActorOrRole(), context);
+            } else {
+                Assert.isTrue(controlFault.getFaultActorOrRole().equals(receivedFault.getFaultActorOrRole()), 
+                        "SOAP fault validation failed! Fault actor does not match - expected: '" +
+                        controlFault.getFaultActorOrRole() + "' but was: '" + receivedFault.getFaultActorOrRole() + "'");
+            }
         }
         
         if (controlFault.getFaultDetail() != null) {

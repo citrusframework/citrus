@@ -51,6 +51,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-code"), "faultCode");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-string"), "faultString");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-actor"), "faultActor");
         
         Element faultDetailElement = DomUtils.getChildElementByTagName(element, "fault-detail");
         if (faultDetailElement != null) {

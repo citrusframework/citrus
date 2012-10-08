@@ -42,6 +42,7 @@
                     </xs:sequence>
                     <xs:attribute name="fault-code" type="xs:string" use="required"/>
                     <xs:attribute name="fault-string" type="xs:string"/>
+                    <xs:attribute name="fault-actor" type="xs:string"/>
                     <xs:attribute name="fault-validator" type="xs:string"/>
                     <xs:attribute name="message-factory" type="xs:string"/>
                 </xs:extension>

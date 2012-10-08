@@ -28,6 +28,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
@@ -64,9 +65,11 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
                 
                 faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
                 
-                ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"), 
+                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"), 
                         "Internal server error", 
                         Locale.GERMANY);
+                
+                fault.setFaultActorOrRole("SERVER");
                 
                 throw new SoapFaultClientException(faultMessage);
             }
@@ -74,6 +77,37 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
+        assertAction.setFaultActor("SERVER");
+        
+        assertAction.execute(context);
+    }
+    
+    @Test
+    public void testAssertSoapFaultWithValidationMatchers() throws Exception {
+        AssertSoapFault assertAction = new AssertSoapFault();
+        assertAction.setValidator(soapFaultValidator);
+        assertAction.setMessageFactory(messageFactory);
+     
+        assertAction.setAction(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                SoapMessage faultMessage = null;
+                
+                faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
+                
+                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"), 
+                        "Internal server error", 
+                        Locale.GERMANY);
+                
+                fault.setFaultActorOrRole("SERVER");
+                
+                throw new SoapFaultClientException(faultMessage);
+            }
+        });
+        
+        assertAction.setFaultString("@equalsIgnoreCase('internal server error')@");
+        assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
+        assertAction.setFaultActor("@equalsIgnoreCase('server')@");
         
         assertAction.execute(context);
     }
@@ -133,6 +167,43 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
             assertAction.execute(context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "SOAP fault validation failed! Fault code does not match - expected: '{http://citrusframework.org}TEC-1001' but was: '{http://citrusframework.org}TEC-2002'");
+            return;
+        }
+        
+        Assert.fail("Missing validation exception");
+    }
+    
+    @Test
+    public void testWrongFaultActor() throws Exception {
+        AssertSoapFault assertAction = new AssertSoapFault();
+        assertAction.setValidator(soapFaultValidator);
+        assertAction.setMessageFactory(messageFactory);
+        
+        assertAction.setAction(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                SoapMessage faultMessage = null;
+                
+                faultMessage = (SaajSoapMessage)messageFactory.createWebServiceMessage();
+                
+                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"), 
+                        "Internal server error", 
+                        Locale.GERMANY);
+                
+                fault.setFaultActorOrRole("CLIENT");
+                
+                throw new SoapFaultClientException(faultMessage);
+            }
+        });
+        
+        assertAction.setFaultString("Internal server error");
+        assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
+        assertAction.setFaultActor("SERVER");
+        
+        try {
+            assertAction.execute(context);
+        } catch(IllegalArgumentException e) {
+            Assert.assertEquals(e.getMessage(), "SOAP fault validation failed! Fault actor does not match - expected: 'SERVER' but was: 'CLIENT'");
             return;
         }
         
