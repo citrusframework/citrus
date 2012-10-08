@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
 /**
- * @author roland
+ * @author Roland Huss
  * @since 05.09.12
  */
 public class SshParserTest {

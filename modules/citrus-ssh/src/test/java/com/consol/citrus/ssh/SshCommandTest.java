@@ -33,7 +33,7 @@ import static org.easymock.EasyMock.*;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
- * @author roland
+ * @author Roland Huss
  * @since 05.09.12
  */
 public class SshCommandTest {

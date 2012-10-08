@@ -22,7 +22,7 @@ import org.apache.sshd.server.session.ServerSession;
 /**
  * Simple user/password authenticator for comparing textually.
  *
- * @author roland
+ * @author Roland Huss
  * @since 05.09.12
  */
 class SimplePasswordAuthenticator implements PasswordAuthenticator {

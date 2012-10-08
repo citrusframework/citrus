@@ -19,8 +19,8 @@ package com.consol.citrus.ssh;
 /**
  * POJO encapsulating an SSH request. It is immutable.
  *
- * @author roland
- * @since 05.09.12
+ * @author Roland Huss
+ * @since 1.3
  */
 public class SshRequest {
 

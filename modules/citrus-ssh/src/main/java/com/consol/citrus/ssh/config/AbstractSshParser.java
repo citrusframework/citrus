@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.ssh.config;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -9,10 +25,10 @@ import org.w3c.dom.Element;
 
 /**
  * Helper class for providing a mapping of XML attribute names to bean properties
- * and other utility stuff com for all config parser.
+ * and other utility stuff common for all config parser.
  *
- * @author roland
- * @since 11.09.12
+ * @author Roland Huss
+ * @since 1.3
  */
 abstract public class AbstractSshParser extends AbstractBeanDefinitionParser {
 
@@ -67,8 +83,7 @@ abstract public class AbstractSshParser extends AbstractBeanDefinitionParser {
      *
      * @return class name, must never be null
      */
-    protected abstract Class getBeanClass();
-
+    protected abstract Class<?> getBeanClass();
 
     /**
      * Hook for doing extra initializations to the BeanDefinitionBuilder

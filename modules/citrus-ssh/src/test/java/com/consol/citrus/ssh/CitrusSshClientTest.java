@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.ssh;
 
 import java.io.*;
@@ -15,7 +31,7 @@ import static org.easymock.EasyMock.*;
 import static org.testng.Assert.*;
 
 /**
- * @author roland
+ * @author Roland Huss
  * @since 12.09.12
  */
 public class CitrusSshClientTest {
@@ -163,7 +179,7 @@ public class CitrusSshClientTest {
         expect(channel.isConnected()).andReturn(true);
     }
 
-    private Message createMessage(String pCommand, String pInput) {
+    private Message<?> createMessage(String pCommand, String pInput) {
         SshRequest request = new SshRequest(pCommand,pInput);
         return MessageBuilder.withPayload(xstream.toXML(request))
                              .build();

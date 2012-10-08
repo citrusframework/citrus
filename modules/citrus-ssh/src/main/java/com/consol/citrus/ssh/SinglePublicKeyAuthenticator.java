@@ -30,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * Public key authenticator which verifies a single provided public key. The public key
  * itself must be in PEM format.
  *
- * @author roland
+ * @author Roland Huss
  * @since 05.09.12
  */
 class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {

@@ -12,22 +12,30 @@ import com.thoughtworks.xstream.io.xml.XppDriver;
  * Simple class for doing XML mappings via XStream, putting the content
  * into CDATA sections
  *
- * @author roland
+ * @author Roland Huss
  * @since 02.10.12
  */
 public class XmlMapper extends XStream {
 
+    /**
+     * Default constructor.
+     */
     public XmlMapper() {
         super(getXppDriver());
         alias("ssh-request",SshRequest.class);
         alias("ssh-response",SshResponse.class);
     }
 
+    /**
+     * Provides driver with cdata support.
+     * @return
+     */
     private static XppDriver getXppDriver() {
         return new XppDriver() {
             public HierarchicalStreamWriter createWriter(Writer out) {
                 return new PrettyPrintWriter(out) {
                     boolean cdata = false;
+                    @SuppressWarnings("rawtypes")
                     public void startNode(String name, Class clazz){
                         super.startNode(name, clazz);
                         cdata = (name.equals("command") ||

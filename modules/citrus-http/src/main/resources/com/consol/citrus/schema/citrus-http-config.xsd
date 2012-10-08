@@ -32,36 +32,36 @@
             <xs:attribute name="connectors" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-
-  <xs:element name="message-sender">
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="request-url" type="xs:string" use="required"/>
-      <xs:attribute name="request-method" type="xs:string"/>
-      <xs:attribute name="reply-handler" type="xs:string"/>
-      <xs:attribute name="reply-message-correlator" type="xs:string"/>
-      <xs:attribute name="endpoint-resolver" type="xs:string"/>
-      <xs:attribute name="request-factory" type="xs:string"/>
-      <xs:attribute name="rest-template" type="xs:string"/>
-      <xs:attribute name="charset" type="xs:string"/>
-      <xs:attribute name="content-type" type="xs:string"/>
-      <xs:attribute name="interceptors" type="xs:string"/>
-      <xs:attribute name="error-strategy">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="throwsException"/>
-            <xs:enumeration value="propagateError"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="actor" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="reply-message-handler">
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="actor" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
+    
+    <xs:element name="message-sender">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="request-url" type="xs:string" use="required"/>
+            <xs:attribute name="request-method" type="xs:string"/>
+            <xs:attribute name="reply-handler" type="xs:string"/>
+            <xs:attribute name="reply-message-correlator" type="xs:string"/>
+            <xs:attribute name="endpoint-resolver" type="xs:string"/>
+            <xs:attribute name="request-factory" type="xs:string"/>
+            <xs:attribute name="rest-template" type="xs:string"/>
+            <xs:attribute name="charset" type="xs:string"/>
+            <xs:attribute name="content-type" type="xs:string"/>
+            <xs:attribute name="interceptors" type="xs:string"/>
+            <xs:attribute name="error-strategy">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="throwsException"/>
+                        <xs:enumeration value="propagateError"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="reply-message-handler">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="actor" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

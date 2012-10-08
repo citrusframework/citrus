@@ -53,7 +53,7 @@ import com.consol.citrus.server.AbstractServer;
  *   <stderr>warning: no tty</stderr>
  * </ssh-response>
  *
- * @author roland
+ * @author Roland Huss
  * @since 04.09.12
  */
 public class CitrusSshServer extends AbstractServer {

@@ -16,7 +16,6 @@
 
 package com.consol.citrus.ssh;
 
-
 import java.io.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -32,8 +31,8 @@ import org.springframework.util.StringUtils;
  * A SSH client which sends a request specified in a test-cast as SSH EXEC call to a target host
  * and notifies a {@link ReplyMessageHandler} after the SSH call has been returned.
  *
- * @author roland
- * @since 06.09.12
+ * @author Roland Huss
+ * @since 1.3
  */
 public class CitrusSshClient extends AbstractMessageSender {
 
@@ -121,7 +120,7 @@ public class CitrusSshClient extends AbstractMessageSender {
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message response = MessageBuilder.withPayload(xmlMapper.toXML(sshResp))
+        Message<String> response = MessageBuilder.withPayload(xmlMapper.toXML(sshResp))
                                          .setHeader("user", rUser).build();
         informReplyMessageHandler(response,message);
     }

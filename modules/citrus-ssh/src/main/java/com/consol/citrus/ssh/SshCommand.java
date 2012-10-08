@@ -30,14 +30,13 @@ import org.springframework.util.FileCopyUtils;
 /**
  * A command for delegation to a message handler
  *
- * @author roland
- * @since 05.09.12
+ * @author Roland Huss
+ * @since 1.3
  */
 public class SshCommand implements Command, Runnable {
 
-    // Logger
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SshCommand.class);
-
 
     /** Message handler for creating requests/responses **/
     private MessageHandler messageHandler;

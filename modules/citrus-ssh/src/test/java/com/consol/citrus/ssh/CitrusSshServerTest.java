@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 /**
- * @author roland
+ * @author Roland Huss
  * @since 05.09.12
  */
 public class CitrusSshServerTest {
