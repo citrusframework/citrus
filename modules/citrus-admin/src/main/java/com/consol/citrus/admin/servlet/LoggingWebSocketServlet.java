@@ -22,13 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
-import com.consol.citrus.admin.listener.LoggingTestActionListener;
-import com.consol.citrus.admin.listener.LoggingTestListener;
+import com.consol.citrus.admin.listener.TestEventListener;
 import com.consol.citrus.admin.websocket.LoggingWebSocket;
 
 /**
- * Web socket servlet accepts client requests opening a TCP/IP connection. Once connection handshake is done
- * server sends test action events to the client.
+ * Web socket servlet accepts client requests opening a bidirectional TCP/IP connection. 
+ * Once connection handshake is done server sends test action events to the client for logging purpose.
  * 
  * @author Christoph Deppisch
  * @since 1.3
@@ -42,8 +41,8 @@ public class LoggingWebSocketServlet extends WebSocketServlet {
     public void init() throws ServletException {
         super.init();
         
-        ((LoggingTestListener)getServletContext().getAttribute(LoggingTestListener.ATTRIBUTE)).addLoggingListener(socket);
-        ((LoggingTestActionListener)getServletContext().getAttribute(LoggingTestActionListener.ATTRIBUTE)).addLoggingListener(socket);
+        //set web socket as logging listener on test event provider coming from servlet context
+        ((TestEventListener)getServletContext().getAttribute(TestEventListener.ATTRIBUTE)).addLoggingListener(socket);
     }
     
     /**

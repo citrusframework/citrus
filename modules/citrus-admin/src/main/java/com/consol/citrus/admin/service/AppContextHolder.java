@@ -22,10 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContextManager;
 
-import com.consol.citrus.admin.listener.LoggingTestActionListener;
-import com.consol.citrus.admin.listener.LoggingTestListener;
-import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.admin.listener.TestEventListener;
+import com.consol.citrus.report.*;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
@@ -41,10 +39,7 @@ public class AppContextHolder {
     private ApplicationContext applicationContext;
     
     @Autowired
-    private LoggingTestListener loggingTestListener;
-    
-    @Autowired
-    private LoggingTestActionListener loggingTestActionListener;
+    private TestEventListener testEventListener;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AppContextHolder.class);
@@ -73,8 +68,9 @@ public class AppContextHolder {
                 applicationContext = getTestContext().getApplicationContext();
                 
                 // add special admin webapp test listeners
-                applicationContext.getBean(TestListeners.class).addTestListener(loggingTestListener);
-                applicationContext.getBean(TestActionListeners.class).addTestActionListener(loggingTestActionListener);
+                applicationContext.getBean(TestListeners.class).addTestListener(testEventListener);
+                applicationContext.getBean(TestActionListeners.class).addTestActionListener(testEventListener);
+                applicationContext.getBean(TestSuiteListeners.class).addTestSuiteListener(testEventListener);
             }
         };
         
