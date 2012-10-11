@@ -11,6 +11,12 @@
           initialize: function() {
               var headerView = new HeaderView();
               $('.header').html(headerView.render().el);
+              
+              $('ul.nav li').each(function(index) {
+                  $(this).click(function() {
+                      changeNavigation($(this));
+                  });
+              });
           },
           
           appcontext: function() {
