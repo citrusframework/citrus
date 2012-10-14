@@ -20,13 +20,13 @@
           },
           
           appcontext: function() {
-              var appContextView = new AppContextView();
-              $('#content').html(appContextView.render().el);
+              var appContextView = new AppContextView({el: $('#content')});
+              appContextView.render();
           },
         
           testcases: function() {
-              var testCasesView = new TestCasesView();
-              $('#content').html(testCasesView.render().el);
+              var testCasesView = new TestCasesView({el: $('#content')});
+              testCasesView.render();
           },
           
           about: function() {
