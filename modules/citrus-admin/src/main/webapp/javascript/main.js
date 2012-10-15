@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-var changeNavigation = function(clicked) {
-    $('ul.nav li').removeClass('active');
-    clicked.addClass('active');
-}
-
 var logOutput;
 var websocket;
 
