@@ -16,24 +16,19 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import java.io.File;
+import java.io.IOException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.*;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
 /**
@@ -64,43 +59,43 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
      * The name-suffix of all test cases. 
      * @parameter 
      *          expression="${nameSuffix}" 
-     *          default-value="_ITest" */
-    private String nameSuffix;
+     *          default-value="_Test" */
+    private String nameSuffix = "_Test";
     
     /**
      * The test author
      * @parameter
      *          expression="${author}" 
      *          default-value="Unknown" */
-    private String author;
+    private String author = "Unknown";
 
     /**
      * Describes the test case and its actions
      * @parameter
      *          expression="${description}" 
      *          default-value="TODO: Description" */
-    private String description;
+    private String description = "TODO: Description";
     
     /** 
      * Which package (folder structure) is assigned to this test. Defaults to "com.consol.citrus"
      * @parameter 
      *          expression="${targetPackage}"
      *          default-value="com.consol.citrus" */
-    private String targetPackage;
+    private String targetPackage = "com.consol.citrus";
     
     /** 
      * Whether to run this command in interactive mode. Defaults to "true".
      * @parameter 
      *          expression="${interactiveMode}"
      *          default-value="true" */
-    private boolean interactiveMode;
+    private boolean interactiveMode = true;
 
     /**
      * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
      * @parameter 
      *          expression="${framework}"
      *          default-value="testng" */
-    private String framework;
+    private String framework = "testng";
     
     /** @component
      *  @required */
@@ -115,21 +110,26 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
         		pathToWsdl = prompter.prompt("Enter path to WSDL");
         	}
         	
-        	// compile wsdl and xsds already here, otherwise later input is useless:
-        	XmlObject wsdl = compileWsdl();
-        	SchemaTypeSystem sts = compileXsd(wsdl);
-        	getLog().info("--------");
-        	getLog().info("WSDL was compiled successfully.");
-        	String serviceName = getAttributeContent(wsdl, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' .//wsdl:portType/@name"); 
-        	getLog().info("Following service was detected: " + serviceName);
+        	String separator = "--------";
+        	String wsdlNsDelaration = "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ";
         	
-        	getLog().info("--------");
-        	getLog().info("Following operations were detected for test-creation:");
-    		XmlObject[] operations = wsdl.selectPath("declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' .//wsdl:portType/wsdl:operation");
+        	// compile wsdl and xsds right now, otherwise later input is useless:
+        	XmlObject wsdl = compileWsdl();
+        	SchemaTypeSystem schemaTypeSystem = compileXsd(wsdl);
+        	
+            getLog().info(separator);
+        	getLog().info("WSDL compiled successfully.");
+        	String serviceName = getAttributeContent(wsdl, wsdlNsDelaration + ".//wsdl:portType/@name"); 
+        	getLog().info("Detected service: " + serviceName);
+        	
+        	getLog().info(separator);
+        	getLog().info("Detected operations:");
+        	XmlObject[] messages = wsdl.selectPath(wsdlNsDelaration + ".//wsdl:message");
+    		XmlObject[] operations = wsdl.selectPath(wsdlNsDelaration + ".//wsdl:portType/wsdl:operation");
     		for (XmlObject operation : operations) {
-    			getLog().info(getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./@name"));
+    			getLog().info(getAttributeContent(operation, wsdlNsDelaration + "./@name"));
 			}
-    		getLog().info("--------");
+    		getLog().info(separator);
         	
         	if (interactiveMode) {
         		namePrefix = prompter.prompt("Enter prefix of all test names", namePrefix);
@@ -141,7 +141,7 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
         		
         		String confirm = prompter.prompt("Confirm test creation:\n" +
         		        "framework: " + framework + "\n" +
-    			        "name e.g.: " + namePrefix + getAttributeContent(operations[0], "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./@name") + nameSuffix + "\n" +
+    			        "name e.g.: " + namePrefix + getAttributeContent(operations[0], wsdlNsDelaration + "./@name") + nameSuffix + "\n" +
     					"author: " + author + "\n" +
     					"description: " + description + "\n" +
     					"package: " + targetPackage + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
@@ -151,25 +151,53 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
 		    	}
         	}
         	
-        	SchemaType[] globalElems = sts.documentTypes();
+        	SchemaType[] globalElems = schemaTypeSystem.documentTypes();
 			
 			for (XmlObject operation : operations) {
-				String operationName = getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./@name");
-				String inputElem = getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./wsdl:input/@message");
-				String outputElem = getAttributeContent(operation, "declare namespace wsdl='http://schemas.xmlsoap.org/wsdl/' ./wsdl:output/@message");
+				String operationName = getAttributeContent(operation, wsdlNsDelaration + "./@name");
+				String inputMessageName = getAttributeContent(operation, wsdlNsDelaration + "./wsdl:input/@message");
+				String outputMessageName = getAttributeContent(operation, wsdlNsDelaration + "./wsdl:output/@message");
 				//remove ns-prefix:
-				inputElem = inputElem.indexOf(':') != -1 ? inputElem.substring(inputElem.indexOf(':') + 1) : inputElem;
-				outputElem = outputElem.indexOf(':')  != -1 ? outputElem.substring(outputElem.indexOf(':') + 1) : outputElem;
-
+				inputMessageName = inputMessageName.indexOf(':') != -1 ? inputMessageName.substring(inputMessageName.indexOf(':') + 1) : inputMessageName;
+				outputMessageName = outputMessageName.indexOf(':')  != -1 ? outputMessageName.substring(outputMessageName.indexOf(':') + 1) : outputMessageName;
+				
+				
+				String inputElementName = null;
+				String outputElementName = null;
+				
+				for (XmlObject message : messages) {
+				    String messageName = getAttributeContent(message, wsdlNsDelaration + "./@name");
+				    
+				    if (messageName.equals(inputMessageName)) {
+				        inputElementName = getAttributeContent(message, wsdlNsDelaration + "./wsdl:part/@element");
+				    }
+				    
+				    if (messageName.equals(outputMessageName)) {
+                        outputElementName = getAttributeContent(message, wsdlNsDelaration + "./wsdl:part/@element");
+                    }
+                }
+				
+				inputElementName = inputElementName.indexOf(':') != -1 ? inputElementName.substring(inputElementName.indexOf(':') + 1) : inputElementName;
+				outputElementName = outputElementName.indexOf(':')  != -1 ? outputElementName.substring(outputElementName.indexOf(':') + 1) : outputElementName;
+				
 				SchemaType requestElem = null;
 				SchemaType responseElem = null;
 				for (SchemaType elem : globalElems) {
-					if (elem.toString().contains(inputElem)) {
-						requestElem = elem;
-					}
-					if (elem.toString().contains(outputElem)) {
-						responseElem = elem;
-					}
+				    if (elem.getContentModel().getName().getLocalPart().equals(inputElementName)) {
+                        requestElem = elem;
+                    }
+                    
+                    if (elem.getContentModel().getName().getLocalPart().equals(outputElementName)) {
+                        responseElem = elem;
+                    }
+				}
+				
+				if (requestElem == null) {
+                    throw new MojoExecutionException("Unable to find schema type declaration '" + inputElementName + "' for WSDL operation '" + operationName + "'");
+                }
+				
+				if (responseElem == null) {
+				    throw new MojoExecutionException("Unable to find schema type declaration '" + outputElementName + "' for WSDL operation '" + operationName + "'");
 				}
 				
 				String requestXml = SampleXmlUtil.createSampleForType(requestElem);
@@ -177,7 +205,7 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
 				String name = namePrefix + operationName + nameSuffix;
 				
 				// Now generate it
-				TestCaseCreator creator = TestCaseCreator.build()
+				TestCaseCreator creator = getTestCaseCreator()
 					.withFramework(UnitFramework.fromString(framework))
 					.withName(name)
 					.withAuthor(author)
@@ -197,21 +225,33 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
         } catch (PrompterException e) {
 			getLog().info(e);
 			getLog().info("Failed to create suite! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-suite-from-wsdl).");
-		}
+		} catch (IOException e) {
+            getLog().info(e);
+        }
     }
     
-    private XmlObject compileWsdl() throws MojoExecutionException {
-		
-		File wsdlFile = new File(pathToWsdl);
+    /**
+     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized creator instance.
+     * .
+     * @return test creator.
+     */
+    public TestCaseCreator getTestCaseCreator() {
+        return TestCaseCreator.build();
+    }
+
+    private XmlObject compileWsdl() throws MojoExecutionException, IOException {
+		Resource wsdlFile = FileUtils.getResourceFromFilePath(pathToWsdl);
 		if (!wsdlFile.exists()) {
-			throw new MojoExecutionException("WSDL could not be found at path " + wsdlFile.getAbsolutePath());
+			throw new MojoExecutionException("Unable to read WSDL - does not exist in " + wsdlFile.getFile().getAbsolutePath());
 		}
-		if (!wsdlFile.canRead()) {
-			throw new MojoExecutionException("WSDL could not be opened in read mode");
+		
+		if (!wsdlFile.getFile().canRead()) {
+			throw new MojoExecutionException("Unable to read WSDL - could not open in read mode");
 		}
 		
 		try {
-			return XmlObject.Factory.parse(wsdlFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
+			return XmlObject.Factory.parse(wsdlFile.getFile(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
 		} catch (XmlException e) {
 			for (Object error : e.getErrors()) {
 				getLog().error(((XmlError)error).getLine() + "" + error.toString());
@@ -222,6 +262,12 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
 		}
 	}
     
+    /**
+     * Finds nested XML schema definition and compiles it to a schema type system instance.
+     * @param wsdl
+     * @return
+     * @throws MojoExecutionException
+     */
     private SchemaTypeSystem compileXsd(XmlObject wsdl) throws MojoExecutionException {
     	// extract namespaces defined on wsdl-level:
 		String[] namespacesWsdl = extractNamespacesDefinedOnWsdlLevel(wsdl);
@@ -242,21 +288,21 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
 				xsd[i] = XmlObject.Factory.parse(schema[i], (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
 			}
 		} catch (Exception e) {
-			throw new MojoExecutionException("XSD could not be parsed", e);
+			throw new MojoExecutionException("Failed to parse XSD schema", e);
 		}
 		
-		SchemaTypeSystem sts = null;
+		SchemaTypeSystem schemaTypeSystem = null;
 		try {
-			sts = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
+			schemaTypeSystem = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
 		} catch (XmlException e) {
 			for (Object error : e.getErrors()) {
 				getLog().error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
 			}
-			throw new MojoExecutionException("XSD could not be compiled", e);
+			throw new MojoExecutionException("Failed to compile XSD schema", e);
 		} catch (Exception e) {
-			throw new MojoExecutionException("XSD could not be compiled", e);
+			throw new MojoExecutionException("Failed to compile XSD schema", e);
 		}
-		return sts;
+		return schemaTypeSystem;
     }
 
 	private void addNamespacesDefinedOnWsdlLevelToSchemaTags(XmlObject wsdl,
@@ -331,5 +377,21 @@ public class CreateTestSuiteFromWsdlMojo extends AbstractMojo {
     	int begin = xmlObject[0].xmlText().indexOf(">") + 1;
     	int end = xmlObject[0].xmlText().lastIndexOf("</");
     	return xmlObject[0].xmlText().substring(begin, end);
+    }
+
+    /**
+     * Sets the prompter.
+     * @param prompter the prompter to set
+     */
+    public void setPrompter(Prompter prompter) {
+        this.prompter = prompter;
+    }
+
+    /**
+     * Sets the interactiveMode.
+     * @param interactiveMode the interactiveMode to set
+     */
+    public void setInteractiveMode(boolean interactiveMode) {
+        this.interactiveMode = interactiveMode;
     }
 }

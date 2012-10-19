@@ -216,26 +216,25 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 		
 		File xsdFile = new File(pathToXsd);
 		if (!xsdFile.exists()) {
-			throw new MojoExecutionException("XSD could not be found at path " + xsdFile.getAbsolutePath());
+			throw new MojoExecutionException("Unable to read XSD - does not exist in " + xsdFile.getAbsolutePath());
 		}
 		if (!xsdFile.canRead()) {
-			throw new MojoExecutionException("XSD could not be opened in read mode");
+			throw new MojoExecutionException("Unable to read XSD - could not open in read mode");
 		}
 		
 		XmlObject xsd = null;
 		try {
 			xsd = XmlObject.Factory.parse(xsdFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
 		} catch (Exception e) {
-			throw new MojoExecutionException("XSD could not be parsed", e);
+			throw new MojoExecutionException("Failed to parse XSD schema", e);
 		}
-		XmlObject[] schemas = new XmlObject[1];
-		schemas[0] = xsd;
-		SchemaTypeSystem sts = null;
+		XmlObject[] schemas = new XmlObject[] { xsd };
+		SchemaTypeSystem schemaTypeSystem = null;
 		try {
-			sts = XmlBeans.compileXsd(schemas, XmlBeans.getContextTypeLoader(), new XmlOptions());
+			schemaTypeSystem = XmlBeans.compileXsd(schemas, XmlBeans.getContextTypeLoader(), new XmlOptions());
 		} catch (Exception e) {
-			throw new MojoExecutionException("XSD could not be compiled", e);
+			throw new MojoExecutionException("Failed to compile XSD schema", e);
 		}
-		return sts;
+		return schemaTypeSystem;
 	}
 }
