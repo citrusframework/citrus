@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "underscore", "backbone", "handlebars", "views/HeaderView", "views/AppContextView", "views/TestCasesView"], function($, _, Backbone, Handlebars, HeaderView, AppContextView, TestCasesView) {
+    define(["jquery", "underscore", "backbone", "handlebars", "views/HeaderView", "views/AppContextView", "views/TestListView"], function($, _, Backbone, Handlebars, HeaderView, AppContextView, TestListView) {
         var AppRouter = Backbone.Router.extend({
         
           routes: {
@@ -19,8 +19,8 @@
           },
         
           testcases: function() {
-              var testCasesView = new TestCasesView({el: $('#content')});
-              testCasesView.render();
+              var testListView = new TestListView({el: $('#content')});
+              testListView.render();
           },
           
           about: function() {

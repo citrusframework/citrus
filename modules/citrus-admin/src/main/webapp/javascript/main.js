@@ -41,7 +41,7 @@ curl({
   }},
   ["jquery", "underscore", "backbone", "TemplateManager", "AppRouter", "domReady!"], function($, _, Backbone, TemplateManager, AppRouter) {
     
-  TemplateManager.load(['HeaderView', 'AppContextView', 'TestCasesView'], function() {
+  TemplateManager.load(['HeaderView', 'AppContextView', 'TestListView', 'TestItemView'], function() {
       app = new AppRouter();
       Backbone.history.start();
   });
