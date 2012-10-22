@@ -20,18 +20,13 @@ import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.*;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TestCaseCreator;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
@@ -44,7 +39,7 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
  * @author Christian Wied
  * @goal create-test-from-xsd
  */
-public class CreateTestCaseFromXsdMojo extends AbstractMojo {
+public class CreateTestFromXsdMojo extends AbstractMojo {
 	
 	/**
 	 * Path of the xsd from which the sample request and response are get from
@@ -130,9 +125,9 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 			SchemaType responseElem = null;
 			
 			if (interactiveMode) {
-				xsdRequestElem = prompter.prompt("Enter tag of request-element", xsdRequestElem);
+				xsdRequestElem = prompter.prompt("Enter request element name", xsdRequestElem);
 				for (SchemaType elem : globalElems) {
-					if (elem.toString().contains(xsdRequestElem)) {
+					if (elem.getContentModel().getName().getLocalPart().equals(xsdRequestElem)) {
 						requestElem = elem;
 						break;
 					}
@@ -150,22 +145,18 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
                     name = xsdRequestElem.substring(0, xsdRequestElem.indexOf("RequestMessage")) + "Test";
 				}
 
-				xsdResponseElem = prompter.prompt("Enter tag of response-element", xsdResponseElem);
+				xsdResponseElem = prompter.prompt("Enter response element name", xsdResponseElem);
 				for (SchemaType elem : globalElems) {
-					if (elem.toString().contains(xsdResponseElem)) {
+					if (elem.getContentModel().getName().getLocalPart().equals(xsdResponseElem)) {
 						responseElem = elem;
 						break;
 					}
 				}
 			
-        		name = prompter.prompt("Enter test name", name);
-        	}
-        	
-        	if (!StringUtils.hasText(name)) {
-        		throw new CitrusRuntimeException("Test must have a name!");
-        	}
-        	
-        	if (interactiveMode) {
+				while (!StringUtils.hasText(name)) {
+				    name = prompter.prompt("Enter test name", name);
+	            }
+				
         		author = prompter.prompt("Enter test author:", author);
         		description = prompter.prompt("Enter test description:", description);
         		targetPackage = prompter.prompt("Enter test package:", targetPackage);
@@ -182,28 +173,24 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 		    		return;
 		    	}
         	}
-        	
-			String requestXml = SampleXmlUtil.createSampleForType(requestElem);
-			String responseXml = SampleXmlUtil.createSampleForType(responseElem);
 			
+			if (!StringUtils.hasText(name)) {
+                throw new MojoExecutionException("Please provide proper test name! Test name must not be empty starting with uppercase letter!");
+            }
+        	
 			// Now generate it
-            TestCaseCreator creator = TestCaseCreator.build()
+            TestCaseCreator creator = getTestCaseCreator()
                 .withFramework(UnitFramework.fromString(framework))
                 .withName(name)
                 .withAuthor(author)
                 .withDescription(description)
                 .usePackage(targetPackage)
-                .withXmlRequest(requestXml)
-                .withXmlResponse(responseXml);
+                .withXmlRequest(SampleXmlUtil.createSampleForType(requestElem))
+                .withXmlResponse(SampleXmlUtil.createSampleForType(responseElem));
             
             creator.createTestCase();
             
-            getLog().info("Successfully created new test case \n" +
-                        "framework: " + framework + "\n" +
-            		    "name: " + name + "\n" +
-    					"author: " + author + "\n" +
-    					"description: " + description + "\n" +
-    					"package: " + targetPackage);
+            getLog().info("Successfully created new test case " + targetPackage + "." + name);
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test-from-xsd).");
         } catch (PrompterException e) {
@@ -237,4 +224,30 @@ public class CreateTestCaseFromXsdMojo extends AbstractMojo {
 		}
 		return schemaTypeSystem;
 	}
+	
+	/**
+     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized creator instance.
+     * .
+     * @return test creator.
+     */
+    public TestCaseCreator getTestCaseCreator() {
+        return TestCaseCreator.build();
+    }
+
+    /**
+     * Sets the interactiveMode.
+     * @param interactiveMode the interactiveMode to set
+     */
+    public void setInteractiveMode(boolean interactiveMode) {
+        this.interactiveMode = interactiveMode;
+    }
+
+    /**
+     * Sets the prompter.
+     * @param prompter the prompter to set
+     */
+    public void setPrompter(Prompter prompter) {
+        this.prompter = prompter;
+    }
 }

@@ -23,7 +23,6 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TestCaseCreator;
 import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 
@@ -36,7 +35,7 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
  * @author Christoph Deppisch
  * @goal create-test
  */
-public class CreateTestCaseMojo extends AbstractMojo {
+public class CreateTestMojo extends AbstractMojo {
     /**
      * The name of the test case (must start with upper case letter). 
      * @parameter 
@@ -88,12 +87,12 @@ public class CreateTestCaseMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException {
         try {
-        	while(interactiveMode && !StringUtils.hasText(name)) {
+        	while (interactiveMode && !StringUtils.hasText(name)) {
         		name = prompter.prompt("Enter test name");
         	}
         	
         	if (!StringUtils.hasText(name)) {
-        		throw new CitrusRuntimeException("Test must have a name!");
+        		throw new MojoExecutionException("Please provide proper test name! Test name must not be empty starting with uppercase letter!");
         	}
         	
         	if (interactiveMode) {
@@ -114,7 +113,7 @@ public class CreateTestCaseMojo extends AbstractMojo {
 		    	}
         	}
         	
-            TestCaseCreator creator = TestCaseCreator.build()
+            TestCaseCreator creator = getTestCaseCreator()
                 .withFramework(UnitFramework.fromString(framework))
                 .withName(name)
                 .withAuthor(author)
@@ -123,17 +122,38 @@ public class CreateTestCaseMojo extends AbstractMojo {
             
             creator.createTestCase();
             
-            getLog().info("Successfully created new test case \n" +
-                        "framework: " + framework + "\n" +
-            		    "name: " + name + "\n" +
-    					"author: " + author + "\n" +
-    					"description: " + description + "\n" +
-    					"package: " + targetPackage);
+            getLog().info("Successfully created new test case " + targetPackage + "." + name);
         } catch (ArrayIndexOutOfBoundsException e) {
             getLog().info("Wrong parameter usage! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test).");
         } catch (PrompterException e) {
 			getLog().info(e);
 			getLog().info("Failed to create test! See citrus:help for usage details (mvn citrus:help -Ddetail=true -Dgoal=create-test).");
 		}
+    }
+    
+    /**
+     * Method provides test creator instance. Basically introduced for better mocking capabilities in unit tests but
+     * also useful for subclasses to provide customized creator instance.
+     * .
+     * @return test creator.
+     */
+    public TestCaseCreator getTestCaseCreator() {
+        return TestCaseCreator.build();
+    }
+
+    /**
+     * Sets the interactiveMode.
+     * @param interactiveMode the interactiveMode to set
+     */
+    public void setInteractiveMode(boolean interactiveMode) {
+        this.interactiveMode = interactiveMode;
+    }
+
+    /**
+     * Sets the prompter.
+     * @param prompter the prompter to set
+     */
+    public void setPrompter(Prompter prompter) {
+        this.prompter = prompter;
     }
 }

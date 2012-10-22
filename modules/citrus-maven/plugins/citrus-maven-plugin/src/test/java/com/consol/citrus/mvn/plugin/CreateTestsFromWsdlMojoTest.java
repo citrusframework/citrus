@@ -26,7 +26,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.util.TestCaseCreator;
@@ -35,20 +35,22 @@ import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 /**
  * @author Christoph Deppisch
  */
-public class CreateSuiteFromWsdlMojoTest {
+public class CreateTestsFromWsdlMojoTest {
 
     private Prompter prompter = EasyMock.createMock(Prompter.class);
     
     private TestCaseCreator testCaseCreator = EasyMock.createMock(TestCaseCreator.class);
     
-    private CreateTestSuiteFromWsdlMojo mojo = new CreateTestSuiteFromWsdlMojo() {
-        public TestCaseCreator getTestCaseCreator() {
-            return testCaseCreator;
-        };
-    };
+    private CreateTestsFromWsdlMojo mojo;
     
-    @BeforeClass
+    @BeforeMethod
     public void setup() {
+        mojo = new CreateTestsFromWsdlMojo() {
+            public TestCaseCreator getTestCaseCreator() {
+                return testCaseCreator;
+            };
+        };
+        
         mojo.setPrompter(prompter);
         mojo.setInteractiveMode(true);
     }
@@ -171,6 +173,38 @@ public class CreateSuiteFromWsdlMojoTest {
         mojo.execute();
         
         verify(prompter, testCaseCreator);
+    }
+    
+    @Test
+    public void testSuiteFromWsdlAbort() throws MojoExecutionException, PrompterException {
+        
+        reset(prompter, testCaseCreator);
+        
+        expect(prompter.prompt(contains("path"))).andReturn("classpath:wsdl/BookStore.wsdl").once();
+        expect(prompter.prompt(contains("prefix"), anyObject(String.class))).andReturn("IT_").once();
+        expect(prompter.prompt(contains("suffix"), anyObject(String.class))).andReturn("_Test").once();
+        expect(prompter.prompt(contains("author"), anyObject(String.class))).andReturn("UnknownAuthor").once();
+        expect(prompter.prompt(contains("description"), anyObject(String.class))).andReturn("TODO").once();
+        expect(prompter.prompt(contains("package"), anyObject(String.class))).andReturn("com.consol.citrus.wsdl").once();
+        expect(prompter.prompt(contains("framework"), anyObject(String.class))).andReturn("testng").once();
+        expect(prompter.prompt(contains("Confirm"), anyObject(List.class), anyObject(String.class))).andReturn("n").once();
+        
+        replay(prompter, testCaseCreator);
+        
+        mojo.execute();
+        
+        verify(prompter, testCaseCreator);
+    }
+    
+    @Test
+    public void testEmptyWsdlPath() throws PrompterException {
+        try {
+            mojo.setInteractiveMode(false);
+            mojo.execute();
+            Assert.fail("Missing exception due to invalid WSDL path");
+        } catch (MojoExecutionException e) {
+            Assert.assertTrue(e.getMessage().contains("Please provide proper path to WSDL file"));
+        }
     }
     
 }
