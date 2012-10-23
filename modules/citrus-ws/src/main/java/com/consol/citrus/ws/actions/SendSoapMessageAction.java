@@ -50,10 +50,6 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
     
-    /** Forks the message sending action so other actions can take place while this
-     * message sender is waiting for the synchronous response */
-    private boolean forkMode = false;
-    
     @Override
     public void doExecute(final TestContext context) {
         final Message<?> message = createMessage(context);
@@ -78,7 +74,7 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachmentContent = null;
             }
         
-            if (forkMode) {
+            if (isForkMode()) {
                 SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
                 taskExecutor.execute(new Runnable() {
                     public void run() {
@@ -151,14 +147,6 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
-     * Enables fork mode for this message sender.
-     * @param fork the fork to set.
-     */
-    public void setForkMode(boolean fork) {
-        this.forkMode = fork;
-    }
-
-    /**
      * Gets the attachmentData.
      * @return the attachmentData
      */
@@ -172,14 +160,6 @@ public class SendSoapMessageAction extends SendMessageAction {
      */
     public Resource getAttachmentResource() {
         return attachmentResource;
-    }
-
-    /**
-     * Gets the forkMode.
-     * @return the forkMode
-     */
-    public boolean isForkMode() {
-        return forkMode;
     }
 
     /**

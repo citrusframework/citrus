@@ -18,7 +18,6 @@ package com.consol.citrus.ws.config.xml;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.SendMessageActionParser;
@@ -36,11 +35,6 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
         
         SoapAttachmentParser.parseAttachment(builder, element, parserContext);
         
-        String fork = element.getAttribute("fork");
-        if (StringUtils.hasText(fork)) {
-            builder.addPropertyValue("forkMode", fork);
-        }
-
         return builder;
     }
 }

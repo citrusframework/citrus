@@ -57,7 +57,6 @@
                     <xs:sequence>
                         <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
                     </xs:sequence>
-                    <xs:attribute name="fork" type="xs:boolean"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>

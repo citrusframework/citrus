@@ -130,6 +130,7 @@
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="fork" type="xs:boolean"/>
     </xs:complexType>
 
     <xs:complexType name="receiveActionType">

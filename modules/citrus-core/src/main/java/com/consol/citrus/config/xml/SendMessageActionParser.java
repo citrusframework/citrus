@@ -59,6 +59,8 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
+        
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         
         AbstractMessageContentBuilder<?> messageBuilder = constructMessageBuilder(messageElement);

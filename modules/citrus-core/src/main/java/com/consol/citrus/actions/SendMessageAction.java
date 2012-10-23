@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
@@ -45,6 +46,10 @@ public class SendMessageAction extends AbstractTestAction {
     
     /** Builder constructing a control message */
     private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
+    
+    /** Forks the message sending action so other actions can take place while this
+     * message sender is waiting for the synchronous response */
+    private boolean forkMode = false;
 
     /**
      * Message is constructed with payload and header entries and sent via
@@ -52,14 +57,23 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void doExecute(TestContext context) {
-        Message<?> message = createMessage(context);
+        final Message<?> message = createMessage(context);
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
         }
         
-        messageSender.send(message);
+        if (forkMode) {
+            SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+            taskExecutor.execute(new Runnable() {
+                public void run() {
+                    messageSender.send(message);
+                }
+            });
+        } else {
+            messageSender.send(message);
+        }
     }
     
     /**
@@ -129,5 +143,21 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public MessageSender getMessageSender() {
         return messageSender;
+    }
+    
+    /**
+     * Enables fork mode for this message sender.
+     * @param fork the fork to set.
+     */
+    public void setForkMode(boolean fork) {
+        this.forkMode = fork;
+    }
+
+    /**
+     * Gets the forkMode.
+     * @return the forkMode the forkMode to get.
+     */
+    public boolean isForkMode() {
+        return forkMode;
     }
 }
