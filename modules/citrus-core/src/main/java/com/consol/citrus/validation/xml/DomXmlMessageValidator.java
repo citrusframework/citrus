@@ -566,7 +566,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         //check if validation matcher on element is specified
-        if (nodeContainsValidationMatcher(source)) {
+        if (isValidationMatcherExpression(source)) {
             ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(),
                     received.getFirstChild().getNodeValue().trim(),
                     source.getFirstChild().getNodeValue().trim(),
@@ -655,7 +655,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
             }
             return;
-        } else if (nodeContainsValidationMatcher(source)) {
+        } else if (isValidationMatcherExpression(source)) {
             ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(),
                     received.getFirstChild().getNodeValue().trim(),
                     source.getFirstChild().getNodeValue().trim(),
@@ -922,18 +922,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param node
      * @return true if node value contains validation matcher, false if not
      */
-    private boolean nodeContainsValidationMatcher(Node node) {
+    private boolean isValidationMatcherExpression(Node node) {
         switch (node.getNodeType()) {
             case Node.ELEMENT_NODE:
                 return node.getFirstChild() != null &&
                 StringUtils.hasText(node.getFirstChild().getNodeValue()) &&
-                node.getFirstChild().getNodeValue().trim().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                node.getFirstChild().getNodeValue().trim().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
+                ValidationMatcherUtils.isValidationMatcherExpression(node.getFirstChild().getNodeValue().trim());
 
             case Node.ATTRIBUTE_NODE:
                 return StringUtils.hasText(node.getNodeValue()) &&
-                node.getNodeValue().trim().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                node.getNodeValue().trim().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
+                ValidationMatcherUtils.isValidationMatcherExpression(node.getNodeValue().trim());
 
             default: return false; //validation matchers makes no sense
         }

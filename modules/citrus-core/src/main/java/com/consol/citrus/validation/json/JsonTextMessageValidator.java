@@ -124,11 +124,10 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 continue;
             }
             
-            if (controlJsonEntry.getValue().toString().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                    controlJsonEntry.getValue().toString().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
-                
-                ValidationMatcherUtils.resolveValidationMatcher(controlJsonEntry.getKey().toString(), receivedJson.get(controlJsonEntry.getKey()).toString(), controlJsonEntry.getValue().toString(), context);
-            
+            if (ValidationMatcherUtils.isValidationMatcherExpression(controlJsonEntry.getValue().toString())) {
+                ValidationMatcherUtils.resolveValidationMatcher(controlJsonEntry.getKey().toString(), 
+                        receivedJson.get(controlJsonEntry.getKey()).toString(), 
+                        controlJsonEntry.getValue().toString(), context);
             } else if (controlJsonEntry.getValue() instanceof JSONObject) {
                 Assert.isTrue(receivedJson.get(controlJsonEntry.getKey()) instanceof JSONObject, 
                         ValidationUtils.buildValueMismatchErrorMessage("Type mismatch for JSON entry '" + controlJsonEntry.getKey() + "'", 

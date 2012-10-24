@@ -34,7 +34,7 @@ public final class ValidationMatcherUtils {
     private ValidationMatcherUtils() {}
     
     /**
-     * This method resolves a custom falidationMatcher to its respective result.
+     * This method resolves a custom validationMatcher to its respective result.
      * @param validationMatcherExpression to evaluate.
      * @param fieldName the name of the field
      * @return evaluated control value
@@ -64,6 +64,15 @@ public final class ValidationMatcherUtils {
         library.getValidationMatcher(matcherName).validate(fieldName, fieldValue, matcherValue);
     }
     
+    /**
+     * Checks if expression is a validation matcher expression.
+     * @param expression
+     * @return
+     */
+    public static boolean isValidationMatcherExpression(String expression) {
+        return expression.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                expression.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
+    }
     
     /**
      * Cut off validation matchers prefix and suffix.

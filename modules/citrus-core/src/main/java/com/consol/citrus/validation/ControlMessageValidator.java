@@ -31,6 +31,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 
 /**
  * Basic control message validator provides message header validation. Subclasses only have to add
@@ -106,11 +107,18 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             if (receivedHeaders.get(headerName) != null) {
                 actualValue = receivedHeaders.get(headerName).toString();
             }
+            
             //check if value expression is variable or function
             expectedValue = context.resolveDynamicValue(expectedValue);
 
             try {
                 if (actualValue != null) {
+                    if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                        ValidationMatcherUtils.resolveValidationMatcher(headerName, actualValue, 
+                                expectedValue, context);
+                        continue;
+                    }
+                    
                     Assert.isTrue(expectedValue != null,
                             "Values not equal for header element '"
                                 + headerName + "', expected '"

@@ -266,10 +266,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             }
             return;
         }
-        if (isValidationMatcher(controlValue)) {
+        
+        if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
             ValidationMatcherUtils.resolveValidationMatcher(columnName, resultValue, controlValue, context);
             return;
         }
+        
         if (resultValue == null) {
             if (isCitrusNullValue(controlValue)) {
                 if (log.isDebugEnabled()) {
@@ -296,11 +298,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
     }
     
-    private boolean isValidationMatcher(String controlValue) {
-        return controlValue.startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                controlValue.endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX);
-    }
-
+    /**
+     * Checks on special null values.
+     * @param controlValue
+     * @return
+     */
     private boolean isCitrusNullValue(String controlValue) {
         return controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0;
     }

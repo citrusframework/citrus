@@ -51,8 +51,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
                 !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
             if (controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
                 log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
-            } else if (controlFault.getFaultStringOrReason().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                    controlFault.getFaultStringOrReason().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+            } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultStringOrReason())) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultStringOrReason(), controlFault.getFaultStringOrReason(), context);
             } else {
                 throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
