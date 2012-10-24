@@ -108,7 +108,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
 
             if (receivedMessage == null) {
-                throw new CitrusRuntimeException("Unable to process received message - message is null");
+                throw new CitrusRuntimeException("Failed to receive message - message is not available");
             }
 
             // extract variables from received message content

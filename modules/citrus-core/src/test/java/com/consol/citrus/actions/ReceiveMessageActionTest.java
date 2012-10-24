@@ -1306,7 +1306,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unable to process received message - message is null");
+            Assert.assertEquals(e.getMessage(), "Failed to receive message - message is not available");
             verify(messageReceiver);
             return;
         }
