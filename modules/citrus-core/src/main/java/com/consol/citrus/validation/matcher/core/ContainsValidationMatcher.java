@@ -31,8 +31,8 @@ public class ContainsValidationMatcher implements ValidationMatcher {
         if (!value.contains(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
-                    + "'. Received value is '" + value
-                    + "', control value is '" + control + "'.");
+                    + "'. Received value '" + value
+                    + "' must contain '" + control + "'");
         }
     }
 }
