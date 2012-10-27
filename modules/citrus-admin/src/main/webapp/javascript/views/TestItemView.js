@@ -10,7 +10,8 @@
           
           events: {
               "click a.run-test" : "runTest",
-              "click a.source" : "getSource"
+              "click a.xml-source" : "getXmlSource",
+              "click a.java-source" : "getXmlSource"
           },
           
           render: function() {
@@ -48,20 +49,20 @@
               });
           },
           
-          getSource: function() {
-              $('pre.test-case-code').remove();
-              $(this.el).append('<pre class="prettyprint linenums test-case-code">Loading test ...</pre>');
+          getXmlSource: function() {
+              $('pre.xml-code').remove();
+              $('div#' + this.test.name + ' > div.tab-content > div.tab-pane > div.xml-source').append('<pre class="prettyprint linenums xml-code">Loading sources ...</pre>');
               
               $.ajax({
                   url: "testcase/" + this.test.packageName + "/" + this.test.name,
                   type: 'GET',
                   dataType: "html",
                   success: function(fileContent) {
-                      $('pre.test-case-code').text(fileContent);
-                      $('pre.test-case-code').prepend('<a class="close close-code">×</a>');
+                      $('pre.xml-code').text(fileContent);
+                      $('pre.xml-code').prepend('<a class="close close-code">×</a>');
                       
                       $('a.close-code').click(function() {
-                          $('pre.test-case-code').remove();
+                          $('pre.xml-code').remove();
                       });
                       
                       prettyPrint();

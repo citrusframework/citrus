@@ -54,7 +54,7 @@ public class TestCaseController {
     private static Logger log = LoggerFactory.getLogger(TestCaseController.class);
     
     @Autowired
-    AppContextHolder appContextHolder;
+    private AppContextHolder appContextHolder;
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody

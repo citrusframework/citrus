@@ -34,8 +34,6 @@ curl({
       "underscore": "support/underscore",
       "backbone": "support/backbone",
       "handlebars" : "support/handlebars",
-      "bootstrap-alert" : "support/bootstrap-alert",
-      "prettify" : "support/prettify",
       "TemplateManager" : "views/TemplateManager",
       "AppRouter" : "router/AppRouter"
   }},

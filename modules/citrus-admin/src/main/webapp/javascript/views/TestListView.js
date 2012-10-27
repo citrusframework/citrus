@@ -20,7 +20,16 @@
               $(this.el).html(TemplateManager.template('TestListView', { testsTotal: this.tests.length }));
               
               $.each(this.tests, function(index, test) {
+                  $('#test-list').prepend('<li class=""><a href="#' + test.name + '"><i class="icon-chevron-right"></i> ' + test.name + '</a></li>');
+                  
                   $('#test-cases').prepend(new TestItemView({ test: test }).render().el);
+              });
+              
+              $('ul.side-nav li').each(function(index) {
+                  $(this).click(function() {
+                      $('ul.side-nav li').removeClass('active');
+                      $(this).addClass('active');
+                  });
               });
               
               return this;
