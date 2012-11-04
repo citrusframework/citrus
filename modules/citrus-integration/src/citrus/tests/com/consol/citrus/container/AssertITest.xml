@@ -17,13 +17,28 @@
         
         <description>Asserting excpetions</description>
         
+        <variables>
+            <variable name="failMessage" value="Something went wrong!"/>
+        </variables>
+        
         <actions>
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
             	<fail message="Fail once"/>
             </assert>
+            
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
                     message="Fail again">
             	<fail message="Fail again"/>
+            </assert>
+            
+            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+                    message="${failMessage}">
+                <fail message="${failMessage}"/>
+            </assert>
+            
+            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+                    message="@contains('wrong')@">
+                <fail message="${failMessage}"/>
             </assert>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">

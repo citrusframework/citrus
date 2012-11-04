@@ -67,6 +67,42 @@ public class AssertTest extends AbstractTestNGUnitTest {
         assertAction.execute(context);
     }
     
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testVariableSupport() {
+        Assert assertAction = new Assert();
+        
+        context.setVariable("message", "This went wrong!");
+        
+        FailAction fail = new FailAction();
+        fail.setMessage("This went wrong!");
+        
+        assertAction.setAction(fail);
+        
+        Class exceptionClass = CitrusRuntimeException.class;
+        assertAction.setException(exceptionClass);
+        assertAction.setMessage("${message}");
+        
+        assertAction.execute(context);
+    }
+    
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testValidationMatcherSupport() {
+        Assert assertAction = new Assert();
+        
+        FailAction fail = new FailAction();
+        fail.setMessage("This went wrong!");
+        
+        assertAction.setAction(fail);
+        
+        Class exceptionClass = CitrusRuntimeException.class;
+        assertAction.setException(exceptionClass);
+        assertAction.setMessage("@contains('wrong')@");
+        
+        assertAction.execute(context);
+    }
+    
     @Test(expectedExceptions=CitrusRuntimeException.class)
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionWrongMessageCheck() {

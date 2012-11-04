@@ -27,6 +27,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 
 /**
  * Assert exception to happen in nested test action.
@@ -58,20 +59,24 @@ public class Assert extends AbstractActionContainer {
             action.execute(context);
         } catch (Exception e) {
             log.info("Validating caught exception ...");
-            if (exception.isAssignableFrom(e.getClass())) {
-                
-                if (message != null && !message.equals(e.getLocalizedMessage())) {
-                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + 
-                            message + "' but was: '" + e.getLocalizedMessage() + "'", e);
-                }
-                
-                log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
-                log.info("Exception validation successful");
-                return;
-            } else {
+            
+            if (!exception.isAssignableFrom(e.getClass())) {
                 throw new ValidationException("Validation failed for asserted exception type - expected: '" + 
                         exception + "' but was: '" + e.getClass().getName() + "'", e);
+            }    
+            
+            if (message != null) {
+                if (ValidationMatcherUtils.isValidationMatcherExpression(message)) {
+                    ValidationMatcherUtils.resolveValidationMatcher("message", e.getLocalizedMessage(), message, context);
+                } else if(!context.resolveDynamicValue(message).equals(e.getLocalizedMessage())) {
+                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + 
+                        message + "' but was: '" + e.getLocalizedMessage() + "'", e);
+                }
             }
+            
+            log.info("Exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
+            log.info("Exception validation successful");
+            return;
         }
 
         throw new ValidationException("Missing asserted exception '" + exception + "'");
