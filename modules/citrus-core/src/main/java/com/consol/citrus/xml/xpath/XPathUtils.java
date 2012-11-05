@@ -60,6 +60,12 @@ public abstract class XPathUtils {
     private XPathUtils() {
     }
     
+    /**
+     * Extracts dynamic namespaces that are inline inside a XPath expression. Example:
+     * <code>/{http://sample.org/foo}foo/{http://sample.org/bar}bar</code>
+     * @param expression
+     * @return
+     */
     public static Map<String, String> getDynamicNamespaces(String expression) {
         Map<String, String> namespaces = new HashMap<String, String>();
         
@@ -82,8 +88,8 @@ public abstract class XPathUtils {
      * Replaces all dynamic namespaces in a XPath expression with respective prefixes 
      * in namespace map.
      * 
-     * XPath: //{http://sample.org/foo}foo/{http://sample.org/bar}bar results in //ns1:foo/ns2:bar where
-     * the namespace map contains ns1 and ns2.
+     * XPath: <code>/{http://sample.org/foo}foo/{http://sample.org/bar}bar</code> 
+     * results in <code>/ns1:foo/ns2:bar</code> where the namespace map contains ns1 and ns2.
      * 
      * @param expression
      * @param namespaces
