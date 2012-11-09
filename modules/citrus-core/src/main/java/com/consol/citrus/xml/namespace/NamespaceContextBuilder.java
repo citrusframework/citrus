@@ -84,4 +84,12 @@ public class NamespaceContextBuilder {
     public void setNamespaceMappings(Map<String, String> defaultMappings) {
         this.namespaceMappings = defaultMappings;
     }
+
+    /**
+     * Gets the namespaceMappings.
+     * @return the namespaceMappings the namespaceMappings to get.
+     */
+    public Map<String, String> getNamespaceMappings() {
+        return namespaceMappings;
+    }
 }

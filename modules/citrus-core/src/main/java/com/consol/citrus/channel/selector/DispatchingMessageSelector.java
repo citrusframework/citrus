@@ -19,11 +19,14 @@ package com.consol.citrus.channel.selector;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 
 /**
  * Message selector dispatches incoming messages to several other selector implementations
@@ -40,11 +43,15 @@ public class DispatchingMessageSelector implements MessageSelector {
     /** List of header elements to match */
     private Map<String, String> matchingHeaders;
     
+    /** Spring bean factory */
+    private BeanFactory beanFactory;
+    
     /**
      * Default constructor using a selector string.
      */
-    public DispatchingMessageSelector(String selector) {
-        matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
+    public DispatchingMessageSelector(String selector, BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+        this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
         
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
     }
@@ -72,7 +79,7 @@ public class DispatchingMessageSelector implements MessageSelector {
                 foundXPathSelectors.add(headerEntry.getKey());
                 
                 // delegate to xpath evaluating message selector
-                if (!(new XPathEvaluatingMessageSelector(headerEntry.getKey(), headerEntry.getValue())).accept(message)) {
+                if (!(new XPathEvaluatingMessageSelector(headerEntry.getKey(), headerEntry.getValue(), getNamespContextBuilder())).accept(message)) {
                     success = false;
                 }
             }
@@ -88,6 +95,24 @@ public class DispatchingMessageSelector implements MessageSelector {
         }
         
         return success;
+    }
+
+    /**
+     * Find namespace context builder in Spring bean factory. If not present there
+     * create new one.
+     * 
+     * @return
+     */
+    private NamespaceContextBuilder getNamespContextBuilder() {
+        NamespaceContextBuilder nsContextBuilder;
+        
+        try {
+            nsContextBuilder = beanFactory.getBean(NamespaceContextBuilder.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            nsContextBuilder = new NamespaceContextBuilder();
+        }
+        
+        return nsContextBuilder;
     }
 
 }

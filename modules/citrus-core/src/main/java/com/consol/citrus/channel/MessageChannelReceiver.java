@@ -93,7 +93,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         if (getDestinationChannel() instanceof MessageSelectingQueueChannel) {
             log.info("Receiving message from: " + getDestinationChannelName() + "(" + selector + ")");
            
-            MessageSelector messageSelector = new DispatchingMessageSelector(selector);
+            MessageSelector messageSelector = new DispatchingMessageSelector(selector, beanFactory);
             MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel)getDestinationChannel());
 
             Message<?> message = null;

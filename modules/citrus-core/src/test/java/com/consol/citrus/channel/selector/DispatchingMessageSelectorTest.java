@@ -15,19 +15,39 @@
  */
 package com.consol.citrus.channel.selector;
 
+import static org.easymock.EasyMock.*;
+
+import org.easymock.EasyMock;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 
 /**
  * @author Christoph Deppisch
  */
 public class DispatchingMessageSelectorTest {
 
+    private BeanFactory beanFactory = EasyMock.createMock(BeanFactory.class);
+    
+    @BeforeMethod
+    public void setupMock() {
+        reset(beanFactory);
+        
+        expect(beanFactory.getBean(NamespaceContextBuilder.class))
+            .andThrow(new NoSuchBeanDefinitionException(NamespaceContextBuilder.class)).atLeastOnce();
+        
+        replay(beanFactory);
+    }
+    
     @Test
     public void testHeaderMatchingSelector() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("operation = 'foo'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("operation = 'foo'", beanFactory);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
@@ -43,7 +63,7 @@ public class DispatchingMessageSelectorTest {
     
     @Test
     public void testHeaderMatchingSelectorAndOperation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND operation = 'foo'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND operation = 'foo'", beanFactory);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
@@ -60,7 +80,7 @@ public class DispatchingMessageSelectorTest {
     
     @Test
     public void testRootQNameDelegation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'", beanFactory);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -75,7 +95,7 @@ public class DispatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
         
-        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'");
+        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'", beanFactory);
         
         acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -92,7 +112,7 @@ public class DispatchingMessageSelectorTest {
     
     @Test
     public void testRootQNameDelegationWithNamespace() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'", beanFactory);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/fooschema\"><text>foo</text></FooTest>")
                 .setHeader("operation", "foo")
@@ -108,7 +128,7 @@ public class DispatchingMessageSelectorTest {
     
     @Test
     public void testXPathEvaluationDelegation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://FooTest/text = 'foobar'");
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://FooTest/text = 'foobar'", beanFactory);
         
         Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
                 .setHeader("foo", "bar")
@@ -123,9 +143,43 @@ public class DispatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
         
-        messageSelector = new DispatchingMessageSelector("xpath://FooTest/text = 'foobar'");
+        messageSelector = new DispatchingMessageSelector("xpath://FooTest/text = 'foobar'", beanFactory);
         
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+    
+    @Test
+    public void testXPathEvaluationDelegationWithNamespaceBuilder() {
+        NamespaceContextBuilder nsContextBuilder = new NamespaceContextBuilder();
+        nsContextBuilder.getNamespaceMappings().put("foo", "http://citrusframework.org/foo");
+        
+        reset(beanFactory);
+        
+        expect(beanFactory.getBean(NamespaceContextBuilder.class)).andReturn(nsContextBuilder).atLeastOnce();
+        
+        replay(beanFactory);
+        
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://foo:FooTest/foo:text = 'foobar'", beanFactory);
+        
+        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest xmlns=\"http://citrusframework.org/foo\"><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Message<String> declineMessage = MessageBuilder.withPayload("<FooTest><text>barfoo</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+        
+        messageSelector = new DispatchingMessageSelector("xpath://foo:FooTest/foo:text = 'foobar'", beanFactory);
+        
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+        
+        verify(beanFactory);
     }
 }

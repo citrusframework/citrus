@@ -27,11 +27,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSException;
 
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Message selector accepts XML messages in case XPath expression evaluation result matches
- * the expected value. With this selector someone can select messages aaccording to a message payload XML 
+ * the expected value. With this selector someone can select messages according to a message payload XML 
  * element value for instance.
  * 
  * Syntax is xpath://root/element
@@ -44,7 +45,11 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
     /** Expression to evaluate for acceptance */
     private final String expression;
     
+    /** Control value to check for */
     private final String control;
+    
+    /** Namespace context builder */
+    private NamespaceContextBuilder nsContextBuilder;
     
     /** Special selector element name identifying this message selector implementation */
     public static final String XPATH_SELECTOR_ELEMENT = "xpath:";
@@ -55,9 +60,10 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
     /**
      * Default constructor using fields.
      */
-    public XPathEvaluatingMessageSelector(String expression, String control) {
+    public XPathEvaluatingMessageSelector(String expression, String control, NamespaceContextBuilder nsContextBuider) {
         this.control = control;
         this.expression = expression.substring(XPATH_SELECTOR_ELEMENT.length());
+        this.nsContextBuilder = nsContextBuider;
     }
     
     /**
@@ -74,13 +80,17 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
         }
         
         try {
-            Map<String, String> namespaces = XPathUtils.getDynamicNamespaces(expression);
+            Map<String, String> namespaces = XMLUtils.lookupNamespaces(doc);
             
-            if (!namespaces.isEmpty()) {
+            // add default namespace mappings
+            namespaces.putAll(nsContextBuilder.getNamespaceMappings());
+            
+            if (XPathUtils.hasDynamicNamespaces(expression)) {
+                namespaces.putAll(XPathUtils.getDynamicNamespaces(expression));
                 return XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(expression, namespaces), namespaces)
                         .evaluateAsString(doc).equals(control);
             } else {
-                return XPathExpressionFactory.createXPathExpression(expression, XMLUtils.lookupNamespaces(doc))
+                return XPathExpressionFactory.createXPathExpression(expression, namespaces)
                         .evaluateAsString(doc).equals(control);
             }
             

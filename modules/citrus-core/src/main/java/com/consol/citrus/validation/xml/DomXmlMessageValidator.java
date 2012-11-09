@@ -175,7 +175,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
                 //Give ignore elements the chance to prevent the validation in case result type is node
                 if (resultType.equals(XPathExpressionResult.NODE) &&
-                        isNodeIgnoredByXpathExpr(XPathUtils.evaluateAsNode(received,
+                        isNodeIgnored(XPathUtils.evaluateAsNode(received,
                                 elementPathExpression,
                                 namespaceContext),
                                 validationContext,
@@ -195,7 +195,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             "Element ' " + elementPathExpression + "' could not be found in DOM tree");
                 }
 
-                if (isNodeIgnoredByXpathExpr(node, validationContext, namespaceContext)) {
+                if (isNodeIgnored(node, validationContext, namespaceContext)) {
                     continue;
                 }
 
@@ -780,7 +780,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private boolean isElementNodeIgnored(Node source, Node received, XmlMessageValidationContext validationContext,
             NamespaceContext namespaceContext) {
-        if (isNodeIgnoredByXpathExpr(received, validationContext, namespaceContext)) {
+        if (isNodeIgnored(received, validationContext, namespaceContext)) {
             if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
@@ -798,12 +798,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     }
 
     /**
-     * Checks whether the node is ignored by xpath expression.
+     * Checks whether the node is ignored by node path expression or xpath expression.
      * @param node
      * @param validationContext
      * @return
      */
-    private boolean isNodeIgnoredByXpathExpr(final Node node, XmlMessageValidationContext validationContext,
+    private boolean isNodeIgnored(final Node node, XmlMessageValidationContext validationContext,
             NamespaceContext namespaceContext) {
         Set<String> ignoreMessageElements = validationContext.getIgnoreExpressions();
 

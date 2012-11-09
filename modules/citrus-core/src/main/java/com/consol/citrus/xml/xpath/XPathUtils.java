@@ -24,11 +24,9 @@ import javax.xml.namespace.QName;
 import javax.xml.xpath.*;
 
 import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.XMLUtils;
 
 /**
  * XPath utility class providing static utility methods
@@ -106,6 +104,15 @@ public abstract class XPathUtils {
         }
         
         return expressionResult;
+    }
+    
+    /**
+     * Searches for dynamic namespaces in expression.
+     * @param expression
+     * @return
+     */
+    public static boolean hasDynamicNamespaces(String expression) {
+        return expression.contains(DYNAMIC_NS_START) && expression.contains(DYNAMIC_NS_END);
     }
 
     /**
@@ -226,28 +233,9 @@ public abstract class XPathUtils {
     private static XPathExpression buildExpression(Node node, String xPathExpression, NamespaceContext nsContext)
             throws XPathExpressionException {
         XPath xpath = xPathFactory.newXPath();
-
-        if (nsContext != null) {
-            xpath.setNamespaceContext(nsContext);
-        } else {
-            xpath.setNamespaceContext(buildNamespaceContext(node));
-        }
+        xpath.setNamespaceContext(nsContext);
 
         return xpath.compile(xPathExpression);
-    }
-
-    /**
-     * Build a namespace context from a node element. Method searches for all
-     * namespace attributes in the node element and binds them to a namespace context.
-     *
-     * @param node holding namespace declarations.
-     * @return the namespace context.
-     */
-    private static NamespaceContext buildNamespaceContext(Node node) {
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-        nsContext.setBindings(XMLUtils.lookupNamespaces(node));
-
-        return nsContext;
     }
 
     /**
