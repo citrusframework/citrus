@@ -96,7 +96,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
                 addMimeMessageHeader(soapRequest, 
                         headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length()), 
                         headerEntry.getValue());
-            } else {
+            } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
