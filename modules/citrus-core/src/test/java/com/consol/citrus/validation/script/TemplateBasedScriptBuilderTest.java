@@ -39,7 +39,11 @@ public class TemplateBasedScriptBuilderTest {
         Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateResource(
                 new ClassPathResource("com/consol/citrus/validation/script/script-template.groovy"))
                 .withCode("BODY")
-                .build(), "+++HEAD+++\n\nBODY\n\n+++TAIL+++");
+                .build(), "+++HEAD+++" + 
+                System.getProperty("line.separator") + 
+                System.getProperty("line.separator") + "BODY" + 
+                System.getProperty("line.separator") + 
+                System.getProperty("line.separator") + "+++TAIL+++");
     }
     
     @Test
