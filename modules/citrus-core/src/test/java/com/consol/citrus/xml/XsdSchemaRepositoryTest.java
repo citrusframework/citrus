@@ -16,6 +16,8 @@
 
 package com.consol.citrus.xml;
 
+import java.io.FileNotFoundException;
+
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,6 +41,15 @@ public class XsdSchemaRepositoryTest {
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
     }
     
+    @Test(expectedExceptions = { FileNotFoundException.class })
+    public void testUnknownLocation() throws Exception {
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        
+        schemaRepository.getLocations().add("classpath:com/consol/citrus/unknown/unknown.xsd");
+        
+        schemaRepository.afterPropertiesSet();
+    }
+    
     @Test
     public void testResourceLocationPattern() throws Exception {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
@@ -52,6 +63,17 @@ public class XsdSchemaRepositoryTest {
         Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), SimpleXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), SimpleXsdSchema.class);
+    }
+    
+    @Test
+    public void testResourceLocationPatternNothingFound() throws Exception {
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        
+        schemaRepository.getLocations().add("classpath:com/consol/citrus/*.xsd");
+        
+        schemaRepository.afterPropertiesSet();
+        
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 0);
     }
     
     @Test
