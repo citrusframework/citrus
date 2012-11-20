@@ -20,21 +20,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
-import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.*;
 
 /**
  * Schema repository holding a set of XML schema resources known in the test scope.
  * 
  * @author Christoph Deppisch
  */
-public class XsdSchemaRepository implements BeanNameAware {
+public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
     /** The default repository name */
     public static final String DEFAULT_REPOSITORY_NAME = "schemaRepository";
     
@@ -44,8 +49,14 @@ public class XsdSchemaRepository implements BeanNameAware {
     /** List of schema resources */
     private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
     
+    /** List of location patterns that will be translated to schema resources */
+    private List<String> locations = new ArrayList<String>();
+    
     /** Mapping strategy */
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
+    
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(XsdSchemaRepository.class);
     
     /**
      * Find the matching schema for a given message namespace or root element
@@ -65,6 +76,27 @@ public class XsdSchemaRepository implements BeanNameAware {
         }
         
         return schema;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void afterPropertiesSet() throws Exception {
+        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        
+        for (String location : locations) {
+            Resource[] findings = resourcePatternResolver.getResources(location);
+            
+            for (Resource resource : findings) {
+                if (resource.getFilename().endsWith(".xsd")) {
+                    schemas.add(new SimpleXsdSchema(resource));
+                } else if (resource.getFilename().endsWith(".wsdl")) {
+                    schemas.add(new WsdlXsdSchema(resource));
+                } else {
+                    log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+                }
+            }
+        }
     }
 
     /**
@@ -105,4 +137,21 @@ public class XsdSchemaRepository implements BeanNameAware {
     public String getName() {
         return name;
     }
+
+    /**
+     * Gets the locations.
+     * @return the locations the locations to get.
+     */
+    public List<String> getLocations() {
+        return locations;
+    }
+
+    /**
+     * Sets the locations.
+     * @param locations the locations to set
+     */
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
+    }
+    
 }

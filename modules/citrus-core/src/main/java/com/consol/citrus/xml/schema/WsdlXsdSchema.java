@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.wsdl;
+package com.consol.citrus.xml.schema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,7 +50,7 @@ import com.ibm.wsdl.extensions.schema.SchemaImpl;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class WsdlToXsdSchemaWrapper extends SimpleXsdSchema implements InitializingBean {
+public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
 
     /** WSDL file resource */
     private Resource wsdl;
@@ -59,9 +59,25 @@ public class WsdlToXsdSchemaWrapper extends SimpleXsdSchema implements Initializ
     private List<Resource> schemas = new ArrayList<Resource>();
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WsdlToXsdSchemaWrapper.class);
+    private static Logger log = LoggerFactory.getLogger(WsdlXsdSchema.class);
     
     public static final String W3C_XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema";
+    
+    /**
+     * Default constructor
+     */
+    public WsdlXsdSchema() {
+        super();
+    }
+    
+    /**
+     * Constructor using wsdl resource.
+     * @param wsdl
+     */
+    public WsdlXsdSchema(Resource wsdl) {
+        super();
+        this.wsdl = wsdl;
+    }
     
     @Override
     public XmlValidator createValidator() throws IOException {
