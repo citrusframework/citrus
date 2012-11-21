@@ -18,8 +18,8 @@ package com.consol.citrus.xml.schema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 import javax.wsdl.*;
 import javax.wsdl.factory.WSDLFactory;
@@ -60,7 +60,9 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WsdlXsdSchema.class);
-    
+
+    /** Official xmlns namespace */
+    private static final String WWW_W3_ORG_2000_XMLNS = "http://www.w3.org/2000/xmlns/";
     public static final String W3C_XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema";
     
     /**
@@ -101,6 +103,8 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         for (Object schemaObject : schemaTypes) {
             if (schemaObject instanceof SchemaImpl) {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
+
+                inheritNamespaces(schema, definition);
                 
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 Source source = new DOMSource(schema.getElement());
@@ -108,6 +112,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
                 
                 TransformerFactory.newInstance().newTransformer().transform(source, result);
                 Resource schemaResource = new ByteArrayResource(bos.toByteArray());
+                
                 schemas.add(schemaResource);
                 
                 if (definition.getTargetNamespace().equals(schema.getElement().getAttribute("targetNamespace"))) {
@@ -119,6 +124,22 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         }
     }
     
+    /**
+     * Adds WSDL level namespaces to schema definition if necessary.
+     * @param schema
+     * @param wsdl
+     */
+    @SuppressWarnings("unchecked")
+    private void inheritNamespaces(SchemaImpl schema, Definition wsdl) {
+        Map<String, String> wsdlNamespaces = wsdl.getNamespaces();
+        
+        for (Entry<String, String> nsEntry: wsdlNamespaces.entrySet()) {
+            if (!schema.getElement().hasAttributeNS(WWW_W3_ORG_2000_XMLNS, nsEntry.getKey())) {
+                schema.getElement().setAttributeNS(WWW_W3_ORG_2000_XMLNS, "xmlns:" + nsEntry.getKey(), nsEntry.getValue());
+            }
+        }
+    }
+
     @Override
     public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
         Assert.notNull(wsdl, "wsdl file resource is required");
@@ -145,5 +166,13 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      */
     public void setWsdl(Resource wsdl) {
         this.wsdl = wsdl;
+    }
+
+    /**
+     * Gets the schemas.
+     * @return the schemas the schemas to get.
+     */
+    public List<Resource> getSchemas() {
+        return schemas;
     }
 }
