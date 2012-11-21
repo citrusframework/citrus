@@ -45,11 +45,13 @@ public class WsdlXsdSchemaTest {
         Assert.assertTrue(xsd.contains("xmlns:audio=\"http://www.citrusframework.org/bookstore/audio\""));
         Assert.assertTrue(xsd.contains("xmlns:book=\"http://www.citrusframework.org/book\""));
         Assert.assertTrue(xsd.contains("xmlns:author=\"http://www.citrusframework.org/author\""));
+        Assert.assertTrue(xsd.contains("xmlns=\"http://www.citrusframework.org/bookstore/\""));
         
         xsd = FileUtils.readToString(wsdl.getSchemas().get(1));
         Assert.assertTrue(xsd.contains("xmlns:tns=\"http://www.citrusframework.org/bookstore/\""));
         Assert.assertTrue(xsd.contains("xmlns:audio=\"http://www.citrusframework.org/bookstore/audio\""));
         Assert.assertTrue(xsd.contains("xmlns:book=\"http://www.citrusframework.org/book/wsdl\""));
         Assert.assertFalse(xsd.contains("xmlns:author=\"http://www.citrusframework.org/author\""));
+        Assert.assertTrue(xsd.contains("xmlns=\"http://schemas.xmlsoap.org/wsdl/soap/\""));
     }
 }

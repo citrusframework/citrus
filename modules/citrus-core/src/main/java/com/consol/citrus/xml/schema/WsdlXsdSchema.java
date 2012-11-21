@@ -35,6 +35,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -134,9 +135,16 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         Map<String, String> wsdlNamespaces = wsdl.getNamespaces();
         
         for (Entry<String, String> nsEntry: wsdlNamespaces.entrySet()) {
-            if (!schema.getElement().hasAttributeNS(WWW_W3_ORG_2000_XMLNS, nsEntry.getKey())) {
-                schema.getElement().setAttributeNS(WWW_W3_ORG_2000_XMLNS, "xmlns:" + nsEntry.getKey(), nsEntry.getValue());
+            if (StringUtils.hasText(nsEntry.getKey())) {
+                if (!schema.getElement().hasAttributeNS(WWW_W3_ORG_2000_XMLNS, nsEntry.getKey())) {
+                    schema.getElement().setAttributeNS(WWW_W3_ORG_2000_XMLNS, "xmlns:" + nsEntry.getKey(), nsEntry.getValue());
+                }
+            } else { // handle default namespace
+                if (!schema.getElement().hasAttribute("xmlns")) {
+                    schema.getElement().setAttributeNS(WWW_W3_ORG_2000_XMLNS, "xmlns" + nsEntry.getKey(), nsEntry.getValue());
+                }
             }
+            
         }
     }
 
