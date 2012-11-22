@@ -111,12 +111,12 @@ public class HttpMessageSender extends AbstractMessageSender {
             log.debug("Message to be sent:\n" + message.getPayload().toString());
         }
 
-        HttpEntity<?> requestEntity = generateRequest(message);
-        
         HttpMethod method = requestMethod;
         if (message.getHeaders().containsKey(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD)) {
             method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
         }
+        
+        HttpEntity<?> requestEntity = generateRequest(message, method);
         
         restTemplate.setErrorHandler(new InternalResponseErrorHandler(message));
         ResponseEntity<?> response = restTemplate.exchange(endpointUri, method, requestEntity, String.class);
@@ -173,9 +173,10 @@ public class HttpMessageSender extends AbstractMessageSender {
     /**
      * Generate http request entity from Spring Integration message.
      * @param requestMessage
+     * @param method
      * @return
      */
-    private HttpEntity<?> generateRequest(Message<?> requestMessage) {
+    private HttpEntity<?> generateRequest(Message<?> requestMessage, HttpMethod method) {
         HttpHeaders httpHeaders = new HttpHeaders();
         headerMapper.fromHeaders(requestMessage.getHeaders(), httpHeaders);
         
@@ -193,7 +194,7 @@ public class HttpMessageSender extends AbstractMessageSender {
             httpHeaders.setContentType(MediaType.parseMediaType(contentType.contains("charset") ? contentType : contentType + ";charset=" + charset));
         }
         
-        if (HttpMethod.POST.equals(requestMethod) || HttpMethod.PUT.equals(requestMethod)) {
+        if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)) {
             return new HttpEntity<Object>(payload, httpHeaders);
         }
         
