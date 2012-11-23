@@ -1,7 +1,7 @@
                         Citrus TestFramework
                         ====================
 
-WELCOME TO CITRUS
+WELCOME TO CITRUS 
 
   http://www.citrusframework.org
 
