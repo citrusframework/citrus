@@ -22,10 +22,10 @@ import java.util.*;
 
 import javax.servlet.ServletContext;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.*;
-import org.mortbay.jetty.servlet.*;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.*;
+import org.eclipse.jetty.servlet.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -104,7 +104,7 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
             
             ContextHandlerCollection contexts = new ContextHandlerCollection();
             
-            Context context = new Context();
+            ServletContextHandler context = new ServletContextHandler();
             context.setContextPath("/");
             context.setResourceBase(resourceBase);
             

@@ -30,6 +30,7 @@
     
     <!-- Test listeners -->
     <bean class="com.consol.citrus.report.TestListeners"/>
+    <bean class="com.consol.citrus.report.TestActionListeners"/>
     <bean class="com.consol.citrus.report.TestSuiteListeners"/>
     <bean class="com.consol.citrus.report.FailureStackTestListener"/>
     

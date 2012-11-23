@@ -1,0 +1,27 @@
+<div class="container" style="width: 1170px;">
+  <div class="hero-unit">
+    <h1>Citrus Administration</h1>
+    <p>Welcome to the administration graphical user interface for Citrus. Start the application context below and you will see all 
+    available message senders/receivers as well as server instances in scope of this project.</p>
+    <p>
+        <a id="load-context" class="btn btn-success btn-large">Start application context »</a>
+        <a id="stop-context" class="btn btn-danger btn-large" style="display: none;">Stop application context »</a>
+        <img id="load-context-progress" src="images/ajax-loader.gif" alt="ajax-loader.gif" class="ajax-loader" style="display: none;"/>
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="span4">
+      <h2>Message Sender</h2>
+      <div id="message-senders" class="container"></div>
+    </div>
+    <div class="span4">
+      <h2>Message Receiver</h2>
+      <div id="message-receivers" class="container"></div>
+    </div>
+    <div class="span4">
+      <h2>Server Instances</h2>
+      <div id="server-instances" class="container"></div>
+    </div>
+  </div>
+</div>

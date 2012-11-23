@@ -4,23 +4,23 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     
-  <bean name="jetty" class="org.mortbay.jetty.Server" init-method="start" destroy-method="stop">
+  <bean name="jetty" class="org.eclipse.jetty.server.Server" init-method="start" destroy-method="stop">
     <constructor-arg value="8075" />
     <property name="handler">
-      <bean id="handlers" class="org.mortbay.jetty.handler.HandlerCollection">
+      <bean id="handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
         <property name="handlers">
           <list>
-            <bean id="contexts" class="org.mortbay.jetty.handler.ContextHandlerCollection">
+            <bean id="contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection">
               <property name="handlers">
                 <list>
-                  <bean class="org.mortbay.jetty.servlet.Context">
+                  <bean class="org.eclipse.jetty.servlet.ServletContextHandler">
                     <property name="contextPath" value="/" />
                     <property name="resourceBase" value="src/main/resources" />
                     <property name="servletHandler">
-                      <bean class="org.mortbay.jetty.servlet.ServletHandler">
+                      <bean class="org.eclipse.jetty.servlet.ServletHandler">
                         <property name="servlets">
                           <list>
-                            <bean class="org.mortbay.jetty.servlet.ServletHolder">
+                            <bean class="org.eclipse.jetty.servlet.ServletHolder">
                               <property name="name" value="sprin-ws"/>
                               <property name="servlet">
                                 <bean class="org.springframework.ws.transport.http.MessageDispatcherServlet" />
@@ -36,7 +36,7 @@
                         </property>
                         <property name="servletMappings">
                           <list>
-                            <bean class="org.mortbay.jetty.servlet.ServletMapping">
+                            <bean class="org.eclipse.jetty.servlet.ServletMapping">
                               <property name="servletName" value="spring-ws" />
                               <property name="pathSpec" value="/*" />
                             </bean>
@@ -48,8 +48,8 @@
                 </list>
               </property>
             </bean>
-            <bean id="defaultHandler" class="org.mortbay.jetty.handler.DefaultHandler" />
-            <bean id="requestLog" class="org.mortbay.jetty.handler.RequestLogHandler" />
+            <bean id="defaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler" />
+            <bean id="requestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler" />
           </list>
         </property>
       </bean>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ * Copyright 2006-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns="http://www.citrusframework.org/schema/admin" targetNamespace="http://www.citrusframework.org/schema/admin"
+     elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <!--
+        IMPORTANT: In order to automatically marshal Java-objects in the presentation-layer,
+        all interface return types must be defined as elements and NOT under the same name as complex type!
+     
+        All elements must be additionally listed in oxm:jaxb2-marshaller citrus-admin-context.xml.
+     -->
+    
+    <xs:element name="app-context-info">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message-sender" type="MessageSenderType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="message-receiver" type="MessageReceiverType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="server-instance" type="ServerInstanceType" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="test-case-list">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="test-case-info" type="TestCaseInfoType" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="test-result">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="test-case" type="TestCaseInfoType"/>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="stack-trace" type="xs:string"/>
+                <xs:element name="failure-stack" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- TYPES -->
+
+	<xs:complexType name="MessageSenderType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="MessageReceiverType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="ServerInstanceType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="port" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="TestCaseInfoType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="package-name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

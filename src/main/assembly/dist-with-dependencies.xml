@@ -36,8 +36,9 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>org.mortbay.jetty:jetty</include>
-                <include>org.mortbay.jetty:jetty-util</include>
+                <include>org.eclipse.jetty:jetty-server</include>
+                <include>org.eclipse.jetty:jetty-servlet</include>
+                <include>org.eclipse.jetty:jetty-util</include>
                 <include>org.springframework.ws:spring-ws-core</include>
             </includes>
             <excludes>

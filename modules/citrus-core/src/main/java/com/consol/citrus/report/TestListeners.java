@@ -79,4 +79,12 @@ public class TestListeners implements TestListener {
             listener.onTestSuccess(test);
         }
     }
+    
+    /**
+     * Adds a new test listener.
+     * @param listener
+     */
+    public void addTestListener(TestListener listener) {
+        this.testListeners.add(listener);
+    }
 }

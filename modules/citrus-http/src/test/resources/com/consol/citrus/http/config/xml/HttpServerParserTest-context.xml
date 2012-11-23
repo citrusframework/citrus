@@ -26,14 +26,14 @@
     
   <util:list id="connectors">
       <bean id="connector1" class="org.easymock.EasyMock" factory-method="createMock">
-        <constructor-arg value="org.mortbay.jetty.Connector"/>
+        <constructor-arg value="org.eclipse.jetty.server.Connector"/>
       </bean>
       <bean id="connector2" class="org.easymock.EasyMock" factory-method="createMock">
-          <constructor-arg value="org.mortbay.jetty.Connector"/>
+          <constructor-arg value="org.eclipse.jetty.server.Connector"/>
       </bean>
   </util:list>
   
     <bean id="connector" class="org.easymock.EasyMock" factory-method="createMock">
-        <constructor-arg value="org.mortbay.jetty.Connector"/>
+        <constructor-arg value="org.eclipse.jetty.server.Connector"/>
     </bean>
 </beans>

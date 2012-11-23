@@ -57,6 +57,12 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestRep
         symbol.setDecimalSeparator('.');
         decFormat.setDecimalFormatSymbols(symbol);
     }
+    /**
+     * @see com.consol.citrus.report.TestReporter#clearTestResults()
+     */
+    public void clearTestResults() {
+        testResults = new TestResults();
+    }
 
     /**
      * @see com.consol.citrus.report.TestReporter#generateTestResults()
