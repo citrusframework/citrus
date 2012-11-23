@@ -2,6 +2,7 @@ target
 .project
 .classpath
 .settings
+.idea
 test.history
 test-output
 .DS_Store
