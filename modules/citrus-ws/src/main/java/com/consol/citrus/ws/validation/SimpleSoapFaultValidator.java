@@ -28,11 +28,8 @@ import com.consol.citrus.exceptions.ValidationException;
  * 
  * @author Christoph Deppisch
  */
-public class SimpleSoapFaultValidator extends AbstractFaultDetailStringValidator {
+public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 
-    /**
-     * @see com.consol.citrus.ws.validation.AbstractFaultDetailStringValidator#validateFaultDetailString(java.lang.String, java.lang.String)
-     */
     @Override
     protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
         throws ValidationException {

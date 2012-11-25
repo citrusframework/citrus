@@ -32,17 +32,17 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
  * 
  * @author Christoph Deppisch
  */
-public class XmlSoapFaultValidator extends AbstractFaultDetailStringValidator {
+public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
 
     @Autowired(required = false)
     @Qualifier("xmlMessageValidator")
     private MessageValidator<XmlMessageValidationContext> messageValidator;
     
-    /** validation context holding information like expected message payload, ignored elements and so on */
+    /** Validation context holding information like expected message payload, ignored elements and so on */
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
     
     /**
-     * @see com.consol.citrus.ws.validation.AbstractFaultDetailStringValidator#validateFaultDetailString(java.lang.String, java.lang.String)
+     * Delegates to XML message validator for validation of fault detail.
      */
     @Override
     protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
@@ -51,7 +51,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailStringValidator {
         validationContext.setControlMessage(controlMessage);
 
         Message<String> receivedMessage = MessageBuilder.withPayload(receivedDetailString).build();
-        messageValidator.validateMessage(receivedMessage, null, validationContext);
+        messageValidator.validateMessage(receivedMessage, context, validationContext);
     }
 
     /**
