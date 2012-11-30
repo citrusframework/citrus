@@ -19,6 +19,16 @@
             },
             
             template: function(name, context) {
+                if (!this.templates[name]) {
+                    $.ajax({
+                        url: 'javascript/views/' + name + '.html', 
+                        success: _.bind(function(data) {
+                                     this.templates[name] = Handlebars.compile(data);
+                                 }, this),
+                        async: false
+                    });
+                }
+                
                 return this.templates[name](context);
             }
             

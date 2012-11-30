@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-var logOutput;
-var websocket;
-
-var webSocketInit = function() {
-    websocket = new WebSocket("ws://localhost:9080/citrus-admin/log/");
-    websocket.onopen = function(evt) { logOutput.append('<p>Opened web socket connection</p>') };
-    websocket.onclose = function(evt) { logOutput.append('<p>Closed web socket connection</p>') };
-    websocket.onmessage = function(evt) { logOutput.append('<p>' + evt.data + '</p>') };
-    websocket.onerror = function(evt) { logOutput.append('<p>Error: ' + evt.data + '</p>') };
-}
-
-var app;
+var CitrusAdminLogging;
+var CitrusAdmin;
 
 curl({
   baseUrl: 'javascript',
@@ -35,16 +25,14 @@ curl({
       "backbone": "support/backbone",
       "handlebars" : "support/handlebars",
       "TemplateManager" : "views/TemplateManager",
+      "LoggingWebSocket" : "model/LoggingWebSocket",
       "AppRouter" : "router/AppRouter"
   }},
-  ["jquery", "underscore", "backbone", "TemplateManager", "AppRouter", "domReady!"], function($, _, Backbone, TemplateManager, AppRouter) {
+  ["jquery", "underscore", "backbone", "TemplateManager", "AppRouter", "LoggingWebSocket", "domReady!"], function($, _, Backbone, TemplateManager, AppRouter, LoggingWebSocket) {
     
-  TemplateManager.load(['HeaderView', 'AppContextView', 'TestListView', 'TestItemView'], function() {
-      app = new AppRouter();
+  TemplateManager.load(['HeaderView', 'AppContextView'], function() {
+      CitrusAdmin = new AppRouter();
+      CitrusAdminLogging = new LoggingWebSocket();
       Backbone.history.start();
   });
-  
-  logOutput = $('body');
-  webSocketInit();
-  
 });
