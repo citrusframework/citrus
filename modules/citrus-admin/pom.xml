@@ -31,6 +31,12 @@
           <artifactId>citrus-ws</artifactId>
           <version>${project.version}</version>
         </dependency>
+        <dependency>
+          <groupId>com.consol.citrus</groupId>
+          <artifactId>citrus-integration</artifactId>
+          <classifier>tests</classifier>
+          <version>${project.version}</version>
+        </dependency>
     
         <dependency>
             <groupId>org.springframework</groupId>
@@ -85,6 +91,12 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-integration</artifactId>
+      <classifier>tests</classifier>
     </dependency>
     
     <dependency>
@@ -197,6 +209,38 @@
           </webResources>
         </configuration>
       </plugin>
+      
+      <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <configuration>
+              <webAppConfig>
+                  <contextPath>/citrus-admin</contextPath>
+              </webAppConfig>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>9080</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
+              <useTestScope>true</useTestScope>
+              <scanIntervalSeconds>5</scanIntervalSeconds>
+              <systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>UTF-8</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>log4j.configuration</name>
+                    <value>log4j.xml</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>working.directory</name>
+                    <value>../citrus-integration/src/citrus/tests</value>
+                  </systemProperty>
+              </systemProperties>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
   

@@ -12,7 +12,6 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-integration</artifactId>
   <name>citrus-integration</name>
-  <packaging>war</packaging>
 
   <build>
     <plugins>
@@ -25,59 +24,19 @@
           </configuration>
         </plugin>
         <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-        
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <configuration>
-            <overlays>
-              <overlay>
-                <groupId>com.consol.citrus</groupId>
-                <artifactId>citrus-admin</artifactId>
-                <type>war</type>
-              </overlay>
-              <overlay>
-                <!-- empty groupId/artifactId represents the current build -->
-              </overlay>
-            </overlays>
-          </configuration>
-        </plugin>
-        
-        <plugin>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <configuration>
-              <webAppConfig>
-                  <contextPath>/citrus-admin</contextPath>
-              </webAppConfig>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>9080</port>
-                  <maxIdleTime>60000</maxIdleTime>
-                </connector>
-              </connectors>
-              <useTestScope>true</useTestScope>
-              <scanIntervalSeconds>5</scanIntervalSeconds>
-              <systemProperties>
-                  <systemProperty>
-                    <name>file.encoding</name>
-                    <value>UTF-8</value>
-                  </systemProperty>
-                  <systemProperty>
-                    <name>log4j.configuration</name>
-                    <value>log4j.xml</value>
-                  </systemProperty>
-                  <systemProperty>
-                    <name>working.directory</name>
-                    <value>${basedir}/src/citrus/tests</value>
-                  </systemProperty>
-              </systemProperties>
-          </configuration>
+          <artifactId>maven-jar-plugin</artifactId>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
     </plugins>
+    
   	<testSourceDirectory>src/citrus/java</testSourceDirectory>
     <testResources>
         <testResource>
@@ -107,30 +66,24 @@
         <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-http</artifactId>
-      <version>${project.version}</version>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-http</artifactId>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
-      <version>${project.version}</version>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-java-dsl</artifactId>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-ssh</artifactId>
-      <version>${project.version}</version>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ssh</artifactId>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ws</artifactId>
         <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-admin</artifactId>
-        <version>${project.version}</version>
-        <type>war</type>
     </dependency>
 
     <dependency>
