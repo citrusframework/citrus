@@ -485,9 +485,16 @@ Server: Jetty(7.0.0.pre5)
         
             <programlisting>&lt;bean id=&quot;soapFaultValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;</programlisting>
             
-            <para>Citrus offers reference implementations for SOAP fault validation such as <emphasis>com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator</emphasis>.
-            Please see the API documentation for other available reference implementations. Of course you can define your own validator bean or several 
-            validator beans. In the test case you can explicitly choose the validator to use:</para>
+            <para>Citrus offers reference implementations for SOAP fault validation such as</para>
+            
+            <itemizedlist>
+                <listitem><emphasis>com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator</emphasis></listitem>
+                <listitem><emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis></listitem>
+                <listitem><emphasis>com.consol.citrus.ws.validation.XmlSoapFaultValidator</emphasis></listitem>
+            </itemizedlist>
+            
+            <para>Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic 
+            (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:</para>
             
             <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
               fault-string=&quot;Invalid request&quot;
@@ -552,10 +559,31 @@ Server: Jetty(7.0.0.pre5)
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
             
-            <para>The expected SOAP fault detail content is simply added to the ws:assert action. The SoapFaultValidator implementation is responsible
-            for validation the SOAP fault detail offering a validation algorithm. It depends on the chosen validator implementation how the detail
-            is compared to the expected template. Possible algorithms are pure String comparison and XML tree comparison as already known from the
-            normal message payload validation. Please see the Citrus API documentation for available validator implementations and validation algorithms.</para>
+            <para>The expected SOAP fault detail content is simply added to the ws:assert action. The SoapFaultValidator implementation defined in the <emphasis>citrus-context.xml</emphasis> 
+            is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. 
+            Citrus provides some default SoapFaultValidator implementations. Supported algorithms are pure String comparison (<emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis>) 
+            as well as XML tree walk-through (com.consol.citrus.ws.validation.XmlSoapFaultValidator).</para>
+             
+            <para>When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements
+            for instance. On the fault-detail element you are able to add some validation settings such as <emphasis>schema-validation=enabled/disabled</emphasis>, custom <emphasis>schema-repository</emphasis> 
+            and so on.</para>
+            
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+           fault-string=&quot;Invalid request&quot;&gt;
+    &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
+      &lt;![CDATA[
+          &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+              &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
+          &lt;/ns0:FaultDetail&gt;
+      ]]&gt;
+    &lt;/ws:fault-detail&gt;
+    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+        [...]
+    &lt;/send&gt;
+&lt;/ws:assert&gt;</programlisting>
+            
+            <para>Please see also the Citrus API documentation for available validator implementations and validation algorithms.</para>
             
             <para>So far we used assert action wrapper in order to catch SOAP fault exceptions and validate the SOAP fault content. Now we have an alternative way
             of handling SOAP faults in Citrus. With exceptions the send action aborts and we do not have a receive action for the SOAP fault. This might be inadequate if
