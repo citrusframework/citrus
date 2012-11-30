@@ -23,14 +23,12 @@
 
             render: function() {
                 $(this.el).html(TemplateManager.template('AppContextView',{}));
-                if(this.status) {
-                    $(this.loadContext());
-                }
-                else {
-                    $(document).ready(function() {
-                        $('#stop-context').hide('fast');
-                        $('#load-context').show('fast');
-                    });
+                
+                if (this.status) {
+                    this.loadContext();
+                } else {
+                    $('#stop-context').hide('fast');
+                    $('#load-context').show('fast');
                 }
                 return this;
             },
