@@ -54,8 +54,18 @@ public class AppContextHolder {
         if (applicationContext == null) {
             loadApplicationContext();
         }
-        
+
         return applicationContext;
+    }
+
+    /**
+     * Returns the status of the application context. If the application context hasn't been loaded already or has been
+     * loaded but afterwards destroyed then false is returned. Otherwise true is returned.
+     *
+     * @return true if already loaded, otherwise false
+     */
+    public boolean isApplicationContextLoaded() {
+        return applicationContext != null;
     }
 
     /**

@@ -40,12 +40,18 @@ public class AppContextController {
 
     @Autowired
     private AppContextHolder appContextHolder;
-    
+
+    @RequestMapping(value="/status", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean getStatus() {
+        return appContextHolder.isApplicationContextLoaded();
+    }
+
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public AppContextInfo startContext(HttpEntity<String> requestEntity) {
         AppContextInfo appContextInfo = new AppContextInfo();
-        
+
         ApplicationContext ctx = appContextHolder.getApplicationContext();
         Map<String, MessageSender> senders = ctx.getBeansOfType(MessageSender.class);
         
