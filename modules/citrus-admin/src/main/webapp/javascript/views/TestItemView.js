@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "underscore", "backbone", "TemplateManager"], function($, _, Backbone, TemplateManager) {
+    define(["TemplateManager"], function(TemplateManager) {
         var TestItemView = Backbone.View.extend({
     
           test: {},

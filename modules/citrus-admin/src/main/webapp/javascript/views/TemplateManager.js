@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "underscore", "handlebars"], function($, _, Handlebars) {
+    define([], function() {
         var TemplateManager = {
         
             templates: {},

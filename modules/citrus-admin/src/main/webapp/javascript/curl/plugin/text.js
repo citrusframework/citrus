@@ -1,109 +1,78 @@
+/** MIT License (c) copyright B Cavalier & J Hann */
+
 /**
- * curl text loader plugin
+ * curl text! loader plugin
  *
- * (c) copyright 2011, unscriptable.com
- *
- * TODO: load xdomain text, too
- * 
+ * Licensed under the MIT License at:
+ *      http://www.opensource.org/licenses/mit-license.php
  */
 
-define(/*=='text',==*/ function () {
+/**
+ * TODO: load xdomain text, too
+ *
+ */
 
-	var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
-		// collection of modules that have been written to the built file
-		built = {};
+define(/*=='curl/plugin/text',==*/ function () {
 
-	function xhr () {
-		if (typeof XMLHttpRequest !== "undefined") {
-			// rewrite the getXhr method to always return the native implementation
-			xhr = function () { return new XMLHttpRequest(); };
-		}
-		else {
-			// keep trying progIds until we find the correct one, then rewrite the getXhr method
-			// to always return that one.
-			var noXhr = xhr = function () {
-					throw new Error("getXhr(): XMLHttpRequest not available");
-				};
-			while (progIds.length > 0 && xhr === noXhr) (function (id) {
-				try {
-					new ActiveXObject(id);
-					xhr = function () { return new ActiveXObject(id); };
-				}
-				catch (ex) {}
-			}(progIds.shift()));
-		}
-		return xhr();
-	}
+    var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
 
-	function fetchText (url, callback, errback) {
-		var x = xhr();
-		x.open('GET', url, true);
-		x.onreadystatechange = function (e) {
-			if (x.readyState === 4) {
-				if (x.status < 400) {
-					callback(x.responseText);
-				}
-				else {
-					errback(new Error('fetchText() failed. status: ' + x.statusText));
-				}
-			}
-		};
-		x.send(null);
-	}
+    function xhr () {
+        if (typeof XMLHttpRequest !== "undefined") {
+            // rewrite the getXhr method to always return the native implementation
+            xhr = function () { return new XMLHttpRequest(); };
+        }
+        else {
+            // keep trying progIds until we find the correct one, then rewrite the getXhr method
+            // to always return that one.
+            var noXhr = xhr = function () {
+                    throw new Error("getXhr(): XMLHttpRequest not available");
+                };
+            while (progIds.length > 0 && xhr === noXhr) (function (id) {
+                try {
+                    new ActiveXObject(id);
+                    xhr = function () { return new ActiveXObject(id); };
+                }
+                catch (ex) {}
+            }(progIds.shift()));
+        }
+        return xhr();
+    }
 
-	function nameWithExt (name, defaultExt) {
-		return name.lastIndexOf('.') <= name.lastIndexOf('/') ?
-			name + '.' + defaultExt : name;
-	}
+    function fetchText (url, callback, errback) {
+        var x = xhr();
+        x.open('GET', url, true);
+        x.onreadystatechange = function (e) {
+            if (x.readyState === 4) {
+                if (x.status < 400) {
+                    callback(x.responseText);
+                }
+                else {
+                    errback(new Error('fetchText() failed. status: ' + x.statusText));
+                }
+            }
+        };
+        x.send(null);
+    }
 
-	function error (ex) {
-		if (console) {
-			console.error ? console.error(ex) : console.log(ex.message);
-		}
-	}
+    function error (ex) {
+        throw ex;
+    }
 
-	function jsEncode (text) {
-		// TODO: hoist the map and regex to the enclosing scope for better performance
-		var map = { 34: '\\"', 13: '\\r', 12: '\\f', 10: '\\n', 9: '\\t', 8: '\\b' };
-		return text.replace(/(["\n\f\t\r\b])/g, function (c) {
-			return map[c.charCodeAt(0)];
-		});
-	}
+    return {
 
-	return {
+//      'normalize': function (resourceId, toAbsId) {
+//          // remove options
+//          return resourceId ? toAbsId(resourceId.split("!")[0]) : resourceId;
+//      },
 
-		load: function (resourceName, req, callback, config) {
-			// remove suffixes (future)
-			// hook up callbacks
-			var cb = callback.resolve || callback,
-				eb = callback.reject || error;
-			// get the text
-			fetchText(req['toUrl'](resourceName), cb, eb);
-		},
+        load: function (resourceName, req, callback, config) {
+            // remove suffixes (future)
+            // get the text
+            fetchText(req['toUrl'](resourceName), callback, callback['error'] || error);
+        },
 
-		build: function (writer, fetcher, config) {
-			// writer is a function used to output to the built file
-			// fetcher is a function used to fetch a text file
-			// config is the global config
-			// returns a function that the build tool can use to tell this
-			// plugin to write-out a resource
-			return function write (pluginId, resource, resolver) {
-				var url, absId, text, output;
-				url = resolver['toUrl'](nameWithExt(resource, 'html'));
-				absId = resolver['toAbsMid'](resource);
-				if (!(absId in built)) {
-					built[absId] = true;
-					// fetch text
-					text = jsEncode(fetcher(url));
-					// write out a define
-					output = 'define("' + pluginId + '!' + absId + '", function () {\n' +
-						'\treturn "' + text + '";\n' +
-					'});\n';
-					writer(output);
-				}
-			};
-		}
+        'plugin-builder': './builder/text'
 
-	};
+    };
 
 });

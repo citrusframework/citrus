@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "backbone", "TemplateManager"], function($, Backbone, TemplateManager) {
+    define(["TemplateManager"], function(TemplateManager) {
         var HeaderView = Backbone.View.extend({
         
           render: function() {

@@ -4,17 +4,17 @@
  * curl domReady
  *
  * Licensed under the MIT License at:
- * 		http://www.opensource.org/licenses/mit-license.php
+ *      http://www.opensource.org/licenses/mit-license.php
  */
 
 /**
  * usage:
  *  require(['ModuleA', 'curl/domReady'], function (ModuleA, domReady) {
- * 		var a = new ModuleA();
- * 		domReady(function () {
- * 			document.body.appendChild(a.domNode);
- * 		});
- * 	});
+ *      var a = new ModuleA();
+ *      domReady(function () {
+ *          document.body.appendChild(a.domNode);
+ *      });
+ *  });
  *
  * also: check out curl's domReady! plugin
  *
@@ -25,19 +25,19 @@
 (function (global, doc) {
 
     var
-            readyState = 'readyState',
+        readyState = 'readyState',
         // keep these quoted so closure compiler doesn't squash them
-            readyStates = { 'loaded': 1, 'interactive': 1, 'complete': 1 },
-            callbacks = [],
-            fixReadyState = doc && typeof doc[readyState] != "string",
+        readyStates = { 'loaded': 1, 'interactive': 1, 'complete': 1 },
+        callbacks = [],
+        fixReadyState = doc && typeof doc[readyState] != "string",
         // IE needs this cuz it won't stop setTimeout if it's already queued up
-            completed = false,
-            pollerTime = 10,
-            addEvent,
-            remover,
-            removers = [],
-            pollerHandle,
-            undef;
+        completed = false,
+        pollerTime = 10,
+        addEvent,
+        remover,
+        removers = [],
+        pollerHandle,
+        undef;
 
     function ready () {
         completed = true;

@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "underscore", "backbone", "handlebars", "views/HeaderView", "views/AppContextView", "views/TestListView"], function($, _, Backbone, Handlebars, HeaderView, AppContextView, TestListView) {
+    define(["views/HeaderView", "views/AppContextView", "views/TestListView"], function(HeaderView, AppContextView, TestListView) {
         var AppRouter = Backbone.Router.extend({
         
           routes: {

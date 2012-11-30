@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "underscore", "backbone"], function($, _, Backbone) {
+    define([], function() {
         var LoggingWebSocketModel = Backbone.Model.extend({
         
           socket: {},

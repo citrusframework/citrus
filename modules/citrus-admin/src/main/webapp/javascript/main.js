@@ -20,15 +20,11 @@ var CitrusAdmin;
 curl({
   baseUrl: 'javascript',
   paths: {
-      "jquery" : "support/jquery",
-      "underscore": "support/underscore",
-      "backbone": "support/backbone",
-      "handlebars" : "support/handlebars",
       "TemplateManager" : "views/TemplateManager",
       "LoggingWebSocket" : "model/LoggingWebSocket",
       "AppRouter" : "router/AppRouter"
   }},
-  ["jquery", "underscore", "backbone", "TemplateManager", "AppRouter", "LoggingWebSocket", "domReady!"], function($, _, Backbone, TemplateManager, AppRouter, LoggingWebSocket) {
+  ["TemplateManager", "AppRouter", "LoggingWebSocket", "domReady!"], function(TemplateManager, AppRouter, LoggingWebSocket) {
     
   TemplateManager.load(['HeaderView', 'AppContextView'], function() {
       CitrusAdmin = new AppRouter();

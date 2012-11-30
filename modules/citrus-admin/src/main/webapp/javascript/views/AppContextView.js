@@ -1,5 +1,5 @@
 (function() {
-    define(["jquery", "backbone", "TemplateManager"], function($, Backbone, TemplateManager) {
+    define(["TemplateManager"], function(TemplateManager) {
         var AppContextView = Backbone.View.extend({
 
             status: false,
