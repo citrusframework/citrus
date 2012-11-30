@@ -42,6 +42,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
@@ -76,6 +77,9 @@ public class AssertSoapFault extends AbstractActionContainer {
     /** Soap fault validator implementaiton */
     private SoapFaultValidator validator = new SimpleSoapFaultValidator();
     
+    /** Validation context */
+    private ValidationContext validationContext;
+    
     /** Message factory creating new soap messages */
     private SoapMessageFactory messageFactory;
     
@@ -97,7 +101,7 @@ public class AssertSoapFault extends AbstractActionContainer {
 
             SoapFault controlFault = constructControlFault(context);
             
-            validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault, context);
+            validator.validateSoapFault(soapFaultException.getSoapFault(), controlFault, context, validationContext);
             
             log.info("SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
             log.info("SOAP fault validation successful");
@@ -375,5 +379,21 @@ public class AssertSoapFault extends AbstractActionContainer {
      */
     public void setFaultActor(String faultActor) {
         this.faultActor = faultActor;
+    }
+
+    /**
+     * Gets the validationContext.
+     * @return the validationContext the validationContext to get.
+     */
+    public ValidationContext getValidationContext() {
+        return validationContext;
+    }
+
+    /**
+     * Sets the validationContext.
+     * @param validationContext the validationContext to set
+     */
+    public void setValidationContext(ValidationContext validationContext) {
+        this.validationContext = validationContext;
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.integration.support.MessageBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
@@ -38,20 +39,25 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
     @Qualifier("xmlMessageValidator")
     private MessageValidator<XmlMessageValidationContext> messageValidator;
     
-    /** Validation context holding information like expected message payload, ignored elements and so on */
-    private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-    
     /**
      * Delegates to XML message validator for validation of fault detail.
      */
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
-        throws ValidationException {
+    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, 
+            TestContext context, ValidationContext validationContext) throws ValidationException {
+        XmlMessageValidationContext xmlMessageValidationContext;
+        
+        if (validationContext != null && validationContext instanceof XmlMessageValidationContext) {
+            xmlMessageValidationContext = (XmlMessageValidationContext) validationContext;
+        } else {
+            xmlMessageValidationContext = new XmlMessageValidationContext();
+        }
+        
         Message<String> controlMessage = MessageBuilder.withPayload(controlDetailString).build();
-        validationContext.setControlMessage(controlMessage);
+        xmlMessageValidationContext.setControlMessage(controlMessage);
 
         Message<String> receivedMessage = MessageBuilder.withPayload(receivedDetailString).build();
-        messageValidator.validateMessage(receivedMessage, context, validationContext);
+        messageValidator.validateMessage(receivedMessage, context, xmlMessageValidationContext);
     }
 
     /**

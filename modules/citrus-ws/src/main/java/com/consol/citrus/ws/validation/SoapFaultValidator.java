@@ -20,6 +20,7 @@ import org.springframework.ws.soap.SoapFault;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * Interface for soap fault validation.
@@ -33,6 +34,11 @@ public interface SoapFaultValidator {
      * 
      * @param receivedFault the received fault instance.
      * @param controlfFault the control fault with expected fault information.
+     * @param context
+     * @param validationContext
      */
-    void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, TestContext context) throws ValidationException;
+    void validateSoapFault(SoapFault receivedFault, 
+                           SoapFault controlFault, 
+                           TestContext context,
+                           ValidationContext validationContext) throws ValidationException;
 }

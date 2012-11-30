@@ -33,8 +33,43 @@
             </ws:assert>
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1004"
-                       fault-string="FaultString" fault-validator="customSoapFaultValidator" message-factory="customMessageFactory">
+                       fault-string="FaultString" 
+                       fault-validator="customSoapFaultValidator" 
+                       message-factory="customMessageFactory">
                 <ws:fault-detail file="classpath:com/consol/citrus/ws/actions/test-fault-detail.xml"/>
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+            
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
+                       fault-string="FaultString"
+                       fault-actor="FaultActor">
+                <ws:fault-detail schema-repository="fooSchemaRepository">
+                  <![CDATA[FaultDetail]]>
+                </ws:fault-detail>
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+            
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
+                       fault-string="FaultString"
+                       fault-actor="FaultActor">
+                <ws:fault-detail schema="fooSchema">
+                  <![CDATA[FaultDetail]]>
+                </ws:fault-detail>
+                <echo>
+                    <message>Foo</message>
+                </echo>
+            </ws:assert>
+            
+            <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1003"
+                       fault-string="FaultString"
+                       fault-actor="FaultActor">
+                <ws:fault-detail schema-validation="false">
+                  <![CDATA[FaultDetail]]>
+                </ws:fault-detail>
                 <echo>
                     <message>Foo</message>
                 </echo>

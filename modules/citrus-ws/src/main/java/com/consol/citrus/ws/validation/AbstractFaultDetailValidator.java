@@ -27,6 +27,7 @@ import org.springframework.xml.transform.StringResult;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
@@ -45,7 +46,8 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
      * @see com.consol.citrus.ws.validation.AbstractSoapFaultValidator#validateFaultDetail(org.springframework.ws.soap.SoapFaultDetail, org.springframework.ws.soap.SoapFaultDetail, com.consol.citrus.context.TestContext)
      */
     @Override
-    protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, TestContext context) {
+    protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
+            TestContext context, ValidationContext validationContext) {
         if (controlDetail == null) { return; }
         
         if (log.isDebugEnabled()) {
@@ -61,7 +63,7 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
                 log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
             }
             
-            validateFaultDetailString(receivedDetailString, controlDetailString, context);
+            validateFaultDetailString(receivedDetailString, controlDetailString, context, validationContext);
         } else {
             throw new ValidationException("Missing SOAP fault detail in received message");
         }
@@ -102,7 +104,9 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
      * 
      * @param receivedDetail received soap fault representation as string.
      * @param controlDetail control soap fault representation as string.
+     * @param context
+     * @param validationContext
      */
-    protected abstract void validateFaultDetailString(String receivedDetail, String controlDetail, TestContext context) 
-        throws ValidationException;
+    protected abstract void validateFaultDetailString(String receivedDetail, String controlDetail, 
+            TestContext context, ValidationContext validationContext) throws ValidationException;
 }

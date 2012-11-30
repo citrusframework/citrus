@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
  * Simple soap fault validator implementation just performing String equals on soap fault detail
@@ -31,8 +32,8 @@ import com.consol.citrus.exceptions.ValidationException;
 public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, TestContext context) 
-        throws ValidationException {
+    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, 
+            TestContext context, ValidationContext validationContext) throws ValidationException {
         if (!StringUtils.trimAllWhitespace(receivedDetailString).equals( 
                 StringUtils.trimAllWhitespace(controlDetailString))) {
             throw new ValidationException("SOAP fault validation failed! Fault detail does not match: expected \n'" +

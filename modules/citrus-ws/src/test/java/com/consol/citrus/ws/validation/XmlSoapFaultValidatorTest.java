@@ -25,6 +25,7 @@ import org.springframework.xml.transform.StringSource;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +41,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
     		"request-url=\"http://foo.org/test\"/>";
     @Test
     public void testXmlDetailValidation() {
-        soapFaultValidator.validateFaultDetailString(detail, detail, context);
+        soapFaultValidator.validateFaultDetailString(detail, detail, context, new XmlMessageValidationContext());
     }
     
     @Test
@@ -55,7 +56,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         
         replay(receivedDetail, controlDetail);
         
-        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context);
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
         
         verify(receivedDetail, controlDetail);
     }

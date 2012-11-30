@@ -20,6 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.testng.AbstractActionParserTest;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
 /**
@@ -29,7 +30,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
 
     @Test
     public void testAssertSoapFaultParser() {
-        assertActionCount(4);
+        assertActionCount(7);
         assertActionClassAndName(AssertSoapFault.class, "assert");
         
         // 1st action
@@ -41,6 +42,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertNull(action.getFaultString());
         Assert.assertNull(action.getFaultDetail());
         Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getValidationContext());
         
         // 2nd action
         action = getNextTestActionFromTest();
@@ -51,6 +53,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertNull(action.getFaultDetail());
         Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getValidationContext());
         
         // 3rd action
         action = getNextTestActionFromTest();
@@ -62,6 +65,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
         Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getValidationContext());
         
         // 4th action
         action = getNextTestActionFromTest();
@@ -72,5 +76,54 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertNull(action.getFaultDetail());
         Assert.assertNotNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getValidationContext());
+        
+        // 5th action
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getAction());
+        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
+        Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
+        Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultString(), "FaultString");
+        Assert.assertEquals(action.getFaultActor(), "FaultActor");
+        Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
+        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getValidationContext());
+        Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
+        Assert.assertTrue(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());
+        Assert.assertEquals(((XmlMessageValidationContext)action.getValidationContext()).getSchemaRepository(), "fooSchemaRepository");
+        Assert.assertNull(((XmlMessageValidationContext)action.getValidationContext()).getSchema());
+        
+        // 6th action
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getAction());
+        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
+        Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
+        Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultString(), "FaultString");
+        Assert.assertEquals(action.getFaultActor(), "FaultActor");
+        Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
+        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getValidationContext());
+        Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
+        Assert.assertTrue(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());
+        Assert.assertNull(((XmlMessageValidationContext)action.getValidationContext()).getSchemaRepository());
+        Assert.assertEquals(((XmlMessageValidationContext)action.getValidationContext()).getSchema(), "fooSchema");
+        
+        // 7th action
+        action = getNextTestActionFromTest();
+        Assert.assertNotNull(action.getAction());
+        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
+        Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
+        Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultString(), "FaultString");
+        Assert.assertEquals(action.getFaultActor(), "FaultActor");
+        Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
+        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getValidationContext());
+        Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
+        Assert.assertFalse(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());
+        Assert.assertNull(((XmlMessageValidationContext)action.getValidationContext()).getSchemaRepository());
+        Assert.assertNull(((XmlMessageValidationContext)action.getValidationContext()).getSchema());
     }
 }

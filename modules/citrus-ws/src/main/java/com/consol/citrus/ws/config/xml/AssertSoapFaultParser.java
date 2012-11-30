@@ -32,6 +32,7 @@ import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
 /**
@@ -72,6 +73,25 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                     throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
                 }
             }
+            
+            XmlMessageValidationContext context = new XmlMessageValidationContext();
+            
+            String schemaValidation = faultDetailElement.getAttribute("schema-validation");
+            if (StringUtils.hasText(schemaValidation)) {
+                context.setSchemaValidation(Boolean.valueOf(schemaValidation));
+            }
+            
+            String schema = faultDetailElement.getAttribute("schema");
+            if (StringUtils.hasText(schema)) {
+                context.setSchema(schema);
+            }
+            
+            String schemaRepository = faultDetailElement.getAttribute("schema-repository");
+            if (StringUtils.hasText(schemaRepository)) {
+                context.setSchemaRepository(schemaRepository);
+            }
+            
+            beanDefinition.addPropertyValue("validationContext", context);
         }
         
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	 xmlns="http://www.consol.de/schemas/samples/sayHello.xsd"
-	 targetNamespace="http://www.consol.de/schemas/samples/sayHello.xsd"
+	 xmlns="http://www.consol.de/schemas/samples/sayHelloExtended.xsd"
+	 targetNamespace="http://www.consol.de/schemas/samples/sayHelloExtended.xsd"
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
    
@@ -36,6 +36,7 @@
                 <xs:element name="CorrelationId" type="xs:string"/>
                 <xs:element name="ErrorCode" type="xs:string"/>
                 <xs:element name="Text" type="xs:string"/>
+                <xs:element name="Reason" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

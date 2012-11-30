@@ -34,6 +34,9 @@
                                 <xs:simpleContent>
                                     <xs:extension base="xs:string">
                                         <xs:attribute name="file" type="xs:string"/>
+                                        <xs:attribute name="schema-validation" type="xs:boolean"/>
+                                        <xs:attribute name="schema" type="xs:string"/>
+                                        <xs:attribute name="schema-repository" type="xs:string"/>
                                     </xs:extension>
                                 </xs:simpleContent>
                             </xs:complexType>

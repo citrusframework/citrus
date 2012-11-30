@@ -26,6 +26,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 
 /**
@@ -44,8 +45,8 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
     /**
      * @see com.consol.citrus.ws.validation.SoapFaultValidator#validateSoapFault(org.springframework.ws.soap.SoapFault, org.springframework.ws.soap.SoapFault, com.consol.citrus.context.TestContext)
      */
-    public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, TestContext context)
-            throws ValidationException {
+    public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, 
+            TestContext context, ValidationContext validationContext) throws ValidationException {
         //fault string validation
         if (controlFault.getFaultStringOrReason() != null && 
                 !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
@@ -85,7 +86,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
                 throw new ValidationException("SOAP fault validation failed! Missing fault detail in received message.");
             }
             
-            validateFaultDetail(detail, controlFault.getFaultDetail(), context);
+            validateFaultDetail(detail, controlFault.getFaultDetail(), context, validationContext);
         }
     }
 
@@ -95,6 +96,8 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      * @param receivedDetail
      * @param controlDetail
      * @param context
+     * @param validationContext
      */
-    protected abstract void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, TestContext context);
+    protected abstract void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
+            TestContext context, ValidationContext validationContext);
 }
