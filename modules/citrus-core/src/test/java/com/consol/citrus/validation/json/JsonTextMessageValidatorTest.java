@@ -55,14 +55,30 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWithArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
+        Message<String> receivedMessage = MessageBuilder.withPayload("[" +
+        		"{\"text\":\"Hello World!\", \"index\":1}, " +
+        		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("[" +
+        		"{\"text\":\"Hello World!\", \"index\":1}, " +
+        		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
+        
+        validator.validateMessagePayload(receivedMessage, controlMessage, context);
+    }
+    
+    @Test
+    public void testJsonValidationWithNestedArrays() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        
         Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":[" +
-        		"{\"text\":\"Hello World!\", \"index\":1}, " +
-        		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-        		"{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hello World!\", \"index\":1}, " +
+                "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
         Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":[" +
-        		"{\"text\":\"Hello World!\", \"index\":1}, " +
-        		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-        		"{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hello World!\", \"index\":1}, " +
+                "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }

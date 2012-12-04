@@ -47,6 +47,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 public class JsonTextMessageValidator extends ControlMessageValidator {
 
     @Override
+    @SuppressWarnings("unchecked")
     public void validateMessagePayload(Message<?> receivedMessage,
             Message<?> controlMessage,
             TestContext context) throws ValidationException {
@@ -72,11 +73,23 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
             
             JSONParser parser = new JSONParser();
         
-        
-            JSONObject receivedJson = (JSONObject) parser.parse(receivedJsonText);
-            JSONObject controlJson = (JSONObject) parser.parse(controlJsonText);
+            Object receivedJson = parser.parse(receivedJsonText);
+            Object controlJson = parser.parse(controlJsonText);
             
-            validateJson(receivedJson, controlJson, context);
+            if (receivedJson instanceof JSONObject) {
+                validateJson((JSONObject) receivedJson, (JSONObject) controlJson, context);
+            } else if (receivedJson instanceof JSONArray) {
+                JSONObject tempReceived = new JSONObject();
+                tempReceived.put("array", receivedJson);
+                JSONObject tempControl = new JSONObject();
+                tempControl.put("array", controlJson);
+                
+                validateJson(tempReceived, tempControl, context);
+            } else {
+                throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
+            }
+            
+            
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate JSON text:\n" + receivedJsonText, e);
         } catch (ParseException e) {
