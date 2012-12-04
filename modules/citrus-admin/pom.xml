@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
           <groupId>com.consol.citrus</groupId>
+          <artifactId>citrus-java-dsl</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.consol.citrus</groupId>
           <artifactId>citrus-http</artifactId>
           <version>${project.version}</version>
         </dependency>
@@ -83,6 +88,10 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-java-dsl</artifactId>
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
@@ -224,7 +233,6 @@
                 </connector>
               </connectors>
               <useTestScope>true</useTestScope>
-              <scanIntervalSeconds>5</scanIntervalSeconds>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>
@@ -235,7 +243,7 @@
                     <value>log4j.xml</value>
                   </systemProperty>
                   <systemProperty>
-                    <name>working.directory</name>
+                    <name>project.home</name>
                     <value>../citrus-integration/src/citrus/tests</value>
                   </systemProperty>
               </systemProperties>

@@ -1,6 +1,6 @@
 (function() {
     define(["TemplateManager"], function(TemplateManager) {
-        var TestItemView = Backbone.View.extend({
+        var TestDetailsView = Backbone.View.extend({
     
           test: {},
           
@@ -11,11 +11,11 @@
           events: {
               "click a.run-test" : "runTest",
               "click a.xml-source" : "getXmlSource",
-              "click a.java-source" : "getXmlSource"
+              "click a.java-source" : "getJavaSource"
           },
           
           render: function() {
-              $(this.el).html(TemplateManager.template('TestItemView', this.test));
+              $(this.el).html(TemplateManager.template('TestDetailsView', this.test));
 
               return this;
           },
@@ -54,7 +54,7 @@
               $('div#' + this.test.name + ' > div.tab-content > div.tab-pane > div.xml-source').append('<pre class="prettyprint linenums xml-code">Loading sources ...</pre>');
               
               $.ajax({
-                  url: "testcase/" + this.test.packageName + "/" + this.test.name,
+                  url: "testcase/" + this.test.packageName + "/" + this.test.name + "/xml",
                   type: 'GET',
                   dataType: "html",
                   success: function(fileContent) {
@@ -68,10 +68,31 @@
                       prettyPrint();
                   }
               });
+          },
+          
+          getJavaSource: function() {
+              $('pre.java-code').remove();
+              $('div#' + this.test.name + ' > div.tab-content > div.tab-pane > div.java-source').append('<pre class="prettyprint linenums java-code">Loading sources ...</pre>');
+              
+              $.ajax({
+                  url: "testcase/" + this.test.packageName + "/" + this.test.name + "/java",
+                  type: 'GET',
+                  dataType: "html",
+                  success: function(fileContent) {
+                      $('pre.java-code').text(fileContent);
+                      $('pre.java-code').prepend('<a class="close close-code">×</a>');
+                      
+                      $('a.close-code').click(function() {
+                          $('pre.java-code').remove();
+                      });
+                      
+                      prettyPrint();
+                  }
+              });
           }
     
         });
         
-        return TestItemView;
+        return TestDetailsView;
     });
 }).call(this);

@@ -22,6 +22,7 @@
     
     <!-- Auto detected POJOs labeled with the @Controller annotation -->
     <context:component-scan base-package="com.consol.citrus.admin.controller"/>
+    <context:component-scan base-package="com.consol.citrus.admin.service"/>
     
     <!-- Turns on support for mapping requests to Spring MVC @Controller methods
          Also registers default formatters and validators for use across all @Controllers -->

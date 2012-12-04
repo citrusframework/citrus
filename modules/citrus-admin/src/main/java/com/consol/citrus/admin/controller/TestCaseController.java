@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusCliOptions;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.service.AppContextHolder;
+import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.util.FileUtils;
@@ -47,27 +49,32 @@ import com.consol.citrus.util.FileUtils;
 @RequestMapping("/testcase")
 public class TestCaseController {
 
-    /** Working directory = base of Citrus project */
-    private static final String WORKING_DIRECTORY = "working.directory";
-    
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCaseController.class);
     
     @Autowired
     private AppContextHolder appContextHolder;
     
+    @Autowired
+    private TestCaseService testCaseService;
+    
+    /** Base package for test cases to look for */
+    private String basePackage = "com.consol.citrus";
+    
+    /** Project home property name */
+    private static final String PROJECT_HOME = "project.home";
+    
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public TestCaseList list(HttpEntity<String> requestEntity) {
         TestCaseList testCaseList = new TestCaseList();
         
-        List<File> testFiles = FileUtils.getTestFiles(System.getProperty(WORKING_DIRECTORY));
+        List<String> testFiles = testCaseService.findTestsInClasspath(basePackage); // TODO: make base package configurable
         
-        for (File file : testFiles) {
+        for (String file : testFiles) {
             TestCaseInfoType testCaseInfo = new TestCaseInfoType();
-            testCaseInfo.setName(file.getName().substring(0, file.getName().length() - 4));
-            testCaseInfo.setPackageName(file.getAbsolutePath().substring(System.getProperty(WORKING_DIRECTORY).length() + 1, 
-                                            file.getAbsolutePath().length() - file.getName().length() - 1)
+            testCaseInfo.setName(file.substring(file.lastIndexOf(".") + 1));
+            testCaseInfo.setPackageName(file.substring(0, file.length() - testCaseInfo.getName().length() - 1)
                                             .replace(File.separatorChar, '.'));
             testCaseList.getTestCaseInfos().add(testCaseInfo);
         }
@@ -75,10 +82,11 @@ public class TestCaseController {
         return testCaseList;
     }
     
-    @RequestMapping(value="/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/{package}/{name}/{type}", method = { RequestMethod.GET })
     @ResponseBody
-    public String getTestCase(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
-        Resource testFile = FileUtils.getResourceFromFilePath(System.getProperty(WORKING_DIRECTORY) + File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + ".xml");
+    public String getTestCase(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
+            @PathVariable("type") String type) {
+        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type);
         
         try {
             return FileUtils.readToString(testFile);
@@ -96,7 +104,7 @@ public class TestCaseController {
         result.setTestCase(testCaseInfo);
         
         try {
-            Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", System.getProperty(WORKING_DIRECTORY) }));
+            Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", System.getProperty(PROJECT_HOME) }));
             citrus.run();
             
             result.setSuccess(true);
