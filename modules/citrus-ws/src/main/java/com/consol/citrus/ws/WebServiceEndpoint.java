@@ -27,8 +27,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.*;
@@ -128,6 +127,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws IOException 
      */
     private boolean simulateHttpStatusCode(Message<?> replyMessage) throws IOException {
+        if (CollectionUtils.isEmpty(replyMessage.getHeaders())) {
+            return false;
+        }
+        
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.HTTP_STATUS_CODE)) {
                 WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();

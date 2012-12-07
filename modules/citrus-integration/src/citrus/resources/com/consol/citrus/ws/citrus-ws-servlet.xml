@@ -19,6 +19,7 @@
                 <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
                 <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
                 <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapProbingRequest">probingServiceEndpoint</prop>
             </props>
         </property>
         <property name="interceptors">
@@ -38,6 +39,21 @@
     </bean>
     
     <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.SoapFaultGeneratingEndpoint"/>
+    
+    <bean id="probingServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
+        <property name="messageHandler">
+            <bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler">
+                <property name="messagePayload">
+                    <value></value>
+                </property>
+                <property name="messageHeader">
+                    <map>
+                        <entry key="citrus_http_status_code" value="200"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
     
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="messageHandler">
