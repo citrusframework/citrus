@@ -16,10 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
+
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 
@@ -64,7 +68,12 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
     public SendSoapMessageActionDefinition attatchment(String contentId, String contentType, Resource contentResource) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
-        getAction().setAttachmentResource(contentResource);
+        
+        try {
+            getAction().setAttachmentData(FileUtils.readToString(contentResource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read attachment resource", e);
+        }
         
         return this;
     }

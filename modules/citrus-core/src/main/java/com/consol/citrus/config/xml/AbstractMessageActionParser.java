@@ -25,7 +25,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.message.MessageHeaderType;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
@@ -82,7 +81,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             String scriptResource = builderElement.getAttribute("file");
             
             if (StringUtils.hasText(scriptResource)) {
-                scriptMessageBuilder.setScriptResource(FileUtils.getResourceFromFilePath(scriptResource));
+                scriptMessageBuilder.setScriptResource(scriptResource);
             } else {
                 scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
             }
@@ -109,7 +108,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
         if (xmlResourceElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadResource(FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+            messageBuilder.setPayloadResource(xmlResourceElement.getAttribute("file"));
         }
         
         if (messageBuilder != null) {
@@ -180,7 +179,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
 
             Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
             if (headerResourceElement != null) {
-                messageBuilder.setMessageHeaderResource(FileUtils.getResourceFromFilePath(headerResourceElement.getAttribute("file")));
+                messageBuilder.setMessageHeaderResource(headerResourceElement.getAttribute("file"));
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);

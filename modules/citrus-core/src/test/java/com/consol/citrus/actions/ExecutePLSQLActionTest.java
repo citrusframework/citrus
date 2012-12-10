@@ -16,13 +16,9 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -110,7 +106,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testPLSQLExecutionWithFileResource() {
-        executePLSQLAction.setSqlResource(new ClassPathResource("test-plsql.sql", ExecutePLSQLActionTest.class));
+        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +
@@ -172,7 +168,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	    context.setVariable("myText", "Hello World!");
         context.setVariable("tableName", "Greetings");
         
-        executePLSQLAction.setSqlResource(new ClassPathResource("test-plsql-with-variables.sql", ExecutePLSQLActionTest.class));
+        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql-with-variables.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +
@@ -237,7 +233,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testPLSQLExecutionWithFileResourceMultipleStmts() {
-        executePLSQLAction.setSqlResource(new ClassPathResource("test-plsql-multiple-stmts.sql", ExecutePLSQLActionTest.class));
+        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql-multiple-stmts.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +

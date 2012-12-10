@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.jms.ConnectionFactory;
@@ -29,14 +30,16 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.*;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
+import com.consol.citrus.ws.message.WebServiceMessageSender;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -538,7 +541,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      */
     protected GroovyActionDefinition groovy(Resource scriptResource) {
         GroovyAction action = new GroovyAction();
-        action.setFileResource(scriptResource);
+        try {
+            action.setScript(FileUtils.readToString(scriptResource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read script resource", e);
+        }
         
         testCase.addTestAction(action);
         

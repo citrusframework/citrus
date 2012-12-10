@@ -34,7 +34,7 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
         
         GroovyAction action = getNextTestActionFromTest();
         Assert.assertNull(action.getFileResource());
-        Assert.assertEquals(action.getScriptTemplateResource().getFilename(), "script-template.groovy");
+        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:com/consol/citrus/script/script-template.groovy");
         Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
         
         action = getNextTestActionFromTest();
@@ -44,12 +44,12 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
         
         action = getNextTestActionFromTest();
         Assert.assertNull(action.getFileResource());
-        Assert.assertEquals(action.getScriptTemplateResource().getFilename(), "custom-script-template.groovy");
+        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:com/consol/citrus/script/custom-script-template.groovy");
         Assert.assertNotNull(action.getScript());
         
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getFileResource());
-        Assert.assertEquals(action.getFileResource().getFilename(), "example.groovy");
+        Assert.assertEquals(action.getFileResource(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(action.getScript());
     }
 }

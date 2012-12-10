@@ -46,7 +46,7 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
         Assert.assertNotNull(action.getSqlResource());
-        Assert.assertEquals(action.getSqlResource().getFilename(), "test-sql-statements.sql");
+        Assert.assertEquals(action.getSqlResource(), "classpath:com/consol/citrus/actions/test-sql-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.isIgnoreErrors(), true);
     }

@@ -21,7 +21,6 @@ import java.util.Locale;
 import javax.xml.transform.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -352,7 +351,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.setFaultDetailResource(new ClassPathResource("test-fault-detail.xml", AssertSoapFaultTest.class));
+        assertAction.setFaultDetailResource("classpath:com/consol/citrus/ws/actions/test-fault-detail.xml");
         
         assertAction.execute(context);
     }
@@ -391,7 +390,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.setFaultDetailResource(new ClassPathResource("test-fault-detail-with-variables.xml", AssertSoapFaultTest.class));
+        assertAction.setFaultDetailResource("classpath:com/consol/citrus/ws/actions/test-fault-detail-with-variables.xml");
         
         assertAction.execute(context);
     }

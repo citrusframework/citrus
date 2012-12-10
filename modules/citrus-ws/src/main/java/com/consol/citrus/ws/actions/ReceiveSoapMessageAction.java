@@ -18,7 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
@@ -42,7 +42,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     private String attachmentData;
     
     /** Attachment body content in external file resource */
-    private Resource attachmentResource;
+    private String attachmentResource;
     
     /** Control attachment */
     private SoapAttachment controlAttachment = new SoapAttachment();
@@ -61,7 +61,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             if (attachmentData != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
             } else if (attachmentResource != null) {
-                controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource)));
+                controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                        context.replaceDynamicContentInString(attachmentResource)))));
             } else {
                 return; //no attachment expected, no validation
             }
@@ -94,7 +95,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      * Set the attachment data from external file resource. 
      * @param attachmentResource the attachmentResource to set
      */
-    public void setAttachmentResource(Resource attachmentResource) {
+    public void setAttachmentResource(String attachmentResource) {
         this.attachmentResource = attachmentResource;
     }
 
@@ -150,7 +151,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      * Gets the attachmentResource.
      * @return the attachmentResource
      */
-    public Resource getAttachmentResource() {
+    public String getAttachmentResource() {
         return attachmentResource;
     }
 

@@ -20,7 +20,6 @@ import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
@@ -153,7 +152,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment.xml", SendSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -231,7 +230,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment-with-variables.xml", SendSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -305,7 +304,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        messageBuilder.setMessageHeaderResource(new ClassPathResource("test-header-resource.xml", SendSoapMessageActionTest.class));
+        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -383,7 +382,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("operation", "soapOperation");
         
-        messageBuilder.setMessageHeaderResource(new ClassPathResource("test-header-resource-with-variables.xml", SendSoapMessageActionTest.class));
+        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 

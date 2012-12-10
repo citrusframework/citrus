@@ -16,9 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
+
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Action transforms a XML document(specified inline or from external file resource)
@@ -57,7 +61,11 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 	 * @param xmlResource the xmlResource to set
 	 */
 	public TransformActionDefinition source(Resource xmlResource) {
-		action.setXmlResource(xmlResource);
+	    try {
+	        action.setXmlData(FileUtils.readToString(xmlResource));
+	    } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read xml resource", e);
+        }
 		return this;
 	}
 	
@@ -75,7 +83,12 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 	 * @param xsltResource the xsltResource to set
 	 */
 	public TransformActionDefinition xslt(Resource xsltResource) {
-		action.setXsltResource(xsltResource);
+	    try {
+	        action.setXsltData(FileUtils.readToString(xsltResource));
+	    } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read xstl resource", e);
+        }
+	    
 		return this;
 	}
 }

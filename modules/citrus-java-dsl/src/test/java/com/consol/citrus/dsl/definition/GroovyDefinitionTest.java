@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.*;
+
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -26,11 +30,11 @@ import com.consol.citrus.script.GroovyAction;
 
 public class GroovyDefinitionTest {
     private Resource scriptResource = EasyMock.createMock(Resource.class);
-    
     private Resource scriptTemplate = EasyMock.createMock(Resource.class);
+    private File file = EasyMock.createMock(File.class);
             
     @Test
-    public void testGroovyBuilderWithResource() {
+    public void testGroovyBuilderWithResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -39,14 +43,20 @@ public class GroovyDefinitionTest {
             }
         };
         
+        reset(scriptResource);
+        expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
+        replay(scriptResource);
+        
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getFileResource(), scriptResource);
+        Assert.assertEquals(action.getScript(), "someScript");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
+        
+        verify(scriptResource);
     }
     
     @Test
@@ -70,7 +80,7 @@ public class GroovyDefinitionTest {
     }
     
     @Test
-    public void testGroovyBuilderWithTemplate() {
+    public void testGroovyBuilderWithTemplate() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -79,13 +89,18 @@ public class GroovyDefinitionTest {
             }
         };
         
+        reset(scriptTemplate, file);
+        expect(scriptTemplate.getFile()).andReturn(file).once();
+        expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
+        replay(scriptTemplate, file);
+        
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getScriptTemplateResource(), scriptTemplate);
+        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:some.file");
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
     

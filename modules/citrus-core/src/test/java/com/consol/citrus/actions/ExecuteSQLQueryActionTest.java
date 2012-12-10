@@ -16,16 +16,11 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
 import org.easymock.EasyMock;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -121,8 +116,6 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testSQLResource() {
-	    Resource sqlResource = new ClassPathResource("test-query.sql", ExecuteSQLQueryActionTest.class);
-	    
 	    String sql1 = "SELECT ORDERTYPE, STATUS FROM orders WHERE ID=5;";
         String sql2 = "SELECT NAME, HEIGHT FROM customers WHERE ID=1;";
         reset(jdbcTemplate);
@@ -141,7 +134,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         replay(jdbcTemplate);
         
-        executeSQLQueryAction.setSqlResource(sqlResource);
+        executeSQLQueryAction.setSqlResource("classpath:com/consol/citrus/actions/test-query.sql");
         
         executeSQLQueryAction.execute(context);
         
@@ -655,7 +648,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         replay(jdbcTemplate);
         
-        executeSQLQueryAction.setSqlResource(new ClassPathResource("test-sql-query-statements.sql", ExecuteSQLQueryActionTest.class));
+        executeSQLQueryAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
         
         executeSQLQueryAction.execute(context);
         
@@ -687,10 +680,10 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
         
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
-        		"assert rows[0].ORDERTYPE == 'small'\n" +
-        		"assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
-        		ScriptTypes.GROOVY);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        scriptValidationContext.setValidationScript("assert rows.size() == 1\n" +
+                "assert rows[0].ORDERTYPE == 'small'\n" +
+                "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']");
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
@@ -732,12 +725,12 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         stmts.add(sql2);
         executeSQLQueryAction.setStatements(stmts);
         
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 4\n" +
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        scriptValidationContext.setValidationScript("assert rows.size() == 4\n" +
                 "assert rows[0].ORDERTYPE == 'small'\n" +
                 "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']\n" +
                 "assert rows[1].ID == '1'\n" +
-                "assert rows[3].NAME == 'error3'\n",
-                ScriptTypes.GROOVY);
+                "assert rows[3].NAME == 'error3'\n");
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);
@@ -761,9 +754,9 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.setStatements(stmts);
         
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
-                "assert rows[0] == [ORDERTYPE:'big', STATUS:'in_progress']",
-                ScriptTypes.GROOVY);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        scriptValidationContext.setValidationScript("assert rows.size() == 1\n" +
+                "assert rows[0] == [ORDERTYPE:'big', STATUS:'in_progress']");
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         try {
@@ -800,10 +793,10 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         executeSQLQueryAction.setControlResultSet(controlResultSet);
         
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext("assert rows.size() == 1\n" +
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        scriptValidationContext.setValidationScript("assert rows.size() == 1\n" +
                 "assert rows[0].ORDERTYPE == 'small'\n" +
-                "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']",
-                ScriptTypes.GROOVY);
+                "assert rows[0] == [ORDERTYPE:'small', STATUS:'in_progress']");
         executeSQLQueryAction.setScriptValidationContext(scriptValidationContext);
         
         executeSQLQueryAction.execute(context);

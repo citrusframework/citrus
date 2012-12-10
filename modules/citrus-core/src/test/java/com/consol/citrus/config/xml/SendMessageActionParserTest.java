@@ -56,7 +56,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
         Assert.assertNotNull(messageBuilder.getPayloadResource());
-        Assert.assertEquals(messageBuilder.getPayloadResource().getFilename(), "test-request-payload.xml");
+        Assert.assertEquals(messageBuilder.getPayloadResource(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
@@ -77,7 +77,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
         
         Assert.assertNotNull(groovyMessageBuilder.getScriptResource());
-        Assert.assertEquals(groovyMessageBuilder.getScriptResource().getFilename(), "example.groovy");
+        Assert.assertEquals(groovyMessageBuilder.getScriptResource(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
         
         // 5th action

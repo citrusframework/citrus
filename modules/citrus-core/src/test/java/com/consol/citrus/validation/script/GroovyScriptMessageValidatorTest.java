@@ -46,8 +46,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         		"assert payload == 'This is plain text!'\n" +
         		"assert payload.contains('!')";
         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript(validationScript);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -60,8 +60,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         
         context.setVariable("plainText", "This is plain text!");
         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript(validationScript);
         
         validator.validateMessage(message, context, validationContext);
     }
@@ -72,8 +72,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
                 "assert payload == 'This is plain text!'\n" +
                 "assert payload.contains('!')";
         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript(validationScript);
         
         try {
             validator.validateMessage(message, context, validationContext);
@@ -90,8 +90,8 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         String validationScript = "context.setVariable('operation', 'unitTesting')\n" +
                 "context.setVariable('text', 'This is plain text!')";
         
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript(validationScript);
         
         Assert.assertNull(context.getVariables().get("operation"));
         Assert.assertNull(context.getVariables().get("text"));

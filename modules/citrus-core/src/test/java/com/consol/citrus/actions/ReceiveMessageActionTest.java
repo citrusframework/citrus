@@ -16,15 +16,11 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
 import org.easymock.EasyMock;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -100,7 +96,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload.xml", ReceiveMessageActionTest.class));
+        controlMessageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload.xml");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -205,7 +201,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setScriptResource(new ClassPathResource("test-request-payload.groovy", ReceiveMessageActionTest.class));
+        controlMessageBuilder.setScriptResource("classpath:com/consol/citrus/actions/test-request-payload.groovy");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -268,7 +264,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload-with-variables.xml", ReceiveMessageActionTest.class));
+        controlMessageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
         
         context.setVariable("myText", "Hello World!");
         
@@ -301,7 +297,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        controlMessageBuilder.setPayloadResource(new ClassPathResource("test-request-payload-with-functions.xml", ReceiveMessageActionTest.class));
+        controlMessageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1388,8 +1384,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(new GroovyXmlMessageValidator());
         
-        ScriptValidationContext validationContext = new ScriptValidationContext("assert root.Message.name() == 'Message'\n" + 
-                "assert root.Message.text() == 'Hello World!'", ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript("assert root.Message.name() == 'Message'\n" + 
+                "assert root.Message.text() == 'Hello World!'");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -1416,8 +1413,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setMessageReceiver(messageReceiver);
 
         receiveAction.setValidator(new GroovyXmlMessageValidator());
-        ScriptValidationContext validationContext = new ScriptValidationContext(new ClassPathResource("test-validation-script.groovy", ReceiveMessageActionTest.class), 
-                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScriptResource("classpath:com/consol/citrus/actions/test-validation-script.groovy");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

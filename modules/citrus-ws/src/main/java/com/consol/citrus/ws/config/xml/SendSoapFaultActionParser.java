@@ -28,7 +28,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 
 /**
@@ -105,8 +104,7 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                
-                messageBuilder.setFaultDetailResource(FileUtils.getResourceFromFilePath(filePath));
+                messageBuilder.setFaultDetailResource(filePath);
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {

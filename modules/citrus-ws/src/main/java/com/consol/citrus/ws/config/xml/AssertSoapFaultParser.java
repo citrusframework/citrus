@@ -31,7 +31,6 @@ import org.w3c.dom.Element;
 import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 
@@ -63,8 +62,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                
-                beanDefinition.addPropertyValue("faultDetailResource", FileUtils.getResourceFromFilePath(filePath));
+                beanDefinition.addPropertyValue("faultDetailResource", filePath);
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {

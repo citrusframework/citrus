@@ -18,7 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
@@ -45,7 +45,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     private String attachmentData;
     
     /** SOAP attachment data as external file resource */
-    private Resource attachmentResource;
+    private String attachmentResource;
     
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
@@ -69,7 +69,8 @@ public class SendSoapMessageAction extends SendMessageAction {
             if (StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
             } else if (attachmentResource != null) {
-                attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(attachmentResource));
+                attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                        context.replaceDynamicContentInString(attachmentResource))));
             } else {
                 attachmentContent = null;
             }
@@ -110,7 +111,7 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Set the Attachment data file resource.
      * @param attachment the attachment to set
      */
-    public void setAttachmentResource(Resource attachment) {
+    public void setAttachmentResource(String attachment) {
         this.attachmentResource = attachment;
     }
 
@@ -158,7 +159,7 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Gets the attachmentResource.
      * @return the attachmentResource
      */
-    public Resource getAttachmentResource() {
+    public String getAttachmentResource() {
         return attachmentResource;
     }
 

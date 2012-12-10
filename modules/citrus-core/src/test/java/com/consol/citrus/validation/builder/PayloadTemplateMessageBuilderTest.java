@@ -19,7 +19,6 @@ package com.consol.citrus.validation.builder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -64,7 +63,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithPayloadResource() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         
-        messageBuilder.setPayloadResource(new ClassPathResource("payload-data-resource.txt", PayloadTemplateMessageBuilderTest.class));
+        messageBuilder.setPayloadResource("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         
@@ -75,7 +74,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithPayloadResourceVariableSupport() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         
-        messageBuilder.setPayloadResource(new ClassPathResource("variable-data-resource.txt", PayloadTemplateMessageBuilderTest.class));
+        messageBuilder.setPayloadResource("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
         context.setVariable("placeholder", "payload data");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
@@ -170,7 +169,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResource() {
-        messageBuilder.setMessageHeaderResource(new ClassPathResource("header-data-resource.txt", PayloadTemplateMessageBuilderTest.class));
+        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         
@@ -181,7 +180,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResourceVariableSupport() {
-        messageBuilder.setMessageHeaderResource(new ClassPathResource("variable-data-resource.txt", PayloadTemplateMessageBuilderTest.class));
+        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
         context.setVariable("placeholder", "header data");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);

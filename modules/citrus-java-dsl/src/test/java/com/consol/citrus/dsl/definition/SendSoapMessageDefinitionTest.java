@@ -18,6 +18,9 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -167,7 +170,7 @@ public class SendSoapMessageDefinitionTest {
     }
     
     @Test
-    public void testSoapAttachmentResource() {
+    public void testSoapAttachmentResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -176,6 +179,10 @@ public class SendSoapMessageDefinitionTest {
                     .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -192,11 +199,12 @@ public class SendSoapMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         
-        Assert.assertEquals(action.getAttachmentResource(), resource);
-        Assert.assertNull(action.getAttachmentData());
+        Assert.assertEquals(action.getAttachmentData(), "someAttachmentData");
         Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());
         Assert.assertEquals(action.getAttachment().getCharsetName(), testAttachment.getCharsetName());
+        
+        verify(resource);
     }
     
     @Test

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import com.consol.citrus.TestAction;
@@ -50,7 +50,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     private String name = this.getClass().getSimpleName();
     
     /** SQL file resource */
-    protected Resource sqlResource;
+    protected String sqlResource;
     
     /** List of SQL statements */
     protected List<String> statements = new ArrayList<String>();
@@ -99,10 +99,11 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         
         List<String> stmts = new ArrayList<String>();
         
+        String sqlResourcePath = context.replaceDynamicContentInString(sqlResource);
         try {
-            log.info("Executing SQL file: " + sqlResource.getFilename());
+            log.info("Executing SQL file: " + sqlResourcePath);
             
-            reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(sqlResourcePath).getInputStream()));
             buffer = new StringBuffer();
             
             String line;
@@ -130,7 +131,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
                 }
             }
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResource.getFilename(), e);
+            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResourcePath, e);
         } finally {
             if (reader != null) {
                 try {
@@ -204,7 +205,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
      */
-    public void setSqlResource(Resource sqlResource) {
+    public void setSqlResource(String sqlResource) {
         this.sqlResource = sqlResource;
     }
 
@@ -212,7 +213,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Gets the sqlResource.
      * @return the sqlResource
      */
-    public Resource getSqlResource() {
+    public String getSqlResource() {
         return sqlResource;
     }
 

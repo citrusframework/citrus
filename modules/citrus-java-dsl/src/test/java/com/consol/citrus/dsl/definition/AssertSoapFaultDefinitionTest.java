@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
@@ -89,7 +93,7 @@ public class AssertSoapFaultDefinitionTest {
     }
     
     @Test
-    public void testFaultDetailResource() {
+    public void testFaultDetailResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -99,6 +103,10 @@ public class AssertSoapFaultDefinitionTest {
                     .faultDetailResource(resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<detail>FooBar</detail>".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -112,9 +120,10 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
-        Assert.assertNull(container.getFaultDetail());
-        Assert.assertEquals(container.getFaultDetailResource(), resource);
+        Assert.assertEquals(container.getFaultDetail(), "<detail>FooBar</detail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+        
+        verify(resource);
     }
     
     @Test

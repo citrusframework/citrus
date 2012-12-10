@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.*;
+
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
@@ -58,7 +62,7 @@ public class ExecutePLSQLDefinitionTest {
     }
     
     @Test
-    public void testExecutePLSQLBuilderWithSQLResource() {
+    public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -66,7 +70,11 @@ public class ExecutePLSQLDefinitionTest {
                     .sqlResource(sqlResource);
             }
         };
-          
+        
+        reset(sqlResource);
+        expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
+        replay(sqlResource);
+        
         builder.configure();
           
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
@@ -76,8 +84,7 @@ public class ExecutePLSQLDefinitionTest {
         Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().size(), 0L);
-        Assert.assertNull(action.getScript());
-        Assert.assertEquals(action.getSqlResource(), sqlResource);
+        Assert.assertEquals(action.getScript(), "testScript");
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
     

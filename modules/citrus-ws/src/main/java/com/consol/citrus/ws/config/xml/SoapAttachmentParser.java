@@ -22,7 +22,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Parser for SOAP attachment element in Citrus ws namespace.
@@ -58,8 +57,7 @@ public final class SoapAttachmentParser {
         
         Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
         if (attachmentResourceElement != null) {
-            builder.addPropertyValue("attachmentResource", 
-                    FileUtils.getResourceFromFilePath(attachmentResourceElement.getAttribute("file")));
+            builder.addPropertyValue("attachmentResource", attachmentResourceElement.getAttribute("file"));
         }
     }
 }

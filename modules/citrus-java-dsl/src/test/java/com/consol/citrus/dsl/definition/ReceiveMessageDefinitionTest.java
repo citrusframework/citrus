@@ -18,6 +18,8 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,7 +115,7 @@ public class ReceiveMessageDefinitionTest {
     }
     
     @Test
-    public void testReceiveBuilderWithPayloadResource() {
+    public void testReceiveBuilderWithPayloadResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -121,6 +123,10 @@ public class ReceiveMessageDefinitionTest {
                     .payload(resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayload".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -138,7 +144,9 @@ public class ReceiveMessageDefinitionTest {
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadResource(), resource);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "somePayload");
+        
+        verify(resource);
     }
     
     @Test
@@ -294,7 +302,7 @@ public class ReceiveMessageDefinitionTest {
     }
     
     @Test
-    public void testReceiveBuilderWithHeaderResource() {
+    public void testReceiveBuilderWithHeaderResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -307,6 +315,11 @@ public class ReceiveMessageDefinitionTest {
                     .header(resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -324,8 +337,7 @@ public class ReceiveMessageDefinitionTest {
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource(), resource);
-        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData());
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "someHeaderData");
         
         action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
@@ -337,8 +349,9 @@ public class ReceiveMessageDefinitionTest {
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource(), resource);
-        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData());
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "otherHeaderData");
+        
+        verify(resource);
     }
     
     @Test

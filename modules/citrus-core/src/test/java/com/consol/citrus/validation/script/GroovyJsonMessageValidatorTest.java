@@ -44,8 +44,8 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
                                   "assert json.person.pets[0] == 'dog' \n" +
                                   "assert json.person.pets[1] == 'cat' \n";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(validationScript, 
-                                                                                ScriptTypes.GROOVY);
+        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
+        validationContext.setValidationScript(validationScript);
 
         validator.validateMessage(message, context, validationContext);
         

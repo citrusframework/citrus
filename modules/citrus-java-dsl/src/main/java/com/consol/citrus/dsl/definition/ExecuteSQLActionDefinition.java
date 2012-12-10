@@ -16,11 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Test action executes SQL statements. Use this action when executing
@@ -60,9 +62,22 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
      * @param sqlResource
      */
 	public ExecuteSQLActionDefinition sqlResource(Resource sqlResource) {
-		action.setSqlResource(sqlResource);
+		try {
+            action.setSqlResource(sqlResource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read sql resource", e);
+        }
 		return this;
 	}
+	
+	/**
+     * Setter for external file resource containing the SQL statements to execute.
+     * @param filePath
+     */
+    public ExecuteSQLActionDefinition sqlResource(String filePath) {
+        action.setSqlResource(filePath);
+        return this;
+    }
 	
 	/**
      * Ignore errors during execution.

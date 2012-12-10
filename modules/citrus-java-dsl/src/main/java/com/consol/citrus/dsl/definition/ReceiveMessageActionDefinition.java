@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
@@ -29,6 +30,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
@@ -145,25 +147,29 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition payload(Resource payloadResource) {
-        if (validationContext != null) {
-            if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-                ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadResource(payloadResource);
-            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder.setPayloadResource(payloadResource);
-
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
-                messageBuilder.setMessageHeaders(message.getHeaders());
+        try {
+            if (validationContext != null) {
+                if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
+                    ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(FileUtils.readToString(payloadResource));
+                } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                    messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
+    
+                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                    messageBuilder.setMessageHeaders(message.getHeaders());
+                    
+                    validationContext.setMessageBuilder(messageBuilder);
+                }
+            } else {
+                initializeValidationContext();
                 
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
                 validationContext.setMessageBuilder(messageBuilder);
+                action.getValidationContexts().add(validationContext);
             }
-        } else {
-            initializeValidationContext();
-            
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadResource(payloadResource);
-            validationContext.setMessageBuilder(messageBuilder);
-            action.getValidationContexts().add(validationContext);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
         
         return this;
@@ -234,27 +240,31 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition header(Resource resource) {
-        if (validationContext != null) {
-            if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-                ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderResource(resource);
-            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                // convert to payload template message builder
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        try {
+            if (validationContext != null) {
+                if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+                    ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderData(FileUtils.readToString(resource));
+                } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
+                    // convert to payload template message builder
+                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                    
+                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                    messageBuilder.setPayloadData(message.getPayload().toString());
+                    messageBuilder.getMessageHeaders().putAll(message.getHeaders());
+                    messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
+                    validationContext.setMessageBuilder(messageBuilder);
+                }
+            } else {
+                initializeValidationContext();
                 
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
-                messageBuilder.setPayloadData(message.getPayload().toString());
-                messageBuilder.getMessageHeaders().putAll(message.getHeaders());
-                messageBuilder.setMessageHeaderResource(resource);
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
                 validationContext.setMessageBuilder(messageBuilder);
+                action.getValidationContexts().add(validationContext);
             }
-        } else {
-            initializeValidationContext();
-            
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setMessageHeaderResource(resource);
-            validationContext.setMessageBuilder(messageBuilder);
-            action.getValidationContexts().add(validationContext);
-        }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read header resource", e);
+        }    
         
         return this;
     }

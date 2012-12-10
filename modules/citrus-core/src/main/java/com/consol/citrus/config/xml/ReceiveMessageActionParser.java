@@ -27,7 +27,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -252,12 +251,13 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                         }
     
                         String type = scriptElement.getAttribute("type");
+                        context.setScriptType(type);
                         
                         String filePath = scriptElement.getAttribute("file");
                         if (StringUtils.hasText(filePath)) {
-                            context = new ScriptValidationContext(FileUtils.getResourceFromFilePath(filePath), type);
+                            context.setValidationScriptResource(filePath);
                         } else {
-                            context = new ScriptValidationContext(DomUtils.getTextValue(scriptElement), type);
+                            context.setValidationScript(DomUtils.getTextValue(scriptElement));
                         }
                     }
                 }

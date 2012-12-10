@@ -18,7 +18,7 @@ package com.consol.citrus.validation.script;
 
 import java.io.IOException;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -34,14 +34,14 @@ import com.consol.citrus.validation.context.ValidationContext;
  */
 public class ScriptValidationContext implements ValidationContext {
     /** Validation script as file resource*/
-    private Resource validationScriptResource;
+    private String validationScriptResource;
     
     /** Validation script code */
     private String validationScript = "";
     
     /** Type indicating which type of script we use (e.g. groovy, scala etc.) */
     private String scriptType = ScriptTypes.GROOVY;
-
+    
     /**
      * Default constructor.
      */
@@ -49,25 +49,12 @@ public class ScriptValidationContext implements ValidationContext {
     }
     
     /**
-     * Constructor using validation script resource.
-     * @param validationScriptResource
-     * @param scriptType
+     * Constructor using type field.
+     * @param type
      */
-    public ScriptValidationContext(Resource validationScriptResource, String scriptType) {
+    public ScriptValidationContext(String type) {
         super();
-        this.validationScriptResource = validationScriptResource;
-        this.scriptType = scriptType;
-    }
-    
-    /**
-     * Constructor using validation script.
-     * @param validationScript
-     * @param scriptType
-     */
-    public ScriptValidationContext(String validationScript, String scriptType) {
-        super();
-        this.validationScript = validationScript;
-        this.scriptType = scriptType;
+        this.scriptType = type;
     }
 
     /**
@@ -79,7 +66,8 @@ public class ScriptValidationContext implements ValidationContext {
     public String getValidationScript(TestContext context) {
         try {
             if (validationScriptResource != null) {
-                return context.replaceDynamicContentInString(FileUtils.readToString(validationScriptResource));
+                return context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                        context.replaceDynamicContentInString(validationScriptResource))));
             } else if (validationScript != null) {
                 return context.replaceDynamicContentInString(validationScript);
             } else {
@@ -102,7 +90,7 @@ public class ScriptValidationContext implements ValidationContext {
      * Gets the validationScriptResource.
      * @return the validationScriptResource
      */
-    public Resource getValidationScriptResource() {
+    public String getValidationScriptResource() {
         return validationScriptResource;
     }
 
@@ -110,7 +98,7 @@ public class ScriptValidationContext implements ValidationContext {
      * Sets the validationScriptResource.
      * @param validationScriptResource the validationScriptResource to set
      */
-    public void setValidationScriptResource(Resource validationScriptResource) {
+    public void setValidationScriptResource(String validationScriptResource) {
         this.validationScriptResource = validationScriptResource;
     }
 

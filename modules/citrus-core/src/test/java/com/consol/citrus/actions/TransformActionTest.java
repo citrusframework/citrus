@@ -16,7 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,8 +48,8 @@ public class TransformActionTest extends AbstractTestNGUnitTest {
 	@Test
 	public void testTransformResource(){
 		TransformAction transformAction = new TransformAction();
-		transformAction.setXmlResource(new ClassPathResource("test-request-payload.xml", TransformActionTest.class));
-		transformAction.setXsltResource(new ClassPathResource("test-transform.xslt", TransformActionTest.class));
+		transformAction.setXmlResource("classpath:com/consol/citrus/actions/test-request-payload.xml");
+		transformAction.setXsltResource("classpath:com/consol/citrus/actions/test-transform.xslt");
 		transformAction.setTargetVariable("var");
 		
 		transformAction.execute(context);

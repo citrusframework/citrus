@@ -16,11 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Creates an ExecutePLSQLAction, which executes PLSQL statements either declared inline as 
@@ -56,13 +59,26 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 	
 	/**
      * Setter for external file resource containing the SQL statements to execute.
-     * @param sqlResource
+     * @param filePath
      */
-	public ExecutePLSQLActionDefinition sqlResource(Resource sqlResource) {
-		action.setSqlResource(sqlResource);
+	public ExecutePLSQLActionDefinition sqlResource(String filePath) {
+		action.setSqlResource(filePath);
 		return this;
 	}
 	
+	/**
+     * Setter for external file resource containing the SQL statements to execute.
+     * @param sqlResource
+     */
+    public ExecutePLSQLActionDefinition sqlResource(Resource sqlResource) {
+        try {
+            action.setScript(FileUtils.readToString(sqlResource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read sql resource", e);
+        }
+        return this;
+    }
+    
 	/**
      * Setter for inline script.
      * @param script

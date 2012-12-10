@@ -18,7 +18,6 @@ package com.consol.citrus.ws.message.builder;
 
 import java.util.Map;
 
-import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -90,7 +89,7 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
      * Delegates to payload resource setter.
      * @param faultDetailResource
      */
-    public void setFaultDetailResource(Resource faultDetailResource) {
+    public void setFaultDetailResource(String faultDetailResource) {
         setPayloadResource(faultDetailResource);
     }
 

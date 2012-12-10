@@ -24,7 +24,7 @@ import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.*;
@@ -69,7 +69,7 @@ public class AssertSoapFault extends AbstractActionContainer {
     private String faultActor = null;
     
     /** File resource describing fault detail */
-    private Resource faultDetailResource;
+    private String faultDetailResource;
     
     /** Fault detail as inline CDATA */
     private String faultDetail;
@@ -183,7 +183,8 @@ public class AssertSoapFault extends AbstractActionContainer {
         
         if (faultDetailResource != null) {
             transformer.transform(new StringSource(
-                    context.replaceDynamicContentInString(FileUtils.readToString(faultDetailResource))), fault.addFaultDetail().getResult());
+                    context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                            context.replaceDynamicContentInString(faultDetailResource))))), fault.addFaultDetail().getResult());
         } else if (faultDetail != null){
             transformer.transform(new StringSource(
                     context.replaceDynamicContentInString(faultDetail)), fault.addFaultDetail().getResult());
@@ -235,7 +236,7 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Set the fault detail from external file resource.
      * @param faultDetailResource the faultDetailResource to set
      */
-    public void setFaultDetailResource(Resource faultDetailResource) {
+    public void setFaultDetailResource(String faultDetailResource) {
         this.faultDetailResource = faultDetailResource;
     }
 
@@ -337,7 +338,7 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Gets the faultDetailResource.
      * @return the faultDetailResource
      */
-    public Resource getFaultDetailResource() {
+    public String getFaultDetailResource() {
         return faultDetailResource;
     }
 

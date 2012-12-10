@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
@@ -78,8 +77,7 @@ public class SQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            beanDefinition.addPropertyValue("sqlResource", 
-                    FileUtils.getResourceFromFilePath(sqlResourceElement.getAttribute("file")));
+            beanDefinition.addPropertyValue("sqlResource", sqlResourceElement.getAttribute("file"));
         }
 
         return beanDefinition.getBeanDefinition();
@@ -158,15 +156,14 @@ public class SQLActionParser implements BeanDefinitionParser {
      * @return
      */
     private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
-        ScriptValidationContext validationContext;
-        
         String type = scriptElement.getAttribute("type");
         
+        ScriptValidationContext validationContext = new ScriptValidationContext(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
-            validationContext = new ScriptValidationContext(FileUtils.getResourceFromFilePath(filePath), type);
+            validationContext.setValidationScriptResource(filePath);
         } else {
-            validationContext = new ScriptValidationContext(DomUtils.getTextValue(scriptElement), type);
+            validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
         }
         
         return validationContext;

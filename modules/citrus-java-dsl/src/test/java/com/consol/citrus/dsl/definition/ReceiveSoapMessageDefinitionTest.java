@@ -16,15 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.*;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
+import static org.easymock.EasyMock.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -33,7 +29,16 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.*;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 
 /**
  * @author Christoph Deppisch
@@ -135,7 +140,7 @@ public class ReceiveSoapMessageDefinitionTest {
     }
     
     @Test
-    public void testSoapAttachmentResource() {
+    public void testSoapAttachmentResource() throws IOException {
         final Resource attachmentResource = EasyMock.createMock(Resource.class);
         
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
@@ -147,6 +152,11 @@ public class ReceiveSoapMessageDefinitionTest {
                     .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource);
             }
         };
+        
+        reset(resource, attachmentResource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
+        expect(attachmentResource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
+        replay(resource, attachmentResource);
         
         builder.configure();
         
@@ -164,13 +174,14 @@ public class ReceiveSoapMessageDefinitionTest {
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadResource(), resource);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "somePayloadData");
         
-        Assert.assertEquals(action.getAttachmentResource(), attachmentResource);
-        Assert.assertNull(action.getAttachmentData());
+        Assert.assertEquals(action.getAttachmentData(), "someAttachmentData");
         Assert.assertEquals(action.getControlAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getControlAttachment().getContentType(), testAttachment.getContentType());
         Assert.assertEquals(action.getControlAttachment().getCharsetName(), testAttachment.getCharsetName());
+        
+        verify(resource, attachmentResource);
     }
     
     @Test

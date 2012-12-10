@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -41,7 +42,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
     private Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");
     
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
-    private Resource scriptResource;
+    private String scriptResource;
 
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
@@ -55,7 +56,8 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
             String messagePayload = "";
             if (scriptResource != null){
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        FileUtils.readToString(scriptResource)));
+                        FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                                context.replaceDynamicContentInString(scriptResource)))));
             } else if (scriptData != null){
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
                         scriptData));
@@ -109,7 +111,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
      * Message payload as external Groovy MarkupBuilder script file resource.
      * @param scriptResource the scriptResource to set
      */
-    public void setScriptResource(Resource scriptResource) {
+    public void setScriptResource(String scriptResource) {
         this.scriptResource = scriptResource;
     }
 
@@ -117,7 +119,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
      * Gets the scriptResource.
      * @return the scriptResource
      */
-    public Resource getScriptResource() {
+    public String getScriptResource() {
         return scriptResource;
     }
 

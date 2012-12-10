@@ -25,7 +25,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for groovy action in test case.
@@ -46,7 +45,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String scriptTemplatePath = element.getAttribute("script-template");
         if (StringUtils.hasText(scriptTemplatePath)) {
-            beanDefinition.addPropertyValue("scriptTemplateResource", FileUtils.getResourceFromFilePath(scriptTemplatePath));
+            beanDefinition.addPropertyValue("scriptTemplateResource", scriptTemplatePath);
         }
         
         if (DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
@@ -55,7 +54,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String filePath = element.getAttribute("resource");
         if (StringUtils.hasText(filePath)) {
-            beanDefinition.addPropertyValue("fileResource", FileUtils.getResourceFromFilePath(filePath));
+            beanDefinition.addPropertyValue("fileResource", filePath);
         }
         
         beanDefinition.addPropertyValue("name", element.getLocalName());

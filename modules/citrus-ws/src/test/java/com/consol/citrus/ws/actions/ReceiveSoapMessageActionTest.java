@@ -22,7 +22,6 @@ import java.util.*;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -235,7 +234,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment.xml", ReceiveSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -285,7 +284,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource(new ClassPathResource("test-attachment-with-variables.xml", ReceiveSoapMessageActionTest.class));
+        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

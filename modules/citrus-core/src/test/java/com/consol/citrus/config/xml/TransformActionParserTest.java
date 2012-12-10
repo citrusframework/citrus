@@ -44,9 +44,9 @@ public class TransformActionParserTest extends AbstractActionParserTest<Transfor
         Assert.assertEquals(action.getTargetVariable(), "result");
         Assert.assertFalse(StringUtils.hasText(action.getXmlData()));
         Assert.assertNotNull(action.getXmlResource());
-        Assert.assertEquals(action.getXmlResource().getFilename(), "transform-source.xml");
+        Assert.assertEquals(action.getXmlResource(), "classpath:com/consol/citrus/actions/transform-source.xml");
         Assert.assertFalse(StringUtils.hasText(action.getXsltData()));
         Assert.assertNotNull(action.getXsltResource());
-        Assert.assertEquals(action.getXsltResource().getFilename(), "transform.xslt");
+        Assert.assertEquals(action.getXsltResource(), "classpath:com/consol/citrus/actions/transform.xslt");
     }
 }

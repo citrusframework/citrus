@@ -16,13 +16,16 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 
@@ -65,9 +68,22 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
      * @param sqlResource
      */
 	public ExecuteSQLQueryActionDefinition sqlResource(Resource sqlResource) {
-		action.setSqlResource(sqlResource);
+		try {
+            action.setSqlResource(sqlResource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read sql resource", e);
+        }
 		return this;
 	}
+	
+	/**
+     * Setter for external file resource containing the SQL statements to execute.
+     * @param filePath
+     */
+    public ExecuteSQLQueryActionDefinition sqlResource(String filePath) {
+        action.setSqlResource(filePath);
+        return this;
+    }
 	
 	/**
      * Set expected control result set. Keys represent the column names, values
@@ -86,7 +102,8 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
      * @param type
      */
     public ExecuteSQLQueryActionDefinition validateScript(String script, String type) {
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(script, type);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+        scriptValidationContext.setValidationScript(script);
         action.setScriptValidationContext(scriptValidationContext);
         return this;
     }
@@ -97,7 +114,12 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
      * @param type
      */
     public ExecuteSQLQueryActionDefinition validateScript(Resource scriptResource, String type) {
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(scriptResource, type);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+        try {
+            scriptValidationContext.setValidationScript(FileUtils.readToString(scriptResource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read script resource", e);
+        }
         action.setScriptValidationContext(scriptValidationContext);
         return this;
     }

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.*;
+
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
@@ -32,11 +36,12 @@ public class ExecuteSQLQueryDefinitionTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
+    private File file = EasyMock.createMock(File.class);
     
     private SqlResultSetScriptValidator validator = EasyMock.createMock(SqlResultSetScriptValidator.class);
     
     @Test
-    public void testExecuteSQLQueryWithResource() {
+    public void testExecuteSQLQueryWithResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -47,6 +52,11 @@ public class ExecuteSQLQueryDefinitionTest {
                     .validator(validator);
             }
         };
+        
+        reset(resource, file);
+        expect(resource.getFile()).andReturn(file).once();
+        expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
+        replay(resource, file);
         
         builder.configure();
         
@@ -62,8 +72,10 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "COLUMN=variable");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResource(), resource);
+        Assert.assertEquals(action.getSqlResource(), "classpath:some.file");
         Assert.assertEquals(action.getValidator(), validator);
+        
+        verify(resource, file);
     }
     
     @Test
@@ -130,7 +142,7 @@ public class ExecuteSQLQueryDefinitionTest {
     }
     
     @Test
-    public void testValidationScriptResource() {
+    public void testValidationScriptResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
         @Override
         public void configure() {
@@ -139,6 +151,10 @@ public class ExecuteSQLQueryDefinitionTest {
                 .validateScript(resource, ScriptTypes.GROOVY);
             }
         };
+        
+        reset(resource, file);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
+        replay(resource, file);
         
         builder.configure();
         
@@ -151,11 +167,13 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
-        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "someScript");
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
+        
+        verify(resource, file);
     }
     
     @Test
@@ -188,7 +206,7 @@ public class ExecuteSQLQueryDefinitionTest {
     }
     
     @Test
-    public void testGroovyValidationScriptResource() {
+    public void testGroovyValidationScriptResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
         @Override
         public void configure() {
@@ -197,6 +215,10 @@ public class ExecuteSQLQueryDefinitionTest {
                 .groovy(resource);
             }
         };
+        
+        reset(resource, file);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
+        replay(resource, file);
         
         builder.configure();
         
@@ -209,10 +231,12 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
-        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "someScript");
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
+        
+        verify(resource, file);
     }
 }

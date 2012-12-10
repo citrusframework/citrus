@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for transform action in test case.
@@ -49,8 +48,7 @@ public class TransformActionParser implements BeanDefinitionParser {
 		
 		Element xmlResourceElement = DomUtils.getChildElementByTagName(element, "xml-resource");
 		if (xmlResourceElement != null) {
-        	beanDefinition.addPropertyValue("xmlResource", 
-        	        FileUtils.getResourceFromFilePath(xmlResourceElement.getAttribute("file")));
+        	beanDefinition.addPropertyValue("xmlResource", xmlResourceElement.getAttribute("file"));
 		}
 		
 		Element xsltDataElement = DomUtils.getChildElementByTagName(element, "xslt-data");
@@ -60,8 +58,7 @@ public class TransformActionParser implements BeanDefinitionParser {
 		
 		Element xsltResourceElement = DomUtils.getChildElementByTagName(element, "xslt-resource");
 		if (xsltResourceElement != null) {
-        	beanDefinition.addPropertyValue("xsltResource", 
-        	        FileUtils.getResourceFromFilePath(xsltResourceElement.getAttribute("file")));
+        	beanDefinition.addPropertyValue("xsltResource", xsltResourceElement.getAttribute("file"));
 		}
 		
 		BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");

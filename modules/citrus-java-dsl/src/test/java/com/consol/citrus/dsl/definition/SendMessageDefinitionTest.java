@@ -18,6 +18,9 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -97,7 +100,7 @@ public class SendMessageDefinitionTest {
     }
     
     @Test
-    public void testSendBuilderWithPayloadResource() {
+    public void testSendBuilderWithPayloadResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -105,6 +108,10 @@ public class SendMessageDefinitionTest {
                     .payload(resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -118,9 +125,10 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadResource(), resource);
+        Assert.assertEquals(messageBuilder.getPayloadData(), "somePayloadData");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        
+        verify(resource);
     }
     
     @Test
@@ -230,7 +238,7 @@ public class SendMessageDefinitionTest {
     }
     
     @Test
-    public void testSendBuilderWithHeaderDataResource() {
+    public void testSendBuilderWithHeaderDataResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -243,6 +251,11 @@ public class SendMessageDefinitionTest {
                     .header(resource);
             }
         };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
+        replay(resource);
         
         builder.configure();
         
@@ -259,8 +272,7 @@ public class SendMessageDefinitionTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertNull(messageBuilder.getMessageHeaderData());
-        Assert.assertEquals(messageBuilder.getMessageHeaderResource(), resource);
+        Assert.assertEquals(messageBuilder.getMessageHeaderData(), "someHeaderData");
         
         action = ((SendMessageAction)builder.getTestCase().getActions().get(1));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
@@ -271,8 +283,7 @@ public class SendMessageDefinitionTest {
         messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertNull(messageBuilder.getMessageHeaderData());
-        Assert.assertEquals(messageBuilder.getMessageHeaderResource(), resource);
+        Assert.assertEquals(messageBuilder.getMessageHeaderData(), "otherHeaderData");
     }
     
     @Test

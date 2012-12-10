@@ -29,6 +29,7 @@ import org.springframework.xml.transform.StringResult;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -108,15 +109,19 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @return
      */
     public SendMessageActionDefinition payload(Resource payloadResource) {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-            ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadResource(payloadResource);
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadResource(payloadResource);
-            
-            action.setMessageBuilder(messageBuilder);
+        try {
+            if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
+                ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(FileUtils.readToString(payloadResource));
+            } else {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
+                
+                action.setMessageBuilder(messageBuilder);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
-        
+    
         return this;
     }
     
@@ -191,13 +196,17 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param resource
      */
     public SendMessageActionDefinition header(Resource resource) {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-            ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderResource(resource);
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setMessageHeaderResource(resource);
-            
-            action.setMessageBuilder(messageBuilder);
+        try {
+            if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+                ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderData(FileUtils.readToString(resource));
+            } else {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
+                
+                action.setMessageBuilder(messageBuilder);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read header resource", e);
         }
         
         return this;

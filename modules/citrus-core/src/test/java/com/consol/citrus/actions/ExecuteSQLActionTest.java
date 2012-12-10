@@ -16,16 +16,12 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.annotations.BeforeMethod;
@@ -73,7 +69,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testSQLExecutionWithFileResource() {
-        executeSQLAction.setSqlResource(new ClassPathResource("test-sql-statements.sql", ExecuteSQLActionTest.class));
+        executeSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-statements.sql");
         
         reset(jdbcTemplate);
         
@@ -119,7 +115,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	    context.setVariable("resolvedStatus", "resolved");
         context.setVariable("version", "1");
         
-        executeSQLAction.setSqlResource(new ClassPathResource("test-sql-with-variables.sql", ExecuteSQLActionTest.class));
+        executeSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-with-variables.sql");
         
         reset(jdbcTemplate);
         

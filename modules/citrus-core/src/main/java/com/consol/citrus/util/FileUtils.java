@@ -19,8 +19,7 @@ package com.consol.citrus.util;
 import java.io.*;
 import java.util.*;
 
-import org.springframework.core.io.*;
-import org.springframework.util.StringUtils;
+import org.springframework.core.io.Resource;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -37,33 +36,6 @@ public abstract class FileUtils {
      * Prevent instantiation.
      */
     private FileUtils() {
-    }
-    
-    /**
-     * Constructs a resource from file path supporting "classpath:" and "file:" prefix
-     * in file path string returning either a {@link ClassPathResource} or {@link FileSystemResource}.
-     * 
-     * @param filePath the file path.
-     * @return the resource.
-     */
-    public static Resource getResourceFromFilePath(String filePath) {
-        if (!StringUtils.hasText(filePath)) {
-            throw new CitrusRuntimeException("Unable to load file resource with empty file path");
-        }
-        
-        final String classpathPrefix = "classpath:";
-        final String fileSystemPrefix = "file:";
-        
-        Resource resource;
-        if (filePath.startsWith(classpathPrefix)) {
-            resource = new ClassPathResource(filePath.substring("classpath:".length()));
-        } else if (filePath.startsWith(fileSystemPrefix)) {
-            resource = new FileSystemResource(filePath.substring(fileSystemPrefix.length()));
-        } else {
-            resource = new FileSystemResource(filePath);
-        }
-        
-        return resource;
     }
     
     /**

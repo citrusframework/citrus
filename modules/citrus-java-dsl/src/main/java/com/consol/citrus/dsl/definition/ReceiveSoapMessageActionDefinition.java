@@ -16,13 +16,16 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -71,7 +74,12 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
     public ReceiveSoapMessageActionDefinition attatchment(String contentId, String contentType, Resource contentResource) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
-        getAction().setAttachmentResource(contentResource);
+        
+        try {
+            getAction().setAttachmentData(FileUtils.readToString(contentResource));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read attachment content resource", e);
+        }
         
         return this;
     }

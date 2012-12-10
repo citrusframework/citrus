@@ -21,8 +21,7 @@ import groovy.lang.GroovyObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.actions.AbstractTestAction;
@@ -43,10 +42,10 @@ public class GroovyAction extends AbstractTestAction {
     private String script;
 
     /** External script file resource */
-    private Resource fileResource;
+    private String fileResource;
     
     /** Static code snippet for basic groovy action implementation */
-    private Resource scriptTemplateResource = new ClassPathResource("script-template.groovy", GroovyAction.class);
+    private String scriptTemplateResource = "classpath:com/consol/citrus/script/script-template.groovy";
     
     /** Manage automatic groovy template usage */
     private boolean useScriptTemplate = true;
@@ -69,7 +68,8 @@ public class GroovyAction extends AbstractTestAction {
 
             assertScriptProvided();
 
-            String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(fileResource);
+            String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                    context.replaceDynamicContentInString(fileResource)));
             String code = context.replaceDynamicContentInString(rawCode.trim());
 
             // load groovy code
@@ -80,7 +80,8 @@ public class GroovyAction extends AbstractTestAction {
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
                 // build new script with surrounding template
-                code = TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
+                code = TemplateBasedScriptBuilder.fromTemplateResource(new PathMatchingResourcePatternResolver().getResource(
+                               context.replaceDynamicContentInString(scriptTemplateResource)))
                                                  .withCode(code)
                                                  .build();
 
@@ -134,7 +135,7 @@ public class GroovyAction extends AbstractTestAction {
      * Get the file resource.
      * @return the fileResource
      */
-    public Resource getFileResource() {
+    public String getFileResource() {
         return fileResource;
     }
 
@@ -142,7 +143,7 @@ public class GroovyAction extends AbstractTestAction {
      * Set file resource.
      * @param fileResource the fileResource to set
      */
-    public void setFileResource(Resource fileResource) {
+    public void setFileResource(String fileResource) {
         this.fileResource = fileResource;
     }
 
@@ -150,7 +151,7 @@ public class GroovyAction extends AbstractTestAction {
      * Set the script template resource.
      * @param scriptTemplate the scriptTemplate to set
      */
-    public void setScriptTemplateResource(Resource scriptTemplate) {
+    public void setScriptTemplateResource(String scriptTemplate) {
         this.scriptTemplateResource = scriptTemplate;
     }
 
@@ -174,7 +175,7 @@ public class GroovyAction extends AbstractTestAction {
      * Gets the scriptTemplateResource.
      * @return the scriptTemplateResource
      */
-    public Resource getScriptTemplateResource() {
+    public String getScriptTemplateResource() {
         return scriptTemplateResource;
     }
 }

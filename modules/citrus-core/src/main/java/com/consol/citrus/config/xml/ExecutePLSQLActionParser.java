@@ -24,7 +24,6 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Bean definition parser for plsql action in test case.
@@ -52,8 +51,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            beanDefinition.addPropertyValue("sqlResource", 
-                    FileUtils.getResourceFromFilePath(sqlResourceElement.getAttribute("file")));
+            beanDefinition.addPropertyValue("sqlResource", sqlResourceElement.getAttribute("file"));
         }
 
         String ignoreErrors = element.getAttribute("ignore-errors");

@@ -55,7 +55,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
         Assert.assertNotNull(action.getSqlResource());
-        Assert.assertEquals(action.getSqlResource().getFilename(), "test-sql-query-statements.sql");
+        Assert.assertEquals(action.getSqlResource(), "classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().get("foo").get(0), "1");
@@ -104,7 +104,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResource().getFilename(), "example.groovy");
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResource(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
     }
     

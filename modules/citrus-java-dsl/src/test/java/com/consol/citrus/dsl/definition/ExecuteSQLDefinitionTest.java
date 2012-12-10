@@ -16,6 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.File;
+import java.io.IOException;
+
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
@@ -31,6 +36,7 @@ public class ExecuteSQLDefinitionTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
+    private File file = EasyMock.createMock(File.class);
     
     @Test
     public void TestExecuteSQLBuilderWithStatement() {
@@ -58,7 +64,7 @@ public class ExecuteSQLDefinitionTest {
     }
     
     @Test
-    public void TestExecuteSQLBuilderWithSQLResource() {
+    public void TestExecuteSQLBuilderWithSQLResource() throws IOException {
         TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
             @Override
             public void configure() {
@@ -68,6 +74,11 @@ public class ExecuteSQLDefinitionTest {
             }
         };
     
+        reset(resource, file);
+        expect(resource.getFile()).andReturn(file).once();
+        expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
+        replay(resource, file);
+        
         builder.configure();
         
         Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
@@ -77,6 +88,8 @@ public class ExecuteSQLDefinitionTest {
         Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResource(), resource);
+        Assert.assertEquals(action.getSqlResource(), "classpath:some.file");
+        
+        verify(resource, file);
     }
 }

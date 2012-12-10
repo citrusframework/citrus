@@ -25,12 +25,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.util.FileUtils;
 
 /**
  * Loads properties from an external property file and creates global test variables.
@@ -47,9 +47,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     /** List of property files loaded as global variables */
     private List<String> propertyFiles = new ArrayList<String>();
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
 
     /**
@@ -63,7 +61,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
             if (propertyFilesSet()) {
                 for (String propertyFile : propertyFiles) {
 
-                    Resource file = FileUtils.getResourceFromFilePath(propertyFile.trim());
+                    Resource file = new PathMatchingResourcePatternResolver().getResource(propertyFile.trim());
 
                     log.info("Reading property file " + file.getFilename());
 

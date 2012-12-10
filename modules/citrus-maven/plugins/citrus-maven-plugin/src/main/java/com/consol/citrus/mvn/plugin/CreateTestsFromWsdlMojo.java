@@ -27,6 +27,7 @@ import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -245,7 +246,7 @@ public class CreateTestsFromWsdlMojo extends AbstractMojo {
      * @throws IOException
      */
     private XmlObject compileWsdl() throws MojoExecutionException, IOException {
-		Resource wsdlFile = FileUtils.getResourceFromFilePath(pathToWsdl);
+		Resource wsdlFile = new PathMatchingResourcePatternResolver().getResource(pathToWsdl);
 		if (!wsdlFile.exists()) {
 			throw new MojoExecutionException("Unable to read WSDL - does not exist in " + wsdlFile.getFile().getAbsolutePath());
 		}

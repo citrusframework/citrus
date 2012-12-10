@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -34,7 +34,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder<String> {
 
     /** Message payload defined in external file resource */
-    private Resource payloadResource;
+    private String payloadResource;
 
     /** Direct string representation of message payload */
     private String payloadData;
@@ -50,7 +50,8 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
             //construct control message payload
             String messagePayload = "";
             if (payloadResource != null) {
-                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(payloadResource));
+                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
+                        context.replaceDynamicContentInString(payloadResource))));
             } else if (payloadData != null){
                 messagePayload = context.replaceDynamicContentInString(payloadData);
             }
@@ -79,7 +80,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      * Set the message payload as external file resource.
      * @param payloadResource the payloadResource to set
      */
-    public void setPayloadResource(Resource payloadResource) {
+    public void setPayloadResource(String payloadResource) {
         this.payloadResource = payloadResource;
     }
     
@@ -112,7 +113,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      * Gets the payloadResource.
      * @return the payloadResource
      */
-    public Resource getPayloadResource() {
+    public String getPayloadResource() {
         return payloadResource;
     }
 

@@ -16,6 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -53,7 +58,7 @@ public class TransformDefinitionTest {
 	}
 		
 	@Test
-	public void testTransformBuilderWithResource() {
+	public void testTransformBuilderWithResource() throws IOException {
 		TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
 			@Override
 			public void configure() {
@@ -65,6 +70,11 @@ public class TransformDefinitionTest {
 			}
 		};
 		
+		reset(xmlResource, xsltResource);
+        expect(xmlResource.getInputStream()).andReturn(new ByteArrayInputStream("xmlData".getBytes())).once();
+        expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
+        replay(xmlResource, xsltResource);
+		
 		builder.configure();
 		Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
 		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), TransformAction.class);
@@ -72,8 +82,10 @@ public class TransformDefinitionTest {
 		TransformAction action = (TransformAction)builder.getTestCase().getActions().get(0);
 		
 		Assert.assertEquals(action.getName(), TransformAction.class.getSimpleName());
-		Assert.assertEquals(action.getXmlResource(), xmlResource);
-		Assert.assertEquals(action.getXsltResource(), xsltResource);
+		Assert.assertEquals(action.getXmlData(), "xmlData");
+		Assert.assertEquals(action.getXsltData(), "xsltSource");
 		Assert.assertEquals(action.getTargetVariable(), "result");
+		
+		verify(xmlResource, xsltResource);
 	}
 }
