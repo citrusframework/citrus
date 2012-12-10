@@ -34,7 +34,7 @@ public class LoadPropertiesActionTest extends AbstractTestNGUnitTest {
 	public void testLoadProperties() {
 		LoadPropertiesAction loadProperties = new LoadPropertiesAction();
 		
-		loadProperties.setFile("classpath:com/consol/citrus/actions/load.properties");
+		loadProperties.setFilePath("classpath:com/consol/citrus/actions/load.properties");
 		loadProperties.execute(context);
 		
 		Assert.assertNotNull(context.getVariable("${myVariable}"));
@@ -52,7 +52,7 @@ public class LoadPropertiesActionTest extends AbstractTestNGUnitTest {
     public void testUnknownVariableInLoadProperties() {
         LoadPropertiesAction loadProperties = new LoadPropertiesAction();
         
-        loadProperties.setFile("classpath:com/consol/citrus/actions/load-error.properties");
+        loadProperties.setFilePath("classpath:com/consol/citrus/actions/load-error.properties");
         try {
             loadProperties.execute(context);
         } catch(CitrusRuntimeException e) {

@@ -20,7 +20,6 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -43,8 +42,8 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
 
-    /** The message header as a file resource */
-    private String messageHeaderResource;
+    /** The message header as a file resource path */
+    private String messageHeaderResourcePath;
 
     /** The message header as inline data */
     private String messageHeaderData;
@@ -76,9 +75,8 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             }
             
             String headerContent = null;
-            if (messageHeaderResource != null) {
-                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(messageHeaderResource).trim())));
+            if (messageHeaderResourcePath != null) {
+                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(messageHeaderResourcePath, context)));
             } else if (messageHeaderData != null){
                 headerContent = context.replaceDynamicContentInString(messageHeaderData.trim());
             }
@@ -127,8 +125,8 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * Sets the message header resource.
      * @param messageHeaderResource the messageHeaderResource to set
      */
-    public void setMessageHeaderResource(String messageHeaderResource) {
-        this.messageHeaderResource = messageHeaderResource;
+    public void setMessageHeaderResourcePath(String messageHeaderResource) {
+        this.messageHeaderResourcePath = messageHeaderResource;
     }
 
     /**
@@ -151,8 +149,8 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * Gets the messageHeaderResource.
      * @return the messageHeaderResource the messageHeaderResource to get.
      */
-    public String getMessageHeaderResource() {
-        return messageHeaderResource;
+    public String getMessageHeaderResourcePath() {
+        return messageHeaderResourcePath;
     }
 
     /**

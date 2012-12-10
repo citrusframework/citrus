@@ -134,7 +134,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         replay(jdbcTemplate);
         
-        executeSQLQueryAction.setSqlResource("classpath:com/consol/citrus/actions/test-query.sql");
+        executeSQLQueryAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-query.sql");
         
         executeSQLQueryAction.execute(context);
         
@@ -648,7 +648,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         
         replay(jdbcTemplate);
         
-        executeSQLQueryAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
+        executeSQLQueryAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
         
         executeSQLQueryAction.execute(context);
         

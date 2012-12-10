@@ -36,7 +36,7 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
         ReceiveSoapMessageAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));
         Assert.assertEquals(action.getAttachmentData().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getControlAttachment().getContentId(), "MySoapAttachment");
         Assert.assertEquals(action.getControlAttachment().getContentType(), "text/plain");
 
@@ -44,7 +44,7 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("mySoapAttachmentValidator"));
         Assert.assertNull(action.getAttachmentData());
-        Assert.assertNotNull(action.getAttachmentResource());
+        Assert.assertNotNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getControlAttachment().getContentId(), "MySoapAttachment");
         Assert.assertEquals(action.getControlAttachment().getContentType(), "application/xml");
         Assert.assertEquals(action.getControlAttachment().getCharsetName(), "UTF-8");

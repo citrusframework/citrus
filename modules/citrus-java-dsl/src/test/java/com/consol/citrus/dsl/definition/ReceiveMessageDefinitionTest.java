@@ -285,7 +285,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource());
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResourcePath());
         
         action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
@@ -298,7 +298,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResource());
+        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResourcePath());
     }
     
     @Test

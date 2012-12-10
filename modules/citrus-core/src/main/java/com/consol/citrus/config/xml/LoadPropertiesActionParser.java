@@ -44,7 +44,7 @@ public class LoadPropertiesActionParser implements BeanDefinitionParser {
 
         Element propertiesElement = DomUtils.getChildElementByTagName(element, "properties");
         if (propertiesElement != null) {
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, propertiesElement.getAttribute("file"), "file");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, propertiesElement.getAttribute("file"), "filePath");
         } else {
             throw new BeanCreationException("Missing properties file definition for load action");
         }

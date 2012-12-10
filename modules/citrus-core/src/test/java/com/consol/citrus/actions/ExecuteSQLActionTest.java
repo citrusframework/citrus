@@ -69,7 +69,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testSQLExecutionWithFileResource() {
-        executeSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-statements.sql");
+        executeSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-sql-statements.sql");
         
         reset(jdbcTemplate);
         
@@ -115,7 +115,7 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 	    context.setVariable("resolvedStatus", "resolved");
         context.setVariable("version", "1");
         
-        executeSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-sql-with-variables.sql");
+        executeSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-sql-with-variables.sql");
         
         reset(jdbcTemplate);
         

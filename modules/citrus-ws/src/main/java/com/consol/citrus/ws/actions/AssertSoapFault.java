@@ -24,7 +24,6 @@ import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.*;
@@ -68,8 +67,8 @@ public class AssertSoapFault extends AbstractActionContainer {
     /** Fault actor */
     private String faultActor = null;
     
-    /** File resource describing fault detail */
-    private String faultDetailResource;
+    /** File resource path describing fault detail */
+    private String faultDetailResourcePath;
     
     /** Fault detail as inline CDATA */
     private String faultDetail;
@@ -181,10 +180,9 @@ public class AssertSoapFault extends AbstractActionContainer {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         
-        if (faultDetailResource != null) {
+        if (faultDetailResourcePath != null) {
             transformer.transform(new StringSource(
-                    context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                            context.replaceDynamicContentInString(faultDetailResource))))), fault.addFaultDetail().getResult());
+                    context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(faultDetailResourcePath, context)))), fault.addFaultDetail().getResult());
         } else if (faultDetail != null){
             transformer.transform(new StringSource(
                     context.replaceDynamicContentInString(faultDetail)), fault.addFaultDetail().getResult());
@@ -236,8 +234,8 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Set the fault detail from external file resource.
      * @param faultDetailResource the faultDetailResource to set
      */
-    public void setFaultDetailResource(String faultDetailResource) {
-        this.faultDetailResource = faultDetailResource;
+    public void setFaultDetailResourcePath(String faultDetailResource) {
+        this.faultDetailResourcePath = faultDetailResource;
     }
 
     /**
@@ -338,8 +336,8 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Gets the faultDetailResource.
      * @return the faultDetailResource
      */
-    public String getFaultDetailResource() {
-        return faultDetailResource;
+    public String getFaultDetailResourcePath() {
+        return faultDetailResourcePath;
     }
 
     /**

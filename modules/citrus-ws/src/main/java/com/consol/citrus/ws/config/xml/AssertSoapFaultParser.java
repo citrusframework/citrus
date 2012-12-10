@@ -62,7 +62,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                beanDefinition.addPropertyValue("faultDetailResource", filePath);
+                beanDefinition.addPropertyValue("faultDetailResourcePath", filePath);
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {

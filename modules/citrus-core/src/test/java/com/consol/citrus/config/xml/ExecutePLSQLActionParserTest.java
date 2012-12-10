@@ -34,14 +34,14 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
         ExecutePLSQLAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getName(), "plsql:testDataSource");
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResource());
+        Assert.assertNotNull(action.getSqlResourcePath());
         Assert.assertNull(action.getScript());
         Assert.assertEquals(action.isIgnoreErrors(), false);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getName(), "plsql:testDataSource");
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertTrue(action.getScript().length() > 0);
         Assert.assertEquals(action.isIgnoreErrors(), true);
     }

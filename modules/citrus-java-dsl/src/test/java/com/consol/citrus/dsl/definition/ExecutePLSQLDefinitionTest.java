@@ -57,7 +57,7 @@ public class ExecutePLSQLDefinitionTest {
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
         Assert.assertNull(action.getScript());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
     
@@ -108,7 +108,7 @@ public class ExecutePLSQLDefinitionTest {
         Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getStatements().size(), 0L);
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getScript(), "testScript");
         Assert.assertEquals(action.getDataSource(), dataSource);
     }

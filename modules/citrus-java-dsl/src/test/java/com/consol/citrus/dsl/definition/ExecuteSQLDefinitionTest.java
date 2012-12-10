@@ -88,7 +88,7 @@ public class ExecuteSQLDefinitionTest {
         Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResource(), "classpath:some.file");
+        Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
         
         verify(resource, file);
     }

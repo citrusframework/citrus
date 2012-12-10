@@ -106,7 +106,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testPLSQLExecutionWithFileResource() {
-        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql.sql");
+        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +
@@ -168,7 +168,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	    context.setVariable("myText", "Hello World!");
         context.setVariable("tableName", "Greetings");
         
-        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql-with-variables.sql");
+        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql-with-variables.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +
@@ -233,7 +233,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 	
 	@Test
     public void testPLSQLExecutionWithFileResourceMultipleStmts() {
-        executePLSQLAction.setSqlResource("classpath:com/consol/citrus/actions/test-plsql-multiple-stmts.sql");
+        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql-multiple-stmts.sql");
         
         String controlStatement = "DECLARE\n" + 
                 "    Zahl1 number(2);\n" +

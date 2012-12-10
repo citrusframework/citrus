@@ -18,7 +18,6 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
@@ -41,8 +40,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     /** Attachment body content data */
     private String attachmentData;
     
-    /** Attachment body content in external file resource */
-    private String attachmentResource;
+    /** Attachment body content in external file resource path */
+    private String attachmentResourcePath;
     
     /** Control attachment */
     private SoapAttachment controlAttachment = new SoapAttachment();
@@ -60,9 +59,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             
             if (attachmentData != null) {
                 controlAttachment.setContent(context.replaceDynamicContentInString(attachmentData));
-            } else if (attachmentResource != null) {
-                controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(attachmentResource)))));
+            } else if (attachmentResourcePath != null) {
+                controlAttachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachmentResourcePath, context))));
             } else {
                 return; //no attachment expected, no validation
             }
@@ -95,8 +93,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      * Set the attachment data from external file resource. 
      * @param attachmentResource the attachmentResource to set
      */
-    public void setAttachmentResource(String attachmentResource) {
-        this.attachmentResource = attachmentResource;
+    public void setAttachmentResourcePath(String attachmentResource) {
+        this.attachmentResourcePath = attachmentResource;
     }
 
     /**
@@ -151,8 +149,8 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
      * Gets the attachmentResource.
      * @return the attachmentResource
      */
-    public String getAttachmentResource() {
-        return attachmentResource;
+    public String getAttachmentResourcePath() {
+        return attachmentResourcePath;
     }
 
     /**

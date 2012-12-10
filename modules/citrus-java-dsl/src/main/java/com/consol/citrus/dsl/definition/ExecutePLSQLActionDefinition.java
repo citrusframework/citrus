@@ -62,7 +62,7 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
      * @param filePath
      */
 	public ExecutePLSQLActionDefinition sqlResource(String filePath) {
-		action.setSqlResource(filePath);
+		action.setSqlResourcePath(filePath);
 		return this;
 	}
 	

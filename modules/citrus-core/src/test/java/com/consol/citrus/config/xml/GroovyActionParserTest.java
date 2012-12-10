@@ -33,23 +33,23 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
         assertActionClassAndName(GroovyAction.class, "groovy");
         
         GroovyAction action = getNextTestActionFromTest();
-        Assert.assertNull(action.getFileResource());
-        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:com/consol/citrus/script/script-template.groovy");
+        Assert.assertNull(action.getScriptResourcePath());
+        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:com/consol/citrus/script/script-template.groovy");
         Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
         
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getFileResource());
+        Assert.assertNull(action.getScriptResourcePath());
         Assert.assertNotNull(action.getScript());
         Assert.assertEquals(action.isUseScriptTemplate(), false);
         
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getFileResource());
-        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:com/consol/citrus/script/custom-script-template.groovy");
+        Assert.assertNull(action.getScriptResourcePath());
+        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:com/consol/citrus/script/custom-script-template.groovy");
         Assert.assertNotNull(action.getScript());
         
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getFileResource());
-        Assert.assertEquals(action.getFileResource(), "classpath:com/consol/citrus/script/example.groovy");
+        Assert.assertNotNull(action.getScriptResourcePath());
+        Assert.assertEquals(action.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(action.getScript());
     }
 }

@@ -90,7 +90,7 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
      * @param faultDetailResource
      */
     public void setFaultDetailResource(String faultDetailResource) {
-        setPayloadResource(faultDetailResource);
+        setPayloadResourcePath(faultDetailResource);
     }
 
     /**

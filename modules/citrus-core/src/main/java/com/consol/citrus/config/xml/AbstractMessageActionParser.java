@@ -78,10 +78,9 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
             }
             
-            String scriptResource = builderElement.getAttribute("file");
-            
-            if (StringUtils.hasText(scriptResource)) {
-                scriptMessageBuilder.setScriptResource(scriptResource);
+            String scriptResourcePath = builderElement.getAttribute("file");
+            if (StringUtils.hasText(scriptResourcePath)) {
+                scriptMessageBuilder.setScriptResourcePath(scriptResourcePath);
             } else {
                 scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
             }
@@ -108,7 +107,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
         if (xmlResourceElement != null) {
             messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadResource(xmlResourceElement.getAttribute("file"));
+            messageBuilder.setPayloadResourcePath(xmlResourceElement.getAttribute("file"));
         }
         
         if (messageBuilder != null) {
@@ -179,7 +178,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
 
             Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
             if (headerResourceElement != null) {
-                messageBuilder.setMessageHeaderResource(headerResourceElement.getAttribute("file"));
+                messageBuilder.setMessageHeaderResourcePath(headerResourceElement.getAttribute("file"));
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);

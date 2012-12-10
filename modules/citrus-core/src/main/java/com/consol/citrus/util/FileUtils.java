@@ -20,7 +20,9 @@ import java.io.*;
 import java.util.*;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
@@ -122,5 +124,16 @@ public abstract class FileUtils {
         }
 
         return files;
+    }
+
+    /**
+     * Reads file resource from path with variable replacement support.
+     * @param filePath
+     * @param context
+     * @return
+     */
+    public static Resource getFileResource(String filePath, TestContext context) {
+        return new PathMatchingResourcePatternResolver().getResource(
+                context.replaceDynamicContentInString(filePath));
     }
 }

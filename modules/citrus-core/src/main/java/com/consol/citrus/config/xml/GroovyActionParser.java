@@ -45,7 +45,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String scriptTemplatePath = element.getAttribute("script-template");
         if (StringUtils.hasText(scriptTemplatePath)) {
-            beanDefinition.addPropertyValue("scriptTemplateResource", scriptTemplatePath);
+            beanDefinition.addPropertyValue("scriptTemplatePath", scriptTemplatePath);
         }
         
         if (DomUtils.getTextValue(element) != null && DomUtils.getTextValue(element).length() > 0) {
@@ -54,7 +54,7 @@ public class GroovyActionParser implements BeanDefinitionParser {
         
         String filePath = element.getAttribute("resource");
         if (StringUtils.hasText(filePath)) {
-            beanDefinition.addPropertyValue("fileResource", filePath);
+            beanDefinition.addPropertyValue("scriptResourcePath", filePath);
         }
         
         beanDefinition.addPropertyValue("name", element.getLocalName());

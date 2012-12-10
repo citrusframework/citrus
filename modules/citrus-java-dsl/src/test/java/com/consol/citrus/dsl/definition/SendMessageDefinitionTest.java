@@ -222,7 +222,7 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertNull(messageBuilder.getMessageHeaderResource());
+        Assert.assertNull(messageBuilder.getMessageHeaderResourcePath());
         
         action = ((SendMessageAction)builder.getTestCase().getActions().get(1));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
@@ -234,7 +234,7 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertNull(messageBuilder.getMessageHeaderResource());
+        Assert.assertNull(messageBuilder.getMessageHeaderResourcePath());
     }
     
     @Test

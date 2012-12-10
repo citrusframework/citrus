@@ -21,7 +21,6 @@ import groovy.lang.GroovyObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.actions.AbstractTestAction;
@@ -41,11 +40,11 @@ public class GroovyAction extends AbstractTestAction {
     /** Inline groovy script */
     private String script;
 
-    /** External script file resource */
-    private String fileResource;
+    /** External script file resource path */
+    private String scriptResourcePath;
     
     /** Static code snippet for basic groovy action implementation */
-    private String scriptTemplateResource = "classpath:com/consol/citrus/script/script-template.groovy";
+    private String scriptTemplatePath = "classpath:com/consol/citrus/script/script-template.groovy";
     
     /** Manage automatic groovy template usage */
     private boolean useScriptTemplate = true;
@@ -68,8 +67,7 @@ public class GroovyAction extends AbstractTestAction {
 
             assertScriptProvided();
 
-            String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                    context.replaceDynamicContentInString(fileResource)));
+            String rawCode = StringUtils.hasText(script) ? script.trim() : FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context));
             String code = context.replaceDynamicContentInString(rawCode.trim());
 
             // load groovy code
@@ -80,8 +78,7 @@ public class GroovyAction extends AbstractTestAction {
             // only apply default script template in case we have feature enabled and code is not a class, too
             if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
                 // build new script with surrounding template
-                code = TemplateBasedScriptBuilder.fromTemplateResource(new PathMatchingResourcePatternResolver().getResource(
-                               context.replaceDynamicContentInString(scriptTemplateResource)))
+                code = TemplateBasedScriptBuilder.fromTemplateResource(FileUtils.getFileResource(scriptTemplatePath, context))
                                                  .withCode(code)
                                                  .build();
 
@@ -109,7 +106,7 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     private void assertScriptProvided() {
-        if (!StringUtils.hasText(script) && fileResource == null) {
+        if (!StringUtils.hasText(script) && scriptResourcePath == null) {
             throw new CitrusRuntimeException("Neither inline script nor " +
                 "external script resource is defined. Unable to execute groovy script.");
         }
@@ -135,24 +132,24 @@ public class GroovyAction extends AbstractTestAction {
      * Get the file resource.
      * @return the fileResource
      */
-    public String getFileResource() {
-        return fileResource;
+    public String getScriptResourcePath() {
+        return scriptResourcePath;
     }
 
     /**
      * Set file resource.
      * @param fileResource the fileResource to set
      */
-    public void setFileResource(String fileResource) {
-        this.fileResource = fileResource;
+    public void setScriptResourcePath(String fileResource) {
+        this.scriptResourcePath = fileResource;
     }
 
     /**
      * Set the script template resource.
      * @param scriptTemplate the scriptTemplate to set
      */
-    public void setScriptTemplateResource(String scriptTemplate) {
-        this.scriptTemplateResource = scriptTemplate;
+    public void setScriptTemplatePath(String scriptTemplate) {
+        this.scriptTemplatePath = scriptTemplate;
     }
 
     /**
@@ -172,10 +169,10 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the scriptTemplateResource.
-     * @return the scriptTemplateResource
+     * Gets the scriptTemplatePath.
+     * @return the scriptTemplatePath
      */
-    public String getScriptTemplateResource() {
-        return scriptTemplateResource;
+    public String getScriptTemplatePath() {
+        return scriptTemplatePath;
     }
 }

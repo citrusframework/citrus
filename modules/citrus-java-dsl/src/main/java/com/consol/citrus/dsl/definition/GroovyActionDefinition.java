@@ -40,7 +40,7 @@ public class GroovyActionDefinition extends AbstractActionDefinition<GroovyActio
      * @param scriptTemplate the scriptTemplate to set
      */
     public GroovyActionDefinition template(String scriptTemplatePath) {
-        action.setScriptTemplateResource(scriptTemplatePath);
+        action.setScriptTemplatePath(scriptTemplatePath);
         return this;
     }
 	
@@ -50,7 +50,7 @@ public class GroovyActionDefinition extends AbstractActionDefinition<GroovyActio
      */
 	public GroovyActionDefinition template(Resource scriptTemplate) {
 		try {
-            action.setScriptTemplateResource(scriptTemplate.getFile().getAbsolutePath());
+            action.setScriptTemplatePath(scriptTemplate.getFile().getAbsolutePath());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script template file", e);
         }

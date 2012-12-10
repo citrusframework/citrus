@@ -24,7 +24,6 @@ import java.io.IOException;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -42,7 +41,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
     private Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");
     
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
-    private String scriptResource;
+    private String scriptResourcePath;
 
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
@@ -54,13 +53,11 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
         try {    
             //construct control message payload
             String messagePayload = "";
-            if (scriptResource != null){
+            if (scriptResourcePath != null){
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                                context.replaceDynamicContentInString(scriptResource)))));
+                        FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context))));
             } else if (scriptData != null){
-                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        scriptData));
+                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
             }
             
             return messagePayload;
@@ -111,16 +108,16 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
      * Message payload as external Groovy MarkupBuilder script file resource.
      * @param scriptResource the scriptResource to set
      */
-    public void setScriptResource(String scriptResource) {
-        this.scriptResource = scriptResource;
+    public void setScriptResourcePath(String scriptResource) {
+        this.scriptResourcePath = scriptResource;
     }
 
     /**
      * Gets the scriptResource.
      * @return the scriptResource
      */
-    public String getScriptResource() {
-        return scriptResource;
+    public String getScriptResourcePath() {
+        return scriptResourcePath;
     }
 
     /**

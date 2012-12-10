@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
@@ -33,8 +32,8 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
  */
 public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder<String> {
 
-    /** Message payload defined in external file resource */
-    private String payloadResource;
+    /** Message payload defined in external file resource path */
+    private String payloadResourcePath;
 
     /** Direct string representation of message payload */
     private String payloadData;
@@ -49,9 +48,8 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
         try {
             //construct control message payload
             String messagePayload = "";
-            if (payloadResource != null) {
-                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(payloadResource))));
+            if (payloadResourcePath != null) {
+                messagePayload = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context)));
             } else if (payloadData != null){
                 messagePayload = context.replaceDynamicContentInString(payloadData);
             }
@@ -80,8 +78,8 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      * Set the message payload as external file resource.
      * @param payloadResource the payloadResource to set
      */
-    public void setPayloadResource(String payloadResource) {
-        this.payloadResource = payloadResource;
+    public void setPayloadResourcePath(String payloadResource) {
+        this.payloadResourcePath = payloadResource;
     }
     
     /**
@@ -113,8 +111,8 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      * Gets the payloadResource.
      * @return the payloadResource
      */
-    public String getPayloadResource() {
-        return payloadResource;
+    public String getPayloadResourcePath() {
+        return payloadResourcePath;
     }
 
     /**

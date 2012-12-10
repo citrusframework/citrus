@@ -34,7 +34,7 @@ public class LoadPropertiesActionParserTest extends AbstractActionParserTest<Loa
         assertActionClassAndName(LoadPropertiesAction.class, "load");
         
         LoadPropertiesAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getFile(), "classpath:com/consol/citrus/actions/load.properties");
+        Assert.assertEquals(action.getFilePath(), "classpath:com/consol/citrus/actions/load.properties");
     }
     
     @Test

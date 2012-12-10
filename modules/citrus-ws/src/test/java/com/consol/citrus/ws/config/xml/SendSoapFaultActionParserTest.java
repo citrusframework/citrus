@@ -41,7 +41,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         
         SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder)action.getMessageBuilder();
         Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000");
@@ -55,7 +55,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         
         messageBuilder = (SoapFaultAwareMessageBuilder)action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
-        Assert.assertNotNull(messageBuilder.getPayloadResource());
+        Assert.assertNotNull(messageBuilder.getPayloadResourcePath());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001");

@@ -18,8 +18,6 @@ package com.consol.citrus.validation.script;
 
 import java.io.IOException;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
@@ -33,8 +31,8 @@ import com.consol.citrus.validation.context.ValidationContext;
  * @author Christoph Deppisch
  */
 public class ScriptValidationContext implements ValidationContext {
-    /** Validation script as file resource*/
-    private String validationScriptResource;
+    /** Validation script as file resource path */
+    private String validationScriptResourcePath;
     
     /** Validation script code */
     private String validationScript = "";
@@ -65,9 +63,8 @@ public class ScriptValidationContext implements ValidationContext {
      */
     public String getValidationScript(TestContext context) {
         try {
-            if (validationScriptResource != null) {
-                return context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(validationScriptResource))));
+            if (validationScriptResourcePath != null) {
+                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(validationScriptResourcePath, context)));
             } else if (validationScript != null) {
                 return context.replaceDynamicContentInString(validationScript);
             } else {
@@ -90,16 +87,16 @@ public class ScriptValidationContext implements ValidationContext {
      * Gets the validationScriptResource.
      * @return the validationScriptResource
      */
-    public String getValidationScriptResource() {
-        return validationScriptResource;
+    public String getValidationScriptResourcePath() {
+        return validationScriptResourcePath;
     }
 
     /**
      * Sets the validationScriptResource.
      * @param validationScriptResource the validationScriptResource to set
      */
-    public void setValidationScriptResource(String validationScriptResource) {
-        this.validationScriptResource = validationScriptResource;
+    public void setValidationScriptResourcePath(String validationScriptResource) {
+        this.validationScriptResourcePath = validationScriptResource;
     }
 
     /**

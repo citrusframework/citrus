@@ -57,7 +57,7 @@ public final class SoapAttachmentParser {
         
         Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
         if (attachmentResourceElement != null) {
-            builder.addPropertyValue("attachmentResource", attachmentResourceElement.getAttribute("file"));
+            builder.addPropertyValue("attachmentResourcePath", attachmentResourceElement.getAttribute("file"));
         }
     }
 }

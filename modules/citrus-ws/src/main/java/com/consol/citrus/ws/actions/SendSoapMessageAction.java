@@ -18,7 +18,6 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
@@ -44,8 +43,8 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** SOAP attachment data */
     private String attachmentData;
     
-    /** SOAP attachment data as external file resource */
-    private String attachmentResource;
+    /** SOAP attachment data as external file resource path */
+    private String attachmentResourcePath;
     
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
@@ -68,9 +67,8 @@ public class SendSoapMessageAction extends SendMessageAction {
         try {
             if (StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
-            } else if (attachmentResource != null) {
-                attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(attachmentResource))));
+            } else if (attachmentResourcePath != null) {
+                attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachmentResourcePath, context)));
             } else {
                 attachmentContent = null;
             }
@@ -111,8 +109,8 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Set the Attachment data file resource.
      * @param attachment the attachment to set
      */
-    public void setAttachmentResource(String attachment) {
-        this.attachmentResource = attachment;
+    public void setAttachmentResourcePath(String attachment) {
+        this.attachmentResourcePath = attachment;
     }
 
     /**
@@ -159,8 +157,8 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Gets the attachmentResource.
      * @return the attachmentResource
      */
-    public String getAttachmentResource() {
-        return attachmentResource;
+    public String getAttachmentResourcePath() {
+        return attachmentResourcePath;
     }
 
     /**

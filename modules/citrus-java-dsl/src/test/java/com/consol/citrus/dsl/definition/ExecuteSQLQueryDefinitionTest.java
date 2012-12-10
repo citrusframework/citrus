@@ -72,7 +72,7 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "COLUMN=variable");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getSqlResource(), "classpath:some.file");
+        Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
         Assert.assertEquals(action.getValidator(), validator);
         
         verify(resource, file);
@@ -135,7 +135,7 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
@@ -168,7 +168,7 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "someScript");
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
@@ -199,7 +199,7 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
@@ -232,7 +232,7 @@ public class ExecuteSQLQueryDefinitionTest {
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "someScript");
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);

@@ -41,7 +41,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1001");
         Assert.assertNull(action.getFaultString());
         Assert.assertNull(action.getFaultDetail());
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNull(action.getValidationContext());
         
         // 2nd action
@@ -52,7 +52,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1002");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertNull(action.getFaultDetail());
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNull(action.getValidationContext());
         
         // 3rd action
@@ -64,7 +64,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNotNull(action.getValidationContext());
         
         // 4th action
@@ -75,7 +75,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1004");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertNull(action.getFaultDetail());
-        Assert.assertNotNull(action.getFaultDetailResource());
+        Assert.assertNotNull(action.getFaultDetailResourcePath());
         Assert.assertNotNull(action.getValidationContext());
         
         // 5th action
@@ -87,7 +87,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNotNull(action.getValidationContext());
         Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
         Assert.assertTrue(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());
@@ -103,7 +103,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNotNull(action.getValidationContext());
         Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
         Assert.assertTrue(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());
@@ -119,7 +119,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetail(), "FaultDetail");
-        Assert.assertNull(action.getFaultDetailResource());
+        Assert.assertNull(action.getFaultDetailResourcePath());
         Assert.assertNotNull(action.getValidationContext());
         Assert.assertTrue(action.getValidationContext() instanceof XmlMessageValidationContext);
         Assert.assertFalse(((XmlMessageValidationContext)action.getValidationContext()).isSchemaValidationEnabled());

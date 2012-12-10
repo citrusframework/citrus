@@ -36,7 +36,7 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
         SendSoapMessageAction action = getNextTestActionFromTest();
         Assert.assertFalse(action.isForkMode());
         Assert.assertEquals(action.getAttachmentData().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachment().getContentId(), "MySoapAttachment");
         Assert.assertEquals(action.getAttachment().getContentType(), "text/plain");
 
@@ -44,7 +44,7 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
         action = getNextTestActionFromTest();
         Assert.assertFalse(action.isForkMode());
         Assert.assertNull(action.getAttachmentData());
-        Assert.assertNotNull(action.getAttachmentResource());
+        Assert.assertNotNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachment().getContentId(), "MySoapAttachment");
         Assert.assertEquals(action.getAttachment().getContentType(), "application/xml");
         Assert.assertEquals(action.getAttachment().getCharsetName(), "UTF-8");
@@ -53,6 +53,6 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.isForkMode());
         Assert.assertNull(action.getAttachmentData());
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
     }
 }

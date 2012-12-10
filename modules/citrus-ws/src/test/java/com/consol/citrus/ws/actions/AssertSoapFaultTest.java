@@ -351,7 +351,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.setFaultDetailResource("classpath:com/consol/citrus/ws/actions/test-fault-detail.xml");
+        assertAction.setFaultDetailResourcePath("classpath:com/consol/citrus/ws/actions/test-fault-detail.xml");
         
         assertAction.execute(context);
     }
@@ -390,7 +390,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.setFaultDetailResource("classpath:com/consol/citrus/ws/actions/test-fault-detail-with-variables.xml");
+        assertAction.setFaultDetailResourcePath("classpath:com/consol/citrus/ws/actions/test-fault-detail-with-variables.xml");
         
         assertAction.execute(context);
     }

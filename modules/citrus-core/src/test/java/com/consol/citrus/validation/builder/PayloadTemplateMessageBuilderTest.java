@@ -63,7 +63,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithPayloadResource() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         
@@ -74,7 +74,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithPayloadResourceVariableSupport() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
         context.setVariable("placeholder", "payload data");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
@@ -169,7 +169,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResource() {
-        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
+        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         
@@ -180,7 +180,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResourceVariableSupport() {
-        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
+        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
         context.setVariable("placeholder", "header data");
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);

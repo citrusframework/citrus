@@ -49,8 +49,8 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
     
-    /** SQL file resource */
-    protected String sqlResource;
+    /** SQL file resource path */
+    protected String sqlResourcePath;
     
     /** List of SQL statements */
     protected List<String> statements = new ArrayList<String>();
@@ -99,11 +99,11 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         
         List<String> stmts = new ArrayList<String>();
         
-        String sqlResourcePath = context.replaceDynamicContentInString(sqlResource);
+        String sqlResource = context.replaceDynamicContentInString(sqlResourcePath);
         try {
-            log.info("Executing SQL file: " + sqlResourcePath);
+            log.info("Executing SQL file: " + sqlResource);
             
-            reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(sqlResourcePath).getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(sqlResource).getInputStream()));
             buffer = new StringBuffer();
             
             String line;
@@ -131,7 +131,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
                 }
             }
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResourcePath, e);
+            throw new CitrusRuntimeException("Resource could not be found - filename: " + sqlResource, e);
         } finally {
             if (reader != null) {
                 try {
@@ -205,16 +205,16 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
      */
-    public void setSqlResource(String sqlResource) {
-        this.sqlResource = sqlResource;
+    public void setSqlResourcePath(String sqlResource) {
+        this.sqlResourcePath = sqlResource;
     }
 
     /**
      * Gets the sqlResource.
      * @return the sqlResource
      */
-    public String getSqlResource() {
-        return sqlResource;
+    public String getSqlResourcePath() {
+        return sqlResourcePath;
     }
 
     /**

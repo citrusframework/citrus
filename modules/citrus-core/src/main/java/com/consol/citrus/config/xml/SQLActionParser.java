@@ -77,7 +77,7 @@ public class SQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            beanDefinition.addPropertyValue("sqlResource", sqlResourceElement.getAttribute("file"));
+            beanDefinition.addPropertyValue("sqlResourcePath", sqlResourceElement.getAttribute("file"));
         }
 
         return beanDefinition.getBeanDefinition();
@@ -161,7 +161,7 @@ public class SQLActionParser implements BeanDefinitionParser {
         ScriptValidationContext validationContext = new ScriptValidationContext(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
-            validationContext.setValidationScriptResource(filePath);
+            validationContext.setValidationScriptResourcePath(filePath);
         } else {
             validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
         }

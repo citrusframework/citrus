@@ -36,7 +36,7 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         // 1st action
         ExecuteSQLAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getStatements().size(), 2);
         Assert.assertEquals(action.getStatements().get(0), "insert into foo_table values (foo, foo)");
         Assert.assertEquals(action.getStatements().get(1), "update foo_table set foo=foo where foo=foo");
@@ -45,8 +45,8 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResource());
-        Assert.assertEquals(action.getSqlResource(), "classpath:com/consol/citrus/actions/test-sql-statements.sql");
+        Assert.assertNotNull(action.getSqlResourcePath());
+        Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/actions/test-sql-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.isIgnoreErrors(), true);
     }

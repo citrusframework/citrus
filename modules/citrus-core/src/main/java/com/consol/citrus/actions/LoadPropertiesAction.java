@@ -23,11 +23,11 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.*;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 
 /**
  * Action reads property files and creates test variables for every property entry. File
@@ -38,17 +38,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class LoadPropertiesAction extends AbstractTestAction {
 
     /** File resource path */
-    private String file = null;
+    private String filePath = null;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
 
     @Override
     public void doExecute(TestContext context) {
-        String filePath = context.replaceDynamicContentInString(file);
-        Resource resource = new PathMatchingResourcePatternResolver().getResource(filePath);
+        Resource resource = FileUtils.getFileResource(filePath, context);
 
         log.info("Reading property file " + resource.getFilename());
         Properties props;
@@ -76,15 +73,15 @@ public class LoadPropertiesAction extends AbstractTestAction {
      * File path setter.
      * @param file the file to set
      */
-    public void setFile(String file) {
-        this.file = file;
+    public void setFilePath(String file) {
+        this.filePath = file;
     }
 
     /**
      * Gets the file.
      * @return the file
      */
-    public String getFile() {
-        return file;
+    public String getFilePath() {
+        return filePath;
     }
 }

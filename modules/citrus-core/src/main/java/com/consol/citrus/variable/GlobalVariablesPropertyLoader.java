@@ -59,14 +59,14 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
 
         try {
             if (propertyFilesSet()) {
-                for (String propertyFile : propertyFiles) {
+                for (String propertyFilePath : propertyFiles) {
 
-                    Resource file = new PathMatchingResourcePatternResolver().getResource(propertyFile.trim());
+                    Resource propertyFile = new PathMatchingResourcePatternResolver().getResource(propertyFilePath.trim());
 
-                    log.info("Reading property file " + file.getFilename());
+                    log.info("Reading property file " + propertyFile.getFilename());
 
                     // Use input stream as this also allows to read from resources in a JAR file
-                    reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+                    reader = new BufferedReader(new InputStreamReader(propertyFile.getInputStream()));
 
                     // local context instance handling variable replacement in property values
                     TestContext context = new TestContext();

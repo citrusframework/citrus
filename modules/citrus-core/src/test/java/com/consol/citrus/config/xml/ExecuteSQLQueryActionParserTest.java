@@ -36,7 +36,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         // 1st action
         ExecuteSQLQueryAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getStatements().size(), 2);
         Assert.assertEquals(action.getStatements().get(0), "select A, B, C from D where E='${id}'");
         Assert.assertEquals(action.getStatements().get(1), "select COUNT(F) as cnt_f from G");
@@ -54,8 +54,8 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNotNull(action.getSqlResource());
-        Assert.assertEquals(action.getSqlResource(), "classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
+        Assert.assertNotNull(action.getSqlResourcePath());
+        Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/actions/test-sql-query-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().get("foo").get(0), "1");
@@ -65,7 +65,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         // 3rd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
@@ -83,28 +83,28 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         // 4th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResource());
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript().trim(), "assert rows.size == 2");
         
         // 5th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
-        Assert.assertNull(action.getSqlResource());
+        Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResource());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResource(), "classpath:com/consol/citrus/script/example.groovy");
+        Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResourcePath());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
     }
     

@@ -37,7 +37,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testScriptResource() {
         GroovyAction bean = new GroovyAction();
-        bean.setFileResource("classpath:com/consol/citrus/script/example.groovy");
+        bean.setScriptResourcePath("classpath:com/consol/citrus/script/example.groovy");
         bean.execute(context);
     }
     
@@ -51,7 +51,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testScriptResourceNotFound() {
         GroovyAction bean = new GroovyAction();
-        bean.setFileResource("file:some/wrong/path/test.groovy");
+        bean.setScriptResourcePath("file:some/wrong/path/test.groovy");
         bean.execute(context);
     }
     
@@ -110,7 +110,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     public void testCustomScriptTemplate() {
         GroovyAction bean = new GroovyAction();
         
-        bean.setScriptTemplateResource("classpath:com/consol/citrus/script/custom-script-template.groovy");
+        bean.setScriptTemplatePath("classpath:com/consol/citrus/script/custom-script-template.groovy");
         
         bean.setScript("Assert.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')");
         bean.execute(context);
@@ -120,7 +120,7 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
     public void testInvalidScriptTemplate() {
         GroovyAction bean = new GroovyAction();
         
-        bean.setScriptTemplateResource("classpath:com/consol/citrus/script/invalid-script-template.groovy");
+        bean.setScriptTemplatePath("classpath:com/consol/citrus/script/invalid-script-template.groovy");
         bean.setScript("println 'This should not work!'");
         
         try {

@@ -99,7 +99,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageSender(messageSender);
         
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload.xml");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -226,7 +226,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageSender(messageSender);
         
         GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
-        scriptMessageBuidler.setScriptResource("classpath:com/consol/citrus/actions/test-request-payload.groovy");
+        scriptMessageBuidler.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
         
         sendAction.setMessageBuilder(scriptMessageBuidler);
         
@@ -306,7 +306,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageSender(messageSender);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -347,7 +347,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageSender(messageSender);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -947,7 +947,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageSender(messageSender);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResource("classpath:com/consol/citrus/actions/test-request-iso-encoding.xml");
+        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-iso-encoding.xml");
         
         sendAction.setMessageBuilder(messageBuilder);
         

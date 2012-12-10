@@ -54,7 +54,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)validationContext.getMessageBuilder();
         
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
@@ -74,8 +74,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)validationContext.getMessageBuilder();
         
-        Assert.assertNotNull(messageBuilder.getPayloadResource());
-        Assert.assertEquals(messageBuilder.getPayloadResource(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
+        Assert.assertNotNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
@@ -97,7 +97,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof GroovyScriptMessageBuilder);
         groovyMessageBuilder = (GroovyScriptMessageBuilder)validationContext.getMessageBuilder();
         
-        Assert.assertNull(groovyMessageBuilder.getScriptResource());
+        Assert.assertNull(groovyMessageBuilder.getScriptResourcePath());
         Assert.assertNotNull(groovyMessageBuilder.getScriptData());
         Assert.assertEquals(groovyMessageBuilder.getScriptData().trim(), "println '<TestMessage>Hello Citrus</TestMessage>'");
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().size(), 2);
@@ -116,8 +116,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof GroovyScriptMessageBuilder);
         groovyMessageBuilder = (GroovyScriptMessageBuilder)validationContext.getMessageBuilder();
         
-        Assert.assertNotNull(groovyMessageBuilder.getScriptResource());
-        Assert.assertEquals(groovyMessageBuilder.getScriptResource(), "classpath:com/consol/citrus/script/example.groovy");
+        Assert.assertNotNull(groovyMessageBuilder.getScriptResourcePath());
+        Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
         
         // 6th action
@@ -143,7 +143,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(xmlValidationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         messageBuilder = (PayloadTemplateMessageBuilder)xmlValidationContext.getMessageBuilder();
         
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
         

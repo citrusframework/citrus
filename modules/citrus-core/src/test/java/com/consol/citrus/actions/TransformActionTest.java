@@ -48,8 +48,8 @@ public class TransformActionTest extends AbstractTestNGUnitTest {
 	@Test
 	public void testTransformResource(){
 		TransformAction transformAction = new TransformAction();
-		transformAction.setXmlResource("classpath:com/consol/citrus/actions/test-request-payload.xml");
-		transformAction.setXsltResource("classpath:com/consol/citrus/actions/test-transform.xslt");
+		transformAction.setXmlResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
+		transformAction.setXsltResourcePath("classpath:com/consol/citrus/actions/test-transform.xslt");
 		transformAction.setTargetVariable("var");
 		
 		transformAction.execute(context);

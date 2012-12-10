@@ -39,6 +39,6 @@ public class LoadPropertiesDefinitionTest {
         
         LoadPropertiesAction action = (LoadPropertiesAction)builder.getTestCase().getActions().get(0);
         Assert.assertEquals(action.getName(), LoadPropertiesAction.class.getSimpleName());
-        Assert.assertEquals(action.getFile(), "classpath:test.properties");
+        Assert.assertEquals(action.getFilePath(), "classpath:test.properties");
     }
 }

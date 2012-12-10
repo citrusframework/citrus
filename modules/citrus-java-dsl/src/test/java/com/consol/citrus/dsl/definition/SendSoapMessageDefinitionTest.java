@@ -129,7 +129,7 @@ public class SendSoapMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
         Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());
@@ -162,7 +162,7 @@ public class SendSoapMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
         Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());

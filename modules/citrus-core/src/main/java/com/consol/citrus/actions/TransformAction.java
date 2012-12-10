@@ -22,7 +22,6 @@ import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -44,14 +43,14 @@ public class TransformAction extends AbstractTestAction {
 	/** Inline XML document */
 	private String xmlData;
 	
-	/** External XML document resource */
-	private String xmlResource;
+	/** External XML document resource path */
+	private String xmlResourcePath;
 	
 	/** Inline XSLT document */
 	private String xsltData;
 	
-	/** External XSLT document resource */
-	private String xsltResource;
+	/** External XSLT document resource path */
+	private String xsltResourcePath;
 	
 	/** Target variable for the result */
 	private String targetVariable = "transform-result";
@@ -68,9 +67,8 @@ public class TransformAction extends AbstractTestAction {
 			
 			//parse XML document and define XML source for transformation
 			Source xmlSource = null;
-			if (xmlResource != null) {
-				xmlSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(xmlResource)))));
+			if (xmlResourcePath != null) {
+				xmlSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(xmlResourcePath, context))));
 			} else if (xmlData != null) {
 				xmlSource = new StringSource(context.replaceDynamicContentInString(xmlData));
 			} else {
@@ -81,9 +79,8 @@ public class TransformAction extends AbstractTestAction {
 			
 			//parse XSLT document and define  XSLT source for transformation
 			Source xsltSource = null;
-			if (xsltResource != null) {
-				xsltSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(
-                        context.replaceDynamicContentInString(xsltResource)))));
+			if (xsltResourcePath != null) {
+				xsltSource = new StringSource(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(xsltResourcePath, context))));
 			} else if (xsltData != null) {
 				xsltSource = new StringSource(context.replaceDynamicContentInString(xsltData));
 			} else {
@@ -125,8 +122,8 @@ public class TransformAction extends AbstractTestAction {
 	 * Set the XML document as resource
 	 * @param xmlResource the xmlResource to set
 	 */
-	public void setXmlResource(String xmlResource) {
-		this.xmlResource = xmlResource;
+	public void setXmlResourcePath(String xmlResource) {
+		this.xmlResourcePath = xmlResource;
 	}
 
 	/**
@@ -141,8 +138,8 @@ public class TransformAction extends AbstractTestAction {
 	 * Set the XSLT document as resource
 	 * @param xsltResource the xsltResource to set
 	 */
-	public void setXsltResource(String xsltResource) {
-		this.xsltResource = xsltResource;
+	public void setXsltResourcePath(String xsltResource) {
+		this.xsltResourcePath = xsltResource;
 	}
 
 	/**
@@ -165,8 +162,8 @@ public class TransformAction extends AbstractTestAction {
      * Gets the xmlResource.
      * @return the xmlResource
      */
-    public String getXmlResource() {
-        return xmlResource;
+    public String getXmlResourcePath() {
+        return xmlResourcePath;
     }
 
     /**
@@ -181,8 +178,8 @@ public class TransformAction extends AbstractTestAction {
      * Gets the xsltResource.
      * @return the xsltResource
      */
-    public String getXsltResource() {
-        return xsltResource;
+    public String getXsltResourcePath() {
+        return xsltResourcePath;
     }
 
     /**

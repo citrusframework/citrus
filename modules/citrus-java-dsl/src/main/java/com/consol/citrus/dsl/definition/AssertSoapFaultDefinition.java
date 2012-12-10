@@ -86,7 +86,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      * @return
      */
     public AssertSoapFaultDefinition faultDetailResource(String filePath) {
-        action.setFaultDetailResource(filePath);
+        action.setFaultDetailResourcePath(filePath);
         return this;
     }
     

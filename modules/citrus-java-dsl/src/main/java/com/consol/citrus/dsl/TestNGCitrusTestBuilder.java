@@ -273,7 +273,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      */
     protected LoadPropertiesAction load(String filePath) {
         LoadPropertiesAction action = new LoadPropertiesAction();
-        action.setFile(filePath);
+        action.setFilePath(filePath);
         testCase.addTestAction(action);
         return action;
     }

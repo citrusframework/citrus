@@ -51,7 +51,7 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
         Element sqlResourceElement = DomUtils.getChildElementByTagName(element, "resource");
         if (sqlResourceElement != null) {
-            beanDefinition.addPropertyValue("sqlResource", sqlResourceElement.getAttribute("file"));
+            beanDefinition.addPropertyValue("sqlResourcePath", sqlResourceElement.getAttribute("file"));
         }
 
         String ignoreErrors = element.getAttribute("ignore-errors");

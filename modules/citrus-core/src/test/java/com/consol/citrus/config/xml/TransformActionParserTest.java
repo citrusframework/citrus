@@ -36,17 +36,17 @@ public class TransformActionParserTest extends AbstractActionParserTest<Transfor
         TransformAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTargetVariable(), "result");
         Assert.assertTrue(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNull(action.getXmlResource());
+        Assert.assertNull(action.getXmlResourcePath());
         Assert.assertTrue(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNull(action.getXsltResource());
+        Assert.assertNull(action.getXsltResourcePath());
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTargetVariable(), "result");
         Assert.assertFalse(StringUtils.hasText(action.getXmlData()));
-        Assert.assertNotNull(action.getXmlResource());
-        Assert.assertEquals(action.getXmlResource(), "classpath:com/consol/citrus/actions/transform-source.xml");
+        Assert.assertNotNull(action.getXmlResourcePath());
+        Assert.assertEquals(action.getXmlResourcePath(), "classpath:com/consol/citrus/actions/transform-source.xml");
         Assert.assertFalse(StringUtils.hasText(action.getXsltData()));
-        Assert.assertNotNull(action.getXsltResource());
-        Assert.assertEquals(action.getXsltResource(), "classpath:com/consol/citrus/actions/transform.xslt");
+        Assert.assertNotNull(action.getXsltResourcePath());
+        Assert.assertEquals(action.getXsltResourcePath(), "classpath:com/consol/citrus/actions/transform.xslt");
     }
 }

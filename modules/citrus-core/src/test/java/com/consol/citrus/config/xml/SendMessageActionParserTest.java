@@ -44,7 +44,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         SendMessageAction action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
@@ -55,8 +55,8 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
-        Assert.assertNotNull(messageBuilder.getPayloadResource());
-        Assert.assertEquals(messageBuilder.getPayloadResource(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
+        Assert.assertNotNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
@@ -65,7 +65,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
         
-        Assert.assertNull(groovyMessageBuilder.getScriptResource());
+        Assert.assertNull(groovyMessageBuilder.getScriptResourcePath());
         Assert.assertNotNull(groovyMessageBuilder.getScriptData());
         Assert.assertEquals(groovyMessageBuilder.getScriptData().trim(), "println '<TestMessage>Hello Citrus</TestMessage>'");
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().size(), 2);
@@ -76,8 +76,8 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
         
-        Assert.assertNotNull(groovyMessageBuilder.getScriptResource());
-        Assert.assertEquals(groovyMessageBuilder.getScriptResource(), "classpath:com/consol/citrus/script/example.groovy");
+        Assert.assertNotNull(groovyMessageBuilder.getScriptResourcePath());
+        Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
         
         // 5th action
@@ -91,7 +91,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         
@@ -106,7 +106,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         
-        Assert.assertNull(messageBuilder.getPayloadResource());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 8);

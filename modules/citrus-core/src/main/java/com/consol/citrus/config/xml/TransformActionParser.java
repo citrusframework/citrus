@@ -48,7 +48,7 @@ public class TransformActionParser implements BeanDefinitionParser {
 		
 		Element xmlResourceElement = DomUtils.getChildElementByTagName(element, "xml-resource");
 		if (xmlResourceElement != null) {
-        	beanDefinition.addPropertyValue("xmlResource", xmlResourceElement.getAttribute("file"));
+        	beanDefinition.addPropertyValue("xmlResourcePath", xmlResourceElement.getAttribute("file"));
 		}
 		
 		Element xsltDataElement = DomUtils.getChildElementByTagName(element, "xslt-data");
@@ -58,7 +58,7 @@ public class TransformActionParser implements BeanDefinitionParser {
 		
 		Element xsltResourceElement = DomUtils.getChildElementByTagName(element, "xslt-resource");
 		if (xsltResourceElement != null) {
-        	beanDefinition.addPropertyValue("xsltResource", xsltResourceElement.getAttribute("file"));
+        	beanDefinition.addPropertyValue("xsltResourcePath", xsltResourceElement.getAttribute("file"));
 		}
 		
 		BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");

@@ -152,7 +152,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
+        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -230,7 +230,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
+        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -304,7 +304,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
+        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -382,7 +382,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("operation", "soapOperation");
         
-        messageBuilder.setMessageHeaderResource("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
+        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 

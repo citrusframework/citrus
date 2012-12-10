@@ -95,7 +95,7 @@ public class ReceiveSoapMessageDefinitionTest {
         Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
         Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
         
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
         Assert.assertEquals(action.getControlAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getControlAttachment().getContentType(), testAttachment.getContentType());
@@ -132,7 +132,7 @@ public class ReceiveSoapMessageDefinitionTest {
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Assert.assertNull(action.getAttachmentResource());
+        Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
         Assert.assertEquals(action.getControlAttachment().getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getControlAttachment().getContentType(), testAttachment.getContentType());

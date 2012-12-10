@@ -234,7 +234,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
+        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -284,7 +284,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentResource("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
+        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

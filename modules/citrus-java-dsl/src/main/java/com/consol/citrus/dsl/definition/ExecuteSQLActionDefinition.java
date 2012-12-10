@@ -63,7 +63,7 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
      */
 	public ExecuteSQLActionDefinition sqlResource(Resource sqlResource) {
 		try {
-            action.setSqlResource(sqlResource.getFile().getAbsolutePath());
+            action.setSqlResourcePath(sqlResource.getFile().getAbsolutePath());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read sql resource", e);
         }
@@ -75,7 +75,7 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
      * @param filePath
      */
     public ExecuteSQLActionDefinition sqlResource(String filePath) {
-        action.setSqlResource(filePath);
+        action.setSqlResourcePath(filePath);
         return this;
     }
 	

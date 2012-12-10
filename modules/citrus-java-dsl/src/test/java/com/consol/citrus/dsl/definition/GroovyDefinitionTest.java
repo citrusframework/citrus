@@ -100,7 +100,7 @@ public class GroovyDefinitionTest {
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
-        Assert.assertEquals(action.getScriptTemplateResource(), "classpath:some.file");
+        Assert.assertEquals(action.getScriptTemplatePath(), "classpath:some.file");
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
     
@@ -120,7 +120,7 @@ public class GroovyDefinitionTest {
         Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
-        Assert.assertNotNull(action.getScriptTemplateResource());
+        Assert.assertNotNull(action.getScriptTemplatePath());
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
 }
