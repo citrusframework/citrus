@@ -69,16 +69,6 @@
       </roles>
     </developer>
     <developer>
-      <id>mm</id>
-      <name>Marcel May</name>
-      <email>marcel.may@consol.de</email>
-      <organization>ConSol* Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
       <id>philkom</id>
       <name>Philipp Komninos</name>
       <email>philipp.komninos@consol.de</email>
@@ -102,6 +92,16 @@
       <id>jza</id>
       <name>Jan Zahalka</name>
       <email>jza@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>maherma</id>
+      <name>Martin Maher</name>
+      <email>martin.maher@consol.de</email>
       <organization>ConSol* Software GmbH</organization>
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
