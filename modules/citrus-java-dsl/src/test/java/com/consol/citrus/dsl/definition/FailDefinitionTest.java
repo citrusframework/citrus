@@ -20,26 +20,25 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class FailDefinitionTest {
 
     @Test
     public void testFailBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 fail("This test will fail.");
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), FailAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), FailAction.class);
         
-        FailAction action = (FailAction)builder.getTestCase().getActions().get(0);
+        FailAction action = (FailAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), FailAction.class.getSimpleName());
         Assert.assertEquals(action.getMessage(), "This test will fail.");
     }

@@ -23,13 +23,12 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class CatchDefinitionTest {
     @Test
     public void testCatchBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 catchException("com.consol.citrus.exceptions.CitrusRuntimeException", echo("${var}"));
@@ -38,20 +37,20 @@ public class CatchDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 2);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Catch.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), Catch.class.getSimpleName());
-        assertEquals(builder.getTestCase().getActions().get(1).getClass(), Catch.class);
-        assertEquals(builder.getTestCase().getActions().get(1).getName(), Catch.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 2);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Catch.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), Catch.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(1).getClass(), Catch.class);
+        assertEquals(builder.testCase().getActions().get(1).getName(), Catch.class.getSimpleName());
         
-        Catch container = (Catch)builder.getTestCase().getActions().get(0);
+        Catch container = (Catch)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
         
-        container = (Catch)builder.getTestCase().getActions().get(1);
+        container = (Catch)builder.testCase().getActions().get(1);
         assertEquals(container.getActions().size(), 2);
         assertEquals(container.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");

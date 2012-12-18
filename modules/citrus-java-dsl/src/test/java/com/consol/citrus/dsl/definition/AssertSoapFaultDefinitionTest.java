@@ -28,7 +28,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
@@ -40,7 +39,7 @@ public class AssertSoapFaultDefinitionTest {
     
     @Test
     public void testAssertSoapFaultBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 soapFault(echo("${foo}"))
@@ -49,13 +48,13 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
         
-        AssertSoapFault container = (AssertSoapFault)(builder.getTestCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -66,7 +65,7 @@ public class AssertSoapFaultDefinitionTest {
     
     @Test
     public void testFaultDetail() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 soapFault(echo("${foo}"))
@@ -76,13 +75,13 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
         
-        AssertSoapFault container = (AssertSoapFault)(builder.getTestCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -94,7 +93,7 @@ public class AssertSoapFaultDefinitionTest {
     
     @Test
     public void testFaultDetailResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 soapFault(echo("${foo}"))
@@ -108,13 +107,13 @@ public class AssertSoapFaultDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<detail>FooBar</detail>".getBytes())).once();
         replay(resource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
         
-        AssertSoapFault container = (AssertSoapFault)(builder.getTestCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -128,7 +127,7 @@ public class AssertSoapFaultDefinitionTest {
     
     @Test
     public void testAssertSoapFaultBuilderWithValidator() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 soapFault(echo("${foo}"))
@@ -138,13 +137,13 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
         
-        AssertSoapFault container = (AssertSoapFault)(builder.getTestCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -156,7 +155,7 @@ public class AssertSoapFaultDefinitionTest {
     
     @Test
     public void testAssertSoapFaultBuilderWithMessageFactory() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 soapFault(echo("${foo}"))
@@ -166,13 +165,13 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
         
-        AssertSoapFault container = (AssertSoapFault)(builder.getTestCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);

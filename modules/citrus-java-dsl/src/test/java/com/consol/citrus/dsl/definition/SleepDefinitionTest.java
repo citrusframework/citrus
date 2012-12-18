@@ -20,7 +20,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SleepAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +28,7 @@ public class SleepDefinitionTest {
     
     @Test
     public void testSleepBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 sleep(0.5);
@@ -37,13 +36,13 @@ public class SleepDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SleepAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SleepAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SleepAction.class);
         
-        SleepAction action = (SleepAction)builder.getTestCase().getActions().get(0);
+        SleepAction action = (SleepAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), SleepAction.class.getSimpleName());       
         Assert.assertEquals(action.getDelay(), "0.5");
         Assert.assertEquals(action.getDelay(), "0.5");

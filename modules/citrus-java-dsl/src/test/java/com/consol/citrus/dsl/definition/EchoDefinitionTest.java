@@ -20,7 +20,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -29,19 +28,19 @@ public class EchoDefinitionTest {
     
     @Test
     public void testEchoBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 echo("Hello Citrus!");
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
         
-        EchoAction action = (EchoAction)builder.getTestCase().getActions().get(0);
+        EchoAction action = (EchoAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), EchoAction.class.getSimpleName());
         Assert.assertEquals(action.getMessage(), "Hello Citrus!");
     }

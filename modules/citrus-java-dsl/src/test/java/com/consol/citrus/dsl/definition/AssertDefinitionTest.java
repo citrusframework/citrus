@@ -16,19 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 public class AssertDefinitionTest {
     @Test
     public void testAssertBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 assertException(echo("${foo}"))
@@ -37,13 +36,13 @@ public class AssertDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Assert.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), Assert.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Assert.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), Assert.class.getSimpleName());
         
-        Assert container = (Assert)(builder.getTestCase().getTestAction(0));
+        Assert container = (Assert)(builder.testCase().getTestAction(0));
         
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getAction().getClass(), EchoAction.class);

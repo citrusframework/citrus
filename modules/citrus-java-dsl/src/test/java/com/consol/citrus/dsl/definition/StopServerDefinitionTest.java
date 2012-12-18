@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.StopServerAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.server.Server;
 
 public class StopServerDefinitionTest {
@@ -33,7 +32,7 @@ public class StopServerDefinitionTest {
 
 	@Test
 	public void testStopServerBuilder() {
-		TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+		MockBuilder builder = new MockBuilder() {
 			@Override
 			public void configure() {
 				stop(testServer);
@@ -41,18 +40,18 @@ public class StopServerDefinitionTest {
 			}
 		};
 		
-		builder.configure();
+		builder.run(null, null);
 		
 		
-		Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), StopServerAction.class);
-		Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), StopServerAction.class);
+		Assert.assertEquals(builder.testCase().getActions().size(), 2);
+		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), StopServerAction.class);
+		Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), StopServerAction.class);
 		
-		StopServerAction action = (StopServerAction)builder.getTestCase().getActions().get(0);
+		StopServerAction action = (StopServerAction)builder.testCase().getActions().get(0);
 		Assert.assertEquals(action.getName(), StopServerAction.class.getSimpleName());
 		Assert.assertEquals(action.getServer(), testServer);
 		
-		action = (StopServerAction)builder.getTestCase().getActions().get(1);
+		action = (StopServerAction)builder.testCase().getActions().get(1);
         Assert.assertEquals(action.getName(), StopServerAction.class.getSimpleName());
 		Assert.assertEquals(action.getServerList().size(), 3);
 		Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");

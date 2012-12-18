@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class JavaDefinitionTest {
     
@@ -38,7 +37,7 @@ public class JavaDefinitionTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(4);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 java("com.consol.citrus.dsl.util.JavaTest")
@@ -48,12 +47,12 @@ public class JavaDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), JavaAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
-        JavaAction action = ((JavaAction)builder.getTestCase().getActions().get(0));
+        JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
         
         Assert.assertEquals(action.getClassName(), "com.consol.citrus.dsl.util.JavaTest");
@@ -67,7 +66,7 @@ public class JavaDefinitionTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 java(EchoAction.class)
@@ -76,12 +75,12 @@ public class JavaDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), JavaAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
-        JavaAction action = ((JavaAction)builder.getTestCase().getActions().get(0));
+        JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
         
         Assert.assertEquals(action.getClassName(), EchoAction.class.getSimpleName());
@@ -95,7 +94,7 @@ public class JavaDefinitionTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 java(new EchoAction())
@@ -104,12 +103,12 @@ public class JavaDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), JavaAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
-        JavaAction action = ((JavaAction)builder.getTestCase().getActions().get(0));
+        JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
         
         Assert.assertNull(action.getClassName());

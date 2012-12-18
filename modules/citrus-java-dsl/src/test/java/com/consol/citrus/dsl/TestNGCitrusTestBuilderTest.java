@@ -20,6 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.dsl.definition.MockBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -30,19 +31,19 @@ public class TestNGCitrusTestBuilderTest {
     public void testNG() {
         FooTest builder = new FooTest();
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getName(), "FooTest");
-        Assert.assertEquals(builder.getTestCase().getPackageName(), "com.consol.citrus.dsl");
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getName(), "FooTest");
+        Assert.assertEquals(builder.testCase().getPackageName(), "com.consol.citrus.dsl");
         
-        Assert.assertEquals(builder.getTestCase().getDescription(), "This is a Test");
+        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
         
-        Assert.assertEquals(builder.getTestCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.getTestCase().getMetaInfo().getStatus(), Status.FINAL);
+        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), Status.FINAL);
     }
     
-    private static class FooTest extends TestNGCitrusTestBuilder {
+    private static class FooTest extends MockBuilder {
         @Override
         public void configure() {
             description("This is a Test");

@@ -20,13 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.TraceVariablesAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class TraceVariablesDefinitionTest {
 
 	@Test
 	public void testTraceVariablesBuilder() {
-		TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+		MockBuilder builder = new MockBuilder() {
 			@Override
 			public void configure() {
 				traceVariables();
@@ -34,17 +33,17 @@ public class TraceVariablesDefinitionTest {
 			}
 		};
 			
-		builder.configure();
+		builder.run(null, null);
 		
-		Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), TraceVariablesAction.class);
-		Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), TraceVariablesAction.class);
+		Assert.assertEquals(builder.testCase().getActions().size(), 2);
+		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TraceVariablesAction.class);
+		Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), TraceVariablesAction.class);
 		
-		TraceVariablesAction action = (TraceVariablesAction)builder.getTestCase().getActions().get(0);
+		TraceVariablesAction action = (TraceVariablesAction)builder.testCase().getActions().get(0);
 		Assert.assertEquals(action.getName(), TraceVariablesAction.class.getSimpleName());
 		Assert.assertNull(action.getVariableNames());
 		
-		action = (TraceVariablesAction)builder.getTestCase().getActions().get(1);
+		action = (TraceVariablesAction)builder.testCase().getActions().get(1);
         Assert.assertEquals(action.getName(), TraceVariablesAction.class.getSimpleName());
         Assert.assertNotNull(action.getVariableNames());
         Assert.assertEquals(action.getVariableNames().toString(), "[variable1, variable2]");

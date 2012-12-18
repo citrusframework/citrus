@@ -30,7 +30,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -66,7 +65,7 @@ public class ReceiveSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachment() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -76,12 +75,12 @@ public class ReceiveSoapMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
-        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -104,7 +103,7 @@ public class ReceiveSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachmentData() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -114,12 +113,12 @@ public class ReceiveSoapMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
-        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -143,7 +142,7 @@ public class ReceiveSoapMessageDefinitionTest {
     public void testSoapAttachmentResource() throws IOException {
         final Resource attachmentResource = EasyMock.createMock(Resource.class);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -158,12 +157,12 @@ public class ReceiveSoapMessageDefinitionTest {
         expect(attachmentResource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
         replay(resource, attachmentResource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
-        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -188,7 +187,7 @@ public class ReceiveSoapMessageDefinitionTest {
     public void testReceiveBuilderWithReceiverName() {
         SoapReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(SoapReplyMessageReceiver.class);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive("replyMessageReceiver")
@@ -208,18 +207,18 @@ public class ReceiveSoapMessageDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveSoapMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageReceiver(), replyMessageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
-        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());

@@ -77,7 +77,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Configures the test case with test actions. Subclasses may override this method in order
      * to contribute test actions to this test case.
      */
-    public void configure() {
+    protected void configure() {
     }
     
     /**
@@ -134,13 +134,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Action creating new test variables during a test.
      * @return
      */
-     protected CreateVariablesActionDefinition variables() {
-        CreateVariablesAction action = new CreateVariablesAction();
-        
-        testCase.addTestAction(action);
-        
-        return new CreateVariablesActionDefinition(action); 
-     }
+    protected CreateVariablesActionDefinition variables() {
+       CreateVariablesAction action = new CreateVariablesAction();
+       
+       testCase.addTestAction(action);
+       
+       return new CreateVariablesActionDefinition(action); 
+    }
      
     /**
      * Creates a new echo action.
@@ -809,7 +809,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Gets the testCase.
      * @return the testCase the testCase to get.
      */
-    public TestCase getTestCase() {
+    protected TestCase getTestCase() {
         return testCase;
     }
 }

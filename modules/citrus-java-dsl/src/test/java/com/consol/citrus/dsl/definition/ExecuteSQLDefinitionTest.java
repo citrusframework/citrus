@@ -29,7 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 
 public class ExecuteSQLDefinitionTest {    
@@ -40,7 +39,7 @@ public class ExecuteSQLDefinitionTest {
     
     @Test
     public void TestExecuteSQLBuilderWithStatement() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -51,12 +50,12 @@ public class ExecuteSQLDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
         
-        ExecuteSQLAction action = (ExecuteSQLAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
         Assert.assertEquals(action.isIgnoreErrors(), false);
@@ -65,7 +64,7 @@ public class ExecuteSQLDefinitionTest {
     
     @Test
     public void TestExecuteSQLBuilderWithSQLResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -79,12 +78,12 @@ public class ExecuteSQLDefinitionTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
 
-        ExecuteSQLAction action = (ExecuteSQLAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);

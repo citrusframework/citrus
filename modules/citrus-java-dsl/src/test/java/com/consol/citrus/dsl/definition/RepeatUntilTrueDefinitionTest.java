@@ -22,12 +22,11 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatUntilTrue;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class RepeatUntilTrueDefinitionTest {
     @Test
     public void testRepeatUntilTrueBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 repeat(echo("${var}"), sleep(3.0), echo("${var}"))
@@ -37,13 +36,13 @@ public class RepeatUntilTrueDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), RepeatUntilTrue.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), RepeatUntilTrue.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), RepeatUntilTrue.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), RepeatUntilTrue.class.getSimpleName());
         
-        RepeatUntilTrue container = (RepeatUntilTrue)builder.getTestCase().getActions().get(0);
+        RepeatUntilTrue container = (RepeatUntilTrue)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getCondition(), "i lt 5");
         assertEquals(container.getIndex(), 2);

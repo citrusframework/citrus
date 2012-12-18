@@ -31,7 +31,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
@@ -57,7 +56,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -65,12 +64,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -87,7 +86,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithPayloadString() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -95,12 +94,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -116,7 +115,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -128,12 +127,12 @@ public class ReceiveMessageDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayload".getBytes())).once();
         replay(resource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -151,7 +150,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithReceiverName() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive("fooMessageReceiver")
@@ -167,12 +166,12 @@ public class ReceiveMessageDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -182,7 +181,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithTimeout() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -191,12 +190,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -205,7 +204,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaders() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -220,13 +219,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -239,7 +238,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
         
-        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -255,7 +254,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaderData() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -268,13 +267,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -287,7 +286,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResourcePath());
         
-        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -303,7 +302,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -321,13 +320,13 @@ public class ReceiveMessageDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
         replay(resource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -339,7 +338,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "someHeaderData");
         
-        action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -358,7 +357,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidator() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -369,12 +368,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -392,7 +391,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -411,12 +410,12 @@ public class ReceiveMessageDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -437,7 +436,7 @@ public class ReceiveMessageDefinitionTest {
         final Map<String, String> messageSelector = new HashMap<String, String>();
         messageSelector.put("operation", "sayHello");
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -446,12 +445,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -462,7 +461,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -471,12 +470,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -488,7 +487,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -498,12 +497,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -517,7 +516,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -527,12 +526,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -546,7 +545,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractCombined() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -558,12 +557,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -583,7 +582,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidationCallback() {
         final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -594,12 +593,12 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.getTestCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);

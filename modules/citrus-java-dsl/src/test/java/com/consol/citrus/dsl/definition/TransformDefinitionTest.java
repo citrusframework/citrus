@@ -27,7 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class TransformDefinitionTest {
 	private Resource xmlResource = EasyMock.createMock(Resource.class);
@@ -35,7 +34,7 @@ public class TransformDefinitionTest {
 	
 	@Test
 	public void testTransformBuilderWithData() {
-		TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+		MockBuilder builder = new MockBuilder() {
     		@Override
     		public void configure() {
     		    transform()
@@ -45,11 +44,11 @@ public class TransformDefinitionTest {
 			}
 		};
 	
-		builder.configure();
-		Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), TransformAction.class);
+		builder.run(null, null);
+		Assert.assertEquals(builder.testCase().getActions().size(), 1);
+		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
 		
-		TransformAction action = (TransformAction)builder.getTestCase().getActions().get(0);
+		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
 		
 		Assert.assertEquals(action.getName(), TransformAction.class.getSimpleName());
 		Assert.assertEquals(action.getXmlData(), "<Test>XML</test>");
@@ -59,7 +58,7 @@ public class TransformDefinitionTest {
 		
 	@Test
 	public void testTransformBuilderWithResource() throws IOException {
-		TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+		MockBuilder builder = new MockBuilder() {
 			@Override
 			public void configure() {
 				transform()
@@ -75,11 +74,11 @@ public class TransformDefinitionTest {
         expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
         replay(xmlResource, xsltResource);
 		
-		builder.configure();
-		Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-		Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), TransformAction.class);
+		builder.run(null, null);
+		Assert.assertEquals(builder.testCase().getActions().size(), 1);
+		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
 		
-		TransformAction action = (TransformAction)builder.getTestCase().getActions().get(0);
+		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
 		
 		Assert.assertEquals(action.getName(), TransformAction.class.getSimpleName());
 		Assert.assertEquals(action.getXmlData(), "xmlData");

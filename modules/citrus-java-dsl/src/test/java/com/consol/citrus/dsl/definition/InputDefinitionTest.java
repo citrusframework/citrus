@@ -20,13 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.InputAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class InputDefinitionTest {
 
     @Test
     public void TestInputBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 input()
@@ -36,12 +35,12 @@ public class InputDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), InputAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), InputAction.class);
         
-        InputAction action = (InputAction)builder.getTestCase().getActions().get(0);
+        InputAction action = (InputAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), InputAction.class.getSimpleName());
         Assert.assertEquals(action.getMessage(), "TestMessage");
         Assert.assertEquals(action.getValidAnswers(), "Yes/No/Maybe");

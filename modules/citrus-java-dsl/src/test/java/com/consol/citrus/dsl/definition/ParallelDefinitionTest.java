@@ -22,12 +22,11 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class ParallelDefinitionTest {
     @Test
     public void testParallelBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 parallel(echo("${var}"), 
@@ -36,13 +35,13 @@ public class ParallelDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Parallel.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), Parallel.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Parallel.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), Parallel.class.getSimpleName());
         
-        Parallel container = (Parallel)builder.getTestCase().getActions().get(0); 
+        Parallel container = (Parallel)builder.testCase().getActions().get(0); 
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }

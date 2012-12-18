@@ -21,25 +21,24 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Conditional;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class ConditionalDefinitionTest {
     @Test
     public void testConditionalBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 conditional(echo("${var}")).when("${var} = 5");
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Conditional.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), Conditional.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Conditional.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), Conditional.class.getSimpleName());
         
-        Conditional container = (Conditional)builder.getTestCase().getActions().get(0);
+        Conditional container = (Conditional)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getExpression(), "${var} = 5");
     }

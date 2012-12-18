@@ -16,17 +16,16 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Iterate;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class IterateDefinitionTest {
     @Test
     public void testIterateBuilder() {      
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 iterate(variables().add("index", "${i}"))
@@ -37,13 +36,13 @@ public class IterateDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Iterate.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), Iterate.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), Iterate.class.getSimpleName());
         
-        Iterate container = (Iterate)builder.getTestCase().getActions().get(0);   
+        Iterate container = (Iterate)builder.testCase().getActions().get(0);   
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");
         assertEquals(container.getStep(), 1);

@@ -20,26 +20,25 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.StopTimeAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class StopTimeDefinitionTest {
     
     @Test
     public void testStopTimeBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 stopTime("TestId");
             }
         };
     
-        builder.configure();
+        builder.run(null, null);
         
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), StopTimeAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), StopTimeAction.class);
         
-        StopTimeAction action = (StopTimeAction)builder.getTestCase().getActions().get(0);
+        StopTimeAction action = (StopTimeAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), StopTimeAction.class.getSimpleName());
         Assert.assertEquals(action.getId(), "TestId");
     }

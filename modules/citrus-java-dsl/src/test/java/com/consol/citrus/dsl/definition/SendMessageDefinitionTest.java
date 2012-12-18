@@ -29,7 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -48,7 +47,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -56,12 +55,12 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -75,7 +74,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithPayloadData() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -83,12 +82,12 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -101,7 +100,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithPayloadResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -113,12 +112,12 @@ public class SendMessageDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
         replay(resource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -133,7 +132,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithSenderName() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send("fooMessageSender")
@@ -149,12 +148,12 @@ public class SendMessageDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
@@ -163,7 +162,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithHeaders() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -173,12 +172,12 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -193,7 +192,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithHeaderData() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -206,13 +205,13 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -224,7 +223,7 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertNull(messageBuilder.getMessageHeaderResourcePath());
         
-        action = ((SendMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((SendMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -239,7 +238,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -257,13 +256,13 @@ public class SendMessageDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
         replay(resource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -274,7 +273,7 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "someHeaderData");
         
-        action = ((SendMessageAction)builder.getTestCase().getActions().get(1));
+        action = ((SendMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -288,7 +287,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -298,12 +297,12 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
@@ -316,7 +315,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 send(messageSender)
@@ -326,12 +325,12 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
-        SendMessageAction action = ((SendMessageAction)builder.getTestCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         
         Assert.assertEquals(action.getMessageSender(), messageSender);

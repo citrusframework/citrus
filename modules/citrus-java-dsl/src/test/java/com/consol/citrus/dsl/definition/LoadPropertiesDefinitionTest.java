@@ -20,24 +20,23 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.LoadPropertiesAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class LoadPropertiesDefinitionTest {
     @Test
     public void TestLoadBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 load("classpath:test.properties");
             }
         };
             
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
         
-        LoadPropertiesAction action = (LoadPropertiesAction)builder.getTestCase().getActions().get(0);
+        LoadPropertiesAction action = (LoadPropertiesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), LoadPropertiesAction.class.getSimpleName());
         Assert.assertEquals(action.getFilePath(), "classpath:test.properties");
     }

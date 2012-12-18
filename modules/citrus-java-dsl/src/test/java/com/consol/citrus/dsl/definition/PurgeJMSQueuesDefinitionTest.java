@@ -24,7 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class PurgeJMSQueuesDefinitionTest {
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
@@ -35,7 +34,7 @@ public class PurgeJMSQueuesDefinitionTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueueNames() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -46,12 +45,12 @@ public class PurgeJMSQueuesDefinitionTest {
             }
         };
           
-        builder.configure();
+        builder.run(null, null);
           
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
           
-        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.getTestCase().getActions().get(0);
+        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000);
         Assert.assertEquals(action.getSleepTime(), 1000);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
@@ -62,7 +61,7 @@ public class PurgeJMSQueuesDefinitionTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueues() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -73,12 +72,12 @@ public class PurgeJMSQueuesDefinitionTest {
             }
         };
           
-        builder.configure();
+        builder.run(null, null);
           
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
           
-        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.getTestCase().getActions().get(0);
+        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000);
         Assert.assertEquals(action.getSleepTime(), 1000);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);

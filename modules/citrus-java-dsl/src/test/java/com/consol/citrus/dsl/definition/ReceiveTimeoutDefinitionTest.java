@@ -18,11 +18,10 @@ package com.consol.citrus.dsl.definition;
 
 
 import org.easymock.EasyMock;
-import org.testng.annotations.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.message.MessageReceiver;
 
 public class ReceiveTimeoutDefinitionTest {
@@ -31,7 +30,7 @@ public class ReceiveTimeoutDefinitionTest {
      
     @Test
     public void TestReceiveTimeoutBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 expectTimeout(messageReceiver)
@@ -40,12 +39,12 @@ public class ReceiveTimeoutDefinitionTest {
             }
         };
          
-        builder.configure();
+        builder.run(null, null);
          
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
          
-        ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.getTestCase().getActions().get(0);
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ReceiveTimeoutAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 

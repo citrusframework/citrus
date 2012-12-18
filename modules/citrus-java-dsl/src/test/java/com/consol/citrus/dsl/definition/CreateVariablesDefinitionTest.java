@@ -20,13 +20,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.CreateVariablesAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class CreateVariablesDefinitionTest {
 
     @Test
     public void testCreateVariablesBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 variables().add("foo", "bar")
@@ -34,12 +33,12 @@ public class CreateVariablesDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), CreateVariablesAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), CreateVariablesAction.class);
         
-        CreateVariablesAction action = (CreateVariablesAction)builder.getTestCase().getActions().get(0);
+        CreateVariablesAction action = (CreateVariablesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), CreateVariablesAction.class.getSimpleName());
         Assert.assertEquals(action.getVariables().toString(), "{foo=bar, text=Hello Citrus!}");
         

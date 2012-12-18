@@ -18,7 +18,8 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import javax.sql.DataSource;
 
@@ -28,7 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class ExecutePLSQLDefinitionTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
@@ -37,7 +37,7 @@ public class ExecutePLSQLDefinitionTest {
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -47,12 +47,12 @@ public class ExecutePLSQLDefinitionTest {
             }
         };
           
-        builder.configure();
+        builder.run(null, null);
           
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
           
-        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.getTestCase().getActions().get(0);
+        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
@@ -63,7 +63,7 @@ public class ExecutePLSQLDefinitionTest {
     
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -75,12 +75,12 @@ public class ExecutePLSQLDefinitionTest {
         expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
         replay(sqlResource);
         
-        builder.configure();
+        builder.run(null, null);
           
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
 
-        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.getTestCase().getActions().get(0);
+        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().size(), 0L);
@@ -90,7 +90,7 @@ public class ExecutePLSQLDefinitionTest {
     
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -99,12 +99,12 @@ public class ExecutePLSQLDefinitionTest {
             }
         };
           
-        builder.configure();
+        builder.run(null, null);
           
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
 
-        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.getTestCase().getActions().get(0);
+        ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getStatements().size(), 0L);

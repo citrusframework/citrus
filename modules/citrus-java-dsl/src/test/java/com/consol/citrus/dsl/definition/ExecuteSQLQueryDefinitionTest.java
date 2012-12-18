@@ -28,7 +28,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 
@@ -42,7 +41,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 query(dataSource)
@@ -58,12 +57,12 @@ public class ExecuteSQLQueryDefinitionTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 1);
@@ -80,7 +79,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
         @Override
         public void configure() {
             query(dataSource)
@@ -93,12 +92,12 @@ public class ExecuteSQLQueryDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 1);
@@ -114,7 +113,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testValidationScript() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
         @Override
         public void configure() {
             query(dataSource)
@@ -123,12 +122,12 @@ public class ExecuteSQLQueryDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -143,7 +142,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testValidationScriptResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
         @Override
         public void configure() {
             query(dataSource)
@@ -156,12 +155,12 @@ public class ExecuteSQLQueryDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -178,7 +177,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testGroovyValidationScript() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
         @Override
         public void configure() {
             query(dataSource)
@@ -187,12 +186,12 @@ public class ExecuteSQLQueryDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -207,7 +206,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
         @Override
         public void configure() {
             query(dataSource)
@@ -220,12 +219,12 @@ public class ExecuteSQLQueryDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.getTestCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
         Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
         Assert.assertEquals(action.getControlResultSet().size(), 0);

@@ -25,7 +25,6 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.script.GroovyAction;
 
 public class GroovyDefinitionTest {
@@ -35,7 +34,7 @@ public class GroovyDefinitionTest {
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 groovy(scriptResource)
@@ -47,12 +46,12 @@ public class GroovyDefinitionTest {
         expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(scriptResource);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
         
-        GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getScript(), "someScript");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
         
@@ -61,7 +60,7 @@ public class GroovyDefinitionTest {
     
     @Test
     public void testGroovyBuilderWithScript() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -69,19 +68,19 @@ public class GroovyDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
         
-        GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getScript(), "println 'Groovy!'");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
     }
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -94,19 +93,19 @@ public class GroovyDefinitionTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(scriptTemplate, file);
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
         
-        GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getScriptTemplatePath(), "classpath:some.file");
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
     
     @Test
     public void testGroovyBuilderWithTemplatePath() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -114,12 +113,12 @@ public class GroovyDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 1);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
         
-        GroovyAction action = (GroovyAction)builder.getTestCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
         Assert.assertNotNull(action.getScriptTemplatePath());
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }

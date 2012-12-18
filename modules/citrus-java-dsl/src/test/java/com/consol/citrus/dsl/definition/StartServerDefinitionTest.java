@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.StartServerAction;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.server.Server;
 
 public class StartServerDefinitionTest {
@@ -33,7 +32,7 @@ public class StartServerDefinitionTest {
 
     @Test
     public void testStartServerBuilder() {
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 start(testServer);
@@ -41,18 +40,18 @@ public class StartServerDefinitionTest {
             }
         };
         
-        builder.configure();
+        builder.run(null, null);
         
         
-        Assert.assertEquals(builder.getTestCase().getActions().size(), 2);
-        Assert.assertEquals(builder.getTestCase().getActions().get(0).getClass(), StartServerAction.class);
-        Assert.assertEquals(builder.getTestCase().getActions().get(1).getClass(), StartServerAction.class);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), StartServerAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), StartServerAction.class);
         
-        StartServerAction action = (StartServerAction)builder.getTestCase().getActions().get(0);
+        StartServerAction action = (StartServerAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), StartServerAction.class.getSimpleName());
         Assert.assertEquals(action.getServer(), testServer);
         
-        action = (StartServerAction)builder.getTestCase().getActions().get(1);
+        action = (StartServerAction)builder.testCase().getActions().get(1);
         Assert.assertEquals(action.getName(), StartServerAction.class.getSimpleName());
         Assert.assertEquals(action.getServerList().size(), 3);
         Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");

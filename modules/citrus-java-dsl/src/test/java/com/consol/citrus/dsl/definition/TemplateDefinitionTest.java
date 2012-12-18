@@ -30,7 +30,6 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Template;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 public class TemplateDefinitionTest {
     
@@ -46,7 +45,7 @@ public class TemplateDefinitionTest {
         actions.add(new SleepAction());
         rootTemplate.setActions(actions);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 template("fooTemplate")
@@ -63,13 +62,13 @@ public class TemplateDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Template.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), "fooTemplate");
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), "fooTemplate");
         
-        Template container = (Template)builder.getTestCase().getActions().get(0);
+        Template container = (Template)builder.testCase().getActions().get(0);
         assertEquals(container.isGlobalContext(), true);
         assertEquals(container.getParameter().toString(), "{param=foo, text=Citrus rocks!}");
         assertEquals(container.getActions().size(), 2);
@@ -88,7 +87,7 @@ public class TemplateDefinitionTest {
         actions.add(new EchoAction());
         rootTemplate.setActions(actions);
         
-        TestNGCitrusTestBuilder builder = new TestNGCitrusTestBuilder() {
+        MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
                 template("fooTemplate")
@@ -104,13 +103,13 @@ public class TemplateDefinitionTest {
         
         replay(applicationContext);
         
-        builder.configure();
+        builder.run(null, null);
         
-        assertEquals(builder.getTestCase().getActions().size(), 1);
-        assertEquals(builder.getTestCase().getActions().get(0).getClass(), Template.class);
-        assertEquals(builder.getTestCase().getActions().get(0).getName(), "fooTemplate");
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), "fooTemplate");
         
-        Template container = (Template)builder.getTestCase().getActions().get(0);
+        Template container = (Template)builder.testCase().getActions().get(0);
         assertEquals(container.isGlobalContext(), false);
         assertEquals(container.getParameter().size(), 0L);
         assertEquals(container.getActions().size(), 1);
