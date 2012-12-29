@@ -7,37 +7,17 @@
     <artifactId>citrus-default-skin</artifactId>
     <version>1.3.M1</version>
   </skin>
-  <poweredBy>
-    <logo name="ConSol Labs" href="http://labs.consol.de" img="images/logos/powered-by-labs-consol.png"/>    
-    <logo name="ConSol" href="http://www.consol.de" img="images/logos/powered-by-consol.png"/>
-    <logo name="Maven" href="http://maven.apache.org/"/>
-  </poweredBy>
   <body>
-    <links>
-      <item name="ConSol* Labs" href="http://labs.consol.de/"/>
-      <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
-      <item name="GitHub" href="http://github.com/christophd/citrus"/>
-      <item name="Build" href="http://labs.consol.de/hudson/"/>
-      <item name="Sonar" href="http://labs.consol.de/sonar/"/>
-    </links>
-
-    <menu name="Citrus">
-      <item name="Welcome" href="${site.url}/index.html"/>
-      <item name="Introduction" href="${site.url}/introduction.html"/>
-      <item name="Features" href="${site.url}/features.html"/>
-      <item name="Support" href="${site.url}/support.html"/>
-      <item name="Changes" href="${site.url}/changes-report.html"/>
-    </menu>
+    <menu name="Home"/>
     
-    <menu name="Getting Started">
+    <menu name="Quickstart">
       <item name="Installation" href="${site.url}/installation.html"/>
       <item name="Download" href="${site.url}/download.html"/>
       <item name="Tutorials" href="${site.url}/tutorials.html">
         <item name="Run with Maven" href="${site.url}/tutorials/run-with-maven.html"/>
         <item name="Run with ANT" href="${site.url}/tutorials/run-with-ant.html"/>
-        <item name="Writing functions" href="${site.url}/tutorials/write-functions.html"/>
+        <item name="Custom functions" href="${site.url}/tutorials/write-functions.html"/>
         <item name="Custom actions" href="${site.url}/tutorials/create-custom-actions.html"/>
-        <item name="More ..." href="${site.url}/tutorials.html"/>
       </item>
     </menu>
     
@@ -48,28 +28,31 @@
     </menu>
     
     <menu name="Tools">
-        <item name="Ant tasks" href="${site.url}/ant-tasks.html"/>
-        <item name="Maven plugin" href="${site.url}/modules/citrus-maven/plugins/citrus-maven-plugin/plugin-info.html"/>
+      <item name="Maven plugin" href="${site.url}/modules/citrus-maven/plugins/citrus-maven-plugin/plugin-info.html"/>
+      <item name="ANT tasks" href="${site.url}/ant-tasks.html"/>
     </menu>
     
     <menu name="Community">
       <item name="News" href="${site.url}/news.html"/>
-      <item name="Forum" href="http://citrus.895196.n3.nabble.com/"/>
-      <item name="Contact" href="${site.url}/contact.html"/>
+      <item name="Forum" href="http://labs.consol.de/lang/de/forum/#/categories/citrus"/>
+      <item name="Issues" href="http://citrusframework.atlassian.net/browse/CITRUS"/>
+      <item name="Mailing List" href="${site.url}/mailing-list.html"/>
     </menu>
 
     <menu name="Development">
       <item name="Team" href="${site.url}/team-list.html"/>
       <item name="Quickstart" href="${site.url}/quickstart.html"/>
-      <item name="Sources" href="${site.url}/source-repository.html"/>
-      <item name="Contributing" href="${site.url}/contributing.html"/>
-      <item name="Conventions" href="${site.url}/conventions.html"/>
+      <item name="Github Sources" href="${site.url}/source-repository.html"/>
+      <item name="Contribute" href="${site.url}/contributing.html"/>
       <item name="Modules" href="${site.url}/modules-introduction.html"/>
+      <item name="Continuous Build" href="http://labs.consol.de/hudson/"/>
+      <item name="Sonar" href="http://labs.consol.de/sonar/"/>
     </menu>
     
-    <menu name="Commercial services">
+    <menu name="Contact">
+        <item name="Training" href="${site.url}/commercial-consulting.html"/>
         <item name="Consulting" href="${site.url}/commercial-consulting.html"/>
-        <item name="Development" href="${site.url}/commercial-development.html"/>
+        <item name="ConSol* Software GmbH" href="http://www.consol.de"/>
     </menu>
   </body>
 </project>

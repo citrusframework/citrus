@@ -42,8 +42,6 @@
     <module>modules/citrus-ws</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
-    <module>modules/citrus-ant-tasks</module>
-    <module>modules/citrus-maven</module>
     <module>modules/citrus-admin</module>
   </modules>
 
@@ -544,8 +542,9 @@
           <version>2.4.1</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.2</version>
+          <version>3.2</version>
         </plugin>
         <plugin>
           <groupId>org.mortbay.jetty</groupId>
@@ -637,6 +636,14 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>tools</id>
+      <modules>
+        <module>modules/citrus-ant-tasks</module>
+        <module>modules/citrus-maven</module>
+      </modules>
+    </profile>
+    
     <!-- Distribution Management -->
     <profile>
       <id>release-inhouse</id>
@@ -649,7 +656,14 @@
           <id>repository-consol-snapshots</id>
           <url>http://build.int.consol.de/nexus/content/repositories/inhouse-snapshots</url>
         </snapshotRepository>
+        <site>
+          <id>site-citrus</id>
+          <url>scpexe://build.int.consol.de/home/sites/www/htdocs/citrus</url>
+        </site>
       </distributionManagement>
+      <properties>
+        <site.url>http://build.int.consol.de/citrus</site.url>
+      </properties>
     </profile>
     
     <profile>
@@ -663,38 +677,6 @@
           <id>consol-labs-snapshots</id>
           <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
         </snapshotRepository>
-      </distributionManagement>
-    </profile>
-    
-    <profile>
-      <id>site-local</id>
-      <distributionManagement>
-        <site>
-          <id>site-citrus</id>
-          <url>file:///stage/citrus-site</url>
-        </site>
-      </distributionManagement>
-      <properties>
-        <site.url>http://www.citrusframework.org</site.url>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>site-inhouse</id>
-      <distributionManagement>
-        <site>
-          <id>site-citrus</id>
-          <url>scpexe://build.int.consol.de/home/sites/www/htdocs/citrus</url>
-        </site>
-      </distributionManagement>
-      <properties>
-        <site.url>http://build.int.consol.de/citrus</site.url>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>site-labs</id>
-      <distributionManagement>
         <site>
           <id>site-citrus</id>
           <url>scpexe://labs.consol.de/home/citrus/www/stage</url>
@@ -706,9 +688,48 @@
     </profile>
     
     <profile>
+      <id>release-local</id>
+      <distributionManagement>
+        <repository>
+          <id>local-release</id>
+          <url>file:///stage/repository</url>
+        </repository>
+        <snapshotRepository>
+          <id>local-snapshots</id>
+          <url>file:///stage/snapshots-repository</url>
+        </snapshotRepository>
+        <site>
+          <id>site-citrus</id>
+          <url>file:///stage/citrus-site</url>
+        </site>
+      </distributionManagement>
+      <properties>
+        <site.url>http://www.citrusframework.org</site.url>
+      </properties>
+    </profile>
+    
+    <profile>
       <id>site</id>
       <build>
         <plugins>
+          <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>com.consol.citrus.mvn</groupId>
+                <artifactId>citrus-default-skin</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>attach-descriptor</id>
+                <goals>
+                  <goal>attach-descriptor</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>com.agilejava.docbkx</groupId>
             <artifactId>docbkx-maven-plugin</artifactId>
@@ -757,9 +778,6 @@
                 <phase>pre-site</phase>
               </execution>
             </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-site-plugin</artifactId>
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -875,14 +893,12 @@
         </plugins>
       </build>
   
-      <!-- Reports common to *all* projects. Top-level project needs some
-           special aggregation reports. -->
       <reporting>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
-            <version>2.3</version>
+            <version>2.6</version>
             <reportSets>
               <reportSet>
                 <reports>
@@ -905,38 +921,13 @@
             </configuration>
           </plugin>
           <plugin>
-            <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>2.5</version>
-            <configuration>
-              <linkXRef>true</linkXRef>
-              <aggregate>true</aggregate>
-            </configuration>
-          </plugin>
-          <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.7</version>
           </plugin>
           <plugin>
-            <!--  This report includes a cross-reference of the project's sources. Each source entry is also linked with its corresponding Javadoc (if Javadoc was generated). -->
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>2.2</version>
-            <configuration>
-              <linkJavadoc>true</linkJavadoc>
-              <aggregate>true</aggregate>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>2.2</version>
-            <configuration>
-              <linkJavadoc>true</linkJavadoc>
-              <aggregate>false</aggregate> <!-- Generates additional per module report -->
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.2</version>
+            <version>2.4</version>
             <configuration>
               <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
               <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
@@ -944,10 +935,9 @@
             <reportSets>
               <reportSet>
                 <reports>
-                  <report>dependencies</report>
                   <report>dependency-convergence</report>
+                  <report>dependency-management</report>
                   <report>scm</report>
-                  <report>mailing-list</report>
                   <report>cim</report>
                   <report>issue-tracking</report>
                   <report>license</report>
@@ -1045,40 +1035,6 @@
                 </plugin>
             </plugins>
         </build>
-    </profile>
-    
-    <profile>
-      <id>maven-3</id>
-      <activation>
-        <file>
-          <!--  This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
-          <exists>${basedir}</exists>
-        </file>
-      </activation>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>3.1</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-        <plugins>
-          <plugin>
-            <artifactId>maven-site-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-descriptor</id>
-                <goals>
-                  <goal>attach-descriptor</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>
