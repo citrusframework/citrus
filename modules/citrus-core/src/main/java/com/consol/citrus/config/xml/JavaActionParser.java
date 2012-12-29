@@ -18,10 +18,12 @@ package com.consol.citrus.config.xml;
 
 import java.util.*;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -77,7 +79,7 @@ public class JavaActionParser implements BeanDefinitionParser {
     }
 
     private Object resolveArgument(String type, String value) {
-        if (type == null || type.equals("")) {
+        if (!StringUtils.hasText(type) || type.equals("String")) {
             return value;
         } else if (type.equals("String[]")) {
             return value.split(",");
@@ -85,9 +87,13 @@ public class JavaActionParser implements BeanDefinitionParser {
             return Boolean.valueOf(value).booleanValue();
         }  else if (type.equals("int")) {
             return Integer.valueOf(value).intValue();
-        } //TODO: add other data types
+        } else if (type.equals("long")) {
+            return Long.valueOf(value);
+        } else if (type.equals("double")) {
+            return Double.valueOf(value);
+        }
 
-        return null;
+        throw new BeanCreationException("Found unsupported method argument type: '" + type + "'");
     }
 
 }

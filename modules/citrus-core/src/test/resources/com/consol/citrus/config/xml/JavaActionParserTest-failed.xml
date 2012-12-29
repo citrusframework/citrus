@@ -6,28 +6,9 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="JavaActionParserTest">
         <actions>
-            <java class="com.consol.citrus.util.InvocationDummy">
-                <constructor>
-                    <argument type="">Test Invocation</argument>
-                </constructor>
-                <method name="invoke">
-                    <argument type="String[]">1,2</argument>
-                </method>
-            </java>
-      
-            <java class="com.consol.citrus.util.InvocationDummy">
-                <method name="invoke">
-                    <argument type="int">4</argument>
-                    <argument>Test</argument>
-                    <argument type="boolean">true</argument>
-                </method>
-            </java>
-            
             <java ref="invocationDummy">
                 <method name="invoke">
-                    <argument type="int">0</argument>
-                    <argument type="String">Test invocation</argument>
-                    <argument type="boolean">false</argument>
+                    <argument type="integer">4</argument>
                 </method>
             </java>
         </actions>

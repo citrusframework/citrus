@@ -64,7 +64,7 @@
                 </constructor>
                 <method name="invoke">
                     <argument type="int">4</argument>
-                    <argument>Test</argument>
+                    <argument type="String">Test</argument>
                     <argument type="boolean">true</argument>
                 </method>
             </java>

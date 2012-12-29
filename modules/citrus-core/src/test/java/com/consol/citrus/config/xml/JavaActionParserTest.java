@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -56,5 +57,19 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         Assert.assertEquals(action.getInstance().getClass(), InvocationDummy.class);
         Assert.assertEquals(action.getMethodName(), "invoke");
         Assert.assertEquals(action.getConstructorArgs().size(), 0);
+        Assert.assertEquals(action.getMethodArgs().get(0), 0);
+        Assert.assertEquals(action.getMethodArgs().get(1), "Test invocation");
+        Assert.assertEquals(action.getMethodArgs().get(2), false);
+    }
+    
+    @Test
+    public void testUnsupportedMethodType() {
+        try {
+            createApplicationContext("failed");
+            Assert.fail("Missing bean creation exception due to unsupported method type");
+        } catch (BeanDefinitionStoreException e) {
+            Assert.assertTrue(e.getCause().getMessage().contains(
+                    "unsupported method argument type: 'integer'"));
+        }
     }
 }
