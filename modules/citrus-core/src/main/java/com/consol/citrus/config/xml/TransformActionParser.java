@@ -33,39 +33,39 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  */
 public class TransformActionParser implements BeanDefinitionParser {
 
-	/**
+    /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
-		BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TransformAction.class);
-		
-		DescriptionElementParser.doParse(element, beanDefinition);
-		
-		Element xmlDataElement = DomUtils.getChildElementByTagName(element, "xml-data");
-		if (xmlDataElement != null) {
-			beanDefinition.addPropertyValue("xmlData", DomUtils.getTextValue(xmlDataElement));
-		}
-		
-		Element xmlResourceElement = DomUtils.getChildElementByTagName(element, "xml-resource");
-		if (xmlResourceElement != null) {
-        	beanDefinition.addPropertyValue("xmlResourcePath", xmlResourceElement.getAttribute("file"));
-		}
-		
-		Element xsltDataElement = DomUtils.getChildElementByTagName(element, "xslt-data");
-		if (xsltDataElement != null) {
-			beanDefinition.addPropertyValue("xsltData", DomUtils.getTextValue(xsltDataElement));
-		}
-		
-		Element xsltResourceElement = DomUtils.getChildElementByTagName(element, "xslt-resource");
-		if (xsltResourceElement != null) {
-        	beanDefinition.addPropertyValue("xsltResourcePath", xsltResourceElement.getAttribute("file"));
-		}
-		
-		BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");
-		
-		beanDefinition.addPropertyValue("name", element.getLocalName());
-		
-		return beanDefinition.getBeanDefinition();
-	}
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TransformAction.class);
+        
+        DescriptionElementParser.doParse(element, beanDefinition);
+        
+        Element xmlDataElement = DomUtils.getChildElementByTagName(element, "xml-data");
+        if (xmlDataElement != null) {
+            beanDefinition.addPropertyValue("xmlData", DomUtils.getTextValue(xmlDataElement));
+        }
+        
+        Element xmlResourceElement = DomUtils.getChildElementByTagName(element, "xml-resource");
+        if (xmlResourceElement != null) {
+            beanDefinition.addPropertyValue("xmlResourcePath", xmlResourceElement.getAttribute("file"));
+        }
+        
+        Element xsltDataElement = DomUtils.getChildElementByTagName(element, "xslt-data");
+        if (xsltDataElement != null) {
+            beanDefinition.addPropertyValue("xsltData", DomUtils.getTextValue(xsltDataElement));
+        }
+        
+        Element xsltResourceElement = DomUtils.getChildElementByTagName(element, "xslt-resource");
+        if (xsltResourceElement != null) {
+            beanDefinition.addPropertyValue("xsltResourcePath", xsltResourceElement.getAttribute("file"));
+        }
+        
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");
+        
+        beanDefinition.addPropertyValue("name", element.getLocalName());
+        
+        return beanDefinition.getBeanDefinition();
+    }
 
 }
