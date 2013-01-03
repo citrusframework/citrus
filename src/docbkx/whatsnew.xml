@@ -20,17 +20,19 @@
     with a proper SOAP response or SOAP fault. See <xref linkend="soap-http-errors"/> for details.</para>
   </section>
   
-  <section id="whatsnew-actions">
-    <title>New test actions</title>
+  <section id="whatsnew-ssh">
+    <title>SSH server and client</title>
+
+    <para>The Citrus family has raised a new member in adding SSH connectivity. With the new SSH module you are able to provide a full stack SSH server. The SSH server accepts client connections and you as a tester can simulate
+    any SSH server functionality with proper validation as it is known to Citrus SOAP and HTTP modules. In addition to that you can also use the Citrus SSH client in order to connect to an external SSH server. You can execute 
+    SSH commands on the SSH server and validate the respective response data. The full description is provided in <xref linkend="ssh"/>.</para>
+  </section>
+  
+  <section id="whatsnew-antrun">
+    <title>ANT run test action</title>
     
-    <para>We introduced some completely new test actions:</para> 
-    
-    <itemizedlist>
-        <listitem><para><emphasis>AntRunAction</emphasis> This action executes one or more ANT build targets on a build.xml file. You can specify build properties that get passed to the ANT build and you can add a 
-        custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para></listitem>
-    </itemizedlist>
-    
-    <para>See also our test action section (<xref linkend="actions"/>) for detailed instructions how to use the new test actions.</para>
+    <para>With this new test action you can call ANT builds from your test case. The action executes one or more ANT build targets on a build.xml file. You can specify build properties that get passed to the ANT build and 
+    you can add a custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para>
   </section>
   
   <section id="whatsnew-functions">

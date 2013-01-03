@@ -31,11 +31,11 @@
           <message>
             <data>
               <![CDATA[
-	            				<ssh-request>
-	            				  <command>shutdown</command>
-	            				  <stdin>input</stdin>
-	            				</ssh-request>
-	            			]]>
+                  <ssh-request>
+                    <command>shutdown</command>
+                    <stdin>input</stdin>
+                  </ssh-request>
+              ]]>
             </data>
           </message>
         </send>
@@ -61,11 +61,11 @@
             <message>
               <data>
                 <![CDATA[
-    	           	<ssh-response>
-    	           		<stdout>Hello Citrus</stdout>
-    	             	<exit>0</exit>
-    	           	</ssh-response>
-    	           ]]>
+                    <ssh-response>
+                        <stdout>Hello Citrus</stdout>
+                        <exit>0</exit>
+                    </ssh-response>
+                   ]]>
               </data>
             </message>
             <header>
@@ -79,17 +79,15 @@
         <message>
           <data>
             <![CDATA[
-            				<ssh-response>
-            					<stdout>Hello Citrus</stdout>
-            					<stderr/>
-            					<exit>0</exit>
-            				</ssh-response>
-            			]]>
+                <ssh-response>
+                    <stdout>Hello Citrus</stdout>
+                    <stderr/>
+                    <exit>0</exit>
+                </ssh-response>
+            ]]>
           </data>
         </message>
       </receive>
-
-
     </actions>
   </testcase>
 </spring:beans>
