@@ -66,6 +66,7 @@ public final class TestActionRegistry {
         registerActionParser("plsql", new ExecutePLSQLActionParser());
         registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
+        registerActionParser("ant", new AntRunActionParser());
     }
 
     /**

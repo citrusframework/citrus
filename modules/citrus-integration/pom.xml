@@ -115,6 +115,12 @@
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
     </dependency>
+    
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>

@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.3" date="05.09.2012" description="1.3 release">
+        <action dev="christophd" type="add">
+          #405 Add new test action for running ANT build targets
+        </action>
         <action dev="roland" type="add">
           #404 Added SSH adapter for mocking SSH requests
         </action>

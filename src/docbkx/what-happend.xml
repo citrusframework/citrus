@@ -113,7 +113,7 @@
     <para>We introduced some completely new test actions in this release for you. The new actions are listed below:</para> 
     
     <itemizedlist>
-        <listitem>Purge message channel action (<xref linkend="actions-purge-channels"/>)</listitem>
+        <listitem><para>Purge message channel action (<xref linkend="actions-purge-channels"/>)</para></listitem>
     </itemizedlist>
     
     <para>See <xref linkend="actions"/> for detailed instructions how to use the new actions.</para>
@@ -126,12 +126,12 @@
     random Java UUID values. These are the new functions in this release:</para>
     
     <itemizedlist>
-        <listitem>citrus:randomUUID()</listitem>
-        <listitem>citrus:cdataSection()</listitem>
-        <listitem>citrus:encodeBase64()</listitem>
-        <listitem>citrus:decodeBase64()</listitem>
-        <listitem>citrus:digestAuthHeader()</listitem>
-        <listitem>citrus:localHostAddress()</listitem>
+        <listitem><para>citrus:randomUUID()</para></listitem>
+        <listitem><para>citrus:cdataSection()</para></listitem>
+        <listitem><para>citrus:encodeBase64()</para></listitem>
+        <listitem><para>citrus:decodeBase64()</para></listitem>
+        <listitem><para>citrus:digestAuthHeader()</para></listitem>
+        <listitem><para>citrus:localHostAddress()</para></listitem>
     </itemizedlist>
     
     <para>See <xref linkend="functions"/> for detail descriptions of each function.</para>

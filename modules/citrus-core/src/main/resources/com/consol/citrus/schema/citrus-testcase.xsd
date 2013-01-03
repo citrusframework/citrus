@@ -341,6 +341,7 @@
             <xs:element ref="assert"/>
             <xs:element ref="groovy"/>
             <xs:element ref="transform"/>
+            <xs:element ref="ant"/>
             <xs:any namespace="##other" processContents="strict"/>
         </xs:choice>
     </xs:group>
@@ -754,6 +755,7 @@
     <xs:element name="transform">
         <xs:complexType>
             <xs:sequence>
+                <xs:element ref="description" minOccurs="0"/>
                 <xs:choice>
                     <xs:element name="xml-data" type="xs:string" />
                     <xs:element name="xml-resource">
@@ -775,4 +777,34 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="ant">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="description" minOccurs="0"/>
+                <xs:element name="execute">
+                    <xs:complexType>
+                        <xs:attribute name="target" type="xs:string" />
+                        <xs:attribute name="targets" type="xs:string" />    
+                    </xs:complexType>
+                </xs:element>
+                <xs:choice minOccurs="0">
+                    <xs:element name="properties">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="property" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:attribute name="name" type="xs:string" use="required" />
+                                        <xs:attribute name="value" type="xs:string" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="file" type="xs:string" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="build-file" type="xs:string" use="required" />
+            <xs:attribute name="build-listener" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

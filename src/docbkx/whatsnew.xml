@@ -2,7 +2,7 @@
 <chapter id="whatsnew">
   <title>What's new?!</title>
 
-  <para>The new Citrus release introduces new features and changes that we discuss in the following sections. We want you to get an overview of what has happend in the last release so you can
+  <para>The new Citrus release introduces new features and changes that we discuss in the following sections. We want you to get an overview of what has happened in the last release so you can
   identify the new stuff which is of interest for you.</para>
   
   <section id="whatsnew-actors">
@@ -26,10 +26,11 @@
     <para>We introduced some completely new test actions:</para> 
     
     <itemizedlist>
-        <listitem>Nothing yet!</listitem>
+        <listitem><para><emphasis>AntRunAction</emphasis> This action executes one or more ANT build targets on a build.xml file. You can specify build properties that get passed to the ANT build and you can add a 
+        custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para></listitem>
     </itemizedlist>
     
-    <para>See <xref linkend="actions"/> for detailed instructions how to use these test actions.</para>
+    <para>See also our test action section (<xref linkend="actions"/>) for detailed instructions how to use the new test actions.</para>
   </section>
   
   <section id="whatsnew-functions">
