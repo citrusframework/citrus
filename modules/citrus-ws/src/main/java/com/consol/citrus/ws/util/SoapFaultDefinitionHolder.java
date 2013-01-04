@@ -26,10 +26,10 @@ import org.springframework.xml.namespace.QNameUtils;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * SOAP fault definition consists of fault code and optional fault reason string and optional locale. This holder
+ * SOAP fault definition consists of fault code as well as optional values for fault reason string, fault actor and locale. This holder
  * constructs a proper {@link SoapFaultDefinition} from String representation and back. The String representation follows this syntax:
  * 
- * {faultCode}{faultString}{locale}
+ * {faultCode}{faultString}{locale}{faultActor}
  *  
  * @author Christoph Deppisch
  * @since 1.3
@@ -43,6 +43,9 @@ public class SoapFaultDefinitionHolder {
     /** Soap fault definition */
     private SoapFaultDefinition soapFaultDefinition = new SoapFaultDefinition();
     
+    /** Optional fault actor */
+    private String faultActor;
+    
     /**
      * Construct instance from String expression.
      * @param faultExpression
@@ -53,7 +56,7 @@ public class SoapFaultDefinitionHolder {
         
         if (!isValid(faultExpression)) {
             throw new CitrusRuntimeException("Invalid SOAP fault definition expression (" + faultExpression + ") - " +
-            		"please follow syntax " + decorate("faultCode") + decorate("faultString") + decorate("locale"));
+            		"please follow syntax " + decorate("faultCode") + decorate("faultString") + decorate("faultActor") + decorate("locale"));
         }
         
         String[] tokens = faultExpression.substring(1, faultExpression.length() - 1).split("\\}\\{");
@@ -64,8 +67,12 @@ public class SoapFaultDefinitionHolder {
             holder.setFaultStringOrReason(tokens[1].trim());
         }
         
-        if (tokens.length > 2) {
+        if (tokens.length > 2 && StringUtils.hasText(tokens[2].trim())) {
             holder.setLocale(tokens[2].trim());
+        }
+        
+        if (tokens.length > 3) {
+            holder.setFaultActor(tokens[3].trim());
         }
         
         return holder;
@@ -107,6 +114,10 @@ public class SoapFaultDefinitionHolder {
             if (soapFaultDefinition.getLocale() != null) {
                 builder.append(decorate(soapFaultDefinition.getLocale().toString()));
             }
+            
+            if (faultActor != null) {
+                builder.append(decorate(faultActor));
+            }
         }
         
         return builder.toString();
@@ -144,6 +155,22 @@ public class SoapFaultDefinitionHolder {
      */
     public void setFaultStringOrReason(String faultStringOrReason) {
         soapFaultDefinition.setFaultStringOrReason(faultStringOrReason);
+    }
+    
+    /**
+     * Sets the fault actor on the SOAP fault definition.
+     * @param faultActor
+     */
+    public void setFaultActor(String faultActor) {
+        this.faultActor = faultActor;
+    }
+    
+    /**
+     * Gets the faultActor.
+     * @return the faultActor the faultActor to get.
+     */
+    public String getFaultActor() {
+        return faultActor;
     }
 
     /**

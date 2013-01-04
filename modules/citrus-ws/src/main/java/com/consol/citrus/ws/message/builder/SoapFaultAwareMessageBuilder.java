@@ -38,6 +38,9 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     /** Fault reason string describing the fault */
     private String faultString;
     
+    /** Optional fault actor */
+    private String faultActor;
+    
     @Override
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         Map<String, Object> headers = super.buildMessageHeaders(context);
@@ -53,6 +56,10 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
             soapFaultDefinitionHolder.setFaultStringOrReason(context.replaceDynamicContentInString(faultString));
         }
 
+        if (StringUtils.hasText(faultActor)) {
+            soapFaultDefinitionHolder.setFaultActor(context.replaceDynamicContentInString(faultActor));
+        }
+        
         headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultDefinitionHolder.toString());
         
         return headers;
@@ -91,6 +98,22 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
      */
     public void setFaultDetailResource(String faultDetailResource) {
         setPayloadResourcePath(faultDetailResource);
+    }
+    
+    /**
+     * Sets the faultActor.
+     * @param faultActor the faultActor to set
+     */
+    public void setFaultActor(String faultActor) {
+        this.faultActor = faultActor;
+    }
+    
+    /**
+     * Gets the faultActor.
+     * @return the faultActor the faultActor to get.
+     */
+    public String getFaultActor() {
+        return faultActor;
     }
 
     /**

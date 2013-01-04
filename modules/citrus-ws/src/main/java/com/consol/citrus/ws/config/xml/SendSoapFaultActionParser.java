@@ -55,7 +55,6 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, builder);
 
         SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
-        
         Element faultElement = DomUtils.getChildElementByTagName(element, "fault");
         if (faultElement != null) {
             Element faultCodeElement = DomUtils.getChildElementByTagName(faultElement, "fault-code");
@@ -66,6 +65,11 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
             Element faultStringElement = DomUtils.getChildElementByTagName(faultElement, "fault-string");
             if (faultStringElement != null) {
                 messageBuilder.setFaultString(DomUtils.getTextValue(faultStringElement).trim());
+            }
+            
+            Element faultActorElement = DomUtils.getChildElementByTagName(faultElement, "fault-actor");
+            if (faultActorElement != null) {
+                messageBuilder.setFaultActor(DomUtils.getTextValue(faultActorElement).trim());
             }
             
             parseFaultDetail(faultElement, messageBuilder);

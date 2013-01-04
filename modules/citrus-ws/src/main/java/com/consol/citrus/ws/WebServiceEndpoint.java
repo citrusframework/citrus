@@ -240,9 +240,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage
      */
     private void addSoapFault(SoapMessage response, Message<?> replyMessage) throws TransformerException {
-        SoapFaultDefinition definition = SoapFaultDefinitionHolder.fromString(
-                replyMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT).toString()).getSoapFaultDefinition();
+        SoapFaultDefinitionHolder definitionHolder = SoapFaultDefinitionHolder.fromString(
+                replyMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT).toString());
         
+        SoapFaultDefinition definition = definitionHolder.getSoapFaultDefinition();
         SoapBody soapBody = response.getSoapBody();
         SoapFault soapFault = null;
         
@@ -269,6 +270,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
             soapFault = soap12Fault;
         } else {
                 throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
+        }
+        
+        if (definitionHolder.getFaultActor() != null) {
+            soapFault.setFaultActorOrRole(definitionHolder.getFaultActor());
         }
         
         if (!(replyMessage.getPayload() instanceof String) || 

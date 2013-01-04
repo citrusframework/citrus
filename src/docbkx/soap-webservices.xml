@@ -349,7 +349,7 @@
         <title>SOAP faults</title>
         
         <para>SOAP faults describe a failed communication in SOAP WebServices world. Citrus is able to send and receive SOAP fault messages. On server side 
-        Citrus can simulate SOAP faults with fault-code, fault-reason-string and fault-detail. On client side Citrus is able to handle and validate SOAP faults 
+        Citrus can simulate SOAP faults with fault-code, fault-reason, fault-actor and fault-detail. On client side Citrus is able to handle and validate SOAP faults 
         in response messages. The next section describes how to deal with SOAP faults in Citrus.</para>
         
         <section id="soap-fault-simulation">
@@ -365,6 +365,7 @@
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
         &lt;ws:fault-string&gt;Invalid request&lt;/ws:fault-string&gt;
+        &lt;ws:fault-actor&gt;SERVER&lt;/ws:fault-actor&gt;
         &lt;ws:fault-detail&gt;
             &lt;![CDATA[
                 &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
@@ -381,8 +382,9 @@
     &lt;/ws:header&gt;
 &lt;/ws:send-fault&gt;</programlisting>
             
-            <para>The example generates a simple SOAP fault that is sent back to the calling client. The fault-detail is optional as well as the soap action
-            declared in the special Citrus header <literal>citrus_soap_action</literal>. You can also set the fault-detail via external file resource. Just use
+            <para>The example generates a simple SOAP fault that is sent back to the calling client. The fault-actor and the fault-detail elements are optional. 
+            Same with the soap action declared in the special Citrus header <literal>citrus_soap_action</literal>. In the sample above the fault-detail data is
+            placed inline as XML data. As an alternative to that you can also set the fault-detail via external file resource. Just use
             <literal>&lt;ws:fault-detail file=&quot;classpath:myFaultDetail.xml&quot;/&gt;</literal> instead of the inline CDATA definition.</para>
             
             <para>The generated SOAP fault results in a SOAP message like follows:</para>
@@ -461,6 +463,7 @@ Server: Jetty(7.0.0.pre5)
             
             <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
            fault-string=&quot;Invalid request&quot;&gt;
+           fault-actor=&quot;SERVER&quot;&gt;
     &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;data&gt;
@@ -475,9 +478,9 @@ Server: Jetty(7.0.0.pre5)
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
             
-            <para>The special assert action offers two attributes <emphasis>"fault-code"</emphasis> and <emphasis>"fault-string"</emphasis>, where 
-            <emphasis>fault-code</emphasis> is defined as a QName string and is mandatory for the validation. The fault assertion also supports test
-            variable replacement as usual (e.g. fault-code=&quot;{http://www.citrusframework.org/faults}${myFaultCode}&quot;).</para>
+            <para>The special assert action offers several attributes to specify the expected SOAP fault. Namely these are <emphasis>"fault-code"</emphasis>, 
+            <emphasis>"fault-string"</emphasis> and <emphasis>"fault-actor"</emphasis>. The <emphasis>fault-code</emphasis> is defined as a QName string and 
+            is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code=&quot;{http://www.citrusframework.org/faults}${myFaultCode}&quot;).</para>
             
             <para>The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an
             instance of SoapFaultValitator that we need to place into the <emphasis>'citrus-context.xml'</emphasis> Spring application context. By default

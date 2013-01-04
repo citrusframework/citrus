@@ -75,6 +75,42 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
     
     @Test
     @SuppressWarnings("rawtypes")
+    public void testSendSoapFaultWithActor() {
+        SendMessageAction sendSoapFaultAction = new SendMessageAction();
+        sendSoapFaultAction.setMessageSender(messageSender);
+        
+        SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();
+        messageBuilder.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
+        messageBuilder.setFaultString("Internal server error");
+        messageBuilder.setFaultActor("SERVER");
+        
+        sendSoapFaultAction.setMessageBuilder(messageBuilder);
+        
+        reset(messageSender);
+        
+        messageSender.send((Message)anyObject());
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
+                Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
+                Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
+                        "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}{SERVER}");
+                
+                return null;
+            }
+        }).once();
+        
+        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        
+        replay(messageSender);
+        
+        sendSoapFaultAction.execute(context);
+        
+        verify(messageSender);
+    }
+    
+    @Test
+    @SuppressWarnings("rawtypes")
     public void testSendSoapFaultMissingFaultString() {
         SendMessageAction sendSoapFaultAction = new SendMessageAction();
         sendSoapFaultAction.setMessageSender(messageSender);

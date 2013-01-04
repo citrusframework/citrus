@@ -73,7 +73,8 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="fault-code" type="xs:string"/>
-                            <xs:element name="fault-string" type="xs:string" minOccurs="0"/>                            
+                            <xs:element name="fault-string" type="xs:string" minOccurs="0"/>
+                            <xs:element name="fault-actor" type="xs:string" minOccurs="0"/>                            
                             <xs:element name="fault-detail" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>

@@ -17,6 +17,15 @@
   <body>
     <release version="1.3" date="05.09.2012" description="1.3 release">
         <action dev="christophd" type="add">
+          #408 Add SOAP fault actor support
+        </action>
+        <action dev="christophd" type="add">
+          #407 Add WSDL support for schema repository
+        </action>
+        <action dev="christophd" type="update">
+          #406 Extend schema repository with pattern resolver
+        </action>
+        <action dev="christophd" type="add">
           #405 Add new test action for running ANT build targets
         </action>
         <action dev="roland" type="add">

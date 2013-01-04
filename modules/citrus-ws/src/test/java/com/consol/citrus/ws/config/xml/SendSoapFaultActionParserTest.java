@@ -46,6 +46,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000");
         Assert.assertEquals(messageBuilder.getFaultString(), "FaultString");
+        Assert.assertNull(messageBuilder.getFaultActor());
         
         // 2nd action
         action = getNextTestActionFromTest();
@@ -60,5 +61,6 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001");
         Assert.assertEquals(messageBuilder.getFaultString(), "FaultString");
+        Assert.assertEquals(messageBuilder.getFaultActor(), "FaultActor");
     }
 }

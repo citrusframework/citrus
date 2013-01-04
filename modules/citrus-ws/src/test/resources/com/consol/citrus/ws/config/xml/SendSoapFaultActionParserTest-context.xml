@@ -29,6 +29,7 @@
               <ws:fault>
                   <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001</ws:fault-code>
                   <ws:fault-string>FaultString</ws:fault-string>
+                  <ws:fault-actor>FaultActor</ws:fault-actor>
                   <ws:fault-detail file="classpath:com/consol/citrus/ws/actions/test-fault-detail.xml"/>
               </ws:fault>
               <ws:header>

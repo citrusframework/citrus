@@ -37,6 +37,7 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
         Assert.assertNull(holder.getSoapFaultDefinition().getFaultStringOrReason());
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertNull(holder.getFaultActor());
         
         holder = SoapFaultDefinitionHolder.fromString("{{http://citrusframework.org}TEC-1000}");
         
@@ -45,6 +46,7 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
         Assert.assertNull(holder.getSoapFaultDefinition().getFaultStringOrReason());
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertNull(holder.getFaultActor());
         
         holder = SoapFaultDefinitionHolder.fromString("{{http://citrusframework.org}CITRUS:TEC-1000}");
         
@@ -53,6 +55,7 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "CITRUS");
         Assert.assertNull(holder.getSoapFaultDefinition().getFaultStringOrReason());
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertNull(holder.getFaultActor());
         
         holder = SoapFaultDefinitionHolder.fromString("{TEC-1000}{Internal server error}");
         
@@ -61,6 +64,7 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultStringOrReason(), "Internal server error");
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertNull(holder.getFaultActor());
         
         holder = SoapFaultDefinitionHolder.fromString("{{http://citrusframework.org}CITRUS:TEC-1000}{Internal server error}");
         
@@ -69,6 +73,7 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "CITRUS");
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultStringOrReason(), "Internal server error");
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertNull(holder.getFaultActor());
         
         holder = SoapFaultDefinitionHolder.fromString("{TEC-1000}{Interner Fehler}{DE}");
         
@@ -77,6 +82,25 @@ public class SoapFaultDefinitionHolderTest {
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
         Assert.assertEquals(holder.getSoapFaultDefinition().getFaultStringOrReason(), "Interner Fehler");
         Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.GERMAN);
+        Assert.assertNull(holder.getFaultActor());
+        
+        holder = SoapFaultDefinitionHolder.fromString("{TEC-1000}{Interner Fehler}{DE}{Actor}");
+        
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getLocalPart(), "TEC-1000");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getNamespaceURI(), "");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultStringOrReason(), "Interner Fehler");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.GERMAN);
+        Assert.assertEquals(holder.getFaultActor(), "Actor");
+        
+        holder = SoapFaultDefinitionHolder.fromString("{TEC-1000}{Interner Fehler}{}{Actor}");
+        
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getLocalPart(), "TEC-1000");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getNamespaceURI(), "");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultCode().getPrefix(), "");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getFaultStringOrReason(), "Interner Fehler");
+        Assert.assertEquals(holder.getSoapFaultDefinition().getLocale(), Locale.ENGLISH);
+        Assert.assertEquals(holder.getFaultActor(), "Actor");
     }
     
     @Test
@@ -97,6 +121,10 @@ public class SoapFaultDefinitionHolderTest {
         holder.setLocale("DE");
         
         Assert.assertEquals(holder.toString(), "{{http://citrusframework.org}TEC-1000}{Internal server error}{de}");
+        
+        holder.setFaultActor("Actor");
+        
+        Assert.assertEquals(holder.toString(), "{{http://citrusframework.org}TEC-1000}{Internal server error}{de}{Actor}");
     }
     
     @Test
