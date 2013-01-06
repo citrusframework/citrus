@@ -944,10 +944,6 @@
                 <reports>
                   <report>dependency-convergence</report>
                   <report>dependency-management</report>
-                  <report>scm</report>
-                  <report>cim</report>
-                  <report>issue-tracking</report>
-                  <report>license</report>
                   <report>project-team</report>
                 </reports>
               </reportSet>

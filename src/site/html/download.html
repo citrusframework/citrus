@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+	<div class="container box">
+      <h1 class="page-header">Download <small>Latest releases</small></h1>
+
+      <p>
+        Citrus 1.2 is the latest stable release . You may also go for
+        the latest snapshot versions of Citrus always being up to date with
+        development changes. All available versions and production releases
+        are listed below:
+      </p>
+      
+      <p><b>Latest stable release</b>: 1.2</p>
+      
+      <p>Version 1.2 is the current stable release.</p>
+      <ul>
+        <li>citrus-1.2-with-dependencies (<a href="./dist/citrus-1.2-with-dependencies.zip">zip</a>/<a href="./dist/citrus-1.2-with-dependencies.tar.gz">tar.gz</a>)</li>
+        <li>citrus-1.2-src (<a href="./dist/citrus-1.2-src.zip">zip</a>/<a href="./dist/citrus-1.2-src.tar.gz">tar.gz</a>)</li>
+      </ul>
+      
+      <p><b>Older versions</b></p>
+      
+      <ul>
+        <li>citrus-1.1-with-dependencies (<a href="./dist/citrus-1.1-with-dependencies.zip">zip</a>/<a href="./dist/citrus-1.1-with-dependencies.tar.gz">tar.gz</a>)</li>
+        <li>citrus-1.1-src (<a href="./dist/citrus-1.1-src.zip">zip</a>/<a href="./dist/citrus-1.1-src.tar.gz">tar.gz</a>)</li>
+        <li>citrus-1.0-with-dependencies, Note: Licensed under GPLv3 (<a href="./dist/citrus-1.0-with-dependencies.zip">zip</a>/<a href="./dist/citrus-1.0-with-dependencies.tar.gz">tar.gz</a>)</li>
+        <li>citrus-1.0-src, Note: Licensed under GPLv3 (<a href="./dist/citrus-1.0-src.zip">zip</a>/<a href="./dist/citrus-1.0-src.tar.gz">tar.gz</a>)</li>
+      </ul>
+      
+      <p>The Citrus project requires JDK 1.5 (or newer version) to run.</p>
+
+      <h2>Logging framework notice</h2>
+      <p>
+        We use <a class="externalLink" href="http://www.slf4j.org">SLF4J</a>
+        as logging abstraction framework, which means that you as a user are
+        not forced to use a specific logging implementation. SLF4J is similar
+        to commons-logging, so you may use whatever logging framework you
+        want to. All you have to do is <b>add an SLF4J logging implementation to your classpath</b>.
+      </p>
+      
+      <p>
+        In case you are currently using <a class="externalLink" href="http://logging.apache.org/log4j">log4j</a> as logging
+        framework just include slf4j-log4j12.jar on your classpath and Citrus
+        will use log4j too. If you want to use some other framework than
+        please see the <a class="externalLink" href="http://www.slf4j.org">SLF4J</a>
+        documentation for help.
+      </p>
+
+      <h2>Maven 2</h2>
+      <p>
+        You can easily use Citrus in a Maven project by defining test-scoped
+        dependencies. Simply add the ConSol Labs repository and the following
+        dependencies to your POM (pom.xml). See also our <a href="./tutorials/run-with-maven.html"> Maven tutorial</a> for a
+        detailed description.
+      </p>
+        
+      <pre class="prettyprint linenums">&lt;repository&gt;
+  &lt;id&gt;consol-labs-release&lt;/id&gt;
+  &lt;url&gt;http://labs.consol.de/maven/repository/&lt;/url&gt;
+  &lt;snapshots&gt;
+    &lt;enabled&gt;false&lt;/enabled&gt;
+  &lt;/snapshots&gt;
+  &lt;releases&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/releases&gt;
+&lt;/repository&gt;
+&lt;repository&gt;
+  &lt;id&gt;consol-labs-snapshots&lt;/id&gt;
+  &lt;url&gt;http://labs.consol.de/maven/snapshots-repository/&lt;/url&gt;
+  &lt;snapshots&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never --&gt;
+    &lt;updatePolicy&gt;10080&lt;/updatePolicy&gt;
+  &lt;/snapshots&gt;
+  &lt;releases&gt;
+    &lt;enabled&gt;false&lt;/enabled&gt;
+  &lt;/releases&gt;
+&lt;/repository&gt;</pre>
+
+      <p>The Citrus core module dependency.</p>
+      <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+		
+      <p>
+        In case you need Citrus modules add following dependencies. See also
+        our <a href="./modules-introduction.html"> modules section</a> for
+        more information on Citrus modules:
+      </p>
+        
+      <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-http&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+ 
+   	  <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-ws&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+
+      <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-tibco&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+    </div>
+  </body>
+</html>

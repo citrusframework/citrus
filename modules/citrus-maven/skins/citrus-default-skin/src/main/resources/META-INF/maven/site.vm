@@ -18,7 +18,7 @@
   </ul>
 </li>
     #else
-<li class="$active"><a href="#$menu.name">$menu.name</a></li>
+<li class="$active"><a href="index.html">$menu.name</a></li>
     #end
   #end
 #end
@@ -50,7 +50,6 @@
     
     <script src="js/jquery.js"></script>
     <script src="js/prettify.js"></script>
-    <script src="js/citrus-site.js"></script>
 
     <link href="css/bootstrap.css" rel="stylesheet"/>
     <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
@@ -95,7 +94,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="#">Citrus</a>
+            <a class="brand" href="index.html">Citrus</a>
             <div class="nav-collapse collapse">
               <ul class="nav">
               #mainMenu( $decoration.body.menus )
@@ -119,5 +118,6 @@
     
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/bootstrap.js"></script>
+    <script src="js/citrus-site.js"></script>
   </body>
 </html>

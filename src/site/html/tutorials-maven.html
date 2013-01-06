@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Maven tutorial <small>Setting up Citrus with Maven</small></h1>
+      
+      <p>
+        This tutorial shows you how to setup a new Citrus project with
+        Maven. You will see it is very easy and you are finished within
+        minutes.
+      </p>
+      
+      <p>
+        In case you already use Maven build tool in your project it is most
+        suitable for you to include Citrus into your Maven build lifecycle. In
+        this tutorial we will setup a project with Maven and configure the
+        Maven POM to execute all Citrus tests during the Maven integration-test
+        phase. First of all we create a new Java project called
+        &quot;citrus-sample&quot;. We use the Maven command line tool in
+        combination with Maven's archetype plugin. In case you do not have
+        Maven installed yet it is time for you to do so before continuing this
+        tutorial. See the <a class="externalLink" href="http://http://maven.apache.org/">Maven</a> site for detailed
+        installation instructions. So let's start with creating the Citrus Java
+        project:
+      </p>
+      
+      <pre>mvn archetype:generate -DarchetypeCatalog=http://citrusframework.org
+
+[...]
+
+Choose archetype:
+1: http://citrusframework.org -&gt; citrus-archetype (Basic archetype for Citrus integration test project)
+Choose a number: 1 
+
+Define value for groupId: com.consol.citrus.samples
+Define value for artifactId: citrus-sample
+Define value for version: 1.0-SNAPSHOT
+Define value for package: com.consol.citrus.samples
+
+[...]</pre>
+
+      <p>
+        Citrus provides a custom Maven archetype. We load the archetype
+        information from &quot;http://citrusframework.org&quot; and choose the
+        Citrus basic archetype. Now you have to define several values for your
+        project: the groupId, the artifactId, the package and the project
+        version. After that we are done! Maven created a Citrus project
+        structure for us which is ready for testing. You should see the
+        following basic project folder structure.
+      </p>
+      
+      <pre>citrus-sample
+  |   + src
+  |   |   + main
+  |   |    |   + java
+  |   |    |   + resources
+  |   |   + citrus
+  |   |    |   + java
+  |   |    |   + resources
+  |   |    |   + tests
+  pom.xml</pre>
+  
+      <p>
+        The Citrus project is absolutely ready for testing. With Maven we
+        can build, package, install and test our project right away without any
+        adjustments. Try to execute the following commands:
+      </p>
+      
+      <pre>cd citrus-sample
+mvn package
+mvn integration-test
+mvn install</pre>
+
+      <p>
+        Congratulations! You just have built the complete project and you
+        also have executed the first Citrus tests in your project. The project
+        comes with a sample Citrus test &quot;SampleTest&quot;. You can find
+        this test in &quot;src/citrus/tests&quot; and
+        &quot;src/citrus/java&quot;. The Citrus test was automatically executed
+        in the integration test phase in Maven project lifecycle.
+      </p>
+      
+      <p>
+        The next step would be to import our project into our favorite
+        IDE (e.g. Eclipse, IntelliJ or NetBeans). With Eclipse for instance you
+        have to execute the following command:
+      </p>
+      
+      <pre>mvn eclipse:eclipse</pre>
+
+      <p>
+        Now let's import the new Citrus project into the IDE and have a
+        closer look at the basic project files that were generated for you.
+        First of all open the Maven POM (pom.xml). You see the basic Maven
+        project settings, all Citrus project dependencies as well as the
+        ConSol* Labs Maven repositories here. In future you may add other
+        project dependencies, Maven plugins in this file. For now you do not
+        have to change the Citrus Maven settings in your project's POM, however
+        we have a closer look at them:
+      </p>
+      
+      <p>
+        First of all the ConSol* Labs Maven repositories. Maven will load
+        new versions of Citrus from these servers.
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;repositories&gt;
+  [...]
+
+  &lt;repository&gt;
+    &lt;id&gt;consol-labs-release&lt;/id&gt;
+    &lt;url&gt;http://labs.consol.de/maven/repository/&lt;/url&gt;
+    &lt;snapshots&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/snapshots&gt;
+    &lt;releases&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/releases&gt;
+  &lt;/repository&gt;
+  &lt;repository&gt;
+    &lt;id&gt;consol-labs-snapshots&lt;/id&gt;
+    &lt;url&gt;http://labs.consol.de/maven/snapshots-repository/&lt;/url&gt;
+    &lt;snapshots&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never --&gt;
+      &lt;updatePolicy&gt;10080&lt;/updatePolicy&gt;
+    &lt;/snapshots&gt;
+    &lt;releases&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/releases&gt;
+  &lt;/repository&gt;
+  
+  [...]
+&lt;/repositories&gt;</pre>
+
+      <pre class="prettyprint linenums">&lt;pluginRepositories&gt;
+  [...]
+
+  &lt;pluginRepository&gt;
+    &lt;id&gt;consol-labs-release&lt;/id&gt;
+    &lt;url&gt;http://labs.consol.de/maven/repository/&lt;/url&gt;
+    &lt;snapshots&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/snapshots&gt;
+    &lt;releases&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/releases&gt;
+  &lt;/pluginRepository&gt;
+  &lt;pluginRepository&gt;
+    &lt;id&gt;consol-labs-snapshots&lt;/id&gt;
+    &lt;url&gt;http://labs.consol.de/maven/snapshots-repository/&lt;/url&gt;
+    &lt;snapshots&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;updatePolicy&gt;10080&lt;/updatePolicy&gt;
+    &lt;/snapshots&gt;
+    &lt;releases&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/releases&gt;
+  &lt;/pluginRepository&gt;
+  
+  [...]
+&lt;/pluginRepositories&gt;</pre>
+
+      <p>Now we let's have a look at the Citrus project libraries as dependencies in our Maven POM.</p>
+
+      <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-ws&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-http&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+
+      <p>The Citrus Maven plugin capable of test creation and report generation.</p>
+
+      <pre class="prettyprint linenums">&lt;plugin&gt;
+  &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;author&gt;Mickey Mouse&lt;/author&gt;
+    &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</pre>
+
+      <p>
+        The surefire plugin is responsible for executing all available
+        tests in your project when you run the integration-test phase in Maven:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;plugin&gt;
+  &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+  &lt;version&gt;2.4.3&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;skip&gt;true&lt;/skip&gt;
+  &lt;/configuration&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;id&gt;citrus-tests&lt;/id&gt;
+      &lt;phase&gt;integration-test&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;test&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;skip&gt;false&lt;/skip&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+&lt;/plugin&gt;</pre>
+
+      <p>Last not least the Citrus source directories defined as test sources for Maven:</p>
+
+      <pre class="prettyprint linenums">&lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+&lt;testResources&gt;
+  &lt;testResource&gt;
+    &lt;directory&gt;src/citrus/resources&lt;/directory&gt;
+    &lt;includes&gt;
+      &lt;include&gt;**/*&lt;/include&gt;
+    &lt;/includes&gt;
+    &lt;filtering&gt;true&lt;/filtering&gt;
+  &lt;/testResource&gt;
+  &lt;testResource&gt;
+    &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+    &lt;includes&gt;
+      &lt;include&gt;**/*.xml&lt;/include&gt;
+    &lt;/includes&gt;
+    &lt;excludes&gt;
+    &lt;/excludes&gt;
+  &lt;/testResource&gt;
+&lt;/testResources&gt;</pre>
+
+      <p>
+        Finally we are ready to proceed with creating new test cases. So
+        let's add a new Citrus test case to our project. We use the Citrus
+        Maven plugin here, just type the following command:
+      </p>
+
+      <pre>mvn citrus:create-test
+Enter test name: MyTest
+Enter test author: Unknown: : Christoph
+Enter test description: TODO: Description: : 
+Enter test package: com.consol.citrus.samples: : 
+Choose unit test framework testng: :</pre>
+
+      <p>
+        You have to specify the test name, author, description, package
+        and the test framework. The plugin sucessfully generates the new test
+        files for you. On the one hand a new Java class in src/citrus/java and
+        a new XML test file in src/citrus/tests. The test is runnable right
+        now. Try it and execute &quot;mvn integration-test&quot; once more. In
+        the Citrus test results you will see that the new test was executed
+        during integration-test phase along with the other existing test case.
+        You can also run the test manually in your IDE with a TestNG plugin.
+      </p>
+      
+      <p>
+        So now you are ready to use Citrus! Write test cases and add more
+        logic to the test project. Have fun with it!
+      </p>
+    </div>
+  </body>
+</html>

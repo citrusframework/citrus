@@ -11,47 +11,46 @@
     <menu name="Home"/>
     
     <menu name="Quickstart">
-      <item name="Installation" href="${site.url}/installation.html"/>
-      <item name="Download" href="${site.url}/download.html"/>
-      <item name="Tutorials" href="${site.url}/tutorials.html">
-        <item name="Run with Maven" href="${site.url}/tutorials/run-with-maven.html"/>
-        <item name="Run with ANT" href="${site.url}/tutorials/run-with-ant.html"/>
-        <item name="Custom functions" href="${site.url}/tutorials/write-functions.html"/>
-        <item name="Custom actions" href="${site.url}/tutorials/create-custom-actions.html"/>
+      <item name="Installation" href="installation.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Tutorials" href="tutorials.html">
+        <item name="Run with Maven" href="tutorials-maven.html"/>
+        <item name="Run with ANT" href="tutorials-ant.html"/>
+        <item name="Custom functions" href="tutorials-functions.html"/>
+        <item name="Custom actions" href="tutorials-actions.html"/>
       </item>
     </menu>
     
     <menu name="Documentation">
-      <item name="Reference" href="${site.url}/reference-doc.html"/>
-      <item name="License" href="${site.url}/license.html"/>
+      <item name="Reference" href="documentation.html"/>
+      <item name="License" href="license.html"/>
       <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
+      <item name="Modules" href="modules.html"/>
     </menu>
     
     <menu name="Tools">
-      <item name="Maven plugin" href="${site.url}/modules/citrus-maven/plugins/citrus-maven-plugin/plugin-info.html"/>
-      <item name="ANT tasks" href="${site.url}/ant-tasks.html"/>
+      <item name="Maven plugin" href="maven-plugin.html"/>
+      <item name="ANT tasks" href="ant-tasks.html"/>
     </menu>
     
     <menu name="Community">
-      <item name="News" href="${site.url}/news.html"/>
+      <item name="News" href="news.html"/>
       <item name="Forum" href="http://labs.consol.de/lang/de/forum/#/categories/citrus"/>
-      <item name="Issues" href="http://citrusframework.atlassian.net/browse/CITRUS"/>
-      <item name="Mailing List" href="${site.url}/mailing-list.html"/>
+      <item name="Issues" href="issues.html"/>
+      <item name="Team" href="team.html"/>
     </menu>
 
     <menu name="Development">
-      <item name="Team" href="${site.url}/team-list.html"/>
-      <item name="Quickstart" href="${site.url}/quickstart.html"/>
-      <item name="Github Sources" href="${site.url}/source-repository.html"/>
-      <item name="Contribute" href="${site.url}/contributing.html"/>
-      <item name="Modules" href="${site.url}/modules-introduction.html"/>
+      <item name="Quickstart" href="quickstart.html"/>
+      <item name="Sources" href="source-repository.html"/>
+      <item name="Contribute" href="contributing.html"/>
       <item name="Continuous Build" href="http://labs.consol.de/hudson/"/>
       <item name="Sonar" href="http://labs.consol.de/sonar/"/>
     </menu>
     
     <menu name="Contact">
-        <item name="Training" href="${site.url}/commercial-consulting.html"/>
-        <item name="Consulting" href="${site.url}/commercial-consulting.html"/>
+        <item name="Training" href="training.html"/>
+        <item name="Consulting" href="consulting.html"/>
         <item name="ConSol* Software GmbH" href="http://www.consol.de"/>
     </menu>
   </body>

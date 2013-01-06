@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Test action tutorial <small>Write custom test actions</small></h1>
+
+      <p>
+        Citrus comes with a powerful set of actions built-in, covering a wide
+        range of helpful SOA integration testing aspects like sending and
+        receiving messages, database access, Java and Groovy scripting support
+        or dealing with exceptions. For a full list of provided standard
+        actions see the reference <a class="externalLink" href="http://www.citrusframework.org/reference-doc.html">documentation</a>
+        on the citrus homepage. But each project and especially each
+        system-under-test (SUT) comes along with its own specifics and
+        characteristics, so chances are high that during a project the need for
+        an extension of the built-in citrus actions will arise. This tutorial
+        shall show you how easy and handsome it is to provide your own custom
+        actions and reuse them inside your citrus integration tests.
+      </p>
+      
+      <p>Let's quickly refresh our memory how citrus actions are used in a test case:</p>
+      <pre class="prettyprint linenums">&lt;actions&gt;
+  &lt;echo&gt;
+    &lt;message&gt;Starting integration test&lt;/message&gt;
+  &lt;/echo&gt;
+  
+  &lt;sql datasource=&quot;someDataSource&quot;&gt;
+    &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
+  &lt;/sql&gt;
+  
+  &lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
+    &lt;message&gt;
+      &lt;data&gt;
+        &lt;![CDATA[
+          &lt;RequestMessage&gt;
+                 ...
+          &lt;/RequestMessage&gt;
+        ]]&gt;
+      &lt;/data&gt;
+    &lt;/message&gt;
+  &lt;/send&gt;
+&lt;/actions&gt;</pre>
+
+      <p>
+        As you'll notice (or already know) actions are written in a
+        DSL-like syntax. But under the hood they end up as Spring beans - so
+        using standard Spring mechanisms for extending citrus with your own
+        custom actions will work like a charm. Let's explore a first simple way
+        to introduce a custom action into your testing project.
+      </p>
+
+      <h2>Using the generic <i>action</i> element</h2>
+      <p>
+        This approach is almost a no-brainer, but offers less
+        flexibility as we will see later on. Let's imagine a simplicistic
+        scenario: your SUT outputs a lot of file traffic during the tests, so
+        that we need a simple way to clean up the mess in a specific directory
+        right after a test run. We also put away the fact that this could be
+        as well realized by using groovy or Java actions and decide to use a
+        custom action instead.
+      </p>
+      
+      <p>
+        The first step is to create our own action class which extends
+        com.consol.citrus.actions.AbstractTestAction:
+      </p>
+      
+      <pre class="prettyprint linenums">public class SimpleCleanupDirAction extends AbstractTestAction {
+
+    private String directory;
+
+    @Override
+    public void doExecute(TestContext context) {
+        File dir = new File(directory);
+        deleteDirectory(dir);
+    }
+
+    //ommitted directory getter/setter and deleteDirectory() method
+}</pre>
+
+      <p>
+        If you want to avoid inheritance here you could as well
+        implement the interface com.consol.citrus.TestAction instead. The
+        property directory is declared as field with appropriate getters and
+        setters so that a value can be injected by the container.
+      </p>
+      
+      <p>
+        Having your test action class ready, change to citrus-config.xml
+        and make it available as Spring bean there:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;!-- Custom action bean --&gt;
+&lt;bean name=&quot;simpleCleanupDirAction&quot; class=&quot;com.consol.jza.citrus.tutorial.actions.SimpleCleanupDirAction&quot;&gt;
+  &lt;property name=&quot;directory&quot; value=&quot;/Users/jza/tmp/test&quot;/&gt;    
+&lt;/bean&gt;</pre>
+
+      <p>
+        Note that the directory value is injected here during
+        declaration of the bean, a drawback we will address in a second. So
+        for now, your first custom action is ready to be used in citrus tests
+        using the generic action element provided by citrus:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;actions&gt;
+  &lt;echo&gt;
+      &lt;message&gt;Attention! Calling my first custom action bean!!&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;action reference=&quot;simpleCleanupDirAction&quot;/&gt;
+&lt;/actions&gt;</pre>
+
+      <p>
+        Run your test project and enjoy your first custom action being
+        executed. Easy so far, but as stated earlier, our custom action lacks
+        some kind of configurability. If your SUT spammed 10 directories with
+        files, you would have to declare one bean for each directory, not an
+        optimal solution. So let's head on for a more generic approach using
+        Spring's extensible XML authoring feature.
+      </p>
+
+      <h2>Using Spring's schema-based extensions</h2>
+      <p>
+        Since version 2.0, Spring provides a mechanism to define your
+        own bean definition schemas and wire them into the Spring container.
+        We will use this mechanism to define our own custom action schema,
+        describing XML action elements which can then be used in citrus tests.
+        It is much easier than it sounds, so let's get started. The
+        functionality of our action bean stays the same, so just copy it and
+        name it GenericCleanupDirAction inside the same package. Our aim is to
+        be able to define actions in our tests like this:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;actions&gt;
+  &lt;custom:genericCleanupDirAction directory=&quot;/Users/jza/tmp/andSoOn&quot;/&gt;
+&lt;/actions&gt;</pre>
+
+      <p>
+        To achieve this, we define our custom namespace
+        (http://www.citrusframework.org/schema/jza/custom/actions) together
+        with an XSD schema for our action declaration:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;xs:schema xmlns=&quot;http://www.citrusframework.org/schema/jza/custom/actions&quot; 
+  xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
+  xmlns:beans=&quot;http://www.springframework.org/schema/beans&quot;
+  targetNamespace=&quot;http://www.citrusframework.org/schema/jza/custom/actions&quot;
+  elementFormDefault=&quot;qualified&quot;
+  attributeFormDefault=&quot;unqualified&quot;&gt;
+
+  &lt;xs:import namespace=&quot;http://www.springframework.org/schema/beans&quot;/&gt;
+
+  &lt;xs:element name=&quot;cleanupFileDirAction&quot;&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:complexContent&gt;
+        &lt;xs:extension base=&quot;beans:identifiedType&quot;&gt;
+          &lt;xs:attribute name=&quot;directory&quot; type=&quot;xs:string&quot; use=&quot;required&quot;/&gt;
+        &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;  
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+&lt;/xs:schema&gt;</pre>
+
+      <p>
+        Important aspects are the declaration of the namespace we are
+        using and the usage of Spring's beans namespace for the XSD extension
+        mechanism to add an id attribute to our action element (as an
+        alternative, we could simply add it ourselves). Place the XSD into a
+        package of your source tree (I used com.consol.jza.citrus.tutorial.schema 
+        in this example) and head on.
+      </p>
+      
+      <p>
+        Next, we have to write two simple classes to tell Spring how to handle
+        the bean definitions of our newly created namespace. At first, we have
+        to provide a NamespaceHandler for our new namespace, registering a
+        BeanDefinitionParser for our XML element:
+      </p>
+
+      <pre class="prettyprint linenums">public class CustomActionsNamespaceHandler extends NamespaceHandlerSupport {
+        
+    public void init() {
+        registerBeanDefinitionParser(&quot;cleanupFileDirAction&quot;, new GenericCleanupDirActionDefinitionParser());
+    }
+}</pre>
+
+      <p>
+        We tell Spring to pass our top-level action element to our own
+        parser implementation. The code for our custom BeanDefinitionParser is
+        even simpler:
+      </p>
+
+      <pre class="prettyprint linenums">public class GenericCleanupDirActionDefinitionParser extends AbstractSimpleBeanDefinitionParser {
+
+    @Override
+    protected Class getBeanClass(Element element) {
+        return GenericCleanupDirAction.class;
+    }
+}</pre>
+
+      <p>
+        We select the most simple form by choosing to extend
+        AbstractSimpleBeanDefinitionParser, only providing the bean class
+        which shall be generated - the mapping (and injection) of XSD
+        attributes to properties is performed by Spring in this case. Of
+        course parsing can be extended for more complex (nested) elements,
+        just ase a AbstractSingleBeanDefinitionParser instead and overwrite
+        the doParse() method.
+      </p>
+      
+      <p>
+        Now that all our coding is done, one final step has to be
+        performed. We have to make Spring XML parsing infrastructure aware our
+        new schema. To achieve this, we have to register our XSD file and the
+        namespace handler in two special purpose properties files which have
+        to reside in the META-INF directory of your testing jar file. Spring
+        will detect these and automatically pick them up as extension. At
+        first, we declare our handler inside META-INF/spring.handlers:
+      </p>
+
+      <pre>http\://www.citrusframework.org/schema/jza/custom/actions=com.consol.jza.citrus.tutorial.actions.xml.CustomActionsNamespaceHandler</pre>
+
+      <p>
+        The left side is our own namespace (with escaped ':') which gets
+        assigned the package path to our custom handler implementation on the
+        right. Having our handler registered, we notify Spring about the
+        existence of our custom schema by adding META-INF/spring.schemas with
+        the following content:
+      </p>
+
+      <pre>http\://www.citrusframework.org/schema/jza/custom/actions/custom-actions.xsd=com/consol/jza/citrus/tutorial/schema/custom-actions.xsd</pre>
+
+      <p>
+        This entry defines a mapping of XML schema locations (which we
+        will define right in a moment when using our new action namespace in
+        our citrus tests) to the physical location of our custom XSD on the
+        classpath.
+      </p>
+      
+      <p>
+        So now everything is in place: we have coded our own namespace
+        handler and bean parser, defined our custom action schema and
+        namespace and registered all of it to Spring's XML extensible
+        authoring mechanism. Time to bring the harvest in and use our custom
+        action in citrus tests as desired:
+      </p>
+
+      <pre class="prettyprint linenums">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot; 
+  xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot;
+  xmlns:my=&quot;http://www.citrusframework.org/schema/jza/custom/actions&quot;
+  xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+  xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+    http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/jza/custom/actions http://www.citrusframework.org/schema/jza/custom/actions/custom-actions.xsd&quot;&gt;
+
+  &lt;testcase name=&quot;SampleTest&quot;&gt;
+    &lt;meta-info&gt;
+      &lt;!-- ommitted --&gt;
+    &lt;/meta-info&gt;
+
+    &lt;actions&gt;
+      &lt;echo&gt;
+        &lt;message&gt;Even more attention! Calling my first custom XML action!&lt;/message&gt;
+      &lt;/echo&gt;
+      &lt;my:cleanupFileDirAction id=&quot;cleanLogsDir&quot; directory=&quot;/Users/jza/tmp/logs&quot;/&gt;
+      &lt;my:cleanupFileDirAction id=&quot;cleanEtlDir&quot; directory=&quot;/Users/jza/tmp/etl&quot;/&gt;
+    &lt;/actions&gt;
+  &lt;/testcase&gt;
+&lt;/spring:beans&gt;</pre>
+
+      <p>
+        Note the declaration of our new namespace as 'my' and don't
+        forget to declare the mapping to the schemalocation as well. It will
+        save you lots of curses and hours of debugging Spring - I'm speaking
+        from experience here. ;)
+      </p>
+      
+      <p>
+        That's it for the custom actions tutorial. We looked at two ways to
+        create custom citrus actions inside your test projects. Using the
+        generic citrus <i>action</i> element is a very easy and quick way to
+        add your custom coded actions to a test project. Using the XML
+        extensible authoring mechanism provides you with full control and
+        improved reusability through parameterization in XML. Whichever
+        approach you choose, we hope you enjoy extending citrus with custom
+        actions as we do.
+      </p>
+    </div>
+  </body>
+</html>

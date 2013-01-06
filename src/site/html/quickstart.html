@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Quickstart <small>Setting up project sources</small></h1>
+      
+      <p>
+        This quickstart gets the Citrus project sources running in a few
+        minutes, starting with initial git repository clone and ending with a
+        built Citrus project ready for coding.
+      </p>
+      
+      <h3>Preconditions</h3>
+      <ul>
+        <li>Git Client <b><a href="http://git-scm.com/">http://git-scm.com/</a></b>
+          <p>
+            This can be either a command line client or some graphical UI.
+            For simplicity, we assume you have the command line client
+            installed.
+          </p>
+        </li>
+        <li>Java 1.5 (or higher version)
+          <p>You can verify the Java installation via command line with</p>
+          <pre>&gt; java -version
+java version &quot;1.6.0_17&quot;
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.6.0_17)
+Java HotSpot(TM) Client VM (build 1.6.0_17, mixed mode, sharing)</pre>
+        </li>
+        <li>Maven 2.2.1 (or higher version)
+          <p>
+            Download <a href="http://maven.apache.org">maven</a>
+            and install Maven on your machine. Please verify correct version and
+            <b>MAVEN_HOME</b> setup using following command
+          </p>
+          <pre>&gt; mvn -version
+Maven version: 2.2.1
+Java version: 1.6.0_17
+Default locale: en_US, platform encoding: MacRoman
+OS name: &quot;mac os x&quot; version: &quot;10.6.2&quot; arch: &quot;x86_64&quot; Family: &quot;mac&quot;</pre>
+        </li>
+        <li>
+            In case you want to use the Citrus TIBCO module in order to
+            connect to TIBCO EMS or TIBCO Collaborator you will need a TIBCO
+            Active Matrix BusinessWorks installation on your local machine. For
+            more information about TIBCO see <a href="http://www.tibco.com/">official website</a>.
+        </li>
+      </ul>
+
+      <h3>Initial git clone</h3>
+      <p>
+        First of all we get the Citrus sources from the repository on GitHub (<a href="http://www.github.com/">http://www.github.com/</a>).
+        You can use the following command to do this
+      </p>
+      
+      <pre>git clone git://github.com/christophd/citrus.git</pre>
+      <p>
+        This will clone the Citrus project to the target directory
+        <b>citrus</b>. In the following this project directory is referred 
+        to as <b>PROJECT_HOME</b>. For detailed instructions about the version control system git,
+        please consult the official website <a href="http://git-scm.com/">http://git-scm.com/</a>.
+      </p>
+
+      <h3>Build the Citrus artifacts</h3>
+      <p>Now everything is setup properly and you can use Maven for all the rest. Call</p>
+      
+      <pre>mvn install</pre>
+      <p>
+        This command runs the full Maven build lifecycle with
+        compilation, testing, packaging and installation of all artifacts. You
+        will find the freshly built Citrus JAR files in your local Maven
+        repository. Using this new own Citrus version is quite simple. Just
+        add the SNAPSHot dependency to your projects POM like this
+      </p>
+      
+      <pre>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+
+      <h3>Create IDE project files</h3>
+      <p>
+        You can easily create the project files for your favorite IDE. For
+        IntelliJ IDEA, in <b>PROJECT_HOME</b> call
+      </p>
+      
+      <pre>mvn idea:idea</pre>
+      <p>for Eclipse, call</p>
+      <pre>mvn eclipse:eclipse</pre>
+      <p>for Netbeans call</p>
+      <pre>mvn netbeans:netbeans</pre>
+      <p>
+        The project files are now ready for import in your IDE. This is
+        the preferred way for creating IDE project files in Maven. Please do
+        not create IDE projects manually. Maven takes care of the whole
+        project classpath construction.
+      </p>
+      <p>
+        Make sure that you have set the M2_REPO classpath variable set in
+        Eclipse (or Netbeans). The variable value points to your local Maven
+        repository (typically found in <i>C:\Documents and Settings\username\.m2\repo</i> or <i>~/.m2/repo</i>).
+      </p>
+      <p>Maven ofers a suitable command to do this automatically:</p>
+      <pre>mvn -Declipse.workspace=&lt;path-to-eclipse-workspace&gt; eclipse:add-maven-repo </pre>
+      
+      <h3>What's next?</h3>
+      <p>Have fun with Citrus!</p>
+    </div>
+  </body>
+</html>

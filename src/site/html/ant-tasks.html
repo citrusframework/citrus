@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">ANT tasks <small>Execute Citrus with ANT</small></h1>
+
+      <p>
+        You can execute Citrus tests with ANT. The Citrus ANT tasks
+        simplify the test execution so you just include predefined tasks into
+        your project's 'build.xml'.
+      </p>
+      
+      <p>
+        <b>Latest stable release</b>: 1.2
+      </p>
+      
+      <ul>
+        <li>citrus-ant-tasks-1.2.jar (<a href="dist/citrus-ant-tasks-1.2.jar">download</a>)</li>
+      </ul>
+      
+      <p>
+        <b>Older versions</b>:
+      </p>
+      
+      <ul>
+        <li>citrus-ant-tasks-1.1.jar (<a href="./dist/citrus-ant-tasks-1.1.jar">download</a>)</li>
+        <li>citrus-ant-tasks-1.0.jar, Note: Licensed under GPLv3 (<a href="./dist/citrus-ant-tasks-1.0.jar">download</a>)</li>
+      </ul>
+      
+      <p>
+        The ANT tasks can execute Citrus test cases in several modes.
+        You can either run one single test by its name or all tests in a test
+        package. In addition to that you can also use TestNG XML test suite
+        files to execute your tests.
+      </p>
+      
+      <p>Here is a simple usage example:</p>
+      
+      <pre class="prettyprint linenums">&lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-1.2.jar&quot;/&gt;
+
+&lt;target name=&quot;citrus.run.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
+    &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
+&lt;/target&gt;</pre>
+      
+      <p>
+        Following parameters are supported in the <i>citrus</i> tasks
+        definition.
+      </p>
+      
+      <table class="table table-striped table-bordered">
+        <tr>
+          <td align="center">suitename</td>
+          <td align="left">The name of the test suite to execute (List of suites is also supported, separated by space</td>
+        </tr>
+        <tr>
+          <td align="center">test</td>
+          <td align="left">List of test names that should be executed (space separated list of test names)</td>
+        </tr>
+        <tr>
+          <td align="center">package</td>
+          <td align="left">List of test packages to execute. all test files in these packages are executed in this test run</td>
+        </tr>
+        <tr>
+          <td align="center">testngXml</td>
+          <td align="left">TestNG XML execution file describing the tests/test suites to execute</td>
+        </tr>
+      </table>
+      
+      <p>
+        In the Citrus samples section you can find several 'build.xml'
+        scripts, which give examples how to use the Citrus ANT tasks in order
+        to run tests. You can also see how single test execution is extended
+        with ANT prompts, so the user is asked for test name inputs during
+        execution.
+      </p>
+    </div>
+  </body>
+</html>

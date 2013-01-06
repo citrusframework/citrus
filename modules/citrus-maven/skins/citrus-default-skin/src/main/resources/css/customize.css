@@ -2,6 +2,8 @@ body {
   padding-top: 40px;
   background: none repeat scroll 0 0 #efefef;
   color: #404040;
+  font-family: Verdana, Helvetica, Arial, sans-serif;
+  font-size: 13px;
 }
 
 .hero-unit {
@@ -9,7 +11,7 @@ body {
   border: 1px solid #d6d6d6;
   border-radius: 6px 6px 6px 6px;
   color: inherit;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 200;
   line-height: 30px;
   margin-bottom: 30px;
@@ -19,7 +21,7 @@ body {
 
 .hero-unit .subtitle {
   color: #777777;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -142,25 +144,45 @@ a:hover {
     color: #FFFFFF;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+    width: 940px;
+}
 
 .box {
+  padding-top: 25px;
+  padding-left: 50px;
+  padding-right: 50px;
+  width: 840px;
+}
+
+.box, .smallbox {
   background-color: #ffffff;
   border: 1px solid #d6d6d6;
   border-radius: 6px 6px 6px 6px;
   padding-bottom: 30px;
   min-height: 310px !important;
+  font-size: 12px;
 }
 
-.box h3 {
+.smallbox h3 {
 	border-bottom: 1px solid #dedede;
 }
 
-.box h3, .box p, .box span {
+.smallbox h3, .smallbox p, .smallbox span {
   padding: 0px 30px;	
 }
 
-.box ul {
+.smallbox ul {
   margin: 0px 45px;
+}
+
+pre {
+  font-size: 12px;
+}
+
+pre.license {
+  width: 600px;
+  background: none;
 }
 
 .rssRow p, .rssRow div {
@@ -171,6 +193,10 @@ a:hover {
 .rssRow p {
   height: 3em;
   overflow: hidden;
+}
+
+.rssRow h4 {
+  font-size: 15px;
 }
 
 footer {
@@ -188,9 +214,6 @@ footer a, footer a:hover {
     min-height: 1px;
 }
 
-.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
-    width: 940px;
-}
 .span12 {
     width: 938px;
 }

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Functions tutorial <small>Write custom functions</small></h1>
+      
+      <p>
+        This tutorial tries to explain how to write and include your own
+        functions in Citrus. First of all let us keep in mind what functions
+        do. Functions can ease up your life when working with dynamic values
+        and test variables. For instance if you need the current date in a test
+        case you may use the Citrus function currentDate() in your test case.
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;variable name=&quot;date&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+&lt;variable name=&quot;dateCustomFormat&quot; value=&quot;citrus:currentDate('yyyy-mm-dd')&quot;/&gt;</pre>
+
+      <p>
+        Citrus offers a lot of functions to be used out of the box (function
+        prefix: citrus). See the reference <a class="externalLink" href="http://www.citrusframework.org/reference-doc.html">documentation</a>
+        for a detailed function overview. However you might need to write your
+        own functions in order to implement a specific logic in your test. We
+        will deal with an id generating function in this tutorial. Maybe your
+        project needs special identifyers in a special format and you are tired
+        of statically defining the ids in all your tests. Therefore a function
+        shall generate the id strings in the special format:
+      </p>
+
+      <p>Lx0x123456789xM</p>
+
+      <p>
+        So the generated identifyers must have a static prefix
+        &quot;Lx0x&quot; and a static ending &quot;xM&quot;. In between there
+        is a number of 9 digits that should be randomly generated. The function
+        should be accessible from every test case with the function name
+        &quot;generateId&quot;. No function parameters are needed so far. So
+        much for the requirements. No let us start implementing this function
+        in Java.
+      </p>
+      
+      <p>All functions in Citrus need to implement the common function interface:</p>
+
+      <pre class="prettyprint linenums">public interface Function {
+    public String execute(List&lt;String&gt; parameterList);
+}</pre>
+
+      <p>
+        The function interface defines an execute method that will return
+        a String value. Lets see how we can implement our id generating function.
+      </p>
+
+      <pre class="prettyprint linenums">package com.mycompany.citrus.extension.functions;
+
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.core.RandomNumberFunction;
+
+public class IdGeneratingFunction implements Function {
+    public String execute(List&lt;String&gt; parameterList) {
+        StringBuffer idBuffer = new StringBuffer();
+        
+        idBuffer.append(&quot;Lx0x&quot;);
+        idBuffer.append(new RandomNumberFunction().execute(Collections.singletonList(&quot;9&quot;)));
+        idBuffer.append(&quot;xM&quot;);
+        
+        return idBuffer.toString();
+    }
+}</pre>
+
+      <p>
+        Our function implementation is very simple. We use a StringBuffer
+        to build the resulting identifyer string with its static prefix
+        (&quot;Lx0x&quot;) and suffix (&quot;xM&quot;). For the generated
+        random number of 9 digits we use the existing random number function of
+        Citrus. The function receives the number length of 9 as a singelton
+        parameter list and will do all the number generating work for us.
+      </p>
+      
+      <p>
+        Thats it! We return the identifyer string as a result of our
+        function and we are done!
+      </p>
+      
+      <p>
+        Now we need to publish the function to Citrus so that test cases
+        can call the function. Every function in Citrus belongs to a function
+        library. The library holds one or more functions and provides the
+        prefix to identify the functions inside the test case. Let us define a
+        custom function library in the Spring configuration to see how it is
+        done:
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;bean id=&quot;myCustomFunctionLibrary&quot; class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;myCustomFunctionLibrary&quot;/&gt;
+    &lt;property name=&quot;prefix&quot; value=&quot;mcfl:&quot;/&gt;
+    &lt;property name=&quot;members&quot;&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;generateId&quot;&gt;
+                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+            &lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</pre>
+
+      <p>
+        Once you have placed the function library into the Spring
+        configuration Citrus is ready to use it inside the test cases. The
+        library defines a custom function prefix (in our example
+        &quot;mcfl&quot; for &quot;my custom function library&quot;). Usually
+        this prefix would reflect the name of your project or your companies
+        name. The library holds one or more functions as members in a simple
+        map. Every function needs to have a name and the implementing Java
+        object. Here we use our previously coded IdGeneratingFunction in the
+        package &quot;com.mycompany.citrus.extension.functions&quot;.
+      </p>
+      
+      <p>
+        Inside a test case we have to use the function prefix as well as
+        the defined function name to access the new function:
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;variable name=&quot;correlationId&quot; value=&quot;mcfl:generateId()&quot;/&gt;</pre>
+
+      <p>
+        Now you can add as many functions as you want to the new function
+        library. You can extend Citrus with own functionalities fitting the
+        special needs of your project. In the following we will add another
+        function that will use parameters.
+      </p>
+
+      <h2>Writing functions with parameters</h2>
+      <p>
+        The common function interface says that a function gets a list
+        of parameters while executing. This parameters are automatically
+        converted into a Java list implementation so you can easily handle the
+        parameters passed to your function.
+      </p>
+      <p>
+        Let us implement another function called &quot;greeting&quot;.
+        The function will return a greeting phrase when executed. The function
+        looks for a parameter specifying the language. Let us see the detailed
+        implementation:
+      </p>
+      
+      <pre class="prettyprint linenums">public class GreetingFunction implements Function {
+ 
+    public String execute(List&lt;String&gt; parameterList) {
+        if(parameterList.isEmpty()) {
+            throw new InvalidFunctionUsageException(&quot;Function parameters must not be empty. Specify language as parameter (US, GERMAN, SPANISH)!&quot;);
+        }
+        
+        if(parameterList.size() &gt; 1) {
+            throw new InvalidFunctionUsageException(&quot;Function does not support multiple parameters&quot;);
+        }
+        
+        String language = parameterList.get(0).toUpperCase();
+        
+        if(language.equals(&quot;US&quot;)) {
+            return &quot;Welcome&quot;;
+        } else if(language.equals(&quot;GERMAN&quot;)) {
+            return &quot;Willkommen&quot;;
+        } else if(language.equals(&quot;SPANISH&quot;)) {
+            return &quot;Bienvenido&quot;;
+        } else {
+            throw new UnsupportedOperationException(&quot;Unsupported language: '&quot; + language + &quot;'&quot;);
+        }
+    }
+}</pre>
+
+      <p>
+        The function is again very simple. After the parameter list is
+        checked for possible usage errors the function returns the correct
+        greeting phrase according to the passed language. I bet fantastic
+        function was just missing in your project, right? However lets add it
+        to the function library and use it in our test:
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;bean id=&quot;myCustomFunctionLibrary&quot; class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;myCustomFunctionLibrary&quot;/&gt;
+    &lt;property name=&quot;prefix&quot; value=&quot;mcfl:&quot;/&gt;
+    &lt;property name=&quot;members&quot;&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;generateId&quot;&gt;
+                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+            &lt;/entry&gt;
+            &lt;entry key=&quot;greeting&quot;&gt;
+                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.GreetingFunction&quot;/&gt;
+            &lt;/entry&gt;
+        &lt;/map&gt;
+&lt;/bean&gt;</pre>
+
+      <p>
+        Another member entry for the function library and the function
+        is ready for usage in our test cases:
+      </p>
+      
+      <pre class="prettyprint linenums">&lt;testcase name=&quot;greetingTest&quot;&gt;
+    &lt;variables&gt;
+        &lt;variable name=&quot;user&quot; value=&quot;Mickey Mouse&quot;/&gt;
+    &lt;/variables&gt;
+    &lt;actions&gt;
+        &lt;echo&gt;
+            &lt;message&gt;mcfl:greeting('GERMAN') ${user}!&lt;/message&gt;
+        &lt;/echo&gt;
+        &lt;echo&gt;
+            &lt;message&gt;mcfl:greeting('US') ${user}!&lt;/message&gt;
+        &lt;/echo&gt;
+        &lt;echo&gt;
+            &lt;message&gt;mcfl:greeting('SPANISH') ${user}!&lt;/message&gt;
+        &lt;/echo&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</pre>
+
+      <p>
+        Note that functions can be used wherever you use variables.
+        Inside echo messages for example as shown in our test example. Citrus
+        will parse the function string and execute the function with the
+        respective parameter list.
+      </p>
+      
+      <p>The output of the test proves that the function is working as expected:</p>
+
+      <pre>echo Willkommen MickeyMouse!
+echo Welcome MickeyMouse!
+echo Bienvenido MickeyMouse!</pre>
+
+      <p>
+        That's it for the writing functions tutorial. I think it is
+        quite easy to include own logic into a test case using cutom function
+        implementations. We are glad to here about your functions and maybe we
+        can include your function into the Citrus function library so all
+        Citrus users can take the benefit.
+      </p>
+    </div>
+  </body>
+</html>

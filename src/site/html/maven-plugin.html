@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Maven plugin <small>Citrus Maven helpers</small></h1>
+      
+      <p>Goals available for this plugin:</p>
+      
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Goal</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><a href="create-excel-doc-mojo.html">citrus:create-excel-doc</a></td>
+          <td>
+            Creates test documentation in MS Excel listing all available
+            tests with meta information (name, author, description, date, ...)
+          </td>
+        </tr>
+        <tr>
+          <td><a href="create-html-doc-mojo.html">citrus:create-html-doc</a></td>
+          <td>
+            Creates test overview documentation in HTML. The web page
+            contains a list of all available tests with meta information.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="create-suite-from-wsdl-mojo.html">citrus:create-suite-from-wsdl</a></td>
+          <td>
+            Creates new Citrus test suite from a given WSDL with XML test
+            file and executable Java class. Mojo offers an interactive mode,
+            where the plugin prompts for parameters during execution. In
+            non-interactive mode the parameters are given as command line
+            arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="create-test-mojo.html">citrus:create-test</a></td>
+          <td>
+            Creates new Citrus test cases with empty XML test file and
+            executable Java class. Mojo offers an interactive mode, where the
+            plugin prompts for parameters during execution. In non-interactive
+            mode the parameters are given as command line arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="create-test-from-xsd-mojo.html">citrus:create-test-from-xsd</a></td>
+          <td>
+            Creates new Citrus test cases with empty XML test file and
+            executable Java class. Mojo offers an interactive mode, where the
+            plugin prompts for parameters during execution. In non-interactive
+            mode the parameters are given as command line arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="help-mojo.html">citrus:help</a></td>
+          <td>
+            Display help information on citrus-maven-plugin.<br /> Call
+            <pre>mvn citrus:help -Ddetail=true -Dgoal=&lt;goal-name&gt;</pre> to display parameter details.
+          </td>
+        </tr>
+      </table>
+      
+      <h3>System Requirements</h3>
+      <p>The following specifies the minimum requirements to run this Maven plugin:</p>
+      <table class="table table-striped table-bordered">
+        <tr>
+          <td>Maven</td>
+          <td>2.0</td>
+        </tr>
+        <tr>
+          <td>JDK</td>
+          <td>1.5</td>
+        </tr>
+        <tr>
+          <td>Memory</td>
+          <td>No minimum requirement.</td>
+        </tr>
+        <tr>
+          <td>Disk Space</td>
+          <td>No minimum requirement.</td>
+        </tr>
+      </table>
+          
+      <h3>Usage</h3>
+      <p>You should specify the version in your project's plugin configuration:</p>
+      
+      <pre>&lt;project&gt;
+  ...
+  &lt;build&gt;
+    &lt;!-- To define the plugin version in your parent POM --&gt;
+    &lt;pluginManagement&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
+          &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
+          &lt;version&gt;1.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        ...
+      &lt;/plugins&gt;
+    &lt;/pluginManagement&gt;
+    &lt;!-- To use the plugin goals in your POM or parent POM --&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
+        &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;1.2&lt;/version&gt;
+      &lt;/plugin&gt;
+      ...
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+  ...
+&lt;/project&gt;</pre>
+
+      <p>
+        For more information, see 
+        <a class="externalLink" href="http://maven.apache.org/guides/mini/guide-configuring-plugins.html">&quot;Guide to Configuring Plug-ins&quot;</a>
+      </p>
+    </div>
+  </body>
+</html>
