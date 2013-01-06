@@ -1,12 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 #macro ( mainMenu $menus )
   #foreach( $menu in $menus )
-    #set ( $currentItemHref = $PathTool.calculateLink( $menu.name, $relativePath ) )
-    #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
-    #if ( $alignedFileName == $currentItemHref )
-      #set ( $active = "active" )
-    #else
-      #set ( $active = "" )
+    #set ( $active = "" )
+    #foreach( $item in $menu.items )
+      #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
+      #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
+      #if ( $alignedFileName == $currentItemHref )
+        #set ( $active = "active" )
+      #end
+      #foreach( $subitem in $item.items )
+        #set ( $currentSubItemHref = $PathTool.calculateLink( $subitem.href, $relativePath ) )
+        #set ( $currentSubItemHref = $currentSubItemHref.replaceAll( "\\", "/" ) )
+        #if ( $alignedFileName == $currentSubItemHref )
+          #set ( $active = "active" )
+        #end
+      #end
     #end
     #if ( $menu.items && $menu.items.size() > 0 )
 <li class="dropdown $active">
@@ -18,6 +26,9 @@
   </ul>
 </li>
     #else
+    #if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) ))
+      #set ( $active = "active" )
+    #end
 <li class="$active"><a href="index.html">$menu.name</a></li>
     #end
   #end
