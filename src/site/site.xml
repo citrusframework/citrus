@@ -12,6 +12,7 @@
     
     <menu name="Quickstart">
       <item name="Installation" href="installation.html"/>
+      <item name="Features" href="features.html"/>
       <item name="Download" href="download.html"/>
       <item name="Tutorials" href="tutorials.html">
         <item name="Run with Maven" href="tutorials-maven.html"/>

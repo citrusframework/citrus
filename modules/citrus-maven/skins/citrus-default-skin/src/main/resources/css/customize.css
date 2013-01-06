@@ -185,6 +185,18 @@ pre.license {
   background: none;
 }
 
+.str, .atv {
+  color: #434399;
+}
+
+.typ, .atn, .dec, .var {
+  color: #F89406;
+}
+
+.kwd, .linenums .tag {
+  color: #181818;
+}
+
 .rssRow p, .rssRow div {
   padding: 0px 0px;	
   font-size: 12px;
