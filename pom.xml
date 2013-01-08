@@ -106,6 +106,16 @@
         <role>Developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>movchin</id>
+      <name>Michael Movchin</name>
+      <email>michael.movchin@consol.de</email>
+      <organization>ConSol* Software GmbH</organization>
+      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <roles>
+        <role>Web Developer</role>
+      </roles>
+    </developer>
   </developers>
 
   <prerequisites>

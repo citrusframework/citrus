@@ -39,7 +39,7 @@
       <item name="News" href="news.html"/>
       <item name="Forum" href="http://labs.consol.de/lang/de/forum/#/categories/citrus"/>
       <item name="Issues" href="issues.html"/>
-      <item name="Team" href="team.html"/>
+      <item name="Team" href="team-list.html"/>
     </menu>
 
     <menu name="Development">
