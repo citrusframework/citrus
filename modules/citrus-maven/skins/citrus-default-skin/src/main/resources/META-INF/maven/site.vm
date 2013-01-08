@@ -26,7 +26,7 @@
   </ul>
 </li>
     #else
-    #if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) ))
+    #if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) )
       #set ( $active = "active" )
     #end
 <li class="$active"><a href="index.html">$menu.name</a></li>
