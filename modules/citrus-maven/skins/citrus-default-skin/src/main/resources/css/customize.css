@@ -1,3 +1,5 @@
+@IMPORT url("customize-maven.css");
+
 body {
   padding-top: 40px;
   background: none repeat scroll 0 0 #efefef;
@@ -148,20 +150,28 @@ a:hover {
     width: 940px;
 }
 
-.box {
+.box, .section {
   padding-top: 25px;
   padding-left: 50px;
   padding-right: 50px;
   width: 840px;
 }
 
-.box, .smallbox {
+.box, .smallbox, .section {
   background-color: #ffffff;
   border: 1px solid #d6d6d6;
   border-radius: 6px 6px 6px 6px;
   padding-bottom: 30px;
   min-height: 310px !important;
   font-size: 12px;
+}
+
+.section > div.section {
+  border: none;
+  width: auto;
+  padding: 0px;
+  margin-bottom: 20px;
+  min-height: 0px !important;
 }
 
 .smallbox h3 {
