@@ -1,0 +1,44 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.box {
+  background-color: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 4px 4px 4px 4px;
+  margin: 15px 0;
+  padding: 5px 20px 20px 25px;
+  position: relative;
+}
+
+.side-nav {
+  background-color: #FFFFFF;
+  border-radius: 6px 6px 6px 6px;
+  margin: 110px 0 0;
+  padding: 0;
+}
+
+.side-nav > li > a {
+  border: 1px solid #DDDDDD;
+  display: block;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+}
+
+.side-nav > li:first-child > a {
+  border-radius: 6px 6px 0 0;
+}
+
+.side-nav > li:last-child > a {
+  border-radius: 0 0 6px 6px;
+}
+
+.ajax-loader {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+tr.test-case i {
+  cursor: pointer;
+}
