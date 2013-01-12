@@ -80,6 +80,7 @@ public class Template extends AbstractTestAction {
             innerContext.getVariables().putAll(context.getVariables());
             
             innerContext.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
+            innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
         }
         
         for (Entry<String, String> entry : parameter.entrySet()) {
