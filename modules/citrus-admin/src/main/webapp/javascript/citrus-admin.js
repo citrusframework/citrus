@@ -20,7 +20,7 @@ var CitrusAdmin;
 curl({
   baseUrl: 'javascript',
   paths: {
-      "TemplateManager" : "views/TemplateManager",
+      "TemplateManager" : "template/TemplateManager",
       "LoggingWebSocket" : "model/LoggingWebSocket",
       "AppRouter" : "router/AppRouter"
   }},

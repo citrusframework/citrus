@@ -21,6 +21,7 @@
           testcases: function() {
               var testListView = new TestListView({el: $('#content')});
               testListView.render();
+              testListView.afterRender();
           },
           
           about: function() {

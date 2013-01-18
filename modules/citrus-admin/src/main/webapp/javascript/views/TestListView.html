@@ -1,19 +1,37 @@
-<div class="conatiner-fluid">
-    <div class="row-fluid">
-        <div class="span3">
-            <ul id="test-list" class="nav nav-list box side-nav"></ul>
-        </div>
-        <div class="span9">
-          <div class="container">
-			  <div class="page-header">
-			    <h1>Integration Tests <small>All Citrus test cases</small></h1>
-			  </div>
-			  
-			  <p class="well">Found <strong id="cnt-tests">{{testsTotal}}</strong> test cases available for this Citrus project. You can execute a test
-			  or a complete test package below. Click on a test name in order to see the content of the test file.</p>
-			  
-			  <div id="test-case"></div>
-		  </div>
-		</div>
+<div class="container">
+    <div class="page-header">
+      <h1>Tests cases <small>Manage tests in this project</small></h1>
+    </div>
+    
+    <ul id="testlist-tabs" class="nav nav-tabs">
+     <li class="active">
+        <a href="#all-tab" data-toggle="tab">All Tests</a>
+      </li>
+    </ul>
+    
+    <div id="testlist-tab-content" class="tab-content">
+      <div class="tab-pane active" id="all-tab">
+        <form id="search-form" class="form-horizontal">
+          <input id="test-name" type="text" class="input-large search-query"/>
+          <a id="button-search" class="btn btn-primary"><i class="icon-search icon-white"></i> Search</a>
+          &nbsp;
+          <img class="ajax-loader" src="images/ajax-loader.gif" style="display: none;"/>
+        </form>
+        
+        <div id="search-results"></div>
+      </div>
     </div>
 </div>
+
+<code id="test-details-tab" class="template">
+  <li id="tab-{{var name='hash'}}" class="">
+    <button id="tab-close-{{var name='hash'}}" type="button" class="close">&times;</button>
+    <a href="#test-details-tab-{{var name='hash'}}" data-toggle="tab">{{var name='name'}}</a>
+  </li>
+</code>
+
+<code id="test-details-tab-pane" class="template">
+  <div class="tab-pane" id="test-details-tab-{{var name='hash'}}">
+    <div id="test-case-details-{{var name='hash'}}"></div>
+  </div>
+</code>

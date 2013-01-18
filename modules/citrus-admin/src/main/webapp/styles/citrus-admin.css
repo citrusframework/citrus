@@ -39,6 +39,53 @@ body {
   vertical-align: middle;
 }
 
-tr.test-case i {
+tr.show-test-details {
   cursor: pointer;
+}
+
+#testlist-tabs > li {
+  margin-right: 5px;
+}
+
+#testlist-tabs button.close {
+  margin-right: 8px;
+}
+
+#testlist-tabs > li > a {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #DDDDDD #DDDDDD transparent;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  padding-right: 22px;
+}
+
+code.template {
+  display: none;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  background-image: url("icons/glyphicons-halflings.png");
+}
+
+/* White icons with optional class, or on hover/active states of certain elements */
+
+.icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"] {
+  background-image: url("icons/glyphicons-halflings-white.png");
 }

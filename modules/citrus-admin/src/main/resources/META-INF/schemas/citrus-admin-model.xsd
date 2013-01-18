@@ -35,18 +35,10 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="test-case-list">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="test-case-info" type="TestCaseInfoType" minOccurs="0" maxOccurs="unbounded" />
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    
     <xs:element name="test-result">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="test-case" type="TestCaseInfoType"/>
+                <xs:element name="test-case" type="TestCaseType"/>
                 <xs:element name="success" type="xs:boolean"/>
                 <xs:element name="stack-trace" type="xs:string"/>
                 <xs:element name="failure-stack" type="xs:string" minOccurs="0"/>
@@ -75,11 +67,19 @@
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="TestCaseInfoType">
-        <xs:sequence>
-            <xs:element name="name" type="xs:string" />
-            <xs:element name="package-name" type="xs:string"/>
-        </xs:sequence>
+    <xs:complexType name="TestCaseType">
+      <xs:sequence>
+        <xs:element name="package-name" type="xs:string"/>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="author" type="xs:string"/>
+        <xs:element name="description" type="xs:string"/>
+        <xs:element name="status" type="xs:string"/>
+        <xs:element name="groups" type="xs:string"/>
+        <xs:element name="creationDate" type="xs:string"/>
+        <xs:element name="lastUpdated" type="xs:string"/>
+        <xs:element name="lastUpdatedBy" type="xs:string"/>
+        <xs:element name="file" type="xs:string"/>
+      </xs:sequence>
     </xs:complexType>
     
 </xs:schema>
