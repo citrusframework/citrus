@@ -29,6 +29,15 @@ curl({
   TemplateManager.load(['HeaderView', 'AppContextView'], function() {
       CitrusAdmin = new AppRouter();
       CitrusAdminLogging = new LoggingWebSocket();
+      
+      $('body').ajaxStart(function() {
+          $('.ajax-loader').show();
+      });
+      
+      $('body').ajaxComplete(function() {
+          $('.ajax-loader').hide();
+      });
+      
       Backbone.history.start();
   });
 });

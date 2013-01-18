@@ -3,41 +3,65 @@
         var TestListView = Backbone.View.extend({
     
           tests: {},
+          searchResults: {},
           
           events: {
-              "click tr.show-test-details" : "showDetails"
+              "click tr.show-test-details" : "showDetails",
+              "submit #search-form" : "searchTests"
           },
           
           initialize: function() {
+          },
+          
+          render: function() {
+              $(this.el).html(TemplateManager.template('TestListView', {}));
+              
               $.ajax({
                   url: "testcase",
                   type: 'GET',
                   dataType: "json",
                   success: _.bind(function(response) {
-                               this.tests = response;
-                           }, this),
-                  async: false
+                      this.tests = response;
+                      this.searchResults = response;
+                      this.afterRender();
+                  }, this)
               });
-          },
-          
-          render: function() {
-              $(this.el).html(TemplateManager.template('TestListView', {}));
+              
               return this;
           },
           
           afterRender: function() {
               $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.tests }));
               
-              var searchkeys = _.map(this.tests, function(test){ return test.packageName + "." + test.name; });
+              var searchNames = _.map(this.tests, function(test){ return test.name; });
+              var searchPackages = _.map(this.tests, function(test){ return test.packageName + ".*"; });
+              var searchKeys = _.union(searchPackages, searchNames);
               $('#test-name').typeahead({
-                  source: searchkeys,
+                  source: searchKeys,
                   items: 5,
                   minLength: 1
               });
           },
           
+          searchTests: function() {
+              var searchKey = $('#test-name').val();
+              
+              if (searchKey) {
+                  if (searchKey.indexOf(".*")) {
+                      this.searchResults = _.where(this.tests, {packageName: searchKey.substring(0, searchKey.length - 2)});
+                  } else {
+                      this.searchResults = _.where(this.tests, {name: searchKey});
+                  }
+                  
+              } else {
+                  this.searchResults = this.tests;
+              }
+              
+              $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.searchResults }));
+          },
+          
           showDetails: function(event) {
-              var test = this.tests[event.currentTarget.rowIndex - 1];
+              var test = this.searchResults[event.currentTarget.rowIndex - 1];
               var idHash= test.name.toLowerCase();
               
               if ($('ul#testlist-tabs li#tab-' + idHash).size() === 0) {

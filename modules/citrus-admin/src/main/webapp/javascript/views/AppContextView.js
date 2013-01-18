@@ -34,8 +34,6 @@
             },
 
             loadContext: function() {
-                $('img#load-context-progress').show('fast');
-
                 $.ajax({
                     url: "context",
                     type: 'GET',
@@ -53,8 +51,6 @@
                             $('#server-instances').append('<p class="server-instance">' + server.name + '</p>');
                         });
 
-                        $('img#load-context-progress').hide('fast');
-
                         $('#load-context').hide('fast');
                         $('#stop-context').show('fast');
                     }
@@ -62,8 +58,6 @@
             },
 
             stopContext: function() {
-                $('img#load-context-progress').show('fast');
-
                 $.ajax({
                     url: "context",
                     type: 'DELETE',
@@ -72,8 +66,6 @@
                         $('.message-sender').remove();
                         $('.message-receiver').remove();
                         $('.server-instance').remove();
-
-                        $('img#load-context-progress').hide('fast');
 
                         $('#stop-context').hide('fast');
                         $('#load-context').show('fast');
