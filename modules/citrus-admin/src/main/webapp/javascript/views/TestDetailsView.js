@@ -25,8 +25,6 @@
               $('div.alert').remove();
               $('div#' + this.test.name).append('<div class="alert"><strong>Running test!</strong> Run Citrus test case ... <img src="images/ajax-loader.gif" alt="ajax-loader.gif" class="ajax-loader"/></div>');
               
-              CitrusAdminLogging.bindOutput('div#' + this.test.name);
-              
               $.ajax({
                   url: "testcase/execute/" + this.test.name,
                   type: 'GET',

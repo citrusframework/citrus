@@ -1,5 +1,5 @@
 (function() {
-    define(["TemplateManager"], function(TemplateManager) {
+    define(["TemplateManager", "views/WebSocketView"], function(TemplateManager, WebSocketView) {
         var HeaderView = Backbone.View.extend({
         
           render: function() {
@@ -11,6 +11,8 @@
                       $(this).addClass('active');
                   });
               });
+              
+              $('#web-socket').html(new WebSocketView({ model: CitrusWebSocket }).render().el);
               
               return this;
           }

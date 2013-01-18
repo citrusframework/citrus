@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-var CitrusAdminLogging;
+var CitrusWebSocket;
 var CitrusAdmin;
 
 curl({
   baseUrl: 'javascript',
   paths: {
       "TemplateManager" : "template/TemplateManager",
-      "LoggingWebSocket" : "model/LoggingWebSocket",
+      "WebSocketHolder" : "socket/WebSocketHolder",
       "AppRouter" : "router/AppRouter"
   }},
-  ["TemplateManager", "AppRouter", "LoggingWebSocket", "domReady!"], function(TemplateManager, AppRouter, LoggingWebSocket) {
+  ["TemplateManager", "AppRouter", "WebSocketHolder", "domReady!"], function(TemplateManager, AppRouter, WebSocketHolder) {
     
   TemplateManager.load(['HeaderView', 'AppContextView'], function() {
+      CitrusWebSocket = new WebSocketHolder();
       CitrusAdmin = new AppRouter();
-      CitrusAdminLogging = new LoggingWebSocket();
       
       $('body').ajaxStart(function() {
           $('.ajax-loader').show();
