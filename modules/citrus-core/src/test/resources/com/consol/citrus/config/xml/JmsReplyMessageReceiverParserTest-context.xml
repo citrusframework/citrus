@@ -9,6 +9,9 @@
 
     <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver2"
                                       actor="testActor"/>
-        
+    
+    <citrus:jms-reply-message-handler id="jmsReplyMessageReceiver3"
+                                      polling-interval="550"/>
+                                          
     <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

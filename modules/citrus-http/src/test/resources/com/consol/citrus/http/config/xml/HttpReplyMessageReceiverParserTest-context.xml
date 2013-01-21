@@ -10,7 +10,10 @@
     <citrus-http:reply-message-handler id="httpReplyMessageReceiver1"/>
     
     <citrus-http:reply-message-handler id="httpReplyMessageReceiver2"
-                actor="testActor"/>
+                                        actor="testActor"/>
+                
+    <citrus-http:reply-message-handler id="httpReplyMessageReceiver3"
+                                        polling-interval="550"/>
     
     <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

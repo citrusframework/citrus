@@ -82,7 +82,7 @@ public class JmsReplyMessageReceiverTest {
         };
         
         Assert.assertEquals(retryCount, 0);
-        Assert.assertEquals(replyMessageReceiver.receive(3000), message);
+        Assert.assertEquals(replyMessageReceiver.receive(2500), message);
         Assert.assertEquals(retryCount, 5);
     }
     
@@ -98,10 +98,48 @@ public class JmsReplyMessageReceiverTest {
             }
         };
         
-        replyMessageReceiver.setMaxRetries(3);
+        replyMessageReceiver.setPollingInterval(300L);
         
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(replyMessageReceiver.receive(1000));
-        Assert.assertEquals(retryCount, 3);
+        Assert.assertNull(replyMessageReceiver.receive(800));
+        Assert.assertEquals(retryCount, 4);
+    }
+    
+    @Test
+    public void testIntervalGreaterThanTimeout() {
+        retryCount = 0;
+        
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+            @Override
+            public Message<?> receiveSelected(String selector) {
+                retryCount++;
+                return null;
+            }
+        };
+        
+        replyMessageReceiver.setPollingInterval(1000L);
+        
+        Assert.assertEquals(retryCount, 0);
+        Assert.assertNull(replyMessageReceiver.receive(250));
+        Assert.assertEquals(retryCount, 2);
+    }
+    
+    @Test
+    public void testZeroTimeout() {
+        retryCount = 0;
+        
+        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+            @Override
+            public Message<?> receiveSelected(String selector) {
+                retryCount++;
+                return null;
+            }
+        };
+        
+        replyMessageReceiver.setPollingInterval(1000L);
+        
+        Assert.assertEquals(retryCount, 0);
+        Assert.assertNull(replyMessageReceiver.receive(0));
+        Assert.assertEquals(retryCount, 1);
     }
 }

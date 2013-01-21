@@ -22,7 +22,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.util.Assert;
 
 import com.consol.citrus.TestActor;
 
@@ -41,8 +40,8 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
     
-    /** Maximum number of retries when waiting for synchronous reply message to arrive */
-    private int maxRetries = 5;
+    /** Polling interval when waiting for synchronous reply message to arrive */
+    private long pollingInterval = 500;
     
     /** The test actor linked with this reply message receiver */
     private TestActor actor;
@@ -77,26 +76,23 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        Message<?> message = null;
-        
-        long timeoutInterval = timeout / maxRetries;
-        int retryIndex = 1;
-        
-        message = receiveSelected(selector);
-        
-        while (message == null && retryIndex < maxRetries) {
+        long timeLeft = timeout;
+        Message<?> message = receiveSelected(selector);
+
+        while (message == null && timeLeft > 0) {
+            timeLeft -= pollingInterval;
+            
             if (log.isDebugEnabled()) {
-                log.debug("Reply message did not arrive yet - waiting " + timeoutInterval + " ms before next try");
+                log.debug("Reply message did not arrive yet - waiting " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms before next try");
             }
             
             try {
-                Thread.sleep(timeoutInterval);
+                Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             } catch (InterruptedException e) {
                 log.warn("Thread interrupted while waiting for synchronous reply", e);
             }
             
             message = receiveSelected(selector);
-            retryIndex++;
         }
         
         return message;
@@ -127,15 +123,6 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
     }
 
     /**
-     * Sets the maximum number of retries while asking for the response message.
-     * @param maxRetries the maxRetries to set
-     */
-    public void setMaxRetries(int maxRetries) {
-        Assert.isTrue(maxRetries > 0, "Maximum number of retries must be a positive number > 0");
-        this.maxRetries = maxRetries;
-    }
-
-    /**
      * Gets the actor.
      * @return the actor the actor to get.
      */
@@ -149,5 +136,21 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    /**
+     * Gets the pollingInterval.
+     * @return the pollingInterval the pollingInterval to get.
+     */
+    public long getPollingInterval() {
+        return pollingInterval;
+    }
+
+    /**
+     * Sets the pollingInterval.
+     * @param pollingInterval the pollingInterval to set
+     */
+    public void setPollingInterval(long pollingInterval) {
+        this.pollingInterval = pollingInterval;
     }
 }

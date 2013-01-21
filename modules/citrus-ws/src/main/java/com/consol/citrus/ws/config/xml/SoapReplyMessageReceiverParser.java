@@ -38,6 +38,8 @@ public class SoapReplyMessageReceiverParser extends AbstractBeanDefinitionParser
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
         
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("polling-interval"), "pollingInterval");
+        
         return builder.getBeanDefinition();
     }
 }
