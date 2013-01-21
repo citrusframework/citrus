@@ -59,15 +59,15 @@ public class TestCaseService {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCaseService.class);
     
-    /** Base package for test cases to look for */
-    private String basePackage = "com.consol.citrus";
-    
     @Autowired
     private AppContextHolder appContextHolder;
     
     /** Project home property name */
     private static final String PROJECT_HOME = "project.home";
 
+    /** Base package for test cases to look for */
+    private static final String BASE_PACKAGE = "test.base.package";
+    
     /**
      * Lists all available Citrus test cases from classpath.
      * @return
@@ -75,7 +75,7 @@ public class TestCaseService {
     public List<TestCaseType> getAllTests() {
         List<TestCaseType> testCases = new ArrayList<TestCaseType>();
         
-        List<String> testFiles = findTestsInClasspath(basePackage); // TODO: make base package configurable
+        List<String> testFiles = findTestsInClasspath(System.getProperty(BASE_PACKAGE, "com.consol.citrus"));
         
         for (String file : testFiles) {
             String testName = file.substring(file.lastIndexOf(".") + 1);
@@ -102,7 +102,7 @@ public class TestCaseService {
      * @return
      */
     public String getSourceCode(String testPackage, String testName, String type) {
-        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type);
+        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replaceAll("\\.", "/") + "/" + testName + "." + type);
         
         try {
             return FileUtils.readToString(testFile);
