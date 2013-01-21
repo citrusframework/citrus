@@ -127,7 +127,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws IOException 
      */
     private boolean simulateHttpStatusCode(Message<?> replyMessage) throws IOException {
-        if (CollectionUtils.isEmpty(replyMessage.getHeaders())) {
+        if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.getHeaders())) {
             return false;
         }
         
