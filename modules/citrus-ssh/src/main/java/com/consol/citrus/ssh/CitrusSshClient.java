@@ -19,7 +19,7 @@ package com.consol.citrus.ssh;
 import java.io.*;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.AbstractMessageSender;
+import com.consol.citrus.message.AbstractSyncMessageSender;
 import com.consol.citrus.message.ReplyMessageHandler;
 import com.jcraft.jsch.*;
 import org.springframework.integration.Message;
@@ -34,7 +34,7 @@ import org.springframework.util.StringUtils;
  * @author Roland Huss
  * @since 1.3
  */
-public class CitrusSshClient extends AbstractMessageSender {
+public class CitrusSshClient extends AbstractSyncMessageSender {
 
     public static final String CLASSPATH_PREFIX = "classpath:";
     // SSH implementation
