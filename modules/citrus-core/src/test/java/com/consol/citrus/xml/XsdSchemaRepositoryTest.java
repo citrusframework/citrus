@@ -16,8 +16,6 @@
 
 package com.consol.citrus.xml;
 
-import java.io.FileNotFoundException;
-
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,7 +39,7 @@ public class XsdSchemaRepositoryTest {
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
     }
     
-    @Test(expectedExceptions = { FileNotFoundException.class })
+    @Test(expectedExceptions = { IllegalArgumentException.class })
     public void testUnknownLocation() throws Exception {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
         
