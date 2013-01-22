@@ -35,7 +35,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestResult.RESULT;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
@@ -150,7 +149,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
      * @throws IOException 
      */
     private String getLogoImageData() {
-        ByteOutputStream os = new ByteOutputStream();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
         BufferedInputStream reader = null;
         
         try {
@@ -178,7 +177,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             }
         }
         
-        return Base64.encodeBase64String(os.getBytes());
+        return Base64.encodeBase64String(os.toByteArray());
     }
 
     /**
