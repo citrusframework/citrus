@@ -46,10 +46,8 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
     /** The test actor linked with this reply message receiver */
     private TestActor actor;
     
-    /**
-     * Logger
-     */
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    /** Logger */
+    private final Logger retry_log = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
     
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
@@ -82,14 +80,14 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
         while (message == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
             
-            if (log.isDebugEnabled()) {
-                log.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+            if (retry_log.isDebugEnabled()) {
+                retry_log.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
             }
             
             try {
                 Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             } catch (InterruptedException e) {
-                log.warn("Thread interrupted while waiting for retry", e);
+                retry_log.warn("Thread interrupted while waiting for retry", e);
             }
             
             message = receiveSelected(selector);

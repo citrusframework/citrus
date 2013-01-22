@@ -60,16 +60,20 @@ public class SyncMessageChannelSender extends MessageChannelSender {
         getMessagingTemplate().setReceiveTimeout(replyTimeout);
         Message<?> replyMessage;
         
+        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
+        
         replyMessage = getMessagingTemplate().sendAndReceive(getDestinationChannel(), message);
         
         if (replyMessage == null) {
             throw new CitrusRuntimeException("Reply timed out after " + 
                     replyTimeout + "ms. Did not receive reply message on reply channel");
+        } else {
+            log.info("Received synchronous repsonse message from reply channel");
         }
         
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
-        
         if (replyMessageHandler != null) {
+            log.info("Informing reply message handler for further processing");
+            
             if (correlator != null) {
                 replyMessageHandler.onReplyMessage(replyMessage,
                     correlator.getCorrelationKey(message));
