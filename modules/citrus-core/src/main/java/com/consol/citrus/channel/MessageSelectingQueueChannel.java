@@ -18,6 +18,8 @@ package com.consol.citrus.channel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
@@ -29,8 +31,14 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(MessageSelectingQueueChannel.class);
+    
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;
+    
+    /** Polling interval when waiting for synchronous reply message to arrive */
+    private long pollingInterval = 500;
     
     /**
      * Create a channel with the specified queue.
@@ -65,7 +73,7 @@ public class MessageSelectingQueueChannel extends QueueChannel {
      * @param selector
      * @return
      */
-    public Message<?> receiveSelected(MessageSelector selector) {
+    public Message<?> receive(MessageSelector selector) {
         Object[] array = this.queue.toArray();
         for (Object o : array) {
             Message<?> message = (Message<?>) o;
@@ -75,5 +83,52 @@ public class MessageSelectingQueueChannel extends QueueChannel {
         }
         
         return null;
+    }
+    
+    /**
+     * Consume messages on the channel via message selector. Timeout forces several retries
+     * with polling interval setting.
+     * 
+     * @param selector
+     * @param timeout
+     * @return
+     */
+    public Message<?> receive(MessageSelector selector, long timeout) {
+        long timeLeft = timeout;
+        Message<?> message = receive(selector);
+
+        while (message == null && timeLeft > 0) {
+            timeLeft -= pollingInterval;
+            
+            if (log.isDebugEnabled()) {
+                log.debug("No message received for selector (" + selector + ") - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+            }
+            
+            try {
+                Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
+            } catch (InterruptedException e) {
+                log.warn("Thread interrupted while waiting for retry", e);
+            }
+            
+            message = receive(selector);
+        }
+        
+        return message;
+    }
+
+    /**
+     * Gets the pollingInterval.
+     * @return the pollingInterval the pollingInterval to get.
+     */
+    public long getPollingInterval() {
+        return pollingInterval;
+    }
+
+    /**
+     * Sets the pollingInterval.
+     * @param pollingInterval the pollingInterval to set
+     */
+    public void setPollingInterval(long pollingInterval) {
+        this.pollingInterval = pollingInterval;
     }
 }

@@ -26,7 +26,6 @@ import org.springframework.integration.MessageChannel;
 import org.springframework.integration.core.*;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.support.channel.ChannelResolver;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
@@ -41,9 +40,7 @@ import com.consol.citrus.message.MessageReceiver;
  */
 public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(MessageChannelReceiver.class);
     
     /** Pollable channel */
@@ -60,9 +57,6 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
     
     /** Channel resolver instance */
     private ChannelResolver channelResolver;
-    
-    /** Maximum number of retries when receiving messages with timeout */
-    private int maxRetries = 5;
     
     /**
      * @see MessageReceiver#receive(long)
@@ -99,27 +93,9 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
             Message<?> message = null;
             
             if (timeout <= 0) {
-                message = queueChannel.receiveSelected(messageSelector);
+                message = queueChannel.receive(messageSelector);
             } else {
-                long timeoutInterval = timeout / maxRetries;
-                int retryIndex = 1;
-                
-                message = queueChannel.receiveSelected(messageSelector);
-                
-                while (message == null && retryIndex < maxRetries) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("No message received for selector (" + selector + ") - retrying in " + timeoutInterval + " ms");
-                    }
-                    
-                    try {
-                        Thread.sleep(timeoutInterval);
-                    } catch (InterruptedException e) {
-                        log.warn("Thread interrupted while waiting for retry", e);
-                    }
-                    
-                    message = queueChannel.receiveSelected(messageSelector);
-                    retryIndex++;
-                }
+                message = queueChannel.receive(messageSelector, timeout);
             }
             
             if (message == null) {
@@ -189,23 +165,6 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         return channelResolver.resolveChannelName(channelName);
     }
     
-    /**
-     * Sets the maximum number of retries while asking for the response message.
-     * @param maxRetries the maxRetries to set
-     */
-    public void setMaxRetries(int maxRetries) {
-        Assert.isTrue(maxRetries > 0, "Maximum number of retries must be a positive number > 0");
-        this.maxRetries = maxRetries;
-    }
-    
-    /**
-     * Gets the maxRetries.
-     * @return the maxRetries the maxRetries to get.
-     */
-    public int getMaxRetries() {
-        return maxRetries;
-    }
-
     /**
      * Set the target channel to receive message from.
      * @param channel the channel to set

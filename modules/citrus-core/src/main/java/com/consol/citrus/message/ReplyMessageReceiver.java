@@ -83,13 +83,13 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
             timeLeft -= pollingInterval;
             
             if (log.isDebugEnabled()) {
-                log.debug("Reply message did not arrive yet - waiting " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms before next try");
+                log.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
             }
             
             try {
                 Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             } catch (InterruptedException e) {
-                log.warn("Thread interrupted while waiting for synchronous reply", e);
+                log.warn("Thread interrupted while waiting for retry", e);
             }
             
             message = receiveSelected(selector);
