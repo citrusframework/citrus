@@ -20,19 +20,19 @@
             table#report-summary tr.even td { background-color: #DDDDDD; }
             table#report-summary tr.odd td { background-color: #EAEAEA; }
             
-            table#test-details { margin-left: 10px; margin-bottom: 20px; width: 95%; }
-            table#test-details tr th { padding: 2px 0 2px 10px; cursor: pointer; }
+            table#test-results { margin-left: 10px; margin-bottom: 20px; width: 940px; }
+            table#test-results tr th { padding: 2px 0 2px 10px; cursor: pointer; }
             
             span.tooltip { color: #555555; display: none; width: 350px; position: absolute;
             background-color: #EAEAEA; border: 1px solid #333333; font-size: 11px; font-weight: normal; padding: 3px; }
             span.tooltip i { display: block; text-decoration: underline; }
             
-            table#test-details tr.success th { color: #009900; }
-            table#test-details tr.success td { color: #009900; }
-            table#test-details tr.skip th { color: #999999; text-decoration: line-through; }
-            table#test-details tr.skip td { color: #555555; }
-            table#test-details tr.failure th { color: #FF0000; }
-            table#test-details tr.failure td { color: #FF0000; }
+            table#test-results tr.success th { color: #009900; }
+            table#test-results tr.success td { color: #009900; }
+            table#test-results tr.skip th { color: #999999; text-decoration: line-through; }
+            table#test-results tr.skip td { color: #555555; }
+            table#test-results tr.failure th { color: #FF0000; }
+            table#test-results tr.failure td { color: #FF0000; }
             div.error-detail { padding-left: 15px; color: #FF0000; }
             div.code-snippet { display: block; border: 1px solid #AAAAAA; }
             h2.code-title { background-color: #CCCCCC; color: #555555; display: block; font-size: 1.2em; margin: 0px; padding: 10px; }
@@ -86,37 +86,37 @@
     </head>
     <body>
         <div id="report-content">
-            <div><img id="citrus-logo" src="resources/citrus_logo.png" alt="Citrus"/></div>
+            <div><img id="citrus-logo" src="data:image/png;base64,@logo.data@" alt="Citrus"/></div>
             <table id="report-summary">
                 <thead>
                     <tr>
-                        <th class="title" colspan="2">Test summary</th>
+                        <th class="title" colspan="2">Integration Test Summary</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="even">
-                        <th>Total Tests</th>
+                        <th>Total</th>
                         <td>@test.cnt@</td>
                     </tr>
                     <tr class="odd">
-                        <th>Skipped Tests</th>
+                        <th>Skipped</th>
                         <td>@skipped.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@skipped.test.pct@%</td>
                     </tr>
                     <tr class="even">
-                        <th>Failed Tests</th>
+                        <th>Failed</th>
                         <td>@failed.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@failed.test.pct@%</td>
                     </tr>
                     <tr class="odd">
-                        <th>Successful Tests</th>
+                        <th>Successful</th>
                         <td>@success.test.cnt@&nbsp;&nbsp;|&nbsp;&nbsp;@success.test.pct@%</td>
                     </tr>
                 </tbody>
             </table>
             
             <h1>Tests results (@test.cnt@ Tests)</h1>
-            <table id="test-details"> 
+            <table id="test-results"> 
                 <tbody> 
-                    @test.details@
+                    @test.results@
                 </tbody>
             </table>
         </div>

@@ -20,8 +20,11 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -32,6 +35,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestResult.RESULT;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
@@ -40,9 +44,7 @@ import com.consol.citrus.util.PropertyUtils;
  */
 public class HtmlReporter extends AbstractTestListener implements TestReporter {
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(HtmlReporter.class);
     
     /** Collect test results for test report */
@@ -60,9 +62,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     /** Output directory */
     private static final String OUTPUT_DIRECTORY = "test-output" + File.separator + "citrus-reports";
     
-    /** Resource files directory */
-    private static final String RESOURCE_DIRECTORY = OUTPUT_DIRECTORY + File.separator + "resources";
-    
     /** Resulting HTML test report file name */    
     private static final String REPORT_FILE_NAME = "citrus-test-results.html";
     
@@ -71,6 +70,11 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     
     /** Common decimal format for percentage calculation in report */
     private DecimalFormat decFormat = new DecimalFormat("0.0");
+    
+    /** Default logo image resource */
+    @Autowired(required = false)
+    @Qualifier("HtmlReporter.LOGO")
+    private Resource logo = new ClassPathResource("citrus_logo.png", HtmlReporter.class);
     
     /**
      * Default constructor.
@@ -130,14 +134,51 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             reportProps.put("failed.test.pct", decFormat.format((double)testResults.getFailed() / testResults.size()*100));
             reportProps.put("success.test.cnt", Integer.toString(testResults.getSuccess()));
             reportProps.put("success.test.pct", decFormat.format((double)testResults.getSuccess() / testResults.size()*100));
-            reportProps.put("test.details", reportDetails.toString());
+            reportProps.put("test.results", reportDetails.toString());
+            reportProps.put("logo.data", getLogoImageData());
             report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(REPORT_TEMPLATE), reportProps);
             
-            copyResources();
             createReportFile(report);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to generate HTML test report", e);
         }
+    }
+
+    /**
+     * Reads citrus logo png image and converts to base64 encoded string for inline HTML image display.
+     * @return
+     * @throws IOException 
+     */
+    private String getLogoImageData() {
+        ByteOutputStream os = new ByteOutputStream();
+        BufferedInputStream reader = null;
+        
+        try {
+            reader = new BufferedInputStream(logo.getInputStream());
+            
+            byte[] contents = new byte[1024];
+            while( reader.read(contents) != -1){
+                os.write(contents);
+            }
+        } catch(IOException e) {
+            log.warn("Failed to add logo image data to HTML report", e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch(IOException ex) {
+                    log.warn("Failed to close logo image resource for HTML report", ex);
+                }
+            }
+            
+            try {
+                os.flush();
+            } catch(IOException ex) {
+                log.warn("Failed to flush logo image stream for HTML report", ex);
+            }
+        }
+        
+        return Base64.encodeBase64String(os.getBytes());
     }
 
     /**
@@ -224,57 +265,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         		"</pre>" + getCodeSnippetHtml(cause) + "</div></td></tr>";
     }
 
-
-    /**
-     * Creates resources(images and CSS file) in target directory
-     * @param resources A String array of classpath resources to be copied
-     * @param targetPath The target directory where the files should be written to
-     */
-    private void copyResources() {
-        Resource resource = new ClassPathResource("citrus_logo.png", HtmlReporter.class);
-        
-        InputStream  in = null;
-        OutputStream out = null;
-        File targetDirectory = new File(RESOURCE_DIRECTORY);
-        if (!targetDirectory.exists()) {
-            boolean success = targetDirectory.mkdirs();
-            
-            if (!success) {
-                throw new CitrusRuntimeException("Unable to create folder structure for HTML report");
-            }
-        }
-        
-        try {
-            in = resource.getInputStream();
-            out = new FileOutputStream(RESOURCE_DIRECTORY + File.separator + resource.getFilename());
-            byte[] buffer = new byte[ 0xFFFF ];
-            int len = in.read(buffer);
-            while (len != -1) {
-                out.write(buffer, 0, len);
-                len = in.read(buffer);
-            }
-        } catch (IOException e) {
-            log.error("Failed to copy the HTML test report resource files", e);
-        } finally {
-            if (in != null) {
-                try { 
-                    in.close(); 
-                } catch (IOException e) { 
-                    log.error("Failed to close input stream", e); 
-                }
-            }
-            
-            if (out != null) {
-                try { 
-                    out.close(); 
-                } catch (IOException e) { 
-                    log.error("Failed to close output stream", e); 
-                }
-            }
-        }
-    }
-    
-    
     /**
      * Creates the HTML report file
      * @param content The String content of the report file
@@ -283,6 +273,16 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
      */
     private void createReportFile(String content) {
         Writer fileWriter = null;
+        
+        File targetDirectory = new File(OUTPUT_DIRECTORY);
+        if (!targetDirectory.exists()) {
+            boolean success = targetDirectory.mkdirs();
+            
+            if (!success) {
+                throw new CitrusRuntimeException("Unable to create folder structure for HTML report");
+            }
+        }
+        
         try {
             fileWriter = new FileWriter(OUTPUT_DIRECTORY + File.separator + REPORT_FILE_NAME);
             fileWriter.append(content);
@@ -323,6 +323,14 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         details.put(test.getName(), ResultDetail.build(test));
         
         testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
+    }
+    
+    /**
+     * Sets the logo.
+     * @param logo the logo to set
+     */
+    public void setLogo(Resource logo) {
+        this.logo = logo;
     }
     
     /**
@@ -380,5 +388,5 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             this.description = description;
         }
     }
-    
+
 }
