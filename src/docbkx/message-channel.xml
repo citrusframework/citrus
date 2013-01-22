@@ -92,10 +92,13 @@
                             reply-handler=&quot;customerReplyMessageHandler&quot;
                             reply-timeout=&quot;1000&quot;/&gt;
                             
-&lt;citrus:message-channel-reply-handler id=&quot;customerReplyMessageHandler&quot;/&gt;</programlisting>
+&lt;citrus:message-channel-reply-handler id=&quot;customerReplyMessageHandler&quot;
+                                            polling-interval=&quot;1000&quot;/&gt;</programlisting>
         
-        <para>Synchronous message channel senders usually go with a reply message handler that handles the reply messages. Once the synchronous reply 
-        message was consumed from the reply channel the reply-message-handler implementation is responsible for further processing (e.g. message validation).</para>
+        <para>Synchronous message channel senders usually go with a reply message handler which is responsible for processing the reply messages. While the synchronous message sender component 
+        is waiting for the reply message to arrive the reply handler polls for the reply message several times. The poll interval is an optional setting in order to manage the amount of
+        reply message handshake attempts. Once the sender was able to receive the reply message synchronously the reply handler takes over with further steps such as message validation. In case
+        all message handshake attempts do fail because the reply message is not available in time we raise some timeout error and the test will fail.</para>
         
         <note>
             <para>Reply channels are always of dynamic temporary nature. The temporary reply channels are only used once for a single communication handshake. 

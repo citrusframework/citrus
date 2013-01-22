@@ -39,12 +39,17 @@
                                request-url=&quot;http://localhost:8090/test&quot; 
                                reply-handler=&quot;soapResponseHandler&quot;/&gt;
 
-&lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;</programlisting>
+&lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;
+                                    polling-interval=&quot;1000&quot;/&gt;</programlisting>
         
-        <para>SOAP WebServices always use synchronous communication, so we need a reply message handler. The message sender 
-        uses the <emphasis>request-url</emphasis> and and calls the WebService. The sender
-        will automatically build a SOAP request message including a SOAP header and the message payload as SOAP body. 
-        As the WebService response arrives it is passed to the given reply handler.</para>
+        <para>SOAP WebServices usually use synchronous communication as we use the Http transport protocol. Following from that 
+        we need a reply message handler. The message sender component uses the <emphasis>request-url</emphasis> and calls the 
+        WebService as a client. The sender will automatically build a SOAP request message including a SOAP header and the message 
+        payload as SOAP body. This means that you as a tester do not care about SOAP envelope specific logic in the test case. The SOAP
+        message components do add SOAP elements automatically. As soon as the SOAP response arrives it is passed to the given reply handler.
+        In detail the reply handler polls several times for the reply message while the message sender is waiting. The poll interval is an 
+        optional setting so you can manage the frequency of message handshake attempts. In case no response message is available in time according
+        to the timeout settings we raise a timeout error and the test will fail.</para>
         
         <important>
             <para>The SOAP WebService message sender uses a SoapMessageFactory implementation in order to create the SOAP messages. 

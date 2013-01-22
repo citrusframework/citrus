@@ -42,12 +42,15 @@
                                content-type=&quot;application/xml&quot;
                                reply-handler=&quot;httpResponseHandler&quot;/&gt;
 
-&lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;/&gt;</programlisting>
+&lt;citrus-http:reply-message-handler id=&quot;httpResponseHandler&quot;
+                                    polling-interval=&quot;1000&quot;/&gt;</programlisting>
         
         <para>As Http communication is always synchronous we need a reply message handler in combination with the Http message-sender. It is not
         very surprising that the sender also needs the <emphasis>request-url</emphasis> and a <emphasis>request-method</emphasis> as parameter. In addition
         to that we can specify the content-type of the request we are about to send. The message sender builds the Http request and sends it to the Http server. 
-        The Http response is then provided to the reply handler as soon as it has arrived.</para>
+        While the sender component is waiting for the synchronous Http response to arrive the reply handler polls several times for the response message. The reply handler
+        polling interval is set as well as the reply message timeout in order to handle situations where messages arrive late or not in time. In case the reply
+        message comes in too late according to the timeout settings a respective timeout error is raised.</para>
         
         <para>The request method is statically set to <emphasis>POST</emphasis> in the example above. You can also set/overwrite the Http request method inside the 
         sending test action which gives more flexibility. Use something like this in your test:</para>
