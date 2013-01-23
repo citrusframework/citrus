@@ -16,7 +16,7 @@
 
 package com.consol.citrus;
 
-import java.util.Collections;
+import java.util.*;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,6 +25,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
@@ -47,13 +48,22 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
         
-        final String message = "Hello TestFramework!";
-        testcase.setVariableDefinitions(Collections.singletonMap("text", message));
+        Map<String, Object> variables = new LinkedHashMap<String, Object>();
+        variables.put("name", "Citrus");
+        variables.put("framework", "${name}");
+        variables.put("hello", "citrus:concat('Hello ', ${name}, '!')");
+        variables.put("goodbye", "Goodbye ${name}!");
+        variables.put("welcome", "Welcome ${name}, today is citrus:currentDate()!");
+        testcase.setVariableDefinitions(variables);
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
-                Assert.assertEquals(context.getVariable("${text}"), message);
+                Assert.assertEquals(context.getVariable("${name}"), "Citrus");
+                Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
+                Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
+                Assert.assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
+                Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<String>()) + "!");
             }
         });
         

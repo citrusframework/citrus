@@ -155,7 +155,7 @@ public class TestContext {
             String value = (String) entry.getValue();
 
             //put value into target map, but check if value is variable or function first
-            target.put(key, resolveDynamicValue(value));
+            target.put(key, replaceDynamicContentInString(value));
         }
         return target;
     }
@@ -172,7 +172,7 @@ public class TestContext {
 
         for (String entry : list) {
             //add new value after check if it is variable or function
-            variableFreeList.add(resolveDynamicValue(entry));
+            variableFreeList.add(replaceDynamicContentInString(entry));
         }
         return variableFreeList;
     }

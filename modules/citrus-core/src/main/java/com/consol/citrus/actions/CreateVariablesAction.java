@@ -56,7 +56,7 @@ public class CreateVariablesAction extends AbstractTestAction {
             }
 
             //check if value is variable or function (and resolve it if yes)
-            value = context.resolveDynamicValue(value);
+            value = context.replaceDynamicContentInString(value);
 
             log.info("Setting variable: " + key + " to value: " + value);
 

@@ -109,7 +109,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             }
             
             //check if value expression is variable or function
-            expectedValue = context.resolveDynamicValue(expectedValue);
+            expectedValue = context.replaceDynamicContentInString(expectedValue);
 
             try {
                 if (actualValue != null) {

@@ -235,7 +235,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             for (String controlValue : controlColumnValues) {
                 String resultValue = it.next();
                 //check if controlValue is variable or function (and resolve it)
-                controlValue = context.resolveDynamicValue(controlValue);
+                controlValue = context.replaceDynamicContentInString(controlValue);
 
                 validateSingleValue(columnName, controlValue, resultValue, context);
             }

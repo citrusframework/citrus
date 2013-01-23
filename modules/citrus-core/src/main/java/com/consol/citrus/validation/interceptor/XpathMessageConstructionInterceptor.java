@@ -78,7 +78,7 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
             String valueExpression = entry.getValue();
 
             //check if value expr is variable or function (and resolve it if yes)
-            valueExpression = context.resolveDynamicValue(valueExpression);
+            valueExpression = context.replaceDynamicContentInString(valueExpression);
 
             if (valueExpression == null) {
                 throw new CitrusRuntimeException(
