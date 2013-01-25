@@ -45,5 +45,12 @@ public class MessageSelectorBuilderTest {
         Assert.assertEquals(headerMap.get("foo"), "bar");
         Assert.assertTrue(headerMap.containsKey("operation"));
         Assert.assertEquals(headerMap.get("operation"), "foo");
+        
+        headerMap = MessageSelectorBuilder.withString("xpath://foo[@key='primary']/value='bar' AND operation='foo'").toKeyValueMap();
+        
+        Assert.assertTrue(headerMap.containsKey("xpath://foo[@key='primary']/value"));
+        Assert.assertEquals(headerMap.get("xpath://foo[@key='primary']/value"), "bar");
+        Assert.assertTrue(headerMap.containsKey("operation"));
+        Assert.assertEquals(headerMap.get("operation"), "foo");
     }
 }

@@ -55,5 +55,9 @@ public class XPathEvaluatingMessageSelectorTest {
         
         messageSelector = new XPathEvaluatingMessageSelector("xpath://{http://citrusframework.org/schema}Foo/{http://citrusframework.org/schema2}text", "foobar", nsContextBuilder);
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns1:Foo xmlns:ns1=\"http://citrusframework.org/schema\" xmlns:ns2=\"http://citrusframework.org/schema2\"><ns2:text>foobar</ns2:text></ns1:Foo>").build()));
+        
+        messageSelector = new XPathEvaluatingMessageSelector("xpath://ns:Foos/ns:Foo[ns:key='KEY-X']/ns:value", "foo", nsContextBuilder);
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns:Foos xmlns:ns=\"http://citrusframework.org/schema\"><ns:Foo><ns:key>KEY-X</ns:key><ns:value>foo</ns:value></ns:Foo><ns:Foo><ns:key>KEY-Y</ns:key><ns:value>bar</ns:value></ns:Foo></ns:Foos>").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<ns:Foos xmlns:ns=\"http://citrusframework.org/schema\"><ns:Foo><ns:key>KEY-Z</ns:key><ns:value>foo</ns:value></ns:Foo><ns:Foo><ns:key>KEY-Y</ns:key><ns:value>bar</ns:value></ns:Foo></ns:Foos>").build()));
     }
 }
