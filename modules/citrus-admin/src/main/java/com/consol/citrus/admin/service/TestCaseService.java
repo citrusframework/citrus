@@ -61,9 +61,9 @@ public class TestCaseService {
     
     @Autowired
     private AppContextHolder appContextHolder;
-    
-    /** Project home property name */
-    private static final String PROJECT_HOME = "project.home";
+
+    @Autowired
+    private ConfigService configService;
 
     /** Base package for test cases to look for */
     private static final String BASE_PACKAGE = "test.base.package";
@@ -123,7 +123,7 @@ public class TestCaseService {
         result.setTestCase(testCase);
         
         try {
-            Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", System.getProperty(PROJECT_HOME) }));
+            Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", configService.getProjectHome().getAbsolutePath() }));
             citrus.run();
             
             result.setSuccess(true);
