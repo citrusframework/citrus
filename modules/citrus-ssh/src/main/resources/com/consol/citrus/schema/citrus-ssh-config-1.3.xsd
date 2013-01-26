@@ -192,6 +192,7 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="polling-interval" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

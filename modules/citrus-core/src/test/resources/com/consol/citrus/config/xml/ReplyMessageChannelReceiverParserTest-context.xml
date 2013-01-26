@@ -8,7 +8,10 @@
     <citrus:message-channel-reply-handler id="replyMessageChannelReceiver1"/>
     
     <citrus:message-channel-reply-handler id="replyMessageChannelReceiver2"
-            actor="testActor"/>
+                                            actor="testActor"/>
+            
+    <citrus:message-channel-reply-handler id="replyMessageChannelReceiver3"
+                                            polling-interval="550"/>
     
     <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

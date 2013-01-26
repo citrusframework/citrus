@@ -10,7 +10,10 @@
     <citrus-ws:reply-message-handler id="webServiceReplyMessageReceiver1"/>
     
     <citrus-ws:reply-message-handler id="webServiceReplyMessageReceiver2"
-            actor="testActor"/>
+                                        actor="testActor"/>
+            
+    <citrus-ws:reply-message-handler id="webServiceReplyMessageReceiver3"
+                                        polling-interval="550"/>
            
     <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 </beans>

@@ -20,7 +20,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * Constructs message selectors either from string value or from key value maps.
+ * Constructs message selectors either from string value or from key value maps. Currently only AND logical combination
+ * of multiple expressions is supported.
  * 
  * @author Christoph Deppisch
  */
@@ -87,19 +88,71 @@ public class MessageSelectorBuilder {
             StringTokenizer tok = new StringTokenizer(selectorString, "AND");
             while (tok.hasMoreElements()) {
                 String selectorItem = tok.nextElement().toString();
-                tokens = selectorItem.split("=");
+                tokens = escapeEqualsFromXpathNodeTest(selectorItem).split("=");
                 
-                valueMap.put(tokens[0].trim(), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
+                valueMap.put(unescapeEqualsFromXpathNodeTest(tokens[0].trim()), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
             }
         } else {
-            tokens = selectorString.split("=");
+            tokens = escapeEqualsFromXpathNodeTest(selectorString).split("=");
             
-            valueMap.put(tokens[0].trim(), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
+            valueMap.put(unescapeEqualsFromXpathNodeTest(tokens[0].trim()), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
         }
         
         return valueMap;
     }
     
+    /**
+     * Xpath expression can gold equals characters in node tests. We have to escape those first before evaluating the
+     * message selector expression, because equals characters do
+     * @param selectorExpression
+     * @return
+     */
+    private String escapeEqualsFromXpathNodeTest(String selectorExpression) {
+        String nodeTestStart = "[";
+        String nodeTestEnd = "]";
+        
+        // check presence of Xpath node test first
+        if (!selectorExpression.contains(nodeTestStart) || !selectorExpression.contains(nodeTestEnd)) {
+            return selectorExpression; //no Xpath node test return initial value - nothing to escape
+        }
+        
+        StringBuilder selectorBuilder = new StringBuilder();
+        int nodeTestStartIndex = selectorExpression.indexOf(nodeTestStart);
+        int nodeTestEndIndex = selectorExpression.indexOf(nodeTestEnd);
+        boolean escape = false;
+        for (int i = 0; i < selectorExpression.length(); i++) {
+            
+            if (i == nodeTestStartIndex) {
+                escape = true;
+            }
+            
+            if (escape && selectorExpression.charAt(i) == '=') {
+                selectorBuilder.append("@equals@");
+            } else {
+                selectorBuilder.append(selectorExpression.charAt(i));
+            }
+            
+            if (i == nodeTestEndIndex) {
+                nodeTestStartIndex = selectorExpression.indexOf(nodeTestStart);
+                nodeTestEndIndex = selectorExpression.indexOf(nodeTestEnd);
+                escape = false;
+            }
+        }
+        
+        return selectorBuilder.toString();
+    }
+    
+    /**
+     * Parses expression string and replaces all equals character escapings with initial
+     * equals character
+     * 
+     * @param expression
+     * @return
+     */
+    private String unescapeEqualsFromXpathNodeTest(String expression) {
+        return expression.replaceAll("@equals@", "=");
+    }
+
     /**
      * Builds the message selector.
      * @return

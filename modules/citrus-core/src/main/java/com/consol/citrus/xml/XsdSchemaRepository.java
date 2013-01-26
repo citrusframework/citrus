@@ -89,12 +89,12 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
             
             for (Resource resource : findings) {
                 if (resource.getFilename().endsWith(".xsd")) {
-                    log.info("Loading XSD schema resource " + resource.getFile().getAbsolutePath());
+                    log.info("Loading XSD schema resource " + resource.getFilename());
                     SimpleXsdSchema schema = new SimpleXsdSchema(resource);
                     schema.afterPropertiesSet();
                     schemas.add(schema);
                 } else if (resource.getFilename().endsWith(".wsdl")) {
-                    log.info("Loading WSDL schema resource " + resource.getFile().getAbsolutePath());
+                    log.info("Loading WSDL schema resource " + resource.getFilename());
                     WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
                     wsdl.afterPropertiesSet();
                     schemas.add(wsdl);

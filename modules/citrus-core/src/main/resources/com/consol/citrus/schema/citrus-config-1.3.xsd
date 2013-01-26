@@ -69,6 +69,7 @@
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="actor" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -97,6 +98,7 @@
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="capacity" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     
@@ -139,6 +141,7 @@
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="actor" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     

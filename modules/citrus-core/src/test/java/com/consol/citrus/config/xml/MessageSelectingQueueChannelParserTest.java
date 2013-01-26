@@ -33,7 +33,7 @@ public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefiniti
     public void testMessageSelectingQueueChannelParser() {
         Map<String, MessageSelectingQueueChannel> channels = beanDefinitionContext.getBeansOfType(MessageSelectingQueueChannel.class);
         
-        Assert.assertEquals(channels.size(), 2);
+        Assert.assertEquals(channels.size(), 3);
         
         // 1st channel
         Assert.assertTrue(channels.containsKey("channel1"));
@@ -41,5 +41,9 @@ public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefiniti
         // 2nd chanel with capacity
         MessageSelectingQueueChannel channel = channels.get("channel2");
         Assert.assertEquals(channel.getRemainingCapacity(), 5);
+        
+        // 3rd chanel with polling interval
+        channel = channels.get("channel3");
+        Assert.assertEquals(channel.getPollingInterval(), 550);
     }
 }

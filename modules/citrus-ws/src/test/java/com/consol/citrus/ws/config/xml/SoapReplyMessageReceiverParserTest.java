@@ -34,14 +34,21 @@ public class SoapReplyMessageReceiverParserTest extends AbstractBeanDefinitionPa
     public void testReplyMessageReceiverParser() {
         Map<String, SoapReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(SoapReplyMessageReceiver.class);
         
-        Assert.assertEquals(messageReceivers.size(), 2);
+        Assert.assertEquals(messageReceivers.size(), 3);
         Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver1"));
         
         Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver2"));
+        
+        Assert.assertTrue(messageReceivers.containsKey("webServiceReplyMessageReceiver3"));
         
         // 2nd message receiver
         SoapReplyMessageReceiver messageReceiver = messageReceivers.get("webServiceReplyMessageReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        
+        // 3rd message receiver
+        messageReceiver = messageReceivers.get("webServiceReplyMessageReceiver3");
+        Assert.assertNotNull(messageReceiver.getPollingInterval());
+        Assert.assertEquals(messageReceiver.getPollingInterval(), 550L);
     }
 }

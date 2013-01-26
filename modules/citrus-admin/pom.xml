@@ -246,6 +246,10 @@
                     <name>project.home</name>
                     <value>../citrus-integration/src/citrus/tests</value>
                   </systemProperty>
+                  <systemProperty>
+                    <name>test.base.package</name>
+                    <value>com.consol.citrus</value>
+                  </systemProperty>
               </systemProperties>
           </configuration>
         </plugin>

@@ -118,15 +118,18 @@
                             reply-handler=&quot;getCustomerReplyHandler&quot;
                             reply-timeout=&quot;1000&quot;/&gt;
                             
-&lt;citrus:jms-reply-message-handler id=&quot;getCustomerReplyHandler&quot;/&gt;</programlisting>
+&lt;citrus:jms-reply-message-handler id=&quot;getCustomerReplyHandler&quot; 
+                                polling-interval=&quot;1000&quot;/&gt;</programlisting>
         
         <para>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
-        in the Spring configuration. The sender sends the message and waits for the response synchronously. Once the reply has arrived the 
-        reply handler is invoked with the respective reply message. The second possibility would be a timeout while receiving the reply.</para>
+        in the Spring configuration. The sender component sends the message and waits synchronously for the response message to arrive. While the
+        sender component is waiting for the response the reply handler is polling for the response several times (depends on polling interval 
+        and reply timeout settings). When the reply message arrives the reply handler takes over and performs further processing steps such as 
+        message validation and so on. In cas no reply message arrives in time a message timeout error is raised respectively.</para>
         
         <para>See the following figure which tries to explain the handshake between synchronous sender component and synchronous reply handler.
         The synchronous sender receives the reply message and provides it to the reply handler. Once the reply handler has received the reply message 
-        it can be handed over to a validator component as usual for extended message validation.</para>
+        it can be handed over to a validator component as usual for further message validation.</para>
         
         <mediaobject>
           <imageobject role="fo">

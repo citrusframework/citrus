@@ -211,46 +211,13 @@ public class MessageChannelReceiverTest {
         Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
         reset(queueChannel);
         
-        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
+        expect(queueChannel.receive(anyObject(HeaderMatchingMessageSelector.class)))
                             .andReturn(message).once();
         
         replay(queueChannel);
         
         messageChannelReceiver.setChannel(queueChannel);
         Message receivedMessage = messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
-        
-        Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
-        verify(queueChannel);
-    }
-    
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveSelectedWithTimeout() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
-        
-        try {
-            messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 2500L);
-            Assert.fail("Missing exception due to unsupported operation");
-        } catch (UnsupportedOperationException e) {
-            Assert.assertNotNull(e.getMessage());
-        }
-        
-        MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
-        Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
-        reset(queueChannel);
-        
-        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
-                            .andReturn(null).times(2) // force retry
-                            .andReturn(message).once();
-        
-        replay(queueChannel);
-        
-        messageChannelReceiver.setChannel(queueChannel);
-        Message receivedMessage = messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 2500L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -266,8 +233,8 @@ public class MessageChannelReceiverTest {
         
         reset(queueChannel);
         
-        expect(queueChannel.receiveSelected(anyObject(HeaderMatchingMessageSelector.class)))
-                            .andReturn(null).times(5); // force retries
+        expect(queueChannel.receive(anyObject(HeaderMatchingMessageSelector.class), eq(1500L)))
+                            .andReturn(null).once(); // force retry
         
         replay(queueChannel);
         

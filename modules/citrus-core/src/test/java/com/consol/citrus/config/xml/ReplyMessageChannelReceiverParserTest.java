@@ -33,13 +33,19 @@ public class ReplyMessageChannelReceiverParserTest extends AbstractBeanDefinitio
     public void testFailActionParser() {
         Map<String, ReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(ReplyMessageReceiver.class);
         
-        Assert.assertEquals(messageReceivers.size(), 2);
+        Assert.assertEquals(messageReceivers.size(), 3);
         Assert.assertTrue(messageReceivers.containsKey("replyMessageChannelReceiver1"));
         Assert.assertTrue(messageReceivers.containsKey("replyMessageChannelReceiver2"));
+        Assert.assertTrue(messageReceivers.containsKey("replyMessageChannelReceiver3"));
         
         // 2nd message receiver
         ReplyMessageReceiver messageReceiver = messageReceivers.get("replyMessageChannelReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        
+        // 3rd message receiver
+        messageReceiver = messageReceivers.get("replyMessageChannelReceiver3");
+        Assert.assertNotNull(messageReceiver.getPollingInterval());
+        Assert.assertEquals(messageReceiver.getPollingInterval(), 550L);
     }
 }

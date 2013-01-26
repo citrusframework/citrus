@@ -202,7 +202,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 actualValue = getNodeValue(node);
             }
             //check if expected value is variable or function (and resolve it, if yes)
-            expectedValue = context.resolveDynamicValue(expectedValue);
+            expectedValue = context.replaceDynamicContentInString(expectedValue);
 
             //do the validation of actual and expected value for element
             validateExpectedActualElements(actualValue, expectedValue, elementPathExpression);

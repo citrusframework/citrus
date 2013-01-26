@@ -35,6 +35,15 @@
     you can add a custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para>
   </section>
   
+  <section id="whatsnew-polling-interval">
+    <title>Polling interval for reply handlers</title>
+    
+    <para>With synchronous communication in Citrus we always have a combination of a synchronous message sender and a reply handler component. These two perform a handshake when passing synchronous reply messages to the test
+    for further processing such as message validation. While the sender is waiting for the synchronous response to arrive the reply handler polls for the reply message. This polling for reply messages was done in a static way 
+    which often led to time delays according to long polling intervals. Now with Citrus 1.3 you can set the polling-interval for the reply handler as you like. This setting is
+    valid for all reply handler components in Citrus (citrus-jms, citrus-http, citrus-ws, citrus-channel, citrus-shh, and so on).</para>
+  </section>
+  
   <section id="whatsnew-functions">
     <title>New functions</title>
     

@@ -7,12 +7,15 @@ import org.springframework.integration.Message;
 
 /**
  * Abstract base class for message sender with functionality common for all
- * message senders
+ * synchronous message senders. Synchronous communication requires a {@link ReplyMessageHandler} to be
+ * informed about receipt of synchronous response messages for further processing.
+ * 
+ * In parallel testing reply messages need message correlation via {@link ReplyMessageCorrelator} implementation.
  *
  * @author Christoph Deppisch, roland
  * @since 06.09.12
  */
-abstract public class AbstractMessageSender implements MessageSender {
+abstract public class AbstractSyncMessageSender implements MessageSender {
 
     /** Logger */
     protected  Logger log = LoggerFactory.getLogger(getClass());
@@ -50,6 +53,14 @@ abstract public class AbstractMessageSender implements MessageSender {
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
+    }
+    
+    /**
+     * Gets the replyMessageHandler.
+     * @return the replyMessageHandler
+     */
+    public ReplyMessageHandler getReplyMessageHandler() {
+        return replyMessageHandler;
     }
 
     /**

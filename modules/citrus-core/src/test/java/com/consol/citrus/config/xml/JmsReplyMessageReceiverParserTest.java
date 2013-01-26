@@ -33,13 +33,19 @@ public class JmsReplyMessageReceiverParserTest extends AbstractBeanDefinitionPar
     public void testReplyMessageReceiverParser() {
         Map<String, ReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(ReplyMessageReceiver.class);
         
-        Assert.assertEquals(messageReceivers.size(), 2);
+        Assert.assertEquals(messageReceivers.size(), 3);
         Assert.assertTrue(messageReceivers.containsKey("jmsReplyMessageReceiver1"));
         Assert.assertTrue(messageReceivers.containsKey("jmsReplyMessageReceiver2"));
+        Assert.assertTrue(messageReceivers.containsKey("jmsReplyMessageReceiver3"));
         
         // 2nd message receiver
         ReplyMessageReceiver messageReceiver = messageReceivers.get("jmsReplyMessageReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        
+        // 3rd message receiver
+        messageReceiver = messageReceivers.get("jmsReplyMessageReceiver3");
+        Assert.assertNotNull(messageReceiver.getPollingInterval());
+        Assert.assertEquals(messageReceiver.getPollingInterval(), 550L);
     }
 }

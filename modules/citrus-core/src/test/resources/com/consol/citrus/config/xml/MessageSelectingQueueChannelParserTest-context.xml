@@ -8,4 +8,6 @@
     <citrus:message-channel id="channel1"/>
                                  
     <citrus:message-channel id="channel2" capacity="5"/>
+    
+    <citrus:message-channel id="channel3" polling-interval="550"/>
 </beans>

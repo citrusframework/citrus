@@ -42,7 +42,7 @@ import org.springframework.web.client.*;
  * 
  * @author Christoph Deppisch
  */
-public class HttpMessageSender extends AbstractMessageSender {
+public class HttpMessageSender extends AbstractSyncMessageSender {
 
     /** Http url as service destination */
     private String requestUrl;
@@ -346,14 +346,6 @@ public class HttpMessageSender extends AbstractMessageSender {
      */
     public String getContentType() {
         return contentType;
-    }
-
-    /**
-     * Gets the replyMessageHandler.
-     * @return the replyMessageHandler
-     */
-    public ReplyMessageHandler getReplyMessageHandler() {
-        return replyMessageHandler;
     }
 
     /**

@@ -39,7 +39,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private List<TestAction> finallyChain = new ArrayList<TestAction>();
 
     /** Tests variables */
-    private Map<String, ?> variableDefinitions = new HashMap<String, Object>();
+    private Map<String, ?> variableDefinitions = new LinkedHashMap<String, Object>();
 
     /** Test context */
     private TestContext context;
@@ -75,7 +75,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             Object value = entry.getValue();
 
             //check if value is a variable or function (and resolve it accordingly)
-            value = context.resolveDynamicValue(value.toString());
+            value = context.replaceDynamicContentInString(value.toString());
 
             context.setVariable(key, value);
         }
