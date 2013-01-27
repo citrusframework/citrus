@@ -24,6 +24,7 @@ public class ProcessLauncherTest {
     private final static int FAILED_EXIT_CODE = 2;
     private final static int FAILED_EXCEPTION = 3;
 
+    @SuppressWarnings("unchecked")
     private List<Boolean> callbacks = Arrays.asList(new Boolean[]{false, false, false, false});
 
     @Test
