@@ -189,7 +189,7 @@
         <title>JMS synchronous message receiver</title>
         
         <para>What is missing is the situation that Citrus receives a JMS message where a temporary reply destination is set.
-        When dealing with synchronous JMS communication the requestor will store a dynamic JMS queue destination into the JMS 
+        When dealing with synchronous JMS communication the message producer stores a dynamic JMS queue destination to the JMS 
         header in order to receive the synchronous answer on this dynamic destination. So Citrus has to send the reply to the 
         temporary destination, which is dynamic of course. You can handle this with the synchronous message receiver in combination 
         with a reply sender.</para>
@@ -237,7 +237,7 @@
                              destination-name=&quot;Citrus.JMS.Topic.Hello.Request&quot;
                              pub-sub-domain=&quot;true&quot;/&gt;</programlisting>
         
-        <para>When using JMS topics you will be able to subscribe several test actions to the topic destiantion and receive a message
+        <para>When using JMS topics you will be able to subscribe several test actions to the topic destination and receive a message
         multiple times as all subscribers will receive the message.</para>
         
         <important>

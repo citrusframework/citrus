@@ -537,7 +537,7 @@ Server: Jetty(7.0.0.pre5)
         request factory so Citrus can setup an authentication cache within the Http context in order to have preemtive authentication.</para>
         
         <para>See the following example request that is created by the Citrus message sender and have a look
-        at the <emphasis>Authorization</emphasis> header which gets automatically set for all requsts.</para>
+        at the <emphasis>Authorization</emphasis> header which gets automatically set for all requests.</para>
         
         <programlisting>POST /test HTTP/1.1
 Accept: text/xml, */*

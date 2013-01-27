@@ -13,7 +13,7 @@
     <title>Using Maven</title>
 
     <para>Citrus uses <ulink url="http://maven.apache.org/">Maven</ulink> internally as a project build tool and provides extended
-    support for Maven projects. Maven will ease up your life as it manages project dependencies and provides extended build lifecycles and 
+    support for Maven projects. Maven will ease up your life as it manages project dependencies and provides extended build life cycles and 
     conventions for compiling, testing, packaging and installing your Java project. Therefore it is recommended to use the Citrus Maven 
     project setup. In case you already use Maven it is most suitable for you to include Citrus as a test-scoped dependency.</para>
     
@@ -172,7 +172,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     <section id="setup-prerequisits">
       <title>Preconditions</title>
       
-      <para>Before we start with the Citrus setup be sure to meet the following precondintions. The following software should
+      <para>Before we start with the Citrus setup be sure to meet the following preconditions. The following software should
       be installed on your computer, in order to use the Citrus framework:</para>
   
       <itemizedlist>

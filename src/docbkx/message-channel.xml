@@ -114,7 +114,7 @@
         Citrus is able to publish messages to channels and wait for reply messages to arrive on temporary reply channels. This section deals with the same
         synchronous communication over reply messages, but now Citrus has to send dynamic reply messages to temporary channels.</para> 
         
-        <para>The scenario we are talking about is that Cittrus receives a message and we need to reply to a temporary reply channel that is stored 
+        <para>The scenario we are talking about is that Citrus receives a message and we need to reply to a temporary reply channel that is stored 
         in the message header attributes.</para>
         
         <para>We handle this synchronous communication with the synchronous message receiver in combination with a reply sender. The configuration looks like follows:</para>

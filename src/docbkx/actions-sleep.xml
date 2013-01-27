@@ -16,7 +16,7 @@
     
     <para>When should somebody use this action? To us this action was always very useful in case the test needed to wait until 
     an application had done some work. For example in some cases the application took some time to write some data into the database.
-    We waited then a small amount of time in order to avoid unnessesary test failures, because the test framework simply validated 
+    We waited then a small amount of time in order to avoid unnecessary test failures, because the test framework simply validated 
     the database too early. Or as another example the test may wait a given time until retry mechanisms are triggered in the tested
     application and then proceed with the test actions.</para>
 </section>

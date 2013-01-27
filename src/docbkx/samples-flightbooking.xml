@@ -45,7 +45,7 @@
           </mediaobject>
         </para>
         
-        <para>The travel agency puts a travel booking request towards the system. The travel booking contains two seperate flights. The
+        <para>The travel agency puts a travel booking request towards the system. The travel booking contains two separate flights. The
         flight requests are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive
         answer. The consolidated travel booking response is then sent back to the travel agency.</para>
     </section>
@@ -149,7 +149,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
           </mediaobject>
         </para>
         
-        <para>The RoyalAirline adapter receives client requsts over Http and sends them over JMS to a message receiver as we alredy know it. The
+        <para>The RoyalAirline adapter receives client requests over Http and sends them over JMS to a message receiver as we already know it. The
         test engine validates the received request and provides a proper response back to the adapter. The adapter will transform the response 
         to Http again and publishes it to the calling client. Citrus offers these kind of adapters for Http and SOAP communication. By writing 
         your own adapters like this you will be able to extend Citrus so it works with protocols that are not supported yet.</para>
@@ -175,7 +175,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                             reply-destination-holder=&quot;royalAirlineBookingRequestReceiver&quot;/&gt;</programlisting>
         
         <para>We need to configure a Http server instance with a port, a request URI and a message handler. We define the
-        JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchrpnous JMS
+        JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchronous JMS
         message sender and receiver instances. That's it! We are able to receive Http request in order to simulate the RoyalAirline
         application. What is missing now? The test case definition itself.</para>
     </section>
@@ -440,7 +440,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors.
         In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against
         a defined expected message template. Only in case all content validation steps are successful the test continues with the action
-        chain. And so the test case proceeeds and works through the use case until every message is sent respectively received and 
+        chain. And so the test case proceeds and works through the use case until every message is sent respectively received and 
         validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and 
         provides detailed validation possibilities of messages.</para>
     </section>

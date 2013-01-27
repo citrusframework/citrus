@@ -206,7 +206,7 @@ public class JmsReplyMessageSenderTest {
             return;
         }
         
-        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destiantion found");
+        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
     
     @Test

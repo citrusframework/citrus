@@ -424,7 +424,7 @@
         
         <para>In the previous sections we have seen how to validate whole XML fragments with control message templates. In some cases 
         this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition 
-        of control templates in combination with several ignore statements is not appropiate in this case. You would rather want
+        of control templates in combination with several ignore statements is not appropriate in this case. You would rather want
         to use explicit element validation.</para>
         
         <programlisting>&lt;message&gt;
@@ -440,7 +440,7 @@
         and compares its value to the control value. The basic message structure as well as other message elements are not included into validation.</para> 
         
         <note>
-            <para>If this type of element validation is choosen neither &lt;data&gt; nor &lt;resource&gt; template definitions are allowed.</para>
+            <para>If this type of element validation is chosen neither &lt;data&gt; nor &lt;resource&gt; template definitions are allowed.</para>
         </note>
         
         <tip>
@@ -509,7 +509,7 @@
         situations where the application's error handling automatically tries to solve a communication problem that occurred 
         during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently 
         running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
-        received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer informations 
+        received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer information 
         etc.).</para>
         
         <para>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages 

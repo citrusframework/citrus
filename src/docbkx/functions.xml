@@ -256,7 +256,7 @@
         <title>citrus:randomEnumValue()</title>
         <para>
               This function returns one of its supplied arguments. Furthermore you can specify a custom function
-              with a preconfigured list of values (the enumeration). The funciton will randomly return an entry when called without arguments. 
+              with a preconfigured list of values (the enumeration). The function will randomly return an entry when called without arguments. 
               This promotes code reuse and facilitates refactoring.
         </para>
         <para>
@@ -401,7 +401,7 @@
         <title>citrus:mapValue()</title>
         <para>
               This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen
-              at runtime and the corresponding value ist not defined during the design time.
+              at runtime and the corresponding value is not defined during the design time.
         </para>
         <para>
               The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:

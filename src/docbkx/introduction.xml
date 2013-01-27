@@ -36,7 +36,7 @@
     <para>If you are in charge of an enterprise application in a service-oriented Architecture with message interfaces to other software 
     components you should use Citrus. In case your project interacts with other software systems over different messaging transports and 
     you need to simulate your interface partners for extended end-to-end testing you should use Citrus. In case you need to increase the 
-    software stability dealing with change requests, bugfixing or regression testing you should use Citrus. In case you simply want to 
+    software stability dealing with change requests, bug fixing or regression testing you should use Citrus. In case you simply want to 
     increase your test coverage with automated integration tests, in order to feel comfortable regarding the next software release you 
     should definitely use Citrus.</para>
     
@@ -52,7 +52,7 @@
       </mediaobject>
     </para>
     
-    <para>This test set up is typical for Citrus use cases. In a such a test scenario we have a system under test (SUT) with several message 
+    <para>This test set up is typical for Citrus use cases. In such a test scenario we have a system under test (SUT) with several message 
     interfaces to other applications. A client application invokes services on the SUT application. The SUT is linked to several backend 
     applications over various messaging transports (here SOAP, JMS, and Http). Interim message notifications and final responses are sent back 
     to the client application. This generates a bunch of messages that are exchanged throughout the applications involved.</para>

@@ -4,7 +4,7 @@
   
     <para>In many cases it is necessary to access the database during a test. This enables a tester to also validate 
     the persistent data in a database. It might also be helpful to prepare the database with some test data before running a test. 
-    You can do this using the two database actions that are descirbed in the following sections.</para>
+    You can do this using the two database actions that are described in the following sections.</para>
     
     <section id="actions-database-update">
       <title>Updating the database</title>
