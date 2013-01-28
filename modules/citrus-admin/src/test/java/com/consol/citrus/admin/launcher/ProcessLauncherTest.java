@@ -98,7 +98,7 @@ public class ProcessLauncherTest {
         assertStarted();
 
         // check failed
-        Thread.sleep(2000);
+        Thread.sleep(5000);
         assertFailed();
         Assert.assertTrue(pl.isComplete());
     }
@@ -117,7 +117,7 @@ public class ProcessLauncherTest {
         pl.stop();
 
         // check failed
-        Thread.sleep(2000);
+        Thread.sleep(5000);
         assertFailed();
         Assert.assertTrue(pl.isComplete());
     }
