@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.util.StringUtils;
@@ -91,7 +92,7 @@ public final class FunctionUtils {
                         control++;
                     }
 
-                    if ((!Character.isJavaIdentifierPart(newString.charAt(curIndex)) && (newString.charAt(curIndex) == ')')) || (curIndex+1 == newString.length())) {
+                    if (newString.charAt(curIndex) == ')' || curIndex == newString.length() - 1) {
                         if (control == 0) {
                             isVarComplete = true;
                         } else {
@@ -100,7 +101,7 @@ public final class FunctionUtils {
                     }
 
                     variableNameBuf.append(newString.charAt(curIndex));
-                    ++curIndex;
+                    curIndex++;
                 }
 
                 final String value = resolveFunction(variableNameBuf.toString(), context);
@@ -141,9 +142,13 @@ public final class FunctionUtils {
     public static String resolveFunction(String functionString, TestContext context) {
         String functionExpression = VariableUtils.cutOffVariablesPrefix(functionString);
 
+        if (!functionExpression.contains("(") || !functionExpression.endsWith(")") || !functionExpression.contains(":")) {
+            throw new InvalidFunctionUsageException("Unable to resolve function: " + functionExpression);
+        }
+        
         String functionPrefix = functionExpression.substring(0, functionExpression.indexOf(':') + 1);
         String parameterString = functionExpression.substring(functionExpression.indexOf('(') + 1, functionExpression.length() - 1);
-        String function = functionExpression.substring(functionExpression.indexOf(':') + 1, functionExpression.indexOf('('));
+        String function = functionExpression.substring(functionPrefix.length(), functionExpression.indexOf('('));
 
         FunctionLibrary library = context.getFunctionRegistry().getLibraryForPrefix(functionPrefix);
 
