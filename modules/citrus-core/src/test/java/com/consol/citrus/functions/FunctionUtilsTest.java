@@ -21,8 +21,7 @@ import java.util.Collections;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.NoSuchFunctionException;
-import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
@@ -33,6 +32,8 @@ public class FunctionUtilsTest extends AbstractTestNGUnitTest {
     @Test
     public void testResolveFunction() {
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello', ' TestFramework!')", context), "Hello TestFramework!");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus', ':citrus')", context), "citrus:citrus");
+        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('citrus:citrus')", context), "citrus:citrus");
     }
     
     @Test
@@ -57,6 +58,11 @@ public class FunctionUtilsTest extends AbstractTestNGUnitTest {
         context.setVariable("dateFormat", "yyyy-mm-dd");
         
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat(citrus:currentDate('${dateFormat}'), ' ', citrus:concat(${greeting}, ' TestFramework!'))", context), new CurrentDateFunction().execute(Collections.singletonList("yyyy-mm-dd")) + " Hello TestFramework!");
+    }
+    
+    @Test(expectedExceptions = {InvalidFunctionUsageException.class})
+    public void testInvalidFunction() {
+        FunctionUtils.resolveFunction("citrus:citrus", context);
     }
     
     @Test(expectedExceptions = {NoSuchFunctionException.class})

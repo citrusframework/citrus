@@ -116,6 +116,8 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(context.replaceDynamicContentInString("Hello TestFramework!"), "Hello TestFramework!");
         Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('Hello', ' TestFramework!')"), "Hello TestFramework!");
+        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus', ':citrus')"), "citrus:citrus");
+        Assert.assertEquals(context.replaceDynamicContentInString("citrus:concat('citrus:citrus')"), "citrus:citrus");
         
         Assert.assertEquals(context.replaceDynamicContentInString("Variable test is: ${test}", true), "Variable test is: '456'");
         Assert.assertEquals(context.replaceDynamicContentInString("${test} is the value of variable test", true), "'456' is the value of variable test");
