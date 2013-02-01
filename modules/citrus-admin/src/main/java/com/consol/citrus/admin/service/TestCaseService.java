@@ -113,18 +113,7 @@ public class TestCaseService {
      * @param testCase
      */
     private void addTestCaseInfo(TestCaseType testCase) {
-        try {
-            Class<?> javaPart = Class.forName(testCase.getPackageName() + "." + testCase.getName());
-            
-            for (Method method : javaPart.getMethods()) {
-                if (method.isAnnotationPresent(Test.class)) {
-                    testCase.setGroups(StringUtils.arrayToCommaDelimitedString(method.getAnnotation(Test.class).groups()));
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            throw new CitrusRuntimeException("Unable to find test case in classpath", e);
-        }
-        
+        // TODO also get testng groups from java part
         String xmlPart = testExecutor.getSourceCode(testCase.getPackageName(), testCase.getName(), "xml");
         
         SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
