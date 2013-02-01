@@ -16,37 +16,25 @@
 
 package com.consol.citrus.admin.service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
 
-import org.apache.commons.cli.GnuParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.SimpleNamespaceContext;
-import org.springframework.web.context.support.StandardServletEnvironment;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusCliOptions;
+import com.consol.citrus.admin.executor.TestExecutor;
 import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.model.TestResult;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestReporter;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
@@ -59,56 +47,22 @@ public class TestCaseService {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCaseService.class);
     
+    /** Test executor depends on type of project classpath or filesystem */
     @Autowired
-    private AppContextHolder appContextHolder;
+    private TestExecutor testExecutor;
 
-    @Autowired
-    private ConfigService configService;
-
-    /** Base package for test cases to look for */
-    private static final String BASE_PACKAGE = "test.base.package";
-    
     /**
      * Lists all available Citrus test cases from classpath.
      * @return
      */
     public List<TestCaseType> getAllTests() {
-        List<TestCaseType> testCases = new ArrayList<TestCaseType>();
+        List<TestCaseType> tests = testExecutor.getTests();
         
-        List<String> testFiles = findTestsInClasspath(System.getProperty(BASE_PACKAGE, "com.consol.citrus"));
-        
-        for (String file : testFiles) {
-            String testName = file.substring(file.lastIndexOf(".") + 1);
-            String testPackageName = file.substring(0, file.length() - testName.length() - 1)
-                    .replace(File.separatorChar, '.');
-            
-            TestCaseType testCase = new TestCaseType();
-            testCase.setName(testName);
-            testCase.setPackageName(testPackageName);
-            
-            addTestCaseInfo(testCase);
-            
-            testCases.add(testCase);
+        for (TestCaseType test : tests) {
+            addTestCaseInfo(test);
         }
         
-        return testCases;
-    }
-    
-    /**
-     * Gets the source code for a given test case. Either getting the XML or Java part of the test.
-     * @param testPackage
-     * @param testName
-     * @param type
-     * @return
-     */
-    public String getSourceCode(String testPackage, String testName, String type) {
-        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replaceAll("\\.", "/") + "/" + testName + "." + type);
-        
-        try {
-            return FileUtils.readToString(testFile);
-        } catch (IOException e) {
-            return "Failed to load test case file: " + e.getMessage();
-        }
+        return tests;
     }
     
     /**
@@ -123,8 +77,7 @@ public class TestCaseService {
         result.setTestCase(testCase);
         
         try {
-            Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), new String[] { "-test", testName, "-testdir", configService.getProjectHome().getAbsolutePath() }));
-            citrus.run();
+            testExecutor.execute(testName);
             
             result.setSuccess(true);
         } catch (Exception e) {
@@ -141,12 +94,18 @@ public class TestCaseService {
             }
         }
         
-        Map<String, TestReporter> reporters = appContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);
-        for (TestReporter reporter : reporters.values()) {
-            reporter.clearTestResults();
-        }
-        
         return result;
+    }
+    
+    /**
+     * Gets the source code for the given test.
+     * @param packageName
+     * @param name
+     * @param type
+     * @return
+     */
+    public String getTestSources(String packageName, String name, String type) {
+        return testExecutor.getSourceCode(packageName, name, type);
     }
     
     /**
@@ -166,7 +125,7 @@ public class TestCaseService {
             throw new CitrusRuntimeException("Unable to find test case in classpath", e);
         }
         
-        String xmlPart = getSourceCode(testCase.getPackageName(), testCase.getName(), "xml");
+        String xmlPart = testExecutor.getSourceCode(testCase.getPackageName(), testCase.getName(), "xml");
         
         SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
         nsContext.bindNamespaceUri("spring", "http://www.springframework.org/schema/beans"); //TODO: remove hard coded namespace uri
@@ -188,38 +147,4 @@ public class TestCaseService {
         }
     }
     
-    /**
-     * Finds all test cases in classpath starting in given base package. Searches for 
-     * **.class files extending AbstractTestNGCitrusTest superclass.
-     * 
-     * @param basePackage
-     * @return
-     */
-    private List<String> findTestsInClasspath(String basePackage) {
-        List<String> testCaseNames = new ArrayList<String>();
-        
-        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false, new StandardServletEnvironment());
-        
-        scanner.addIncludeFilter(new CitrusTestTypeFilter());
-        
-        Set<BeanDefinition> findings = scanner.findCandidateComponents(basePackage);
-        
-        for (BeanDefinition bean : findings) {
-            testCaseNames.add(bean.getBeanClassName());
-        }
-        
-        return testCaseNames;
-    }
-    
-    /**
-     * Class type filter searches for subclasses of {@link AbstractTestNGCitrusTest}
-     */
-    private static final class CitrusTestTypeFilter extends AbstractClassTestingTypeFilter {
-        @Override
-        protected boolean match(ClassMetadata metadata) {
-            return !metadata.getClassName().equals(TestNGCitrusTestBuilder.class.getName()) && 
-                    metadata.getSuperClassName().equals(AbstractTestNGCitrusTest.class.getName());
-        }
-    }
-
 }

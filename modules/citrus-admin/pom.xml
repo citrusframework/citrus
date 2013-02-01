@@ -232,7 +232,6 @@
                   <maxIdleTime>60000</maxIdleTime>
                 </connector>
               </connectors>
-              <useTestScope>true</useTestScope>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>

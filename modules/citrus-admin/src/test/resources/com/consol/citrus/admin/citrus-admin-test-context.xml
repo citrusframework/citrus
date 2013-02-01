@@ -1,0 +1,18 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+          
+    <!-- Used for autowiring -->
+    <context:annotation-config/>
+    
+    <!-- DAO implementation mocks -->
+    <bean id="configService" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.consol.citrus.admin.service.ConfigService"/>
+    </bean>
+    
+    <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
+</beans>

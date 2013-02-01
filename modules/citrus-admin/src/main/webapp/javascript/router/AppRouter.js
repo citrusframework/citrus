@@ -1,5 +1,5 @@
 (function() {
-    define(["views/HeaderView", "views/AppContextView", "views/TestListView"], function(HeaderView, AppContextView, TestListView) {
+    define(["views/HeaderView", "views/WelcomeView", "views/TestListView"], function(HeaderView, WelcomeView, TestListView) {
         var AppRouter = Backbone.Router.extend({
         
           routes: {
@@ -16,8 +16,8 @@
           },
           
           welcome: function() {
-              var appContextView = new AppContextView({el: $('#content')});
-              appContextView.render();
+              var welcomeView = new WelcomeView({el: $('#content')});
+              welcomeView.render();
           },
           
           config: function() {

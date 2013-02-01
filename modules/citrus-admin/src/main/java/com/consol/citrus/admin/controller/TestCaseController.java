@@ -16,21 +16,14 @@
 
 package com.consol.citrus.admin.controller;
 
-import java.io.File;
 import java.util.List;
 
-import com.consol.citrus.admin.launcher.ProcessLauncher;
-import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
-import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
-import com.consol.citrus.admin.service.ConfigService;
-import com.consol.citrus.admin.websocket.LoggingWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.model.TestResult;
 import com.consol.citrus.admin.service.TestCaseService;
 
 /**
@@ -46,12 +39,6 @@ public class TestCaseController {
     @Autowired
     private TestCaseService testCaseService;
     
-    @Autowired
-    private LoggingWebSocket loggingWebSocket;
-
-    @Autowired
-    private ConfigService configService;
-
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestCaseType> list(HttpEntity<String> requestEntity) {
@@ -62,17 +49,13 @@ public class TestCaseController {
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
             @PathVariable("type") String type) {
-        return testCaseService.getSourceCode(testPackage, testName, type);
+        return testCaseService.getTestSources(testPackage, testName, type);
     }
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public String executeTest(@PathVariable("name") String testName) {
-        File file = configService.getProjectHome();
-        ProcessBuilder processBuilder = new ExecuteSingleTest(file, testName).getProcessBuilder();
-        ProcessLauncher processLauncher = new ProcessLauncherImpl(testName);
-        processLauncher.addProcessListener(loggingWebSocket);
-        processLauncher.launchAndContinue(processBuilder, 0);
+        testCaseService.executeTest(testName);
         return "LAUNCHED";
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.service;
+package com.consol.citrus.admin.executor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class AppContextHolder {
+public class ApplicationContextHolder {
     
     /** Citrus application context */
     private ApplicationContext applicationContext;
@@ -42,7 +42,7 @@ public class AppContextHolder {
     private TestEventListener testEventListener;
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AppContextHolder.class);
+    private static Logger log = LoggerFactory.getLogger(ApplicationContextHolder.class);
     
     /**
      * Gets the current application context. If not loaded before we initialize the 

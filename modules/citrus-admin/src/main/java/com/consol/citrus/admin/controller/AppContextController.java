@@ -25,8 +25,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.service.AppContextHolder;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.server.Server;
@@ -39,7 +39,7 @@ import com.consol.citrus.server.Server;
 public class AppContextController {
 
     @Autowired
-    private AppContextHolder appContextHolder;
+    private ApplicationContextHolder appContextHolder;
 
     @RequestMapping(value="/status", method = RequestMethod.GET)
     @ResponseBody
