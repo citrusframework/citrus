@@ -36,12 +36,6 @@
           <artifactId>citrus-ws</artifactId>
           <version>${project.version}</version>
         </dependency>
-        <dependency>
-          <groupId>com.consol.citrus</groupId>
-          <artifactId>citrus-integration</artifactId>
-          <classifier>tests</classifier>
-          <version>${project.version}</version>
-        </dependency>
     
         <dependency>
             <groupId>org.springframework</groupId>
@@ -100,12 +94,6 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-integration</artifactId>
-      <classifier>tests</classifier>
     </dependency>
     
     <dependency>
