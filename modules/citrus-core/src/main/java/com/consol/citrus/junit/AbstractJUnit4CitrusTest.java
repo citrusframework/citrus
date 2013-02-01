@@ -65,7 +65,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      */
     @Before
     public void beforeTest() {
-        testExecutor  = new JUnitTestExecutor(applicationContext, testListener);
+        testExecutor  = new JUnitTestExecutor(applicationContext, getClass(), testListener);
         testExecutor.beforeTest(beforeTest, createTestContext());
     }
     

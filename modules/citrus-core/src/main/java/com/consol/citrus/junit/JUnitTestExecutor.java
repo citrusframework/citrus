@@ -38,13 +38,17 @@ public class JUnitTestExecutor {
     
     /** Test listeners */
     private TestListeners testListeners;
+    
+    /** Class to execute as JUnit test */
+    private Class<?> testClass;
 
     /**
      * Default constructor using fields.
      */
-    public JUnitTestExecutor(ApplicationContext applicationContext, TestListeners testListeners) {
+    public JUnitTestExecutor(ApplicationContext applicationContext, Class<?> testClass, TestListeners testListeners) {
         this.applicationContext = applicationContext;
         this.testListeners = testListeners;
+        this.testClass = testClass;
     }
     
     /**
@@ -94,10 +98,10 @@ public class JUnitTestExecutor {
         ClassPathXmlApplicationContext ctx = createApplicationContext();
         TestCase testCase = null;
         try {
-            testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
-            testCase.setPackageName(this.getClass().getPackage().getName());
+            testCase = (TestCase) ctx.getBean(testClass.getSimpleName(), TestCase.class);
+            testCase.setPackageName(testClass.getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
-            throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            throw handleError("Could not find test with name '" + testClass.getSimpleName() + "'", e);
         }
         return testCase;
     }
@@ -112,8 +116,8 @@ public class JUnitTestExecutor {
         try {
             return new ClassPathXmlApplicationContext(
                     new String[] {
-                            this.getClass().getPackage().getName().replace('.', '/')
-                                    + "/" + getClass().getSimpleName() + ".xml",
+                            testClass.getPackage().getName().replace('.', '/')
+                                    + "/" + testClass.getSimpleName() + ".xml",
                                     "com/consol/citrus/spring/internal-helper-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
@@ -132,8 +136,8 @@ public class JUnitTestExecutor {
     private CitrusRuntimeException handleError(String message, Exception cause) {
         // Create empty backup test case for logging
         TestCase backupTest = new TestCase();
-        backupTest.setName(getClass().getSimpleName());
-        backupTest.setPackageName(getClass().getPackage().getName());
+        backupTest.setName(testClass.getSimpleName());
+        backupTest.setPackageName(testClass.getPackage().getName());
         
         CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
         

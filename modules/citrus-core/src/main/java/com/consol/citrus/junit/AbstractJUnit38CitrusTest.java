@@ -65,7 +65,7 @@ public abstract class AbstractJUnit38CitrusTest extends AbstractJUnit38SpringCon
      * Run tasks before each test case.
      */
     protected void setUp() {
-        testExecutor  = new JUnitTestExecutor(applicationContext, testListener);
+        testExecutor  = new JUnitTestExecutor(applicationContext, getClass(), testListener);
         testExecutor.beforeTest(beforeTest, createTestContext());
     }
     
