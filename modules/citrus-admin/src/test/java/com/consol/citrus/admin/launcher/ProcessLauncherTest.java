@@ -1,14 +1,13 @@
 package com.consol.citrus.admin.launcher;
 
-import com.consol.citrus.admin.launcher.process.ExecuteCommand;
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.io.File;
+import java.util.*;
+
 import org.apache.commons.lang.SystemUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
+import com.consol.citrus.admin.launcher.process.ExecuteCommand;
 
 /**
  * Tests the process launcher functionality
@@ -24,7 +23,6 @@ public class ProcessLauncherTest {
     private final static int FAILED_EXIT_CODE = 2;
     private final static int FAILED_EXCEPTION = 3;
 
-    @SuppressWarnings("unchecked")
     private List<Boolean> callbacks = Arrays.asList(new Boolean[]{false, false, false, false});
 
     @Test
