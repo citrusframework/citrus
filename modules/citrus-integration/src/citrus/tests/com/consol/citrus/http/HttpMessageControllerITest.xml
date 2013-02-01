@@ -67,7 +67,7 @@
                 <send with="httpMessageSender">
                     <message><data></data></message>
                     <header>
-                        <element name="citrus_endpoint_uri" value="citrus:concat('http://localhost:8072/test/user/', ${id})"/>
+                        <element name="citrus_endpoint_uri" value="http://localhost:8072/test/user/${id}"/>
                         <element name="citrus_http_method" value="GET"/>
                         <element name="Content-Type" value="text/html"/>
                         <element name="Accept" value="application/xml;charset=UTF-8"/>
@@ -107,7 +107,7 @@
                 <send with="httpMessageSender">
                     <message><data></data></message>
                     <header>
-                        <element name="citrus_endpoint_uri" value="http://localhost:8072/test/user?id=123456789&amp;name=TestUser"/>
+                        <element name="citrus_endpoint_uri" value="http://localhost:8072/test/user?id=${id}&amp;name=TestUser"/>
                         <element name="citrus_http_method" value="GET"/>
                         <element name="Content-Type" value="text/html"/>
                         <element name="Accept" value="application/xml;charset=UTF-8"/>
@@ -124,7 +124,7 @@
                             <element name="citrus_http_method" value="GET"/>
                             <element name="citrus_http_request_uri" value="/test/user"/>
                             <element name="citrus_http_context_path" value=""/>
-                            <element name="citrus_http_query_params" value="id=123456789&amp;name=TestUser"/>
+                            <element name="citrus_http_query_params" value="id=${id}&amp;name=TestUser"/>
                         </header>
                     </receive>
                 </sequential>
