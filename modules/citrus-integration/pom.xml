@@ -35,6 +35,34 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration> 
+                <junitArtifactName>none:none</junitArtifactName>
+                <excludes>
+                  <exclude>**/junit/*.java</exclude>
+                </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                  <id>junit-tests</id>
+                  <phase>test</phase>
+                  <goals>
+                      <goal>test</goal>
+                  </goals>
+                  <configuration>
+                      <junitArtifactName>junit:junit</junitArtifactName> 
+                      <testNGArtifactName>none:none</testNGArtifactName>
+                      <excludes>
+                        <exclude>none</exclude>
+                      </excludes>
+                      <includes>
+                        <include>**/junit/*.java</include>
+                      </includes>
+                  </configuration>
+              </execution>
+            </executions>
+        </plugin>
     </plugins>
     
   	<testSourceDirectory>src/citrus/java</testSourceDirectory>
