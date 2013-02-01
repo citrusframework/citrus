@@ -62,7 +62,9 @@
     <bean class="com.consol.citrus.admin.service.AppContextHolder" scope="singleton"/>
     
     <bean class="com.consol.citrus.admin.listener.TestEventListener" scope="singleton"/>
-    
+
+    <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket2" scope="singleton"/>
+
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">
         <oxm:class-to-be-bound name="com.consol.citrus.admin.model.AppContextInfo" />
