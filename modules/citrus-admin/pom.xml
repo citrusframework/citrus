@@ -244,7 +244,7 @@
                   </systemProperty>
                   <systemProperty>
                     <name>project.home</name>
-                    <value>../citrus-integration/src/citrus/tests</value>
+                    <value>../citrus-integration</value>
                   </systemProperty>
                   <systemProperty>
                     <name>test.base.package</name>

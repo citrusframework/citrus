@@ -116,3 +116,10 @@ code.template {
 .dropdown-submenu:hover > a > [class*=" icon-"] {
   background-image: url("icons/glyphicons-halflings-white.png");
 }
+
+pre.log {
+  height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 10px;
+}
