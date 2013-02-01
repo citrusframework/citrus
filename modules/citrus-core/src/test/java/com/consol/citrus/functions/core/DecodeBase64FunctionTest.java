@@ -17,6 +17,7 @@
 package com.consol.citrus.functions.core;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.testng.Assert;
@@ -25,8 +26,6 @@ import org.testng.annotations.Test;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * @author Christoph Deppisch
@@ -40,13 +39,11 @@ public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testCustomCharset() {
         Assert.assertEquals(function.execute(Arrays.asList(new String[] {"Zm9v", "UTF-8"})), "foo");
     }
     
     @Test
-    @SuppressWarnings("unchecked")
     public void testUnsupportedCharset() {
         try {
             function.execute(Arrays.asList(new String[] {"foo", "UNKNOWN"}));
