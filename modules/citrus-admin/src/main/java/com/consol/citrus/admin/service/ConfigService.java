@@ -1,11 +1,11 @@
 package com.consol.citrus.admin.service;
 
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 
+import org.springframework.stereotype.Component;
+
 /**
- * Single point of access for all admin-gui configuration settings
+ * Single point of access for all configuration settings
  *
  * @author Martin.Maher@consol.de
  * @version $Id$
@@ -13,13 +13,27 @@ import java.io.File;
  */
 @Component
 public class ConfigService {
+    /** System property name for project home setting */
     public static final String PROJECT_HOME = "project.home";
 
+    /**
+     * Get project home from system property.
+     * @return
+     */
     public File getProjectHome() {
         String projectHomeProperty = System.getProperty(PROJECT_HOME);
-        if(projectHomeProperty != null) {
+        if (projectHomeProperty != null) {
             return new File(projectHomeProperty);
         }
+        
         return null;
+    }
+
+    /**
+     * Sets new project home path.
+     * @param homePath
+     */
+    public void setProjectHome(String homePath) {
+        System.setProperty(PROJECT_HOME, homePath);
     }
 }
