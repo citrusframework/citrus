@@ -34,10 +34,14 @@ public class ConfigurationController {
 
     @Autowired
     private ConfigService configService;
+
+    @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
+    public String getProjectHome() {
+        return configService.getProjectHome();
+    }
     
-    @RequestMapping(params = {"projecthome"}, method = RequestMethod.GET)
-    public String setProjectHome(@RequestParam("projecthome") String projecthome) {
-        configService.setProjectHome(projecthome);
-        return "redirect:/";
+    @RequestMapping(value = "/root", method = RequestMethod.GET)
+    public String getRootDirectory() {
+        return configService.getRootDirectory();
     }
 }

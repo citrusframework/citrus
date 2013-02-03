@@ -47,7 +47,7 @@ public class FileSystemTestExecutorTest extends AbstractTestNGSpringContextTests
     public void testGetTests() throws IOException {
         reset(configService);
 
-        expect(configService.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile()).once();
+        expect(configService.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).once();
         
         replay(configService);
         

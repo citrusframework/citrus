@@ -83,7 +83,7 @@ public class ClasspathTestExecutor implements TestExecutor {
      */
     public void execute(String testName) throws ParseException {
         Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
-                new String[] { "-test", testName, "-testdir", configService.getProjectHome().getAbsolutePath() }));
+                new String[] { "-test", testName, "-testdir", new File(configService.getProjectHome()).getAbsolutePath() }));
         citrus.run();
         
         Map<String, TestReporter> reporters = appContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);

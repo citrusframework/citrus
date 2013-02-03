@@ -1,7 +1,5 @@
 package com.consol.citrus.admin.service;
 
-import java.io.File;
-
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,18 +13,24 @@ import org.springframework.stereotype.Component;
 public class ConfigService {
     /** System property name for project home setting */
     public static final String PROJECT_HOME = "project.home";
+    
+    public static final String ROOT_DIRECTORY = "root.directory";
 
     /**
      * Get project home from system property.
      * @return
      */
-    public File getProjectHome() {
-        String projectHomeProperty = System.getProperty(PROJECT_HOME);
-        if (projectHomeProperty != null) {
-            return new File(projectHomeProperty);
-        }
-        
-        return null;
+    public String getProjectHome() {
+        return System.getProperty(PROJECT_HOME);
+    }
+    
+    /**
+     * Gets the root directory from system property. By default user.home system
+     * property setting is used as root.
+     * @return
+     */
+    public String getRootDirectory() {
+        return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
     }
 
     /**
@@ -36,4 +40,5 @@ public class ConfigService {
     public void setProjectHome(String homePath) {
         System.setProperty(PROJECT_HOME, homePath);
     }
+    
 }

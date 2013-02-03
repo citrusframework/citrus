@@ -43,7 +43,7 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
      */
     @Override
     public void execute(String testName) throws ParseException {
-        File file = configService.getProjectHome();
+        File file = new File(configService.getProjectHome());
         ProcessBuilder processBuilder = new ExecuteSingleTest(file, testName).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(testName);
         processLauncher.addProcessListener(loggingWebSocket);

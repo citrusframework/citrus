@@ -42,7 +42,7 @@ public class FileSystemTestExecutor implements TestExecutor{
      */
     public List<TestCaseType> getTests() {
         List<TestCaseType> tests = new ArrayList<TestCaseType>();
-        String testDirectory = configService.getProjectHome().getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+        String testDirectory = getTestDirectory();
         
         List<File> testFiles = FileUtils.getTestFiles(testDirectory);
         
@@ -69,7 +69,7 @@ public class FileSystemTestExecutor implements TestExecutor{
      * {@inheritDoc}
      */
     public void execute(String testName) throws ParseException {
-        String testDirectory = configService.getProjectHome().getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+        String testDirectory = getTestDirectory();
         
         Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
                 new String[] { "-test", testName, "-testdir", testDirectory }));
@@ -80,7 +80,7 @@ public class FileSystemTestExecutor implements TestExecutor{
      * {@inheritDoc}
      */
     public String getSourceCode(String testPackage, String testName, String type) {
-        String testDirectory = configService.getProjectHome().getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+        String testDirectory = getTestDirectory();
         
         List<File> testFiles = FileUtils.getTestFiles(testDirectory + "/" + testPackage.replaceAll(".", File.separator));
         
@@ -89,6 +89,14 @@ public class FileSystemTestExecutor implements TestExecutor{
         } catch (IOException e) {
             return "Failed to load test case file: " + e.getMessage();
         }
+    }
+    
+    /**
+     * Gets the current test directory based on project home and default test directory.
+     * @return
+     */
+    private String getTestDirectory() {
+        return new File(configService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
     }
 
 }
