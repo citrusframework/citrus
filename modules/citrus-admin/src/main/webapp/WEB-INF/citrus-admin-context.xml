@@ -50,10 +50,14 @@
     <mvc:default-servlet-handler/>
     
     <mvc:view-controller path="/" view-name="index.html"/>
-
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
-        <property name="order" value="1" />
-    </bean>
+    <mvc:view-controller path="/setup" view-name="setup.html"/>
+    
+    <mvc:interceptors>
+        <bean class="com.consol.citrus.admin.controller.ProjectSetupInterceptor">
+            <property name="redirect" value="/setup"/>
+            <property name="excludes" value="/images/*, /styles/*, /javascript/*, /config, /project"/>
+        </bean> 
+    </mvc:interceptors>
     
     <bean id="jaxbHttpMessageConverter"
         class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">

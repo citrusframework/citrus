@@ -124,6 +124,18 @@ pre.log {
   font-size: 10px;
 }
 
+div.file-tree {
+  border: 1px solid #BBBBBB;
+  height: 300px;
+  overflow: auto;
+  padding: 5px;
+}
+
+.modal-backdrop, .modal-backdrop.fade.in {
+    opacity: 0.6;
+    background-color: #F9F9F9;
+}}
+
 #log-tabs > li {
   margin-right: 5px;
 }
