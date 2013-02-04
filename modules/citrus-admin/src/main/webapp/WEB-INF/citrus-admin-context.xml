@@ -23,7 +23,21 @@
     <!-- Auto detected POJOs labeled with the @Controller annotation -->
     <context:component-scan base-package="com.consol.citrus.admin.controller"/>
     <context:component-scan base-package="com.consol.citrus.admin.service"/>
-    
+
+    <mvc:interceptors>
+        <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+            <property name="cacheSeconds" value="0"/>
+            <property name="useExpiresHeader" value="true"/>
+            <property name="useCacheControlHeader" value="true"/>
+            <property name="useCacheControlNoStore" value="true"/>
+            <property name="cacheMappings">
+                <props>
+                    <prop key="/javascript/support/*.js">86400</prop>
+                </props>
+            </property>
+        </bean>
+    </mvc:interceptors>
+
     <!-- Turns on support for mapping requests to Spring MVC @Controller methods
          Also registers default formatters and validators for use across all @Controllers -->
     <mvc:annotation-driven conversion-service="applicationConversionService"/>
