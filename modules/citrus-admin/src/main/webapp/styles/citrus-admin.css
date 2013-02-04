@@ -123,3 +123,23 @@ pre.log {
   overflow-x: hidden;
   font-size: 10px;
 }
+
+#log-tabs > li {
+  margin-right: 5px;
+}
+
+#log-tabs button.close {
+  margin-right: 8px;
+}
+
+#log-tabs > li > a {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #DDDDDD #DDDDDD transparent;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  padding-right: 22px;
+}
