@@ -132,6 +132,6 @@ div.file-tree {
 }
 
 .modal-backdrop, .modal-backdrop.fade.in {
-    opacity: 0.6;
-    background-color: #F9F9F9;
+  opacity: 0.6;
+  background-color: #F9F9F9;
 }
