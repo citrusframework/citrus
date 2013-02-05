@@ -32,7 +32,7 @@
               }, this);
               
               return this;
-          },
+          }
         });
         
         return WebSocketHolder;

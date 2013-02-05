@@ -1,5 +1,5 @@
 (function() {
-    define(["views/HeaderView", "views/WelcomeView", "views/TestListView"], function(HeaderView, WelcomeView, TestListView) {
+    define(["views/HeaderView", "views/WelcomeView", "views/TestListView", "views/FooterView"], function(HeaderView, WelcomeView, TestListView, FooterView) {
         var AppRouter = Backbone.Router.extend({
         
           routes: {
@@ -13,6 +13,8 @@
           initialize: function() {
               var headerView = new HeaderView({el: $('#header')});
               headerView.render();
+              var footerView = new FooterView({el: $('#footer')});
+              footerView.render();
           },
           
           welcome: function() {

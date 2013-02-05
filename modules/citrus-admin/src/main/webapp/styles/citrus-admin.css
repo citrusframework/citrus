@@ -135,3 +135,23 @@ div.file-tree {
   opacity: 0.6;
   background-color: #F9F9F9;
 }
+
+#log-tabs > li {
+  margin-right: 5px;
+}
+
+#log-tabs button.close {
+  margin-right: 8px;
+}
+
+#log-tabs > li > a {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #DDDDDD #DDDDDD transparent;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  padding-right: 22px;
+}
