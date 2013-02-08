@@ -63,7 +63,6 @@
     <script src="js/prettify.js"></script>
 
     <link href="css/bootstrap.css" rel="stylesheet"/>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
     <link href="css/prettify.css" rel="stylesheet"/>
     <link href="css/customize.css" rel="stylesheet"/>
 
@@ -118,7 +117,7 @@
       $bodyContent
       
       <footer>
-          <span>&copy; 2008-2012 ConSol* Software GmbH</span>
+          <span>&copy; 2008-2013 ConSol* Software GmbH</span>
           <div class="pull-right">
             <a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a>&nbsp;|&nbsp;
             <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">Issues</a>&nbsp;|&nbsp;
