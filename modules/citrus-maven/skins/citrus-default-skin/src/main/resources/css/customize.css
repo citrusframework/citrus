@@ -20,7 +20,7 @@ body.page {
   font-size: 14px;
   font-weight: 200;
   line-height: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   padding: 30px;
   text-align: center;
 }
@@ -191,7 +191,7 @@ a:hover {
   border: 1px solid #d6d6d6;
   border-radius: 6px 6px 6px 6px;
   padding-bottom: 30px;
-  min-height: 310px !important;
+  min-height: 100px !important;
   font-size: 12px;
 }
 
@@ -259,4 +259,5 @@ footer a, footer a:hover {
 
 .row {
     margin-left: -20px;
+    margin-bottom: 10px;
 }
