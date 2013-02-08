@@ -23,7 +23,6 @@ import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
 import org.testng.ITestContext;
 
 import com.consol.citrus.*;
@@ -572,8 +571,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      */
     protected AssertDefinition assertException(TestAction testAction) {
         Assert action = new Assert();
-        action.setAction(testAction);
-            
+        
+        if (testAction instanceof AbstractActionDefinition<?>) {
+            action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
+        } else {
+            action.setAction(testAction);
+        }
+        
         testCase.getActions().remove((testCase.getActions().size()) -1);
         testCase.addTestAction(action);
         
@@ -792,17 +796,16 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Adds sequence of test actions to finally block.
      * @param actions
      */
-    @SuppressWarnings("unchecked")
     protected void doFinally(TestAction ... actions) {
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
+                testCase.getFinallyChain().add(((AbstractActionDefinition<?>) action).getAction());
             } else {
                 testCase.getActions().remove(action);
+                testCase.getFinallyChain().add(action);
             }
         }
-        
-        testCase.getFinallyChain().addAll(CollectionUtils.arrayToList(actions));
     }
 
     /**

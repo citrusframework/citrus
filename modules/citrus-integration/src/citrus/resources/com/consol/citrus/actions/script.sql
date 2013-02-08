@@ -1,5 +1,6 @@
 -- clean up database
 DELETE FROM CUSTOMERS;
+DELETE FROM ORDERS;
 
 -- insert data
 INSERT INTO 
