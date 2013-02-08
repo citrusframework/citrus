@@ -51,7 +51,6 @@
     </menu>
     
     <menu name="Contact">
-        <item name="Training" href="training.html"/>
         <item name="Consulting" href="consulting.html"/>
         <item name="ConSol* Software GmbH" href="http://www.consol.de"/>
     </menu>

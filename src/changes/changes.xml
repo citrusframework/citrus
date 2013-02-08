@@ -15,30 +15,60 @@
   </properties>
   
   <body>
-    <release version="1.3" date="05.09.2012" description="1.3 release">
+    <release version="1.3" date="20.02.2012" description="1.3 release">
         <action dev="christophd" type="add">
-          #408 Add SOAP fault actor support
-        </action>
-        <action dev="christophd" type="add">
-          #407 Add WSDL support for schema repository
-        </action>
-        <action dev="christophd" type="update">
-          #406 Extend schema repository with pattern resolver
-        </action>
-        <action dev="christophd" type="add">
-          #405 Add new test action for running ANT build targets
+          CITRUS-158 Http error code simulation
         </action>
         <action dev="roland" type="add">
-          #404 Added SSH adapter for mocking SSH requests
+          CITRUS-157 SSH adapter for mocking SSH requests
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-156 Extend schema repository with pattern resolver
         </action>
         <action dev="christophd" type="add">
-          #403 Http error code simulation
+          CITRUS-155 Add WSDL support for schema repository
         </action>
         <action dev="christophd" type="add">
-          #401 Test actors
+          CITRUS-154 Add SOAP fault actor support
         </action>
         <action dev="christophd" type="add">
-          #400 Java DSL for writing test cases
+          CITRUS-153 Test actors
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-152 JUnit test execution broken
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-151 Resolve function throwing StringIndexOutOfBounds
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-150 WebServiceEndpoint - NullPointerException when there´s no response
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-149 XPath breaks message selector with "=" character 
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-148 Java action with String argument type
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-147 Comma character breaks concat function
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-146 Support variables in file resource paths
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-145 JSONArray as top level element
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-143 SOAP fault detail schema validation
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-142 Add new test action for running ANT build targets
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-82 Fork Http send action
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-68 Java DSL for writing test cases
         </action>
     </release>
   

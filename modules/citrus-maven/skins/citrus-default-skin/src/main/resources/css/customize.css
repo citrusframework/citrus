@@ -1,11 +1,15 @@
 @IMPORT url("customize-maven.css");
 
 body {
-  padding-top: 40px;
-  background: none repeat scroll 0 0 #efefef;
+  padding-top: 70px;
+  background: url(../images/feature_logo_disabled.png) no-repeat scroll top right #efefef;
   color: #404040;
   font-family: Verdana, Helvetica, Arial, sans-serif;
   font-size: 13px;
+}
+
+body.page {
+  background: url(../images/feature_logo_small.png) no-repeat scroll top right #efefef;
 }
 
 .hero-unit {
@@ -40,6 +44,10 @@ body {
 
 .hero-unit h5 {
   margin: 0px;
+}
+
+.navbar {
+  margin-bottom: 10px;
 }
 
 .navbar-inverse .navbar-inner {
