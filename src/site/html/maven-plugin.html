@@ -5,63 +5,7 @@
     <div class="container box">
       <h1 class="page-header">Maven plugin <small>Citrus Maven helpers</small></h1>
       
-      <p>Goals available for this plugin:</p>
-      
-      <table class="table table-striped table-bordered">
-        <tr>
-          <th>Goal</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td><a href="create-excel-doc-mojo.html">citrus:create-excel-doc</a></td>
-          <td>
-            Creates test documentation in MS Excel listing all available
-            tests with meta information (name, author, description, date, ...)
-          </td>
-        </tr>
-        <tr>
-          <td><a href="create-html-doc-mojo.html">citrus:create-html-doc</a></td>
-          <td>
-            Creates test overview documentation in HTML. The web page
-            contains a list of all available tests with meta information.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="create-suite-from-wsdl-mojo.html">citrus:create-suite-from-wsdl</a></td>
-          <td>
-            Creates new Citrus test suite from a given WSDL with XML test
-            file and executable Java class. Mojo offers an interactive mode,
-            where the plugin prompts for parameters during execution. In
-            non-interactive mode the parameters are given as command line
-            arguments.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="create-test-mojo.html">citrus:create-test</a></td>
-          <td>
-            Creates new Citrus test cases with empty XML test file and
-            executable Java class. Mojo offers an interactive mode, where the
-            plugin prompts for parameters during execution. In non-interactive
-            mode the parameters are given as command line arguments.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="create-test-from-xsd-mojo.html">citrus:create-test-from-xsd</a></td>
-          <td>
-            Creates new Citrus test cases with empty XML test file and
-            executable Java class. Mojo offers an interactive mode, where the
-            plugin prompts for parameters during execution. In non-interactive
-            mode the parameters are given as command line arguments.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="help-mojo.html">citrus:help</a></td>
-          <td>
-            Display help information on citrus-maven-plugin.<br /> Call
-            <pre>mvn citrus:help -Ddetail=true -Dgoal=&lt;goal-name&gt;</pre> to display parameter details.
-          </td>
-        </tr>
-      </table>
+      <p>The Citrus Maven plugin offers several tools and handy tasks for generating test cases and reports.</p>
       
       <h3>System Requirements</h3>
       <p>The following specifies the minimum requirements to run this Maven plugin:</p>
@@ -114,10 +58,631 @@
   ...
 &lt;/project&gt;</pre>
 
-      <p>
-        For more information, see 
-        <a class="externalLink" href="http://maven.apache.org/guides/mini/guide-configuring-plugins.html">&quot;Guide to Configuring Plug-ins&quot;</a>
-      </p>
+      <h1 class="page-header">Goals <small>Goals available for this plugin</small></h1>
+      
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Goal</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><a href="#create-excel-doc">citrus:create-excel-doc</a></td>
+          <td>
+            Creates test documentation in MS Excel listing all available
+            tests with meta information (name, author, description, date, ...)
+          </td>
+        </tr>
+        <tr>
+          <td><a href="#create-html-doc">citrus:create-html-doc</a></td>
+          <td>
+            Creates test overview documentation in HTML. The web page
+            contains a list of all available tests with meta information.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="#create-suite-from-wsdl">citrus:create-suite-from-wsdl</a></td>
+          <td>
+            Creates new Citrus test suite from a given WSDL with XML test
+            file and executable Java class. Mojo offers an interactive mode,
+            where the plugin prompts for parameters during execution. In
+            non-interactive mode the parameters are given as command line
+            arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="#create-test">citrus:create-test</a></td>
+          <td>
+            Creates new Citrus test cases with empty XML test file and
+            executable Java class. Mojo offers an interactive mode, where the
+            plugin prompts for parameters during execution. In non-interactive
+            mode the parameters are given as command line arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="#create-test-from-xsd">citrus:create-test-from-xsd</a></td>
+          <td>
+            Creates new Citrus test cases with empty XML test file and
+            executable Java class. Mojo offers an interactive mode, where the
+            plugin prompts for parameters during execution. In non-interactive
+            mode the parameters are given as command line arguments.
+          </td>
+        </tr>
+        <tr>
+          <td><a href="#help">citrus:help</a></td>
+          <td>
+            Display help information on citrus-maven-plugin.<br /> Call
+            <pre>mvn citrus:help -Ddetail=true -Dgoal=&lt;goal-name&gt;</pre> to display parameter details.
+          </td>
+        </tr>
+      </table>
+      
+      <div id="create-excel-doc">
+        <h1 class="page-header">citrus:create-excel-doc</h1>
+        <p><b>Full name</b>:</p>
+        <p>com.consol.citrus.mvn:citrus-maven-plugin:1.2:create-excel-doc</p>
+        <p><b>Description</b>:</p>
+        <div>Creates test documentation in MS Excel listing all available tests with meta information (name, author, description, date, ...) .</div>
+        
+        <h3>Optional Parameters</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><b><a href="#author">author</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Author name that goes into Excel meta information.<br /><b>Default value is</b>: <tt>Citrus Testframework</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#company">company</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of company that goes into Excel meta information.<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#customHeaders">customHeaders</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Customized column headers as comma separated value string (e.g. &quot;Nr;Name;Author;Status;TestCase;Date&quot;).<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#interactiveMode">interactiveMode</a></b></td>
+            <td><tt>boolean</tt></td>
+            <td><tt>-</tt></td>
+            <td>Whether to use interactive mode where user is prompted for parameter input during execution.<br /><b>Default value is</b>: <tt>true</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#outputFile">outputFile</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of output file (.xsl file extension is added automatically and can be left out). Defaults to &quot;CitrusTests&quot;.<br /><b>Default value is</b>: <tt>CitrusTests</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#pageTitle">pageTitle</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Page title displayed on top of the sheet.<br /><b>Default value is</b>: <tt>Citrus Test Documentation</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#testDirectory">testDirectory</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Mojo looks in this directory for test files that are included in this report. Defaults to &quot;src/citrus/tests&quot;<br /><b>Default value is</b>: <tt>src/citrus/tests</tt>.</td>
+          </tr>
+        </table>
+      
+        <h3>Parameter Details</h3>
+        <p><b><a name="author">author</a>:</b></p>
+        <div>Author name that goes into Excel meta information.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>Citrus Testframework</tt></li>
+        </ul><hr /><p><b><a name="company">company</a>:</b></p>
+        <div>Name of company that goes into Excel meta information.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>Unknown</tt></li>
+        </ul><hr /><p><b><a name="customHeaders">customHeaders</a>:</b></p>
+        <div>Customized column headers as comma separated value string (e.g. &quot;Nr;Name;Author;Status;TestCase;Date&quot;).</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+        </ul><hr /><p><b><a name="interactiveMode">interactiveMode</a>:</b></p>
+        <div>Whether to use interactive mode where user is prompted for parameter input during execution.</div>
+        <ul>
+          <li><b>Type</b>: <tt>boolean</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
+          <li><b>Default</b>: <tt>true</tt></li>
+        </ul><hr /><p><b><a name="outputFile">outputFile</a>:</b></p>
+        <div>Name of output file (.xsl file extension is added automatically and can be left out). Defaults to &quot;CitrusTests&quot;.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${outputFile}</tt></li>
+          <li><b>Default</b>: <tt>CitrusTests</tt></li>
+        </ul><hr /><p><b><a name="pageTitle">pageTitle</a>:</b></p>
+        <div>Page title displayed on top of the sheet.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>Citrus Test Documentation</tt></li>
+        </ul><hr /><p><b><a name="testDirectory">testDirectory</a>:</b></p>
+        <div>Mojo looks in this directory for test files that are included in this report. Defaults to &quot;src/citrus/tests&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>src/citrus/tests</tt></li>
+        </ul>
+      </div>
+      
+      <div id="create-html-doc">
+        <h1 class="page-header">citrus:create-html-doc</h1>
+        <p><b>Full name</b>:</p>
+        <p>com.consol.citrus.mvn:citrus-maven-plugin:1.2:create-html-doc</p>
+        <p><b>Description</b>:</p>
+        <div>Creates test overview documentation in HTML. The web page contains a list of all available tests with meta information.</div>
+        
+        <h3>Optional Parameters</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><b><a href="#columns">columns</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Number of columns in test overview table<br /><b>Default value is</b>: <tt>1</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#interactiveMode">interactiveMode</a></b></td>
+            <td><tt>boolean</tt></td>
+            <td><tt>-</tt></td>
+            <td>Whether to use interactive mode where user is prompted for parameter input during execution.<br /><b>Default value is</b>: <tt>true</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#logo">logo</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Company or project logo displayed on top of page. Defaults to &quot;logo.png&quot;<br /><b>Default value is</b>: <tt>logo.png</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#outputFile">outputFile</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of output file (.html file extension is added automatically and can be left out). Defaults to &quot;CitrusTests&quot;<br /><b>Default value is</b>: <tt>CitrusTests</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#overviewTitle">overviewTitle</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The overview title displayed at the top of the test overview<br /><b>Default value is</b>: <tt>Overview</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#pageTitle">pageTitle</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Page title displayed at the top of the page<br /><b>Default value is</b>: <tt>Citrus Test Documentation</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#testDirectory">testDirectory</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>All test files in this directory are included into the report. Defaults to &quot;src/citrus/tests&quot;<br /><b>Default value is</b>: <tt>src/citrus/tests</tt>.</td>
+          </tr>
+        </table>
+  
+        <h3>Parameter Details</h3>
+        <p><b><a name="columns">columns</a>:</b></p>
+        <div>Number of columns in test overview table</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>1</tt></li>
+        </ul><hr /><p><b><a name="interactiveMode">interactiveMode</a>:</b></p>
+        <div>Whether to use interactive mode where user is prompted for parameter input during execution.</div>
+        <ul>
+          <li><b>Type</b>: <tt>boolean</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
+          <li><b>Default</b>: <tt>true</tt></li>
+        </ul><hr /><p><b><a name="logo">logo</a>:</b></p>
+        <div>Company or project logo displayed on top of page. Defaults to &quot;logo.png&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>logo.png</tt></li>
+        </ul><hr /><p><b><a name="outputFile">outputFile</a>:</b></p>
+        <div>Name of output file (.html file extension is added automatically and can be left out). Defaults to &quot;CitrusTests&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${outputFile}</tt></li>
+          <li><b>Default</b>: <tt>CitrusTests</tt></li>
+        </ul><hr /><p><b><a name="overviewTitle">overviewTitle</a>:</b></p>
+        <div>The overview title displayed at the top of the test overview</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>Overview</tt></li>
+        </ul><hr /><p><b><a name="pageTitle">pageTitle</a>:</b></p>
+        <div>Page title displayed at the top of the page</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>Citrus Test Documentation</tt></li>
+        </ul><hr /><p><b><a name="testDirectory">testDirectory</a>:</b></p>
+        <div>All test files in this directory are included into the report. Defaults to &quot;src/citrus/tests&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Default</b>: <tt>src/citrus/tests</tt></li>
+        </ul>
+      </div>
+      
+      <div id="create-test">
+        <h1 class="page-header">citrus:create-test</h1>
+        <p><b>Full name</b>:</p>
+        <p>com.consol.citrus.mvn:citrus-maven-plugin:1.2:create-test</p>
+        <p><b>Description</b>:</p>
+        <div>Creates new Citrus test cases with empty XML test file and executable Java class. Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode the parameters are given as command line arguments.</div>
+        
+        <h3>Optional Parameters</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><b><a href="#author">author</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The test author<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#description">description</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Describes the test case and its actions<br /><b>Default value is</b>: <tt>TODO: Description</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#framework">framework</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)<br /><b>Default value is</b>: <tt>testng</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#interactiveMode">interactiveMode</a></b></td>
+            <td><tt>boolean</tt></td>
+            <td><tt>-</tt></td>
+            <td>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.<br /><b>Default value is</b>: <tt>true</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#name">name</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The name of the test case (must start with upper case letter).<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#targetPackage">targetPackage</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
+          </tr>
+        </table>
+
+        <h3>Parameter Details</h3>
+        <p><b><a name="author">author</a>:</b></p>
+        <div>The test author</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${author}</tt></li>
+          <li><b>Default</b>: <tt>Unknown</tt></li>
+        </ul><hr /><p><b><a name="description">description</a>:</b></p>
+        <div>Describes the test case and its actions</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${description}</tt></li>
+          <li><b>Default</b>: <tt>TODO: Description</tt></li>
+        </ul><hr /><p><b><a name="framework">framework</a>:</b></p>
+        <div>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${framework}</tt></li>
+          <li><b>Default</b>: <tt>testng</tt></li>
+        </ul><hr /><p><b><a name="interactiveMode">interactiveMode</a>:</b></p>
+        <div>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.</div>
+        <ul>
+          <li><b>Type</b>: <tt>boolean</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
+          <li><b>Default</b>: <tt>true</tt></li>
+        </ul><hr /><p><b><a name="name">name</a>:</b></p>
+        <div>The name of the test case (must start with upper case letter).</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${name}</tt></li>
+        </ul><hr /><p><b><a name="targetPackage">targetPackage</a>:</b></p>
+        <div>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
+          <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
+        </ul>
+      </div>
+      
+      <div id="create-test-from-xsd">
+        <h1 class="page-header">citrus:create-test-from-xsd</h1>
+        <p><b>Full name</b>:</p>
+        <p>com.consol.citrus.mvn:citrus-maven-plugin:1.2:create-test-from-xsd</p>
+        <p><b>Description</b>:</p>
+        <div>Creates new Citrus test cases with empty XML test file and executable Java class. Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode the parameters are given as command line arguments.</div>
+      
+        <h3>Optional Parameters</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><b><a href="#author">author</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The test author<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#description">description</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Describes the test case and its actions<br /><b>Default value is</b>: <tt>TODO: Description</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#framework">framework</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)<br /><b>Default value is</b>: <tt>testng</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#interactiveMode">interactiveMode</a></b></td>
+            <td><tt>boolean</tt></td>
+            <td><tt>-</tt></td>
+            <td>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.<br /><b>Default value is</b>: <tt>true</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#name">name</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The name of the test case (must start with upper case letter).<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#pathToXsd">pathToXsd</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Path of the xsd from which the sample request and response are get from<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#targetPackage">targetPackage</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#xsdRequestElem">xsdRequestElem</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of the xsd-element used to create the xml-sample-request<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#xsdResponseElem">xsdResponseElem</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of the xsd-element used to create the xml-sample-response<br /></td>
+          </tr>
+        </table>
+
+        <h3>Parameter Details</h3>
+        <p><b><a name="author">author</a>:</b></p>
+        <div>The test author</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${author}</tt></li>
+          <li><b>Default</b>: <tt>Unknown</tt></li>
+        </ul><hr /><p><b><a name="description">description</a>:</b></p>
+        <div>Describes the test case and its actions</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${description}</tt></li>
+          <li><b>Default</b>: <tt>TODO: Description</tt></li>
+        </ul><hr /><p><b><a name="framework">framework</a>:</b></p>
+        <div>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${framework}</tt></li>
+          <li><b>Default</b>: <tt>testng</tt></li>
+        </ul><hr /><p><b><a name="interactiveMode">interactiveMode</a>:</b></p>
+        <div>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.</div>
+        <ul>
+          <li><b>Type</b>: <tt>boolean</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
+          <li><b>Default</b>: <tt>true</tt></li>
+        </ul><hr /><p><b><a name="name">name</a>:</b></p>
+        <div>The name of the test case (must start with upper case letter).</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${name}</tt></li>
+        </ul><hr /><p><b><a name="pathToXsd">pathToXsd</a>:</b></p>
+        <div>Path of the xsd from which the sample request and response are get from</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${pathToXsd}</tt></li>
+        </ul><hr /><p><b><a name="targetPackage">targetPackage</a>:</b></p>
+        <div>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
+          <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
+        </ul><hr /><p><b><a name="xsdRequestElem">xsdRequestElem</a>:</b></p>
+        <div>Name of the xsd-element used to create the xml-sample-request</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${xsdRequestElem}</tt></li>
+        </ul><hr /><p><b><a name="xsdResponseElem">xsdResponseElem</a>:</b></p>
+        <div>Name of the xsd-element used to create the xml-sample-response</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${xsdResponseElem}</tt></li>
+        </ul>
+      </div>
+      
+      <div id="create-suite-from-wsdl">
+        <h1 class="page-header">citrus:create-suite-from-wsdl</h1>
+        <p><b>Full name</b>:</p>
+        <p>com.consol.citrus.mvn:citrus-maven-plugin:1.2:create-suite-from-wsdl</p>
+        <p><b>Description</b>:</p>
+        <div>Creates new Citrus test suite from a given WSDL with XML test file and executable Java class. Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode the parameters are given as command line arguments.</div>
+
+        <h3>Optional Parameters</h3>
+        <table class="table table-striped table-bordered">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><b><a href="#author">author</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The test author<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#description">description</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Describes the test case and its actions<br /><b>Default value is</b>: <tt>TODO: Description</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#framework">framework</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)<br /><b>Default value is</b>: <tt>testng</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#interactiveMode">interactiveMode</a></b></td>
+            <td><tt>boolean</tt></td>
+            <td><tt>-</tt></td>
+            <td>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.<br /><b>Default value is</b>: <tt>true</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#namePrefix">namePrefix</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The name-prefix of all test cases (must start with upper case letter).<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#nameSuffix">nameSuffix</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The name-suffix of all test cases.<br /><b>Default value is</b>: <tt>_ITest</tt>.</td>
+          </tr>
+          <tr>
+            <td><b><a href="#pathToWsdl">pathToWsdl</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The path to the wsdl from which the suite is generated.<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#targetPackage">targetPackage</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
+          </tr>
+        </table>
+
+        <h3>Parameter Details</h3>
+        <p><b><a name="author">author</a>:</b></p>
+        <div>The test author</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${author}</tt></li>
+          <li><b>Default</b>: <tt>Unknown</tt></li>
+        </ul><hr /><p><b><a name="description">description</a>:</b></p>
+        <div>Describes the test case and its actions</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${description}</tt></li>
+          <li><b>Default</b>: <tt>TODO: Description</tt></li>
+        </ul><hr /><p><b><a name="framework">framework</a>:</b></p>
+        <div>Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${framework}</tt></li>
+          <li><b>Default</b>: <tt>testng</tt></li>
+        </ul><hr /><p><b><a name="interactiveMode">interactiveMode</a>:</b></p>
+        <div>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.</div>
+        <ul>
+          <li><b>Type</b>: <tt>boolean</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
+          <li><b>Default</b>: <tt>true</tt></li>
+        </ul><hr /><p><b><a name="namePrefix">namePrefix</a>:</b></p>
+        <div>The name-prefix of all test cases (must start with upper case letter).</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${namePrefix}</tt></li>
+        </ul><hr /><p><b><a name="nameSuffix">nameSuffix</a>:</b></p>
+        <div>The name-suffix of all test cases.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${nameSuffix}</tt></li>
+          <li><b>Default</b>: <tt>_ITest</tt></li>
+        </ul><hr /><p><b><a name="pathToWsdl">pathToWsdl</a>:</b></p>
+        <div>The path to the wsdl from which the suite is generated.</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${pathToWsdl}</tt></li>
+        </ul><hr /><p><b><a name="targetPackage">targetPackage</a>:</b></p>
+        <div>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;</div>
+        <ul>
+          <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          <li><b>Required</b>: <tt>No</tt></li>
+          <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
+          <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
+        </ul>
+      </div>
     </div>
   </body>
 </html>
