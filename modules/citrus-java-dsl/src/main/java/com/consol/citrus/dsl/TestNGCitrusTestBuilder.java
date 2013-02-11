@@ -291,6 +291,17 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
+     * Purge queues using default connection factory.
+     * @return
+     */
+    protected PurgeJMSQueuesActionDefinition purgeQueues() {
+        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
+        action.setConnectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+        testCase.addTestAction(action);
+        return new PurgeJMSQueuesActionDefinition(action);
+    }
+    
+    /**
      * Creates a new purge message channel action definition
      * for further configuration.
      * @param beanFactory
@@ -399,6 +410,17 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
             testCase.addTestAction(action);
             return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
         }
+    }
+    
+    /**
+     * Add sleep action with default delay time.
+     * @param time
+     */
+    protected SleepAction sleep() {
+        SleepAction action = new SleepAction();
+        testCase.addTestAction(action);
+        
+        return action;
     }
     
     /**
