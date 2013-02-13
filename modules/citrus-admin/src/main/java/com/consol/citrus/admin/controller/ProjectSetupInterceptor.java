@@ -16,6 +16,8 @@
 
 package com.consol.citrus.admin.controller;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -100,7 +102,7 @@ public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
      * @return the excludes the excludes to get.
      */
     public String[] getExcludes() {
-        return excludes;
+        return Arrays.copyOf(excludes, excludes.length);
     }
 
     /**
@@ -108,7 +110,7 @@ public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
      * @param excludes the excludes to set
      */
     public void setExcludes(String[] excludes) {
-        this.excludes = excludes;
+        this.excludes = Arrays.copyOf(excludes, excludes.length);
     }
 
 }
