@@ -503,12 +503,22 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     
     /**
      * Creates a new stop time action.
-     * @param period 
      * @return
      */
-    protected StopTimeAction stopTime(String period) {
+    protected StopTimeAction stopTime() {
         StopTimeAction action = new StopTimeAction();
-        action.setId(period);
+        testCase.addTestAction(action);
+        return new StopTimeAction();
+    }
+    
+    /**
+     * Creates a new stop time action.
+     * @param id 
+     * @return
+     */
+    protected StopTimeAction stopTime(String id) {
+        StopTimeAction action = new StopTimeAction();
+        action.setId(id);
         testCase.addTestAction(action);
         return new StopTimeAction();
     }
