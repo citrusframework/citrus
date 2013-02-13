@@ -71,12 +71,28 @@ public class CitrusSshServerTest {
     }
 
     @Test
-    public void startupAndShutdown() throws IOException {
-        for (boolean b : new boolean[] { true, false }) {
-            prepareServer(b);
-            server.start();
+    public void startupAndShutdownWithPassword() throws IOException {
+        prepareServer(true);
+        server.start();
+        
+        try {
             assertTrue(server.isRunning());
-            new Socket(InetAddress.getLocalHost(), port); // throws exception if it cant connect
+            new Socket("127.0.0.1", port); // throws exception if it can't connect
+        } finally {
+            server.stop();
+            assertFalse(server.isRunning());
+        }
+    }
+    
+    @Test
+    public void startupAndShutdown() throws IOException {
+        prepareServer(false);
+        server.start();
+        
+        try {
+            assertTrue(server.isRunning());
+            new Socket("127.0.0.1", port); // throws exception if it can't connect
+        } finally {
             server.stop();
             assertFalse(server.isRunning());
         }
