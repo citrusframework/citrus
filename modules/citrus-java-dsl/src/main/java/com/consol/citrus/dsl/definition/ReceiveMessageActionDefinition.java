@@ -281,6 +281,25 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     }
     
     /**
+     * Sets schema validation enabled/disabled for this message.
+     * @param enabled
+     * @return
+     */
+    public ReceiveMessageActionDefinition schemaValidation(boolean enabled) {
+        if (validationContext == null) {
+            initializeValidationContext();
+        }
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).setSchemaValidation(enabled);
+        } else {
+            throw new CitrusRuntimeException("Unable to enable/disable schema validation on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
      * Sets message selector string.
      * @param messageSelector
      * @return
