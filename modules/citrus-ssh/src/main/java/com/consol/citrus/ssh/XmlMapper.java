@@ -33,27 +33,41 @@ public class XmlMapper extends XStream {
     private static XppDriver getXppDriver() {
         return new XppDriver() {
             public HierarchicalStreamWriter createWriter(Writer out) {
-                return new PrettyPrintWriter(out) {
-                    boolean cdata = false;
-                    @SuppressWarnings("rawtypes")
-                    public void startNode(String name, Class clazz){
-                        super.startNode(name, clazz);
-                        cdata = (name.equals("command") ||
-                                 name.equals("stdin")  ||
-                                 name.equals("stdout") ||
-                                 name.equals("stderr"));
-                    }
-                    protected void writeText(QuickWriter writer, String text) {
-                        if(cdata) {
-                            writer.write("<![CDATA[");
-                            writer.write(text);
-                            writer.write("]]>");
-                        } else {
-                            writer.write(text);
-                        }
-                    }
-                };
+                return new SshContentPrettyPrintWriter(out);
             }
         };
     }
+    
+    /**
+     * Pretty print writer puts commands to CDATA sections.
+     */
+   private static final class SshContentPrettyPrintWriter extends PrettyPrintWriter {
+       private boolean cdata = false;
+
+       /**
+        * @param writer
+        */
+       private SshContentPrettyPrintWriter(Writer writer) {
+           super(writer);
+       }
+
+       @SuppressWarnings("rawtypes")
+       public void startNode(String name, Class clazz){
+           super.startNode(name, clazz);
+           cdata = (name.equals("command") ||
+                    name.equals("stdin")  ||
+                    name.equals("stdout") ||
+                    name.equals("stderr"));
+       }
+
+       protected void writeText(QuickWriter writer, String text) {
+           if(cdata) {
+               writer.write("<![CDATA[");
+               writer.write(text);
+               writer.write("]]>");
+           } else {
+               writer.write(text);
+           }
+       }
+   }
 }
