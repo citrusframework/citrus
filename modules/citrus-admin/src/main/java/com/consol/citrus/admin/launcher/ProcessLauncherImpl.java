@@ -1,23 +1,18 @@
 package com.consol.citrus.admin.launcher;
 
+import java.io.*;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
- * {@inheritDoc}
- *
  * @author Martin.Maher@consol.de
  * @since 2012.11.30
  */
 public class ProcessLauncherImpl implements ProcessLauncher {
+    
+    /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncherImpl.class);
 
     private boolean processCompleted;
@@ -25,6 +20,10 @@ public class ProcessLauncherImpl implements ProcessLauncher {
     private Process process;
     private List<ProcessListener> processListeners = new ArrayList<ProcessListener>();
 
+    /**
+     * Default constructor.
+     * @param processId
+     */
     public ProcessLauncherImpl(String processId) {
         this.processId = processId;
     }
@@ -69,7 +68,6 @@ public class ProcessLauncherImpl implements ProcessLauncher {
         return processCompleted;
     }
 
-
     /**
      * Launches the process, returning the thread the process is executing within
      *
@@ -80,58 +78,78 @@ public class ProcessLauncherImpl implements ProcessLauncher {
     private Thread launch(final ProcessBuilder processBuilder, final int maxExecutionTimeSeconds) {
         notifyStart(processId);
 
-        Runnable runnable = new Runnable() {
-            public void run() {
-                processCompleted = false;
-                Timer timer = null;
-                int result = 0;
-                Exception caughtException = null;
-
-                BufferedReader br = null;
-                try {
-                    processBuilder.redirectErrorStream(true);
-                    LOG.info("Starting process: " + processBuilder.command());
-                    process = processBuilder.start();
-
-                    if (maxExecutionTimeSeconds > 0) {
-                        // ensure the process doesn't exceed the max execution time
-                        timer = startTimer(maxExecutionTimeSeconds, process);
-                    }
-
-                    // Read output
-                    br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        notifyOutput(processId, line);
-                        Thread.sleep(100);
-                    }
-
-                    // store result
-                    result = process.waitFor();
-                } catch (Exception e) {
-                    caughtException = e;
-                } finally {
-                    // check result
-                    if (caughtException != null) {
-                        notifyFail(processId, caughtException);
-                    } else if (result == 0) {
-                        notifySuccess(processId);
-                    } else {
-                        notifyFail(processId, process.exitValue());
-                    }
-
-                    // tidy up
-                    close(br);
-                    destroyProcess(process);
-                    cancelTimer(timer);
-                    processCompleted = true;
-                }
-            }
-        };
-        Thread thread = new Thread(runnable);
+        Thread thread = new Thread(new LaunchJob(maxExecutionTimeSeconds, processBuilder));
         thread.setDaemon(true);
         thread.start();
         return thread;
+    }
+    
+    /**
+     * Launch job runnable doing the process start magic.
+     */
+    private final class LaunchJob implements Runnable {
+        private final int maxExecutionTimeSeconds;
+        private final ProcessBuilder processBuilder;
+
+        /**
+         * @param maxExecutionTimeSeconds
+         * @param processBuilder
+         */
+        private LaunchJob(int maxExecutionTimeSeconds,
+                ProcessBuilder processBuilder) {
+            this.maxExecutionTimeSeconds = maxExecutionTimeSeconds;
+            this.processBuilder = processBuilder;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void run() {
+            processCompleted = false;
+            Timer timer = null;
+            int result = 0;
+            Exception caughtException = null;
+
+            BufferedReader br = null;
+            try {
+                processBuilder.redirectErrorStream(true);
+                LOG.info("Starting process: " + processBuilder.command());
+                process = processBuilder.start();
+
+                if (maxExecutionTimeSeconds > 0) {
+                    // ensure the process doesn't exceed the max execution time
+                    timer = startTimer(maxExecutionTimeSeconds, process);
+                }
+
+                // Read output
+                br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    notifyOutput(processId, line);
+                    Thread.sleep(100);
+                }
+
+                // store result
+                result = process.waitFor();
+            } catch (Exception e) {
+                caughtException = e;
+            } finally {
+                // check result
+                if (caughtException != null) {
+                    notifyFail(processId, caughtException);
+                } else if (result == 0) {
+                    notifySuccess(processId);
+                } else {
+                    notifyFail(processId, process.exitValue());
+                }
+
+                // tidy up
+                close(br);
+                destroyProcess(process);
+                cancelTimer(timer);
+                processCompleted = true;
+            }
+        }
     }
 
     private void notifyStart(String processId) {
@@ -187,16 +205,16 @@ public class ProcessLauncherImpl implements ProcessLauncher {
     }
 
     private Timer startTimer(final long maxExecutionTimeSeconds, final Process timedProcess) {
-        final int SECOND_IN_MILLISECONDS = 1000;
         Timer timer = new Timer(true);
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                LOG.info(String.format("Stopping process as it didn't complete within the allocated time (%s seconds)", maxExecutionTimeSeconds));
+                LOG.info(String.format("Stopping process as it didn't complete within the allocated time (%s seconds)", 
+                        maxExecutionTimeSeconds));
                 timedProcess.destroy();
             }
         };
-        timer.schedule(task, maxExecutionTimeSeconds * SECOND_IN_MILLISECONDS);
+        timer.schedule(task, maxExecutionTimeSeconds * 1000L);
         return timer;
     }
 
