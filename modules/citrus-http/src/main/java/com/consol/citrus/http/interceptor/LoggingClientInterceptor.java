@@ -17,6 +17,7 @@
 package com.consol.citrus.http.interceptor;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -195,7 +196,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
                 getBody();
             }
             
-            return new String(body);
+            return new String(body, Charset.forName("UTF-8"));
         }
 
         public void close() {
