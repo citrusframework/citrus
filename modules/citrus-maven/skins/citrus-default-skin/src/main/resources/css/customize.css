@@ -57,6 +57,7 @@ body.page {
   background-image: -webkit-linear-gradient(top, #585858, #3d3d3d);
   background-image: -o-linear-gradient(top, #585858, #3d3d3d);
   background-image: linear-gradient(to bottom, #585858, #3d3d3d);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff585858', endColorstr='#ff3d3d3d', GradientType=0);
 }
 
 .navbar-inverse .brand, .navbar-inverse .nav > li > a {
@@ -64,7 +65,6 @@ body.page {
 }
 
 .navbar-inverse .nav > li > a {
-  color: #ffffff;
   font-size: 13px;
   border-left: 1px solid #585858;
 }
