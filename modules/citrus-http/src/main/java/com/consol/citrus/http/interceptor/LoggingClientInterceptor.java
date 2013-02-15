@@ -104,7 +104,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         appendHeaders(request.getHeaders(), builder);
         
         builder.append("\n");
-        builder.append(new String(body));
+        builder.append(body);
         
         return builder.toString(); 
     }
