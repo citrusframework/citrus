@@ -27,6 +27,15 @@
 	        		<message>${i}. Versuch: ${message}</message>
 	        	</echo>
         	</repeat-onerror-until-true>
+          
+            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+                <repeat-onerror-until-true condition="i = 3" index="i">
+                    <echo>
+                        <message>${i}. Versuch: ${message}</message>
+                    </echo>
+                    <fail />
+                </repeat-onerror-until-true>
+            </assert>
         </actions>
     </testcase>
 </spring:beans>

@@ -642,13 +642,23 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
-     * Action catches poissible exceptions in neste test actions.
+     * Action catches possible exceptions in nested test actions.
      * @param exception
      * @param actions
      * @return
      */
     protected Catch catchException(Class<? extends Throwable> exception, TestAction ... actions) {
         return catchException(exception.getName(), actions);
+    }
+    
+    /**
+     * Action catches possible exceptions in nested test actions.
+     * @param exception
+     * @param actions
+     * @return
+     */
+    protected Catch catchException(TestAction ... actions) {
+        return catchException(CitrusRuntimeException.class.getName(), actions);
     }
     
     /**
