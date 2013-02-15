@@ -320,6 +320,9 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
         public Environment getEnvironment() {
             return applicationContext.getEnvironment();
         }
+        public String getApplicationName() {
+            return applicationContext.getApplicationName();
+        }
     }
 
     /**

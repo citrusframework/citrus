@@ -130,7 +130,9 @@ public class XMLUtilsTest {
         String xml = "<testRequest><message>Hello</message></testRequest>";
 
         Assert.assertEquals(XMLUtils.prettyPrint(xml).trim(),
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<testRequest>\n    <message>Hello</message>\n</testRequest>");
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?><testRequest>\n" +
+                "   <message>Hello</message>\n" +
+                "</testRequest>");
     }
 
     @Test
