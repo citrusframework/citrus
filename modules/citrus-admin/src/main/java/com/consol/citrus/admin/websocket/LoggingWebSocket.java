@@ -80,6 +80,7 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({"PMD.CloseResource"})
     public void onClose(int closeCode, String message) {
         LOG.debug("Web socket connection closed");
         Iterator<Connection> itor = connections.iterator();
@@ -177,6 +178,7 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
      * Push log message to connected clients.
      * @param message
      */
+    @SuppressWarnings({"PMD.CloseResource"})
     private void logMessage(String message) {
         Iterator<Connection> itor = connections.iterator();
         while (itor.hasNext()) {
