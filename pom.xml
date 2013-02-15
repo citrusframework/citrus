@@ -376,6 +376,10 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.fusesource.mqtt-client</groupId>
+            <artifactId>mqtt-client</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       
