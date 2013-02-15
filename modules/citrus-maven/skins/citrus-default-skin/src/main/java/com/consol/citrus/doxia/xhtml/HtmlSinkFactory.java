@@ -29,11 +29,11 @@ import org.apache.maven.doxia.sink.Sink;
 public class HtmlSinkFactory extends AbstractXmlSinkFactory {
     /** {@inheritDoc} */
     protected Sink createSink( Writer writer, String encoding ) {
-        return new HtmlSink( writer, encoding );
+        return new HtmlSink( writer );
     }
 
     /** {@inheritDoc} */
     protected Sink createSink( Writer writer, String encoding, String languageId ) {
-        return new HtmlSink( writer, encoding, languageId );
+        return new HtmlSink( writer );
     }
 }
