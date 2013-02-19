@@ -14,37 +14,30 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class RepeatUntilTrueJavaITest extends TestNGCitrusTestBuilder {
+public class CatchJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        variable("max", "3");
+        catchException(fail("Fail!"));
         
-        repeat(echo("index is: ${i}")).until("i gt citrus:randomNumber(1)").index("i");
+        catchException("com.consol.citrus.exceptions.CitrusRuntimeException", fail("Fail!"));
         
-        repeat(echo("index is: ${i}")).until("i gt= 5").index("i");
-        
-        repeat(echo("index is: ${i}")).until("(i gt 5) or (i = 5)").index("i");
-        
-        repeat(echo("index is: ${i}")).until("(i gt 5) and (i gt 3)").index("i");
-        
-        repeat(echo("index is: ${i}")).until("i gt 0").index("i");
-        
-        repeat(echo("index is: ${i}")).until("${max} lt i").index("i");
+        catchException(CitrusRuntimeException.class, fail("Fail!"));
     }
     
     @Test
-    public void repeatUntilTrueITest(ITestContext testContext) {
+    public void catchITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

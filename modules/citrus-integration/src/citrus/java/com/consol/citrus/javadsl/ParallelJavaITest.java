@@ -14,48 +14,54 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class QueryDatabaseRetriesJavaITest extends TestNGCitrusTestBuilder {
-    
-    @Autowired
-    @Qualifier("testDataSource")
-    private DataSource dataSource;
+public class ParallelJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
         parallel(
+            sleep(1.5), 
             sequential(
-                sql(dataSource)
-                    .sqlResource("classpath:com/consol/citrus/actions/script.sql"),
-                repeatOnError(
-                    query(dataSource)
-                        .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
-                        .validate("CUSTOMER_CNT", "0")
-                ).autoSleep(1L).index("i").until("i = 5")
+                sleep(1.0),
+                echo("1")
             ),
-            sequential(
-                sleep(3000L),
-                sql(dataSource)
-                    .statement("DELETE FROM CUSTOMERS")
-            )
+            echo("2"),
+            echo("3"),
+            iterate(
+                echo("10")
+            ).condition("i lt= 5").index("i")
         );
+        
+        assertException(
+            parallel(
+                sleep(1.5), 
+                sequential(
+                    sleep(1.0),
+                    fail("This went wrong too"),
+                    echo("1")
+                ),
+                echo("2"),
+                fail("This went wrong too"),
+                echo("3"),
+                iterate(
+                    echo("10")
+                ).condition("i lt= 5").index("i")
+            )
+        ).exception(CitrusRuntimeException.class);
     }
     
     @Test
-    public void queryDatabaseRetriesITest(ITestContext testContext) {
+    public void parallelITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

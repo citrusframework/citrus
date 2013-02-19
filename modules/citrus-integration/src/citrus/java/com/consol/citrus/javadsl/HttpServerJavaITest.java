@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;

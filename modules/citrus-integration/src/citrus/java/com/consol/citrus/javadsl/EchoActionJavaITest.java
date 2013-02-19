@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -24,16 +24,17 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 /**
  * @author Christoph Deppisch
  */
-public class SleepActionJavaITest extends TestNGCitrusTestBuilder {
+public class EchoActionJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
-    protected void configure() {
-        sleep(0.5);
-        sleep();
+    public void configure() {
+        echo("Hello Citrus!");
+        
+        echo("Today is citrus:currentDate()");
     }
     
     @Test
-    public void sleepActionITest(ITestContext testContext) {
+    public void echoActionITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

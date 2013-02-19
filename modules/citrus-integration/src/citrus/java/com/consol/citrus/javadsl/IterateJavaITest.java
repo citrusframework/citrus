@@ -14,38 +14,41 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
+public class IterateJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        variable("message", "Hello TestFramework");
+        variable("max", "3");
         
-        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
+        iterate(echo("index is: ${i}")).condition("i lt= citrus:randomNumber(1)").index("i");
         
-        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i").autoSleep(0L);
+        iterate(echo("index is: ${i}")).condition("i lt 20").index("i");
         
-        assertException( 
-            repeatOnError(
-                    echo("${i}. Versuch: ${message}"), 
-                    fail("")
-            ).until("i = 3").index("i")
-        ).exception(CitrusRuntimeException.class);
+        iterate(echo("index is: ${i}")).condition("(i lt 5) or (i = 5)").index("i");
         
+        iterate(echo("index is: ${i}")).condition("(i lt 5) and (i lt 3)").index("i");
+        
+        iterate(echo("index is: ${i}")).condition("i = 0").index("i");
+        
+        iterate(echo("index is: ${i}")).condition("${max} gt= i").index("i");
+        
+        iterate(echo("index is: ${i}")).condition("i lt= 50").index("i")
+                                       .startsWith(0)
+                                       .step(5);
     }
     
     @Test
-    public void repeatOnErrorITest(ITestContext testContext) {
+    public void iterateITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

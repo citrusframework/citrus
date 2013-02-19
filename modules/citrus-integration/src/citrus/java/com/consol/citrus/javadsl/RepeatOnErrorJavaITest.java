@@ -14,32 +14,38 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveTimeoutJavaITest extends TestNGCitrusTestBuilder {
-    
-    @Autowired
-    @Qualifier("dummyMessageReceiver")
-    private MessageReceiver messageReceiver;
+public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        expectTimeout(messageReceiver).timeout(500);
+        variable("message", "Hello TestFramework");
+        
+        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
+        
+        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i").autoSleep(0L);
+        
+        assertException( 
+            repeatOnError(
+                    echo("${i}. Versuch: ${message}"), 
+                    fail("")
+            ).until("i = 3").index("i")
+        ).exception(CitrusRuntimeException.class);
+        
     }
     
     @Test
-    public void receiveTimeoutITest(ITestContext testContext) {
+    public void repeatOnErrorITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

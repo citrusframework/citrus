@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
@@ -24,30 +28,28 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 /**
  * @author Christoph Deppisch
  */
-public class InputActionJavaITest extends TestNGCitrusTestBuilder {
+public class FinallyBlockJavaITest extends TestNGCitrusTestBuilder {
+    
+    @Autowired
+    @Qualifier("testDataSource")
+    private DataSource dataSource;
     
     @Override
     protected void configure() {
-        variable("userinput", "");
-        variable("userinput1", "");
-        variable("userinput2", "y");
-        variable("userinput3", "yes");
-        variable("userinput4", "");
+        variable("orderId", "citrus:randomNumber(5)");
+
+        sql(dataSource)
+            .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')");
         
-        input();
-        echo("user input was: ${userinput}");
-        input().message("Now press enter:").result("userinput1");
-        echo("user input was: ${userinput1}");
-        input().message("Do you want to continue?").answers("y", "n").result("userinput2");
-        echo("user input was: ${userinput2}");
-        input().message("Do you want to continue?").answers("yes", "no").result("userinput3");
-        echo("user input was: ${userinput3}");
-        input().result("userinput4");
-        echo("user input was: ${userinput4}");
+        echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
+        
+        doFinally(
+                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
+        );
     }
     
     @Test
-    public void inputActionITest(ITestContext testContext) {
+    public void finallyBlockITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

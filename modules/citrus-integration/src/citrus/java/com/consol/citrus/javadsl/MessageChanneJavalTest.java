@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.channel;
+package com.consol.citrus.javadsl;
 
 import java.util.*;
 

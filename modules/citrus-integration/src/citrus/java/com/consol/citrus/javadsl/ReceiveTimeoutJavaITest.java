@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
-
-import javax.sql.DataSource;
+package com.consol.citrus.javadsl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,32 +22,24 @@ import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.message.MessageReceiver;
 
 /**
  * @author Christoph Deppisch
  */
-public class FinallyBlockJavaITest extends TestNGCitrusTestBuilder {
+public class ReceiveTimeoutJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
-    @Qualifier("testDataSource")
-    private DataSource dataSource;
+    @Qualifier("dummyMessageReceiver")
+    private MessageReceiver messageReceiver;
     
     @Override
     protected void configure() {
-        variable("orderId", "citrus:randomNumber(5)");
-
-        sql(dataSource)
-            .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')");
-        
-        echo("ORDER creation time: citrus:currentDate('dd.MM.yyyy')");
-        
-        doFinally(
-                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
-        );
+        expectTimeout(messageReceiver).timeout(500);
     }
     
     @Test
-    public void finallyBlockITest(ITestContext testContext) {
+    public void receiveTimeoutITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

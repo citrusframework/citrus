@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -24,21 +24,17 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 /**
  * @author Christoph Deppisch
  */
-public class StopTimeJavaITest extends TestNGCitrusTestBuilder {
+public class GlobalPropertiesJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        stopTime();
-        stopTime("watchId");
-        sleep(1000L);
-        stopTime("watchId");
-        sleep(2000L);
-        stopTime();
-        stopTime("watchId");
+        echo("Project name is: ${project.name}");
+        
+        echo("Testing global variables from properties: ${globalWelcomingText}");
     }
     
     @Test
-    public void stopTimeITest(ITestContext testContext) {
+    public void globalPropertiesITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

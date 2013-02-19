@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -24,31 +24,30 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 /**
  * @author Christoph Deppisch
  */
-public class IterateJavaITest extends TestNGCitrusTestBuilder {
+public class InputActionJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        variable("max", "3");
+        variable("userinput", "");
+        variable("userinput1", "");
+        variable("userinput2", "y");
+        variable("userinput3", "yes");
+        variable("userinput4", "");
         
-        iterate(echo("index is: ${i}")).condition("i lt= citrus:randomNumber(1)").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("i lt 20").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("(i lt 5) or (i = 5)").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("(i lt 5) and (i lt 3)").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("i = 0").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("${max} gt= i").index("i");
-        
-        iterate(echo("index is: ${i}")).condition("i lt= 50").index("i")
-                                       .startsWith(0)
-                                       .step(5);
+        input();
+        echo("user input was: ${userinput}");
+        input().message("Now press enter:").result("userinput1");
+        echo("user input was: ${userinput1}");
+        input().message("Do you want to continue?").answers("y", "n").result("userinput2");
+        echo("user input was: ${userinput2}");
+        input().message("Do you want to continue?").answers("yes", "no").result("userinput3");
+        echo("user input was: ${userinput3}");
+        input().result("userinput4");
+        echo("user input was: ${userinput4}");
     }
     
     @Test
-    public void iterateITest(ITestContext testContext) {
+    public void inputActionITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

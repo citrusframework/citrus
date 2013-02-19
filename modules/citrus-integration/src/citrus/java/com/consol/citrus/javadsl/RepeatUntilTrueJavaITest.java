@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class FailActionJavaTest extends TestNGCitrusTestBuilder {
+public class RepeatUntilTrueJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
-    public void configure() {
-        assertException(fail("Failing ITest"))
-            .exception(CitrusRuntimeException.class)
-            .message("Failing ITest");
+    protected void configure() {
+        variable("max", "3");
         
-        assertException(
-                assertException(sleep(0.5))
-                    .exception(CitrusRuntimeException.class)
-        ).exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@");
+        repeat(echo("index is: ${i}")).until("i gt citrus:randomNumber(1)").index("i");
+        
+        repeat(echo("index is: ${i}")).until("i gt= 5").index("i");
+        
+        repeat(echo("index is: ${i}")).until("(i gt 5) or (i = 5)").index("i");
+        
+        repeat(echo("index is: ${i}")).until("(i gt 5) and (i gt 3)").index("i");
+        
+        repeat(echo("index is: ${i}")).until("i gt 0").index("i");
+        
+        repeat(echo("index is: ${i}")).until("${max} lt i").index("i");
     }
     
     @Test
-    public void failActionITest(ITestContext testContext) {
+    public void repeatUntilTrueITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

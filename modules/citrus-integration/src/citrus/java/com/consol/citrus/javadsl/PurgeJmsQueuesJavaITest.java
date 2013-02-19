@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;

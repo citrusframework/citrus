@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class CatchJavaITest extends TestNGCitrusTestBuilder {
+public class SleepActionJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
-        catchException(fail("Fail!"));
-        
-        catchException("com.consol.citrus.exceptions.CitrusRuntimeException", fail("Fail!"));
-        
-        catchException(CitrusRuntimeException.class, fail("Fail!"));
+        sleep(0.5);
+        sleep();
     }
     
     @Test
-    public void catchITest(ITestContext testContext) {
+    public void sleepActionITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

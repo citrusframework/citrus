@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class SequentialJavaITest extends TestNGCitrusTestBuilder {
+public class FailActionJavaTest extends TestNGCitrusTestBuilder {
     
     @Override
-    protected void configure() {
-        sequential(
-            stopTime(),
-            sleep(1.0),
-            echo("Hello Citrus"),
-            stopTime()
-        );
+    public void configure() {
+        assertException(fail("Failing ITest"))
+            .exception(CitrusRuntimeException.class)
+            .message("Failing ITest");
+        
+        assertException(
+                assertException(sleep(0.5))
+                    .exception(CitrusRuntimeException.class)
+        ).exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@");
     }
     
     @Test
-    public void sequentialITest(ITestContext testContext) {
+    public void failActionITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }
