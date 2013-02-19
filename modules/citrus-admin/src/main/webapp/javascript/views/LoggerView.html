@@ -1,3 +1,5 @@
+<a id="toggle-log-content" class="btn-small btn-primary pull-right log-expanded">Collapse <i class="icon-minus icon-white"></i></a>
+
 <ul id="log-tabs" class="nav nav-tabs">
     <li class="active">
         <a href="#general-tab" data-toggle="tab">General</a>
@@ -19,8 +21,8 @@
 
 <code id="log-tab-pane" class="template">
     <div class="tab-pane" id="log-tab-{{var name='hash'}}">
-        <div id="log-details-{{var name='hash'}}">
-            <pre class="log">Log messages</pre>
+        <div id="log-details-{{var name='hash'}}" style="position: relative;">
+            <pre class="log"><button id="log-tab-cancel-{{var name='hash'}}" class="btn-mini btn-danger" style="position: absolute; top: 20px; right: 20px;">Cancel</button></pre>
         </div>
     </div>
 </code>

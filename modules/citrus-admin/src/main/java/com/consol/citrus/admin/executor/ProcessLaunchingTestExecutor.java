@@ -18,6 +18,7 @@ package com.consol.citrus.admin.executor;
 
 import java.io.File;
 
+import com.consol.citrus.admin.launcher.ProcessMonitor;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +34,11 @@ import com.consol.citrus.admin.websocket.LoggingWebSocket;
 public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
 
     @Autowired
-    private ConfigService configService;
+    private ProcessMonitor processMonitor;
     
+    @Autowired
+    private ConfigService configService;
+
     @Autowired
     private LoggingWebSocket loggingWebSocket;
     
@@ -45,7 +49,7 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
     public void execute(String testName) throws ParseException {
         File file = new File(configService.getProjectHome());
         ProcessBuilder processBuilder = new ExecuteSingleTest(file, testName).getProcessBuilder();
-        ProcessLauncher processLauncher = new ProcessLauncherImpl(testName);
+        ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
         processLauncher.addProcessListener(loggingWebSocket);
         processLauncher.launchAndContinue(processBuilder, 0);
     }

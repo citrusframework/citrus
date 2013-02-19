@@ -23,10 +23,16 @@ public class ProcessLauncherImpl implements ProcessLauncher {
     private boolean processCompleted;
     private String processId;
     private Process process;
+    private ProcessMonitor processMonitor;
     private List<ProcessListener> processListeners = new ArrayList<ProcessListener>();
 
-    public ProcessLauncherImpl(String processId) {
+    public ProcessLauncherImpl(ProcessMonitor processMonitor, String processId) {
         this.processId = processId;
+        this.processMonitor = processMonitor;
+    }
+
+    public String getProcessId() {
+        return processId;
     }
 
     /**
@@ -91,6 +97,8 @@ public class ProcessLauncherImpl implements ProcessLauncher {
                 try {
                     processBuilder.redirectErrorStream(true);
                     LOG.info("Starting process: " + processBuilder.command());
+
+                    addProcessToMonitor();
                     process = processBuilder.start();
 
                     if (maxExecutionTimeSeconds > 0) {
@@ -125,6 +133,7 @@ public class ProcessLauncherImpl implements ProcessLauncher {
                     destroyProcess(process);
                     cancelTimer(timer);
                     processCompleted = true;
+                    removeProcessFromMonitor();
                 }
             }
         };
@@ -204,6 +213,14 @@ public class ProcessLauncherImpl implements ProcessLauncher {
         if (timer != null) {
             timer.cancel();
         }
+    }
+
+    private void addProcessToMonitor() {
+        this.processMonitor.add(this);
+    }
+
+    private void removeProcessFromMonitor() {
+        this.processMonitor.remove(this);
     }
 
 }

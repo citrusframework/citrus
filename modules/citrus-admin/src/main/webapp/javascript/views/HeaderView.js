@@ -5,9 +5,9 @@
           render: function() {
               $(this.el).html(TemplateManager.template('HeaderView',{}));
               
-              $('ul.nav li').each(function(index) {
+              $('#header-nav li').each(function(index) {
                   $(this).click(function() {
-                      $('ul.nav li').removeClass('active');
+                      $('#header-nav li').removeClass('active');
                       $(this).addClass('active');
                   });
               });

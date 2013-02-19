@@ -6,9 +6,33 @@
                 this.model.on('change:onmessage', this.onSocketMessage, this);
             },
 
+            events: {
+                "show .nav-tabs a": "navigateTab",
+                "click #toggle-log-content" : "toggleLogContent"
+
+            },
+
+            navigateTab: function(e) {
+                var hash = $(e.currentTarget).attr('href');
+                localStorage.setItem('lastLogTab', hash);
+                window.location.hash = hash;
+            },
+
             render: function () {
                 $(this.el).html(TemplateManager.template('LoggerView', { socket: this.model }));
                 return this;
+            },
+
+            toggleLogContent: function() {
+                if (!$('#toggle-log-content').hasClass('log-expanded')) {
+                    $('div#log-tab-content').show(200);
+                    $('#toggle-log-content').addClass('log-expanded');
+                    $('#toggle-log-content').html('Collapse <i class="icon-minus icon-white"></i>');
+                } else {
+                    $('div#log-tab-content').hide(200);
+                    $('#toggle-log-content').removeClass('log-expanded');
+                    $('#toggle-log-content').html('Expand <i class="icon-plus icon-white"></i>');
+                }
             },
 
             onSocketMessage: function (message) {
@@ -30,16 +54,19 @@
 
                     if ("START" == jsMessage.event) {
                         this.createOrShowProcessTab(processId, idHash);
-                        $(logId).html(jsMessage.msg);
+                        this.displayCancelButton(idHash);
+                        $(logId).append(msg);
                     }
                     else if ("MESSAGE" == jsMessage.event) {
                         $(logId).append(msg)
                     }
                     else if ("SUCCESS" == jsMessage.event) {
                         $(logId).append(msg)
+                        this.hideCancelButton(idHash);
                     }
                     else if ("FAILED" == jsMessage.event) {
                         $(logId).append(msg)
+                        this.hideCancelButton(idHash);
                     }
                     else {
                         return;
@@ -65,12 +92,30 @@
                         // remove tab item
                         $(this).parent('li').remove();
                     });
+
+                    // bind cancel function on newly created tab
+                    $('#log-tab-cancel-' + idHash).click(function () {
+                        $.ajax({
+                            url: "testcase/stop/" + processId,
+                            type: 'GET',
+                            dataType: "json",
+                            success: function() {
+                            }
+                        });
+                    });
                 }
 
                 // show processId details tab
                 $('#log-tabs a[href="#log-tab-' + idHash + '"]').tab('show');
-            }
+            },
 
+            displayCancelButton: function (idHash) {
+                $('#log-tab-cancel-' + idHash).show('fast');
+            },
+
+            hideCancelButton: function (idHash) {
+                $('#log-tab-cancel-' + idHash).hide('fast');
+            }
         });
 
         return LoggerView;

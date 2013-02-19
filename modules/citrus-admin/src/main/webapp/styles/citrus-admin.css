@@ -155,3 +155,9 @@ div.file-tree {
   border-width: 1px;
   padding-right: 22px;
 }
+
+#toggle-log-content {
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+}

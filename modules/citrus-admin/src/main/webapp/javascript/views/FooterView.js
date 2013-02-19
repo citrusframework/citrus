@@ -5,11 +5,18 @@
           render: function() {
               $(this.el).html(TemplateManager.template('FooterView',{}));
 
-              $('#logger').html(new LoggerView({ model: CitrusWebSocket }).render().el);
+              $('#logger').html(this.getLoggerView().render().el);
               
               return this;
-          }
+          },
         
+          getLoggerView: function() {
+              if(this.loggerView == null) {
+                  this.loggerView = new LoggerView({ model: CitrusWebSocket });
+              }
+              return this.loggerView;
+          }
+
         });
         
         return FooterView;

@@ -20,6 +20,8 @@ public class TestMavenProcessLaunch {
     // adapt this accordingly
     private static final File PROJECT_ROOT_DIR = new File("/Users/maherm/dev/projects/internal/citrus/modules/citrus-integration");
 
+    private static ProcessMonitor processMonitor = new ProcessMonitorImpl();
+
     public static void main(final String[] args) throws IOException, InterruptedException {
         rebuildProject(0);
 
@@ -31,7 +33,7 @@ public class TestMavenProcessLaunch {
     private static ProcessLauncher singleTest(int maxExecutionTimeSeconds) throws InterruptedException {
         ProcessBuilder pb = new ExecuteSingleTest(PROJECT_ROOT_DIR, "CreateVariablesITest").getProcessBuilder();
         ProcessListener pli = getProcessListener();
-        ProcessLauncherImpl pla = new ProcessLauncherImpl("CreateVariablesITest");
+        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, "CreateVariablesITest");
         pla.addProcessListener(pli);
         pla.launchAndWait(pb, maxExecutionTimeSeconds);
         return pla;
@@ -40,7 +42,7 @@ public class TestMavenProcessLaunch {
     private static ProcessLauncher allTests(int maxExecutionTimeSeconds) throws InterruptedException {
         ProcessBuilder pb = new ExecuteAllTests(PROJECT_ROOT_DIR).getProcessBuilder();
         ProcessListener pli = getProcessListener();
-        ProcessLauncherImpl pla = new ProcessLauncherImpl("all-tests");
+        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, "all-tests");
         pla.addProcessListener(pli);
         pla.launchAndWait(pb, maxExecutionTimeSeconds);
         return pla;
@@ -49,7 +51,7 @@ public class TestMavenProcessLaunch {
     private static ProcessLauncher rebuildProject(int maxExecutionTimeSeconds) throws InterruptedException {
         ProcessBuilder pb = new RebuildProject(PROJECT_ROOT_DIR).getProcessBuilder();
         ProcessListener pli = getProcessListener();
-        ProcessLauncherImpl pla = new ProcessLauncherImpl("rebuild");
+        ProcessLauncherImpl pla = new ProcessLauncherImpl(processMonitor, "rebuild");
         pla.addProcessListener(pli);
         pla.launchAndWait(pb, maxExecutionTimeSeconds);
         return pla;

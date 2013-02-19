@@ -13,6 +13,12 @@ package com.consol.citrus.admin.launcher;
 public interface ProcessLauncher {
 
     /**
+     * Returns the ID of the process launched
+     * @return
+     */
+    String getProcessId();
+
+    /**
      * Launches a new process. The caller is blocked or waits until the process terminates normally or has exceeded the
      * maxExecutionTime.
      *

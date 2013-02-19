@@ -18,6 +18,7 @@ package com.consol.citrus.admin.controller;
 
 import java.util.List;
 
+import com.consol.citrus.admin.launcher.ProcessMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,9 @@ import com.consol.citrus.admin.service.TestCaseService;
 @Controller
 @RequestMapping("/testcase")
 public class TestCaseController {
+
+    @Autowired
+    private ProcessMonitor processMonitor;
 
     @Autowired
     private TestCaseService testCaseService;
@@ -57,5 +61,12 @@ public class TestCaseController {
     public String executeTest(@PathVariable("name") String testName) {
         testCaseService.executeTest(testName);
         return "LAUNCHED";
+    }
+
+    @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })
+    @ResponseBody
+    public String stopTest(@PathVariable("processId") String processId) {
+        processMonitor.stopProcess(processId);
+        return "STOPPED";
     }
 }
