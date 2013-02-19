@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionJavaITest extends TestNGCitrusTestBuilder {
+public class FailActionJavaTest extends TestNGCitrusTestBuilder {
     
     @Override
     public void configure() {
-        echo("Hello Citrus!");
+        assertException(fail("Failing ITest"))
+            .exception(CitrusRuntimeException.class)
+            .message("Failing ITest");
         
-        echo("Today is citrus:currentDate()");
+        assertException(
+                assertException(sleep(0.5))
+                    .exception(CitrusRuntimeException.class)
+        ).exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@");
     }
     
     @Test
-    public void echoActionITest(ITestContext testContext) {
+    public void failActionITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

@@ -52,8 +52,25 @@
     </moduleSet>
     <moduleSet>
       <includes>
+        <include>com.consol.citrus:citrus-ssh</include>
+      </includes>
+      <binaries>
+        <outputDirectory>dist</outputDirectory>
+        <unpack>false</unpack>
+        <dependencySets>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+          </dependencySet>
+        </dependencySets>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <includes>
         <include>com.consol.citrus:citrus-http</include>
-        <include>com.consol.citrus:citrus-tibco</include>
+        <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus:citrus-adapter</include>
         <include>com.consol.citrus.ant:citrus-ant-tasks</include>
         <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
@@ -294,6 +311,20 @@
     </fileSet>
     <fileSet>
         <directory>modules/citrus-ws/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-ssh/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-java-dsl/target</directory>
         <outputDirectory>src</outputDirectory>
         <includes>
             <include>*sources.jar</include>

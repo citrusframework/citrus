@@ -27,7 +27,7 @@ import org.springframework.beans.factory.*;
  */
 public abstract class AbstractServer implements Server, InitializingBean, DisposableBean, BeanNameAware {
     /** Name of this server (will be injected through Spring) */
-    private String name = "";
+    private String name = getClass().getSimpleName().toLowerCase();
     
     /** Running flag */
     private boolean running = false;
@@ -41,10 +41,8 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
     /**  Monitor for startup and running lifecycle */
     private Object runningLock = new Object();
     
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(Server.class);
+    /** Logger */
+    private Logger log = LoggerFactory.getLogger(getClass());
     
     /**
      * @see com.consol.citrus.server.Server#start()

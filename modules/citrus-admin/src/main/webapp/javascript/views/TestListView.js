@@ -47,7 +47,7 @@
               var searchKey = $('#test-name').val();
               
               if (searchKey) {
-                  if (searchKey.indexOf(".*")) {
+                  if (searchKey.indexOf(".*") > 0) {
                       this.searchResults = _.where(this.tests, {packageName: searchKey.substring(0, searchKey.length - 2)});
                   } else {
                       this.searchResults = _.where(this.tests, {name: searchKey});

@@ -84,7 +84,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     
     @Override
     public XmlValidator createValidator() throws IOException {
-        return XmlValidatorFactory.createValidator(schemas.toArray(new Resource[] {}), W3C_XML_SCHEMA_NS_URI);
+        return XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), W3C_XML_SCHEMA_NS_URI);
     }
     
     /**

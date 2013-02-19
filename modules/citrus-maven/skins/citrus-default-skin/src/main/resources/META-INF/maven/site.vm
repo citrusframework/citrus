@@ -51,6 +51,13 @@
 <li><a href="$currentItemHref">$item.name</a></li> 
   #end
 #end
+#macro ( bodyClass )
+  #if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) ) )
+home
+  #else
+page
+  #end
+#end
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8"/>
@@ -63,7 +70,6 @@
     <script src="js/prettify.js"></script>
 
     <link href="css/bootstrap.css" rel="stylesheet"/>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
     <link href="css/prettify.css" rel="stylesheet"/>
     <link href="css/customize.css" rel="stylesheet"/>
 
@@ -95,7 +101,7 @@
 
     $headContent
   </head>
-  <body>
+  <body class="#bodyClass()">
     <div class="container">
       <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -118,7 +124,7 @@
       $bodyContent
       
       <footer>
-          <span>&copy; 2008-2012 ConSol* Software GmbH</span>
+          <span>&copy; 2008-2013 ConSol* Software GmbH</span>
           <div class="pull-right">
             <a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a>&nbsp;|&nbsp;
             <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">Issues</a>&nbsp;|&nbsp;

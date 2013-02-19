@@ -12,15 +12,12 @@
         <description>
 			Test of action sequence
 		</description>
-		<variables>
-			<variable name="max" value="3"/>
-		</variables>
         <actions>
 			<sequential>
 				<trace-time/>
 				<sleep time="1.0"/>
 				<echo>
-					<message>Hallo TestFramework</message>
+					<message>Hello Citrus</message>
 				</echo>
 				<trace-time/>
 			</sequential>

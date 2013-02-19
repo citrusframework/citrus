@@ -221,16 +221,15 @@ public abstract class XPathUtils {
     }
 
     /**
-     * Construct a xPath expression insdtance with given expression string and namespace context.
+     * Construct a xPath expression instance with given expression string and namespace context.
      * If namespace context is not specified a default context is built from the XML node
      * that is evaluated against.
-     * @param node
      * @param xPathExpression
      * @param nsContext
      * @return
      * @throws XPathExpressionException
      */
-    private static XPathExpression buildExpression(Node node, String xPathExpression, NamespaceContext nsContext)
+    private static XPathExpression buildExpression(String xPathExpression, NamespaceContext nsContext)
             throws XPathExpressionException {
         XPath xpath = xPathFactory.newXPath();
         xpath.setNamespaceContext(nsContext);
@@ -258,7 +257,7 @@ public abstract class XPathUtils {
      */
     private static Object evaluateExpression(Node node, String xPathExpression, NamespaceContext nsContext, QName returnType) {
         try {
-            return buildExpression(node, xPathExpression, nsContext).evaluate(node, returnType);
+            return buildExpression(xPathExpression, nsContext).evaluate(node, returnType);
         } catch (XPathExpressionException e) {
             throw new CitrusRuntimeException("Can not evaluate xpath expression '"+xPathExpression+"'", e);
         }

@@ -40,19 +40,10 @@ public class HtmlSink extends AbstractXmlSink {
      * @param writer
      * @param encoding
      */
-    public HtmlSink(Writer writer, String encoding) {
+    public HtmlSink(Writer writer) {
         this.writer = writer;
     }
 
-    /**
-     * @param writer
-     * @param encoding
-     * @param languageId
-     */
-    public HtmlSink(Writer writer, String encoding, String languageId) {
-        this(writer, encoding);
-    }
-    
     @Override
     public void head() {
         init();

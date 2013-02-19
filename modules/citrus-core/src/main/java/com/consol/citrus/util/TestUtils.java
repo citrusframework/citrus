@@ -62,14 +62,17 @@ public abstract class TestUtils {
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
+            Resource testFileResource = new ClassPathResource(testFilePath + ".xml");
+            if (!testFileResource.exists()) {
+                return failureStack;
+            }
+            
             // first check if test failed during setup
             if (test.getLastExecutedAction() == null) {
                 failureStack.add(new FailureStackElement(testFilePath, "init", 0L));
                 // no actions were executed yet failure caused by test setup: abort
                 return failureStack;
             }
-            
-            Resource testFileResource = new ClassPathResource(testFilePath + ".xml");
             
             SAXParserFactory factory = SAXParserFactory.newInstance();
             XMLReader reader = factory.newSAXParser().getXMLReader();

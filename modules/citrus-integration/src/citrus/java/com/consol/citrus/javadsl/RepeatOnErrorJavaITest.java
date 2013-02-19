@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.actions;
+package com.consol.citrus.javadsl;
 
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
  */
-public class CreateVariablesJavaITest extends TestNGCitrusTestBuilder {
+public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
     
     @Override
-    public void configure() {
-        variable("myVariable", "12345");
-        variable("newValue", "54321");
+    protected void configure() {
+        variable("message", "Hello TestFramework");
         
-        echo("Current variable value: ${myVariable}");
+        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
         
-        variables().add("myVariable", "${newValue}");
-        variables().add("new", "This is a test");
+        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i").autoSleep(0L);
         
-        echo("Current variable value: ${myVariable}");
+        assertException( 
+            repeatOnError(
+                    echo("${i}. Versuch: ${message}"), 
+                    fail("")
+            ).until("i = 3").index("i")
+        ).exception(CitrusRuntimeException.class);
         
-        echo("New variable 'new' has the value: ${new}");
-        
-        groovy("assert ${myVariable} == 54321");
     }
     
     @Test
-    public void createVariablesITest(ITestContext testContext) {
+    public void repeatOnErrorITest(ITestContext testContext) {
         executeTest(testContext);
     }
 }

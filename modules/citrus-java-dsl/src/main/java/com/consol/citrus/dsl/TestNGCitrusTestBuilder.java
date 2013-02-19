@@ -23,7 +23,6 @@ import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
 import org.testng.ITestContext;
 
 import com.consol.citrus.*;
@@ -292,6 +291,17 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
+     * Purge queues using default connection factory.
+     * @return
+     */
+    protected PurgeJMSQueuesActionDefinition purgeQueues() {
+        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
+        action.setConnectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+        testCase.addTestAction(action);
+        return new PurgeJMSQueuesActionDefinition(action);
+    }
+    
+    /**
      * Creates a new purge message channel action definition
      * for further configuration.
      * @param beanFactory
@@ -403,6 +413,17 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
+     * Add sleep action with default delay time.
+     * @param time
+     */
+    protected SleepAction sleep() {
+        SleepAction action = new SleepAction();
+        testCase.addTestAction(action);
+        
+        return action;
+    }
+    
+    /**
      * Add sleep action with time in milliseconds.
      * @param time
      */
@@ -482,12 +503,22 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     
     /**
      * Creates a new stop time action.
-     * @param period 
      * @return
      */
-    protected StopTimeAction stopTime(String period) {
+    protected StopTimeAction stopTime() {
         StopTimeAction action = new StopTimeAction();
-        action.setId(period);
+        testCase.addTestAction(action);
+        return new StopTimeAction();
+    }
+    
+    /**
+     * Creates a new stop time action.
+     * @param id 
+     * @return
+     */
+    protected StopTimeAction stopTime(String id) {
+        StopTimeAction action = new StopTimeAction();
+        action.setId(id);
         testCase.addTestAction(action);
         return new StopTimeAction();
     }
@@ -572,8 +603,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      */
     protected AssertDefinition assertException(TestAction testAction) {
         Assert action = new Assert();
-        action.setAction(testAction);
-            
+        
+        if (testAction instanceof AbstractActionDefinition<?>) {
+            action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
+        } else {
+            action.setAction(testAction);
+        }
+        
         testCase.getActions().remove((testCase.getActions().size()) -1);
         testCase.addTestAction(action);
         
@@ -606,13 +642,23 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
     
     /**
-     * Action catches poissible exceptions in neste test actions.
+     * Action catches possible exceptions in nested test actions.
      * @param exception
      * @param actions
      * @return
      */
     protected Catch catchException(Class<? extends Throwable> exception, TestAction ... actions) {
         return catchException(exception.getName(), actions);
+    }
+    
+    /**
+     * Action catches possible exceptions in nested test actions.
+     * @param exception
+     * @param actions
+     * @return
+     */
+    protected Catch catchException(TestAction ... actions) {
+        return catchException(CitrusRuntimeException.class.getName(), actions);
     }
     
     /**
@@ -792,17 +838,16 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * Adds sequence of test actions to finally block.
      * @param actions
      */
-    @SuppressWarnings("unchecked")
     protected void doFinally(TestAction ... actions) {
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
+                testCase.getFinallyChain().add(((AbstractActionDefinition<?>) action).getAction());
             } else {
                 testCase.getActions().remove(action);
+                testCase.getFinallyChain().add(action);
             }
         }
-        
-        testCase.getFinallyChain().addAll(CollectionUtils.arrayToList(actions));
     }
 
     /**

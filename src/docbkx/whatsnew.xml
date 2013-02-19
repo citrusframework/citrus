@@ -5,6 +5,22 @@
   <para>The new Citrus release introduces new features and changes that we discuss in the following sections. We want you to get an overview of what has happened in the last release so you can
   identify the new stuff which is of interest for you.</para>
   
+  <section id="whatsnew-javadsl">
+    <title>Java DSL</title>
+
+    <para>Citrus users, in particular those with development experience, do often tell me to not like the XML test definitions so much. They want to write Java code rather than XML. Although I personally
+    do like the XML syntax when writing test cases we have introduced a Java DSL language for writing Citrus tests with Java only. Details can be seen in the code examples for all test actions 
+    in <xref linkend="test-actions"/>.</para>
+  </section>
+  
+  <section id="whatsnew-xhtml">
+    <title>XHTML message validation</title>
+
+    <para>Message validation for Html code was not really comfortable as Html does not confirm to be wellformed and valid XML syntax. XHTML tries to close this gap by automatically resolving all Html specific 
+    XML syntax rule violations. With Citrus 1.3 we introduced a XHTML message validator which does the magic for converting Html code to proper wellformed and valid XML. In a test case you can then use
+    the full XML validation power in Citrus in order to validate incoming Html messages. Section <xref linkend="xhtml"/> deals with the new validation capabilities for Html.</para>
+  </section>
+  
   <section id="whatsnew-actors">
     <title>Test actors</title>
 
@@ -47,7 +63,7 @@
   <section id="whatsnew-functions">
     <title>New functions</title>
     
-    <para>Citrus provides several default functions that will ease the testers life. We continuously :</para>
+    <para>Citrus provides several default functions that will ease the testers life. We continuously develop out of the box functions that you can use:</para>
     
     <itemizedlist>
         <listitem>Nothing yet!</listitem>
@@ -60,17 +76,19 @@
     <title>Bugfixes</title>
     
     <para>Bug fixing is part of our daily business. Finding and solving issues makes Citrus better every day. For a detailed
-    bugfix listing please refer to the complete changes log.</para>
+    bugfix listing please refer to the complete changes log and JIRA.</para>
   </section>
   
   <section id="whatsnew-upgrading">
     <title>Upgrading from version 1.2</title>
     
-    <para>If you are coming from Citrus 1.2 final you may have to look at the following points in order to have a smooth upgrade to the latest release version.</para>
+    <para>If you are coming from Citrus 1.2 you may have to look at the following points in order to have a smooth upgrade to the latest release version.</para>
     
     <itemizedlist mark="opencircle">
         <listitem>
-            <para><emphasis>Nothing yet</emphasis> Nothing to do yet!</para>
+            <para><emphasis>Jetty version upgrade</emphasis> We are using Jetty a lot for starting Http server mocks within Citrus. In order to stay up to date we upgraded to
+            Jetty 8.1.7 version with this Citrus release. This implies that package names did change for Jetty API. In general there is no conflict for you as a Citrus user, but you may want to
+            adjust your logging configuration according to new Jetty packages. Jetty package names did change from <emphasis>ord.mortbay</emphasis> to <emphasis>org.eclipse.jetty</emphasis>.</para>
         </listitem>
     </itemizedlist>
   </section>

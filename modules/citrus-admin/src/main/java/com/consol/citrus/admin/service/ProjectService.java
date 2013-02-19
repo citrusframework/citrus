@@ -20,7 +20,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 /**
  * Project related activities like project home selection and 
@@ -31,6 +34,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectService {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(ProjectService.class);
+    
     /**
      * Gets list of subfolder names and paths for given root directory.
      * @param directory
@@ -58,20 +64,18 @@ public class ProjectService {
     public boolean isProjectHome(String directory) {
         File homeDir = new File(directory);
         
-        if (!homeDir.exists()) {
+        try {
+            Assert.isTrue(homeDir.exists());
+            Assert.isTrue(new File(homeDir, "src/citrus").exists());
+            Assert.isTrue(new File(homeDir, "src/citrus/resources").exists());
+            Assert.isTrue(new File(homeDir, "src/citrus/resources/citrus-context.xml").exists());
+            Assert.isTrue(new File(homeDir, "src/citrus/tests").exists());
+            Assert.isTrue(new File(homeDir, "src/citrus/java").exists());
+        } catch (IllegalArgumentException e) {
+            log.warn("Project home validation failed", e);
             return false;
-        } else if (!new File(homeDir, "src/citrus").exists()) {
-            return false;
-        } else if (!new File(homeDir, "src/citrus/resources").exists()) {
-            return false;
-        } else if (!new File(homeDir, "src/citrus/resources/citrus-context.xml").exists()) {
-            return false;
-        } else if (!new File(homeDir, "src/citrus/tests").exists()) {
-            return false;
-        } else if (!new File(homeDir, "src/citrus/java").exists()) {
-            return false;
-        } else {
-            return true;
         }
+        
+        return true;
     }
 }

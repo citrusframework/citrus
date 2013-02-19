@@ -16,13 +16,11 @@
 
 package com.consol.citrus.http.servlet;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -41,49 +39,6 @@ public class RequestCachingServletFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
             FilterChain filterChain) throws ServletException, IOException {
         filterChain.doFilter(new CachingHttpServletRequestWrapper(request), response);
-    }
-    
-    /**
-     * Caching wrapper saves request body data to cache when read.
-     */
-    private static final class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
-        /** Cached request data initialized when first read from input stream */
-        private byte[] body;
-        
-        /**
-         * Default constructor using initial servlet request.
-         * @param request
-         */
-        public CachingHttpServletRequestWrapper(HttpServletRequest request) {
-            super(request);
-        }
-        
-        @Override
-        public ServletInputStream getInputStream() throws IOException {
-            if (body == null) {
-                if (super.getInputStream() != null) {
-                    body = FileCopyUtils.copyToByteArray(super.getInputStream());
-                } else {
-                    body = new byte[] {};
-                }
-            }
-            return new RequestCachingInputStream(body);
-        }
-        
-        /** Input stream uses cached request data */
-        private final static class RequestCachingInputStream extends ServletInputStream {
-            private final ByteArrayInputStream is;
-
-            private RequestCachingInputStream(byte[] body) {
-                this.is = new ByteArrayInputStream(body);
-            }
-
-            @Override
-            public int read() throws IOException {
-                return is.read();
-            }
-        }
-        
     }
     
 }

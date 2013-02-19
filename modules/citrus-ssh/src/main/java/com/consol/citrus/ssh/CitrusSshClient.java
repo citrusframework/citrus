@@ -18,14 +18,15 @@ package com.consol.citrus.ssh;
 
 import java.io.*;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.AbstractSyncMessageSender;
-import com.consol.citrus.message.ReplyMessageHandler;
-import com.jcraft.jsch.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.AbstractSyncMessageSender;
+import com.consol.citrus.message.ReplyMessageHandler;
+import com.jcraft.jsch.*;
 
 /**
  * A SSH client which sends a request specified in a test-cast as SSH EXEC call to a target host
@@ -82,7 +83,6 @@ public class CitrusSshClient extends AbstractSyncMessageSender {
         xmlMapper = new XmlMapper();
     }
 
-
     /**
      * Send a message as SSH request. The message format is created from {@link CitrusSshServer}.
      *
@@ -98,24 +98,24 @@ public class CitrusSshClient extends AbstractSyncMessageSender {
 
         String rUser = getRemoteUser(message);
         connect(rUser);
-        ChannelExec ch = null;
+        ChannelExec channelExec = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ByteArrayOutputStream errStream = new ByteArrayOutputStream();
         int rc = 0;
         try {
-            ch = openChannelExec(ch);
-            ch.setErrStream(errStream);
-            ch.setOutputStream(outStream);
-            ch.setCommand(request.getCommand());
-            doConnect(ch);
+            channelExec = openChannelExec();
+            channelExec.setErrStream(errStream);
+            channelExec.setOutputStream(outStream);
+            channelExec.setCommand(request.getCommand());
+            doConnect(channelExec);
             if (request.getStdin() != null) {
-                sendStandardInput(ch, request.getStdin());
+                sendStandardInput(channelExec, request.getStdin());
             }
-            waitCommandToFinish(ch);
-            rc = ch.getExitStatus();
+            waitCommandToFinish(channelExec);
+            rc = channelExec.getExitStatus();
         } finally {
-            if (ch != null && ch.isConnected()) {
-                ch.disconnect();
+            if (channelExec != null && channelExec.isConnected()) {
+                channelExec.disconnect();
             }
             disconnect();
         }
@@ -210,13 +210,14 @@ public class CitrusSshClient extends AbstractSyncMessageSender {
         }
     }
 
-    private ChannelExec openChannelExec(ChannelExec pCh) throws CitrusRuntimeException {
+    private ChannelExec openChannelExec() throws CitrusRuntimeException {
+        ChannelExec channelExec;
         try {
-            pCh = (ChannelExec) session.openChannel("exec");
+            channelExec = (ChannelExec) session.openChannel("exec");
         } catch (JSchException e) {
             throw new CitrusRuntimeException("Cannot open EXEC SSH channel: " + e,e);
         }
-        return pCh;
+        return channelExec;
     }
 
     private void waitCommandToFinish(ChannelExec pCh) {

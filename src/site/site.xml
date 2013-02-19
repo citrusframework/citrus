@@ -11,21 +11,16 @@
     <menu name="Home"/>
     
     <menu name="Getting Started">
-      <item name="Installation" href="installation.html"/>
+      <item name="Introduction" href="introduction.html"/>
       <item name="Features" href="features.html"/>
+      <item name="Setup with Maven" href="tutorials-maven.html"/>
+      <item name="Setup with ANT" href="tutorials-ant.html"/>
       <item name="Download" href="download.html"/>
-      <item name="Tutorials" href="tutorials.html">
-        <item name="Maven setup" href="tutorials-maven.html"/>
-        <item name="ANT setup" href="tutorials-ant.html"/>
-        <item name="Custom functions" href="tutorials-functions.html"/>
-        <item name="Custom actions" href="tutorials-actions.html"/>
-      </item>
     </menu>
     
     <menu name="Documentation">
-      <item name="Reference" href="documentation.html"/>
+      <item name="User guide" href="documentation.html"/>
       <item name="License" href="license.html"/>
-      <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
       <item name="Changes" href="changes-report.html"/>
       <item name="Modules" href="modules.html"/>
     </menu>
@@ -38,20 +33,24 @@
     <menu name="Community">
       <item name="News" href="news.html"/>
       <item name="Forum" href="http://labs.consol.de/lang/de/forum/#/categories/citrus"/>
-      <item name="Issues" href="issues.html"/>
-      <item name="Team" href="team-list.html"/>
+      <item name="Blog" href="http://labs.consol.de/tags/citrus"/>
     </menu>
 
     <menu name="Development">
       <item name="Quickstart" href="quickstart.html"/>
       <item name="Sources" href="source-repository.html"/>
+      <item name="Team" href="team-list.html"/>
+      <item name="Issues" href="issues.html"/>
       <item name="Continuous Build" href="http://labs.consol.de/hudson/"/>
       <item name="Sonar" href="http://labs.consol.de/sonar/"/>
+      <item name="Customize" href="tutorials.html">
+        <item name="Custom functions" href="tutorials-functions.html"/>
+        <item name="Custom actions" href="tutorials-actions.html"/>
+      </item>
       <item name="Contribute" href="contributing.html"/>
     </menu>
     
     <menu name="Contact">
-        <item name="Training" href="training.html"/>
         <item name="Consulting" href="consulting.html"/>
         <item name="ConSol* Software GmbH" href="http://www.consol.de"/>
     </menu>

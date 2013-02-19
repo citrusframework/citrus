@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
     /** Logger */
-    private static Logger retry_log = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private static Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
     
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;
@@ -100,14 +100,14 @@ public class MessageSelectingQueueChannel extends QueueChannel {
         while (message == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
             
-            if (retry_log.isDebugEnabled()) {
-                retry_log.debug("No message received with message selector - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
+            if (RETRY_LOG.isDebugEnabled()) {
+                RETRY_LOG.debug("No message received with message selector - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
             }
             
             try {
                 Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             } catch (InterruptedException e) {
-                retry_log.warn("Thread interrupted while waiting for retry", e);
+                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
             
             message = receive(selector);

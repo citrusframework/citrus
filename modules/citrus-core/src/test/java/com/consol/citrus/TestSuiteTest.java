@@ -18,9 +18,10 @@ package com.consol.citrus;
 
 import static org.easymock.EasyMock.*;
 
+import javax.annotation.Resource;
+
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -39,11 +40,10 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  */
 public class TestSuiteTest extends AbstractTestNGUnitTest {
     @Autowired
-    TestSuiteListeners testSuiteListeners;
+    private TestSuiteListeners testSuiteListeners;
     
-    @Autowired
-    @Qualifier("mockListener")
-    TestSuiteListener testSuiteListener;
+    @Resource(name = "mockListener")
+    private TestSuiteListener testSuiteListener;
     
     @BeforeClass
     public void setupTest() {

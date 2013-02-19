@@ -47,7 +47,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
             TestContext context, ValidationContext validationContext) throws ValidationException {
         XmlMessageValidationContext xmlMessageValidationContext;
         
-        if (validationContext != null && validationContext instanceof XmlMessageValidationContext) {
+        if (validationContext instanceof XmlMessageValidationContext) {
             xmlMessageValidationContext = (XmlMessageValidationContext) validationContext;
         } else {
             xmlMessageValidationContext = new XmlMessageValidationContext();

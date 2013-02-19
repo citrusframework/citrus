@@ -1,17 +1,30 @@
+/*
+ * Copyright 2006-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.admin.websocket;
 
-import com.consol.citrus.admin.launcher.ProcessListener;
+import java.io.IOException;
+import java.util.*;
+
 import org.eclipse.jetty.websocket.WebSocket;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.consol.citrus.admin.launcher.ProcessListener;
 
 /**
  * Used for publishing log messages to connected clients via the web socket api.
@@ -21,6 +34,7 @@ import java.util.TimerTask;
  */
 public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListener {
 
+    /** Log event types */
     private enum LogEvent {
         PING,
         START,
@@ -40,6 +54,9 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
      */
     private List<Connection> connections = new ArrayList<Connection>();
 
+    /**
+     * Default constructor.
+     */
     public LoggingWebSocket() {
         Timer timer = new Timer(true);
         TimerTask task = new TimerTask() {
@@ -63,6 +80,7 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({"PMD.CloseResource"})
     public void onClose(int closeCode, String message) {
         LOG.debug("Web socket connection closed");
         Iterator<Connection> itor = connections.iterator();
@@ -130,12 +148,24 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
         logMessage(createMessage(processId, LogEvent.MESSAGE, output));
     }
 
+    /**
+     * Send ping event.
+     */
+    @SuppressWarnings("unchecked")
     public void ping() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("event", LogEvent.PING.name());
         logMessage(jsonObject.toString());
     }
 
+    /**
+     * Creates proper JSON message for log event.
+     * @param processId
+     * @param logEvent
+     * @param message
+     * @return
+     */
+    @SuppressWarnings("unchecked")
     private String createMessage(String processId, LogEvent logEvent, String message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("processId", processId);
@@ -144,6 +174,11 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
         return jsonObject.toString();
     }
 
+    /**
+     * Push log message to connected clients.
+     * @param message
+     */
+    @SuppressWarnings({"PMD.CloseResource"})
     private void logMessage(String message) {
         Iterator<Connection> itor = connections.iterator();
         while (itor.hasNext()) {
