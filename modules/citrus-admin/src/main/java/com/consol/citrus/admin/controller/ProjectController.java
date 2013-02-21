@@ -42,7 +42,7 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public String searchProjectHome(@RequestParam("dir") String dir) throws UnsupportedEncodingException {
-        String directory = dir;
+        String directory = URLDecoder.decode(dir, "UTF-8"); // TODO use system default encoding?
         if (directory.equals("/")) {
             directory = configService.getRootDirectory();
         }
