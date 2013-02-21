@@ -82,7 +82,7 @@ public class FileSystemTestExecutor implements TestExecutor{
     public String getSourceCode(String testPackage, String testName, String type) {
         String testDirectory = getTestDirectory();
         
-        List<File> testFiles = FileUtils.getTestFiles(testDirectory + "/" + testPackage.replaceAll("\\.", File.separator));
+        List<File> testFiles = FileUtils.getTestFiles(testDirectory + "/" + testPackage.replaceAll("\\.", "/"));
         
         try {
             return FileUtils.readToString(new FileInputStream(testFiles.get(0)));
