@@ -56,7 +56,7 @@ public class JmsTopicJavaITest extends TestNGCitrusTestBuilder {
                .timeout(5000)
                .description("Receive asynchronous hello response: HelloService -> TestFramework"),
            sequential(
-               sleep(1L),
+               sleep(1000L),
                send("helloTopicRequestSender")
                    .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
