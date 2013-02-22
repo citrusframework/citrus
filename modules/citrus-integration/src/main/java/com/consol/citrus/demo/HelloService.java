@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.samples.bookregistry.model;
+package com.consol.citrus.demo;
 
-import java.util.*;
+import org.springframework.integration.Message;
+
+import com.consol.citrus.demo.model.HelloRequest;
+import com.consol.citrus.demo.model.HelloResponse;
 
 /**
  * @author Christoph Deppisch
  */
-public class ListBooksResponseMessage {
-    private List<Book> books = new ArrayList<Book>();
-
-    /**
-     * @param books the books to set
-     */
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
-    /**
-     * @return the books
-     */
-    public List<Book> getBooks() {
-        return books;
-    }
+public interface HelloService {
+    public Message<HelloResponse> sayHello(Message<HelloRequest> request);
 }

@@ -3,12 +3,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xmlns:oxm="http://www.springframework.org/schema/oxm"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/integration
             http://www.springframework.org/schema/integration/spring-integration.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd">
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+            http://www.springframework.org/schema/oxm 
+            http://www.springframework.org/schema/oxm/spring-oxm.xsd">
 
     <int:poller id="poller" 
                 fixed-rate="1000" 
@@ -32,18 +35,7 @@
     <int:channel id="syncHelloRequestsXML"/>
     <int:transformer input-channel="syncHelloRequestsXML" ref="unmarshallingTransformer" output-channel="syncHelloRequests"/>
     
-    <bean id="helloMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="namespaceMappings">
-            <props>
-                <prop key="ns0">http://www.consol.de/schemas/samples/sayHello.xsd</prop>
-            </props>
-        </property>
-        <property name="mappingLocations">
-            <list>
-                <value>classpath:com/consol/citrus/demo/hello-mapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <oxm:jaxb2-marshaller id="helloMarshaller" contextPath="com.consol.citrus.demo.model"/>
     
     <int:channel id="helloRequests"/>
     <int:service-activator input-channel="helloRequests" 
@@ -85,7 +77,7 @@
         </int:interceptors>
     </int:channel>
     
-    <bean id="loggingInterceptor" class="com.consol.citrus.demo.util.LoggingInterceptor"/>
+    <bean id="loggingInterceptor" class="com.consol.citrus.demo.LoggingInterceptor"/>
     
     <int:logging-channel-adapter id="logger" level="INFO"/>
 </beans>

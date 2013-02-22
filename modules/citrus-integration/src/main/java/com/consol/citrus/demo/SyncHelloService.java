@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.samples.bookregistry.model;
+package com.consol.citrus.demo;
+
+import org.springframework.integration.Message;
+
+import com.consol.citrus.demo.model.HelloRequest;
 
 /**
  * @author Christoph Deppisch
  */
-public class ListBooksRequestMessage {
-
+public interface SyncHelloService {
+    public Message<String> sayHello(Message<HelloRequest> request);
 }

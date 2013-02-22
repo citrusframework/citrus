@@ -1,0 +1,21 @@
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" version="2.0" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+  extensionBindingPrefixes="xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <globalBindings>
+    <javaType 
+        name="java.util.Calendar" 
+        xmlType="xs:dateTime" 
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+        printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+    <javaType 
+        name="java.util.Calendar" 
+        xmlType="xs:date" 
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+        printMethod="javax.xml.bind.DatatypeConverter.printDate" />
+    <xjc:simple />
+  </globalBindings>
+
+  <bindings schemaLocation="FlightBookingSchema.xsd">
+    <schemaBindings><package name="com.consol.citrus.samples.flightbooking.model"/></schemaBindings>
+  </bindings>
+
+</bindings>

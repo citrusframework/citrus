@@ -50,6 +50,15 @@
         </property>
     </bean>
     
+    <!-- Default namespace mappings used in XPath expression evaluations -->
+    <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="fbs">http://www.consol.com/schemas/flightbooking</prop>            
+            </props>
+        </property>
+    </bean>
+    
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
 
     <!-- FlightBookingService Sample -->

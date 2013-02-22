@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.samples.flightbooking.model;
+package com.consol.citrus.samples.flightbooking.entity;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "FBS_CUSTOMER")
-public class Customer implements Serializable {
+public class CustomerEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     

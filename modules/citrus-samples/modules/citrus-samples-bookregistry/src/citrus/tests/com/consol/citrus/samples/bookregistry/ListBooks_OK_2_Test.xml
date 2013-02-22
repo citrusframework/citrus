@@ -61,8 +61,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                            <bkr:ListBooksRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry">
-                            </bkr:ListBooksRequestMessage>                        
+                            <bkr:ListBooksRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookregistry"/>
                         ]]>
                     </data>
                 </message>

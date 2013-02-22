@@ -23,6 +23,7 @@ import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.samples.flightbooking.model.*;
+import com.consol.citrus.samples.flightbooking.model.TravelBookingResponseMessage.Flights;
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +38,9 @@ public class FlightAggregator {
             flights.add(confirmationMessage.getFlight());
         }
         
-        responseMessage.setFlights(flights);
+        Flights flightContainer = new Flights();
+        flightContainer.getFlights().addAll(flights);
+        responseMessage.setFlights(flightContainer);
         responseMessage.setCorrelationId(messages.get(0).getCorrelationId());
         responseMessage.setSuccess(true);
         

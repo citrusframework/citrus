@@ -63,6 +63,27 @@
               </execution>
             </executions>
         </plugin>
+        <plugin>
+          <groupId>org.jvnet.jaxb2.maven2</groupId>
+          <artifactId>maven-jaxb2-plugin</artifactId>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <extension>true</extension>
+            <schemaDirectory>src/citrus/resources/com/consol/citrus/demo</schemaDirectory>
+            <schemaIncludes>
+              <include>sayHello.xsd</include>
+            </schemaIncludes>
+            <bindingIncludes>
+              <include>**/*.xjb</include>
+            </bindingIncludes>
+          </configuration>
+        </plugin>
     </plugins>
     
   	<testSourceDirectory>src/citrus/java</testSourceDirectory>
@@ -135,10 +156,6 @@
         <artifactId>spring-oxm</artifactId>
     </dependency>
     
-    <dependency>
-        <groupId>org.codehaus.castor</groupId>
-        <artifactId>castor-xml</artifactId>
-    </dependency>
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>

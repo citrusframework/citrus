@@ -22,6 +22,8 @@ import javax.persistence.*;
 
 import org.springframework.stereotype.Repository;
 
+import com.consol.citrus.samples.flightbooking.entity.CustomerEntity;
+import com.consol.citrus.samples.flightbooking.entity.converter.CustomerConverter;
 import com.consol.citrus.samples.flightbooking.model.Customer;
 import com.consol.citrus.samples.flightbooking.persistence.CustomerDao;
 
@@ -35,25 +37,25 @@ public class CustomerDaoImpl implements CustomerDao {
     private EntityManager em;
     
     public Customer find(String customerId) {
-        return em.find(Customer.class, customerId);
+        return CustomerConverter.from(em.find(CustomerEntity.class, customerId));
     }
 
     @SuppressWarnings("unchecked") public List<Customer> findAll() {
-        Query query = em.createQuery("from Customer c");
+        Query query = em.createQuery("from CustomerEntity c");
         
         return query.getResultList();
     }
 
     public void merge(Customer customer) {
-        em.merge(customer);
+        em.merge(CustomerConverter.from(customer));
     }
 
     public void persist(Customer customer) {
-        em.persist(customer);
+        em.persist(CustomerConverter.from(customer));
     }
 
     public void remove(Customer customer) {
-        em.remove(customer);
+        em.remove(CustomerConverter.from(customer));
     }
 
 }

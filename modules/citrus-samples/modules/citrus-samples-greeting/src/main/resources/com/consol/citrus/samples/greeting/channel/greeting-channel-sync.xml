@@ -3,12 +3,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xmlns:oxm="http://www.springframework.org/schema/oxm"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/integration
             http://www.springframework.org/schema/integration/spring-integration.xsd
             http://www.springframework.org/schema/integration/jms
-            http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd">
+            http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+            http://www.springframework.org/schema/oxm 
+            http://www.springframework.org/schema/oxm/spring-oxm.xsd">
             
     <int:channel id="syncGreetings">
         <int:queue/>
@@ -24,18 +27,7 @@
     <bean id="greetingService" class="com.consol.citrus.samples.greeting.GreetingService"/>
     
     <!-- XML marshalling/unmarshalling -->
-    <bean id="xmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="namespaceMappings">
-            <props>
-                <prop key="tns">http://www.citrusframework.org/samples/greeting</prop>
-            </props>
-        </property>
-        <property name="mappingLocations">
-            <list>
-                <value>classpath:com/consol/citrus/samples/greeting/castor/greeting-mapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <oxm:jaxb2-marshaller id="xmlMarshaller" contextPath="com.consol.citrus.samples.greeting.model"/>
         
     <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.MarshallingTransformer">
         <constructor-arg>

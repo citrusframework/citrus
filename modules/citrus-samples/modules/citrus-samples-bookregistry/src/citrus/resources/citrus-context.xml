@@ -6,12 +6,14 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+       http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd">
 	
     <!-- Common settings -->
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
@@ -31,6 +33,15 @@
             <map>
                 <entry key="project.name" value="Citrus BookRegistry sample"/>
             </map>
+        </property>
+    </bean>
+    
+    <!-- Default namespace mappings used in XPath expression evaluations -->
+    <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
+        <property name="namespaceMappings">
+            <props>
+                <prop key="bkr">http://www.consol.com/schemas/bookregistry</prop>            
+            </props>
         </property>
     </bean>
     
@@ -58,17 +69,6 @@
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     
-    <bean id="marshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="namespaceMappings">
-            <props>
-                <prop key="book">http://www.consol.com/schemas/bookregistry</prop>
-            </props>
-        </property>
-        <property name="mappingLocations">
-            <list>
-                <value>classpath:com/consol/citrus/samples/bookregistry/castor/bookregistry-mapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.samples.bookregistry.model"/>
         
 </beans>

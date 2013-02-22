@@ -42,6 +42,7 @@
                     <validate path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
                     <validate path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
                     <validate path="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    <namespace prefix="ns0" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
@@ -152,6 +153,7 @@
                         <xpath expression="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
                         <xpath expression="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
                     </validate>
+                    <namespace prefix="ns0" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

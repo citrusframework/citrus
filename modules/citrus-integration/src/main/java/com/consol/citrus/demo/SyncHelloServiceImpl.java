@@ -16,27 +16,47 @@
 
 package com.consol.citrus.demo;
 
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.xml.transform.StringResult;
+
+import com.consol.citrus.demo.model.HelloRequest;
+import com.consol.citrus.demo.model.HelloResponse;
 
 /**
  * @author Christoph Deppisch
  */
-public class HelloServiceImpl implements HelloService {
-
-    public Message<HelloResponseMessage> sayHello(Message<HelloRequestMessage> request) {
-        HelloResponseMessage helloResponse = new HelloResponseMessage();
+public class SyncHelloServiceImpl implements SyncHelloService  {
+    
+    @Autowired
+    Marshaller helloMarshaller;
+    
+    public Message<String> sayHello(Message<HelloRequest> request) {
+        HelloResponse helloResponse = new HelloResponse();
         helloResponse.setMessageId(request.getPayload().getMessageId());
         helloResponse.setCorrelationId(request.getPayload().getCorrelationId());
         helloResponse.setUser("HelloService");
         helloResponse.setText("Hello " + request.getPayload().getUser());
         
-        MessageBuilder<HelloResponseMessage> builder = MessageBuilder.withPayload(helloResponse);
+        StringResult result = new StringResult();
+        try {
+            helloMarshaller.marshal(helloResponse, result);
+        } catch (XmlMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        MessageBuilder<String> builder = MessageBuilder.withPayload(result.toString());
         builder.setHeader("CorrelationId", request.getHeaders().get("CorrelationId"));
         builder.setHeader("Operation", "sayHello");
         builder.setHeader("Type", "response");
         
         return builder.build();
     }
-
 }

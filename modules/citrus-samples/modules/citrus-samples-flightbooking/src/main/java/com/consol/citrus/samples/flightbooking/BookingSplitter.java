@@ -53,7 +53,7 @@ public class BookingSplitter {
             customerDao.persist(request.getCustomer());
         }
         
-        for (Flight flight : request.getFlights()) {
+        for (Flight flight : request.getFlights().getFlights()) {
             //Save flight if necessary
             if (flightDao.find(flight.getFlightId()) == null) {
                 flightDao.persist(flight);

@@ -8,7 +8,7 @@
 	
 	<xs:complexType name="Book">
 		<xs:sequence>
-			<xs:element name="id" type="xs:string" minOccurs="0"/>
+			<xs:element name="id" type="xs:long" minOccurs="0"/>
 			<xs:element name="title" type="xs:string"/>
 			<xs:element name="author" type="xs:string"/>
 			<xs:element name="isbn" type="xs:string"/>
@@ -65,7 +65,9 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="ListBooksRequestMessage"/>
+    <xs:element name="ListBooksRequestMessage">
+        <xs:complexType></xs:complexType>
+    </xs:element>
     
     <xs:element name="ListBooksResponseMessage">
         <xs:complexType>

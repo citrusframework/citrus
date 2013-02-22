@@ -19,16 +19,16 @@ package com.consol.citrus.test.demo.service;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.Message;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.oxm.*;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
+import com.consol.citrus.demo.model.HelloRequest;
+import com.consol.citrus.demo.model.HelloResponse;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.test.demo.model.HelloRequest;
-import com.consol.citrus.test.demo.model.HelloResponse;
 
 /**
  * @author Christoph Deppisch

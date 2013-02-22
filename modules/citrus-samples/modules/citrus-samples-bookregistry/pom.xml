@@ -22,23 +22,33 @@
                 <targetPackage>com.consol.citrus.samples.bookregistry</targetPackage>
             </configuration>
         </plugin>
+        
         <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.5</version>
+          <groupId>org.jvnet.jaxb2.maven2</groupId>
+          <artifactId>maven-jaxb2-plugin</artifactId>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <extension>true</extension>
+            <schemaDirectory>src/main/resources/com/consol/citrus/samples/bookregistry/schema</schemaDirectory>
+            <schemaIncludes>
+              <include>BookRegistrySchema.xsd</include>
+            </schemaIncludes>
+            <bindingIncludes>
+              <include>**/*.xjb</include>
+            </bindingIncludes>
+          </configuration>
         </plugin>
       </plugins>
   </build>
   
   <dependencies>
     <!-- Citrus -->
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-core</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-java-dsl</artifactId>
-    </dependency>
     <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ws</artifactId>
@@ -51,41 +61,9 @@
     
     <!-- Spring framework -->
     <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-core</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-xml</artifactId>
-    </dependency>
-    <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-ws</artifactId>
     </dependency>
-
-    <!--  Spring related dependencies -->
-    <dependency>
-        <groupId>org.apache.xbean</groupId>
-        <artifactId>xbean-spring</artifactId>
-        <scope>runtime</scope>
-    </dependency>
     
-    <!-- Sample related dependencies -->    
-    <dependency>
-        <groupId>org.codehaus.castor</groupId>
-        <artifactId>castor-xml</artifactId>
-    </dependency>    
   </dependencies>
 </project>

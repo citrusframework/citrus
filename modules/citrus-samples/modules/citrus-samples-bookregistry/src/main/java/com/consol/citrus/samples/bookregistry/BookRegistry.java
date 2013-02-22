@@ -17,7 +17,7 @@
 package com.consol.citrus.samples.bookregistry;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -25,6 +25,7 @@ import org.springframework.integration.support.MessageBuilder;
 import com.consol.citrus.samples.bookregistry.exceptions.DuplicateIsbnException;
 import com.consol.citrus.samples.bookregistry.exceptions.UnknownBookException;
 import com.consol.citrus.samples.bookregistry.model.*;
+import com.consol.citrus.samples.bookregistry.model.ListBooksResponseMessage.Books;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +36,7 @@ public class BookRegistry {
     private static Map<String, Book> bookRegistry = new HashMap<String, Book>();
     
     /** Atomic identifyer generator */
-    private static AtomicInteger ids = new AtomicInteger();
+    private static AtomicLong ids = new AtomicLong();
     
     /**
      * Adds a book to the registry.
@@ -49,7 +50,7 @@ public class BookRegistry {
         
         if (!bookRegistry.containsKey(book.getIsbn())) {
             book.setId(ids.incrementAndGet());
-            book.setRegistrationDate(new Date());
+            book.setRegistrationDate(Calendar.getInstance());
             bookRegistry.put(book.getIsbn(), book);
             
             response.setSuccess(true);
@@ -104,7 +105,9 @@ public class BookRegistry {
      */
     public Message<ListBooksResponseMessage> listBooks() {
         ListBooksResponseMessage response = new ListBooksResponseMessage();
-        response.setBooks(new ArrayList<Book>(bookRegistry.values()));
+        Books books = new Books();
+        books.getBooks().addAll(bookRegistry.values());
+        response.setBooks(books);
         
         return MessageBuilder.withPayload(response).build();
     }

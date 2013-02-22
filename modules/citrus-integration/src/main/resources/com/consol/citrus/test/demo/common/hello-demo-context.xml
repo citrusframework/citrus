@@ -3,12 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
               http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.springframework.org/schema/context 
               http://www.springframework.org/schema/context/spring-context.xsd
               http://www.springframework.org/schema/integration
-              http://www.springframework.org/schema/integration/spring-integration.xsd">
+              http://www.springframework.org/schema/integration/spring-integration.xsd
+              http://www.springframework.org/schema/oxm 
+              http://www.springframework.org/schema/oxm/spring-oxm.xsd">
 
     <context:annotation-config />
     
@@ -21,18 +24,7 @@
     
     <bean id="helloService" class="com.consol.citrus.test.demo.service.HelloServiceDefault"/>
     
-    <bean id="helloMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="namespaceMappings">
-            <props>
-                <prop key="ns0">http://www.consol.de/schemas/samples/sayHello.xsd</prop>
-            </props>
-        </property>
-        <property name="mappingLocations">
-            <list>
-                <value>classpath:com/consol/citrus/test/demo/castor/hello-mapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.demo.model"/>
        
     <int:channel id="errorChannel">
         <int:interceptors>

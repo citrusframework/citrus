@@ -3,11 +3,10 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
     version="1.0">
     
-    <persistence-unit name="flightbooking-persistence" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>com.consol.citrus.samples.flightbooking.model.Customer</class>
-        <class>com.consol.citrus.samples.flightbooking.model.Flight</class>
+    <persistence-unit name="flightbooking" transaction-type="RESOURCE_LOCAL">
         <properties>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.dialect" value="oorg.hibernate.dialect.HSQLDialect"/>
         </properties>
     </persistence-unit>

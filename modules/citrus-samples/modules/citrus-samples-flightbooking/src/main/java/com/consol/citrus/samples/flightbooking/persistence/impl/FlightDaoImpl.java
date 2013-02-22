@@ -22,6 +22,8 @@ import javax.persistence.*;
 
 import org.springframework.stereotype.Repository;
 
+import com.consol.citrus.samples.flightbooking.entity.FlightEntity;
+import com.consol.citrus.samples.flightbooking.entity.converter.FlightConverter;
 import com.consol.citrus.samples.flightbooking.model.Flight;
 import com.consol.citrus.samples.flightbooking.persistence.FlightDao;
 
@@ -35,25 +37,25 @@ public class FlightDaoImpl implements FlightDao {
     private EntityManager em;
     
     public Flight find(String flightId) {
-        return em.find(Flight.class, flightId);
+        return FlightConverter.from(em.find(FlightEntity.class, flightId));
     }
 
     @SuppressWarnings("unchecked") public List<Flight> findAll() {
-        Query query = em.createQuery("from Flight f");
+        Query query = em.createQuery("from FlightEntity f");
         
         return query.getResultList();
     }
 
     public void merge(Flight flight) {
-        em.merge(flight);
+        em.merge(FlightConverter.from(flight));
     }
 
     public void persist(Flight flight) {
-        em.persist(flight);
+        em.persist(FlightConverter.from(flight));
     }
 
     public void remove(Flight flight) {
-        em.remove(flight);
+        em.remove(FlightConverter.from(flight));
     }
 
 }

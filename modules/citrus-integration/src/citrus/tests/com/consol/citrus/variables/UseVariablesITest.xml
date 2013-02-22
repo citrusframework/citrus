@@ -67,7 +67,7 @@
 				<extract>
 					<header name="Operation" variable="${operation}"/>
 					<header name="CorrelationId" variable="${id}"/>
-					<message path="//ns0:HelloResponse/ns0:User" variable="${user}"/>
+					<message path="//:HelloResponse/:User" variable="${user}"/>
 				</extract>
 			</receive>
 			

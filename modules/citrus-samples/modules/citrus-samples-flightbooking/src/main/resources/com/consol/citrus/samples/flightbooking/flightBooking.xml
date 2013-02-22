@@ -5,6 +5,7 @@
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
     xmlns:http="http://www.springframework.org/schema/integration/http"
+    xmlns:oxm="http://www.springframework.org/schema/oxm"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context 
@@ -14,7 +15,9 @@
             http://www.springframework.org/schema/integration/jms
             http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
             http://www.springframework.org/schema/integration/http
-            http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+            http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+            http://www.springframework.org/schema/oxm 
+            http://www.springframework.org/schema/oxm/spring-oxm.xsd">
     
     <context:annotation-config />
     
@@ -33,18 +36,7 @@
         </constructor-arg>
     </bean>    
     
-    <bean id="bookingMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-        <property name="namespaceMappings">
-            <props>
-                <prop key="fbs">http://www.consol.com/schemas/flightbooking</prop>
-            </props>
-        </property>
-        <property name="mappingLocations">
-            <list>
-                <value>classpath:com/consol/citrus/samples/flightbooking/castor/flightbooking-mapping.xml</value>
-            </list>
-        </property>
-    </bean>
+    <oxm:jaxb2-marshaller id="bookingMarshaller" contextPath="com.consol.citrus.samples.flightbooking.model"/>
     
 	<int:channel id="bookings"/>
 	<int:splitter input-channel="bookings" ref="bookingSplitter" output-channel="flights"/>
@@ -148,10 +140,17 @@
     <bean id="customerDao" class="com.consol.citrus.samples.flightbooking.persistence.impl.CustomerDaoImpl"/>
     
     <bean id="flightDao" class="com.consol.citrus.samples.flightbooking.persistence.impl.FlightDaoImpl"/>
-        
+    
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="persistenceXmlLocation" value="classpath:com/consol/citrus/samples/flightbooking/persistence/persistence.xml" />
+        <property name="persistenceUnitName" value="flightbooking" />
+        <property name="persistenceUnitManager">
+          <bean class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+            <property name="defaultDataSource" ref="dataSource" />
+          </bean>
+        </property>
+        <property name="jpaDialect">
+          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
         <property name="jpaVendorAdapter">
           <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
             <property name="showSql" value="true"/>
@@ -166,10 +165,7 @@
         </property>
     </bean>
     
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
     
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>

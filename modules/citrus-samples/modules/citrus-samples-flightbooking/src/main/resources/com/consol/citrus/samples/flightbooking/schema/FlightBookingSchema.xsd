@@ -12,9 +12,8 @@
 			<xs:element name="airline" type="xs:string"/>
 			<xs:element name="fromAirport" type="xs:string"/>
 			<xs:element name="toAirport" type="xs:string"/>
-			<xs:element name="date" type="xs:date"/>
-			<xs:element name="scheduledDeparture" type="xs:time"/>
-			<xs:element name="scheduledArrival" type="xs:time"/>
+			<xs:element name="scheduledDeparture" type="xs:dateTime"/>
+			<xs:element name="scheduledArrival" type="xs:dateTime"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="Customer">

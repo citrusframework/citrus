@@ -16,12 +16,12 @@
 
 package com.consol.citrus.samples.bookregistry;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.MessageHeaders;
-import org.springframework.oxm.castor.CastorMarshaller;
+import org.springframework.oxm.Marshaller;
 import org.springframework.util.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
@@ -49,7 +49,7 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
     private MessageReceiver bookResponseMessageHandler;
     
     @Autowired
-    private CastorMarshaller marshaller;
+    private Marshaller marshaller;
     
     @Test
     public void runTest(ITestContext testContext) {
@@ -81,7 +81,7 @@ public class AddBook_Ok_2_Test extends DemoAwareTestNGCitrusTestBuilder {
         book.setTitle("Maven: The Definitive Guide");
         book.setIsbn(isbn);
         book.setYear(2008);
-        book.setRegistrationDate(new Date());
+        book.setRegistrationDate(Calendar.getInstance());
         requestMessage.setBook(book);
         return requestMessage;
     }

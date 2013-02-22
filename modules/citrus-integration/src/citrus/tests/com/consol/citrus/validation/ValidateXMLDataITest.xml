@@ -96,6 +96,7 @@
                     <element path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
                     <element path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
                     <ignore path="//ns0:HelloResponse/ns0:Text"/>
+                    <namespace prefix="ns0" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

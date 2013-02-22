@@ -43,14 +43,6 @@
     <level value="WARN"/>
   </logger>
   
-  <logger name="org.exolab.castor">
-    <level value="WARN"/>
-  </logger>
-  
-  <logger name="org.castor">
-    <level value="WARN"/>
-  </logger>
-
   <!-- ======================= -->
   <!-- Setup the Root logger -->
   <!-- ======================= -->
