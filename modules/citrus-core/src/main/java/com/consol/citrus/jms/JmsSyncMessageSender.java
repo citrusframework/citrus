@@ -170,7 +170,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         }
         
         if (log.isDebugEnabled()) {
-            log.debug("Message received is:\n" + responseMessage != null ? responseMessage.toString() : "");
+            log.debug("Message received is:\n" + (responseMessage != null ? responseMessage.toString() : ""));
         }
         
         if (replyMessageHandler != null) {
