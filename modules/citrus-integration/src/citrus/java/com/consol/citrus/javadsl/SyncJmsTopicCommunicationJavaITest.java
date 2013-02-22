@@ -67,7 +67,6 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}")
                 ),
-                sleep(1000),
                 send("syncHelloTopicReplySender")
                     .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
