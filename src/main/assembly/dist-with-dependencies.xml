@@ -96,7 +96,10 @@
             <includes>
                 <include>com.consol.citrus:citrus-samples-common</include>
                 <include>com.consol.citrus.ant:citrus-ant-tasks</include>
-                <include>org.codehaus.castor:castor-xml</include>
+                <include>org.codehaus.jackson:jackson-jaxrs</include>
+                <include>org.codehaus.jackson:jackson-xc</include>
+                <include>com.sun.xml.bind:jaxb-api</include>
+                <include>com.sun.xml.bind:jaxb-impl</include>
                 <include>commons-dbcp:commons-dbcp</include>
                 <include>hsqldb:hsqldb</include>
                 <include>org.slf4j:slf4j-log4j12</include>
