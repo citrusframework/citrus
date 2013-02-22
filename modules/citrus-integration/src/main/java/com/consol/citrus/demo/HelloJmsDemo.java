@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.test.demo.jms;
+package com.consol.citrus.demo;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -50,6 +50,6 @@ public class HelloJmsDemo implements Runnable {
     }
 
     private static void initApplicationContext() {
-        ctx = new ClassPathXmlApplicationContext("jms-demo-context.xml", HelloJmsDemo.class);
+        ctx = new ClassPathXmlApplicationContext("hello-jms-demo-context.xml", HelloJmsDemo.class);
     }
 }

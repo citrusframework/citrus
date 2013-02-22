@@ -19,7 +19,7 @@ package com.consol.citrus.jms;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
-import com.consol.citrus.test.demo.jms.HelloJmsDemo;
+import com.consol.citrus.demo.HelloJmsDemo;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**

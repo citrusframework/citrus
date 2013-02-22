@@ -22,13 +22,31 @@
     
     <int:logging-channel-adapter id="logger" level="DEBUG"/>
     
-    <bean id="helloService" class="com.consol.citrus.test.demo.service.HelloServiceDefault"/>
+    <bean id="helloService" class="com.consol.citrus.demo.HelloServiceImpl"/>
+    
+    <int:service-activator input-channel="helloRequests" 
+                       output-channel="helloResponses"
+                       ref="helloService"/>
+                       
+    <int:service-activator input-channel="syncHelloRequests" 
+                       ref="helloService"/>
+                       
+    <int:channel id="helloRequests"/>
+    <int:channel id="syncHelloRequests"/>
+    <int:channel id="helloResponses">
+        <int:interceptors>
+            <ref bean="loggingInterceptor"/>
+        </int:interceptors>
+    </int:channel>    
+    
+    <int:channel id="errorChannel">
+        <int:interceptors>
+            <ref bean="loggingInterceptor"/>
+        </int:interceptors>
+    </int:channel>
+    
+    <bean id="loggingInterceptor" class="com.consol.citrus.demo.LoggingInterceptor"/>
     
     <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.demo.model"/>
        
-    <int:channel id="errorChannel">
-        <int:interceptors>
-            <int:wire-tap channel="logger" />
-        </int:interceptors>
-    </int:channel>     
 </beans>

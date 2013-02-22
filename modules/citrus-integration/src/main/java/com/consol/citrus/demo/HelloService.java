@@ -25,5 +25,11 @@ import com.consol.citrus.demo.model.HelloResponse;
  * @author Christoph Deppisch
  */
 public interface HelloService {
+    /**
+     * Handles hello request responding with proper hello response.
+     * 
+     * @param request the hello request.
+     * @return the hello response.
+     */
     public Message<HelloResponse> sayHello(Message<HelloRequest> request);
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.test.demo.service;
+package com.consol.citrus.demo;
 
 import java.io.IOException;
 

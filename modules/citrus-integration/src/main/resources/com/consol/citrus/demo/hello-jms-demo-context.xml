@@ -10,36 +10,21 @@
             http://www.springframework.org/schema/integration/jms
             http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd">
 
-    <import resource="classpath:com/consol/citrus/test/demo/common/hello-demo-context.xml"/>
+    <import resource="classpath:com/consol/citrus/demo/hello-common-context.xml"/>
     
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://localhost:61616" />
     </bean>
     
     <jms:message-driven-channel-adapter id="helloRequestsIn" 
-                    destination-name="Citrus.Hello.Request.Queue" 
-                    channel="helloRequests"/>
+                                        destination-name="Citrus.Hello.Request.Queue" 
+                                        channel="helloRequests"/>
 
     <jms:outbound-channel-adapter id="helloResponsesOut" 
-                    channel="helloResponses" 
-                    destination-name="Citrus.Hello.Response.Queue"/>
+                                  destination-name="Citrus.Hello.Response.Queue"
+                                  channel="helloResponses" />
                         
     <jms:inbound-gateway id="syncHelloRequestsIn"
                          request-destination-name="Citrus.Hello.Sync.Request.Queue"
-                         request-channel="helloSyncRequests"/>
-                      
-    <int:channel id="helloRequests"/>
-    <int:service-activator input-channel="helloRequests" 
-                           output-channel="helloResponses"
-                           ref="helloService"/>
-                       
-    <int:channel id="helloSyncRequests"/>
-    <int:service-activator input-channel="helloSyncRequests" 
-                           ref="helloService"/>                   
-                       
-    <int:channel id="helloResponses">
-        <int:interceptors>
-            <int:wire-tap channel="logger" />
-        </int:interceptors>
-    </int:channel>    
+                         request-channel="syncHelloRequests"/>
 </beans>

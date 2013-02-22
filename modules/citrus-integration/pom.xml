@@ -75,7 +75,7 @@
           </executions>
           <configuration>
             <extension>true</extension>
-            <schemaDirectory>src/citrus/resources/com/consol/citrus/demo</schemaDirectory>
+            <schemaDirectory>src/main/resources/com/consol/citrus/demo</schemaDirectory>
             <schemaIncludes>
               <include>sayHello.xsd</include>
             </schemaIncludes>

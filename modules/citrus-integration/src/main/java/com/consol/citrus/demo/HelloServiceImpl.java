@@ -25,16 +25,16 @@ import com.consol.citrus.demo.model.HelloResponse;
 /**
  * @author Christoph Deppisch
  */
-public class HelloServiceImpl implements HelloService {
+public class HelloServiceImpl extends AbstractMarshallingHelloService {
 
     public Message<HelloResponse> sayHello(Message<HelloRequest> request) {
-        HelloResponse helloResponse = new HelloResponse();
-        helloResponse.setMessageId(request.getPayload().getMessageId());
-        helloResponse.setCorrelationId(request.getPayload().getCorrelationId());
-        helloResponse.setUser("HelloService");
-        helloResponse.setText("Hello " + request.getPayload().getUser());
+        HelloResponse response = new HelloResponse();
+        response.setMessageId(request.getPayload().getMessageId());
+        response.setCorrelationId(request.getPayload().getCorrelationId());
+        response.setUser("HelloService");
+        response.setText("Hello " + request.getPayload().getUser());
         
-        MessageBuilder<HelloResponse> builder = MessageBuilder.withPayload(helloResponse);
+        MessageBuilder<HelloResponse> builder = MessageBuilder.withPayload(response);
         builder.setHeader("CorrelationId", request.getHeaders().get("CorrelationId"));
         builder.setHeader("Operation", "sayHello");
         builder.setHeader("Type", "response");
