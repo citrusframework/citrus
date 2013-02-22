@@ -210,6 +210,8 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param destination
      */
     private void deleteTemporaryDestination(Destination destination) {
+        log.debug("Delete temporary destination: '{}'", destination);
+        
         try {
             if (destination instanceof TemporaryQueue) {
                 ((TemporaryQueue) destination).delete();
