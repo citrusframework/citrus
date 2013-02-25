@@ -1,6 +1,9 @@
+html, body {
+  height: 100%;	
+}
+
 body {
-  padding-top: 60px;
-  padding-bottom: 40px;
+	padding-top: 60px;
 }
 
 .box {
@@ -91,10 +94,12 @@ code.template {
 }
 
 pre.log {
-  height: 200px;
+  height: 125px;
   overflow-y: auto;
   overflow-x: hidden;
   font-size: 10px;
+  background-color: #ffffff;
+  border: none;
 }
 
 div.file-tree {
@@ -133,4 +138,30 @@ div.file-tree {
   cursor: pointer;
   margin-top: 10px;
   text-decoration: none;
+}
+
+#footer {
+  height: 150px;
+  background-color: #ffffff;
+}
+
+#footer .nav {
+	margin-bottom: 0px;
+}
+
+#footer .tab-content {
+	min-height: 500px;
+    background-color: #ffffff;
+}
+
+#footer .nav-tabs > li > a {
+	line-height: 10px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	background-color: #e5e5e5;
+	color: #555555;
+}
+
+#footer .nav-tabs > .active > a, #footer .nav-tabs > .active > a:hover {
+	background-color: #ffffff;
 }
