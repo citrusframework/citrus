@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+    
+  <parent>
+    <artifactId>citrus-greeting</artifactId>
+    <groupId>com.consol.citrus.samples</groupId>
+    <version>1.3.M1</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  
+  <groupId>com.consol.citrus.samples</groupId>
+  <artifactId>citrus-greeting-war</artifactId>
+  <name>citrus-greeting-war</name>
+  <packaging>war</packaging>
+  
+  <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <configuration>
+            <webResources>
+              <resource>
+                <directory>${project.build.directory}</directory>
+                <targetPath>citrus</targetPath>
+                <includes>
+                  <include>**/*</include>
+                </includes>
+              </resource>
+            </webResources>
+          </configuration>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <configuration>
+              <webAppConfig>
+                  <contextPath>/</contextPath>
+              </webAppConfig>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>8070</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
+              <systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>UTF-8</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>log4j.configuration</name>
+                    <value>log4j.xml</value>
+                  </systemProperty>
+              </systemProperties>
+          </configuration>
+        </plugin>
+      </plugins>
+  </build>
+  
+  <dependencies>
+    <dependency>
+        <groupId>com.consol.citrus.samples</groupId>
+        <artifactId>citrus-greeting-service</artifactId>
+    </dependency>
+  </dependencies>
+</project>

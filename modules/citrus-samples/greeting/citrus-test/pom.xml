@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <artifactId>citrus-greeting</artifactId>
+    <groupId>com.consol.citrus.samples</groupId>
+    <version>1.3.M1</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.consol.citrus.samples</groupId>
+  <artifactId>citrus-greeting-test</artifactId>
+  <name>citrus-greeting-test</name>
+  
+  <build>
+      <plugins>
+        <plugin>
+            <groupId>com.consol.citrus.mvn</groupId>
+            <artifactId>citrus-maven-plugin</artifactId>
+            <configuration>
+                <targetPackage>com.consol.citrus.samples.greeting</targetPackage>
+            </configuration>
+        </plugin>
+        
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+            <failIfNoTests>false</failIfNoTests>
+          </configuration>
+          <executions>
+            <execution>
+              <id>greeting-integration-tests</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>test</goal>
+              </goals>
+              <configuration>
+                <skip>false</skip>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <configuration>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>8070</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
+              <stopKey>foo</stopKey>
+              <stopPort>9999</stopPort>
+              <systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>UTF-8</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>log4j.configuration</name>
+                    <value>log4j.xml</value>
+                  </systemProperty>
+              </systemProperties>
+          </configuration>
+          <executions>
+            <execution>
+              <id>start-jetty</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>deploy-war</goal>
+              </goals>
+              <configuration>
+                <war>${settings.localRepository}/com/consol/citrus/samples/citrus-greeting-war/${project.version}/citrus-greeting-war-${project.version}.war</war>
+                <reload>manual</reload>
+                <daemon>true</daemon>
+              </configuration>
+            </execution>
+            <execution>
+              <id>stop-jetty</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+      
+      <testSourceDirectory>src/citrus/java</testSourceDirectory>
+      <testResources>
+          <testResource>
+              <directory>src/citrus/resources</directory>
+              <includes>
+                  <include>**</include>
+              </includes>
+              <excludes>
+                  <exclude>*.java</exclude>
+              </excludes>
+          </testResource>
+          <testResource>
+              <directory>src/citrus/tests</directory>
+              <includes>
+                  <include>**/*</include>
+              </includes>
+          </testResource>
+      </testResources>
+  </build>
+  
+  <dependencies>
+    <dependency>
+        <groupId>com.consol.citrus.samples</groupId>
+        <artifactId>citrus-greeting-service</artifactId>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.xbean</groupId>
+        <artifactId>xbean-spring</artifactId>
+    </dependency>
+  </dependencies>
+</project>
