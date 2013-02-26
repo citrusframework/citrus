@@ -135,11 +135,17 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
             messageProducer = session.createProducer(getDefaultDestination(session));
 
             replyToDestination = getReplyDestination(session, message);
+            if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
+                messageConsumer = session.createConsumer(replyToDestination);
+            }
+            
             jmsRequest.setJMSReplyTo(replyToDestination);
 
-            messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
-
             messageProducer.send(jmsRequest);
+            
+            if (messageConsumer == null) {
+                messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
+            }
 
             log.info("Message was successfully sent to destination: '{}'", defaultDestinationName);
             log.info("Waiting for reply message on destination: '{}'", replyToDestination);
@@ -196,9 +202,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     private MessageConsumer createMessageConsumer(Destination replyToDestination, String messageId) throws JMSException {
         MessageConsumer messageConsumer;
 
-        if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
-            messageConsumer = session.createConsumer(replyToDestination);
-        } else if (replyToDestination instanceof Queue) {
+        if (replyToDestination instanceof Queue) {
             messageConsumer = session.createConsumer(replyToDestination,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
         } else {
