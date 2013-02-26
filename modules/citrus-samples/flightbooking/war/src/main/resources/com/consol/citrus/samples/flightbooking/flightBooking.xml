@@ -72,7 +72,7 @@
                           http-method="POST"
                           expected-response-type="java.lang.String"
                           charset="UTF-8"
-                          reply-timeout="1000"
+                          reply-timeout="5000"
                           reply-channel="confirmedFlightsXML"
                           header-mapper="httpHeaderMapper"/>
     
