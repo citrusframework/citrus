@@ -6,6 +6,7 @@
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
     xmlns:http="http://www.springframework.org/schema/integration/http"
     xmlns:oxm="http://www.springframework.org/schema/oxm"
+    xmlns:amq="http://activemq.apache.org/schema/core"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context 
@@ -17,9 +18,17 @@
             http://www.springframework.org/schema/integration/http
             http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
             http://www.springframework.org/schema/oxm 
-            http://www.springframework.org/schema/oxm/spring-oxm.xsd">
+            http://www.springframework.org/schema/oxm/spring-oxm.xsd
+            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
     
     <context:annotation-config />
+    
+    <!-- Embedded ActiveMQ JMS broker -->
+    <amq:broker useJmx="false" persistent="false">
+        <amq:transportConnectors>
+            <amq:transportConnector uri="tcp://localhost:61616" />
+        </amq:transportConnectors>
+    </amq:broker>
     
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://localhost:61616" />
