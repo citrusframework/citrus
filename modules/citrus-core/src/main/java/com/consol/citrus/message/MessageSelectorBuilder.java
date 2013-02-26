@@ -84,17 +84,14 @@ public class MessageSelectorBuilder {
         Map<String, String> valueMap = new HashMap<String, String>();
         String[] tokens;
         
-        if (selectorString.contains("AND")) {
-            StringTokenizer tok = new StringTokenizer(selectorString, "AND");
-            while (tok.hasMoreElements()) {
-                String selectorItem = tok.nextElement().toString();
-                tokens = escapeEqualsFromXpathNodeTest(selectorItem).split("=");
-                
+        if (selectorString.contains(" AND")) {
+            String[] chunks = selectorString.split(" AND");
+            for (String chunk : chunks) {
+                tokens = escapeEqualsFromXpathNodeTest(chunk).split("=");
                 valueMap.put(unescapeEqualsFromXpathNodeTest(tokens[0].trim()), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
             }
         } else {
             tokens = escapeEqualsFromXpathNodeTest(selectorString).split("=");
-            
             valueMap.put(unescapeEqualsFromXpathNodeTest(tokens[0].trim()), tokens[1].trim().substring(1, tokens[1].trim().length() -1));
         }
         
