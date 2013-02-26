@@ -128,10 +128,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             replyToDestination = getReplyDestination(session, request);
             if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyToDestination);
-            } else {
-                String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
-                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-                messageConsumer = session.createConsumer(replyToDestination, messageSelector);
             }
             
             jmsRequest.setJMSReplyTo(replyToDestination);
@@ -141,6 +137,13 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             }
             
             messageProducer.send(jmsRequest);
+            
+            if (messageConsumer == null) {
+                String messageId = jmsRequest.getJMSMessageID().replaceAll("'", "''");
+                String messageSelector = "JMSCorrelationID = '" + messageId + "'";
+                messageConsumer = session.createConsumer(replyToDestination, messageSelector);
+            }
+            
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             if (jmsReplyMessage != null) {
