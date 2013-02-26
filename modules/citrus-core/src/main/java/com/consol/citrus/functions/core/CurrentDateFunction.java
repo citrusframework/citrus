@@ -17,9 +17,7 @@
 package com.consol.citrus.functions.core;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +33,6 @@ import com.consol.citrus.functions.Function;
  */
 public class CurrentDateFunction implements Function {
 
-    /** Date formatter */
-    private SimpleDateFormat dateFormat;
-
     /**
      * Logger
      */
@@ -49,9 +44,10 @@ public class CurrentDateFunction implements Function {
      */
     public String execute(List<String> parameterList) {
         Calendar calendar = Calendar.getInstance();
-
+        
+        SimpleDateFormat dateFormat;
         String result = "";
-
+        
         if (parameterList != null && parameterList.size() > 0) {
             dateFormat = new SimpleDateFormat(parameterList.get(0));
         } else {
