@@ -117,13 +117,8 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
         
         Message<?> replyMessage = null;
         try {
-            if (connection == null) { 
-                connection = createConnection();
-            }
-            
-            if (session == null) {
-                session = createSession(connection);
-            }
+            createConnection();
+            createSession(connection);
             
             JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
             javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(request, session);
@@ -131,13 +126,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             messageProducer = session.createProducer(getDestination(session));
 
             replyToDestination = getReplyDestination(session, request);
-            jmsRequest.setJMSReplyTo(replyToDestination);
-            
-            if (messageCallback != null) {
-                messageCallback.doWithMessage(jmsRequest, request);
-            }
-            
-            messageProducer.send(jmsRequest);
             if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyToDestination);
             } else {
@@ -146,6 +134,13 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
                 messageConsumer = session.createConsumer(replyToDestination, messageSelector);
             }
             
+            jmsRequest.setJMSReplyTo(replyToDestination);
+            
+            if (messageCallback != null) {
+                messageCallback.doWithMessage(jmsRequest, request);
+            }
+            
+            messageProducer.send(jmsRequest);
             javax.jms.Message jmsReplyMessage = (this.replyTimeout >= 0) ? messageConsumer.receive(replyTimeout) : messageConsumer.receive();
             
             if (jmsReplyMessage != null) {
