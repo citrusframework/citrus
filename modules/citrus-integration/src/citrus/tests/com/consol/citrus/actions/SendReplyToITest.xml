@@ -119,9 +119,7 @@
                     </header>
                 </send>
                 
-                <sleep time="1"/>
-                 
-                <receive with="syncGetDateResponseHandler">
+                <receive with="syncGetDateResponseHandler" timeout="5000">
                     <selector>
                         <element name="id" value="${syncRequestCorrelatorId}"/>
                     </selector>

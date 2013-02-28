@@ -32,6 +32,7 @@
     
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="watchTopicAdvisories" value="false"/>
     </bean>
     
     <jms:message-driven-channel-adapter id="bookingIn" destination-name="Travel.Agency.Request.Queue" channel="bookingsXML"/>
