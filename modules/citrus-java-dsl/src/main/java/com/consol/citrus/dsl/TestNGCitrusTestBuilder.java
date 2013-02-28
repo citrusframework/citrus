@@ -52,12 +52,14 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     private TestCase testCase;
     
     /** The test variables to set before execution */
-    private Map<String, Object> variables = new LinkedHashMap<String, Object>();
+    private Map<String, Object> variables;
     
     /**
-     * Default constructor.
+     * Initialize test case and variables. Must be done with each test run.
      */
-    public TestNGCitrusTestBuilder() {
+    protected void init() {
+        variables = new LinkedHashMap<String, Object>();
+        
         testCase = new TestCase();
         testCase.setBeanName(this.getClass().getSimpleName());
         testCase.setName(this.getClass().getSimpleName());
@@ -68,6 +70,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     
     @Override
     protected void executeTest(ITestContext testContext) {
+        init();
         configure();
         super.executeTest(testContext);
     }
