@@ -32,6 +32,7 @@ public class MockBuilder extends TestNGCitrusTestBuilder {
 
     @Override
     public void run(IHookCallBack callBack, ITestResult testResult) {
+        init();
         configure();
     }
     

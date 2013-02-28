@@ -47,9 +47,9 @@ public class AddBook_Ok_2_Test extends TestNGCitrusTestBuilder {
     
     @Autowired
     private Marshaller marshaller;
-    
-    @Test
-    public void runTest(ITestContext testContext) {
+
+    @Override
+    protected void configure() {
         String isbn = "978-citrus:randomNumber(10)";
         
         send(bookRequestMessageSender)
@@ -63,7 +63,10 @@ public class AddBook_Ok_2_Test extends TestNGCitrusTestBuilder {
                     Assert.isTrue(response.isSuccess());
                 }
             });
-        
+    }
+    
+    @Test
+    public void runTest(ITestContext testContext) {
         executeTest(testContext);
     }
     
