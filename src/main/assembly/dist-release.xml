@@ -1,0 +1,112 @@
+<assembly>
+  <id>release</id>
+  <formats>
+    <format>tar.gz</format>
+    <format>zip</format>
+    <format>dir</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <includeSiteDirectory>false</includeSiteDirectory>
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>com.consol.citrus:citrus-core</include>
+        <include>com.consol.citrus:citrus-ws</include>
+        <include>com.consol.citrus:citrus-http</include>
+        <include>com.consol.citrus:citrus-ssh</include>
+        <include>com.consol.citrus:citrus-java-dsl</include>
+        <include>com.consol.citrus:citrus-adapter</include>
+        <include>com.consol.citrus.ant:citrus-ant-tasks</include>
+        <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
+      </includes>
+      <binaries>
+        <outputDirectory>dist</outputDirectory>
+        <unpack>false</unpack>
+        <includeDependencies>false</includeDependencies>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+    
+  <fileSets>
+    <!-- Citrus Samples -->
+    <fileSet>
+      <directory>modules/citrus-samples</directory>
+      <outputDirectory>samples</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+      <excludes>
+        <exclude>**/target/**</exclude>
+        <exclude>**/test-output/**</exclude>
+        <exclude>**/logs/**</exclude>
+      </excludes>
+    </fileSet>
+    
+    <!-- Reference documentation -->
+    <fileSet>
+      <directory>target/doc/html</directory>
+      <outputDirectory>docs/reference/html</outputDirectory>
+    </fileSet>
+    
+    <!-- Citrus Sources -->
+    <fileSet>
+        <directory>modules/citrus-core/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-adapter/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-http/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-ws/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-ssh/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    <fileSet>
+        <directory>modules/citrus-java-dsl/target</directory>
+        <outputDirectory>src</outputDirectory>
+        <includes>
+            <include>*sources.jar</include>
+        </includes>
+    </fileSet>
+    
+    <!-- License, readme, notice -->
+    <fileSet>
+        <directory>${project.basedir}</directory>
+        <outputDirectory></outputDirectory>
+        <includes>
+          <include>README.txt</include>
+          <include>LICENSE.txt</include>
+          <include>NOTICE.txt</include>
+        </includes>
+    </fileSet>
+  </fileSets>
+  
+  <files>
+    <!-- PDF reference documentation -->
+    <file>
+      <source>target/doc/pdf/citrus-reference.pdf</source>
+      <outputDirectory>docs/reference/pdf</outputDirectory>
+    </file>
+  </files>
+</assembly>
