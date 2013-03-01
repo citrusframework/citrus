@@ -83,7 +83,7 @@
     </moduleSet>
     <moduleSet>
       <includes>
-        <include>com.consol.citrus:citrus-samples-flightbooking</include>
+        <include>com.consol.citrus.samples:citrus-flightbooking-war</include>
       </includes>
       <binaries>
         <outputDirectory>samples/flightbooking/lib</outputDirectory>
@@ -94,7 +94,7 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>samples/lib</outputDirectory>
             <includes>
-                <include>com.consol.citrus:citrus-samples-common</include>
+                <include>com.consol.citrus.samples:citrus-samples-common</include>
                 <include>com.consol.citrus.ant:citrus-ant-tasks</include>
                 <include>org.codehaus.jackson:jackson-jaxrs</include>
                 <include>org.codehaus.jackson:jackson-xc</include>
@@ -135,7 +135,7 @@
     </moduleSet>
     <moduleSet>
       <includes>
-        <include>com.consol.citrus:citrus-samples-greeting</include>
+        <include>com.consol.citrus.samples:citrus-greeting-war</include>
       </includes>
       <binaries>
         <outputDirectory>samples/greeting/lib</outputDirectory>
@@ -145,16 +145,16 @@
     </moduleSet>
     <moduleSet>
       <includes>
-        <include>com.consol.citrus:citrus-samples-bookregistry</include>
+        <include>com.consol.citrus.samples:citrus-bookstore-war</include>
       </includes>
       <binaries>
-        <outputDirectory>samples/bookregistry/lib</outputDirectory>
+        <outputDirectory>samples/bookstore/lib</outputDirectory>
         <unpack>false</unpack>
         <dependencySets>
           <dependencySet>
             <unpack>false</unpack>
             <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>samples/bookregistry/lib</outputDirectory>
+            <outputDirectory>samples/bookstore/lib</outputDirectory>
             <includes>
                 <include>org.springframework.integration:spring-integration-ws</include>
                 <include>com.sun.xml.messaging.saaj:saaj-impl</include>
@@ -171,7 +171,7 @@
   <fileSets>
     <!-- FlightBooking sample -->
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/main/script</directory>
+      <directory>modules/citrus-samples/flightbooking/src/main/script</directory>
       <outputDirectory>samples/flightbooking</outputDirectory>
       <includes>
           <include>*.bat</include>
@@ -181,7 +181,7 @@
       <fileMode>0744</fileMode>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/citrus/resources</directory>
+      <directory>modules/citrus-samples/flightbooking/src/citrus/resources</directory>
       <outputDirectory>samples/flightbooking/src/citrus/resources</outputDirectory>
       <includes>
           <include>**/*</include>
@@ -189,7 +189,7 @@
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/target/test-classes</directory>
+      <directory>modules/citrus-samples/flightbooking/target/test-classes</directory>
       <outputDirectory>samples/flightbooking/src/citrus/java</outputDirectory>
       <includes>
           <include>**/*.java</include>
@@ -197,7 +197,7 @@
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/src/citrus/tests</directory>
+      <directory>modules/citrus-samples/flightbooking/src/citrus/tests</directory>
       <outputDirectory>samples/flightbooking/src/citrus/tests</outputDirectory>
       <includes>
           <include>**/*.xml</include>
@@ -207,7 +207,7 @@
     
     <!-- Greeting sample -->
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/main/script</directory>
+      <directory>modules/citrus-samples/greeting/src/main/script</directory>
       <outputDirectory>samples/greeting</outputDirectory>
       <includes>
           <include>*.bat</include>
@@ -217,7 +217,7 @@
       <fileMode>0744</fileMode>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/citrus/resources</directory>
+      <directory>modules/citrus-samples/greeting/src/citrus/resources</directory>
       <outputDirectory>samples/greeting/src/citrus/resources</outputDirectory>
       <includes>
           <include>**/*</include>
@@ -225,7 +225,7 @@
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-greeting/target/test-classes</directory>
+      <directory>modules/citrus-samples/greeting/target/test-classes</directory>
       <outputDirectory>samples/greeting/src/citrus/java</outputDirectory>
       <includes>
           <include>**/*.java</include>
@@ -233,7 +233,7 @@
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-greeting/src/citrus/tests</directory>
+      <directory>modules/citrus-samples/greeting/src/citrus/tests</directory>
       <outputDirectory>samples/greeting/src/citrus/tests</outputDirectory>
       <includes>
           <include>**/*.xml</include>
@@ -241,10 +241,10 @@
       <lineEnding>unix</lineEnding>
     </fileSet>
     
-    <!-- Bookregistry sample -->
+    <!-- Bookstore sample -->
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-bookregistry/src/main/script</directory>
-      <outputDirectory>samples/bookregistry</outputDirectory>
+      <directory>modules/citrus-samples/bookstore/src/main/script</directory>
+      <outputDirectory>samples/bookstore</outputDirectory>
       <includes>
           <include>*.bat</include>
           <include>*.sh</include>
@@ -253,24 +253,24 @@
       <fileMode>0744</fileMode>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-bookregistry/src/citrus/resources</directory>
-      <outputDirectory>samples/bookregistry/src/citrus/resources</outputDirectory>
+      <directory>modules/citrus-samples/bookstore/src/citrus/resources</directory>
+      <outputDirectory>samples/bookstore/src/citrus/resources</outputDirectory>
       <includes>
           <include>**/*</include>
       </includes>
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-bookregistry/target/test-classes</directory>
-      <outputDirectory>samples/bookregistry/src/citrus/java</outputDirectory>
+      <directory>modules/citrus-samples/bookstore/target/test-classes</directory>
+      <outputDirectory>samples/bookstore/src/citrus/java</outputDirectory>
       <includes>
           <include>**/*.java</include>
       </includes>
       <lineEnding>unix</lineEnding>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-samples/modules/citrus-samples-bookregistry/src/citrus/tests</directory>
-      <outputDirectory>samples/bookregistry/src/citrus/tests</outputDirectory>
+      <directory>modules/citrus-samples/bookstore/src/citrus/tests</directory>
+      <outputDirectory>samples/bookstore/src/citrus/tests</outputDirectory>
       <includes>
           <include>**/*.xml</include>
       </includes>
@@ -334,22 +334,22 @@
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples/modules/citrus-samples-flightbooking/target</directory>
+        <directory>modules/citrus-samples/flightbooking/target</directory>
         <outputDirectory>samples/flightbooking/src</outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples/modules/citrus-samples-greeting/target</directory>
+        <directory>modules/citrus-samples/greeting/target</directory>
         <outputDirectory>samples/greeting/src</outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples/modules/citrus-samples-bookregistry/target</directory>
-        <outputDirectory>samples/bookregistry/src</outputDirectory>
+        <directory>modules/citrus-samples/bookstore/target</directory>
+        <outputDirectory>samples/bookstore/src</outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
@@ -385,7 +385,7 @@
     </file>
     <file>
       <source>modules/citrus-samples/src/main/script/build.xml</source>
-      <outputDirectory>samples/bookregistry</outputDirectory>
+      <outputDirectory>samples/bookstore</outputDirectory>
       <lineEnding>unix</lineEnding>
     </file>
     <!-- Samples overall readme -->

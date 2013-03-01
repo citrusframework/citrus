@@ -29,13 +29,6 @@
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-tibco/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
-    </fileSet>
-    <fileSet>
         <directory>modules/citrus-http/target</directory>
         <outputDirectory></outputDirectory>
         <includes>
@@ -50,15 +43,15 @@
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples-flightbooking/target</directory>
-        <outputDirectory>samples</outputDirectory>
+        <directory>modules/citrus-ssh/target</directory>
+        <outputDirectory></outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-samples-greeting/target</directory>
-        <outputDirectory>samples</outputDirectory>
+        <directory>modules/citrus-java-dsl/target</directory>
+        <outputDirectory></outputDirectory>
         <includes>
             <include>*sources.jar</include>
         </includes>
