@@ -54,7 +54,7 @@
                 </connector>
               </connectors>
               <stopKey>foo</stopKey>
-              <stopPort>9999</stopPort>
+              <stopPort>9099</stopPort>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>
