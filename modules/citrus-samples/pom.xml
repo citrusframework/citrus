@@ -21,6 +21,11 @@
     <module>bookstore</module>
   </modules>
   
+  <properties>
+    <server.port>8070</server.port>
+    <server.stop.port>9099</server.stop.port>
+  </properties>
+  
   <build>
     <pluginManagement>
       <plugins>
@@ -32,7 +37,53 @@
                 <author>Christoph Deppisch</author>
                 <targetPackage>com.consol.citrus.samples</targetPackage>
                 <framework>testng</framework>
+                <targetPackage>${citrus.test.package}</targetPackage>
             </configuration>
+        </plugin>
+        
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+            <failIfNoTests>false</failIfNoTests>
+          </configuration>
+          <executions>
+            <execution>
+              <id>samples-integration-tests</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>test</goal>
+              </goals>
+              <configuration>
+                <skip>false</skip>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <configuration>
+              <connectors>
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                  <port>${server.port}</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+              </connectors>
+              <stopKey>citrus</stopKey>
+              <stopPort>${server.stop.port}</stopPort>
+              <systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>UTF-8</value>
+                  </systemProperty>
+                  <systemProperty>
+                    <name>log4j.configuration</name>
+                    <value>log4j.xml</value>
+                  </systemProperty>
+              </systemProperties>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
