@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="ListBooks_OK_1_Test">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-02-24</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-02-24T23:34:23</last-updated-on>
+        </meta-info>
+        
+        <description>
+            In this test we add a book first to the registry and afterwards try to get the list of all available books.
+            The newly added book has to be present in this list. As we do not know exactly what other books might be in the
+            complete list of books we have to validate with XPath magic.
+        </description>
+        
+        <variables>
+            <variable name="isbn" value="978-0321200686"/>
+        </variables>
+        
+        <actions>
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:book>
+                                    <bkr:title>Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions</bkr:title>
+                                    <bkr:author>Gregor Hohpe, Bobby Wolf</bkr:author>
+                                    <bkr:isbn>${isbn}</bkr:isbn>
+                                    <bkr:year>2003</bkr:year>
+                                </bkr:book>
+                            </bkr:AddBookRequestMessage>                        
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="add-book"/>
+                </header>
+            </send>
+            
+            <receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:success>true</bkr:success>
+                            </bkr:AddBookResponseMessage>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+            
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:ListBooksRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore"/>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="list-books"/>
+                </header>
+            </send>
+            
+            <receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <validate path="count(/bkr:ListBooksResponseMessage/bkr:books/bkr:book) > 0" value="true" result-type="boolean"/>
+                    <validate path="/bkr:ListBooksResponseMessage/bkr:books/bkr:book/bkr:isbn[.='${isbn}']" value="true" result-type="boolean"/>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

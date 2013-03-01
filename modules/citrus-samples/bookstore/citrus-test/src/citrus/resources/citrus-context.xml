@@ -20,7 +20,7 @@
         <property name="schemas">
             <list>
                 <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/samples/bookregistry/schema/BookRegistrySchema.xsd"/>
+                    <property name="xsd" value="classpath:com/consol/citrus/samples/bookstore/schema/BookStoreSchema.xsd"/>
                 </bean>
             </list>
         </property>
@@ -31,7 +31,7 @@
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>
-                <entry key="project.name" value="Citrus BookRegistry sample"/>
+                <entry key="project.name" value="Citrus BookStore sample"/>
             </map>
         </property>
     </bean>
@@ -40,7 +40,7 @@
     <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
         <property name="namespaceMappings">
             <props>
-                <prop key="bkr">http://www.consol.com/schemas/bookregistry</prop>            
+                <prop key="bkr">http://www.consol.com/schemas/bookstore</prop>            
             </props>
         </property>
     </bean>
@@ -58,17 +58,17 @@
     <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
   
     <!-- Message Sender/Receiver -->
-    <citrus-ws:message-sender id="bookRegistryRequestMessageSender" 
-                              request-url="http://localhost:8070/bookregistry"
-                              reply-handler="bookRegistryResponseMessageHandler"
+    <citrus-ws:message-sender id="bookStoreRequestMessageSender" 
+                              request-url="http://localhost:8070/bookstore"
+                              reply-handler="bookStoreResponseMessageHandler"
                               interceptors="clientInterceptors"/>
                               
-    <citrus-ws:reply-message-handler id="bookRegistryResponseMessageHandler"/>
+    <citrus-ws:reply-message-handler id="bookStoreResponseMessageHandler"/>
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     
-    <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.samples.bookregistry.model"/>
+    <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.samples.bookstore.model"/>
         
 </beans>

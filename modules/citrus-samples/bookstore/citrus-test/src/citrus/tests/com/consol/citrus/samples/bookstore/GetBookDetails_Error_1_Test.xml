@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="GetBookDetails_Error_1_Test">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-02-24</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-02-24T23:34:23</last-updated-on>
+        </meta-info>
+        
+        <description>
+            This test forces a SOAP fault in WebService response. Citrus asks for book details regarding a non-existent book.
+            SOAP WebService server creates a SOAP fault that is validated in Citrus.
+        </description>
+        
+        <variables>
+            <variable name="isbn" value="000-0000000000"/>
+            <variable name="faultCode" value="{http://www.consol.com/citrus/samples/errorcodes}CITRUS:1002"/>
+        </variables>
+        
+        <actions>
+            <ws:assert fault-code="${faultCode}" fault-string="Book(isbn:'${isbn}') not available in registry">
+                <send with="bookStoreRequestMessageSender">
+                    <message>
+                        <data>
+                            <![CDATA[
+                                <bkr:GetBookDetailsRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                    <bkr:isbn>${isbn}</bkr:isbn>
+                                </bkr:GetBookDetailsRequestMessage>                        
+                            ]]>
+                        </data>
+                    </message>
+                    <header>
+                        <element name="citrus_soap_action" value="get-book-details"/>
+                    </header>
+                </send>
+            </ws:assert>
+        </actions>
+    </testcase>
+</spring:beans>

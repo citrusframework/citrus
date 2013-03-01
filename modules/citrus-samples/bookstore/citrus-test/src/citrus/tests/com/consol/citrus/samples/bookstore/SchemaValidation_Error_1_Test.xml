@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="SchemaValidation_Error_1_Test">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-02-24</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-02-24T23:34:23</last-updated-on>
+        </meta-info>
+        
+        <description>
+            This test gets schema validation errors in SOAP fault response from server as the request is not
+            valid ('year'=>'03.Okt.2008' not a valid number).
+        </description>
+        
+        <variables>
+            <variable name="isbn" value="978-0596517335"/>
+            <variable name="faultCode" value="{http://www.consol.com/citrus/samples/errorcodes}CITRUS:999"/>
+        </variables>
+        
+        <actions>
+            <ws:assert fault-code="${faultCode}" fault-string="Client sent invalid request!">
+                <send with="bookStoreRequestMessageSender">
+                    <message>
+                        <data>
+                            <![CDATA[
+                                <bkr:AddBookRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                    <bkr:book>
+                                        <bkr:title>Maven: The Definitive Guide</bkr:title>
+                                        <bkr:author>Mike Loukides, Sonatype</bkr:author>
+                                        <bkr:isbn>${isbn}</bkr:isbn>
+                                        <bkr:year>03.Okt.2008</bkr:year>
+                                    </bkr:book>
+                                </bkr:AddBookRequestMessage>                        
+                            ]]>
+                        </data>
+                    </message>
+                    <header>
+                        <element name="citrus_soap_action" value="addBook"/>
+                    </header>
+                </send>
+            </ws:assert>
+        </actions>
+    </testcase>
+</spring:beans>

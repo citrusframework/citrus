@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:ws="http://www.springframework.org/schema/integration/ws"
+    xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd
+            http://www.springframework.org/schema/integration/ws
+            http://www.springframework.org/schema/integration/ws/spring-integration-ws.xsd
+            http://www.springframework.org/schema/oxm 
+            http://www.springframework.org/schema/oxm/spring-oxm.xsd">
+    
+    <!-- SOAP WebService servlet mapping -->
+    <bean id="defaultPayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+        <property name="mappings">
+            <props>
+                <prop key="{http://www.consol.com/schemas/bookstore}AddBookRequestMessage">bookStoreInboundGateway</prop>
+                <prop key="{http://www.consol.com/schemas/bookstore}GetBookDetailsRequestMessage">bookStoreInboundGateway</prop>
+                <prop key="{http://www.consol.com/schemas/bookstore}ListBooksRequestMessage">bookStoreInboundGateway</prop>
+                <prop key="{http://www.consol.com/schemas/bookstore}GetBookAbstractRequestMessage">bookAbstractInboundGateway</prop>
+            </props>
+        </property>
+        <property name="defaultEndpoint" ref="bookStoreInboundGateway"/>
+        <property name="interceptors">
+            <list>
+                <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+                <bean id="soapAttachmentEndpointInterceptor" 
+                              class="com.consol.citrus.samples.bookstore.endpoint.interceptor.BookAbstractAttachmentEndpointInterceptor">
+                    <property name="bookAbstractInboundGateway" ref="bookAbstractInboundGateway"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+        <property name="defaultFault" value="{http://www.consol.com/citrus/samples/errorcodes}CITRUS:1000" />
+        <property name="exceptionMappings">
+            <value>
+                com.consol.citrus.samples.common.exceptions.XmlSchemaValidationException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:999,Client sent invalid request!
+                com.consol.citrus.samples.bookstore.exceptions.DuplicateIsbnException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:1001
+                com.consol.citrus.samples.bookstore.exceptions.UnknownBookException={http://www.consol.com/citrus/samples/errorcodes}CITRUS:1002
+            </value>
+        </property>
+    </bean>
+    
+    <ws:inbound-gateway id="bookStoreInboundGateway" 
+        request-channel="inboundChannel"
+        reply-channel="outboundChannel"/>
+        
+    <ws:inbound-gateway id="bookAbstractInboundGateway" 
+        request-channel="inboundChannel"
+        reply-channel="outboundChannel"/>
+        
+    <int:channel id="inboundChannel">
+        <int:interceptors>
+            <int:wire-tap channel="logger"/>
+            <bean class="com.consol.citrus.samples.common.xml.validation.XmlSchemaValidatingChannelInterceptor">
+                <constructor-arg value="classpath:com/consol/citrus/samples/bookstore/schema/BookStoreSchema.xsd" />
+            </bean>
+            <bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+                <constructor-arg ref="unmarshallingTransformer"/>
+            </bean>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:channel id="outboundChannel">
+        <int:interceptors>
+            <bean class="org.springframework.integration.transformer.MessageTransformingChannelInterceptor">
+                <constructor-arg ref="marshallingTransformer"/>
+            </bean>
+        </int:interceptors>
+    </int:channel>
+    
+    <int:payload-type-router input-channel="inboundChannel" resolution-required="true">
+        <int:mapping type="com.consol.citrus.samples.bookstore.model.AddBookRequestMessage" channel="addChannel" />
+        <int:mapping type="com.consol.citrus.samples.bookstore.model.GetBookDetailsRequestMessage" channel="detailChannel" />
+        <int:mapping type="com.consol.citrus.samples.bookstore.model.ListBooksRequestMessage" channel="listChannel"/>
+        <int:mapping type="com.consol.citrus.samples.bookstore.model.GetBookAbstractRequestMessage" channel="abstractChannel" />
+    </int:payload-type-router>
+    
+    <int:service-activator ref="bookStore" method="addBook" input-channel="addChannel" output-channel="outboundChannel"/>
+    <int:service-activator ref="bookStore" method="getBookDetails" input-channel="detailChannel" output-channel="outboundChannel"/>
+    <int:service-activator ref="bookStore" method="listBooks" input-channel="listChannel" output-channel="outboundChannel"/>
+    <int:service-activator ref="bookStore" method="getBookAbstract" input-channel="abstractChannel" output-channel="outboundChannel"/>
+    
+    <bean id="bookStore" class="com.consol.citrus.samples.bookstore.BookStore"/>
+    
+    <!-- XML marshalling/unmarshalling -->
+    <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.samples.bookstore.model"/>
+    
+    <bean id="unmarshallingTransformer" class="org.springframework.integration.xml.transformer.UnmarshallingTransformer">
+        <constructor-arg>
+            <ref bean="marshaller"/>
+        </constructor-arg>
+    </bean>    
+    
+    <bean id="marshallingTransformer" class="org.springframework.integration.xml.transformer.MarshallingTransformer">
+        <constructor-arg>
+            <ref bean="marshaller"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.integration.xml.transformer.ResultToStringTransformer"/>
+        </constructor-arg>
+    </bean>
+</beans>

@@ -19,7 +19,7 @@
             <groupId>com.consol.citrus.mvn</groupId>
             <artifactId>citrus-maven-plugin</artifactId>
             <configuration>
-                <targetPackage>com.consol.citrus.samples.bookregistry</targetPackage>
+                <targetPackage>com.consol.citrus.samples.bookstore</targetPackage>
             </configuration>
         </plugin>
         

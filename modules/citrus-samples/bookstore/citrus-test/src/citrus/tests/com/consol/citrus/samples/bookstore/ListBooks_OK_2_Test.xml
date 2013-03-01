@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="ListBooks_OK_2_Test">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-12-07</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-12-07T00:00:00</last-updated-on>
+        </meta-info>
+        
+        <description>
+            In this test we get the list of all available books. This time we validate the existence of a newly added book via Groovy script. 
+        </description>
+        
+        <variables>
+            <variable name="isbn" value="citrus:concat('978-', citrus:randomNumber(9, true))"/>
+            <variable name="year" value="citrus:currentDate('yyyy')"/>
+        </variables>
+        
+        <actions>
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:book>
+                                    <bkr:title>Random Book</bkr:title>
+                                    <bkr:author>Random Author</bkr:author>
+                                    <bkr:isbn>${isbn}</bkr:isbn>
+                                    <bkr:year>${year}</bkr:year>
+                                </bkr:book>
+                            </bkr:AddBookRequestMessage>                        
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="add-book"/>
+                </header>
+            </send>
+            
+            <receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:success>true</bkr:success>
+                            </bkr:AddBookResponseMessage>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+            
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:ListBooksRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore"/>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="list-books"/>
+                </header>
+            </send>
+            
+            <receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <validate>
+                        <script type="groovy">
+                            org.testng.Assert.assertTrue(root.books.book.findAll{ it.isbn == '${isbn}' }.size() == 1, 
+                                                         "Missing book with isbn: '${isbn}' in book list!")
+                        </script>
+                    </validate>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

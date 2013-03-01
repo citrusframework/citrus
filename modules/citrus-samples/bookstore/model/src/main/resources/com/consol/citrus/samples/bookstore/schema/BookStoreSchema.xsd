@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.consol.com/schemas/bookstore"
+	 targetNamespace="http://www.consol.com/schemas/bookstore"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	
+	<xs:complexType name="Book">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" minOccurs="0"/>
+			<xs:element name="title" type="xs:string"/>
+			<xs:element name="author" type="xs:string"/>
+			<xs:element name="isbn" type="xs:string"/>
+            <xs:element name="year" type="xs:int"/>
+			<xs:element name="registration-date" type="xs:dateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:element name="AddBookRequestMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="book" type="Book"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+	<xs:element name="AddBookResponseMessage">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="success" type="xs:boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+    
+    <xs:element name="GetBookDetailsRequestMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isbn" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="GetBookDetailsResponseMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="book" type="Book"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="GetBookAbstractRequestMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isbn" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="GetBookAbstractResponseMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="book" type="Book"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="ListBooksRequestMessage">
+        <xs:complexType></xs:complexType>
+    </xs:element>
+    
+    <xs:element name="ListBooksResponseMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="books">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element name="book" type="Book"/>
+                        </xs:sequence>  
+                    </xs:complexType>              
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

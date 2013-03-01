@@ -50,7 +50,7 @@ OVERVIEW
   
   * FlightBooking (/flightbooking)
   * Greeting (/greeting)
-  * BookRegistry (/bookregistry)
+  * BookStore (/bookstore)
   
   The projects cover following message transports and technologies:
   
@@ -58,7 +58,7 @@ OVERVIEW
   ------------------------------------------------------------------------
   FlightBooking      |  X  |  X   |      |         |  X   |      |   X   |
   Greeting           |  X  |      |      |    X    |      |  X   |   X   |
-  BookRegistry       |  X  |      |  X   |         |      |  X   |       |
+  BookStore       |  X  |      |  X   |         |      |  X   |       |
   
 FLIGHTBOOKING SAMPLE
 
@@ -87,9 +87,9 @@ GREETING SAMPLE
   executed. If you want to start the JMS Greeting sample application in standalone mode call 
   'greetingDemo.bat' (Windows) or 'greetingDemo.sh' (Unix).
   
-BOOKREGISTRY SAMPLE
+BOOKSTORE SAMPLE
 
-  The BookRegistry sample application offers a SOAP WebService with following supported 
+  The BookStore sample application offers a SOAP WebService with following supported 
   operations:
   
   * addBook
@@ -101,9 +101,9 @@ BOOKREGISTRY SAMPLE
   test cases will call the WebService as client and test the complete functionality for the 
   available operations.
   
-  The BookRegistry WebService application is started automatically before the test cases are 
-  executed, but you can also start the BookRegistry sample application in standalone mode 
-  ('bookRegistryDemo.bat' (Windows) or 'bookRegistryDemo.sh' (Unix)).
+  The BookStore WebService application is started automatically before the test cases are 
+  executed, but you can also start the BookStore sample application in standalone mode 
+  ('bookStoreDemo.bat' (Windows) or 'bookStoreDemo.sh' (Unix)).
   
 WHAT'S NEXT?!
 

@@ -27,9 +27,9 @@
           </executions>
           <configuration>
             <extension>true</extension>
-            <schemaDirectory>src/main/resources/com/consol/citrus/samples/bookregistry/schema</schemaDirectory>
+            <schemaDirectory>src/main/resources/com/consol/citrus/samples/bookstore/schema</schemaDirectory>
             <schemaIncludes>
-              <include>BookRegistrySchema.xsd</include>
+              <include>BookStoreSchema.xsd</include>
             </schemaIncludes>
             <bindingIncludes>
               <include>**/*.xjb</include>

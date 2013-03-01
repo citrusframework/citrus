@@ -6,5 +6,5 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd ">
         
     <import resource="classpath:com/consol/citrus/samples/citrus-samples-common.xml"/>
-    <import resource="classpath:com/consol/citrus/samples/bookregistry/bookRegistry.xml"/>
+    <import resource="classpath:com/consol/citrus/samples/bookstore/bookStore.xml"/>
 </beans>

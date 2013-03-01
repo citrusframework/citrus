@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd 
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    
+    <testcase name="GetBookAbstract_OK_1_Test">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2010-02-24</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2010-02-24T23:34:23</last-updated-on>
+        </meta-info>
+        
+        <description>
+            This test shows basic SOAP WebService client server communication. 
+            Citrus first of all adds a book to the registry in order to request for the book 
+            details right after book was added. This time the book abstract is also returned 
+            as SOAP attachment.
+        </description>
+        
+        <variables>
+            <variable name="isbn" value="978-1933988999"/>
+        </variables>
+        
+        <actions>
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:book>
+                                    <bkr:title>Spring in Action</bkr:title>
+                                    <bkr:author>Craig Walls, Ryan Breidenbach</bkr:author>
+                                    <bkr:isbn>${isbn}</bkr:isbn>
+                                    <bkr:year>2007</bkr:year>
+                                </bkr:book>
+                            </bkr:AddBookRequestMessage>                        
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="add-book"/>
+                </header>
+            </send>
+            
+            <receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:AddBookResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:success>true</bkr:success>
+                            </bkr:AddBookResponseMessage>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+            
+            <send with="bookStoreRequestMessageSender">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:GetBookAbstractRequestMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:isbn>${isbn}</bkr:isbn>
+                            </bkr:GetBookAbstractRequestMessage>                        
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="citrus_soap_action" value="get-book-details"/>
+                </header>
+            </send>
+            
+            <ws:receive with="bookStoreResponseMessageHandler">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <bkr:GetBookAbstractResponseMessage xmlns:bkr="http://www.consol.com/schemas/bookstore">
+                                <bkr:book>
+                                    <bkr:id>@ignore@</bkr:id>
+                                    <bkr:title>Spring in Action</bkr:title>
+                                    <bkr:author>Craig Walls, Ryan Breidenbach</bkr:author>
+                                    <bkr:isbn>${isbn}</bkr:isbn>
+                                    <bkr:year>2007</bkr:year>
+                                    <bkr:registration-date>@ignore@</bkr:registration-date>
+                                </bkr:book>
+                            </bkr:GetBookAbstractResponseMessage>
+                        ]]>
+                    </data>
+                </message>
+                <extract>
+                    <message path="/bkr:GetBookAbstractResponseMessage/bkr:book/bkr:id" variable="bookId"></message>
+                </extract>
+                <ws:attachment content-id="book-abstract" content-type="text/plain">
+                    <ws:resource file="classpath:com/consol/citrus/samples/bookstore/book-abstract.txt"/>
+                </ws:attachment>
+            </ws:receive>
+        </actions>
+    </testcase>
+</spring:beans>
