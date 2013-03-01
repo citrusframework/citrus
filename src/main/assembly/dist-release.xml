@@ -38,7 +38,9 @@
         <exclude>**/test-output/**</exclude>
         <exclude>**/logs/**</exclude>
         <exclude>**/src/pom.xml</exclude>
+        <exclude>**/citrus-test/pom.xml</exclude>
       </excludes>
+      <lineEnding>unix</lineEnding>
     </fileSet>
     
     <!-- Reference documentation -->
