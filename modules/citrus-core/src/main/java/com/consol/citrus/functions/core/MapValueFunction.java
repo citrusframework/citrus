@@ -63,6 +63,8 @@ import com.consol.citrus.functions.Function;
  *
  */
 public class MapValueFunction implements Function, InitializingBean {
+    
+    /** Mappings for key value logic in this function */
 	private Map<String, String> map = null;
 	
 	/**
@@ -83,14 +85,25 @@ public class MapValueFunction implements Function, InitializingBean {
 		return result;
 	}
 
+	/**
+	 * Check that map is set correctly after initialization
+	 */
 	public void afterPropertiesSet() {
 		Assert.notEmpty(map);
 	}
 
+	/**
+	 * Gets the mappings for this function.
+	 * @return
+	 */
 	public Map<String, String> getMap() {
 		return map;
 	}
 
+	/**
+	 * Sets the mappings for this function.
+	 * @param map
+	 */
 	public void setMap(Map<String, String> map) {
 		this.map = map;
 	}
