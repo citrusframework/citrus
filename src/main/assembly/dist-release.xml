@@ -37,6 +37,7 @@
         <exclude>**/target/**</exclude>
         <exclude>**/test-output/**</exclude>
         <exclude>**/logs/**</exclude>
+        <exclude>**/src/pom.xml</exclude>
       </excludes>
     </fileSet>
     
@@ -103,6 +104,20 @@
   </fileSets>
   
   <files>
+    <file>
+      <source>modules/citrus-samples/bookstore/citrus-test/src/pom.xml</source>
+      <outputDirectory>samples/bookstore/citrus-test</outputDirectory>
+    </file>
+    
+    <file>
+      <source>modules/citrus-samples/flightbooking/citrus-test/src/pom.xml</source>
+      <outputDirectory>samples/flightbooking/citrus-test</outputDirectory>
+    </file>
+    
+    <file>
+      <source>modules/citrus-samples/greeting/citrus-test/src/pom.xml</source>
+      <outputDirectory>samples/greeting/citrus-test</outputDirectory>
+    </file>
     <!-- PDF reference documentation -->
     <file>
       <source>target/doc/pdf/citrus-reference.pdf</source>
