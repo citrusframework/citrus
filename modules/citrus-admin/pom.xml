@@ -66,14 +66,14 @@
         
         <!-- JaxB Bindings (API and implementation) -->
         <dependency>
-            <groupId>com.sun.xml</groupId>
-            <artifactId>com.springsource.com.sun.xml.bind</artifactId>
-            <version>2.2.0</version>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+          <version>2.2.6</version>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>com.springsource.javax.xml.bind</artifactId>
-            <version>2.2.0</version>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>2.2.6</version>
         </dependency>
     </dependencies>
   </dependencyManagement>
@@ -153,16 +153,6 @@
   </dependencies>
   
   <build>
-    <pluginManagement>
-        <plugins>
-            <plugin>
-              <groupId>org.jvnet.jaxb2.maven2</groupId>
-              <artifactId>maven-jaxb2-plugin</artifactId>
-              <version>0.8.3</version>
-            </plugin>
-        </plugins>
-    </pluginManagement>
-    
     <plugins>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -194,17 +184,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webResources>
-            <resource>
-              <directory>${project.build.directory}</directory>
-              <targetPath>citrus</targetPath>
-              <includes>
-                <include>**/*</include>
-              </includes>
-            </resource>
-          </webResources>
-        </configuration>
       </plugin>
       
       <plugin>

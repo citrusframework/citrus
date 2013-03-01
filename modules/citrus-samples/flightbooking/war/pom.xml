@@ -19,17 +19,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <configuration>
-            <webResources>
-              <resource>
-                <directory>${project.build.directory}</directory>
-                <targetPath>citrus</targetPath>
-                <includes>
-                  <include>**/*</include>
-                </includes>
-              </resource>
-            </webResources>
-          </configuration>
         </plugin>
         
         <plugin>
