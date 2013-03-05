@@ -16,12 +16,15 @@
 
 package com.consol.citrus.ws.validation;
 
+import java.util.Iterator;
+
 import javax.xml.transform.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.context.TestContext;
@@ -47,23 +50,55 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
      */
     @Override
     protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
-            TestContext context, ValidationContext validationContext) {
+            TestContext context, final ValidationContext validationContext) {
         if (controlDetail == null) { return; }
         
         if (log.isDebugEnabled()) {
             log.debug("Validating SOAP fault detail content ...");
         }
         
+        Iterator<ValidationContext> contexts;
+        if (validationContext instanceof SoapFaultDetailValidationContext) {
+            contexts = ((SoapFaultDetailValidationContext)validationContext).getValidationContexts().iterator();
+        } else {
+            contexts = new Iterator<ValidationContext>() {
+                public boolean hasNext() {
+                    return true;
+                }
+                public ValidationContext next() {
+                    return validationContext;
+                }
+                public void remove() {
+                }
+            };
+        }
+        
         if (receivedDetail != null) {
-            String receivedDetailString = extractFaultDetail(receivedDetail);
-            String controlDetailString = extractFaultDetail(controlDetail);
+            Iterator<SoapFaultDetailElement> receivedDetailElements = receivedDetail.getDetailEntries();
+            Iterator<SoapFaultDetailElement> controlDetailElements = controlDetail.getDetailEntries();
             
-            if (log.isDebugEnabled()) {
-                log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
-                log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
+            while (receivedDetailElements.hasNext()) {
+                if (!controlDetailElements.hasNext()) {
+                    throw new ValidationException("Unexpected SOAP fault detail entry in received message");
+                }
+                
+                SoapFaultDetailElement receivedDetailElement = receivedDetailElements.next();
+                SoapFaultDetailElement controlDetailElement = controlDetailElements.next();
+                
+                String receivedDetailString = extractFaultDetail(receivedDetailElement);
+                String controlDetailString = extractFaultDetail(controlDetailElement);
+                
+                if (log.isDebugEnabled()) {
+                    log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
+                    log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
+                }
+                
+                validateFaultDetailString(receivedDetailString, controlDetailString, context, contexts.next());
             }
             
-            validateFaultDetailString(receivedDetailString, controlDetailString, context, validationContext);
+            if (controlDetailElements.hasNext()) {
+                throw new ValidationException("Missing at least one SOAP fault detail entry in received message");
+            }
         } else {
             throw new ValidationException("Missing SOAP fault detail in received message");
         }
@@ -71,12 +106,12 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
 
     /**
      * Extracts fault detail string from soap fault detail instance. Transforms detail source
-     * into string and takes care on detail element that gets stripped off.
+     * into string and takes care.
      * 
      * @param detail
      * @return
      */
-    private String extractFaultDetail(SoapFaultDetail detail) {
+    private String extractFaultDetail(SoapFaultDetailElement detail) {
         StringResult detailResult = new StringResult();
         
         try {
@@ -90,13 +125,7 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             throw new CitrusRuntimeException(e);
         }
         
-        String detailString = detailResult.toString();
-        
-        if (detailString.startsWith("<detail>")) {
-            detailString = detailString.substring("<detail>".length(), detailString.length() - "</detail>".length());
-        }
-        
-        return detailString;
+        return detailResult.toString();
     }
 
     /**

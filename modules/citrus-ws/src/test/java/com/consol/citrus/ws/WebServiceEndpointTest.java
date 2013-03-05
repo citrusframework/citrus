@@ -956,7 +956,8 @@ public class WebServiceEndpointTest {
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><DetailMessage><text>This request was not OK!</text></DetailMessage>")
+        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>")
                                 .copyHeaders(responseHeaders)
                                 .build();
         
@@ -1025,7 +1026,95 @@ public class WebServiceEndpointTest {
         
         endpoint.invoke(messageContext);
         
-        Assert.assertEquals(soapFaultResult.toString(), responseMessage.getPayload());
+        Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        
+        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+    }
+    
+    @Test
+    public void testMessageProcessingWithMultipleSoapFaultDetails() throws Exception {
+        WebServiceEndpoint endpoint = new WebServiceEndpoint();
+
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(requestHeaders)
+                                .build();
+        
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
+        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_2", "<Error><text>This request was not OK!</text></Error>");
+        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>")
+                                .copyHeaders(responseHeaders)
+                                .build();
+        
+        endpoint.setMessageHandler(new MessageHandler() {
+            public Message<?> handleMessage(Message<?> message) {
+                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                
+                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                
+                return responseMessage;
+            }
+        });
+        
+        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
+        
+        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
+        SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
+        final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
+        SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
+        
+        StringResult soapFaultResult = new StringResult();
+        
+        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        
+        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        
+        expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
+        
+        expect(soapRequest.getSoapHeader()).andReturn(soapRequestHeader).once();
+        expect(soapRequestHeader.getSource()).andReturn(null).once();
+        
+        Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
+        expect(soapRequestHeader.examineAllHeaderElements()).andReturn(emptyHeaderSet.iterator()).once();
+        
+        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        
+        Set<Attachment> emptyAttachmentSet = Collections.emptySet();
+        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        
+        expect(messageContext.getResponse()).andReturn(soapResponse).once();
+
+        expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
+        
+        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        
+        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
+            public SoapFault answer() throws Throwable {
+                Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
+                
+                return soapFault;
+            }
+        });
+        
+        expect(soapFault.addFaultDetail()).andReturn(soapFaultDetail).once();
+        
+        expect(soapFaultDetail.getResult()).andReturn(soapFaultResult).times(2);
+        
+        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        
+        endpoint.invoke(messageContext);
+        
+        Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
         
         verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
     }

@@ -71,7 +71,7 @@ public class AssertSoapFaultDefinitionTest {
                 soapFault(echo("${foo}"))
                     .faultCode("SOAP-ENV:Server")
                     .faultString("Internal server error")
-                    .faultDetail("<detail>FooBar</detail>");
+                    .faultDetail("<ErrorDetail><message>FooBar</message></ErrorDetail>");
             }
         };
         
@@ -87,7 +87,39 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
-        Assert.assertEquals(container.getFaultDetail(), "<detail>FooBar</detail>");
+        Assert.assertEquals(container.getFaultDetails().size(), 1L);
+        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>FooBar</message></ErrorDetail>");
+        Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+    }
+    
+    @Test
+    public void testMultipleFaultDetails() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                soapFault(echo("${foo}"))
+                    .faultCode("SOAP-ENV:Server")
+                    .faultString("Internal server error")
+                    .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
+                    .faultDetail("<MessageDetail><message>FooBar</message></MessageDetail>");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        
+        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
+        Assert.assertEquals(container.getFaultString(), "Internal server error");
+        Assert.assertEquals(container.getFaultDetails().size(), 2L);
+        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><code>1001</code></ErrorDetail>");
+        Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>FooBar</message></MessageDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
     }
     
@@ -104,7 +136,7 @@ public class AssertSoapFaultDefinitionTest {
         };
         
         reset(resource);
-        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<detail>FooBar</detail>".getBytes())).once();
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<ErrorDetail><message>FooBar</message</ErrorDetail>".getBytes())).once();
         replay(resource);
         
         builder.run(null, null);
@@ -119,7 +151,45 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
-        Assert.assertEquals(container.getFaultDetail(), "<detail>FooBar</detail>");
+        Assert.assertEquals(container.getFaultDetails().size(), 1L);
+        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>FooBar</message</ErrorDetail>");
+        Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+        
+        verify(resource);
+    }
+    
+    @Test
+    public void testMultipleFaultDetailsInlineAndResource() throws IOException {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                soapFault(echo("${foo}"))
+                    .faultCode("SOAP-ENV:Server")
+                    .faultString("Internal server error")
+                    .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
+                    .faultDetailResource(resource);
+            }
+        };
+        
+        reset(resource);
+        expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<MessageDetail><message>FooBar</message></MessageDetail>".getBytes())).once();
+        replay(resource);
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), AssertSoapFault.class.getSimpleName());
+        
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        
+        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
+        Assert.assertEquals(container.getFaultString(), "Internal server error");
+        Assert.assertEquals(container.getFaultDetails().size(), 2L);
+        Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><code>1001</code></ErrorDetail>");
+        Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>FooBar</message></MessageDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
         verify(resource);

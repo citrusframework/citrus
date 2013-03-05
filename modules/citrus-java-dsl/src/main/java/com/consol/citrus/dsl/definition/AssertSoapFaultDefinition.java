@@ -24,6 +24,7 @@ import org.springframework.ws.soap.SoapMessageFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
@@ -62,7 +63,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      * @return
      */
     public AssertSoapFaultDefinition faultDetail(String faultDetail) {
-        action.setFaultDetail(faultDetail);
+        action.getFaultDetails().add(faultDetail);
         return this;
     }
     
@@ -73,7 +74,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      */
     public AssertSoapFaultDefinition faultDetailResource(Resource resource) {
         try {
-            action.setFaultDetail(FileUtils.readToString(resource));
+            action.getFaultDetails().add(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read fault detail resource", e);
         }
@@ -86,7 +87,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      * @return
      */
     public AssertSoapFaultDefinition faultDetailResource(String filePath) {
-        action.setFaultDetailResourcePath(filePath);
+        action.getFaultDetails().add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
         return this;
     }
     

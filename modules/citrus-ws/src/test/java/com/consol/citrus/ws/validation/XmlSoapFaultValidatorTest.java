@@ -18,9 +18,13 @@ package com.consol.citrus.ws.validation;
 
 import static org.easymock.EasyMock.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.transform.StringSource;
 import org.testng.annotations.Test;
 
@@ -35,10 +39,16 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
     @Autowired
     private XmlSoapFaultValidator soapFaultValidator;
     
-    private String detail = "<ws:message-sender " +
-    		"xmlns:ws=\"http://www.citrusframework.org/schema/ws/config\" " +
-    		"id=\"fooMsgSender\" " +
-    		"request-url=\"http://foo.org/test\"/>";
+    private String error = "<ws:Error xmlns:ws=\"http://www.citrusframework.org/schema/ws/fault\" " +
+    		"type=\"INTERNAL\">" +
+    		    "<ws:code>1001</ws:code>" +
+    		    "<ws:message>Something went wrong</ws:message>" +
+    		"</ws:Error>";
+    
+    private String detail = "<ws:ErrorDetails xmlns:ws=\"http://www.citrusframework.org/schema/ws/fault\">" +
+                "<ws:stacktrace>N/A</ws:stacktrace>" +
+            "</ws:ErrorDetails>";
+    
     @Test
     public void testXmlDetailValidation() {
         soapFaultValidator.validateFaultDetailString(detail, detail, context, new XmlMessageValidationContext());
@@ -49,15 +59,57 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         SoapFaultDetail receivedDetail = EasyMock.createMock(SoapFaultDetail.class);
         SoapFaultDetail controlDetail = EasyMock.createMock(SoapFaultDetail.class);
         
-        reset(receivedDetail, controlDetail);
+        SoapFaultDetailElement receivedDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
+        List<SoapFaultDetailElement> receivedDetailElements = new ArrayList<SoapFaultDetailElement>();
+        receivedDetailElements.add(receivedDetailElement);
         
-        expect(receivedDetail.getSource()).andReturn(new StringSource("<detail>" + detail + "</detail>")).once();
-        expect(controlDetail.getSource()).andReturn(new StringSource(detail)).once();
+        SoapFaultDetailElement controlDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
+        List<SoapFaultDetailElement> controlDetailElements = new ArrayList<SoapFaultDetailElement>();
+        controlDetailElements.add(controlDetailElement);
         
-        replay(receivedDetail, controlDetail);
+        reset(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+        
+        expect(receivedDetail.getDetailEntries()).andReturn(receivedDetailElements.iterator()).once();
+        expect(controlDetail.getDetailEntries()).andReturn(controlDetailElements.iterator()).once();
+        expect(receivedDetailElement.getSource()).andReturn(new StringSource(error)).once();
+        expect(controlDetailElement.getSource()).andReturn(new StringSource(error)).once();
+        
+        replay(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
         
         soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
         
-        verify(receivedDetail, controlDetail);
+        verify(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+    }
+    
+    @Test
+    public void testMultipleFaultDetailTranslation() {
+        SoapFaultDetail receivedDetail = EasyMock.createMock(SoapFaultDetail.class);
+        SoapFaultDetail controlDetail = EasyMock.createMock(SoapFaultDetail.class);
+        
+        SoapFaultDetailElement receivedDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
+        List<SoapFaultDetailElement> receivedDetailElements = new ArrayList<SoapFaultDetailElement>();
+        receivedDetailElements.add(receivedDetailElement);
+        receivedDetailElements.add(receivedDetailElement);
+        
+        SoapFaultDetailElement controlDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
+        List<SoapFaultDetailElement> controlDetailElements = new ArrayList<SoapFaultDetailElement>();
+        controlDetailElements.add(controlDetailElement);
+        controlDetailElements.add(controlDetailElement);
+        
+        reset(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+        
+        expect(receivedDetail.getDetailEntries()).andReturn(receivedDetailElements.iterator()).once();
+        expect(controlDetail.getDetailEntries()).andReturn(controlDetailElements.iterator()).once();
+        expect(receivedDetailElement.getSource()).andReturn(new StringSource(error)).once();
+        expect(controlDetailElement.getSource()).andReturn(new StringSource(error)).once();
+        
+        expect(receivedDetailElement.getSource()).andReturn(new StringSource(detail)).once();
+        expect(controlDetailElement.getSource()).andReturn(new StringSource(detail)).once();
+        
+        replay(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+        
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
+        
+        verify(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
     }
 }

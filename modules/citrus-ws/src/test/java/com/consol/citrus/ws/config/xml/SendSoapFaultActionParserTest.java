@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 
 /**
@@ -40,9 +41,11 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
         
         SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder)action.getMessageBuilder();
-        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
+        Assert.assertEquals(messageBuilder.getFaultDetails().size(), 1);
+        Assert.assertTrue(messageBuilder.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">"));
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000");
         Assert.assertEquals(messageBuilder.getFaultString(), "FaultString");
@@ -56,8 +59,10 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         
         messageBuilder = (SoapFaultAwareMessageBuilder)action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
-        Assert.assertNotNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
+        Assert.assertEquals(messageBuilder.getFaultDetails().size(), 1);
+        Assert.assertEquals(messageBuilder.getFaultDetails().get(0), CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "sendFault");
         Assert.assertEquals(messageBuilder.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001");
         Assert.assertEquals(messageBuilder.getFaultString(), "FaultString");

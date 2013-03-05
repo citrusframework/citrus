@@ -98,8 +98,9 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
      * @param messageBuilder the soap fault aware message builder.
      */
     private void parseFaultDetail(Element faultElement, SoapFaultAwareMessageBuilder messageBuilder) {
-        Element faultDetailElement = DomUtils.getChildElementByTagName(faultElement, "fault-detail");
-        if (faultDetailElement != null) {
+        List<Element> faultDetails = DomUtils.getChildElementsByTagName(faultElement, "fault-detail");
+    
+        for (Element faultDetailElement : faultDetails) {
             if (faultDetailElement.hasAttribute("file")) {
                 
                 if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
@@ -108,11 +109,11 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                messageBuilder.setFaultDetailResource(filePath);
+                messageBuilder.addFaultDetailResource(filePath);
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {
-                    messageBuilder.setFaultDetail(faultDetailData);
+                    messageBuilder.addFaultDetail(faultDetailData);
                 } else {
                     throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
                 }

@@ -17,8 +17,7 @@
 package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.transform.*;
 
@@ -42,6 +41,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
@@ -67,13 +67,10 @@ public class AssertSoapFault extends AbstractActionContainer {
     /** Fault actor */
     private String faultActor = null;
     
-    /** File resource path describing fault detail */
-    private String faultDetailResourcePath;
+    /** List of fault details, either inline data or file resource path */
+    private List<String> faultDetails = new ArrayList<String>();
     
-    /** Fault detail as inline CDATA */
-    private String faultDetail;
-    
-    /** Soap fault validator implementaiton */
+    /** Soap fault validator implementation */
     private SoapFaultValidator validator = new SimpleSoapFaultValidator();
     
     /** Validation context */
@@ -177,15 +174,26 @@ public class AssertSoapFault extends AbstractActionContainer {
      * @throws TransformerException 
      */
     private void addFaultDetail(SoapFault fault, TestContext context) throws TransformerException, IOException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        
-        if (faultDetailResourcePath != null) {
-            transformer.transform(new StringSource(
-                    context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(faultDetailResourcePath, context)))), fault.addFaultDetail().getResult());
-        } else if (faultDetail != null){
-            transformer.transform(new StringSource(
-                    context.replaceDynamicContentInString(faultDetail)), fault.addFaultDetail().getResult());
+        if (!faultDetails.isEmpty()) {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            
+            SoapFaultDetail soapFaultDetail = fault.addFaultDetail();
+            for (int i = 0; i < faultDetails.size(); i++) {
+                String faultDetail = faultDetails.get(i);
+                
+                if (faultDetail.startsWith(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE)) {
+                    String resourcePath = faultDetail.substring(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE.length() + 1, faultDetail.length() - 1);
+                    
+                    transformer.transform(new StringSource(
+                        context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context)))), soapFaultDetail.getResult());
+                } else {
+                    transformer.transform(new StringSource(
+                        context.replaceDynamicContentInString(faultDetail)), soapFaultDetail.getResult());
+                }
+            }
         }
     }
 
@@ -229,22 +237,6 @@ public class AssertSoapFault extends AbstractActionContainer {
 	public void setFaultString(String faultString) {
 		this.faultString = faultString;
 	}
-
-    /**
-     * Set the fault detail from external file resource.
-     * @param faultDetailResource the faultDetailResource to set
-     */
-    public void setFaultDetailResourcePath(String faultDetailResource) {
-        this.faultDetailResourcePath = faultDetailResource;
-    }
-
-    /**
-     * Set the fault string from inline CDATA.
-     * @param faultDetail the faultDetail to set
-     */
-    public void setFaultDetail(String faultDetail) {
-        this.faultDetail = faultDetail;
-    }
 
     /**
      * @param validator the validator to set
@@ -333,19 +325,19 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     /**
-     * Gets the faultDetailResource.
-     * @return the faultDetailResource
+     * Gets the list of fault details.
+     * @return the faultDetails
      */
-    public String getFaultDetailResourcePath() {
-        return faultDetailResourcePath;
+    public List<String> getFaultDetails() {
+        return faultDetails;
     }
-
+    
     /**
-     * Gets the faultDetail.
-     * @return the faultDetail
+     * Sets the faultDetails.
+     * @param faultDetails the faultDetails to set
      */
-    public String getFaultDetail() {
-        return faultDetail;
+    public void setFaultDetails(List<String> faultDetails) {
+        this.faultDetails = faultDetails;
     }
 
     /**
@@ -395,4 +387,5 @@ public class AssertSoapFault extends AbstractActionContainer {
     public void setValidationContext(ValidationContext validationContext) {
         this.validationContext = validationContext;
     }
+    
 }

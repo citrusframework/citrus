@@ -16,12 +16,14 @@
 
 package com.consol.citrus.ws.message.builder;
 
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
@@ -40,6 +42,9 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     
     /** Optional fault actor */
     private String faultActor;
+    
+    /** List of fault detail elements */
+    private List<String> faultDetails = new ArrayList<String>();
     
     @Override
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
@@ -61,6 +66,21 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
         }
         
         headers.put(CitrusSoapMessageHeaders.SOAP_FAULT, soapFaultDefinitionHolder.toString());
+        
+        for (int i = 0; i < faultDetails.size(); i++) {
+            String faultDetail = faultDetails.get(i);
+            if (faultDetail.startsWith(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE)) {
+                String resourcePath = faultDetail.substring(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE.length() + 1, faultDetail.length() - 1);
+                try {
+                    headers.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_" + (i+1), context.replaceDynamicContentInString(
+                            FileUtils.readToString(FileUtils.getFileResource(resourcePath, context))));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to build soap fault detail from resource", e);
+                }
+            } else {
+                headers.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_" + (i+1), context.replaceDynamicContentInString(faultDetail));
+            }
+        }
         
         return headers;
     }
@@ -85,19 +105,19 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
     }
     
     /**
-     * Delegates to payload data setter.
+     * Adds a fault detail element.
      * @param faultDetail
      */
-    public void setFaultDetail(String faultDetail) {
-        setPayloadData(faultDetail);
+    public void addFaultDetail(String faultDetail) {
+        faultDetails.add(faultDetail);
     }
     
     /**
      * Delegates to payload resource setter.
      * @param faultDetailResource
      */
-    public void setFaultDetailResource(String faultDetailResource) {
-        setPayloadResourcePath(faultDetailResource);
+    public void addFaultDetailResource(String faultDetailResourcePath) {
+        faultDetails.add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" +  faultDetailResourcePath + ")");
     }
     
     /**
@@ -130,5 +150,21 @@ public class SoapFaultAwareMessageBuilder extends PayloadTemplateMessageBuilder 
      */
     public String getFaultString() {
         return faultString;
+    }
+
+    /**
+     * Gets the faultDetails.
+     * @return the faultDetails the faultDetails to get.
+     */
+    public List<String> getFaultDetails() {
+        return faultDetails;
+    }
+
+    /**
+     * Sets the faultDetails.
+     * @param faultDetails the faultDetails to set
+     */
+    public void setFaultDetails(List<String> faultDetails) {
+        this.faultDetails = faultDetails;
     }
 }

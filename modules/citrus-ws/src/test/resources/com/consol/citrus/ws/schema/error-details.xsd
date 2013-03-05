@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns="http://www.citrusframework.org/schema/ws/fault" 
+        targetNamespace="http://www.citrusframework.org/schema/ws/fault"
+        elementFormDefault="qualified">
+  
+  <xs:element name="Error">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="code" type="xs:string"/>
+        <xs:element name="message" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="type">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="INTERNAL"></xs:enumeration>
+                <xs:enumeration value="CLIENT"></xs:enumeration>
+                <xs:enumeration value="SERVER"></xs:enumeration>
+            </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ErrorDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="stacktrace" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

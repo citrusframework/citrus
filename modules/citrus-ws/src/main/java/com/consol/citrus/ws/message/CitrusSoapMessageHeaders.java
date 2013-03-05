@@ -44,6 +44,12 @@ public abstract class CitrusSoapMessageHeaders {
     /** Soap fault code specific header */
     public static final String SOAP_FAULT = SOAP_PREFIX + "fault";
     
+    /** Soap fault detail specific header */
+    public static final String SOAP_FAULT_DETAIL = SOAP_PREFIX + "fault_detail";
+    
+    /** Soap fault detail specific header */
+    public static final String SOAP_FAULT_DETAIL_RESOURCE = SOAP_FAULT_DETAIL + "_resource";
+    
     /** Soap attachment header prefix */
     public static final String SOAP_ATTACHMENT_PREFIX = SOAP_PREFIX + "attachment_";
     

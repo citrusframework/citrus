@@ -13,7 +13,7 @@
    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
       <property name="locations">
           <list>
-             <value>classpath:com/consol/citrus/schema/citrus-ws-config.xsd</value>
+             <value>classpath:com/consol/citrus/ws/schema/error-details.xsd</value>
           </list>
       </property>
    </bean>

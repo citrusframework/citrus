@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import java.util.Map;
+import java.util.*;
 
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -33,6 +34,8 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 
 /**
  * Parser for SOAP fault assert action.
@@ -53,8 +56,10 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-string"), "faultString");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-actor"), "faultActor");
         
-        Element faultDetailElement = DomUtils.getChildElementByTagName(element, "fault-detail");
-        if (faultDetailElement != null) {
+        List<Element> faultDetails = DomUtils.getChildElementsByTagName(element, "fault-detail");
+        SoapFaultDetailValidationContext validationContext = new SoapFaultDetailValidationContext();
+        List<String> soapFaultDetails = new ArrayList<String>();
+        for (Element faultDetailElement : faultDetails) {
             if (faultDetailElement.hasAttribute("file")) {
                 if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
                     throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
@@ -62,18 +67,17 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                beanDefinition.addPropertyValue("faultDetailResourcePath", filePath);
+                soapFaultDetails.add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {
-                    beanDefinition.addPropertyValue("faultDetail", faultDetailData);
+                    soapFaultDetails.add(faultDetailData);
                 } else {
                     throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
                 }
             }
             
             XmlMessageValidationContext context = new XmlMessageValidationContext();
-            
             String schemaValidation = faultDetailElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
                 context.setSchemaValidation(Boolean.valueOf(schemaValidation));
@@ -88,16 +92,20 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             if (StringUtils.hasText(schemaRepository)) {
                 context.setSchemaRepository(schemaRepository);
             }
-            
-            beanDefinition.addPropertyValue("validationContext", context);
+            validationContext.addValidationContext(context);
+        }
+        
+        if (!soapFaultDetails.isEmpty()) {
+            beanDefinition.addPropertyValue("faultDetails", soapFaultDetails);
+            beanDefinition.addPropertyValue("validationContext", validationContext);
         }
         
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         Element action;
-        if (faultDetailElement == null) {
+        if (CollectionUtils.isEmpty(faultDetails)) {
             action = DOMUtil.getFirstChildElement(element);
         } else {
-            action = DOMUtil.getNextSiblingElement(faultDetailElement);
+            action = DOMUtil.getLastChildElement(element);
         }
         
         if (action != null && action.getTagName().equals("description")) {

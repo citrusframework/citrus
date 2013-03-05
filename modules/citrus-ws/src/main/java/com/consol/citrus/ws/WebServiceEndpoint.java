@@ -17,6 +17,7 @@
 package com.consol.citrus.ws;
 
 import java.io.IOException;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
@@ -276,13 +277,24 @@ public class WebServiceEndpoint implements MessageEndpoint {
             soapFault.setFaultActorOrRole(definitionHolder.getFaultActor());
         }
         
-        if (!(replyMessage.getPayload() instanceof String) || 
-                StringUtils.hasText(replyMessage.getPayload().toString())) {
-            SoapFaultDetail faultDetail = soapFault.addFaultDetail();
+        List<String> soapFaultDetails = new ArrayList<String>();
+        // add fault details
+        for (Entry<String, Object> header : replyMessage.getHeaders().entrySet()) {
+            if (header.getKey().startsWith(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL)) {
+                soapFaultDetails.add(header.getValue().toString());
+            }
+        }
+        
+        if (!soapFaultDetails.isEmpty()) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             
-            transformer.transform(getPayloadAsSource(replyMessage.getPayload()), faultDetail.getResult());
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            
+            SoapFaultDetail faultDetail = soapFault.addFaultDetail();;
+            for (int i = 0; i < soapFaultDetails.size(); i++) {
+                transformer.transform(new StringSource(soapFaultDetails.get(i)), faultDetail.getResult());
+            }
         }
     }
     
