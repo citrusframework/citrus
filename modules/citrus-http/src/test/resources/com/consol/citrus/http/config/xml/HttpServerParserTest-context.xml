@@ -17,23 +17,61 @@
                         context-config-location="classpath:com/consol/citrus/http/servlet-context.xml"
                         connector="connector"
                         resource-base="src/citrus/resources"
-                        root-parent-context="true"/>
+                        root-parent-context="true"
+                        context-path="/citrus"
+                        servlet-name="citrus-http"
+                        servlet-mapping-path="/foo"/>
                         
     <citrus-http:server id="httpServer3"
                         auto-start="false"
                         port="8083"
-                        connectors="connectors"/>                    
+                        connectors="connectors"/>
+                        
+    <citrus-http:server id="httpServer4"
+                        auto-start="false"
+                        port="8084"
+                        servlet-handler="servletHandler"/>
     
-  <util:list id="connectors">
-      <bean id="connector1" class="org.easymock.EasyMock" factory-method="createMock">
-        <constructor-arg value="org.eclipse.jetty.server.Connector"/>
-      </bean>
-      <bean id="connector2" class="org.easymock.EasyMock" factory-method="createMock">
+    <citrus-http:server id="httpServer5"
+                        auto-start="false"
+                        port="8085"
+                        security-handler="securityHandler"/>                    
+    
+    <util:list id="connectors">
+        <bean id="connector1" class="org.easymock.EasyMock" factory-method="createMock">
           <constructor-arg value="org.eclipse.jetty.server.Connector"/>
-      </bean>
-  </util:list>
+        </bean>
+        <bean id="connector2" class="org.easymock.EasyMock" factory-method="createMock">
+            <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+        </bean>
+    </util:list>
   
     <bean id="connector" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+    </bean>
+    
+    <bean id="securityHandler" class="com.consol.citrus.http.security.SecurityHandlerFactory">
+        <property name="users">
+            <list>
+                <bean class="com.consol.citrus.http.security.User">
+                    <property name="name" value="citrus"/>
+                    <property name="password" value="secret"/>
+                    <property name="roles" value="CitrusRole"/>
+                </bean>
+            </list>
+        </property>
+        <property name="constraints">
+            <map>
+                <entry key="/foo/*">
+                    <bean class="com.consol.citrus.http.security.BasicAuthConstraint">
+                        <constructor-arg value="CitrusRole"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+                
+    <bean id ="servletHandler" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.eclipse.jetty.servlet.ServletHandler"/>
     </bean>
 </beans>

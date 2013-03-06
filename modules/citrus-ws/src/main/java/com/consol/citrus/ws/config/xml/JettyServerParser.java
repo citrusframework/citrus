@@ -23,6 +23,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+
 /**
  * Parser for jetty-server component in Citrus ws namespace.
  * 
@@ -77,6 +79,12 @@ public class JettyServerParser extends AbstractBeanDefinitionParser {
         if (StringUtils.hasText(connector)) {
             builder.addPropertyReference(WSParserConstants.CONNECTOR_PROPERTY, connector);
         }
+        
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-mapping-path"), "servletMappingPath");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("servlet-handler"), "servletHandler");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
         
         return builder.getBeanDefinition();
     }

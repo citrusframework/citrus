@@ -22,6 +22,7 @@ import java.util.*;
 
 import javax.servlet.ServletContext;
 
+import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.*;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
@@ -74,6 +76,21 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     /** Set list of custom connectors with custom configuration options */
     private Connector[] connectors;
     
+    /** Servlet mapping path */
+    private String servletMappingPath = "/*";
+    
+    /** Optional servlet name customization */
+    private String servletName;
+    
+    /** Context path */
+    private String contextPath = "/";
+    
+    /** Optional security handler for basic auth */
+    private SecurityHandler securityHandler;
+    
+    /** Optional servlet handler customization */
+    private ServletHandler servletHandler;
+    
     @Override
     protected void shutdown() {
         if (jettyServer != null) {
@@ -90,7 +107,7 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     @Override
     protected void startup() {
         synchronized (serverLock) {
-            if (connectors != null) {
+            if (connectors != null && connectors.length > 0) {
                 jettyServer = new Server();
                 jettyServer.setConnectors(connectors);
             } else if (connector != null) {
@@ -102,37 +119,42 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
             
             HandlerCollection handlers = new HandlerCollection();
             
-            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            ContextHandlerCollection contextCollection = new ContextHandlerCollection();
             
-            ServletContextHandler context = new ServletContextHandler();
-            context.setContextPath("/");
-            context.setResourceBase(resourceBase);
+            ServletContextHandler contextHandler = new ServletContextHandler();
+            contextHandler.setContextPath(contextPath);
+            contextHandler.setResourceBase(resourceBase);
             
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
-                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
                         new SimpleDelegatingWebApplicationContext());
             }
             
-            ServletHandler servletHandler = new ServletHandler();
+            if (servletHandler == null) {
+                servletHandler = new ServletHandler();
+                ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
+                servletHolder.setName(getServletName());
+                servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+                
+                servletHandler.addServlet(servletHolder);
+    
+                ServletMapping servletMapping = new ServletMapping();
+                servletMapping.setServletName(getServletName());
+                servletMapping.setPathSpec(servletMappingPath);
+                
+                servletHandler.addServletMapping(servletMapping);
+            }
             
-            ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
-            servletHolder.setName("spring-ws");
-            servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+            contextHandler.setServletHandler(servletHandler);
             
-            servletHandler.addServlet(servletHolder);
+            if (securityHandler != null) {
+                contextHandler.setSecurityHandler(securityHandler);
+            }
             
-            ServletMapping servletMapping = new ServletMapping();
-            servletMapping.setServletName("spring-ws");
-            servletMapping.setPathSpec("/*");
+            contextCollection.addHandler(contextHandler);
             
-            servletHandler.addServletMapping(servletMapping);
-            
-            context.setServletHandler(servletHandler);
-            
-            contexts.addHandler(context);
-            
-            handlers.addHandler(contexts);
+            handlers.addHandler(contextCollection);
             
             handlers.addHandler(new DefaultHandler());
             handlers.addHandler(new RequestLogHandler());
@@ -146,54 +168,19 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
             }
         }
     }
-
-    /**
-     * Get the server port.
-     * @return the port
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Set the server port.
-     * @param port the port to set
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
     
     /**
-     * Set the server resource base.
-     * @param resourceBase the resourceBase to set
+     * Gets the customized servlet name or default name if not set.
+     * @return the servletName
      */
-    public void setResourceBase(String resourceBase) {
-        this.resourceBase = resourceBase;
+    public String getServletName() {
+        if (StringUtils.hasText(servletName)) {
+            return servletName;
+        } else {
+            return getName() + "-servlet";
+        }
     }
 
-    /**
-     * Set the context config location.
-     * @param contextConfigLocation the contextConfigLocation to set
-     */
-    public void setContextConfigLocation(String contextConfigLocation) {
-        this.contextConfigLocation = contextConfigLocation;
-    }
-
-    /** (non-Javadoc)
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) 
-        throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-    
-    /**
-     * @param useRootContextAsParent the useRootContextAsParent to set
-     */
-    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
-        this.useRootContextAsParent = useRootContextAsParent;
-    }
-    
     /**
      * WebApplicationContext implementation that delegates method calls to parent ApplicationContext.
      */
@@ -323,7 +310,70 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     }
 
     /**
-     * Sets the custom connector.
+     * {@inheritDoc}
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Gets the port.
+     * @return the port the port to get.
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Sets the port.
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    /**
+     * Gets the resourceBase.
+     * @return the resourceBase the resourceBase to get.
+     */
+    public String getResourceBase() {
+        return resourceBase;
+    }
+
+    /**
+     * Sets the resourceBase.
+     * @param resourceBase the resourceBase to set
+     */
+    public void setResourceBase(String resourceBase) {
+        this.resourceBase = resourceBase;
+    }
+
+    /**
+     * Gets the contextConfigLocation.
+     * @return the contextConfigLocation the contextConfigLocation to get.
+     */
+    public String getContextConfigLocation() {
+        return contextConfigLocation;
+    }
+
+    /**
+     * Sets the contextConfigLocation.
+     * @param contextConfigLocation the contextConfigLocation to set
+     */
+    public void setContextConfigLocation(String contextConfigLocation) {
+        this.contextConfigLocation = contextConfigLocation;
+    }
+
+    /**
+     * Gets the connector.
+     * @return the connector the connector to get.
+     */
+    public Connector getConnector() {
+        return connector;
+    }
+
+    /**
+     * Sets the connector.
      * @param connector the connector to set
      */
     public void setConnector(Connector connector) {
@@ -331,10 +381,110 @@ public class JettyServer extends AbstractServer implements ApplicationContextAwa
     }
 
     /**
-     * Sets a list of custom connectors.
+     * Gets the connectors.
+     * @return the connectors
+     */
+    public Connector[] getConnectors() {
+        if (connectors != null) {
+            return Arrays.copyOf(connectors, connectors.length);
+        } else {
+            return new Connector[]{};
+        }
+    }
+
+    /**
+     * Sets the connectors.
      * @param connectors the connectors to set
      */
     public void setConnectors(Connector[] connectors) {
         this.connectors = Arrays.copyOf(connectors, connectors.length);
+    }
+
+    /**
+     * Gets the servletMappingPath.
+     * @return the servletMappingPath the servletMappingPath to get.
+     */
+    public String getServletMappingPath() {
+        return servletMappingPath;
+    }
+
+    /**
+     * Sets the servletMappingPath.
+     * @param servletMappingPath the servletMappingPath to set
+     */
+    public void setServletMappingPath(String servletMappingPath) {
+        this.servletMappingPath = servletMappingPath;
+    }
+
+    /**
+     * Gets the contextPath.
+     * @return the contextPath the contextPath to get.
+     */
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    /**
+     * Sets the contextPath.
+     * @param contextPath the contextPath to set
+     */
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    /**
+     * Gets the securityHandler.
+     * @return the securityHandler the securityHandler to get.
+     */
+    public SecurityHandler getSecurityHandler() {
+        return securityHandler;
+    }
+
+    /**
+     * Sets the securityHandler.
+     * @param securityHandler the securityHandler to set
+     */
+    public void setSecurityHandler(SecurityHandler securityHandler) {
+        this.securityHandler = securityHandler;
+    }
+
+    /**
+     * Gets the servletHandler.
+     * @return the servletHandler the servletHandler to get.
+     */
+    public ServletHandler getServletHandler() {
+        return servletHandler;
+    }
+
+    /**
+     * Sets the servletHandler.
+     * @param servletHandler the servletHandler to set
+     */
+    public void setServletHandler(ServletHandler servletHandler) {
+        this.servletHandler = servletHandler;
+    }
+
+    /**
+     * Sets the servletName.
+     * @param servletName the servletName to set
+     */
+    public void setServletName(String servletName) {
+        this.servletName = servletName;
+    }
+
+    /**
+     * Gets the useRootContextAsParent.
+     * @return the useRootContextAsParent the useRootContextAsParent to get.
+     */
+    public boolean isUseRootContextAsParent() {
+        return useRootContextAsParent;
+    }
+
+    /**
+     * Sets the useRootContextAsParent.
+     * @param useRootContextAsParent the useRootContextAsParent to set
+     */
+    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
+        this.useRootContextAsParent = useRootContextAsParent;
     }
 }

@@ -30,6 +30,11 @@
             <xs:attribute name="root-parent-context" type="xs:boolean"/>
             <xs:attribute name="connector" type="xs:string"/>
             <xs:attribute name="connectors" type="xs:string"/>
+            <xs:attribute name="servlet-name" type="xs:string"/>
+            <xs:attribute name="servlet-mapping-path" type="xs:string"/>
+            <xs:attribute name="context-path" type="xs:string"/>
+            <xs:attribute name="servlet-handler" type="xs:string"/>
+            <xs:attribute name="security-handler" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     

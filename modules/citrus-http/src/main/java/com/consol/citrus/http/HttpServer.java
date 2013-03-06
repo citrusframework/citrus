@@ -22,6 +22,7 @@ import java.util.*;
 
 import javax.servlet.ServletContext;
 
+import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.*;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -76,6 +78,21 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     /** Set list of custom connectors with custom configuration options */
     private Connector[] connectors;
     
+    /** Servlet mapping path */
+    private String servletMappingPath = "/*";
+    
+    /** Optional servlet name customization */
+    private String servletName;
+    
+    /** Context path */
+    private String contextPath = "/";
+    
+    /** Optional security handler for basic auth */
+    private SecurityHandler securityHandler;
+    
+    /** Optional servlet handler customization */
+    private ServletHandler servletHandler;
+    
     @Override
     protected void shutdown() {
         if (jettyServer != null) {
@@ -92,7 +109,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     @Override
     protected void startup() {
         synchronized (serverLock) {
-            if (connectors != null) {
+            if (connectors != null && connectors.length > 0) {
                 jettyServer = new Server();
                 jettyServer.setConnectors(connectors);
             } else if (connector != null) {
@@ -104,32 +121,32 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             
             HandlerCollection handlers = new HandlerCollection();
             
-            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            ContextHandlerCollection contextCollection = new ContextHandlerCollection();
             
-            ServletContextHandler context = new ServletContextHandler();
-            context.setContextPath("/");
-            context.setResourceBase(resourceBase);
+            ServletContextHandler contextHandler = new ServletContextHandler();
+            contextHandler.setContextPath(contextPath);
+            contextHandler.setResourceBase(resourceBase);
             
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
-                context.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                         new SimpleDelegatingWebApplicationContext());
             }
             
-            ServletHandler servletHandler = new ServletHandler();
-            
-            ServletHolder servletHolder = new ServletHolder(new DispatcherServlet());
-            servletHolder.setName("spring-servlet");
-            servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
-            
-            servletHandler.addServlet(servletHolder);
-            
-            ServletMapping servletMapping = new ServletMapping();
-            servletMapping.setServletName("spring-servlet");
-            servletMapping.setPathSpec("/*");
-            
-            servletHandler.addServletMapping(servletMapping);
-            
+            if (servletHandler == null) {
+                servletHandler = new ServletHandler();
+                ServletHolder servletHolder = new ServletHolder(new DispatcherServlet());
+                servletHolder.setName(getServletName());
+                servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+                
+                servletHandler.addServlet(servletHolder);
+                
+                ServletMapping servletMapping = new ServletMapping();
+                servletMapping.setServletName(getServletName());
+                servletMapping.setPathSpec(servletMappingPath);
+                
+                servletHandler.addServletMapping(servletMapping);
+            }
             //Add request caching filter when message tracing is enabled
             if (applicationContext.getBeansOfType(MessageTracingTestListener.class).size() > 0) {
                 FilterMapping filterMapping = new FilterMapping();
@@ -141,11 +158,15 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 servletHandler.addFilter(filterHolder, filterMapping);
             }
             
-            context.setServletHandler(servletHandler);
+            contextHandler.setServletHandler(servletHandler);
             
-            contexts.addHandler(context);
+            if (securityHandler != null) {
+                contextHandler.setSecurityHandler(securityHandler);
+            }
             
-            handlers.addHandler(contexts);
+            contextCollection.addHandler(contextHandler);
+            
+            handlers.addHandler(contextCollection);
             
             handlers.addHandler(new DefaultHandler());
             handlers.addHandler(new RequestLogHandler());
@@ -159,52 +180,17 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             }
         }
     }
-
-    /**
-     * Get the server port.
-     * @return the port
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Set the server port.
-     * @param port the port to set
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
     
     /**
-     * Set the server resource base.
-     * @param resourceBase the resourceBase to set
+     * Gets the customized servlet name or default name if not set.
+     * @return the servletName
      */
-    public void setResourceBase(String resourceBase) {
-        this.resourceBase = resourceBase;
-    }
-
-    /**
-     * Set the context config location.
-     * @param contextConfigLocation the contextConfigLocation to set
-     */
-    public void setContextConfigLocation(String contextConfigLocation) {
-        this.contextConfigLocation = contextConfigLocation;
-    }
-
-    /** (non-Javadoc)
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) 
-        throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-    
-    /**
-     * @param useRootContextAsParent the useRootContextAsParent to set
-     */
-    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
-        this.useRootContextAsParent = useRootContextAsParent;
+    public String getServletName() {
+        if (StringUtils.hasText(servletName)) {
+            return servletName;
+        } else {
+            return getName() + "-servlet";
+        }
     }
     
     /**
@@ -334,53 +320,76 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             return applicationContext.getEnvironment();
         }
     }
-
+    
     /**
-     * Sets the custom connector.
-     * @param connector the connector to set
+     * {@inheritDoc}
      */
-    public void setConnector(Connector connector) {
-        this.connector = connector;
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     /**
-     * Sets a list of custom connectors.
-     * @param connectors the connectors to set
+     * Gets the port.
+     * @return the port the port to get.
      */
-    public void setConnectors(Connector[] connectors) {
-        this.connectors = Arrays.copyOf(connectors, connectors.length);
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Sets the port.
+     * @param port the port to set
+     */
+    public void setPort(int port) {
+        this.port = port;
     }
 
     /**
      * Gets the resourceBase.
-     * @return the resourceBase
+     * @return the resourceBase the resourceBase to get.
      */
     public String getResourceBase() {
         return resourceBase;
     }
 
     /**
+     * Sets the resourceBase.
+     * @param resourceBase the resourceBase to set
+     */
+    public void setResourceBase(String resourceBase) {
+        this.resourceBase = resourceBase;
+    }
+
+    /**
      * Gets the contextConfigLocation.
-     * @return the contextConfigLocation
+     * @return the contextConfigLocation the contextConfigLocation to get.
      */
     public String getContextConfigLocation() {
         return contextConfigLocation;
     }
 
     /**
-     * Gets the useRootContextAsParent.
-     * @return the useRootContextAsParent
+     * Sets the contextConfigLocation.
+     * @param contextConfigLocation the contextConfigLocation to set
      */
-    public boolean isUseRootContextAsParent() {
-        return useRootContextAsParent;
+    public void setContextConfigLocation(String contextConfigLocation) {
+        this.contextConfigLocation = contextConfigLocation;
     }
 
     /**
      * Gets the connector.
-     * @return the connector
+     * @return the connector the connector to get.
      */
     public Connector getConnector() {
         return connector;
+    }
+
+    /**
+     * Sets the connector.
+     * @param connector the connector to set
+     */
+    public void setConnector(Connector connector) {
+        this.connector = connector;
     }
 
     /**
@@ -393,5 +402,101 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         } else {
             return new Connector[]{};
         }
+    }
+
+    /**
+     * Sets the connectors.
+     * @param connectors the connectors to set
+     */
+    public void setConnectors(Connector[] connectors) {
+        this.connectors = Arrays.copyOf(connectors, connectors.length);
+    }
+
+    /**
+     * Gets the servletMappingPath.
+     * @return the servletMappingPath the servletMappingPath to get.
+     */
+    public String getServletMappingPath() {
+        return servletMappingPath;
+    }
+
+    /**
+     * Sets the servletMappingPath.
+     * @param servletMappingPath the servletMappingPath to set
+     */
+    public void setServletMappingPath(String servletMappingPath) {
+        this.servletMappingPath = servletMappingPath;
+    }
+
+    /**
+     * Gets the contextPath.
+     * @return the contextPath the contextPath to get.
+     */
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    /**
+     * Sets the contextPath.
+     * @param contextPath the contextPath to set
+     */
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    /**
+     * Gets the securityHandler.
+     * @return the securityHandler the securityHandler to get.
+     */
+    public SecurityHandler getSecurityHandler() {
+        return securityHandler;
+    }
+
+    /**
+     * Sets the securityHandler.
+     * @param securityHandler the securityHandler to set
+     */
+    public void setSecurityHandler(SecurityHandler securityHandler) {
+        this.securityHandler = securityHandler;
+    }
+
+    /**
+     * Gets the servletHandler.
+     * @return the servletHandler the servletHandler to get.
+     */
+    public ServletHandler getServletHandler() {
+        return servletHandler;
+    }
+
+    /**
+     * Sets the servletHandler.
+     * @param servletHandler the servletHandler to set
+     */
+    public void setServletHandler(ServletHandler servletHandler) {
+        this.servletHandler = servletHandler;
+    }
+
+    /**
+     * Sets the servletName.
+     * @param servletName the servletName to set
+     */
+    public void setServletName(String servletName) {
+        this.servletName = servletName;
+    }
+
+    /**
+     * Gets the useRootContextAsParent.
+     * @return the useRootContextAsParent the useRootContextAsParent to get.
+     */
+    public boolean isUseRootContextAsParent() {
+        return useRootContextAsParent;
+    }
+
+    /**
+     * Sets the useRootContextAsParent.
+     * @param useRootContextAsParent the useRootContextAsParent to set
+     */
+    public void setUseRootContextAsParent(boolean useRootContextAsParent) {
+        this.useRootContextAsParent = useRootContextAsParent;
     }
 }

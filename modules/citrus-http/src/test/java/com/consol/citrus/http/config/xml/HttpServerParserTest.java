@@ -34,11 +34,13 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testFailActionParser() {
         Map<String, HttpServer> servers = beanDefinitionContext.getBeansOfType(HttpServer.class);
         
-        Assert.assertEquals(servers.size(), 3);
+        Assert.assertEquals(servers.size(), 5);
         
         // 1st message sender
         HttpServer server = servers.get("httpServer1");
         Assert.assertNull(server.getConnector());
+        Assert.assertNull(server.getServletHandler());
+        Assert.assertNull(server.getSecurityHandler());
         Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertEquals(server.getName(), "httpServer1");
         Assert.assertEquals(server.getPort(), 8081);
@@ -46,6 +48,9 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getContextPath(), "/");
+        Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
+        Assert.assertEquals(server.getServletMappingPath(), "/*");
         
         // 2nd message sender
         server = servers.get("httpServer2");
@@ -58,6 +63,9 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getResourceBase(), "src/citrus/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertTrue(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getContextPath(), "/citrus");
+        Assert.assertEquals(server.getServletName(), "citrus-http");
+        Assert.assertEquals(server.getServletMappingPath(), "/foo");
         
         // 3rd message sender
         server = servers.get("httpServer3");
@@ -70,5 +78,32 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getServletName(), "httpServer3-servlet");
+        
+        // 4th message sender
+        server = servers.get("httpServer4");
+        Assert.assertNull(server.getConnector());
+        Assert.assertNotNull(server.getServletHandler());
+        Assert.assertEquals(server.getServletHandler(), beanDefinitionContext.getBean("servletHandler"));
+        Assert.assertEquals(server.getName(), "httpServer4");
+        Assert.assertEquals(server.getPort(), 8084);
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getResourceBase(), "src/main/resources");
+        Assert.assertFalse(server.isAutoStart());
+        Assert.assertFalse(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getServletName(), "httpServer4-servlet");
+        
+        // 5th message sender
+        server = servers.get("httpServer5");
+        Assert.assertNull(server.getConnector());
+        Assert.assertNotNull(server.getSecurityHandler());
+        Assert.assertEquals(server.getSecurityHandler(), beanDefinitionContext.getBean("securityHandler"));
+        Assert.assertEquals(server.getName(), "httpServer5");
+        Assert.assertEquals(server.getPort(), 8085);
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getResourceBase(), "src/main/resources");
+        Assert.assertFalse(server.isAutoStart());
+        Assert.assertFalse(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getServletName(), "httpServer5-servlet");
     }
 }
