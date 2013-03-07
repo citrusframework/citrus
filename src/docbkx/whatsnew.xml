@@ -21,6 +21,13 @@
     the full XML validation power in Citrus in order to validate incoming Html messages. Section <xref linkend="xhtml"/> deals with the new validation capabilities for Html.</para>
   </section>
   
+  <section id="whatsnew-soap-fault">
+    <title>Multiple SOAP fault detail support</title>
+
+    <para>SOAP fault messages can hold many SOAP fault detail elements. Citrus was able to handle SOAP fault details on sending and receiving test actions before, but only one single fault detail. Now you can 
+    send and receive as many detail elements as you like. For each SOAP fault detail you can specify individual validation rules and expectations. See <xref linkend="soap-faults"/> for detailed description.</para>
+  </section>
+  
   <section id="whatsnew-actors">
     <title>Test actors</title>
 
@@ -89,6 +96,11 @@
             <para><emphasis>Jetty version upgrade</emphasis> We are using Jetty a lot for starting Http server mocks within Citrus. In order to stay up to date we upgraded to
             Jetty 8.1.7 version with this Citrus release. This implies that package names did change for Jetty API. In general there is no conflict for you as a Citrus user, but you may want to
             adjust your logging configuration according to new Jetty packages. Jetty package names did change from <emphasis>ord.mortbay</emphasis> to <emphasis>org.eclipse.jetty</emphasis>.</para>
+        </listitem>
+        <listitem>
+            <para><emphasis>Spring version upgrade</emphasis> Staying up to date with the versions of 3rd library dependencies is quite important for us. So we upgrade our dependencies to newer versions
+            with each release. As we did only upgrade minor versions there is no significant change or problems to be expected. However you may take care on versions and 
+            release changes in the Spring world for details and migration.</para>
         </listitem>
     </itemizedlist>
   </section>
