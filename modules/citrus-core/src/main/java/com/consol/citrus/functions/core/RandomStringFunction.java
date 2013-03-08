@@ -44,6 +44,8 @@ public class RandomStringFunction implements Function {
         'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
         'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
         'u', 'v', 'w', 'x', 'y', 'z' };
+    
+    private static final char[] NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', };
 
     /** Mode upper case */
     private static final String UPPERCASE = "UPPERCASE";
@@ -60,13 +62,14 @@ public class RandomStringFunction implements Function {
      */
     public String execute(List<String> parameterList) {
         int numberOfLetters;
-        String notationMethod;
+        String notationMethod = MIXED;
+        boolean includeNumbers = false;
 
         if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        if (parameterList.size() > 2) {
+        if (parameterList.size() > 3) {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
@@ -77,26 +80,52 @@ public class RandomStringFunction implements Function {
 
         if (parameterList.size() > 1) {
             notationMethod = parameterList.get(1);
-
-            if (notationMethod.equals(UPPERCASE)) {
-                return getRandomString(numberOfLetters, ALPHABET_UPPER);
-            } else if (notationMethod.equals(LOWERCASE)) {
-                return getRandomString(numberOfLetters, ALPHABET_LOWER);
-            } else if (notationMethod.equals(MIXED)) {
-                return getRandomString(numberOfLetters, ALPHABET_MIXED);
-            }
         }
 
-        return getRandomString(numberOfLetters, ALPHABET_MIXED);
+        if (parameterList.size() > 2) {
+            includeNumbers = Boolean.valueOf(parameterList.get(2));
+        }
+        
+        if (notationMethod.equals(UPPERCASE)) {
+            return getRandomString(numberOfLetters, ALPHABET_UPPER, includeNumbers);
+        } else if (notationMethod.equals(LOWERCASE)) {
+            return getRandomString(numberOfLetters, ALPHABET_LOWER, includeNumbers);
+        } else {
+            return getRandomString(numberOfLetters, ALPHABET_MIXED, includeNumbers);
+        }
     }
 
-    public static String getRandomString(int numberOfLetters, char[] alphabet) {
-        StringBuffer sBuf = new StringBuffer();
+    /**
+     * Static random number generator aware string generating method.
+     * @param numberOfLetters
+     * @param alphabet
+     * @param includeNumbers
+     * @return
+     */
+    public static String getRandomString(int numberOfLetters, char[] alphabet, boolean includeNumbers) {
+        StringBuilder builder = new StringBuilder();
+        
         int upperRange = alphabet.length - 1;
-        for (int i = 0; i < numberOfLetters; i++) {
-            int letterIndex = generator.nextInt(upperRange);
-            sBuf.append(alphabet[letterIndex]);
+        
+        // make sure first character is not a number
+        builder.append(alphabet[generator.nextInt(upperRange)]);
+        
+        if (includeNumbers) {
+            upperRange += NUMBERS.length;
         }
-        return sBuf.toString();
+        
+        for (int i = 1; i < numberOfLetters; i++) {
+            int letterIndex = generator.nextInt(upperRange);
+            
+            if (letterIndex > alphabet.length - 1) {
+                builder.append(NUMBERS[letterIndex - alphabet.length]);
+            } else {
+                builder.append(alphabet[letterIndex]);
+            }
+        }
+        
+        System.out.println(builder.toString());
+        
+        return builder.toString();
     }
 }

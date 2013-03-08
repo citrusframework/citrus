@@ -31,7 +31,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class RandomStringFunctionTest extends AbstractTestNGUnitTest {
-    RandomStringFunction function = new RandomStringFunction();
+    private RandomStringFunction function = new RandomStringFunction();
     
     @Test
     public void testFunction() {
@@ -65,6 +65,38 @@ public class RandomStringFunctionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(function.execute(params).length() == 3);
     }
     
+    @Test
+    public void testWithNumbers() {
+        List<String> params = new ArrayList<String>();
+        params = new ArrayList<String>();
+        params.add("10");
+        params.add("UPPERCASE");
+        params.add("true");
+        
+        Assert.assertTrue(function.execute(params).length() == 10);
+        
+        params = new ArrayList<String>();
+        params.add("10");
+        params.add("LOWERCASE");
+        params.add("true");
+        
+        Assert.assertTrue(function.execute(params).length() == 10);
+        
+        params = new ArrayList<String>();
+        params.add("10");
+        params.add("MIXED");
+        params.add("true");
+        
+        Assert.assertTrue(function.execute(params).length() == 10);
+        
+        params = new ArrayList<String>();
+        params.add("10");
+        params.add("UNKNOWN");
+        params.add("true");
+        
+        Assert.assertTrue(function.execute(params).length() == 10);
+    }
+    
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("-1"));
@@ -80,6 +112,7 @@ public class RandomStringFunctionTest extends AbstractTestNGUnitTest {
         List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("UPPERCASE");
+        params.add("true");
         params.add("too much");
         
         function.execute(params);

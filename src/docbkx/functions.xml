@@ -213,7 +213,7 @@
         
         <para>The random number function will provide you the opportunity to generate random number strings
         containing positive number letters. There is a singular Boolean parameter for that function describing
-        whether the generated String should have leading zero letters or not. Default value for this padding flag
+        whether the generated number should have exactly the amount of digits. Default value for this padding flag
         will be true.</para>
     
         <para>Next example will show the function usage:</para>
@@ -221,20 +221,23 @@
         <programlisting>&lt;variables&gt;
     &lt;variable name=&quot;rndNumber1&quot; value=&quot;citrus:randomNumber(10)&quot;/&gt;
     &lt;variable name=&quot;rndNumber2&quot; value=&quot;citrus:randomNumber(10, true)&quot;/&gt;
-    &lt;variable name=&quot;rndNumber3&quot; value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber2&quot; value=&quot;citrus:randomNumber(10, false)&quot;/&gt;
+    &lt;variable name=&quot;rndNumber3&quot; value=&quot;citrus:randomNumber(3, false)&quot;/&gt;
 &lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
         <para><emphasis>8954638765</emphasis></para>
-        <para><emphasis>0006387650</emphasis></para>
-        <para><emphasis>45638765</emphasis></para>
+        <para><emphasis>5003485980</emphasis></para>
+        <para><emphasis>6387650</emphasis></para>
+        <para><emphasis>65</emphasis></para>
     </section>
 
     <section id="functions-random-string">
         <title>citrus:randomString()</title>
         
         <para>This function will generate a random string representation with a defined length. A second parameter for
-        this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED)</para>
+        this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows
+        also digit characters in the generated string. By default digit charaters are not allowed.</para>
         
         <programlisting>&lt;variables&gt;
     &lt;variable name=&quot;rndString0&quot; value=&quot;${citrus:randomString(10)}&quot;/&gt;
@@ -242,13 +245,14 @@
     &lt;variable name=&quot;rndString2&quot; value=&quot;citrus:randomString(10, UPPERCASE)&quot;/&gt;
     &lt;variable name=&quot;rndString3&quot; value=&quot;citrus:randomString(10, LOWERCASE)&quot;/&gt;
     &lt;variable name=&quot;rndString4&quot; value=&quot;citrus:randomString(10, MIXED)&quot;/&gt;
+    &lt;variable name=&quot;rndString4&quot; value=&quot;citrus:randomString(10, MIXED, true)&quot;/&gt;
 &lt;/variables&gt;</programlisting>
         
         <para>Function output:</para>
-        <para><emphasis>Hr546dfA65</emphasis></para>
-        <para><emphasis>Ag3876det5</emphasis></para>
-        <para><emphasis>4SDF87TR</emphasis></para>
-        <para><emphasis>4tkhi7uz</emphasis></para>
+        <para><emphasis>HrGHOdfAer</emphasis></para>
+        <para><emphasis>AgSSwedetG</emphasis></para>
+        <para><emphasis>JSDFUTTRKU</emphasis></para>
+        <para><emphasis>dtkhirtsuz</emphasis></para>
         <para><emphasis>Vt567JkA32</emphasis></para>
     </section>
     

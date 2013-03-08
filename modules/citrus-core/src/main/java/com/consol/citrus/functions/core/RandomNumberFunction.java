@@ -29,6 +29,7 @@ import com.consol.citrus.functions.Function;
  * @author Christoph Deppisch
  */
 public class RandomNumberFunction implements Function {
+    /** Basic seed generating random number */
     private static Random generator = new Random(System.currentTimeMillis());
 
     /**
@@ -59,37 +60,80 @@ public class RandomNumberFunction implements Function {
         return getRandomNumber(numberLength, paddingOn);
     }
 
+    /**
+     * Static number generator method.
+     * @param numberLength
+     * @param paddingOn
+     * @return
+     */
     public static String getRandomNumber(int numberLength, boolean paddingOn) {
         if (numberLength < 1) {
             throw new InvalidFunctionUsageException("numberLength must be greater than 0 - supplied " + numberLength);
         }
 
-        StringBuffer sBuf = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < numberLength; i++) {
-            sBuf.append(generator.nextInt(10));
+            buffer.append(generator.nextInt(10));
         }
 
-        if (!paddingOn) {
-            removePadding(sBuf);
-        }
-
-        return sBuf.toString();
+        return checkLeadingZeros(buffer.toString(), paddingOn);
     }
 
-    private static void removePadding(StringBuffer sBuf) {
-        for (int i = 0; i < sBuf.length(); i++) {
-            if (sBuf.charAt(i) == '0') {
+    /**
+     * Remove leading Zero numbers.
+     * @param generated
+     * @param paddingOn
+     */
+    public static String checkLeadingZeros(String generated, boolean paddingOn) {
+        if (paddingOn) {
+            return replaceLeadingZero(generated);
+        } else {
+            return removeLeadingZeros(generated);
+        }
+        
+    }
+
+    /**
+     * Removes leading zero numbers if present.
+     * @param generated
+     * @return
+     */
+    private static String removeLeadingZeros(String generated) {
+        StringBuilder builder = new StringBuilder();
+        boolean leading = true;
+        for (int i = 0; i < generated.length(); i++) {
+            if (generated.charAt(i) == '0' && leading) {
                 continue;
             } else {
-                if (i > 0) {
-                    sBuf.delete(0, i);
-                    // very unlikely, ensures that empty string is not returned
-                    if (sBuf.length() < 1) {
-                        sBuf.append('0');
-                    }
-                }
-                break;
+                leading = false;
+                builder.append(generated.charAt(i));
             }
+        }
+        
+        if (builder.length() == 0) {
+            // very unlikely to happen, ensures that empty string is not returned
+            builder.append('0');
+        }
+        
+        return builder.toString();
+    }
+
+    /**
+     * Replaces first leading zero number if present.
+     * @param generated
+     * @return
+     */
+    private static String replaceLeadingZero(String generated) {
+        if (generated.charAt(0) == '0') {
+            // find number > 0 as replacement to avoid leading zero numbers
+            int replacement = 0;
+            while (replacement == 0) {
+                replacement = generator.nextInt(10);
+            }
+            
+            return String.valueOf(replacement) + generated.substring(1);
+        } else {
+            return generated;
         }
     }
 }
