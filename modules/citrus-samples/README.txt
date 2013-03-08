@@ -3,14 +3,14 @@
 
 CITRUS SAMPLE APPLICATIONS
 
-  The Citrus samples applications try to demonstrate how Citrus works with
-  different message transports. The projects are executable with ANT and should give you
-  a detailed picture how to execute Citrus test cases.
+  The Citrus samples applications try to demonstrate how Citrus works in
+  different integration test scenarios. The projects are executable with Maven 
+  or ANT and should give you a detailed picture how Citrus testing works.
 
-  In the reference documentation you can find a detailed description of the sample
+  In the reference documentation you can also find detailed descriptions of the sample
   applications.
 
-INSTALLATION & PRECONDITIONS
+PRECONDITIONS
 
   See the preconditions for using the Citrus sample applications:
   
@@ -18,31 +18,17 @@ INSTALLATION & PRECONDITIONS
     Installed JDK 5.0 or higher plus JAVA_HOME environment variable set 
     up and pointing to your Java installation directory
     
-  * Apache ANT 1.7.1 or higher
-    The sample projects are executed with Apache ANT (http://ant.apache.org/). You need 
-    ANT installed and running an your machine in order to use the Citrus samples.
+  * Apache Maven 3.0.x or higher
+    The sample projects are executable via Apache Maven (http://maven.apache.org/). You need 
+    ANT installed and running an your machine in order to use this way of executing the 
+    sample applications.
+    
+  * Apache ANT 1.8.x or higher
+    The sample projects are executable via Apache ANT (http://ant.apache.org/). You need 
+    ANT installed and running an your machine in order to use this way of executing the 
+    sample applications.
 
-  In each sample subfolder you will find the ANT executable build script (build.xml).
-  Execute following ANT command to see which targets are offered by the sample Citrus 
-  installation:
-
-  > ant -p
-
-  Buildfile: build.xml
-
-  Main targets:
-
-   citrus.run.single.test  Runs a single test by name
-   citrus.run.tests        Runs all Citrus tests
-   create.test             Creates a new empty test case
-  Default target: citrus.run.tests
-
-  The different targets are not very difficult to understand. You can run all tests, a 
-  single test case by its name or create new test cases.
-  
-  Just try to call the different options like this:
-  
-  > ant citrus.run.tests
+  In each of the samples folders you will find the Maven pom.xml and ANT executable build script (build.xml) files.
 
 OVERVIEW
 
@@ -58,56 +44,47 @@ OVERVIEW
   ------------------------------------------------------------------------
   FlightBooking      |  X  |  X   |      |         |  X   |      |   X   |
   Greeting           |  X  |      |      |    X    |      |  X   |   X   |
-  BookStore       |  X  |      |  X   |         |      |  X   |       |
+  BookStore          |  X  |      |  X   |         |      |  X   |       |  
   
-FLIGHTBOOKING SAMPLE
+  Pick your sample application for try out and got to the respective folder.
 
-  The FlightBooking sample application receives request messages from a travel agency over
-  JMS (async). The application splits the request into several flight bookings and forwards 
-  the messages to respective airline applications (Http or JMS). The consolidated response 
-  message is sent back to the calling travel agency asynchronous over JMS.
-    
-  The Citrus test cases will automatically start the sample application before the tests are 
-  executed. To start the FlightBooking sample application in standalone mode call 
-  'flightBookingDemo.bat' (Windows) or 'flightBookingDemo.sh' (Unix).
+RUNNING THE SAMPLES
 
-  The test cases contain simple workflows for handling TravelBookingRequest messages with 
-  several flight bookings. See the log output for detailed information how Citrus validates 
-  the received messages.
+  All samples hold a web application project (war folder) and a Citrus test project (citrus-test). First of all start 
+  the sample application within the war folder. You can do this either by calling "mvn jetty:run" command using an 
+  embedded Jetty Web Server Container or you call "mvn package" and deploy the resulting war archive to a separate 
+  Web container of your choice.
+  
+  Once the sample application is deployed and running you can execute the Citrus test cases in citrus-test folder. 
+  Open a separate command line terminal and navigate to the citrus-test folder.
+  
+  Execute all Citrus tests by calling "mvn integration-test". You can also pick a single test by calling "mvn integration-test -Ptest=TestName". 
+  You should see Citrus performing several tests with lots of debugging output in both terminals (sample application server 
+  and Citrus test client). And of course green tests at the very end of the build.
+  
+  You can also use Apache ANT to execute the tests. Run the following command to see which targets are offered:
 
-GREETING SAMPLE
-  
-  The greeting sample project is separated into two parts each one handling another type of 
-  message transport. One part is dealing with simple JMS messaging (synchronous). The other part 
-  is handling messages on Spring Integration message channels. The application receives greeting 
-  requests messages and creates proper greeting responses according to the chosen message 
-  transport (JMS or message channel).
-  
-  The test cases will start and stop the sample application automatically before any test is 
-  executed. If you want to start the JMS Greeting sample application in standalone mode call 
-  'greetingDemo.bat' (Windows) or 'greetingDemo.sh' (Unix).
-  
-BOOKSTORE SAMPLE
+  > ant -p
 
-  The BookStore sample application offers a SOAP WebService with following supported 
-  operations:
+  Buildfile: build.xml
+
+  Main targets:
+
+   citrus.run.single.test  Runs a single test by name
+   citrus.run.tests        Runs all Citrus tests
+   create.test             Creates a new empty test case
+  Default target: citrus.run.tests
+
+  The different targets are not very difficult to understand. You can run all tests, a single test case by its name or create 
+  new test cases.
   
-  * addBook
-  * getBookDetails
-  * listBooks 
+  Just try to call the different options like this:
   
-  Each operation will result in a synchronous SOAP response to the calling client. Duplicate 
-  books (isbn) or unknown books will generate SOAP Faults in the response. The different sample
-  test cases will call the WebService as client and test the complete functionality for the 
-  available operations.
-  
-  The BookStore WebService application is started automatically before the test cases are 
-  executed, but you can also start the BookStore sample application in standalone mode 
-  ('bookStoreDemo.bat' (Windows) or 'bookStoreDemo.sh' (Unix)).
-  
+  > ant citrus.run.tests
+
 WHAT'S NEXT?!
 
-  Have fun with Citrus!
+  Have fun with Citrus! Write your own test cases and kill all bugs!
 
   The Citrus Team
   ConSol* Software GmbH

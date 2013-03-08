@@ -1,24 +1,21 @@
-<project name="citrus-samples" basedir="." default="citrus.run.tests">
+<project name="citrus-samples" basedir="." default="citrus.run.tests" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 		
 	<property file="src/citrus/resources/citrus.properties"/>
+
+	<path id="maven-ant-tasks.classpath" path="../../lib/maven-ant-tasks-2.1.3.jar" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+	         uri="antlib:org.apache.maven.artifact.ant"
+	         classpathref="maven-ant-tasks.classpath" />
+	
+	<artifact:pom id="citrus-pom" file="pom.xml" />
+	<artifact:dependencies filesetId="citrus-dependencies" pomRefId="citrus-pom" />
 	
     <path id="citrus-classpath">
         <pathelement path="src/citrus/java"/>
-        <fileset dir="../../dist">
-            <include name="*.jar"/>
-        </fileset>
-		<fileset dir="../../lib">
-            <include name="*.jar"/>
-        </fileset>
-    	<fileset dir="../lib">
-            <include name="*.jar"/>
-        </fileset>
-    	<fileset dir="lib">
-            <include name="*.jar"/>
-        </fileset>
+        <fileset refid="citrus-dependencies"/>
     </path>
     
-	<typedef resource="citrustasks" classpath="../lib/citrus-ant-tasks-1.3.M1.jar"/>
+	<typedef resource="citrustasks" classpath="../../../dist/citrus-ant-tasks-1.3.M1.jar"/>
 	
 	<target name="compile.tests">
 	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>

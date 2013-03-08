@@ -39,8 +39,41 @@
         <exclude>**/logs/**</exclude>
         <exclude>**/src/pom.xml</exclude>
         <exclude>**/citrus-test/pom.xml</exclude>
+        <exclude>src/main/script</exclude>
+        <exclude>.project</exclude>
+        <exclude>.classpath</exclude>
+        <exclude>.settings</exclude>
       </excludes>
       <lineEnding>unix</lineEnding>
+    </fileSet>
+    
+    <fileSet>
+      <directory>modules/citrus-samples/src/main/script/lib</directory>
+      <outputDirectory>samples/lib</outputDirectory>
+    </fileSet>
+    
+    <fileSet>
+      <directory>modules/citrus-samples/src/main/script</directory>
+      <outputDirectory>samples/flightbooking/citrus-test</outputDirectory>
+      <includes>
+        <include>build.xml</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet>
+      <directory>modules/citrus-samples/src/main/script</directory>
+      <outputDirectory>samples/greeting/citrus-test</outputDirectory>
+      <includes>
+        <include>build.xml</include>
+      </includes>
+    </fileSet>
+    
+    <fileSet>
+      <directory>modules/citrus-samples/src/main/script</directory>
+      <outputDirectory>samples/bookstore/citrus-test</outputDirectory>
+      <includes>
+        <include>build.xml</include>
+      </includes>
     </fileSet>
     
     <!-- Reference documentation -->
