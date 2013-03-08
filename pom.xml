@@ -180,9 +180,9 @@
         <version>2.7.1</version>
       </dependency>
       <dependency>
-        <groupId>javax.jms</groupId>
-        <artifactId>jms</artifactId>
-        <version>1.1</version>
+          <groupId>javax.jms</groupId>
+          <artifactId>com.springsource.javax.jms</artifactId>
+          <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>javax.activation</groupId>
@@ -691,6 +691,14 @@
     </pluginManagement>
   </build>
 
+  <repositories>
+    <repository>
+        <id>com.springsource.repository.bundles.external</id>
+        <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+        <url>http://repository.springsource.com/maven/bundles/external</url>
+    </repository>
+  </repositories>
+  
   <profiles>
     <profile>
       <id>tools</id>
