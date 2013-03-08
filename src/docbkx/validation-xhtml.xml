@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="validation-xhtml">
+    <title>XHTML message validation</title>
+
+    <para>When Citrus receives plain Html messages we likely want to use the powerful XML validation capabilities such as XML tree comparison or XPath support.
+    Unfortunately Html messages do not ollow the XML well formed rules very strictly. This implies that XML message validation will fail because
+    of non well formed Html code.</para>
+    
+    <para>XHTML closes this gap by automatically fixing the most common Html XML incompatible rule violations such as missing end tags (e.g. &lt;br&gt;).</para>
+    
+    <para>Let's try this with a simple example. Again we have to add a proper XHTML message validator implementation to the citrus-context first.</para>
+    
+    <programlisting>&lt;bean id=&quot;xhtmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xhtml.XhtmlMessageValidator&quot;/&gt;</programlisting>
+    
+    <para>Now we can tell the test case receiving action that we want to use the XHTML message validation in our test case.</para>
+    
+    <programlisting>&lt;receive with=&quot;httpMessageReceiver&quot;&gt;
+    &lt;message type=&quot;xhtml&quot;&gt;
+        &lt;data&gt;
+          &lt;![CDATA[
+            &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;org/w3c/xhtml/xhtml1-strict.dtd&quot;&gt;
+            &lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+            &lt;head&gt;
+              &lt;title&gt;Citrus Hello World&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+              &lt;h1&gt;Hello World!&lt;/h1&gt;
+              &lt;br/&gt;
+              &lt;p&gt;This is a test!&lt;/p&gt;
+            &lt;/body&gt;
+          ]]&gt;
+        &lt;/data&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
+    <para>The message receiving action in our test case has to specify a message format type <emphasis>type=&quot;xhtml&quot;</emphasis>. 
+    As you can see the Html message payload get XHTML specific DOCTYPE processing instruction. The <emphasis>xhtml1-strict.dtd</emphasis> 
+    is mandatory in the XHTML message validation. For better convenience all XHTML dtd files are packaged within Citrus so you can use
+    this as a relative path.</para>
+    
+    <para>The incoming Html message is automatically converted into proper XHTML code with well formed XML. So now the XHTML message validator
+    can use the XML message validation mechanism of Citrus for comparing received and expected data. As usual you can use test variables, 
+    ignore element expressions and XPath expressions.</para>
+
+</section>

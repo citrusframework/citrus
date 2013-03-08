@@ -639,6 +639,97 @@ Server: Jetty(7.0.0.pre5)
 
             <para>So choose the prefered way of handling SOAP faults either by asserting client exceptions or propagating fault messages to reply message handler receive action.</para>            
         </section>
+        
+        <section id="soap-fault-details">
+            <title>Multiple SOAP fault details</title>
+            
+            <para>SOAP fault details can hold one or more SOAP fault detail elements. In the previous sections we have used SOAP fault details in sending and receiving actions as single element. In order 
+            to meet the SOAP specification Citrus is also able to handle multiple SOAP fault detail elements in a message. You just use many fault-detail elements in your test action like this:</para>
+            
+            <programlisting>&lt;ws:send-fault with=&quot;webServiceResponseSender&quot;&gt;
+    &lt;ws:fault&gt;
+        &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
+        &lt;ws:fault-string&gt;Invalid request&lt;/ws:fault-string&gt;
+        &lt;ws:fault-actor&gt;SERVER&lt;/ws:fault-actor&gt;
+        &lt;ws:fault-detail&gt;
+            &lt;![CDATA[
+                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ns0:MessageId&gt;${messageId}&lt;/ns0:MessageId&gt;
+                    &lt;ns0:CorrelationId&gt;${correlationId}&lt;/ns0:CorrelationId&gt;
+                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
+                &lt;/ns0:FaultDetail&gt;
+            ]]&gt;
+        &lt;/ws:fault-detail&gt;
+        &lt;ws:fault-detail&gt;
+            &lt;![CDATA[
+                &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+                &lt;/ns0:ErrorDetail&gt;
+            ]]&gt;
+        &lt;/ws:fault-detail&gt;
+    &lt;/ws:fault&gt;
+    &lt;ws:header&gt;
+        &lt;ws:element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
+    &lt;/ws:header&gt;
+&lt;/ws:send-fault&gt;</programlisting>
+
+            <para>This will result in following SOAP envelope message:</para>
+            
+            <programlisting>HTTP/1.1 500 Internal Server Error
+Accept: text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+SOAPAction: &quot;sayHello&quot;
+Content-Type: text/xml; charset=utf-8
+Content-Length: 680
+Server: Jetty(7.0.0.pre5)
+
+&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+    &lt;SOAP-ENV:Header/&gt;
+    &lt;SOAP-ENV:Body&gt;
+        &lt;SOAP-ENV:Fault&gt;
+            &lt;faultcode xmlns:citrus=&quot;http://www.citrusframework.org/faults&quot;&gt;citrus:TEC-1000&lt;/faultcode&gt;
+            &lt;faultstring xml:lang=&quot;en&quot;&gt;Invalid request&lt;/faultstring&gt;
+            &lt;detail&gt;
+                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ns0:MessageId&gt;9277832563&lt;/ns0:MessageId&gt;
+                    &lt;ns0:CorrelationId&gt;4346806225&lt;/ns0:CorrelationId&gt;
+                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
+                &lt;/ns0:FaultDetail&gt;
+                &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+                &lt;/ns0:ErrorDetail&gt;
+            &lt;/detail&gt;
+        &lt;/SOAP-ENV:Fault&gt;
+    &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</programlisting>
+
+            <para>Of course we can also expect several fault detail elements when receiving a SOAP fault.</para>
+            
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+           fault-string=&quot;Invalid request&quot;&gt;
+    &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
+      &lt;![CDATA[
+          &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+              &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
+          &lt;/ns0:FaultDetail&gt;
+      ]]&gt;
+    &lt;/ws:fault-detail&gt;
+    &lt;ws:fault-detail&gt;
+      &lt;![CDATA[
+          &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
+          &lt;/ns0:ErrorDetail&gt;
+      ]]&gt;
+    &lt;/ws:fault-detail&gt;
+    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+        [...]
+    &lt;/send&gt;
+&lt;/ws:assert&gt;</programlisting>
+            
+            <para>As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.</para>
+        </section>
     </section>
     
     <section id="soap-http-errors">
@@ -784,7 +875,7 @@ Server: Jetty(7.0.0.pre5)
         </section>
     </section>
     
-    <section id="soap-basic-auth">
+    <section id="soap-basic-auth-client">
         <title>Basic authentication with SOAP</title>
         
         <para>As a SOAP client you often have to use basic authentication in order to access a service. Basic authentication via Http stands for username/password authentication 
@@ -831,6 +922,52 @@ Server: Jetty(7.0.0.pre5)
 &lt;/header&gt;</programlisting>
 
           <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
+        </tip>
+    </section>
+    
+    <section id="soap-basic-auth-server">
+        <title>Basic authentication on the server</title>
+        
+        <para>When providing SOAP WebService server functionality Citrus can also set basic authentication so clients need to 
+        authenticate properly when accessing the server.</para>
+        
+        <programlisting>&lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
+             port=&quot;8091&quot; 
+             auto-start=&quot;true&quot;
+             context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
+             resource-base=&quot;src/citrus/resources&quot;
+             security-handler=&quot;basicSecurityHandler&quot;/&gt;
+                
+&lt;bean id=&quot;securityHandler&quot; class=&quot;com.consol.citrus.ws.security.SecurityHandlerFactory&quot;&gt;
+    &lt;property name=&quot;users&quot;&gt;
+        &lt;list&gt;
+            &lt;bean class=&quot;com.consol.citrus.ws.security.User&quot;&gt;
+                &lt;property name=&quot;name&quot; value=&quot;citrus&quot;/&gt;
+                &lt;property name=&quot;password&quot; value=&quot;secret&quot;/&gt;
+                &lt;property name=&quot;roles&quot; value=&quot;CitrusRole&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;constraints&quot;&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;/foo/*&quot;&gt;
+                &lt;bean class=&quot;com.consol.citrus.ws.security.BasicAuthConstraint&quot;&gt;
+                    &lt;constructor-arg value=&quot;CitrusRole&quot;/&gt;
+                &lt;/bean&gt;
+            &lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+        
+        <para>We have set a security handler on the server web container with a constraint on all resources with <emphasis>/foo/*</emphasis>. Following from that
+        the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients
+        have to set the basic auth Http header properly using the correct user and role for accessing the Citrus server now.</para>
+        
+        <para>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and
+        inspect the settings and properties offered by the security handler interface.</para>
+        
+        <tip>
+            <para>This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</para>
         </tip>
     </section>
     

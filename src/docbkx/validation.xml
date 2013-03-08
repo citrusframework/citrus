@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="validation" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Message validation</title>
+
+  <para>In the previous sections we have seen the powerful Citrus XML message validation capabilities. The tester is able to define
+  expected message behaviour on header and payload level. Later in this documentation we will also deal with XPath and XML schema validation capabilities.
+  Now we deal with other message formats than XML.</para>
+  
+  <para>Message formats such as JSON have become very poular in the Java enterprise world. More and more interfaces are built with JSON message format. 
+  Just think of RESTful WebServices and JavaScript using JSON as the message format to go for. Citrus is able to expect and validate JSON messages and 
+  other formats such as Html, CSV or plaintext.</para>
+
+  <xi:include href='validation-json.xml'/>
+  <xi:include href='validation-xhtml.xml'/>
+  <xi:include href='validation-plaintext.xml'/>
+  
+</chapter>

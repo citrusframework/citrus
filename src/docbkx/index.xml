@@ -27,13 +27,16 @@
     <xi:include href='setup.xml'/>
     
     <xi:include href='testcase.xml'/>
+    <xi:include href='test-actors.xml'/>
     <xi:include href='run-config.xml'/>
     <xi:include href='messaging.xml'/>
+    <xi:include href='validation.xml'/>
+    <xi:include href='schema-validation.xml'/>
+    <xi:include href='xpath.xml'/>
     <xi:include href='actions.xml'/>
     <xi:include href='templates.xml'/>
     <xi:include href='containers.xml'/>
     <xi:include href='finally-section.xml'/>
-    <xi:include href='xpath.xml'/>
     <xi:include href='jms.xml'/>
     <xi:include href='http.xml'/>
     <xi:include href='ssh.xml'/>
@@ -43,10 +46,8 @@
     <xi:include href='validation-matchers.xml'/>
     <xi:include href='testsuite.xml'/>
     <xi:include href='tibco.xml'/>
-    <xi:include href='schema-validation.xml'/>
     <xi:include href='meta-info.xml'/>
-    <xi:include href='test-actors.xml'/>
-    <xi:include href='debug-messages.xml'/>
+    <xi:include href='message-tracing.xml'/>
     <xi:include href='reporting.xml'/>
     
     <appendix id="samples">

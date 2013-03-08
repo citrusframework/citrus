@@ -492,8 +492,8 @@ Server: Jetty(7.0.0.pre5)
         <para>Both ways of handling Http error messages on client side are valid for expecting the server to raise Http error codes. Choose the prefered way according to your test project requirements.</para>
     </section>
     
-    <section id="http-basic-auth">
-        <title>Basic authentication</title>
+    <section id="http-basic-auth-client">
+        <title>Client basic authentication</title>
         
         <para>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication 
         where the credentials are transmtted in the request header section as base64 encoding. As Citrus uses Spring's REST support with the RestTemplate and ClientHttpRequestFactory the
@@ -559,6 +559,51 @@ Content-Length: 175
 &lt;/header&gt;</programlisting>
 
           <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
+        </tip>
+    </section>
+    
+    <section id="http-basic-auth-server">
+        <title>Server basic authentication</title>
+        
+        <para>Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.</para>
+        
+        <programlisting>&lt;citrus-http:server id=&quot;basicAuthHttpServer&quot; 
+                port=&quot;8090&quot;
+                auto-start=&quot;true&quot;
+                context-config-location=&quot;classpath:com/consol/citrus/http/citrus-servlet-context.xml&quot;
+                resource-base=&quot;src/citrus/resources&quot;
+                security-handler=&quot;basicSecurityHandler&quot;/&gt;
+                
+&lt;bean id=&quot;securityHandler&quot; class=&quot;com.consol.citrus.http.security.SecurityHandlerFactory&quot;&gt;
+    &lt;property name=&quot;users&quot;&gt;
+        &lt;list&gt;
+            &lt;bean class=&quot;com.consol.citrus.http.security.User&quot;&gt;
+                &lt;property name=&quot;name&quot; value=&quot;citrus&quot;/&gt;
+                &lt;property name=&quot;password&quot; value=&quot;secret&quot;/&gt;
+                &lt;property name=&quot;roles&quot; value=&quot;CitrusRole&quot;/&gt;
+            &lt;/bean&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+    &lt;property name=&quot;constraints&quot;&gt;
+        &lt;map&gt;
+            &lt;entry key=&quot;/foo/*&quot;&gt;
+                &lt;bean class=&quot;com.consol.citrus.http.security.BasicAuthConstraint&quot;&gt;
+                    &lt;constructor-arg value=&quot;CitrusRole&quot;/&gt;
+                &lt;/bean&gt;
+            &lt;/entry&gt;
+        &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+        
+        <para>We have set a security handler on the server web container with a constraint on all resources with <emphasis>/foo/*</emphasis>. Following from that
+        the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients
+        have to set the basic auth Http header properly using the correct user and role for accessing the Citrus server now.</para>
+        
+        <para>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and
+        inspect the settings and properties offered by the security handler interface.</para>
+        
+        <tip>
+            <para>This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</para>
         </tip>
     </section>
 </chapter>
