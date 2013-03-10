@@ -52,11 +52,7 @@
   #end
 #end
 #macro ( bodyClass )
-  #if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) ) )
-home
-  #else
-page
-  #end
+#if ( $alignedFileName == $PathTool.calculateLink( "index.html", $relativePath ).replaceAll( "\\", "/" ) ) home #else page #end
 #end
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -111,7 +107,7 @@ page
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="index.html">Citrus</a>
+            <a class="brand" href="index.html"><img src="images/brand_logo.png"/><span>&nbsp;Citrus</span></a>
             <div class="nav-collapse collapse">
               <ul class="nav">
               #mainMenu( $decoration.body.menus )
@@ -120,18 +116,27 @@ page
           </div>
         </div>
       </div>
-      
-      $bodyContent
-      
-      <footer>
-          <span>&copy; 2008-2013 ConSol* Software GmbH</span>
-          <div class="pull-right">
-            <a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a>&nbsp;|&nbsp;
-            <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">Issues</a>&nbsp;|&nbsp;
-            <a href="http://www.consol.com/legal-notice/" target="_blank">Legal Notice</a>
-          </div>
-      </footer>
     </div>
+      
+    $bodyContent
+    
+    <footer>
+      <div class="container">
+        <p>
+            Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a><br/>
+            <a href="http://glyphicons.com">Glyphicons Free</a> licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>
+        </p>
+        
+        <div class="pull-left">
+          <span>&copy; 2008-2013 ConSol* Software GmbH</span>
+        </div>
+        <div class="pull-right">
+          <a href="http://labs.consol.de/tags/citrus" target="_blank">Blog</a>&nbsp;|&nbsp;
+          <a href="http://citrusframework.atlassian.net/browse/CITRUS" target="_blank">Issues</a>&nbsp;|&nbsp;
+          <a href="http://www.consol.com/legal-notice/" target="_blank">Legal Notice</a>
+        </div>
+      </div>
+    </footer>
     
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/bootstrap.js"></script>

@@ -1,49 +1,36 @@
 @IMPORT url("customize-maven.css");
 
 body {
-  padding-top: 70px;
-  background: url(../images/feature_logo_disabled.png) no-repeat scroll top right #efefef;
+  padding-top: 40px;
   color: #404040;
-  font-family: Verdana, Helvetica, Arial, sans-serif;
-  font-size: 13px;
-}
-
-body.page {
-  background: url(../images/feature_logo_small.png) no-repeat scroll top right #efefef;
-}
-
-.hero-unit {
-  background-color: #ffffff;
-  border: 1px solid #d6d6d6;
-  border-radius: 6px 6px 6px 6px;
-  color: inherit;
   font-size: 14px;
-  font-weight: 200;
-  line-height: 30px;
-  margin-bottom: 10px;
-  padding: 30px;
+}
+
+.jumbotron {
+  margin: 45px 0;
   text-align: center;
 }
 
-.hero-unit .subtitle {
-  color: #777777;
-  font-size: 22px;
-  font-weight: bold;
+.jumbotron h1 {
+  font-size: 80px;
+  line-height: 1;
 }
 
-.hero-unit p {
-  padding: 10px 20px;
+.jumbotron h2 {
+  font-size: 35px;
+  line-height: 1;
 }
 
-.hero-unit .btn-large {
+.jumbotron .lead {
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.jumbotron .btn {
   border-radius: 6px 6px 6px 6px;
   font-size: 20px;
   font-weight: bold;
   padding: 11px 50px;
-}
-
-.hero-unit h5 {
-  margin: 0px;
 }
 
 .navbar {
@@ -62,6 +49,14 @@ body.page {
 
 .navbar-inverse .brand, .navbar-inverse .nav > li > a {
   color: #ffffff;
+}
+
+.navbar-inverse .brand {
+	padding: 6px 10px 5px;
+}
+
+.navbar-inverse .brand span {
+    vertical-align: middle;
 }
 
 .navbar-inverse .nav > li > a {
@@ -100,22 +95,22 @@ body.page {
 .dropdown-menu li > a:hover,
 .dropdown-menu li > a:focus,
 .dropdown-submenu:hover > a {
-  background-color: #434343;
-  background-image: -moz-linear-gradient(top , #808080, #434343);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#808080), to(#434343));
-  background-image: -webkit-linear-gradient(top, #808080, #434343);
-  background-image: -o-linear-gradient(top, #808080, #434343);
-  background-image: linear-gradient(to bottom, #808080, #434343);
+  background-color: #FAA732;
+  background-image: -moz-linear-gradient(top , #FBD577, #F89406);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD577), to(#F89406));
+  background-image: -webkit-linear-gradient(top, #FBD577, #F89406);
+  background-image: -o-linear-gradient(top, #FBD577, #F89406);
+  background-image: linear-gradient(to bottom, #FBD577, #F89406);
 }
 
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  background-color: #434343;
-  background-image: -moz-linear-gradient(top , #808080, #434343);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#808080), to(#434343));
-  background-image: -webkit-linear-gradient(top, #808080, #434343);
-  background-image: -o-linear-gradient(top, #808080, #434343);
-  background-image: linear-gradient(to bottom, #808080, #434343);
+  background-color: #FAA732;
+  background-image: -moz-linear-gradient(top , #FBD577, #F89406);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD577), to(#F89406));
+  background-image: -webkit-linear-gradient(top, #FBD577, #F89406);
+  background-image: -o-linear-gradient(top, #FBD577, #F89406);
+  background-image: linear-gradient(to bottom, #FBD577, #F89406);
 }
 
 .dropdown-menu li > a {
@@ -179,20 +174,9 @@ a:hover {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
-.box, .section {
-  padding-top: 25px;
-  padding-left: 50px;
-  padding-right: 50px;
-  width: 840px;
-}
-
-.box, .smallbox, .section {
-  background-color: #ffffff;
-  border: 1px solid #d6d6d6;
-  border-radius: 6px 6px 6px 6px;
-  padding-bottom: 30px;
-  min-height: 100px !important;
-  font-size: 12px;
+.section {
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .section > div.section {
@@ -203,16 +187,20 @@ a:hover {
   min-height: 0px !important;
 }
 
-.smallbox h3 {
-	border-bottom: 1px solid #dedede;
+.box, .section {
+  border: 1px solid #d6d6d6;
+  border-radius: 6px 6px 6px 6px;
+  padding-top: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 20px;
+  min-height: 100px !important;
+  width: 840px;
+  background: url(../images/feature_logo_small.png) no-repeat 835px -55px;
 }
 
-.smallbox h3, .smallbox p, .smallbox span {
-  padding: 0px 30px;	
-}
-
-.smallbox ul {
-  margin: 0px 45px;
+.section div.section {
+	background: none;
 }
 
 pre {
@@ -226,6 +214,14 @@ pre.license {
 
 .str, .atv {
   color: #434399;
+}
+
+#newsfeed ul, #newsarchive ul {
+	margin: 0px 0px;
+}
+
+li.rssRow {
+	list-style: none;
 }
 
 .rssRow p, .rssRow div {
@@ -243,8 +239,12 @@ pre.license {
 }
 
 footer {
-  margin: 20px 0px;
+  margin: 30px 0px 0px 0px;
+  padding: 5px 0px;
   font-size: 12px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  background-color: #F5F5F5;
 }
 
 footer a, footer a:hover {
