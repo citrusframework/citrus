@@ -17,6 +17,8 @@
 package com.consol.citrus.http.client;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -45,6 +47,9 @@ import org.springframework.util.Assert;
  */
 public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingBean {
 
+    /** Custom Http params */
+    private Map<String, Object> params;
+    
     /** The target request factory */
     private HttpClient httpClient;
     
@@ -112,6 +117,13 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
         if (httpClient == null) {
             httpClient = new DefaultHttpClient();
         }
+        
+        if (params != null) {
+            for (Entry<String, Object> param : params.entrySet()) {
+                log.debug("Setting custom Http param on client: '" + param.getKey() + "'='" + param.getValue() + "'");
+                httpClient.getParams().setParameter(param.getKey(), param.getValue());
+            }
+        }
     }
 
     /**
@@ -136,6 +148,14 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
      */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    /**
+     * Sets the params.
+     * @param params the params to set
+     */
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
     }
     
 }

@@ -14,4 +14,28 @@
     <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     
+    <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
+      <property name="params">
+        <map>
+            <entry key="http.socket.timeout">
+                <value type="java.lang.Integer">10000</value>
+            </entry>
+        </map>
+      </property>
+      <property name="authScope">
+          <bean class="org.apache.http.auth.AuthScope">
+            <constructor-arg value="localhost"/>
+            <constructor-arg value="8088"/>
+            <constructor-arg value=""/>
+            <constructor-arg value="basic"/>
+          </bean>
+      </property>
+      <property name="credentials">
+        <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+            <constructor-arg value="someUsername"/>
+            <constructor-arg value="somePassword"/>
+        </bean>      
+      </property>  
+    </bean>
+    
 </beans>

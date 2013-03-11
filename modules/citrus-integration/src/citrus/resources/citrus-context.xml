@@ -208,6 +208,13 @@
     </util:list>
   
     <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
+      <property name="params">
+        <map>
+            <entry key="http.socket.timeout">
+                <value type="java.lang.Integer">10000</value>
+            </entry>
+        </map>
+      </property>
       <property name="authScope">
           <bean class="org.apache.http.auth.AuthScope">
             <constructor-arg value="localhost"/>
