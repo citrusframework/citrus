@@ -117,8 +117,11 @@
         </div>
       </div>
     </div>
-      
-    $bodyContent
+    
+    <div id="content">  
+      $bodyContent
+      <div id="push"></div>
+    </div>
     
     <footer>
       <div class="container">
