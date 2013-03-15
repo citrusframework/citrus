@@ -205,6 +205,10 @@
                 </header>
             </receive>
             
+            <echo>
+                <message>Test 4: Receive JMS message timeout response</message>
+            </echo>
+            
             <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
               <receive with="helloResponseJmsMessageReceiver" timeout="300">
                   <description>

@@ -18,8 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,11 +32,14 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -610,5 +612,214 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidatonScript() {
+        final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
+        
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.JSON)
+                    .validateScript("assert true")
+                    .validator("groovyMessageValidator");
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext);
+        
+        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        
+        replay(applicationContext);
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getValidator(), validator);
+        
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
+        Assert.assertEquals(validationContext.getValidationScript(), "assert true");
+        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+        
+        verify(applicationContext);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
+        final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
+        
+        File resourceFile = EasyMock.createMock(File.class);
+        
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.JSON)
+                    .validateScript(resource)
+                    .validator("groovyMessageValidator");
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext, resource, resourceFile);
+        
+        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        
+        expect(resource.getFile()).andReturn(resourceFile).once();
+        expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
+        
+        replay(applicationContext, resource, resourceFile);
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getValidator(), validator);
+        
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
+        Assert.assertEquals(validationContext.getValidationScript(), "");
+        Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "/path/to/file/File.groovy");
+        
+        verify(applicationContext, resource, resourceFile);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithValidatonScriptAndHeader() {
+        final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
+        
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .messageType(MessageType.JSON)
+                    .validateScript("assert true")
+                    .validator("groovyMessageValidator")
+                    .header("operation", "sayHello");
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext);
+        
+        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        
+        replay(applicationContext);
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getValidator(), validator);
+        
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
+        
+        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
+        Assert.assertEquals(validationContext.getValidationScript(), "assert true");
+        Assert.assertNull(validationContext.getValidationScriptResourcePath());
+        
+        ControlMessageValidationContext headerValidationContext = (ControlMessageValidationContext) action.getValidationContexts().get(1);
+        
+        Assert.assertTrue(headerValidationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertNull(((PayloadTemplateMessageBuilder)headerValidationContext.getMessageBuilder()).getPayloadData());
+        Assert.assertNull(((PayloadTemplateMessageBuilder)headerValidationContext.getMessageBuilder()).getPayloadResourcePath());
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)headerValidationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        
+        verify(applicationContext);
+    }
+    
+    @Test
+    public void testReceiveBuilderWithNamespaceValidation() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
+                    .validateNamespace("pfx", "http://www.consol.de/schemas/test");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), 
+                "<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://www.consol.de/schemas/test");
+    }
+    
+    @Test
+    public void testReceiveBuilderWithPathValidationExpressions() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                    .validate("Foo.operation", "foo")
+                    .validate("Foo.message", "control");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(validationContext.getPathValidationExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.operation"), "foo");
+        Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.message"), "control");
     }
 }

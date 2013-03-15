@@ -30,7 +30,7 @@ import com.consol.citrus.validation.ControlMessageValidationContext;
  */
 public class XmlMessageValidationContext extends ControlMessageValidationContext {
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> pathValidationExpressions;
+    private Map<String, String> pathValidationExpressions = new HashMap<String, String>();
     
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions;
@@ -42,7 +42,7 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     private Resource dtdResource;
     
     /** Map holding control namespaces for validation */
-    private Map<String, String> controlNamespaces;
+    private Map<String, String> controlNamespaces = new HashMap<String, String>();
     
     /** Should message be validated with its schema definition */
     private boolean schemaValidation = true;

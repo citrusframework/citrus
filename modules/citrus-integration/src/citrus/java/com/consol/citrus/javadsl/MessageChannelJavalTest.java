@@ -27,7 +27,7 @@ import com.consol.citrus.message.MessageType;
 /**
  * @author Christoph Deppisch
  */
-public class MessageChanneJavalTest extends TestNGCitrusTestBuilder {
+public class MessageChannelJavalTest extends TestNGCitrusTestBuilder {
     
     @Override
     protected void configure() {
@@ -65,7 +65,7 @@ public class MessageChanneJavalTest extends TestNGCitrusTestBuilder {
             .selector(Collections.singletonMap("root-qname", "GoodbyeMessage"))
             .schemaValidation(false)
             .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/schema\">Goodbye Citrus</GoodbyeMessage>")
-            .header("Operation", "sayHello");
+            .header("Operation", "sayGoodBye");
         
         receive("channelResponseReceiver")
             .selector(Collections.singletonMap("root-qname", "HelloMessage"))
@@ -87,7 +87,7 @@ public class MessageChanneJavalTest extends TestNGCitrusTestBuilder {
             .selector(Collections.singletonMap("root-qname", "{http://citrusframework.org/goodbyeschema}GoodbyeMessage"))
             .schemaValidation(false)
             .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/goodbyeschema\">Goodbye Citrus</GoodbyeMessage>")
-            .header("Operation", "sayHello");
+            .header("Operation", "sayGoodBye");
         
         receive("channelResponseReceiver")
             .selector(Collections.singletonMap("root-qname", "{http://citrusframework.org/helloschema}HelloMessage"))
@@ -140,7 +140,7 @@ public class MessageChanneJavalTest extends TestNGCitrusTestBuilder {
                             "<ns:value>Adios Citrus</ns:value>" +
                         "</ns:text>" +
                     "</ns:GoodbyeMessage>")
-            .header("Operation", "sayHello");
+            .header("Operation", "sayGoodBye");
         
         Map<String, String> selectorMap = new HashMap<String, String>();
         selectorMap.put("xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value", "Hello Citrus");
@@ -205,7 +205,7 @@ public class MessageChanneJavalTest extends TestNGCitrusTestBuilder {
                             "<ns:value>Adios Citrus</ns:value>" +
                         "</ns:text>" +
                     "</ns:GoodbyeMessage>")
-            .header("Operation", "sayHello");
+            .header("Operation", "sayGoodBye");
         
         receive("channelResponseReceiver")
             .selector("xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value='Hello Citrus'")

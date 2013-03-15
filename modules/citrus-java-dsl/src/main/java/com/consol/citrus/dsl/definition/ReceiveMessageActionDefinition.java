@@ -36,6 +36,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
@@ -54,6 +55,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     
     /** Validation context used in this action definition */
     private ControlMessageValidationContext validationContext;
+    
+    /** Script validation context used in this action definition */
+    private ScriptValidationContext scriptValidationContext;
     
     /** Variable extractors filled within this action definition */
     private MessageHeaderVariableExtractor headerExtractor;
@@ -99,7 +103,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         
         initializeValidationContext();
         
-        action.getValidationContexts().add(validationContext);
         validationContext.setControlMessage(controlMessage);
         
         return this;
@@ -124,7 +127,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.setPayloadData(payload);
             validationContext.setMessageBuilder(messageBuilder);
-            action.getValidationContexts().add(validationContext);
         }
         
         return this;
@@ -134,10 +136,36 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * Creates new validation context according to message type.
      */
     private void initializeValidationContext() {
-        if (messageType.equals(MessageType.XML)) {
-            validationContext = new XmlMessageValidationContext();
-        } else {
-            validationContext = new ControlMessageValidationContext();
+        if (validationContext == null) {
+            if (messageType.equals(MessageType.XML)) {
+                validationContext = new XmlMessageValidationContext();
+            } else {
+                validationContext = new ControlMessageValidationContext();
+            }
+            
+            action.getValidationContexts().add(validationContext);
+        }
+    }
+    
+    /**
+     * Creates new script validation context.
+     */
+    private void initializeScriptValidationContext() {
+        if (scriptValidationContext == null) {
+            scriptValidationContext = new ScriptValidationContext();
+            
+            action.getValidationContexts().add(scriptValidationContext);
+        }
+    }
+    
+    /**
+     * Creates new variable extractor and adds it to test action.
+     */
+    private void initializeXpathVariableExtractor() {
+        if (xpathExtractor == null) {
+            xpathExtractor = new XpathPayloadVariableExtractor();
+            
+            action.getVariableExtractors().add(xpathExtractor);
         }
     }
 
@@ -166,7 +194,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                 PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                 messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
                 validationContext.setMessageBuilder(messageBuilder);
-                action.getValidationContexts().add(validationContext);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
@@ -195,7 +222,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.getMessageHeaders().put(name, value);
             validationContext.setMessageBuilder(messageBuilder);
-            action.getValidationContexts().add(validationContext);
         }
         
         return this;
@@ -227,7 +253,6 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.setMessageHeaderData(data);
             validationContext.setMessageBuilder(messageBuilder);
-            action.getValidationContexts().add(validationContext);
         }
         
         return this;
@@ -260,11 +285,52 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                 PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                 messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
                 validationContext.setMessageBuilder(messageBuilder);
-                action.getValidationContexts().add(validationContext);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }    
+        
+        return this;
+    }
+    
+    /**
+     * Adds script validation.
+     * @param validationScript
+     * @return
+     */
+    public ReceiveMessageActionDefinition validateScript(String validationScript) {
+        initializeScriptValidationContext();
+        
+        scriptValidationContext.setValidationScript(validationScript);
+        
+        return this;
+    }
+    
+    /**
+     * Adds script validation by file resource.
+     * @param script
+     * @return
+     */
+    public ReceiveMessageActionDefinition validateScript(Resource scriptResource) {
+        initializeScriptValidationContext();
+        
+        try {
+            scriptValidationContext.setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read script resource file", e);
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Adds custom validation script type.
+     * @param type
+     * @return
+     */
+    public ReceiveMessageActionDefinition validateScriptType(String type) {
+        initializeScriptValidationContext();
+        scriptValidationContext.setScriptType(type);
         
         return this;
     }
@@ -286,14 +352,100 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition schemaValidation(boolean enabled) {
-        if (validationContext == null) {
-            initializeValidationContext();
-        }
+        initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
             ((XmlMessageValidationContext)validationContext).setSchemaValidation(enabled);
         } else {
             throw new CitrusRuntimeException("Unable to enable/disable schema validation on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Validates XML namespace with prefix and uri.
+     * @param prefix
+     * @param namespaceUri
+     * @return
+     */
+    public ReceiveMessageActionDefinition validateNamespace(String prefix, String namespaceUri) {
+        initializeValidationContext();
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).getControlNamespaces().put(prefix, namespaceUri);
+        } else {
+            throw new CitrusRuntimeException("Unable to validate namespaces on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Adds message element validation.
+     * @param path
+     * @param controlValue
+     * @return
+     */
+    public ReceiveMessageActionDefinition validate(String path, String controlValue) {
+        initializeValidationContext();
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).getPathValidationExpressions().put(path, controlValue);
+        } else {
+            throw new CitrusRuntimeException("Unable to set path validation expression on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Adds XPath message element validation.
+     * @param path
+     * @param controlValue
+     * @return
+     */
+    public ReceiveMessageActionDefinition xpath(String xPathExpression, String controlValue) {
+        validate(xPathExpression, controlValue);
+        return this;
+    }
+    
+    /**
+     * Adds explicit namespace declaration for later path validation expressions.
+     * @param prefix
+     * @param namespaceUri
+     * @return
+     */
+    public ReceiveMessageActionDefinition namespace(String prefix, String namespaceUri) {
+        initializeValidationContext();
+        initializeXpathVariableExtractor();
+        
+        xpathExtractor.getNamespaces().put(prefix, namespaceUri);
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).getNamespaces().put(prefix, namespaceUri);
+        } else {
+            throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Sets default namespace declarations on this action definition.
+     * @param namespaceMappings
+     * @return
+     */
+    public ReceiveMessageActionDefinition namespaces(Map<String, String> namespaceMappings) {
+        initializeValidationContext();
+        initializeXpathVariableExtractor();
+        
+        xpathExtractor.getNamespaces().putAll(namespaceMappings);
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).getNamespaces().putAll(namespaceMappings);
+        } else {
+            throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
         }
         
         return this;
@@ -370,12 +522,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     public ReceiveMessageActionDefinition extractFromPayload(String xpath, String variable) {
-        if (xpathExtractor == null) {
-            xpathExtractor = new XpathPayloadVariableExtractor();
-            
-            action.getVariableExtractors().add(xpathExtractor);
-        }
-        
+        initializeXpathVariableExtractor();
         xpathExtractor.getxPathExpressions().put(xpath, variable);
         return this;
     }

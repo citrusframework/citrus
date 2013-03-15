@@ -20,11 +20,7 @@
         		
         <variables>
             <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-            <variable name="correlationIdA" value="citrus:randomNumber(10)"></variable>
-            <variable name="correlationIdB" value="citrus:randomNumber(10)"></variable>      
             <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-            <variable name="messageIdA" value="citrus:randomNumber(10)"></variable>
-            <variable name="messageIdB" value="citrus:randomNumber(10)"></variable>
             <variable name="user" value="Christoph"></variable>
         </variables>
         

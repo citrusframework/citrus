@@ -51,7 +51,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     private Map<String, String> xPathExpressions = new HashMap<String, String>();
     
     /** Namespace definitions used in xpath expressions */
-    private Map<String, String> namespaces;
+    private Map<String, String> namespaces = new HashMap<String, String>();
     
     @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();

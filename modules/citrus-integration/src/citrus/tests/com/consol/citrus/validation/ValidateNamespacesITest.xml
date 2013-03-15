@@ -77,7 +77,7 @@
             </receive>
             
             <echo>
-                <message>Test: Success with multiple namespace validations</message>
+                <message>Test: Success with multiple nested namespace validations</message>
             </echo>
             
             <send with="testMessageSender">

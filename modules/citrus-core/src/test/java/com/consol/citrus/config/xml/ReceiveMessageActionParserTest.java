@@ -128,7 +128,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
         XpathPayloadVariableExtractor variableExtractor = (XpathPayloadVariableExtractor)action.getVariableExtractors().get(1);
         
-        Assert.assertNull(variableExtractor.getNamespaces());
+        Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
         Assert.assertEquals(variableExtractor.getxPathExpressions().size(), 1);
@@ -156,7 +156,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), false);
         
-        Assert.assertNull(xmlValidationContext.getPathValidationExpressions());
+        Assert.assertEquals(xmlValidationContext.getPathValidationExpressions().size(), 0L);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "/ns:TestMessage/ns:ignore");
         Assert.assertEquals(xmlValidationContext.getNamespaces().size(), 1);

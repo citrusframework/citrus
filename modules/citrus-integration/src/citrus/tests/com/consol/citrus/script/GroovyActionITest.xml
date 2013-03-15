@@ -13,10 +13,12 @@
 			This example executes groovy scripts using both inline script definition 
 			and external file resource.
 		</description>
+    
         <variables>
             <variable name="date" value="citrus:currentDate()"/>
             <variable name="greetingText" value="Hello Citrus!"/>
         </variables>
+        
         <actions>
             <groovy>
                 println 'Hello Citrus'
