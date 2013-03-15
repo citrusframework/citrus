@@ -18,8 +18,7 @@ package com.consol.citrus.util;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;

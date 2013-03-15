@@ -33,7 +33,7 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     private Map<String, String> pathValidationExpressions = new HashMap<String, String>();
     
     /** Map holding xpath expressions to identify the ignored message elements */
-    private Set<String> ignoreExpressions;
+    private Set<String> ignoreExpressions = new HashSet<String>();
 
     /** Namespace definitions resolving namespaces in XML message validation */
     private Map<String, String> namespaces = new HashMap<String, String>();

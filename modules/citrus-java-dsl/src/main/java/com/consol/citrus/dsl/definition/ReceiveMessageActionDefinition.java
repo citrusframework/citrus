@@ -400,6 +400,23 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     }
     
     /**
+     * Adds ignore path expression for message element.
+     * @param path
+     * @return
+     */
+    public ReceiveMessageActionDefinition ignore(String path) {
+        initializeValidationContext();
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).getIgnoreExpressions().add(path);
+        } else {
+            throw new CitrusRuntimeException("Unable to ignore path expression on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
      * Adds XPath message element validation.
      * @param path
      * @param controlValue
@@ -407,6 +424,40 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      */
     public ReceiveMessageActionDefinition xpath(String xPathExpression, String controlValue) {
         validate(xPathExpression, controlValue);
+        return this;
+    }
+    
+    /**
+     * Sets explicit schema instance name to use for schema validation.
+     * @param schemaName
+     * @return
+     */
+    public ReceiveMessageActionDefinition xsd(String schemaName) {
+        initializeValidationContext();
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).setSchema(schemaName);
+        } else {
+            throw new CitrusRuntimeException("Unable to xsd schema on non XML message type");
+        }
+        
+        return this;
+    }
+    
+    /**
+     * Sets explicit xsd schema repository instance to use for validation.
+     * @param schemaRepository
+     * @return
+     */
+    public ReceiveMessageActionDefinition xsdSchemaRepository(String schemaRepository) {
+        initializeValidationContext();
+        
+        if (validationContext instanceof XmlMessageValidationContext) {
+            ((XmlMessageValidationContext)validationContext).setSchemaRepository(schemaRepository);
+        } else {
+            throw new CitrusRuntimeException("Unable to xsd schema repository on non XML message type");
+        }
+        
         return this;
     }
     

@@ -822,4 +822,98 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.operation"), "foo");
         Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.message"), "control");
     }
+    
+    @Test
+    public void testReceiveBuilderWithIgnoreElements() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>?</Message></TestRequest>")
+                    .ignore("TestRequest.Message");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 1L);
+        Assert.assertEquals(validationContext.getIgnoreExpressions().iterator().next(), "TestRequest.Message");
+    }
+    
+    @Test
+    public void testReceiveBuilderWithSchema() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>?</Message></TestRequest>")
+                    .xsd("testSchema");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getSchema(), "testSchema");
+    }
+    
+    @Test
+    public void testReceiveBuilderWithSchemaRepository() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                    .payload("<TestRequest><Message>?</Message></TestRequest>")
+                    .xsdSchemaRepository("testSchemaRepository");
+            }
+        };
+        
+        builder.run(null, null);
+        
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+        
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+        
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getSchemaRepository(), "testSchemaRepository");
+    }
 }
