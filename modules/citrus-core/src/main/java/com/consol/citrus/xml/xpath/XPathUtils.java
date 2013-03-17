@@ -232,7 +232,10 @@ public abstract class XPathUtils {
     private static XPathExpression buildExpression(String xPathExpression, NamespaceContext nsContext)
             throws XPathExpressionException {
         XPath xpath = xPathFactory.newXPath();
-        xpath.setNamespaceContext(nsContext);
+        
+        if (nsContext != null) {
+            xpath.setNamespaceContext(nsContext);
+        }
 
         return xpath.compile(xPathExpression);
     }
