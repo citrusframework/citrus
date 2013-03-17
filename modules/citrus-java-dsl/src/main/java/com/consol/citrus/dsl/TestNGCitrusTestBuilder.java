@@ -23,6 +23,7 @@ import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.io.Resource;
+import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.ITestContext;
 
 import com.consol.citrus.*;
@@ -39,6 +40,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -673,6 +675,15 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     protected AssertSoapFaultDefinition soapFault(TestAction testAction) {
        AssertSoapFault action = new AssertSoapFault();
        action.setAction(testAction);
+       
+       action.setMessageFactory(applicationContext.getBean("messageFactory", SoapMessageFactory.class));
+       action.setValidator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+       
+       if (testAction instanceof AbstractActionDefinition<?>) {
+           action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
+       } else {
+           action.setAction(testAction);
+       }
        
        testCase.getActions().remove((testCase.getActions().size()) -1);
        testCase.addTestAction(action);
