@@ -23,7 +23,6 @@ import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
 import org.springframework.core.io.Resource;
-import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.ITestContext;
 
 import com.consol.citrus.*;
@@ -40,7 +39,6 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -205,6 +203,20 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @return
      */
     protected ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
+        ReceiveTimeoutAction action = new ReceiveTimeoutAction();
+        action.setMessageReceiver(messageReceiver);
+        testCase.addTestAction(action);
+        return new ReceiveTimeoutActionDefinition(action);
+    }
+    
+    /**
+     * Creates a new receive timeout action definition from message receiver name as String.
+     * @param messageReceiver
+     * @return
+     */
+    protected ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName) {
+        MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
+        
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
         action.setMessageReceiver(messageReceiver);
         testCase.addTestAction(action);
@@ -415,6 +427,22 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
             testCase.addTestAction(action);
             return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
         }
+    }
+    
+    /**
+     * Create SOAP fault send message action definition with message sender name. Returns SOAP fault definition with
+     * specific properties for SOAP fault messages.
+     * @param messageSenderName
+     * @return
+     */
+    protected SendSoapFaultActionDefinition sendSoapFault(String messageSenderName) {
+        MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
+        
+        SendMessageAction action = new SendMessageAction();
+        action.setMessageSender(messageSender);
+        
+        testCase.addTestAction(action);
+        return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));
     }
     
     /**
@@ -672,12 +700,9 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
      * @param testAction
      * @return
      */
-    protected AssertSoapFaultDefinition soapFault(TestAction testAction) {
+    protected AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
        AssertSoapFault action = new AssertSoapFault();
        action.setAction(testAction);
-       
-       action.setMessageFactory(applicationContext.getBean("messageFactory", SoapMessageFactory.class));
-       action.setValidator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
        
        if (testAction instanceof AbstractActionDefinition<?>) {
            action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
@@ -688,7 +713,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
        testCase.getActions().remove((testCase.getActions().size()) -1);
        testCase.addTestAction(action);
        
-       return new AssertSoapFaultDefinition(action);  
+       return new AssertSoapFaultDefinition(action, applicationContext);  
     }
     
     /**

@@ -18,13 +18,16 @@ package com.consol.citrus.dsl.definition;
 
 import java.io.IOException;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.SoapMessageFactory;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
@@ -33,8 +36,22 @@ import com.consol.citrus.ws.validation.SoapFaultValidator;
  */
 public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSoapFault> {
 
-	public AssertSoapFaultDefinition(AssertSoapFault action) {
+    /** Citrus base application context */
+    private ApplicationContext applicationContext;
+    
+    private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+    
+	public AssertSoapFaultDefinition(AssertSoapFault action, ApplicationContext ctx) {
 	    super(action);
+	    this.applicationContext = ctx;
+	    
+	    action.setMessageFactory(applicationContext.getBean("messageFactory", SoapMessageFactory.class));
+	    action.setValidator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+	    
+	    // for now support one single soap fault detail
+	    SoapFaultDetailValidationContext soapFaultDetailValidationContext = new SoapFaultDetailValidationContext();
+	    soapFaultDetailValidationContext.addValidationContext(validationContext);
+	    action.setValidationContext(soapFaultDetailValidationContext);
     }
 	
 	/**
@@ -54,6 +71,16 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      */
     public AssertSoapFaultDefinition faultString(String faultString) {
         action.setFaultString(faultString);
+        return this;
+    }
+    
+    /**
+     * Expect fault actor in SOAP fault message.
+     * @param faultActor
+     * @return
+     */
+    public AssertSoapFaultDefinition faultActor(String faultActor) {
+        action.setFaultActor(faultActor);
         return this;
     }
     
@@ -102,12 +129,62 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
     }
     
     /**
+     * Set explicit SOAP fault validator implementation by bean name.
+     * @param validatorName
+     * @return
+     */
+    public AssertSoapFaultDefinition validator(String validatorName) {
+        action.setValidator(applicationContext.getBean(validatorName, SoapFaultValidator.class));
+        return this;
+    }
+    
+    /**
      * Set explicit SOAP message factory implementation.
      * @param messageFactory
      * @return
      */
     public AssertSoapFaultDefinition messageFactory(SoapMessageFactory messageFactory) {
         action.setMessageFactory(messageFactory);
+        return this;
+    }
+    
+    /**
+     * Set explicit SOAP message factory implementation by bean name.
+     * @param messageFactoryName
+     * @return
+     */
+    public AssertSoapFaultDefinition messageFactory(String messageFactoryName) {
+        action.setMessageFactory(applicationContext.getBean(messageFactoryName, SoapMessageFactory.class));
+        return this;
+    }
+    
+    /**
+     * Sets schema validation enabled/disabled for this SOAP fault assertion.
+     * @param enabled
+     * @return
+     */
+    public AssertSoapFaultDefinition schemaValidation(boolean enabled) {
+        validationContext.setSchemaValidation(enabled);
+        return this;
+    }
+    
+    /**
+     * Sets explicit schema instance name to use for schema validation.
+     * @param schemaName
+     * @return
+     */
+    public AssertSoapFaultDefinition xsd(String schemaName) {
+        validationContext.setSchema(schemaName);
+        return this;
+    }
+    
+    /**
+     * Sets explicit xsd schema repository instance to use for validation.
+     * @param schemaRepository
+     * @return
+     */
+    public AssertSoapFaultDefinition xsdSchemaRepository(String schemaRepository) {
+        validationContext.setSchemaRepository(schemaRepository);
         return this;
     }
 }

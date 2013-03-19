@@ -16,8 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import static org.easymock.EasyMock.*;
 
 import org.easymock.EasyMock;
+import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,9 +29,11 @@ import com.consol.citrus.message.MessageReceiver;
 public class ReceiveTimeoutDefinitionTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
+    
+    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
      
     @Test
-    public void TestReceiveTimeoutBuilder() {
+    public void testReceiveTimeoutBuilder() {
         MockBuilder builder = new MockBuilder() {
             @Override
             public void configure() {
@@ -49,5 +53,36 @@ public class ReceiveTimeoutDefinitionTest {
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
         Assert.assertEquals(action.getTimeout(), 5000);
+    }
+    
+    @Test
+    public void testReceiveTimeoutBuilderWithReceiverName() {
+        MockBuilder builder = new MockBuilder() {
+            @Override
+            public void configure() {
+                expectTimeout("fooMessageReceiver")
+                    .timeout(500);
+            }
+        };
+        
+        builder.setApplicationContext(applicationContext);
+        
+        reset(applicationContext);
+        
+        expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        
+        replay(applicationContext);
+        
+        builder.run(null, null);
+         
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
+         
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
+        Assert.assertEquals(action.getName(), ReceiveTimeoutAction.class.getSimpleName());
+        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getTimeout(), 500);
+        
+        verify(applicationContext);
     }
 }
