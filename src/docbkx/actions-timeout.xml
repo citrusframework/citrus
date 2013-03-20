@@ -11,11 +11,22 @@
     <para>In order to validate such a timeout situation the action &lt;expectTimout&gt; shall help. The usage
     is very simple as the following example shows:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;receiveJMSimeoutTest&quot;&gt;
     &lt;actions&gt;
         &lt;expect-timeout message-receiver=&quot;myMessageReceiver&quot; wait=&quot;500&quot;/&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+@Qualifier("myMessageReceiver")
+private MessageReceiver myMessageReceiver;
+    
+protected void configure() {
+    expectTimeout(myMessageReceiver)
+        .timeout(500);
+}</programlisting>
     
     <para>The action offers two attributes:</para>
     
@@ -24,10 +35,22 @@
             <para><emphasis>message-receiver</emphasis>: Reference to a message receiver that will try to receive messages.</para>
         </listitem>
         <listitem>
-            <para><emphasis>wait</emphasis>: Time period to wait for messages to arrive</para>
+            <para><emphasis>wait/timeout</emphasis>: Time period to wait for messages to arrive</para>
         </listitem>
     </itemizedlist>
     
-    <para>TODO: describe receive selected!</para>
+    <para>Sometimes you may want to add some selector on the timeout receiving action. This way you can very selective check on a message to not be present on a message destination.
+    This is possible with defining a message selector on the test action as follows.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;expect-timeout message-receiver=&quot;myMessageReceiver&quot; wait=&quot;500&quot;&gt;
+  &lt;select&gt;MessageId='123456789'&lt;select/&gt;
+&lt;expect-timeout/&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    expectTimeout(myMessageReceiver)
+        .selector("MessageId = '123456789'")
+        .timeout(500);
+}</programlisting>
 </section>

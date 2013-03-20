@@ -17,6 +17,7 @@
       <para>On the one hand you can specify the statements as inline SQL or stored in an external
       SQL resource file as shown in the next two examples.</para>
       
+      <para><emphasis>XML DSL</emphasis></para>
       <programlisting>&lt;actions&gt;
     &lt;sql datasource=&quot;someDataSource&quot;&gt;
         &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
@@ -27,6 +28,20 @@
         &lt;resource file=&quot;file:tests/unit/resources/script.sql&quot;/&gt;
     &lt;/sql&gt;
 &lt;/actions&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting language="java">@Autowired
+@Qualifier("myDataSource")
+private DataSource dataSource;
+    
+protected void configure() {
+    sql(dataSource)
+            .statement("DELETE FROM CUSTOMERS")
+            .statement("DELETE FROM ORDERS");
+            
+    sql(dataSource)
+            .sqlResource("file:tests/unit/resources/script.sql");
+}</programlisting>
       
       <para>The first action uses inline SQL statements defined directly inside the test case. The next action uses an external 
       SQL resource file instead. The file resource can hold several SQL statements separated by new lines. All statements inside 
@@ -60,9 +75,10 @@
     <section id="actions-database-query">
       <title>Verifying data from the database</title>
       
-      <para>The &lt;sql&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
+      <para>The &lt;sql&gt; query action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to read data from a database. 
       The query results are validated against expected data as shown in the next example.</para>
       
+      <para><emphasis>XML DSL</emphasis></para>
       <programlisting>&lt;sql datasource=&quot;testDataSource&quot;&gt;
     &lt;statement&gt;select NAME from CUSTOMERS where ID='${customerId}'&lt;/statement&gt;
     &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
@@ -74,8 +90,25 @@
     &lt;validate column=&quot;COUNT(*)&quot; value=&quot;${rowsCount}&quot;/&gt;
     &lt;validate column=&quot;DESCRIPTION&quot; value=&quot;null&quot;/&gt;
 &lt;/sql&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting language="java">@Autowired
+@Qualifier("testDataSource")
+private DataSource dataSource;
+    
+protected void configure() {
+    query(dataSource)
+            .statement("select NAME from CUSTOMERS where CUSTOMER_ID='${customerId}'")
+            .statement("select COUNT(1) as overall_cnt from ERRORS")
+            .statement("select ORDER_ID from ORDERS where DESCRIPTION LIKE 'Migrate%'")
+            .statement("select DESCRIPTION from ORDERS where ORDER_ID = 2")
+            .validate("ORDER_ID", "1")
+            .validate("NAME", "Christoph")
+            .validate("OVERALL_CNT", "${rowsCount}")
+            .validate("DESCRIPTION", "NULL");
+}</programlisting>
       
-      <para>The action &lt;sql&gt; offers a wide range of validating functionality for database result sets. First
+      <para>The action offers a wide range of validating functionality for database result sets. First
       of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL
       statements or external file resource pattern.</para>
       
@@ -101,7 +134,7 @@
         <para>The validation with <literal>&quot;&lt;validate column=&quot;...&quot; value=&quot;...&quot;/&gt;&quot;</literal> 
         meets single row result sets as you specify a single column control value. In case you have multiple rows in a result 
         set you rather need to validate the columns with multiple control values like this:</para>
-        
+
         <programlisting>
   &lt;validate column=&quot;someColumnName&quot;&gt;
       &lt;values&gt;
@@ -112,17 +145,23 @@
       &lt;/values&gt;               
   &lt;/validate&gt;
         </programlisting>
+        
+        <para>Within Java you can pass a variable argument list to the validate method like this:</para>
+        
+        <programlisting language="java">query(dataSource)
+    .statement("select NAME from WEEKDAYS where NAME LIKE 'S%'")
+    .validate("NAME", "Saturday", "Sunday")</programlisting>
       </important>
       
-      <para>Next example shows how to work with multiple row result sets:</para>
+      <para>Next example shows how to work with multiple row result sets and multiple values to expect within one column:</para>
       
       <programlisting>
   &lt;sql datasource=&quot;testDataSource&quot;&gt;
       &lt;statement&gt;select WEEKDAY as DAY, DESCRIPTION from WEEK&lt;/statement&gt;
       &lt;validate column=&quot;DAY&quot;&gt;
           &lt;values&gt;
-       	      &lt;value&gt;Monday&lt;/value&gt;
-       	      &lt;value&gt;Tuesday&lt;/value&gt;
+              &lt;value&gt;Monday&lt;/value&gt;
+              &lt;value&gt;Tuesday&lt;/value&gt;
               &lt;value&gt;Wednesday&lt;/value&gt;
               &lt;value&gt;Thursday&lt;/value&gt;
               &lt;value&gt;Friday&lt;/value&gt;
@@ -163,6 +202,7 @@
       map representations, where each entry in the list defines a row in the result set and each map entry represents the columns and values. So
       with Groovy's list and map access we have great possibilities to validate a SQL result set - out of the box.</para>
       
+      <para><emphasis>XML DSL</emphasis></para>
       <programlisting>&lt;sql datasource=&quot;testDataSource&quot;&gt;
     &lt;statement&gt;select ID from CUSTOMERS where NAME='${customerName}'&lt;/statement&gt;
     &lt;statement&gt;select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'&lt;/statement&gt;
@@ -174,6 +214,13 @@
         assert rows[1] == [ORDERTYPE:'SampleOrder', STATUS:'in progress']               
     &lt;/validate-script&gt;
 &lt;/sql&gt;</programlisting>
+
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting language="java">query(dataSource)
+    .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
+    .validateScript("assert rows.size == 2;" +
+            "assert rows[0].ID == '1';" +
+            "assert rows[0].STATUS == 'in progress';", "groovy");</programlisting>
       
       <para>As you can see Groovy provides fantastic access methods to the SQL result set. We can browse the result set with named column values and check the size 
       of the result set. We are also able to search for an entry, iterate over the result set and have other helpful operations. For a detailed description of the list and map 
@@ -191,6 +238,7 @@
       persisted content values. The test may want to read database entries into test variables without validation. Citrus
       is able to do that with the following &lt;extract&gt; expressions:</para>
       
+      <para><emphasis>XML DSL</emphasis></para>
       <programlisting>&lt;sql datasource=&quot;testDataSource&quot;&gt;
     &lt;statement&gt;select ID from CUSTOMERS where NAME='${customerName}'&lt;/statement&gt;
     &lt;statement&gt;select STATUS from ORDERS where ID='${orderId}'&lt;/statement&gt;
@@ -198,6 +246,11 @@
     &lt;extract column=&quot;ID&quot; variable=&quot;${customerId}&quot;/&gt;
     &lt;extract column=&quot;STATUS&quot; variable=&quot;${orderStatus}&quot;/&gt;
 &lt;/sql&gt;</programlisting>
+      
+      <para><emphasis>Java DSL</emphasis></para>
+      <programlisting language="java">query(dataSource)
+    .statement("select STATUS from ORDERS where ID='${orderId}'")
+    .extract("STATUS", "orderStatus");</programlisting>
       
       <para>We can save the database column values directly to test variables. Of course you can combine the value extraction 
       with the normal column validation described earlier in this chapter. Please keep in mind that we can not use these operations

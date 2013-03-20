@@ -8,6 +8,7 @@
     
     <para>Read the next example and you will understand the mix of different time lines:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
     &lt;actions&gt;
         &lt;trace-time/&gt;
@@ -25,6 +26,17 @@
         &lt;trace-time id=&quot; time_line_id &quot;/&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+    
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    stopTime();
+    stopTime("time_line_id");
+    sleep(3500L); // do something
+    stopTime("time_line_id");
+    sleep(5000L); // do something
+    stopTime();
+    stopTime("time_line_id");
+}</programlisting>
     
     <para>The test output looks like follows:</para>
     

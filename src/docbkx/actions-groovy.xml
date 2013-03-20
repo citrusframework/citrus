@@ -14,6 +14,7 @@
     <para>Let's have a look at some examples in order to understand the possible Groovy code 
     interactions in Citrus:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;groovyTest&quot;&gt;
   &lt;variables&gt;
     &lt;variable name=&quot;time&quot; value=&quot;citrus:currentDate()&quot;/&gt;
@@ -28,6 +29,14 @@
     &lt;groovy resource=&quot;classpath:com/consol/citrus/script/example.groovy&quot;/&gt;
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    groovy("println 'Hello Citrus'");
+    groovy("println 'The variable is: ${time}'");
+    
+    groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
+}</programlisting>
     
     <para>As you can see it is possible to write Groovy code directly into the test case. 
     Citrus will interpret and execute the Groovy code at runtime. As usual nested variable expressions 
@@ -41,6 +50,7 @@
     reference 'context' and you are able to manipulate the TestContext (e.g. setting a new variable which 
     is directly ready for use in following test actions).</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;groovyTest&quot;&gt;
   &lt;actions&gt;
     &lt;groovy&gt;

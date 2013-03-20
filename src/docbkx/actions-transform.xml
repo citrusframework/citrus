@@ -8,6 +8,7 @@
     <emphasis>variable</emphasis> specifies the target test variable which receives the transformation result. The tester might use the action to 
     transform XML messages as shown in the next code example:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>
   &lt;testcase name=&quot;transformTest&quot;&gt;
       &lt;actions&gt;
@@ -61,5 +62,38 @@
       &lt;xslt-resource file=&quot;classpath:transform.xslt&quot;/&gt;
   &lt;/transform&gt;
     </programlisting>
+    
+    <para>The Java DSL alternative for transforming data via XSTL in Citrus looks like follows:</para>
+    
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    transform()
+        .source("&lt;TestRequest&gt;" +
+                    "&lt;Message&gt;Hello World!&lt;/Message&gt;" +
+                "&lt;/TestRequest&gt;")
+        .xslt("&lt;xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"&gt;\n" +
+                    "&lt;xsl:template match=\"/\"&gt;\n" +
+                    "&lt;html&gt;\n" +
+                        "&lt;body&gt;\n" +
+                            "&lt;h2&gt;Test Request&lt;/h2&gt;\n" +
+                            "&lt;p&gt;Message: &lt;xsl:value-of select=\"TestRequest/Message\"/&gt;&lt;/p&gt;\n" +
+                        "&lt;/body&gt;\n" +  
+                    "&lt;/html&gt;\n" +
+                    "&lt;/xsl:template&gt;\n" +
+                "&lt;/xsl:stylesheet&gt;")
+        .result("result");
+    
+    echo("${result}");
+    
+    transform()
+        .source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
+        .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
+        .result("result");
+    
+    echo("${result}");
+}</programlisting>
+
+    <para>Defining multi-line Strings with nested quotes is no fun in Java. So you may want to use external file resources for your scripts as shown in the second part of the example.
+    In fact you could also use script languages like Groovy or Scala that have much better support for multi-line Strings.</para>
     
 </section>
