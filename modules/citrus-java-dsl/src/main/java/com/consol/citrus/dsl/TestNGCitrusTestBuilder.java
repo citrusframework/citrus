@@ -143,6 +143,14 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
        
        return new CreateVariablesActionDefinition(action); 
     }
+    
+    /**
+     * Adds a custom test action implementation.
+     * @param testAction
+     */
+    protected void action(TestAction testAction) {
+        testCase.addTestAction(testAction);
+    }
      
     /**
      * Creates a new echo action.

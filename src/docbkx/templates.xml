@@ -34,6 +34,7 @@
       a separate XML file other than the test case itself:</para>
     </note>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;templateTest&quot;&gt;
     &lt;variables&gt;
         &lt;variable name=&quot;myTime&quot; value=&quot;citrus:currentDate()&quot;/&gt;
@@ -46,6 +47,16 @@
         &lt;/call-template&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    variable("myTime", "citrus:currentDate()");
+    
+    template("doCreateVariables");
+    
+    template("doTraceVariables")
+        .parameter("time", "${myTime}");
+}</programlisting>
     
     <para>There is an open question when dealing with templates that are defined somewhere else outside the test case.
     How to handle variables? A templates may use different variable names then the test and vice versa. No doubt the 

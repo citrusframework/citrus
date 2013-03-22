@@ -2,11 +2,15 @@
 <section id="actions-catch">
     <title>Catch exceptions</title>
 
-    <para>In the previous chapter we learned how to expect failures in Citrus with assert action. Now the assert action is designed for one single
-    action to be monitored for failures. The <emphasis>'catch'</emphasis> action in contrary will hold several nested test actions and catch 
-    possible errors. The nested actions are error proof for the chosen exception type, but only for the chosen exception type other exception 
-    types may cause the test to fail.</para>
+    <para>In the previous chapter we have seen how to expect failures in Citrus with assert action. Now the assert action is designed for single
+    actions to be monitored and for failures to be expected in any case. The <emphasis>'catch'</emphasis> action in contrary can hold several 
+    nested test actions and exception failure is optional.</para>
     
+    <para>The nested actions are error proof for the chosen exception type. This means possible exceptions are caught and ignored - the test 
+    case will not fail for this exception type. But only for this particular exception type! Other exception types that occur during execution
+    do cause the test to fail as usual.</para>
+    
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;catchExceptionTest&quot;&gt;
     &lt;actions&gt;
         &lt;catch exception=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;&gt;
@@ -17,13 +21,22 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    catchException(CitrusRuntimeException.class, echo("Current date is: ${date}"));
+}</programlisting>
+
     <important>
         <para>Note that there is no validation available in a catch block. So catching exceptions is just to make a test more stable towards
         errors that can occur. The caught exception does not cause any failure in the test. The test case may continue with execution as if there was not failure.
-        Also notice that the catch action is also happy when no exception at all is caught. In contrary to the assert action which requires the failure the catch
-        block is not failing in positive processing.</para>
+        Also notice that the catch action is also happy when no exception at all is raised. In contrary to that the assert action requires the exception and an 
+        assert action is failing in positive processing.</para>
     </important>
     
     <para>Catching exceptions like this may only fit to very error prone action blocks where failures do not harm the test case success. Otherwise a failure 
     in a test action should always reflect to the whole test case to fail with errors.</para>
+    
+    <note>Java developers might ask why not use try-catch Java block instead? The answer is simple yet very important to understand. The configure() method
+    is called by the Java DSL test case builder not at test runtime but before that. This means that a try-catch block within the configure() method will never 
+    perform during the test run. Only adding the catch test action as part of the test case will result in expected behavior.</note>
 </section>

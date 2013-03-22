@@ -8,6 +8,7 @@
     
     <para>The user input is stored to the respective variable value.</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;inputTest&quot;&gt;
     &lt;variables&gt;
         &lt;variable name=&quot;userinput&quot; value=&quot;&quot;&gt;&lt;/variable&gt;
@@ -36,24 +37,46 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para>The input action has following attributes:</para>
+    <para>As you can see the input action is customizable with a prompt message that is displayed to the user and some valid answer possibilities.
+    The user input is stored to a test variable for further use in the test case. In detail the input action offers following attributes:</para>
     
     <itemizedlist mark="opencircle">
         <listitem>
             <para><emphasis>message</emphasis> -&gt; message displayed to the user</para>
         </listitem>
         <listitem>
-            <para><emphasis>valid-answers</emphasis> -&gt; optional slash separated string containing the possible answers</para>
+            <para><emphasis>valid-answers</emphasis> -&gt; optional slash separated string containing the possible valid answers</para>
         </listitem>
         <listitem>
-            <para><emphasis>variable</emphasis> -&gt; destination variable to store the user input (default = ${userinput})</para>
+            <para><emphasis>variable</emphasis> -&gt; result variable name holding the user input (default = ${userinput})</para>
         </listitem>        
     </itemizedlist>
     
-    <note>
-        <para>When user input is restricted to a set of valid answers the input validation of course can fail due to mismatch. 
-        In this case the user is again asked to provide the input until a valid answer is given.</para>
-    </note>
+    <para>The same action in Java DSL now looks quite familiar to us although attribute naming is slightly different:</para>
+    
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    variable("userinput", "");
+    variable("userinput1", "");
+    variable("userinput2", "y");
+    variable("userinput3", "yes");
+    variable("userinput4", "");
+    
+    input();
+    echo("user input was: ${userinput}");
+    input().message("Now press enter:").result("userinput1");
+    echo("user input was: ${userinput1}");
+    input().message("Do you want to continue?").answers("y", "n").result("userinput2");
+    echo("user input was: ${userinput2}");
+    input().message("Do you want to continue?").answers("yes", "no").result("userinput3");
+    echo("user input was: ${userinput3}");
+    input().result("userinput4");
+    echo("user input was: ${userinput4}"); 
+}</programlisting>
+    
+    <para>When the user input is restricted to a set of valid answers the input validation of course can fail due to mismatch. This is the case when the user
+    provides some input not matching the valid answers given. In this case the user is again asked to provide valid input. The test action will continue to ask for valid
+    input until a valid answer is given.</para>
     
     <note>
         <para>User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to 

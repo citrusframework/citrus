@@ -6,12 +6,13 @@
     a loop according to an ending condition. The condition describes a Boolean expression using
     the operators as described in the previous chapter.</para>
 
-    <important>
+    <note>
       <para>The loop continues its work until the provided condition evaluates to true. It is very important to notice that the
       repeat loop will execute the actions before evaluating the condition. This means the actions get executed
       1-n times.</para>
-     </important>
+    </note>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;iterateTest&quot;&gt;
     &lt;actions&gt;
         &lt;repeat-until-true index=&quot;i&quot; condition=&quot;(i = 3) or (i = 5)&quot;&gt;
@@ -21,5 +22,12 @@
         &lt;/repeat-until-true&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    repeat(echo("index is: ${i}"))
+        .until("(i gt 5) or (i = 3)")
+        .index("i");
+}</programlisting>
     
 </section>

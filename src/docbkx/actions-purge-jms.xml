@@ -9,6 +9,7 @@
     
     <para>So we need to purge some JMS queues in our test case. This can be done with following action definition:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
   &lt;actions&gt;
       &lt;purge-jms-queues&gt;
@@ -24,6 +25,22 @@
       &lt;/purge-jms-queues&gt;
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+@Qualifier("connectionFactory")
+private ConnectionFactory connectionFactory;
+
+protected void configure() {
+    purgeQueues()
+        .queue("Some.JMS.QUEUE.Name")
+        .queue("Another.JMS.QUEUE.Name");
+        
+    purgeQueues(connectionFactory)
+        .timeout(150L) // custom timeout in ms
+        .queue("Some.JMS.QUEUE.Name")
+        .queue("Another.JMS.QUEUE.Name");
+}</programlisting>
     
     <para>Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the 
     very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which 
@@ -34,7 +51,7 @@
     'com.consol.citrus.actions.PurgeJmsQueuesAction' action offers the property "queueNames" to hold all destination names 
     that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration.
     This purging bean is then added to the test suite in the tasks between section.</para>
-        
+    
     <programlisting>&lt;bean id=&quot;purgeJmsQueues&quot;
     class=&quot;com.consol.citrus.actions.PurgeJmsQueuesAction&quot;&gt;
     &lt;property name=&quot;connectionFactory&quot; ref=&quot;jmsQueueConnectionFactory&quot;/&gt;
@@ -70,6 +87,7 @@
     bean references that resolve to JMS destinations. We can purge these destination references in a test case, too. Just use the <emphasis>'ref'</emphasis>
     attribute instead of already known <emphasis>'name'</emphasis> attribute:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
   &lt;actions&gt;
       &lt;purge-jms-queues&gt;
@@ -78,5 +96,27 @@
       &lt;/purge-jms-queues&gt;
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para>Of course you can use queue object references also in Java DSL test cases. Here we easily can use Spring's dependency injection with autowiring to
+    get the object references from the container.</para>
+    
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+@Qualifier("jmsQueueHelloRequestIn")
+private Queue jmsQueueHelloRequestIn;
+
+@Autowired
+@Qualifier("jmsQueueHelloResponseOut")
+private Queue jmsQueueHelloResponseOut;
+    
+protected void configure() {
+    purgeQueues()
+        .queue(jmsQueueHelloRequestIn)
+        .queue(jmsQueueHelloResponseOut);
+}</programlisting>
+
+    <note>
+        <para>You can mix queue name and queue object references as you like within one single purge queue test action.</para>
+    </note>
 
 </section>

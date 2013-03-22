@@ -8,6 +8,7 @@
     until all embedded actions were processed successfully <literal>or</literal> the ending condition evaluates to true and the
     error-loop will lead to final failure.</para>
 
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;iterateTest&quot;&gt;
     &lt;actions&gt;
         &lt;repeat-onerror-until-true index=&quot;i&quot; condition=&quot;i = 5&quot;&gt;
@@ -18,6 +19,14 @@
         &lt;/repeat-onerror-until-true&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    repeatOnError(
+        echo("index is: ${i}"),
+        fail("Force loop to fail!")
+    ).until("i = 5").index("i");
+}</programlisting>
     
     <para>In the code example the error-loop continues four times as the &lt;fail&gt; action definitely fails the test.
     During the fifth iteration The condition &quot;i=5&quot; evaluates to true and the loop breaks its processing leading to a
@@ -38,6 +47,7 @@
     
     <para>We can avoid unstable test cases that are based on these runtime conditions with the auto-sleep functionality.</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;repeat-onerror-until-true auto-sleep=&quot;1&quot; condition=&quot;i = 5&quot; index=&quot;i&quot;&gt;
     &lt;echo&gt;
         &lt;sql datasource=&quot;testDataSource&quot;&gt;
@@ -50,6 +60,15 @@
         &lt;/sql&gt;
     &lt;/echo&gt;
 &lt;/repeat-onerror-until-true&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    repeatOnError(
+        query(testDataSource)
+            .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
+            .validate("CNT_ORDERS", "1")
+    ).until("i = 5").index("i").autoSleep(1L);
+}</programlisting>
     
     <para>We surrounded the database check with a repeat-onerror container having the auto-sleep property set to 1 second. The repeat container
     will try to check the database up to five times with an automatic sleep of 1 second before every iteration. This gives the system under test

@@ -10,6 +10,7 @@
     <para>For now the sequential container seems not very sensational - one might say boring - because it simply groups a pair of test
     actions to sequential execution.</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;sequentialTest&quot;&gt;
     &lt;actions&gt;
         &lt;sequential&gt;
@@ -22,5 +23,15 @@
         &lt;/sequential&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    sequential(
+        stopTime(),
+        sleep(1.0),
+        echo("Hello Citrus"),
+        stopTime()
+    );
+}</programlisting>
     
 </section>
