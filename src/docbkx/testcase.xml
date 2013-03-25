@@ -2,11 +2,12 @@
 <chapter id="testcase">
   <title>Test case</title>
 
-  <para>Now let us start writing test cases! A test case describes the steps for a certain use case. The test case holds
-  a sequence of different test actions that are executed during the test. Typically in message-based applications sending 
-  and receiving messages will be the main actions inside a test. But you will learn that Citrus is able to add much more 
-  logic in a test case in order to accomplish very complex use case tests. Step by step we will introduce all possible actions 
-  inside a test case and explain how to connect to other systems by sending and receiving messages over various transports.</para>
+  <para>Now let us start writing test cases! A test case in Citrus describes all steps for a certain use case. The Citrus 
+  integration test holds different test actions that are executed in sequence during the test. Typically with message-based 
+  enterprise applications the sending and receiving of messages represent the main actions inside a test. But you will learn 
+  that Citrus is able to add much more logic to your test, such as connecting to the database, transforming data, adding loops 
+  and iterations. With the default Citrus action set you can accomplish very complex use case integration tests. We will introduce 
+  all possible actions step by step and learn how to use various message transports within the test.</para>
 
   <mediaobject>
     <imageobject role="fo">
@@ -18,16 +19,21 @@
     </imageobject>
   </mediaobject>
     
-  <para>The figure above describes a typical test action sequence in Citrus. A list of test actions that send and receive messages 
-  with various MessageSender and MessageReceiver components. So how do we define those test logic? Citrus specifies test cases 
-  through simple XML files. The whole test case description takes place in one single XML file. This chapter will introduce 
-  the custom XML schema language that defines a test cases.</para>
+  <para>The figure above describes a typical test action sequence in Citrus. A list of test actions with purpose to send and receive 
+  messages using predefined Citrus MessageSender and MessageReceiver components. So how do we define those test cases? In general Citrus specifies 
+  test cases as Java classes. With TestNG or JUnit you can execute the Citrus tests within your Java runtime as you would do within unit testing.
+  You can code the Citrus test in a single Java class doing assertions and using Spring's dependency injection mechanisms. If you are not familiar
+  to writing Java code you can also write Citrus tests as XML files. Whatever test language you choose for Citrus the whole test case description 
+  takes place in one single file (Java or XML). This chapter will introduce the custom XML schema language as well as the Java domain specific 
+  language so you will be able to write Citrus test cases no matter what knowledge base you belong to.</para>
 
   <section id="testcase-defining">
     <title>Defining a test case</title>
 
-    <para>Put simply, a test case is nothing but a simple Spring XML configuration file. 
-    So using the Spring XML configuration syntax you are able to write fully compatible test cases for the Citrus framework.</para>
+    <para>Put simply, a Citrus test case is nothing but a simple Spring XML configuration file. The Spring framework has become a state of the art 
+    development framework for enterprise Java applications. As you work with Citrus you will also learn how to use the Spring application container 
+    and the concepts of dependency injection. So let us have a look at the Spring XML configuration syntax first. If you want to you are able to write 
+    fully compatible test cases for the Citrus framework just using this syntax.</para>
     
     <programlisting>&lt;beans
     xmlns=&quot;http://www.springframework.org/schema/beans&quot;
@@ -46,10 +52,10 @@
     <para>Citrus can execute these test case as normal test cases - no problem, but this XML
     syntax is not usually the best way to describe a test case in Citrus, especially when test scenarios get more 
     complex and the test cases grow in size. Therefore Citrus provides a custom XML schema definition for 
-    writing test cases.</para>
+    writing test cases which is much more adequate for our testing purpose.</para>
     
-    <para>The custom XML schema aims to reach the convenience of Domain specific languages (DSL). Let us have a look 
-    at the Citrus test describing DSL by introducing a first very simple test case definition:</para>
+    <para>The custom XML schema aims to reach the convenience of domain specific languages (DSL). Let us have a look 
+    at the Citrus test describing XML language by introducing a first very simple test case definition:</para>
     
     <programlisting>&lt;spring:beans
     xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
@@ -81,9 +87,10 @@
     language in Citrus to describe the test case.</para>
     
     <para>The test case itself gets a mandatory name that must be unique throughout all test cases in a project. You will receive errors
-    when using duplicate test names. The name must not contain any whitespaces but does support special characters like '-', '.', '_'. 
-    For example, <literal>TestFeature1</literal> is valid but <literal>TestFeature_1</literal> is not.
-    The &lt;testcase&gt; element holds several child elements. These basic test elements are described in the following sections.</para>
+    when using duplicate test names. The test name has to follow the common Java naming conventions and rules for Java classes. This means 
+    names must not contain any whitespaces but special characters like '-', '.', '_' are supported. For example, <literal>TestFeature_1</literal> 
+    is valid but <literal>TestFeature 1</literal> is not. The &lt;testcase&gt; XML element holds several child elements. These basic test elements 
+    are described in the following sections.</para>
     
     <section id="testcase-description">
         <title>Description</title>
