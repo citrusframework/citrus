@@ -53,6 +53,16 @@ body {
   padding: 11px 50px;
 }
 
+.marketing {
+  text-align: center;
+}
+
+.marketing h1 {
+  color: #5d5d5d;
+  margin-top: 20px;
+  font-size: 48px;
+}
+
 .navbar {
   margin-bottom: 10px;
 }
