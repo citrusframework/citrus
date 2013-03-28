@@ -10,8 +10,9 @@
       <div class="jumbotron">
         <h1>Citrus Integration Testing</h1>
         
-        <p class="lead">Automated integration tests supporting message protocols and data formats 
-        that you require! Such as HTTP, JMS, TCP/IP, REST, SOAP, FTP, SSH, XML, JSON and many more!</p>
+        <p class="lead">Automated integration tests for message protocols and data formats 
+        that you require! You can test interfaces with HTTP, JMS, TCP/IP, REST, SOAP, FTP, SSH, 
+        XML, JSON and more!</p>
         
         <a href="download.html" class="btn btn-warning btn-large">Download Citrus 1.3</a>
       </div>
@@ -20,9 +21,14 @@
     <hr/>
     
     <div class="container marketing">
-      <h1>Integration test scenario</h1>
+      <h1>Test scenario</h1>
       
       <img src="images/test-scenario.png"></img>
+      
+      <p>The system under test is usually deployed on some application server and interacts with Citrus over various message transports. 
+      During the test run Citrus is able to act on both sides as client and/or server simulating request/response messages. With each 
+      step in your test you can validate the exchanged messages with expected control data. The test is fully automated and repeatable,
+      so you can easily add the integration tests to your continuous build.</p>
     </div>
     
     <hr/>
@@ -33,21 +39,22 @@
         
         <div class="span3">
           <h2>Features</h2>
-          <p>Citrus is able to perform high complex integration tests with great validation capabilities. 
-          See the complete <a href="features.html">feature list</a> for details.</p>
+          <p>Your enterprise applications requires detailed integration testing. Citrus provides a 
+          tooling for complex integration test with great validation capabilities for XML, JSON and plain text.</p>
           <ul>
-            <li><strong>Mocks and simulators:</strong> out-of-the-box client and server simulation</li>
-            <li><strong>Test automation:</strong> execute integration tests with continuous builds</li>
-            <li><strong>Protocol support:</strong> HTTP, JMS, TCP/IP, REST, SOAP, XML, JSON, and more</li>
-            <li><strong>Validation/Verification:</strong> validate message headers and body in each test step</li>
+            <li><strong>Interface mocks and simulators:</strong> client and server side</li>
+            <li><strong>Test automation:</strong> repeatable integration tests within your continuous build</li>
+            <li><strong>Message transport connectivity:</strong> HTTP, JMS, TCP/IP, REST, SOAP, XML, JSON, and more</li>
+            <li><strong>Validation:</strong> message header and body assertions</li>
           </ul>
+          <p>See the complete <a href="features.html">feature list</a> for details.</p>
         </div>
         
         <div class="span1"></div>
         
         <div class="span3">
           <h2>Documentation</h2>
-          <p>See the following reading material and reference guides to learn about Citrus.</p>
+          <p>See the following reading material and documentation for Citrus.</p>
           <ul>
             <li><a href="installation.html">Installation Guide</a></li>
             <li><a href="tutorials.html">Tutorials</a></li>
@@ -57,16 +64,9 @@
           </ul>
           
           <p>
-            Reference documentation guide:<br/>
+            Reference documentation:<br/>
             <strong>Latest stable release:</strong> 1.3<br/>
             Version 1.3: <a href="reference/html/index.html" target="_blank">HTML</a> | <a href="reference/pdf/citrus-reference-1.2.pdf" target="_blank">PDF</a>
-          </p>
-          
-          <p>
-            <strong>Older versions:</strong><br/>
-            Version 1.2: <a href="reference/1.2/html/index.html" target="_blank">HTML</a> | <a href="reference/1.2/pdf/citrus-reference-1.2.pdf" target="_blank">PDF</a><br/>
-            Version 1.1: <a href="reference/1.1/html_single/index.html" target="_blank">HTML</a> | <a href="reference/1.1/pdf/citrus-reference-1.1.pdf" target="_blank">PDF</a><br/>
-            Version 1.0: <a href="reference/1.0/html_single/index.html" target="_blank">HTML</a> | <a href="reference/1.0/pdf/citrus-reference-1.0.pdf" target="_blank">PDF</a>
           </p>
         </div>
         

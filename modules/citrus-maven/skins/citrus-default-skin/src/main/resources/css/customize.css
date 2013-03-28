@@ -10,6 +10,10 @@ body {
   font-size: 14px;
 }
 
+body.home {
+  background: url(../images/bg_home.png) repeat-x;
+}
+
 #content {
   min-height: 100%;
   height: auto !important;
@@ -60,7 +64,13 @@ body {
 .marketing h1 {
   color: #5d5d5d;
   margin-top: 20px;
+  margin-bottom: 35px;
   font-size: 48px;
+}
+
+.marketing p {
+  font-size: 16px;
+  margin: 20px;	
 }
 
 .navbar {
