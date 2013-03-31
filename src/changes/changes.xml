@@ -15,7 +15,19 @@
   </properties>
   
   <body>
-    <release version="1.3" date="20.02.2012" description="1.3 release">
+    <release version="1.3" date="01.04.2012" description="1.3 release">
+        <action dev="christophd" type="add">
+          CITRUS-165 Add Http params to basic authentication
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-164 Support Jetty server with security handler
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-163 Support multiple SOAP fault detail elements
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-162 Random number function leading zero numbers 
+        </action>
         <action dev="christophd" type="fix">
           CITRUS-161 SOAP 1.2 fault detail validation
         </action>
@@ -72,6 +84,12 @@
         </action>
         <action dev="christophd" type="add">
           CITRUS-142 Add new test action for running ANT build targets
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-91 JUnit samples
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-84 JMS durable subscribers
         </action>
         <action dev="christophd" type="add">
           CITRUS-82 Fork Http send action

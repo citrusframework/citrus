@@ -9,10 +9,10 @@ WELCOME TO CITRUS
   fully automated end-to-end use case tests for enterprise SOA 
   applications. Citrus simulates surrounding interface partners 
   supporting a huge set of different transports and protocols like 
-  SOAP WebServices, Http and JMS.
+  Http, JMS, TCP/IP, FTP, SOAP, XML and JSON.
   
-  Visit the official website on 'http://www.citrusframework.org' 
-  in order to find more information and detailed documentation.
+  Visit our official website at 'http://www.citrusframework.org' 
+  for more information and a detailed documentation.
 
 PRECONDITIONS
 
@@ -42,8 +42,8 @@ INSTALLATION
   * Use the ANT tutorial in our tutorials section to find out how to run 
     tests using ANT.
  
-  * Read the Maven2 tutorial to find out how to integrate the Citrus tests 
-    into the Maven2 build lifecycle
+  * Read the Maven tutorial to find out how to integrate the Citrus tests 
+    into the Maven build lifecycle
 
 RELEASE NOTES
 
@@ -72,7 +72,7 @@ SAMPLES
 
 LICENSING
   
-  Copyright 2006-2012 ConSol* Software GmbH.
+  Copyright 2006-2013 ConSol* Software GmbH.
  
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
