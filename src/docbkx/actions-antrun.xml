@@ -8,6 +8,7 @@
     
     <para>See this basic ANT run example to see how it works within your test case:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;AntRunTest&quot;&gt;
     &lt;variables&gt;
         &lt;variable name=&quot;today&quot; value=&quot;citrus:currentDate()&quot;/&gt;
@@ -22,6 +23,16 @@
         &lt;/ant&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    variable("today", "citrus:currentDate()");
+    
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .target("sayHello")
+        .property("date", "${today}")
+        .property("welcomeText", "$Hello!");
+}</programlisting>
     
     <para>The respective build.xml ANT file must provide the target to call. For example:</para>
     
@@ -42,6 +53,7 @@
     
     <para>You can also call multiple targets within one single build run by using a comma separated list of target names:</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;AntRunTest&quot;&gt;
     &lt;variables&gt;
         &lt;variable name=&quot;today&quot; value=&quot;citrus:currentDate()&quot;/&gt;
@@ -56,6 +68,15 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">protected void configure() {
+    variable("today", "citrus:currentDate()");
+    
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .targets("sayHello", "sayGoodbye")
+        .property("date", "${today}");
+}</programlisting>
+
     <para>The build properties can live in external file resource as an alternative to the inline property definitions. You just have to use the
     respective file resource path and all nested properties get loaded as build properties.</para>
     
@@ -64,6 +85,7 @@
     you can add additional logic to the ANT build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by 
     raising some exception forcing the test case to fail accordingly.</para>
     
+    <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;AntRunTest&quot;&gt;
     &lt;actions&gt;
         &lt;ant build-file=&quot;classpath:com/consol/citrus/actions/build.xml&quot; 
@@ -73,6 +95,17 @@
         &lt;/ant&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+private BuildListener customBuildListener;
+    
+protected void configure() {
+    antrun("classpath:com/consol/citrus/actions/build.xml")
+        .target("sayHello")
+        .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+        .listener(customBuildListener);
+}</programlisting>
 
     <para>The <emphasis>customBuildListener</emphasis> used in the example above should reference a Spring bean in the Citrus application context. The bean implements
     the interface <emphasis>org.apache.tools.ant.BuildListener</emphasis> and controls the ANT build run.</para>

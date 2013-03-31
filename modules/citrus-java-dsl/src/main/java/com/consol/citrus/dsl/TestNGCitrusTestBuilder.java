@@ -151,6 +151,19 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     protected void action(TestAction testAction) {
         testCase.addTestAction(testAction);
     }
+    
+    /**
+     * Creates a new ANT run action definition
+     * for further configuration.
+     * @param buildFilePath
+     * @return
+     */
+    protected AntRunActionDefinition antrun(String buildFilePath) {
+        AntRunAction action = new AntRunAction();
+        action.setBuildFilePath(buildFilePath);
+        testCase.addTestAction(action);
+        return new AntRunActionDefinition(action);
+    }
      
     /**
      * Creates a new echo action.
