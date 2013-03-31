@@ -47,7 +47,7 @@
         connection factory implementation as we use a ActiveMQ message broker.</para>
         
         <tip>
-            <para>Spring makes it very easy to connect to other JMS broker implementations too (e.g. TIBCO Enterprise Messaging Service, 
+            <para>Spring makes it very easy to connect to other JMS broker implementations too (e.g. Apache ActiveMQ, TIBCO Enterprise Messaging Service, 
             IBM Websphere MQ). Just substitute the implementing class in the connectionFactory bean.</para>
         </tip>
         

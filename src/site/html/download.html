@@ -59,12 +59,23 @@
 
       <pre class="prettyprint linenums">&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
-  &lt;artifactId&gt;citrus-tibco&lt;/artifactId&gt;
+  &lt;artifactId&gt;citrus-ssh&lt;/artifactId&gt;
+  &lt;version&gt;1.3&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+
+      <p>If you would like to use the new Java DSL test writing language you have 
+      to add this dependency to your project accordingly.</p>
+      
+      <pre class="prettyprint linenums">&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-java-dsl&lt;/artifactId&gt;
   &lt;version&gt;1.3&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
       
-      <p>ConSol Labs Maven repository providing the Citrus artifacts.</p>
+      <p>As we do provide a Maven repository at ConSol Labs providing the Citrus artifacts to you
+      we have to add this definitions to your POM.</p>
       <pre class="prettyprint linenums">&lt;repository&gt;
   &lt;id&gt;consol-labs-release&lt;/id&gt;
   &lt;url&gt;http://labs.consol.de/maven/repository/&lt;/url&gt;

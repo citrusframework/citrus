@@ -73,7 +73,7 @@
         
         <para>This is all Citrus needs to send and receive messages over JMS in order to simulate the TravelAgency. By default all JMS message
         senders and receivers need a connection factory. Therefore Citrus is searching for a bean named "connectionFactory". In the example
-        we connect to a ActiveMQ message broker. A connection to other JMS brokers like TIBCO EMS or IBM Websphere MQ is possible too by
+        we connect to a ActiveMQ message broker. A connection to other JMS brokers like TIBCO EMS or Apache ActiveMQ is possible too by
         simply changing the connection factory implementation.</para>
         
         <para>The identifiers of the message senders and receivers are very important. We should think of suitable ids that give the

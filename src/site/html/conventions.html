@@ -167,18 +167,10 @@ if ( a &amp;gt; 0 )
           </p>
         </li>
         <li>
-          <b>PROJECT_HOME</b><i>/modules/citrus-tibco/pom.xml</i>
           <p>
-            Contains very specific TIBCO dependency libraries only used by
-            this module. Further TIBCO specific dependencies go directly in
-            here. The Citrus main project should not have dependencies to TIBCO
-            specific APIS and libraries.
-          </p>
-        </li>
-        <li>
-          <p>
-            Other Citrus modules may always reference a dependency
-            defined in the dependency management section in our parent Citrus POM.
+            All Citrus modules do always reference a dependency library
+            defined in the dependency management section in our parent Citrus POM. 
+            This way our dependency version management resides to the parent POM only.
           </p>
         </li>
         <li>
