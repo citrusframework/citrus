@@ -690,6 +690,7 @@
       </plugins>
     </pluginManagement>
     
+    <!-- Does not work with Maven2 on continuous build
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -697,6 +698,7 @@
         <version>2.3</version>
       </extension>
     </extensions>
+     -->
   </build>
 
   <repositories>
