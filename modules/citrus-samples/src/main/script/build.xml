@@ -15,7 +15,7 @@
         <fileset refid="citrus-dependencies"/>
     </path>
     
-	<typedef resource="citrustasks" classpath="../../../dist/citrus-ant-tasks-1.3.M1.jar"/>
+	<typedef resource="citrustasks" classpath="../../../dist/citrus-ant-tasks-1.3.jar"/>
 	
 	<target name="compile.tests">
 	    <javac srcdir="src/citrus/java" classpathref="citrus-classpath"/>
