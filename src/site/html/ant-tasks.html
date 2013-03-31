@@ -6,34 +6,19 @@
       <h1 class="page-header">ANT tasks <small>Execute Citrus with ANT</small></h1>
 
       <p>
-        You can execute Citrus tests with ANT. The Citrus ANT tasks
-        simplify the test execution so you just include predefined tasks into
-        your project's 'build.xml'.
+        You can execute Citrus tests with ANT. The Citrus ANT tasks simplify the test execution 
+        so you just include predefined tasks into your project ANT build file.
       </p>
       
-      <p>
-        <b>Latest stable release</b>: 1.3
-      </p>
-      
+      <p><b>Latest stable release</b>: 1.3</p>
       <ul>
         <li>citrus-ant-tasks-1.3.jar (<a href="dist/citrus-ant-tasks-1.3.jar">download</a>)</li>
       </ul>
       
       <p>
-        <b>Older versions</b>:
-      </p>
-      
-      <ul>
-        <li>citrus-ant-tasks-1.2.jar (<a href="dist/citrus-ant-tasks-1.2.jar">download</a>)</li>
-        <li>citrus-ant-tasks-1.1.jar (<a href="./dist/citrus-ant-tasks-1.1.jar">download</a>)</li>
-        <li>citrus-ant-tasks-1.0.jar, Note: Licensed under GPLv3 (<a href="./dist/citrus-ant-tasks-1.0.jar">download</a>)</li>
-      </ul>
-      
-      <p>
-        The ANT tasks can execute Citrus test cases in several modes.
-        You can either run one single test by its name or all tests in a test
-        package. In addition to that you can also use TestNG XML test suite
-        files to execute your tests.
+        The ANT tasks can execute Citrus test cases in several modes. You can either run one single 
+        test by its name or all tests in a test package. In addition to that you can also use TestNG XML 
+        test suite files to execute your tests.
       </p>
       
       <p>Here is a simple usage example:</p>
@@ -69,12 +54,18 @@
       </table>
       
       <p>
-        In the Citrus samples section you can find several 'build.xml'
-        scripts, which give examples how to use the Citrus ANT tasks in order
-        to run tests. You can also see how single test execution is extended
-        with ANT prompts, so the user is asked for test name inputs during
-        execution.
+        In the Citrus samples section you can find several 'build.xml' scripts, which give examples how to use the Citrus ANT tasks 
+        in order to run tests. You can also see how single test execution is extended with ANT prompts, so the user is asked for 
+        test name inputs during execution.
       </p>
+      
+      <p>Please be aware of Java classpath settings in your ANT build file. Citrus is executed via Java runtime and therefore with
+      Java task execution in ANT. The Citrus ANT tasks require a classpath setting and a default folder structure within your ANT 
+      project. So customization is limited to a certain level.</p>
+      
+      <p>In case you want to have more customization opportunities you can also use the pure ANT Java tasks for TestNG and JUnit 
+      in order to execute the Citrus test cases. The Citrus test case Java class is nothing but a normal TestNG or JUnit executable. In
+      cas you are familiar with ANT you may want to use this option because you then have full power of customizing your build.</p>
     </div>
   </body>
 </html>
