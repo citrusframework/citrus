@@ -689,6 +689,14 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh-external</artifactId>
+        <version>2.3</version>
+      </extension>
+    </extensions>
   </build>
 
   <repositories>
