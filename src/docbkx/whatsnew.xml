@@ -8,9 +8,11 @@
   <section id="whatsnew-javadsl">
     <title>Java DSL</title>
 
-    <para>Citrus users, in particular those with development experience, do often tell me about the nasty XML code they have to write for test definitions. Developers want to write Java code rather than XML. 
-    Although I personally do like the Citrus XML test syntax we have introduced a Java DSL language for writing Citrus tests with Java only. We introduced the Java DSL to all major test action features in Citrus 
-    so you can switch without having to worry about loosing some features. Details can be seen in the test action section where we added Java DSL examples almost everywhere (<xref linkend="actions"/>).</para>
+    <para>Citrus users, in particular those with development experience, do often tell me about the nasty XML code they have to deal with for writing Citrus test definitions. Developers want to write 
+    Java code rather than XML. Although I personally do like the Citrus XML test syntax we have introduced a Java DSL language for writing Citrus tests with Java only.</para>
+    
+    <para>We have introduced the Java DSL to all major test action features in Citrus so you can switch without having to worry about loosing functionality. Details can be seen in the test action section 
+    where we added Java DSL examples almost everywhere (<xref linkend="actions"/>). The basic Java DSL setup is described in <xref linkend="testcase"/>.</para>
   </section>
   
   <section id="whatsnew-xhtml">
@@ -88,7 +90,7 @@
   <section id="whatsnew-upgrading">
     <title>Upgrading from version 1.2</title>
     
-    <para>If you are coming from Citrus 1.2 you may have to look at the following points in order to have a smooth upgrade to the latest release version.</para>
+    <para>If you are coming from Citrus 1.2 you may have to look at the following points in order to have a smooth upgrade to the new release version.</para>
     
     <itemizedlist mark="opencircle">
         <listitem>
@@ -100,6 +102,10 @@
             <para><emphasis>Spring version upgrade</emphasis> Staying up to date with the versions of 3rd library dependencies is quite important for us. So we upgrade our dependencies to newer versions
             with each release. As we did only upgrade minor versions there is no significant change or problems to be expected. However you may take care on versions and 
             release changes in the Spring world for details and migration.</para>
+        </listitem>
+        <listitem>
+            <para><emphasis>TIBCO module</emphasis> We decided to put the TIBCO module separately as it is a very special connectivity adapter for TIBCO software only. So you will not find the TIBCO module
+            within the Citrus distribution anymore. We will maintain a TIBCO connectivity adapter separately in the future.</para>
         </listitem>
     </itemizedlist>
   </section>
