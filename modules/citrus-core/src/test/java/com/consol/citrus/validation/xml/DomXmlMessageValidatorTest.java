@@ -75,12 +75,12 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                     + "</message>").build();
         
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setSchema("testSchema"); // defined as bean in application context
+        validationContext.setSchema("testSchema2"); // defined as bean in application context
         validator.validateXMLSchema(message, validationContext);
     }
     
     @Test
-    public void validateWithExplicitXMLSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+    public void validateWithExplicitSpringSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -88,10 +88,23 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                     + "</message>").build();
         
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setSchemaRepository("testSchemaRepository"); // defined as bean in application context
+        validationContext.setSchemaRepository("testSchemaRepository1"); // defined as bean in application context
         validator.validateXMLSchema(message, validationContext);
     }
     
+    @Test
+    public void validateWithExplicitCitrusSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                        + "<correlationId>Kx1R123456789</correlationId>"
+                        + "<bookingId>Bx1G987654321</bookingId>"
+                        + "<test>Hello TestFramework</test>"
+                    + "</message>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        validationContext.setSchemaRepository("testSchemaRepository2"); // defined as bean in application context
+        validator.validateXMLSchema(message, validationContext);
+    }
+
     @Test
     public void validateWithDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"

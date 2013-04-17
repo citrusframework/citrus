@@ -163,4 +163,31 @@
         <xs:attribute name="channel-resolver" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>
+
+  <xs:element name="xsd-schema">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="location" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="schema-repository">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="schemas">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="schema" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="ref" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
 </xs:schema>

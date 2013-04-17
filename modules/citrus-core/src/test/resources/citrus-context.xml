@@ -4,10 +4,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	 
     <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
 	 
@@ -24,16 +26,25 @@
     <bean id="testSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
         <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
     </bean>
-    
-    <bean id="testSchemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+
+    <citrus:xsd-schema id="testSchema2" location="classpath:com/consol/citrus/validation/test.xsd" />
+    <citrus:xsd-schema id="testSchema3" location="classpath:com/consol/citrus/validation/test.xsd" />
+
+    <bean id="testSchemaRepository1" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
             <list>
                 <ref bean="testSchema"/>
             </list>
         </property>
     </bean>
-    
-	<bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+  <citrus:schema-repository id="testSchemaRepository2">
+      <citrus:schemas>
+          <citrus:schema ref="testSchema" />
+      </citrus:schemas>
+  </citrus:schema-repository>
+
+  <bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>citrus.properties</value>
