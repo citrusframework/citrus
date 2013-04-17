@@ -1,0 +1,35 @@
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" version="2.0" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          extensionBindingPrefixes="xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <globalBindings>
+    <javaType
+        name="java.util.Calendar"
+        xmlType="xs:dateTime"
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+        printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+    <javaType
+        name="java.util.Calendar"
+        xmlType="xs:date"
+        parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
+        printMethod="javax.xml.bind.DatatypeConverter.printDate" />
+    <xjc:simple />
+  </globalBindings>
+
+  <bindings schemaLocation="citrus-testcase.xsd">
+    <schemaBindings><package name="com.consol.citrus.model.testcase.core"/></schemaBindings>
+    <bindings node="//xs:element[@name='selector']">
+      <bindings node=".//xs:element[@name='value']">
+        <property name="SelectorValue"/>
+      </bindings>
+    </bindings>
+    <bindings node="//xs:element[@name='variables']/xs:complexType/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="VariableValue"/>
+    </bindings>
+    <bindings node="//xs:element[@name='create-variables']/xs:complexType/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="CreateVariableValue"/>
+    </bindings>
+    <bindings node="//xs:element[@name='parameter']/xs:complexType/xs:sequence/xs:element[@name='value']">
+      <property name="ParameterValue"/>
+    </bindings>
+  </bindings>
+
+</bindings>

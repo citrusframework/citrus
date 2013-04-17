@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <artifactId>citrus</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>1.3</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.consol.citrus.model</groupId>
+  <artifactId>citrus-model</artifactId>
+  <name>citrus-model</name>
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>config-core</module>
+    <module>config-http</module>
+    <module>config-ssh</module>
+    <module>config-ws</module>
+    <module>testcase-ws</module>
+    <module>testcase-core</module>
+  </modules>
+
+</project>
+

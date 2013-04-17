@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>citrus-model</artifactId>
+    <groupId>com.consol.citrus.model</groupId>
+    <version>1.3</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>com.consol.citrus.model.config.ssh</groupId>
+  <artifactId>citrus-model-config-ssh</artifactId>
+  <name>citrus-model-config-ssh</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <encoding>${file.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <schemaDirectory>src/main/resources/META-INF/schemas</schemaDirectory>
+          <schemaIncludes>
+            <include>**/*.xsd</include>
+          </schemaIncludes>
+          <bindingIncludes>
+            <include>**/*.xjb</include>
+          </bindingIncludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

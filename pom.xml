@@ -34,6 +34,7 @@
   </ciManagement>
 
   <modules>
+    <module>modules/citrus-model</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-adapter</module>
