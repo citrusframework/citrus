@@ -574,7 +574,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.3</version>
+          <version>1.7</version>
         </plugin>
         <plugin>
           <artifactId>maven-ear-plugin</artifactId>
@@ -872,6 +872,7 @@
             <artifactId>maven-resources-plugin</artifactId>
             <version>2.3</version>
             <inherited>false</inherited>
+            <!-- TODO CD the artifact, rather than the path, should be used here -->
             <executions>
               <execution>
                 <id>copy-citrus-config-schemas</id>
@@ -880,7 +881,7 @@
                   <outputDirectory>${basedir}/target/site/schema/config</outputDirectory>
                   <resources>          
                     <resource>
-                      <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
+                      <directory>modules/citrus-model/config-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-config*.xsd</include>
                       </includes>
@@ -898,7 +899,7 @@
                   <outputDirectory>${basedir}/target/site/schema/testcase</outputDirectory>
                   <resources>          
                     <resource>
-                      <directory>modules/citrus-core/src/main/resources/com/consol/citrus/schema</directory>
+                      <directory>modules/citrus-model/testcase-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-testcase*.xsd</include>
                       </includes>
@@ -916,7 +917,7 @@
                   <outputDirectory>${basedir}/target/site/schema/http/config</outputDirectory>
                   <resources>          
                     <resource>
-                      <directory>modules/citrus-http/src/main/resources/com/consol/citrus/schema</directory>
+                      <directory>modules/citrus-model/config-http/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-http-config*.xsd</include>
                       </includes>
@@ -934,7 +935,7 @@
                   <outputDirectory>${basedir}/target/site/schema/ws/config</outputDirectory>
                   <resources>          
                     <resource>
-                      <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
+                      <directory>modules/citrus-model/config-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-ws-config*.xsd</include>
                       </includes>
@@ -952,7 +953,7 @@
                   <outputDirectory>${basedir}/target/site/schema/ws/testcase</outputDirectory>
                   <resources>          
                     <resource>
-                      <directory>modules/citrus-ws/src/main/resources/com/consol/citrus/schema</directory>
+                      <directory>modules/citrus-model/testcase-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-ws-testcase*.xsd</include>
                       </includes>

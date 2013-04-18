@@ -41,7 +41,7 @@
                                 </xs:simpleContent>
                             </xs:complexType>
                         </xs:element>
-                        <xs:group ref="core:actionGroup"/>                    
+                        <xs:group ref="core:actionGroup"/>
                     </xs:sequence>
                     <xs:attribute name="fault-code" type="xs:string" use="required"/>
                     <xs:attribute name="fault-string" type="xs:string"/>

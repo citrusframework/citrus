@@ -14,7 +14,7 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="citrus-config.xsd">
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-config.xsd">
     <schemaBindings><package name="com.consol.citrus.model.config.core"/></schemaBindings>
   </bindings>
 

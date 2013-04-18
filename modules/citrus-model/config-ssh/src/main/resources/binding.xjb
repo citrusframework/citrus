@@ -14,8 +14,8 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="citrus-http-config.xsd">
-    <schemaBindings><package name="com.consol.citrus.model.config.http"/></schemaBindings>
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-ssh-config.xsd">
+    <schemaBindings><package name="com.consol.citrus.model.config.ssh"/></schemaBindings>
   </bindings>
 
 </bindings>

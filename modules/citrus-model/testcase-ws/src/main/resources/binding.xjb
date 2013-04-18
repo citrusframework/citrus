@@ -14,7 +14,7 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="citrus-ws-testcase.xsd">
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-ws-testcase.xsd">
     <schemaBindings><package name="com.consol.citrus.model.testcase.ws"/></schemaBindings>
   </bindings>
 

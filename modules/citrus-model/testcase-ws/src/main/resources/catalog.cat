@@ -1,1 +1,1 @@
-REWRITE_SYSTEM "http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd" "maven:com.consol.citrus.model.testcase.core:citrus-model-testcase-core!/META-INF/schemas/citrus-testcase.xsd"
+REWRITE_SYSTEM "http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd" "maven:com.consol.citrus.model.testcase.core:citrus-model-testcase-core!/com/consol/citrus/schema/citrus-testcase.xsd"

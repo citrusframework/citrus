@@ -34,9 +34,9 @@
         </executions>
         <configuration>
           <extension>true</extension>
-          <schemaDirectory>src/main/resources/META-INF/schemas</schemaDirectory>
+          <schemaDirectory>src/main/resources</schemaDirectory>
           <schemaIncludes>
-            <include>**/*.xsd</include>
+            <include>**/citrus-config.xsd</include>
           </schemaIncludes>
           <bindingIncludes>
             <include>**/*.xjb</include>

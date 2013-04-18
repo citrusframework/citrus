@@ -18,9 +18,53 @@
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack.testcase.core.xsd</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>unpack-dependencies</goal>
+              </goals>
+              <configuration>
+                <includeArtifactIds>citrus-model-testcase-core</includeArtifactIds>
+                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                <includes>**\/*.xsd, **\/*.wsdl</includes>
+              </configuration>
+            </execution>
+            <execution>
+              <id>unpack.config.core.xsd</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>unpack-dependencies</goal>
+              </goals>
+              <configuration>
+                <includeArtifactIds>citrus-model-config-core</includeArtifactIds>
+                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                <includes>**\/*.xsd, **\/*.wsdl</includes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
     </plugins>
+
   </build>
   <dependencies>
+
+    <dependency>
+      <groupId>com.consol.citrus.model.testcase.core</groupId>
+      <artifactId>citrus-model-testcase-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus.model.config.core</groupId>
+      <artifactId>citrus-model-config-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
         <groupId>commons-cli</groupId>
         <artifactId>commons-cli</artifactId>

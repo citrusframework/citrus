@@ -44,9 +44,9 @@
           </episodes>
           <catalog>src/main/resources/catalog.cat</catalog>
           <useDependenciesAsEpisodes>true</useDependenciesAsEpisodes>
-          <schemaDirectory>src/main/resources/META-INF/schemas</schemaDirectory>
+          <schemaDirectory>src/main/resources</schemaDirectory>
           <schemaIncludes>
-            <include>**/*.xsd</include>
+            <include>**/citrus-ws-testcase.xsd</include>
           </schemaIncludes>
           <bindingIncludes>
             <include>**/*.xjb</include>

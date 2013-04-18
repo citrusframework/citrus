@@ -14,7 +14,7 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="citrus-testcase.xsd">
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-testcase.xsd">
     <schemaBindings><package name="com.consol.citrus.model.testcase.core"/></schemaBindings>
     <bindings node="//xs:element[@name='selector']">
       <bindings node=".//xs:element[@name='value']">
