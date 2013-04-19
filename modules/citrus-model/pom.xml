@@ -21,6 +21,7 @@
     <module>config-ws</module>
     <module>testcase-ws</module>
     <module>testcase-core</module>
+    <module>spring-beans</module>
   </modules>
 
 </project>
