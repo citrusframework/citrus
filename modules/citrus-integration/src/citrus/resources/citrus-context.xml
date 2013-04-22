@@ -20,35 +20,8 @@
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 	 
 	<import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
-	
-    <!-- Common settings -->
-    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-        <property name="schemas">
-            <list>
-                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="helloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-        <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
-    </bean>
-    
-    <bean id="helloSchemaExtended" class="org.springframework.xml.xsd.SimpleXsdSchema">
-        <property name="xsd" value="classpath:com/consol/citrus/demo/sayHelloExtended.xsd"/>
-    </bean>
-    
-    <bean id="helloSchemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-        <property name="schemas">
-            <list>
-                <ref bean="helloSchema"/>
-                <ref bean="helloSchemaExtended"/>
-            </list>
-        </property>
-    </bean>
-    
+	<import resource="citrus-admin-context.xml"/>
+
     <context:property-placeholder location="classpath:citrus.properties"/>
 
     <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">

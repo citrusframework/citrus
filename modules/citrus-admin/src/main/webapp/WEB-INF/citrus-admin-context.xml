@@ -23,6 +23,7 @@
     <!-- Auto detected POJOs labeled with the @Controller annotation -->
     <context:component-scan base-package="com.consol.citrus.admin.controller"/>
     <context:component-scan base-package="com.consol.citrus.admin.service"/>
+    <context:component-scan base-package="com.consol.citrus.admin.util"/>
 
     <mvc:interceptors>
         <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">

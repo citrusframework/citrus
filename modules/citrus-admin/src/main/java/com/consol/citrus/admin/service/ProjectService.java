@@ -16,29 +16,40 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.util.FileHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
 /**
- * Project related activities like project home selection and 
+ * Project related activities like project home selection and
  * project specific settings.
- * 
+ *
  * @author Christoph Deppisch
  */
 @Component
 public class ProjectService {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static Logger log = LoggerFactory.getLogger(ProjectService.class);
-    
+
+    @Autowired
+    FileHelper fileHelper;
+
+    @Autowired
+    ConfigService configService;
+
     /**
      * Gets list of subfolder names and paths for given root directory.
+     *
      * @param directory
      * @return
      */
@@ -50,7 +61,7 @@ public class ProjectService {
                 }
             });
             Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
-            
+
             return files;
         } else {
             throw new IllegalArgumentException("Could not open directory because it does not exist: " + directory);
@@ -58,12 +69,13 @@ public class ProjectService {
     }
 
     /**
-     * Check if home directory is valid Citrus project home. 
+     * Check if home directory is valid Citrus project home.
+     *
      * @param directory
      */
     public boolean isProjectHome(String directory) {
         File homeDir = new File(directory);
-        
+
         try {
             Assert.isTrue(homeDir.exists());
             Assert.isTrue(new File(homeDir, "src/citrus").exists());
@@ -75,7 +87,20 @@ public class ProjectService {
             log.warn("Project home validation failed", e);
             return false;
         }
-        
+
         return true;
+    }
+
+
+    /**
+     * Returns the project's config file. It's assumed that there is only a single config file
+     * within the project and that it's named 'citrus-admin-context.xml'.
+     *
+     * @return the config file or null if no config file exists within the selected project.
+     */
+    public File getProjectConfigFile() {
+        final String configFilename = "citrus-admin-context.xml";
+        final File projectHome = new File(configService.getProjectHome());
+        return fileHelper.findFileInPath(projectHome, configFilename, true);
     }
 }
