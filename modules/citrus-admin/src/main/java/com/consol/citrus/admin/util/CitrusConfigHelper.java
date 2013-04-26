@@ -41,7 +41,6 @@ public interface CitrusConfigHelper {
      *     <element-three></element-three>
      * </beans>
      * </pre>
-     *
      * Both element-one and element-three are top level config elements, whereas element-two is not.
      *
      * @param jaxbConfig the root element of the citrus-config. Cannot be null.
@@ -68,4 +67,13 @@ public interface CitrusConfigHelper {
      */
     void persistCitrusConfig(File path, Beans jaxbConfig);
 
+    /**
+     * Searches for a Config Element matching the supplied <code>object</code> (using an equals comparison) and when
+     * found removes it.
+     *
+     * @param beans the configuration to remove the config element from
+     * @param object the object to remove
+     * @return true if removed, otherwise false
+     */
+    boolean deleteConfigElement(Beans beans, Object object);
 }

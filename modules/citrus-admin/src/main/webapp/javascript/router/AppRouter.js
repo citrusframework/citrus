@@ -1,5 +1,5 @@
 (function() {
-    define(["views/HeaderView", "views/WelcomeView", "views/TestListView", "views/FooterView"], function(HeaderView, WelcomeView, TestListView, FooterView) {
+    define(["views/HeaderView", "views/WelcomeView", "views/ConfigView", "views/TestListView", "views/FooterView"], function(HeaderView, WelcomeView, ConfigView, TestListView, FooterView) {
         var AppRouter = Backbone.Router.extend({
         
           routes: {
@@ -15,6 +15,30 @@
               headerView.render();
               var footerView = new FooterView({el: $('#footer')});
               footerView.render();
+
+              $.fn.serializeObject = function () {
+                  var o = {};
+                  var a = this.serializeArray();
+                  $.each(a, function () {
+                      if (o[this.name] !== undefined) {
+                          if (!o[this.name].push) {
+                              o[this.name] = [o[this.name]];
+                          }
+                          o[this.name].push(this.value || null);
+                      }
+                      else {
+                          // treat empty string as undefined
+                          if (this.value == '') {
+                              o[this.name] = undefined;
+                          }
+                          else {
+                              o[this.name] = this.value;
+                          }
+                      }
+                  });
+                  return o;
+              };
+
           },
           
           welcome: function() {
@@ -23,7 +47,9 @@
           },
           
           config: function() {
-              $('#content').html('<div class="container"><h1 class="page-header">Configuration <small>Manage project settings</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+              var configView = new ConfigView({el: $('#content')});
+              configView.render();
+              configView.afterRender();
           },
         
           testcases: function() {

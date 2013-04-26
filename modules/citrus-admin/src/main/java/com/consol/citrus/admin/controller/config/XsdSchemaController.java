@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public class XsdSchemaController {
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createXsdSchema(XsdSchema xsdSchema) {
+    public void createXsdSchema(@RequestBody XsdSchema xsdSchema) {
         final Beans citrusConfig = getCitrusConfig();
         citrusConfig.getImportsAndAliasAndBeen().add(xsdSchema);
         citrusConfigHelper.persistCitrusConfig(projectService.getProjectConfigFile(), citrusConfig);
@@ -81,7 +81,7 @@ public class XsdSchemaController {
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateXsdSchema(@PathVariable("id") String id, XsdSchema xsdSchema) {
+    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody XsdSchema xsdSchema) {
         final Beans citrusConfig = getCitrusConfig();
         List<XsdSchema> xsdSchemas = citrusConfigHelper.getConfigElementsByType(citrusConfig, XsdSchema.class);
         if (updateById(xsdSchemas, id, xsdSchema)) {
@@ -91,12 +91,13 @@ public class XsdSchemaController {
         }
     }
 
-    @RequestMapping(value = "/{id}", params = {"deleteFile"}, method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
-    public void deleteXsdSchema(@PathVariable("id") String id, @RequestParam("deleteFile") Boolean deleteFile) {
+    public void deleteXsdSchema(@PathVariable("id") String id) {
         final Beans citrusConfig = getCitrusConfig();
         List<XsdSchema> xsdSchemas = citrusConfigHelper.getConfigElementsByType(citrusConfig, XsdSchema.class);
-        if (deleteById(xsdSchemas, id)) {
+        XsdSchema xsdSchema = findById(xsdSchemas, id);
+        if (citrusConfigHelper.deleteConfigElement(citrusConfig, xsdSchema)) {
             citrusConfigHelper.persistCitrusConfig(projectService.getProjectConfigFile(), citrusConfig);
         } else {
             throw new CitrusAdminRuntimeException(String.format("No XSD Schema found matching id '%s'", id));
@@ -120,19 +121,6 @@ public class XsdSchemaController {
         }
         LOGGER.info("NO XSD Schema found matching id " + id);
         return null;
-    }
-
-    private boolean deleteById(List<XsdSchema> xsdSchemas, String id) {
-        for (int i = 0; i < xsdSchemas.size(); i++) {
-            XsdSchema xsdSchema = xsdSchemas.get(i);
-            if (id.equals(xsdSchema.getId())) {
-                xsdSchemas.remove(i);
-                LOGGER.info("XSD Schema deleted matching id " + id);
-                return true;
-            }
-        }
-        LOGGER.info("NO XSD Schema found matching id " + id);
-        return false;
     }
 
     private boolean updateById(List<XsdSchema> xsdSchemas, String id, XsdSchema updatedSchema) {

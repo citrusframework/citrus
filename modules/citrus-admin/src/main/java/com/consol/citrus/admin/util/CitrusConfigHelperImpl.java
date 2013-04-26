@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,6 +63,19 @@ public class CitrusConfigHelperImpl implements CitrusConfigHelper {
         }
 
         return configElements;
+    }
+
+    public boolean deleteConfigElement(Beans beans, Object objectToDelete) {
+        if (beans.getImportsAndAliasAndBeen() != null) {
+            for (Iterator<Object> iterator = beans.getImportsAndAliasAndBeen().iterator(); iterator.hasNext(); ) {
+                if(iterator.next().equals(objectToDelete)) {
+                    iterator.remove();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

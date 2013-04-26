@@ -1,0 +1,30 @@
+<table id="table-config-xsd-schemas" class="table table-bordered table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Location</th>
+        <th width="50px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#unless matches.length}}
+    <tr><td colspan="3">&nbsp;<i class="icon-remove"></i> No xsd schemas found</td></tr>
+    {{/unless}}
+
+    {{#each matches}}
+    <tr id="{{id}}">
+        <td>{{id}}</td>
+        <td>{{location}}</td>
+        <td>
+            <a class="edit-config-xsd-schema" href="#config" title="Edit XSD Schema"><i class="icon-pencil"></i></a>&nbsp;
+            <a class="del-config-xsd-schema" href="#config" title="Remove XSD Schema"><i class="icon-trash"></i></a>&nbsp;
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+    <tfoot>
+    {{#unless matches.length}}
+    <tr><td colspan="2">&nbsp;</td></tr>
+    {{/unless}}
+    </tfoot>
+</table>
