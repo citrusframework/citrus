@@ -36,7 +36,7 @@ public class CitrusConfigHelperImplTest {
     private CitrusConfigHelperImpl citrusConfigHelper = new CitrusConfigHelperImpl();
 
     @BeforeMethod
-    private void beforeMethod() {
+    public void beforeMethod() {
         citrusConfigHelper.jaxbHelper = new JAXBHelperImpl();
     }
 
