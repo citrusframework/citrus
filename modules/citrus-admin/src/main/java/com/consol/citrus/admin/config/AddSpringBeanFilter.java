@@ -17,8 +17,7 @@
 package com.consol.citrus.admin.config;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.ls.LSSerializerFilter;
+import org.w3c.dom.traversal.NodeFilter;
 
 /**
  * Filter adds a new Spring bean definition to the very end of the beans section in a 
@@ -41,12 +40,12 @@ public class AddSpringBeanFilter extends AbstractSpringBeanFilter {
     /**
      * {@inheritDoc}
      */
-    public short acceptNode(Node node) {
-        if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("beans")) {
-            node.appendChild(node.getOwnerDocument().importNode(beanDefinition, true));
+    public short accept(Element element) {
+        if (element.getLocalName().equals("beans")) {
+            element.appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
         }
         
-        return LSSerializerFilter.FILTER_ACCEPT;
+        return NodeFilter.FILTER_ACCEPT;
     }
 
 }

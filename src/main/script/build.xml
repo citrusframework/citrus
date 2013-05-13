@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Citrus release" basedir="." default="instructions">
+    <description>Citrus release helpers</description>
+
+    <property name="library.folder" value="lib"/>
+
+    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml">
+        <classpath>
+            <pathelement location="${library.folder}/maven-ant-tasks-2.1.3.jar"/>
+        </classpath>
+    </taskdef>
+    
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${library.folder}/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${library.folder}/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+	
+	<target name="instructions" description="Delivery walkthrough.">
+        <echo message="Instructions:"/>
+        <echo message="1) ant check-release"/>
+        <echo message="2) commit all local changes to github"/>
+        <echo message="3) ant prepare"/>
+        <echo message="4) ant perform-release"/>
+        <echo message="5) create tag in git and push to github"/>
+        <echo message="6) ant update-version and commit"/>
+    </target>
+	
+	<target name="check-release" depends="set-release-version">
+        <input message="Enter the version you want to release: " addproperty="new.version" defaultvalue="${release.version}"/>
+
+        <if>
+            <equals arg1="${release.version}" arg2="${new.version}"/>
+            <then>
+            </then>
+            <else>
+                <replaceregexp match="(${release.version}-SNAPSHOT)"
+                       replace="${new.version}-SNAPSHOT"
+                       byline="false"
+                       flags="g">
+                    <fileset dir="../../" includes="**/pom.xml"/>
+                </replaceregexp>
+
+                <input message="Please commit the new version to Subversion and press [ENTER]"/>
+
+                <fail message="Stopping now. Please start freshly with target prepare-dist."/>
+            </else>
+        </if>
+    </target>
+	
+	<target name="update-version" depends="set-release-version">
+        <input message="If you want to create a branch/tag in git for the old version, do it now! Press [ENTER] to continue ..."/>
+
+        <input message="Enter new version that will be set in all Maven pom.xml (without '-SNPASHOT'):" addproperty="new.version" />
+        <replaceregexp match="(${release.version}-SNAPSHOT)"
+                   replace="${new.version}-SNAPSHOT"
+                   byline="false"
+                   flags="g">
+            <fileset dir="../../" includes="**/pom.xml"/>
+        </replaceregexp>
+    </target>
+	
+	<target name="set-release-version">
+        <pom id="citrus-parent-pom" file="../../../pom.xml"/>
+        <echo message="Current project version: ${citrus-parent-pom.version}"/>
+        <propertyregex property="release.version" input="${citrus-parent-pom.version}"
+                   regexp="(.*)(-SNAPSHOT)" select="\1" global="true" override="true"/>
+    
+        <echo message="Release version: ${release.version}"/>
+    </target>
+    
+</project>

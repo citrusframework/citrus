@@ -17,45 +17,45 @@
 package com.consol.citrus.admin.config;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeFilter;
 
 /**
- * Filter removes a Spring bean definition from the beans section in a
- * Spring XML application context.
+ * Filter searches for a Spring bean definition in a Spring XML application context. Bean definition is identified by its 
+ * id or name attribute.
  * 
  * @author Christoph Deppisch
  */
-public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
+public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
 
-    /** Id or bean name of the bean definition to be removed */
-    private String elementId;
+    /** Bean definition id */
+    private String id;
     
-    /** Temporary holds removed node so all its children are removed too during the parsing operation */
-    private Node delete;
+    /** Found bean definition element node */
+    private Element beanDefinition;
     
     /**
-     * Constructor using element id field.
+     * Constructor using bean definition id as field.
      */
-    public RemoveSpringBeanFilter(String elementId) {
-        this.elementId = elementId;
+    public GetSpringBeanFilter(String id) {
+        this.id = id;
     }
     
     /**
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (element.getLocalName().equals("bean") && 
-                (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
-            delete = element;
-            return NodeFilter.FILTER_REJECT;
-        }
-        
-        if (delete != null && element.getParentNode() != null && element.getParentNode().equals(delete)) {
-            return NodeFilter.FILTER_REJECT;
+        if (isEqualById(element, id) || isEqualByBeanName(element, id)) {
+            beanDefinition = element;
         }
         
         return NodeFilter.FILTER_ACCEPT;
     }
 
+    /**
+     * Gets the beanDefinition.
+     * @return the beanDefinition the beanDefinition to get.
+     */
+    public Element getBeanDefinition() {
+        return beanDefinition;
+    }
 }

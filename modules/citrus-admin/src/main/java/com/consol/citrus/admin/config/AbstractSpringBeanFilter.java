@@ -17,6 +17,8 @@
 package com.consol.citrus.admin.config;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ls.LSParserFilter;
 import org.w3c.dom.ls.LSSerializerFilter;
 import org.w3c.dom.traversal.NodeFilter;
 
@@ -26,7 +28,7 @@ import org.w3c.dom.traversal.NodeFilter;
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractSpringBeanFilter implements LSSerializerFilter {
+public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LSParserFilter {
 
     /**
      * Checks for element equality by bean id attribute.
@@ -45,6 +47,30 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter {
     protected boolean isEqualByBeanName(Element element, String elementId) {
         return element.hasAttribute("name") && element.getAttribute("name").equals(elementId);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short startElement(Element element) {
+        return NodeFilter.FILTER_ACCEPT;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short acceptNode(Node node) {
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            return accept((Element)node);
+        }
+        
+        return NodeFilter.FILTER_ACCEPT;
+    }
+    
+    /**
+     * Abstract element accept method. Subclasses must implement this method in order to decide filter accepts or declines this
+     * element node.
+     */
+    public abstract short accept(Element element);
     
     /**
      * {@inheritDoc}

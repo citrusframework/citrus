@@ -17,8 +17,7 @@
 package com.consol.citrus.admin.config;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.ls.LSSerializerFilter;
+import org.w3c.dom.traversal.NodeFilter;
 
 /**
  * Filter searches fo a Spring bean definition and overwrites it with a new bean definition in 
@@ -45,16 +44,13 @@ public class UpdateSpringBeanFilter extends AbstractSpringBeanFilter {
     /**
      * {@inheritDoc}
      */
-    public short acceptNode(Node node) {
-        if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("bean")) {
-            Element element = (Element)node;
-            
-            if (isEqualById(element, elementId) || isEqualByBeanName(element, elementId)) {
-                element.getOwnerDocument().replaceChild(beanDefinition, element);
-            }
+    public short accept(Element element) {
+        if (element.getLocalName().equals("bean") && 
+                (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
+            element.getOwnerDocument().replaceChild(beanDefinition, element);
         }
         
-        return LSSerializerFilter.FILTER_ACCEPT;
+        return NodeFilter.FILTER_ACCEPT;
     }
 
 }
