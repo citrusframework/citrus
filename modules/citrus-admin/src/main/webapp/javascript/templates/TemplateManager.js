@@ -7,7 +7,7 @@
             load: function(names, callback) {
                 _.each(names, _.bind(function(name) {
                     $.ajax({
-                        url: 'javascript/views/' + name + '.html', 
+                        url: 'javascript/templates/' + name + '.html',
                         success: _.bind(function(data) {
                                      this.templates[name] = Handlebars.compile(data);
                                  }, this),
@@ -21,7 +21,7 @@
             template: function(name, context) {
                 if (!this.templates[name]) {
                     $.ajax({
-                        url: 'javascript/views/' + name + '.html', 
+                        url: 'javascript/templates/' + name + '.html',
                         success: _.bind(function(data) {
                                      this.templates[name] = Handlebars.compile(data);
                                  }, this),
