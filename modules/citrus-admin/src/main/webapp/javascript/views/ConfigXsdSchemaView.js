@@ -47,7 +47,10 @@
 
                 if (searchKey.length) {
                     $("#config-xsd-schemas-table").html(TemplateManager.template('ConfigXsdSchemaTableView', {matches: _.filter(this.schemas, function (schema) {
-                        return JSON.stringify(schema).indexOf('":"' + searchKey) >= 0;
+                        // regex: match all key names (e.g. "keyname":) in JSON String
+                        var regex = /"(\w|0-9|_)+":/;
+                        // replace key names with empty string and only search for match in values
+                        return JSON.stringify(schema).replace(regex,"").indexOf(searchKey) >= 0;
                     })}));
                 } else {
                     $("#config-xsd-schemas-table").html(TemplateManager.template('ConfigXsdSchemaTableView', {matches: this.schemas}));
