@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.config;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeFilter;
 
 /**
@@ -33,6 +34,9 @@ public class UpdateSpringBeanFilter extends AbstractSpringBeanFilter {
     /** New bean definition element to add */
     private Element beanDefinition;
     
+    /** Temporary holds removed node so all its children are removed too during the parsing operation */
+    private Node delete = null;
+    
     /**
      * Constructor using element id field.
      */
@@ -45,9 +49,14 @@ public class UpdateSpringBeanFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (element.getLocalName().equals("bean") && 
-                (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
-            element.getOwnerDocument().replaceChild(beanDefinition, element);
+        if (delete == null && (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
+            element.getParentNode().appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
+            delete = element;
+            return NodeFilter.FILTER_REJECT;
+        }
+        
+        if (delete != null && element.getParentNode() != null && element.getParentNode().equals(delete)) {
+            return NodeFilter.FILTER_REJECT;
         }
         
         return NodeFilter.FILTER_ACCEPT;

@@ -45,8 +45,7 @@ public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (element.getLocalName().equals("bean") && 
-                (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
+        if (isEqualById(element, elementId) || isEqualByBeanName(element, elementId)) {
             delete = element;
             return NodeFilter.FILTER_REJECT;
         }
