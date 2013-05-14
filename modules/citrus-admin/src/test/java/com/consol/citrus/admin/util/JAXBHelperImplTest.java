@@ -16,16 +16,15 @@
 
 package com.consol.citrus.admin.util;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.model.config.core.SchemaRepository;
-import com.consol.citrus.model.config.core.SchemaRepositoryBuilder;
-import com.consol.citrus.model.config.core.XsdSchema;
-import com.consol.citrus.model.config.core.XsdSchemaBuilder;
+import java.io.File;
+
+import javax.xml.bind.JAXBContext;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBContext;
-import java.io.File;
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.model.config.core.*;
 
 /**
  * Tests JAXBHelperImpl
@@ -84,7 +83,7 @@ public class JAXBHelperImplTest {
     @Test(expectedExceptions = CitrusAdminRuntimeException.class, expectedExceptionsMessageRegExp = "Could not marshall element")
     public void testMarshalClass_invalidJAXBElement() {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
-        String marshalledXml = jaxbHelper.marshal(jaxbContext, "Could not marshall element");
+        jaxbHelper.marshal(jaxbContext, "Could not marshall element");
     }
 
     @Test

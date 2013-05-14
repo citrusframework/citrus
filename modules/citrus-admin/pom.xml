@@ -17,14 +17,8 @@
   <dependencyManagement>
     <dependencies>
         <dependency>
-          <groupId>com.consol.citrus.model.testcase.core</groupId>
-          <artifactId>citrus-model-testcase-core</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>com.consol.citrus.model.spring.beans</groupId>
-          <artifactId>citrus-model-spring-beans</artifactId>
+          <groupId>com.consol.citrus.model</groupId>
+          <artifactId>citrus-model-core</artifactId>
           <version>${project.version}</version>
         </dependency>
 
@@ -93,13 +87,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.consol.citrus.model.testcase.core</groupId>
-      <artifactId>citrus-model-testcase-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.consol.citrus.model.spring.beans</groupId>
-      <artifactId>citrus-model-spring-beans</artifactId>
+      <groupId>com.consol.citrus.model</groupId>
+      <artifactId>citrus-model-core</artifactId>
     </dependency>
 
     <dependency>
