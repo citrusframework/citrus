@@ -26,22 +26,19 @@ import org.w3c.dom.traversal.NodeFilter;
  * 
  * @author Christoph Deppisch
  */
-public class UpdateSpringBeanFilter extends AbstractSpringBeanFilter {
+public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
 
-    /** Id or bean name of the bean definition to be updated */
-    private String elementId;
-    
     /** New bean definition element to add */
     private Element beanDefinition;
     
-    /** Temporary holds removed node so all its children are removed too during the parsing operation */
-    private Node delete = null;
+    /** New node added */
+    private Node added = null;
     
     /**
      * Constructor using element id field.
      */
     public UpdateSpringBeanFilter(String elementId, Element beanDefinition) {
-        this.elementId = elementId;
+        super(elementId);
         this.beanDefinition = beanDefinition;
     }
     
@@ -49,17 +46,19 @@ public class UpdateSpringBeanFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (delete == null && (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
-            element.getParentNode().appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
-            delete = element;
-            return NodeFilter.FILTER_REJECT;
+        if (added == null && (isEqualById(element, elementId) || isEqualByBeanName(element, elementId))) {
+            if (element.getNextSibling() != null) {
+                added = element.getParentNode().insertBefore(element.getOwnerDocument().importNode(beanDefinition, true), element.getNextSibling());
+            } else {
+                added = element.getParentNode().appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
+            }
         }
         
-        if (delete != null && element.getParentNode() != null && element.getParentNode().equals(delete)) {
-            return NodeFilter.FILTER_REJECT;
+        if (element == added) {
+            return NodeFilter.FILTER_ACCEPT; 
         }
         
-        return NodeFilter.FILTER_ACCEPT;
+        return super.accept(element);
     }
 
 }

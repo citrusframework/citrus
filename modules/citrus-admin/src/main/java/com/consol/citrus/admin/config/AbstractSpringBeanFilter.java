@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.config;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.w3c.dom.ls.LSParserFilter;
 import org.w3c.dom.ls.LSSerializerFilter;
 import org.w3c.dom.traversal.NodeFilter;
@@ -61,8 +60,19 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
     public short acceptNode(Node node) {
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             return accept((Element)node);
+        } else if (node.getNodeType() == Node.TEXT_NODE) {
+            return acceptText((Text) node);
         }
         
+        return NodeFilter.FILTER_ACCEPT;
+    }
+    
+    /**
+     * Accept text nodes such as whitespace nodes. Subclasses may decide to reject text nodes.
+     * @param text
+     * @return
+     */
+    public short acceptText(Text text) {
         return NodeFilter.FILTER_ACCEPT;
     }
     
@@ -76,6 +86,6 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
      * {@inheritDoc}
      */
     public int getWhatToShow() {
-        return NodeFilter.SHOW_ELEMENT;
+        return NodeFilter.SHOW_ALL;
     }
 }

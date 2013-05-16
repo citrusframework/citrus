@@ -54,8 +54,8 @@ public class SpringConfigServiceTest {
         springBeanConfigService.addBeanDefinition(tempFile, schemaRepository);
         
         String result = FileUtils.readToString(new FileInputStream(tempFile));
-        
-        Assert.assertTrue(result.contains("<schema-repository xmlns=\"http://www.citrusframework.org/schema/config\" id=\"x\">"));
+
+        Assert.assertTrue(result.contains("<citrus:schema-repository xmlns:citrus=\"http://www.citrusframework.org/schema/config\" id=\"x\">"));
     }
     
     @Test
@@ -86,8 +86,7 @@ public class SpringConfigServiceTest {
         
         String result = FileUtils.readToString(new FileInputStream(tempFile));
         
-        Assert.assertTrue(result.contains("id=\"helloSchema\""));
-        Assert.assertTrue(result.contains("location=\"newLocation\""));
+        Assert.assertTrue(result.contains("<citrus:xsd-schema id=\"helloSchema\" location=\"newLocation\" xmlns:citrus=\"http://www.citrusframework.org/schema/config\"/>"));
     }
     
     @Test

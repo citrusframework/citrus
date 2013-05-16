@@ -227,6 +227,12 @@ public class SpringConfigService {
             log.debug("Using LSSerializer: " + serializer.getClass().getName());
         }
 
+        if (serializer.getDomConfig().canSetParameter("element-content-whitespace", true)) {
+            serializer.getDomConfig().setParameter("element-content-whitespace", true);
+        } else {
+            log.warn("Unable to set element-content-whitespace parameter on LSSerializer");
+        }
+
         if (serializer.getDomConfig().canSetParameter("split-cdata-sections", false)) {
             serializer.getDomConfig().setParameter("split-cdata-sections", false);
         } else {

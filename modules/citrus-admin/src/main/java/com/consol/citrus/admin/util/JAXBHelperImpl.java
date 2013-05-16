@@ -16,26 +16,19 @@
 
 package com.consol.citrus.admin.util;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import java.io.*;
+
+import javax.xml.bind.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.xml.transform.StringResult;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * {@inheritDoc}
@@ -88,6 +81,26 @@ public class JAXBHelperImpl implements JAXBHelper {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        
+        NamespacePrefixMapper mapper = new NamespacePrefixMapper() {
+            @Override
+            public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
+                if (namespaceUri.equals("http://www.citrusframework.org/schema/config")) {
+                    return "citrus";
+                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/http/config")) {
+                    return "citrus-http";
+                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/ws/config")) {
+                    return "citrus-ws";
+                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/ssh/config")) {
+                    return "citrus-ssh";
+                }
+                
+                return suggestion;
+            }
+        };  
+        
+        marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", mapper);
+        
         return marshaller;
     }
 

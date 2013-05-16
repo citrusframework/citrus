@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.config;
 
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
 
@@ -41,7 +42,8 @@ public class AddSpringBeanFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (element.getLocalName().equals("beans")) {
+        if (DomUtils.nodeNameEquals(element, "beans")) {
+            element.appendChild(element.getOwnerDocument().createTextNode("\n    ")); //TODO make indentation configurable
             element.appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
         }
         

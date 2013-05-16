@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.config;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.w3c.dom.traversal.NodeFilter;
 
 /**
@@ -29,10 +28,10 @@ import org.w3c.dom.traversal.NodeFilter;
 public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
 
     /** Id or bean name of the bean definition to be removed */
-    private String elementId;
+    protected String elementId;
     
     /** Temporary holds removed node so all its children are removed too during the parsing operation */
-    private Node delete;
+    protected Node deleted;
     
     /**
      * Constructor using element id field.
@@ -46,15 +45,41 @@ public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
      */
     public short accept(Element element) {
         if (isEqualById(element, elementId) || isEqualByBeanName(element, elementId)) {
-            delete = element;
+            
+            if (element.getNextSibling() != null && element.getNextSibling().getNodeType() == Node.TEXT_NODE) {
+                element.getParentNode().removeChild(element.getNextSibling());
+            }
+            
+            deleted = element;
             return NodeFilter.FILTER_REJECT;
         }
         
-        if (delete != null && element.getParentNode() != null && element.getParentNode().equals(delete)) {
+        if (deleted != null && shouldDeleteNode(element)) {
             return NodeFilter.FILTER_REJECT;
         }
         
         return NodeFilter.FILTER_ACCEPT;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public short acceptText(Text text) {
+        if (deleted != null && shouldDeleteNode(text)) {
+            return NodeFilter.FILTER_REJECT;
+        }
+        
+        return NodeFilter.FILTER_ACCEPT;
+    }
+
+    /**
+     * Checks whether the given element is a child of the deleted element node.
+     * @param element
+     * @return
+     */
+    private boolean shouldDeleteNode(Node element) {
+        return element.getParentNode() != null && element.getParentNode().equals(deleted);
     }
 
 }

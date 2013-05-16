@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
 
@@ -50,7 +51,7 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (element.getLocalName().equals(elementName)) {
+        if (DomUtils.nodeNameEquals(element, elementName)) {
             beanDefinitions.add(element);
         }
         
