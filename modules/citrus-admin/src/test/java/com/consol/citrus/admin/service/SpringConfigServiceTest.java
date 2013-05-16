@@ -65,6 +65,8 @@ public class SpringConfigServiceTest {
         springBeanConfigService.removeBeanDefinition(tempFile, "deleteMe");
         springBeanConfigService.removeBeanDefinition(tempFile, "deleteMeName");
         
+        springBeanConfigService.removeBeanDefinition(tempFile, "helloSchema");
+        
         String result = FileUtils.readToString(new FileInputStream(tempFile));
         
         Assert.assertTrue(result.contains("id=\"preserveMe\""));
@@ -72,6 +74,20 @@ public class SpringConfigServiceTest {
         
         Assert.assertFalse(result.contains("<bean id=\"deleteMe\""));
         Assert.assertFalse(result.contains("<bean name=\"deleteMeName\""));
+    }
+    
+    @Test
+    public void testUpdateBeanDefinition() throws Exception {
+        File tempFile = createTempContextFile("citrus-context-update");
+        
+        XsdSchema helloSchema = new XsdSchemaBuilder().withId("helloSchema").setLocation("newLocation").build();
+        
+        springBeanConfigService.updateBeanDefinition(tempFile, "helloSchema", helloSchema);
+        
+        String result = FileUtils.readToString(new FileInputStream(tempFile));
+        
+        Assert.assertTrue(result.contains("id=\"helloSchema\""));
+        Assert.assertTrue(result.contains("location=\"newLocation\""));
     }
     
     @Test

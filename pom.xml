@@ -160,7 +160,6 @@
     <jetty.version>8.1.8.v20121106</jetty.version>
     <testng.version>6.8</testng.version>
     <slf4j.version>1.7.2</slf4j.version>
-    
   </properties>
   
   <dependencyManagement>
