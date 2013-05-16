@@ -261,28 +261,6 @@
       </plugin>
 
       <plugin>
-        <groupId>com.github.timurstrekalov</groupId>
-        <artifactId>saga-maven-plugin</artifactId>
-        <version>1.4.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>coverage</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
-          <outputDir>${project.build.directory}/coverage</outputDir>
-          <noInstrumentPatterns>
-            <pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
-            <pattern>.*/support/.*</pattern> <!-- Don't instrument 3rd party support libs -->
-          </noInstrumentPatterns>
-        </configuration>
-      </plugin>
-
-      
-      <plugin>
           <groupId>org.mortbay.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <configuration>
