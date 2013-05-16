@@ -94,7 +94,7 @@ code.template {
 }
 
 pre.log {
-  height: 125px;
+  height: 175px;
   overflow-y: auto;
   overflow-x: hidden;
   font-size: 10px;
@@ -114,6 +114,10 @@ div.file-tree {
   background-color: #F9F9F9;
 }
 
+#log-tabs {
+  border-bottom: 1px solid #999999;
+}
+
 #log-tabs > li {
   margin-right: 5px;
 }
@@ -127,7 +131,7 @@ div.file-tree {
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
-  border-color: #DDDDDD #DDDDDD transparent;
+  border-color: #999999 #999999 transparent;
   border-image: none;
   border-style: solid;
   border-width: 1px;
@@ -140,8 +144,12 @@ div.file-tree {
   text-decoration: none;
 }
 
+#content {
+  padding-bottom: 200px;
+}
+
 #footer {
-  height: 150px;
+  height: 200px;
   background-color: #ffffff;
 }
 
@@ -164,4 +172,12 @@ div.file-tree {
 
 #footer .nav-tabs > .active > a, #footer .nav-tabs > .active > a:hover {
 	background-color: #ffffff;
+}
+
+#footer.resized {
+	height: 600px;
+}
+
+#footer .resized {
+	height: 575px;
 }
