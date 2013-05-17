@@ -46,7 +46,7 @@
     
     <servlet>
         <servlet-name>citrus-logging</servlet-name>
-        <servlet-class>com.consol.citrus.admin.servlet.LoggingWebSocketServlet</servlet-class>
+        <servlet-class>com.consol.citrus.admin.websocket.LoggingWebSocketServlet</servlet-class>
         <load-on-startup>1000</load-on-startup>
     </servlet>
     
