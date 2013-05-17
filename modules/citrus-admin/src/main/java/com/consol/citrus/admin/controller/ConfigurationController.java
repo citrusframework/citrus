@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 
 /**
  * Project controller handles project choosing requests and project configuration setup
@@ -33,7 +33,7 @@ import com.consol.citrus.admin.service.ConfigService;
 public class ConfigurationController {
 
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
 
     @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
     public String getProjectHome() {

@@ -36,6 +36,9 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
+ * Test case related activities get bundled in this service implementation. Service lists all test cases,
+ * executes tests and provides test case information.
+ * 
  * @author Christoph Deppisch
  */
 @Component

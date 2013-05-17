@@ -23,8 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.consol.citrus.admin.service.ConfigService;
-import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.admin.util.FileHelper;
 
 /**
  * @author Christoph Deppisch
@@ -34,10 +34,10 @@ import com.consol.citrus.admin.service.ProjectService;
 public class ProjectController {
     
     @Autowired
-    private ProjectService projectService;
+    private ConfigurationService configService;
     
     @Autowired
-    private ConfigService configService;
+    private FileHelper fileHelper;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -53,7 +53,7 @@ public class ProjectController {
             directory += "/";
         }
         
-        String[] folders = projectService.getFolders(URLDecoder.decode(directory, "UTF-8"));
+        String[] folders = fileHelper.getFolders(URLDecoder.decode(directory, "UTF-8"));
         
         StringBuilder structure = new StringBuilder();
         structure.append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
@@ -68,7 +68,7 @@ public class ProjectController {
     
     @RequestMapping(params = {"projecthome"}, method = RequestMethod.GET)
     public String setProjectHome(@RequestParam("projecthome") String projecthome) {
-        if (!projectService.isProjectHome(projecthome)) {
+        if (!configService.isProjectHome(projecthome)) {
             throw new IllegalArgumentException("Invalid project home - not a proper Citrus project");
         }
         

@@ -31,8 +31,8 @@ import com.consol.citrus.util.FileUtils;
 /**
  * @author Christoph Deppisch
  */
-public class SpringConfigServiceTest {
-    private SpringConfigService springBeanConfigService = new SpringConfigService();
+public class SpringBeanServiceTest {
+    private SpringBeanService springBeanConfigService = new SpringBeanService();
 
     @BeforeMethod
     public void beforeMethod() {
@@ -130,7 +130,7 @@ public class SpringConfigServiceTest {
             tempFile = File.createTempFile(templateName, ".xml");
             
             writer = new FileWriter(tempFile);
-            writer.write(FileUtils.readToString(new ClassPathResource(templateName + ".xml", SpringConfigService.class)));
+            writer.write(FileUtils.readToString(new ClassPathResource(templateName + ".xml", SpringBeanService.class)));
         } finally {
             if (writer != null) {
                 writer.flush();

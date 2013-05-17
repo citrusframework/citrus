@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.servlet;
+package com.consol.citrus.admin.websocket;
 
-import com.consol.citrus.admin.websocket.LoggingWebSocket;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 import org.slf4j.Logger;

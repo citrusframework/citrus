@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.consol.citrus.admin.launcher.ProcessLauncher;
 import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
 import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.websocket.LoggingWebSocket;
 
 /**
@@ -37,7 +37,7 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
     private ProcessMonitor processMonitor;
     
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
 
     @Autowired
     private LoggingWebSocket loggingWebSocket;

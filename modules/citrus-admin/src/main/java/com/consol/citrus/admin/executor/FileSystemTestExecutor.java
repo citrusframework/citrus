@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.*;
 import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -35,7 +35,7 @@ import com.consol.citrus.util.FileUtils;
 public class FileSystemTestExecutor implements TestExecutor{
 
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
     
     /**
      * {@inheritDoc}

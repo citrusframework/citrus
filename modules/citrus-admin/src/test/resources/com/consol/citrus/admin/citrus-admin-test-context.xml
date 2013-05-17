@@ -11,8 +11,10 @@
     
     <!-- DAO implementation mocks -->
     <bean id="configService" class="org.easymock.EasyMock" factory-method="createMock">
-        <constructor-arg value="com.consol.citrus.admin.service.ConfigService"/>
+        <constructor-arg value="com.consol.citrus.admin.service.ConfigurationService"/>
     </bean>
     
     <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
+    
+    <bean class="com.consol.citrus.admin.util.FileHelperImpl"/>
 </beans>

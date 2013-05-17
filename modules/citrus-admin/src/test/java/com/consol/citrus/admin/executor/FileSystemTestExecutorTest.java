@@ -29,7 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 
 /**
  * @author Christoph Deppisch
@@ -38,7 +38,7 @@ import com.consol.citrus.admin.service.ConfigService;
 public class FileSystemTestExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
     
     @Autowired
     private FileSystemTestExecutor testExecutor;

@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 
 /**
  * Handler interceptor checks for project configuration in system. In case configuration is not set properly
@@ -39,7 +39,7 @@ import com.consol.citrus.admin.service.ConfigService;
 public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
     
     /** Location to redirect to in case project configuration is not set */
     private String redirect;

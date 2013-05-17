@@ -43,10 +43,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  */
 @Component
-public class SpringConfigService {
+public class SpringBeanService {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SpringConfigService.class);
+    private static Logger log = LoggerFactory.getLogger(SpringBeanService.class);
 
     @Autowired
     protected JAXBHelper jaxbHelper;

@@ -34,7 +34,7 @@ import org.springframework.web.context.support.StandardServletEnvironment;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusCliOptions;
 import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.service.ConfigService;
+import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -50,7 +50,7 @@ public class ClasspathTestExecutor implements TestExecutor {
     private ApplicationContextHolder appContextHolder;
     
     @Autowired
-    private ConfigService configService;
+    private ConfigurationService configService;
     
     /** Base package for test cases to look for */
     private static final String BASE_PACKAGE = "test.base.package";

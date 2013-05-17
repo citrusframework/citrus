@@ -19,15 +19,37 @@ package com.consol.citrus.admin.util;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 /**
- * {@inheritDoc}
- *
- * @author Martin.Maher@consol.de
+ * @author Martin Maher, Christoph Deppisch
  * @since 2013.04.22
  */
 @Component
 public class FileHelperImpl implements FileHelper {
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String[] getFolders(String directory) {
+        if (new File(directory).exists()) {
+            String[] files = new File(directory).list(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.charAt(0) != '.' && new File(dir, name).isDirectory();
+                }
+            });
+            Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+
+            return files;
+        } else {
+            throw new IllegalArgumentException("Could not open directory because it does not exist: " + directory);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public File findFileInPath(File path, String filename, boolean recursive) {
         if (!path.isDirectory()) {
             String msg = String.format("Expected a directory but instead got '%s'", path.getAbsolutePath());

@@ -16,58 +16,36 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.util.FileHelper;
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
+import com.consol.citrus.admin.util.FileHelper;
 
 /**
- * Project related activities like project home selection and
+ * Single point of access for all configuration settings. These are project related activities like project home selection and
  * project specific settings.
  *
- * @author Christoph Deppisch
+ * @author Martin Maher, Christoph Deppisch
  */
 @Component
-public class ProjectService {
-
+public class ConfigurationService {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(ProjectService.class);
-
+    private static Logger log = LoggerFactory.getLogger(ConfigurationService.class);
+    
     @Autowired
-    FileHelper fileHelper;
-
-    @Autowired
-    ConfigService configService;
-
-    /**
-     * Gets list of subfolder names and paths for given root directory.
-     *
-     * @param directory
-     * @return
-     */
-    public String[] getFolders(String directory) {
-        if (new File(directory).exists()) {
-            String[] files = new File(directory).list(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.charAt(0) != '.' && new File(dir, name).isDirectory();
-                }
-            });
-            Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
-
-            return files;
-        } else {
-            throw new IllegalArgumentException("Could not open directory because it does not exist: " + directory);
-        }
-    }
-
+    private FileHelper fileHelper;
+    
+    /** System property names */
+    public static final String PROJECT_HOME = "project.home";
+    public static final String ROOT_DIRECTORY = "root.directory";
+    
     /**
      * Check if home directory is valid Citrus project home.
      *
@@ -100,7 +78,33 @@ public class ProjectService {
      */
     public File getProjectConfigFile() {
         final String configFilename = "citrus-admin-context.xml";
-        final File projectHome = new File(configService.getProjectHome());
+        final File projectHome = new File(getProjectHome());
         return fileHelper.findFileInPath(projectHome, configFilename, true);
     }
+    
+    /**
+     * Get project home from system property.
+     * @return
+     */
+    public String getProjectHome() {
+        return System.getProperty(PROJECT_HOME);
+    }
+    
+    /**
+     * Gets the root directory from system property. By default user.home system
+     * property setting is used as root.
+     * @return
+     */
+    public String getRootDirectory() {
+        return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+    }
+
+    /**
+     * Sets new project home path.
+     * @param homePath
+     */
+    public void setProjectHome(String homePath) {
+        System.setProperty(PROJECT_HOME, homePath);
+    }
+    
 }

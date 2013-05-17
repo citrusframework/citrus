@@ -22,8 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.consol.citrus.admin.service.ProjectService;
-import com.consol.citrus.admin.service.SpringConfigService;
+import com.consol.citrus.admin.service.*;
 import com.consol.citrus.model.config.core.XsdSchema;
 
 /**
@@ -37,10 +36,10 @@ import com.consol.citrus.model.config.core.XsdSchema;
 public class XsdSchemaController {
 
     @Autowired
-    private ProjectService projectService;
+    private ConfigurationService configService;
 
     @Autowired
-    private SpringConfigService springBeanConfigService;
+    private SpringBeanService springBeanService;
 
     /**
      * Returns a list of all XSD schemas configured in project
@@ -50,30 +49,30 @@ public class XsdSchemaController {
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
     public List<XsdSchema> list() {
-        return springBeanConfigService.getBeanDefinitions(projectService.getProjectConfigFile(), XsdSchema.class);
+        return springBeanService.getBeanDefinitions(configService.getProjectConfigFile(), XsdSchema.class);
     }
     
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public XsdSchema getXsdSchema(@PathVariable("id") String id) {
-        return springBeanConfigService.getBeanDefinition(projectService.getProjectConfigFile(), id, XsdSchema.class);
+        return springBeanService.getBeanDefinition(configService.getProjectConfigFile(), id, XsdSchema.class);
     }
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
     public void createXsdSchema(@RequestBody XsdSchema xsdSchema) {
-        springBeanConfigService.addBeanDefinition(projectService.getProjectConfigFile(), xsdSchema);
+        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), xsdSchema);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateXsdSchema(@PathVariable("id") String id, @RequestBody XsdSchema xsdSchema) {
-        springBeanConfigService.updateBeanDefinition(projectService.getProjectConfigFile(), id, xsdSchema);
+        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, xsdSchema);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteXsdSchema(@PathVariable("id") String id) {
-        springBeanConfigService.removeBeanDefinition(projectService.getProjectConfigFile(), id);
+        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
     }
 }

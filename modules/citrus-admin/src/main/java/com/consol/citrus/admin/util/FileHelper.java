@@ -25,5 +25,20 @@ import java.io.File;
  * @since 2013.04.22
  */
 public interface FileHelper {
+    
+    /**
+     * Gets list of folder names and paths for given root directory.
+     * @param directory
+     * @return
+     */
+    String[] getFolders(String directory);
+    
+    /**
+     * Scans file path for filename and returns file instance.
+     * @param path
+     * @param filename
+     * @param recursive
+     * @return
+     */
     File findFileInPath(File path, String filename, boolean recursive);
 }
