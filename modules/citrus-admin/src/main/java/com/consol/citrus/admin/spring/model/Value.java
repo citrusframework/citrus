@@ -1,4 +1,4 @@
-package com.consol.citrus.admin.model.spring;
+package com.consol.citrus.admin.spring.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,13 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "", propOrder = {
     "content"
 })
-@XmlRootElement(name = "description")
-public class Description {
+@XmlRootElement(name = "value")
+public class Value {
 
     @XmlMixed
     protected List<String> content;
+    @XmlAttribute(name = "type")
+    protected String type;
 
     /**
      * Gets the value of the content property.
@@ -45,6 +47,30 @@ public class Description {
             content = new ArrayList<String>();
         }
         return this.content;
+    }
+
+    /**
+     * Gets the value of the type property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the value of the type property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setType(String value) {
+        this.type = value;
     }
 
 }

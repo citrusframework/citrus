@@ -1,4 +1,4 @@
-package com.consol.citrus.admin.model.spring;
+package com.consol.citrus.admin.spring.model;
 
 import java.util.ArrayList;
 import java.util.List;

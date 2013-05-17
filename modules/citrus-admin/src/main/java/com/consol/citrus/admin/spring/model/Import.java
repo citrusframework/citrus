@@ -1,46 +1,44 @@
-package com.consol.citrus.admin.model.spring;
+package com.consol.citrus.admin.spring.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author Christoph Deppisch
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "identifiedType")
-@XmlSeeAlso({
-    SpringBean.class
-})
-public abstract class IdentifiedType {
+@XmlType(name = "")
+@XmlRootElement(name = "import")
+public class Import {
 
-    @XmlAttribute(name = "id")
-    protected String id;
+    @XmlAttribute(name = "resource", required = true)
+    protected String resource;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the resource property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getResource() {
+        return resource;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the resource property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setResource(String value) {
+        this.resource = value;
     }
 
 }

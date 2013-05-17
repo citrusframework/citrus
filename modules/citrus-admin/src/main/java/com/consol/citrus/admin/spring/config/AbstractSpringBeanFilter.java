@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.config;
+package com.consol.citrus.admin.spring.config;
 
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSParserFilter;

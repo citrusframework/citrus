@@ -31,7 +31,7 @@ import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.*;
 
-import com.consol.citrus.admin.config.*;
+import com.consol.citrus.admin.spring.config.*;
 import com.consol.citrus.admin.util.JAXBHelper;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
