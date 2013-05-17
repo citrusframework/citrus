@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * {@inheritDoc}
@@ -99,7 +99,7 @@ public class JAXBHelperImpl implements JAXBHelper {
             }
         };  
         
-        marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", mapper);
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", mapper);
         
         return marshaller;
     }

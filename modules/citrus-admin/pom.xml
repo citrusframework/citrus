@@ -145,6 +145,15 @@
     </dependency>
     
     <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    
+    <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-servlet</artifactId>
     </dependency>
@@ -258,6 +267,27 @@
             <version>2.12</version>
           </dependency>
         </dependencies>
+      </plugin>
+      
+      <plugin>
+        <groupId>com.github.timurstrekalov</groupId>
+        <artifactId>saga-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>coverage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+          <outputDir>${project.build.directory}/coverage</outputDir>
+          <noInstrumentPatterns>
+            <pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
+            <pattern>.*/support/.*</pattern> <!-- Don't instrument 3rd party support libs -->
+          </noInstrumentPatterns>
+        </configuration>
       </plugin>
 
       <plugin>
