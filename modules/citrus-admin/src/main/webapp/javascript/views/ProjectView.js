@@ -1,15 +1,29 @@
 (function() {
     define(["TemplateManager"], function(TemplateManager) {
         var ProjectView = Backbone.View.extend({
-        
+          
+          projectHome: "",
+          
           events: {
               "click #button-browse" : "showFileTree",
               "click #button-close" : "hideFileTree",
               "click #button-select" : "selectProject"
           },
+
+          initialize: function() {
+              $.ajax({
+                  url: "config/projecthome",
+                  type: 'GET',
+                  dataType: "text",
+                  success: _.bind(function(response) {
+                      this.projectHome = response;
+                  }, this),
+                  async: false
+              });
+          },
           
           render: function() {
-              $(this.el).html(TemplateManager.template('ProjectView',{}));
+              $(this.el).html(TemplateManager.template('ProjectView', {projectHome: this.projectHome}));
               
               $('#file-tree').fileTree({ 
                   root: '/',

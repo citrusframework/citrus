@@ -303,6 +303,7 @@
                   <maxIdleTime>60000</maxIdleTime>
                 </connector>
               </connectors>
+              <scanIntervalSeconds>4</scanIntervalSeconds>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>

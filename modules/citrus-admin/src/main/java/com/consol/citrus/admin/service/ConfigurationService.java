@@ -17,13 +17,16 @@
 package com.consol.citrus.admin.service;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.util.FileHelper;
 
 /**
@@ -42,9 +45,15 @@ public class ConfigurationService {
     @Autowired
     private FileHelper fileHelper;
     
+    /** Preferences fields */
+    private String projectHome = System.getProperty(PROJECT_HOME, "");
+    private String rootDirectory = System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home")); 
+    
     /** System property names */
     public static final String PROJECT_HOME = "project.home";
     public static final String ROOT_DIRECTORY = "root.directory";
+    
+    private static final String CITRUS_ADMIN_CONTEXT_XML = "citrus-admin-context.xml";
     
     /**
      * Check if home directory is valid Citrus project home.
@@ -77,9 +86,8 @@ public class ConfigurationService {
      * @return the config file or null if no config file exists within the selected project.
      */
     public File getProjectConfigFile() {
-        final String configFilename = "citrus-admin-context.xml";
         final File projectHome = new File(getProjectHome());
-        return fileHelper.findFileInPath(projectHome, configFilename, true);
+        return fileHelper.findFileInPath(projectHome, CITRUS_ADMIN_CONTEXT_XML, true);
     }
     
     /**
@@ -87,7 +95,24 @@ public class ConfigurationService {
      * @return
      */
     public String getProjectHome() {
-        return System.getProperty(PROJECT_HOME);
+        if (StringUtils.hasText(projectHome)) {
+            try {
+                return new File(projectHome).getCanonicalPath();
+            } catch (IOException e) {
+                throw new CitrusAdminRuntimeException("Unable to access project home directory", e);
+            }
+        } else {
+            return "";
+        }
+    }
+    
+    /**
+     * Sets new project home path.
+     * @param projectHome
+     */
+    public void setProjectHome(String projectHome) {
+        this.projectHome = projectHome;
+        System.setProperty(PROJECT_HOME, projectHome);
     }
     
     /**
@@ -96,15 +121,16 @@ public class ConfigurationService {
      * @return
      */
     public String getRootDirectory() {
-        return System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
-    }
-
-    /**
-     * Sets new project home path.
-     * @param homePath
-     */
-    public void setProjectHome(String homePath) {
-        System.setProperty(PROJECT_HOME, homePath);
+        return rootDirectory;
     }
     
+    /**
+     * Sets the rootDirectory.
+     * @param rootDirectory
+     */
+    public void setRootDirectory(String rootDirectory) {
+        this.rootDirectory = rootDirectory;
+        System.setProperty(ROOT_DIRECTORY, rootDirectory);
+    }
+
 }

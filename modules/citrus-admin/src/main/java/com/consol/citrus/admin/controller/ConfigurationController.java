@@ -36,11 +36,13 @@ public class ConfigurationController {
     private ConfigurationService configService;
 
     @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
+    @ResponseBody
     public String getProjectHome() {
         return configService.getProjectHome();
     }
     
     @RequestMapping(value = "/root", method = RequestMethod.GET)
+    @ResponseBody
     public String getRootDirectory() {
         return configService.getRootDirectory();
     }

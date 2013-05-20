@@ -3,12 +3,12 @@
   <div class="well">
     <form class="form-horizontal" action="project" method="get">
       <fieldset>
-        <legend>Open new project</legend>
+        <legend>Open project</legend>
         <div class="control-group">
           <label class="control-label">Project Home</label>
           <div class="controls">
             <div class="input-append">
-              <input name="projecthome" type="text" class="input-xlarge" placeholder="Project Home" />
+              <input name="projecthome" type="text" class="input-xlarge" placeholder="Project Home" value="{{projectHome}}" />
               <button id="button-browse" class="btn" type="button">Browse</button>
             </div>
           </div>
@@ -16,7 +16,7 @@
           
         <div class="control-group">
           <div class="controls">
-            <button class="btn btn-warning" type="submit">Open Project</button>
+            <button class="btn btn-warning" type="submit">Open project</button>
           </div>
         </div>
       </fieldset>
