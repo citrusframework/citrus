@@ -1,26 +1,35 @@
-<div class="container">
-    <div class="page-header">
-      <h1>Tests cases <small>Manage tests in this project</small></h1>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3"></div>
+    <div class="span9">
+        <div class="page-header">
+          <h1>Tests cases <small>Manage tests in this project</small></h1>
+        </div>
     </div>
-    
-    <ul id="testlist-tabs" class="nav nav-tabs">
-     <li class="active">
-        <a href="#all-tab" data-toggle="tab">All Tests</a>
-      </li>
-    </ul>
-    
-    <div id="testlist-tab-content" class="tab-content">
-      <div class="tab-pane active" id="all-tab">
-        <form id="search-form" class="form-horizontal">
-          <input id="test-name" type="text" class="input-large search-query"/>
-          <button id="button-search" type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i> Search</button>
+  </div>
+  <div class="row-fluid">
+    <div class="span3">
+        <form id="search-form" class="form-search">
+          <div class="input-append">
+	          <input id="test-name" type="text" class="input-large search-query"/>
+	          <button id="button-search" type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
+          </div>
           &nbsp;
           <img class="ajax-loader" src="images/ajax-loader.gif" style="display: none;"/>
         </form>
         
         <div id="search-results"></div>
-      </div>
     </div>
+    <div class="span9">
+	    <ul id="testlist-tabs" class="nav nav-tabs">
+	    </ul>
+	    
+	    <div id="testlist-tab-content" class="tab-content">
+	      <div class="tab-pane active" id="all-tab">
+	      </div>
+	    </div>
+    </div>
+  </div>
 </div>
 
 <code id="test-details-tab" class="template">

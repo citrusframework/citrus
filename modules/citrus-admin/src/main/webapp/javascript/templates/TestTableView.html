@@ -1,31 +1,19 @@
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-condensed table-hover">
   <thead>
-    <tr>
-      <th>Name</th>
-      <th>Package</th>
-      <th>Author</th>
-      <th>Status</th>
-      <th>Group</th>
-      <th>Created</th>
-    </tr>
+    <tr><th>TestCase Names</th></tr>  
   </thead>
   <tbody>
     {{#unless tests.length}}
-      <tr class="no-results"><td colspan="6">&nbsp;<i class="icon-remove"></i> No tests available</td></tr>
+      <tr class="no-results"><td>&nbsp;<i class="icon-remove"></i> No tests available</td></tr>
     {{/unless}}
     
     {{#each tests}}
     <tr id="{{id}}" class="show-test-details">
       <td>{{name}}</td>
-      <td>{{packageName}}</td>
-      <td>{{author}}</td>
-      <td>{{status}}</td>
-      <td>{{group}}</td>
-      <td>{{dateFormat creationDate format="MMM DD HH:mm:ss"}}</td>
     </tr>
     {{/each}}
   </tbody>
   <tfoot>
-    <tr><td colspan="6">&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
   </tfoot>
 </table>
