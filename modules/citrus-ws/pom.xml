@@ -32,6 +32,17 @@
         <artifactId>citrus-adapter</artifactId>
         <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+        <groupId>com.consol.citrus.model</groupId>
+        <artifactId>citrus-model-core</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.consol.citrus.model</groupId>
+        <artifactId>citrus-model-ws</artifactId>
+        <version>${project.version}</version>
+    </dependency>
     
     <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>

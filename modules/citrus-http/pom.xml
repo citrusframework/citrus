@@ -32,6 +32,11 @@
         <artifactId>citrus-adapter</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>com.consol.citrus.model</groupId>
+        <artifactId>citrus-model-http</artifactId>
+        <version>${project.version}</version>
+    </dependency>
     
     <dependency>
         <groupId>org.springframework</groupId>
