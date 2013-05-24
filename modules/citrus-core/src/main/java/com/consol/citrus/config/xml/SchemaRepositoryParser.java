@@ -38,7 +38,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
 
-        ManagedList schemaReferences = new ManagedList();
+        ManagedList<RuntimeBeanReference> schemaReferences = new ManagedList<RuntimeBeanReference>();
 
         Element schemasElement = DomUtils.getChildElementByTagName(element, "schemas");
         if (schemasElement != null) {
