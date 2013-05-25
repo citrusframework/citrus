@@ -1,3 +1,31 @@
-<div id="footer-content">
-    <div id="logger" style="position:relative;"></div>
+<div class="footer-content">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <ul id="footer-tabs" class="nav">
+            <li class="active"><a href="#console-tab" data-toggle="tab">Console</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="footer-tab-content" class="tab-content" style="position:relative;">
+        <div class="tab-pane active" id="console-tab">
+            <h4>Console events</h4>
+            <pre class="logevent"></pre>
+        </div>
+    </div>
+
+    <code id="footer-tab" class="template">
+        <li id="tab-{{var name='hash'}}" class="">
+            <button id="footer-tab-close-{{var name='hash'}}" type="button" class="close">&times;</button>
+            <a href="#footer-tab-{{var name='hash'}}" data-toggle="tab">{{var name='name'}}</a>
+        </li>
+    </code>
+
+    <code id="footer-tab-pane" class="template">
+        <div class="tab-pane" id="footer-tab-{{var name='hash'}}">
+            <div id="footer-details-{{var name='hash'}}" style="position: relative;">
+                <pre class="logevent"><button id="footer-tab-cancel-{{var name='hash'}}" class="btn-mini btn-danger" style="position: absolute; top: 20px; right: 20px;">Cancel</button></pre>
+            </div>
+        </div>
+    </code>
 </div>

@@ -93,7 +93,7 @@ code.template {
   background-image: url("icons/glyphicons-halflings-white.png");
 }
 
-pre.log {
+pre.logevent {
   height: 175px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -114,36 +114,6 @@ div.file-tree {
   background-color: #F9F9F9;
 }
 
-#log-tabs {
-  border-bottom: 1px solid #999999;
-}
-
-#log-tabs > li {
-  margin-right: 5px;
-}
-
-#log-tabs button.close {
-  margin-right: 8px;
-}
-
-#log-tabs > li > a {
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-color: #999999 #999999 transparent;
-  border-image: none;
-  border-style: solid;
-  border-width: 1px;
-  padding-right: 22px;
-}
-
-#toggle-log-content {
-  cursor: pointer;
-  margin-top: 10px;
-  text-decoration: none;
-}
-
 #content {
   padding-bottom: 200px;
 }
@@ -154,7 +124,29 @@ div.file-tree {
 }
 
 #footer .nav {
+    height: 25px;
 	margin-bottom: 0px;
+}
+
+#footer .nav li {
+    line-height: 5px;
+}
+
+.navbar .divider-vertical {
+    height: 25px;
+}
+
+#footer .navbar {
+    margin-bottom: 5px;
+}
+
+#footer .navbar-inner {
+    min-height: 10px;
+}
+
+.navbar-fixed-bottom .navbar-inner {
+    border-width: 1px 0 1px;
+    border-color: #888;
 }
 
 #footer .tab-content {
@@ -180,4 +172,13 @@ div.file-tree {
 
 #footer .resized {
 	height: 575px;
+}
+
+#footer-tabs > li > a {
+    padding-right: 25px;
+    border-right: 1px solid #888;
+}
+
+#footer-tabs button.close {
+    margin-right: 8px;
 }
