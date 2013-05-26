@@ -93,7 +93,7 @@ code.template {
   background-image: url("icons/glyphicons-halflings-white.png");
 }
 
-pre.logevent {
+pre.logger {
   height: 175px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -132,12 +132,8 @@ div.file-tree {
     line-height: 5px;
 }
 
-.navbar .divider-vertical {
-    height: 25px;
-}
-
 #footer .navbar {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 #footer .navbar-inner {
@@ -170,8 +166,12 @@ div.file-tree {
 	height: 600px;
 }
 
-#footer .resized {
-	height: 575px;
+.footer-tab {
+    height: 175px;
+}
+
+.footer-tab .resized, pre.logger .resized, .footer-task-bar .resized {
+    height: 575px;
 }
 
 #footer-tabs > li > a {
@@ -181,4 +181,18 @@ div.file-tree {
 
 #footer-tabs button.close {
     margin-right: 8px;
+}
+
+.footer-task-bar {
+    width: 25px;
+    height: 175px;
+    float: left;
+    padding-left: 5px;
+    padding-top: 5px;
+    background-color: #efefef;
+    border-right: 1px solid #dddddd;
+}
+
+.footer-task-bar button {
+    line-height: 15px;
 }

@@ -36,7 +36,7 @@
                     jsMessage = $.parseJSON(message)
                     var processId = jsMessage.processId;
                     var idHash = processId.toLowerCase();
-                    var logId = 'div#footer-details-' + idHash + ' pre';
+                    var logId = 'div#footer-tab-content-' + idHash + ' pre';
                     var msg = jsMessage.msg;
 
                     if ("START" == jsMessage.event) {
@@ -91,7 +91,9 @@
           
             resize: function() {
                 $('#footer').toggleClass('resized');
-                $('pre.logevent').toggleClass('resized');
+                $('.footer-tab').toggleClass('resized');
+                $('.footer-task-bar').toggleClass('resized');
+                $('pre.logger').toggleClass('resized');
             }
 
         });
