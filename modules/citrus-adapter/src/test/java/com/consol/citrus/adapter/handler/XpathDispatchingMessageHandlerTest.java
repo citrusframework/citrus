@@ -1,10 +1,10 @@
 package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import junit.framework.Assert;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
