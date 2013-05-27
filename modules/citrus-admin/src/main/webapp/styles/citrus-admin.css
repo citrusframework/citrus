@@ -46,24 +46,48 @@ tr.show-test-details {
   cursor: pointer;
 }
 
-#testlist-tabs > li {
-  margin-right: 5px;
+#test-tabs {
+    margin-bottom: 0px;
 }
 
-#testlist-tabs button.close {
-  margin-right: 8px;
+#test-tabs > li {
+    margin-right: 5px;
+    font-weight: bold;
 }
 
-#testlist-tabs > li > a {
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-color: #DDDDDD #DDDDDD transparent;
-  border-image: none;
-  border-style: solid;
-  border-width: 1px;
-  padding-right: 22px;
+#test-tabs button.close {
+    margin-right: 8px;
+}
+
+#test-tabs > li > a {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #DDDDDD #DDDDDD transparent;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    padding-right: 22px;
+}
+
+#test-tab-content {
+    padding-left: 10px;
+    padding-top: 20px;
+    min-height: 500px;
+    border-left: 1px solid #dddddd;
+}
+
+#test-info .control-group {
+    margin-bottom: 5px;
+}
+
+#test-info .control-label {
+    width: 60px;
+}
+
+#test-info .controls {
+    margin-left: 80px;
 }
 
 code.template {
@@ -166,12 +190,20 @@ div.file-tree {
 	height: 600px;
 }
 
+#footer.minimized {
+    height: 28px;
+}
+
 .footer-tab {
     height: 175px;
 }
 
 .footer-tab .resized, pre.logger .resized, .footer-task-bar .resized {
     height: 575px;
+}
+
+.footer-tab .minimized, pre.logger .minimized, .footer-task-bar .minimized {
+    height: 0px;
 }
 
 #footer-tabs > li > a {
@@ -195,4 +227,8 @@ div.file-tree {
 
 .footer-task-bar button {
     line-height: 15px;
+}
+
+#footer-minimize {
+    margin-right: 20px;
 }

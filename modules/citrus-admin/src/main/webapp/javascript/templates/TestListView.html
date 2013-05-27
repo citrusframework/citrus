@@ -1,17 +1,9 @@
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span3"></div>
-    <div class="span9">
-        <div class="page-header">
-          <h1>Tests cases <small>Manage tests in this project</small></h1>
-        </div>
-    </div>
-  </div>
-  <div class="row-fluid">
     <div class="span3">
         <form id="search-form" class="form-search">
           <div class="input-append">
-	          <input id="test-name" type="text" class="input-large search-query"/>
+	          <input id="test-name" type="text" autocomplete="off" class="input-large search-query"/>
 	          <button id="button-search" type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
           </div>
           &nbsp;
@@ -21,10 +13,10 @@
         <div id="search-results"></div>
     </div>
     <div class="span9">
-	    <ul id="testlist-tabs" class="nav nav-tabs">
+	    <ul id="test-tabs" class="nav nav-tabs">
 	    </ul>
 	    
-	    <div id="testlist-tab-content" class="tab-content">
+	    <div id="test-tab-content" class="tab-content">
 	      <div class="tab-pane active" id="all-tab">
 	      </div>
 	    </div>

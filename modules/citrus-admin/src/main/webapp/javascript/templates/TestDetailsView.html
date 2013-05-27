@@ -1,42 +1,39 @@
-<div id="{{name}}" class="box">
-    <h2>{{name}} <small>{{packageName}}</small></h2>
+<div id="{{name}}">
+    <form id="test-info" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Name</label>
+            <div class="controls">
+                <input id="name" class="span4" name="name" type="text" placeholder="Name" value="{{name}}"/>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Package</label>
+            <div class="controls">
+                <input id="packageName" class="span4" name="packageName" type="text" placeholder="Package" value="{{packageName}}"/>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Author</label>
+            <div class="controls">
+                <input id="author" class="span4" name="author" type="text" placeholder="Author" value="{{author}}"/>
+            </div>
+        </div>
+    </form>
+
     <a class="btn btn-success pull-right run-test"><i class="icon-play icon-white"></i></a>
     <ul class="nav nav-tabs">
-        <li><a href="#info" data-toggle="tab"><i class="icon-info-sign"></i> Info</a></li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#source"><i class="icon-align-center"></i> Source&nbsp;<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li class="">
-                   <a data-toggle="tab" href="#java-source" class="java-source"><i class="icon-align-center"></i> Java</a>
-                </li>
-                <li class="">
-                   <a data-toggle="tab" href="#xml-source" class="xml-source"><i class="icon-align-right"></i> Xml</a>
-                </li>
-            </ul>
-        </li>
-        <li><a href="#stats" data-toggle="tab"><i class="icon-signal"></i> Statistics</a></li>
+        <li class="active"><a href="#xml-source" data-toggle="tab">XML</a></li>
+        <li><a href="#java-source" data-toggle="tab">Java</a></li>
     </ul>
+
     <div class="tab-content">
-        <div class="tab-pane active" id="info">
-            <dl class="dl-horizontal">
-                <dt>Package</dt>
-                <dd>{{packageName}}</dd>
-                <dt>Name</dt>
-                <dd>{{name}}</dd>
-                <dt>Author</dt>
-                <dd>{{author}}</dd>
-            </dl>
-        </div>
-        <div class="tab-pane" id="java-source">
-            <h3>Java</h3>
-            <div class="java-source"></div>
-        </div>
         <div class="tab-pane" id="xml-source">
-            <h3>XML</h3>
             <div class="xml-source"></div>
         </div>
-        <div class="tab-pane" id="stats">
-            <h3>Statistics</h3>
+        <div class="tab-pane" id="java-source">
+            <div class="java-source"></div>
         </div>
     </div>
 </div>

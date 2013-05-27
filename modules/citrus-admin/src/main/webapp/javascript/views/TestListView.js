@@ -64,16 +64,16 @@
               var test = this.searchResults[event.currentTarget.rowIndex - 1];
               var idHash= test.name.toLowerCase();
               
-              if ($('ul#testlist-tabs li#tab-' + idHash).size() === 0) {
+              if ($('ul#test-tabs li#tab-' + idHash).size() === 0) {
                   
-                  $('ul#testlist-tabs').append(Handlebars.compile($('#test-details-tab').html())({hash: idHash, name: test.name}));
-                  $('div#testlist-tab-content').append(Handlebars.compile($('#test-details-tab-pane').html())({hash: idHash}));
+                  $('ul#test-tabs').append(Handlebars.compile($('#test-details-tab').html())({hash: idHash, name: test.name}));
+                  $('div#test-tab-content').append(Handlebars.compile($('#test-details-tab-pane').html())({hash: idHash}));
                 
                   // bind close function on newly created tab
                   $('#tab-close-' + idHash).click(function() {
                       if ($(this).parent('li').hasClass('active')) {
                           // removed tab was active so display first tab (search tab)
-                          $('#testlist-tabs a:first').tab('show');
+                          $('#test-tabs a:first').tab('show');
                       }
                     
                       // remove tab item
@@ -84,7 +84,7 @@
               }
               
               // show test details tab
-              $('#testlist-tabs a[href="#test-details-tab-' + idHash + '"]').tab('show');
+              $('#test-tabs a[href="#test-details-tab-' + idHash + '"]').tab('show');
           } 
     
         });

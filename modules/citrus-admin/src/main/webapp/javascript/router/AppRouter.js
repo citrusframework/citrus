@@ -16,6 +16,7 @@
               headerView.render();
               var footerView = new FooterView({el: $('#footer')});
               footerView.render();
+              footerView.minimize();
 
               $.fn.serializeObject = function () {
                   var o = {};

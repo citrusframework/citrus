@@ -4,7 +4,8 @@
 
             events: {
                 "show .nav-tabs a": "navigateTab",
-                "dblclick .footer-content": "resize"
+                "dblclick .footer-content": "resize",
+                "click #footer-minimize" : "minimize"
             },
 
             initialize: function () {
@@ -94,6 +95,23 @@
                 $('.footer-tab').toggleClass('resized');
                 $('.footer-task-bar').toggleClass('resized');
                 $('pre.logger').toggleClass('resized');
+
+                $('#footer').removeClass('minimized');
+                $('.footer-tab').removeClass('minimized');
+                $('.footer-task-bar').removeClass('minimized');
+                $('pre.logger').removeClass('minimized');
+            },
+
+            minimize: function() {
+                $('#footer').removeClass('resized');
+                $('.footer-tab').removeClass('resized');
+                $('.footer-task-bar').removeClass('resized');
+                $('pre.logger').removeClass('resized');
+
+                $('#footer').toggleClass('minimized');
+                $('.footer-tab').toggleClass('minimized');
+                $('.footer-task-bar').toggleClass('minimized');
+                $('pre.logger').toggleClass('minimized');
             }
 
         });
