@@ -8,7 +8,7 @@
   <name>Citrus Integration Test</name>
   
   <properties>
-    <citrus.version>1.3</citrus.version>
+    <citrus.version>1.3.1</citrus.version>
     <aspectj.version>1.6.10</aspectj.version>
     <slf4j.version>1.6.1</slf4j.version>
   </properties>
