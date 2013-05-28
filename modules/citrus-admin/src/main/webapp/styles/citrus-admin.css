@@ -6,6 +6,10 @@ body {
 	padding-top: 60px;
 }
 
+a {
+    color: #000000;
+}
+
 .box {
   background-color: #FFFFFF;
   border: 1px solid #DDDDDD;
@@ -37,6 +41,16 @@ body {
   border-radius: 0 0 6px 6px;
 }
 
+.nav-tabs > li > a, .nav-tabs > li > a:hover {
+    color: #000000;
+    background-color: #efefef;
+}
+
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+    color: #0088cc;
+    background-color: #ffffff;
+}
+
 .ajax-loader {
   margin-left: 10px;
   vertical-align: middle;
@@ -48,11 +62,6 @@ tr.show-test-details {
 
 #test-tabs {
     margin-bottom: 0px;
-}
-
-#test-tabs > li {
-    margin-right: 5px;
-    font-weight: bold;
 }
 
 #test-tabs button.close {
@@ -174,24 +183,12 @@ div.file-tree {
     background-color: #ffffff;
 }
 
-#footer .nav-tabs > li > a {
-	line-height: 10px;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	background-color: #e5e5e5;
-	color: #555555;
-}
-
-#footer .nav-tabs > .active > a, #footer .nav-tabs > .active > a:hover {
-	background-color: #ffffff;
-}
-
 #footer.resized {
 	height: 600px;
 }
 
 #footer.minimized {
-    height: 28px;
+    height: 27px;
 }
 
 .footer-tab {

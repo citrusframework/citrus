@@ -42,6 +42,11 @@
 
                     if ("START" == jsMessage.event) {
                         this.createOrShowTab(processId, idHash);
+
+                        if ($('#footer').hasClass('minimized')) {
+                            this.minimize(); // auto open footer task bar
+                        }
+
                         $(logId).append(msg);
                     } else if ("MESSAGE" == jsMessage.event) {
                         $(logId).append(msg)
