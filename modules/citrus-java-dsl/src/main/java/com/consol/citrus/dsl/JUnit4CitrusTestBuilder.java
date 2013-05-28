@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,27 @@
 
 package com.consol.citrus.dsl;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.jms.ConnectionFactory;
-import javax.sql.DataSource;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.actions.*;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
+import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
+import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.springframework.core.io.Resource;
 import org.testng.ITestContext;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.*;
-import com.consol.citrus.container.*;
-import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.*;
-import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
+import javax.jms.ConnectionFactory;
+import javax.sql.DataSource;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Test case builder offers methods for constructing a test case with several
@@ -46,8 +44,9 @@ import com.consol.citrus.ws.message.WebServiceMessageSender;
  * delegating all method calls to this builder.
  *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
-public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
+public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest {
 
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
@@ -62,10 +61,10 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest {
     }
 
     @Override
-    protected void executeTest(ITestContext testContext) {
+    protected void executeTest() {
         init();
         configure();
-        super.executeTest(testContext);
+        super.executeTest();
     }
 
     /**
