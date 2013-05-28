@@ -262,11 +262,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 
                 if (schema == null) {
                     throw new CitrusRuntimeException("Found multiple schema repositories in Spring bean context, " +
-                    		"either define the repository to be used for this validation or define a default repository " +
+                    		"either define the repository to be used or define a default repository " +
                     		"(name=\"" + XsdSchemaRepository.DEFAULT_REPOSITORY_NAME + "\")");
                 }
             } else {
-
+                log.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
+                return;
             }
             
             XmlValidator validator = schema.createValidator();

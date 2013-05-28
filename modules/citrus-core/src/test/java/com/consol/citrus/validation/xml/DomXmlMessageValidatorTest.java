@@ -144,8 +144,20 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
             validator.validateXMLSchema(message, new XmlMessageValidationContext());
             Assert.fail("Missing exception due to missing default schema repository");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("need to define a default repository"));
+            Assert.assertTrue(e.getMessage().contains("either define the repository to be used or define a default repository"));
         }
+    }
+
+    @Test
+    public void validateNoSchemaRepositoryAtAll() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
+                + "<correlationId>Kx1R123456789</correlationId>"
+                + "<bookingId>Bx1G987654321</bookingId>"
+                + "<test>Hello TestFramework</test>"
+                + "</message>").build();
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
     }
     
     @Test(expectedExceptions = {ValidationException.class})
