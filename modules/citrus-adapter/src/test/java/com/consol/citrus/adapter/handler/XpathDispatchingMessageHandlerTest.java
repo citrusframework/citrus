@@ -80,9 +80,9 @@ public class XpathDispatchingMessageHandlerTest {
         XpathDispatchingMessageHandler handler = new XpathDispatchingMessageHandler();
         handler.setMessageHandlerContext(
                 "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
-        handler.setXpathMappingExpression("//MessageBody/Content");
+        handler.setXpathMappingExpression("//MessageBody/*");
 
         handler.handleMessage(MessageBuilder.withPayload(
-                    "<MessageBody>NO_BEAN_DEFINED_FOR_ME</MessageBody>").build());
+                    "<MessageBody><NoSuchBean>This bean does not exist</NoSuchBean></MessageBody>").build());
     }
 }

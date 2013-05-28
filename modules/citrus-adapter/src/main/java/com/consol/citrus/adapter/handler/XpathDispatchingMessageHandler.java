@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.xerces.parsers.DOMParser;
 import org.apache.xerces.util.DOMUtil;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.Message;
@@ -55,7 +56,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
     private String xpathMappingExpression;
 
     /** Application context holding available message handlers */
-    private String messageHandlerContext;
+    protected String messageHandlerContext;
 
     /** Map holding namespace bindings for XPath expression */
     private Map<String, String> namespaceBindings = new HashMap<String, String>();
@@ -76,7 +77,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
             parser.parse(new InputSource(reader));
 
-            Node matchingElement;
+            Node matchingNode;
             if (xpathMappingExpression != null) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
                 if (!CollectionUtils.isEmpty(namespaceBindings)) {
@@ -85,33 +86,58 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
                     nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
                 }
 
-                matchingElement = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(
+                matchingNode = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(
                         parser.getDocument()), xpathMappingExpression, nsContext);
             } else {
-                matchingElement = DOMUtil.getFirstChildElement(parser.getDocument());
+                matchingNode = DOMUtil.getFirstChildElement(parser.getDocument());
             }
 
-            if (matchingElement == null) {
+            if (matchingNode == null) {
                 throw new CitrusRuntimeException(
-                        "Could not find matching element '" + xpathMappingExpression + "' in message");
+                        "Unable to find matching element for expression '" + xpathMappingExpression + "'");
             }
 
-            //TODO support FileSystemContext
-            ApplicationContext ctx = new ClassPathXmlApplicationContext(messageHandlerContext);
-            MessageHandler handler = (MessageHandler) ctx.getBean(matchingElement.getNodeName(), MessageHandler.class);
-
-            if (handler != null) {
-                return handler.handleMessage(request);
-            } else {
-                throw new CitrusRuntimeException("Could not find message handler with name '" +
-                        matchingElement.getNodeName() + "' in '" + messageHandlerContext + "'");
-            }
+            return dispatchMessage(request, extractMappingName(matchingNode));
         } catch (SAXException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }
+
+    /**
+     * Dispatches handler invocation according to extracted mapping name. By default Spring bean application
+     * context is asked for a message handler instance with respective bean name.
+     * @param request
+     * @param mappingName
+     * @return
+     */
+    protected Message<?> dispatchMessage(Message<?> request, String mappingName) {
+        //TODO support FileSystemContext
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(messageHandlerContext);
+        MessageHandler handler;
+
+        try {
+        handler = (MessageHandler) ctx.getBean(mappingName, MessageHandler.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new CitrusRuntimeException("Unable to find matching message handler with bean name '" +
+                    mappingName + "' in Spring bean context", e);
+        }
+
+        return handler.handleMessage(request);
+    }
+
+    /**
+     * Extracts mapping identifier value from matching node. By default node name is
+     * used. Subclasses may overwrite with custom logic on node such as attribute value
+     * or node text value, etc.
+     * @param matchingNode
+     * @return
+     */
+    protected String extractMappingName(Node matchingNode) {
+        return matchingNode.getNodeName();
+    }
+
 
     /**
      * Set the XPath mapping expression.
