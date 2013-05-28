@@ -69,7 +69,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * located in validation context.
      * 
      * @param receivedMessage the received message to check.
-     * @param validationContext the current validation context holding the expected control message.
+     * @param controlMessage the expected control message.
      * @param context the current test context with all variables.
      */
     public void validateMessagePayload(Message<?> receivedMessage, 

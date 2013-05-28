@@ -19,6 +19,9 @@ package com.consol.citrus.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.validation.text.PlainTextMessageValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +43,11 @@ public class MessageValidatorRegistry implements InitializingBean {
 
     /** List of registered message validator implementations */
     @Autowired(required = false)
-    private List<MessageValidator<? extends ValidationContext>> messageValidators = 
-                                    new ArrayList<MessageValidator<? extends ValidationContext>>();
-    
+    private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(MessageValidatorRegistry.class);
+
     /**
      * Finds proper message validators for this message.
      *  
@@ -82,8 +87,10 @@ public class MessageValidatorRegistry implements InitializingBean {
      */
     public void afterPropertiesSet() throws Exception {
         if (messageValidators.isEmpty()) {
-            throw new BeanCreationException("No message validators available in context - " +
-            		"please spacify at leaest one message validator!");
+            log.warn("No message validators available in Spring bean context - " +
+                    "adding default message validator!");
+
+            messageValidators.add(new PlainTextMessageValidator());
         }
     }
 

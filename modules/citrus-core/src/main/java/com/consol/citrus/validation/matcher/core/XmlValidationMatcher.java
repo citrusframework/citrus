@@ -1,6 +1,11 @@
 package com.consol.citrus.validation.matcher.core;
 
+import org.slf4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.integration.support.MessageBuilder;
 
 import com.consol.citrus.context.TestContext;
@@ -17,17 +22,23 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
  * 
  * @author Christoph Deppisch
  */
-public class XmlValidationMatcher implements ValidationMatcher {
+public class XmlValidationMatcher implements ValidationMatcher, ApplicationContextAware, InitializingBean {
 
     /** CDATA section starting and ending in XML */
     private static final String CDATA_SECTION_START = "<![CDATA[";
     private static final String CDATA_SECTION_END = "]]>";
 
-    @Autowired
+    @Autowired(required = false)
     private DomXmlMessageValidator xmlMessageValidator;
     
     @Autowired
     private TestContextFactoryBean testContextFactory;
+
+    /** Spring bean application context */
+    private ApplicationContext applicationContext;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(XmlValidationMatcher.class);
     
     /**
       * {@inheritDoc}
@@ -36,13 +47,7 @@ public class XmlValidationMatcher implements ValidationMatcher {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setControlMessage(MessageBuilder.withPayload(control).build());
         
-        TestContext context;
-        try {
-            context = (TestContext)testContextFactory.getObject();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Unalble to create test context", e);
-        }
-        
+        TestContext context = testContextFactory.getObject();
         xmlMessageValidator.validateMessage(MessageBuilder.withPayload(removeCDataElements(value)).build(), context, validationContext);
     }
 
@@ -62,4 +67,24 @@ public class XmlValidationMatcher implements ValidationMatcher {
         return data;
     }
 
+    /**
+     * Inject Spring bean application context
+     * @param applicationContext
+     * @throws BeansException
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Initialize xml message validator if not injected by Spring bean context.
+     * @throws Exception
+     */
+    public void afterPropertiesSet() throws Exception {
+        if (xmlMessageValidator == null) {
+            log.warn("No XML message validator found in Spring bean context - setting default validator");
+            xmlMessageValidator = new DomXmlMessageValidator();
+            xmlMessageValidator.setApplicationContext(applicationContext);
+        }
+    }
 }

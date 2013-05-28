@@ -68,8 +68,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
     
-    @Autowired
-    private List<XsdSchemaRepository> schemaRepositories;
+    @Autowired(required = false)
+    private List<XsdSchemaRepository> schemaRepositories = new ArrayList<XsdSchemaRepository>();
 
     @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
@@ -123,8 +123,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Validates the message header comparing a control set of header
      * elements with the actual message header.
      *
-     * @param expectedHeaderValues
-     * @param receivedHeaderValues
+     * @param controlHeaders
+     * @param receivedHeaders
+     * @param validationContext
      * @param context
      */
     protected void validateMessageHeader(MessageHeaders controlHeaders,
@@ -252,7 +253,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 schema = applicationContext.getBean(validationContext.getSchemaRepository(), XsdSchemaRepository.class).findSchema(doc);
             } else if (schemaRepositories.size() == 1) {
                 schema = schemaRepositories.get(0).findSchema(doc);
-            } else {
+            } else if (schemaRepositories.size() > 0) {
                 for (XsdSchemaRepository repository : schemaRepositories) {
                     if (repository.getName().equals(XsdSchemaRepository.DEFAULT_REPOSITORY_NAME)) {
                         schema = repository.findSchema(doc);
@@ -260,10 +261,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 }
                 
                 if (schema == null) {
-                    throw new CitrusRuntimeException("When using multiple schema repositories in context, " +
-                    		"you either need to define which repository should be used or you need to define a default repository " +
+                    throw new CitrusRuntimeException("Found multiple schema repositories in Spring bean context, " +
+                    		"either define the repository to be used for this validation or define a default repository " +
                     		"(name=\"" + XsdSchemaRepository.DEFAULT_REPOSITORY_NAME + "\")");
                 }
+            } else {
+
             }
             
             XmlValidator validator = schema.createValidator();
@@ -679,7 +682,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Handle comment node during validation.
      *
      * @param received
-     * @param source
      */
     private void doComment(Node received) {
         log.info("Ignored comment node (" + received.getNodeValue() + ")");
@@ -689,7 +691,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * Handle processing instruction during validation.
      *
      * @param received
-     * @param source
      */
     private void doPI(Node received) {
         log.info("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");

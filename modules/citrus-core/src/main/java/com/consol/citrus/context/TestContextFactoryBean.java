@@ -53,7 +53,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
-    public TestContext getObject() throws Exception {
+    public TestContext getObject() {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
         context.setValidationMatcherRegistry(validationMatcherRegistry);
