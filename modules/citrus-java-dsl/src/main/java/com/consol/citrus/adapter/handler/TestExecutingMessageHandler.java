@@ -36,20 +36,29 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 
 /**
- * Message dispatching message handler invokes test builder instance execution. Provides
- * response message and delegates to respective test builder instance for further testing
- * logic executed in separate thread.
+ * Message dispatching message handler triggers test builder instance execution for each incoming request.
+ * Delegates to respective test builder instance by bean name mapping for further testing logic executed in
+ * separate thread.
+ *
+ * First response message is handle by separate response message handler. Usually this is some message channel or
+ * jms connecting message handler so first response message is also delegated to test builder logic.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler implements InitializingBean {
+public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler implements InitializingBean, BeanNameAware {
 
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
+    /** This handlers name - used for message channel generation */
+    private String name = TestExecutingMessageHandler.class.getSimpleName();
+
     /** Spring bean application context holding all available test builders and basic Citrus config */
     private ApplicationContext applicationContext;
+
+    /** First response message is handled by this message handler - we can delegate to test case */
+    private MessageHandler responseMessageHandler;
 
     @Override
     protected Message<?> dispatchMessage(Message<?> request, String mappingName) {
@@ -69,7 +78,7 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
                 }
             });
 
-            return MessageBuilder.withPayload("OK").build();
+            return responseMessageHandler.handleMessage(request);
         } else {
             throw new CitrusRuntimeException("Could not find test builder bean with name '" +
                     mappingName + "' in '" + messageHandlerContext + "'");
@@ -107,5 +116,28 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
                 "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
                 "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml",
                 messageHandlerContext });
+
+        if (responseMessageHandler == null) {
+            MessageChannelConnectingMessageHandler channelConnectingMessageHandler = new MessageChannelConnectingMessageHandler();
+            channelConnectingMessageHandler.setChannelName(name + ".inbound");
+            channelConnectingMessageHandler.setBeanFactory(applicationContext);
+            responseMessageHandler = channelConnectingMessageHandler;
+        }
+    }
+
+    /**
+     * Injects this handlers bean name.
+     * @param name
+     */
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the response message handler delegate.
+     * @param responseMessageHandler
+     */
+    public void setResponseMessageHandler(MessageHandler responseMessageHandler) {
+        this.responseMessageHandler = responseMessageHandler;
     }
 }

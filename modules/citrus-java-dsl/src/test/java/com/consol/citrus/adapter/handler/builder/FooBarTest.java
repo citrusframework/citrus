@@ -20,18 +20,18 @@ import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
 
-@Component("FooTest")
-public class FooTest extends CitrusTestBuilder {
+@Component("FooBarTest")
+public class FooBarTest extends CitrusTestBuilder {
 
     @Override
     public void configure() {
         receive("inboundRequestReceiver")
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<Test name=\"FooTest\"></Test>");
+                .payload("<FooBarTest></FooBarTest>");
 
         send("outboundResponseSender")
-                .payload("<Test name=\"FooTest\">OK</Test>");
+                .payload("<FooBarTest>OK</FooBarTest>");
 
-        echo("Foo Test OK!");
+        echo("FooBar Test OK!");
     }
 }

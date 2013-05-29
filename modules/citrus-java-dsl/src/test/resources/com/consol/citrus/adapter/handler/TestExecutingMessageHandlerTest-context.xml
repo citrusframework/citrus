@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	 
     <context:component-scan base-package="com.consol.citrus.adapter.handler.builder"/>
-    
+
+    <citrus:message-channel id="TestExecutingMessageHandler.inbound"/>
+
+    <citrus:sync-message-channel-receiver id="inboundRequestReceiver"
+            channel="TestExecutingMessageHandler.inbound"
+            receive-timeout="5000"/>
+
+    <citrus:message-channel-reply-sender id="outboundResponseSender"
+            reply-channel-holder="inboundRequestReceiver"/>
+
 </beans>

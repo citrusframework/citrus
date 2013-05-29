@@ -43,12 +43,12 @@ public class TestExecutingMessageHandlerTest {
         Message<?> response = handler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
 
-        Assert.assertEquals(response.getPayload(), "OK");
+        Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
 
         response = handler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"BarTest\"></Test>").build());
 
-        Assert.assertEquals(response.getPayload(), "OK");
+        Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
     }
 
     /**
@@ -64,15 +64,9 @@ public class TestExecutingMessageHandlerTest {
 
         Message<?> response = handler.handleMessage(
                 MessageBuilder.withPayload(
-                    "<FooTest>foo test please</FooTest>").build());
+                    "<FooBarTest></FooBarTest>").build());
 
-        Assert.assertEquals(response.getPayload(), "OK");
-
-        response = handler.handleMessage(
-                MessageBuilder.withPayload(
-                    "<BarTest>bar test please</BarTest>").build());
-
-        Assert.assertEquals(response.getPayload(), "OK");
+        Assert.assertEquals(response.getPayload(), "<FooBarTest>OK</FooBarTest>");
     }
 
     /**

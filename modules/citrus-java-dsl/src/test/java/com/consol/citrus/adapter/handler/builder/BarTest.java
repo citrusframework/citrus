@@ -17,6 +17,7 @@
 package com.consol.citrus.adapter.handler.builder;
 
 import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
 
 @Component("BarTest")
@@ -24,6 +25,13 @@ public class BarTest extends CitrusTestBuilder {
 
     @Override
     public void configure() {
-        echo("Bar message");
+        receive("inboundRequestReceiver")
+                .messageType(MessageType.PLAINTEXT)
+                .payload("<Test name=\"BarTest\"></Test>");
+
+        send("outboundResponseSender")
+                .payload("<Test name=\"BarTest\">OK</Test>");
+
+        echo("Bar Test OK!");
     }
 }
