@@ -56,13 +56,41 @@ public class TestCaseService {
      * @return
      */
     public List<TestCaseType> getAllTests() {
-        List<TestCaseType> tests = testExecutor.getTests();
-        
-        for (TestCaseType test : tests) {
-            addTestCaseInfo(test);
+        return testExecutor.getTests();
+    }
+
+    /**
+     * Gets test case details such as status, description, author.
+     * @return
+     */
+    public TestCaseType getTestDetails(String packageName, String testName) {
+        // TODO also get testng groups from java part
+        TestCaseType testCase = new TestCaseType();
+        testCase.setPackageName(packageName);
+        testCase.setName(testName);
+
+        String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
+
+        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+        nsContext.bindNamespaceUri("spring", "http://www.springframework.org/schema/beans"); //TODO: remove hard coded namespace uri
+        nsContext.bindNamespaceUri("citrus", "http://www.citrusframework.org/schema/testcase"); //TODO: remove hard coded namespace uri
+
+        Document testCaseDocument = XMLUtils.parseMessagePayload(xmlPart);
+        Node metaInfoNode = XPathUtils.evaluateAsNode(testCaseDocument, "/spring:beans/citrus:testcase/citrus:meta-info", nsContext);
+
+        testCase.setAuthor(XPathUtils.evaluateAsString(metaInfoNode, "citrus:author", nsContext));
+        testCase.setCreationDate(XPathUtils.evaluateAsString(metaInfoNode, "citrus:creationdate", nsContext));
+        testCase.setLastUpdatedBy(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-by", nsContext));
+        testCase.setLastUpdated(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-on", nsContext));
+        testCase.setStatus(XPathUtils.evaluateAsString(metaInfoNode, "citrus:status", nsContext));
+
+        try {
+            testCase.setDescription(XPathUtils.evaluateAsString(testCaseDocument, "/spring:beans/citrus:testcase/citrus:description", nsContext));
+        } catch (CitrusRuntimeException e) {
+            testCase.setDescription("");
         }
-        
-        return tests;
+
+        return testCase;
     }
     
     /**
@@ -106,34 +134,6 @@ public class TestCaseService {
      */
     public String getTestSources(String packageName, String name, String type) {
         return testExecutor.getSourceCode(packageName, name, type);
-    }
-    
-    /**
-     * Finds test case related information and adds it to the test case type.
-     * @param testCase
-     */
-    private void addTestCaseInfo(TestCaseType testCase) {
-        // TODO also get testng groups from java part
-        String xmlPart = testExecutor.getSourceCode(testCase.getPackageName(), testCase.getName(), "xml");
-        
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-        nsContext.bindNamespaceUri("spring", "http://www.springframework.org/schema/beans"); //TODO: remove hard coded namespace uri
-        nsContext.bindNamespaceUri("citrus", "http://www.citrusframework.org/schema/testcase"); //TODO: remove hard coded namespace uri
-        
-        Document testCaseDocument = XMLUtils.parseMessagePayload(xmlPart);
-        Node metaInfoNode = XPathUtils.evaluateAsNode(testCaseDocument, "/spring:beans/citrus:testcase/citrus:meta-info", nsContext);
-        
-        testCase.setAuthor(XPathUtils.evaluateAsString(metaInfoNode, "citrus:author", nsContext));
-        testCase.setCreationDate(XPathUtils.evaluateAsString(metaInfoNode, "citrus:creationdate", nsContext));
-        testCase.setLastUpdatedBy(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-by", nsContext));
-        testCase.setLastUpdated(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-on", nsContext));
-        testCase.setStatus(XPathUtils.evaluateAsString(metaInfoNode, "citrus:status", nsContext));
-        
-        try {
-            testCase.setDescription(XPathUtils.evaluateAsString(testCaseDocument, "/spring:beans/citrus:testcase/citrus:description", nsContext));
-        } catch (CitrusRuntimeException e) {
-            testCase.setDescription("");
-        }
     }
     
 }

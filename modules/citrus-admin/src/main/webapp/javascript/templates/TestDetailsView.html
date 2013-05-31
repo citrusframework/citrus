@@ -36,20 +36,20 @@
 
     <a class="btn btn-success pull-right run-test"><i class="icon-play icon-white"></i></a>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#design" data-toggle="tab">Design</a></li>
-        <li><a href="#xml-source" class="xml-source" data-toggle="tab">XML</a></li>
-        <li><a href="#java-source" class="java-source" data-toggle="tab">Java</a></li>
+        <li class="active"><a href="#design-{{name}}" data-toggle="tab">Design</a></li>
+        <li><a href="#xml-source-{{name}}" class="xml-source" data-toggle="tab">XML</a></li>
+        <li><a href="#java-source-{{name}}" class="java-source" data-toggle="tab">Java</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane" id="design">
+        <div class="tab-pane" id="design-{{name}}">
             <div class="design"></div>
         </div>
-        <div class="tab-pane" id="xml-source">
-            <div class="xml-source"></div>
+        <div class="tab-pane" id="xml-source-{{name}}">
+            <pre class="prettyprint linenums">Loading sources ...</pre>
         </div>
-        <div class="tab-pane" id="java-source">
-            <div class="java-source"></div>
+        <div class="tab-pane" id="java-source-{{name}}">
+            <pre class="prettyprint linenums">Loading sources ...</pre>
         </div>
     </div>
 </div>

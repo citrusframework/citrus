@@ -80,12 +80,11 @@ public class FileSystemTestExecutor implements TestExecutor{
      * {@inheritDoc}
      */
     public String getSourceCode(String testPackage, String testName, String type) {
-        String testDirectory = getTestDirectory();
-        
-        List<File> testFiles = FileUtils.getTestFiles(testDirectory + "/" + testPackage.replaceAll("\\.", "/"));
-        
+        String dir = type.equals("java") ? getJavaDirectory() : getTestDirectory();
+
         try {
-            return FileUtils.readToString(new FileInputStream(testFiles.get(0)));
+            return FileUtils.readToString(new FileInputStream(dir +
+                    File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type));
         } catch (IOException e) {
             return "Failed to load test case file: " + e.getMessage();
         }
@@ -97,6 +96,14 @@ public class FileSystemTestExecutor implements TestExecutor{
      */
     private String getTestDirectory() {
         return new File(configService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+    }
+
+    /**
+     * Gets the current test directory based on project home and default test directory.
+     * @return
+     */
+    private String getJavaDirectory() {
+        return new File(configService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
     }
 
 }

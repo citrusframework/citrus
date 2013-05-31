@@ -45,11 +45,17 @@ public class TestCaseController {
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public List<TestCaseType> list(HttpEntity<String> requestEntity) {
+    public List<TestCaseType> list() {
         return testCaseService.getAllTests();
     }
+
+    @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })
+    @ResponseBody
+    public TestCaseType executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
+        return testCaseService.getTestDetails(testPackage, testName);
+    }
     
-    @RequestMapping(value="/{package}/{name}/{type}", method = { RequestMethod.GET })
+    @RequestMapping(value="/source/{package}/{name}/{type}", method = { RequestMethod.GET })
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
             @PathVariable("type") String type) {

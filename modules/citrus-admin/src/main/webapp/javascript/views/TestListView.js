@@ -58,6 +58,9 @@
               }
               
               $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.searchResults }));
+
+              // prevent default form submission
+              return false;
           },
           
           showDetails: function(event) {
@@ -73,7 +76,7 @@
                   $('#tab-close-' + idHash).click(function() {
                       if ($(this).parent('li').hasClass('active')) {
                           // removed tab was active so display first tab (search tab)
-                          $('#test-tabs a:first').tab('show');
+                          $(this).parent('li').prev().find('a').tab('show');
                       }
                     
                       // remove tab item

@@ -60,6 +60,11 @@ tr.show-test-details {
   cursor: pointer;
 }
 
+div.test-details-open {
+   padding-top: 200px;
+   text-align: center;
+}
+
 #test-tabs {
     margin-bottom: 0px;
 }
@@ -83,8 +88,9 @@ tr.show-test-details {
 #test-tab-content {
     padding-left: 10px;
     padding-top: 20px;
-    min-height: 500px;
+    min-height: 600px;
     border-left: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
 }
 
 #test-info .control-group {

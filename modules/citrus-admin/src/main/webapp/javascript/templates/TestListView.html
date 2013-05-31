@@ -6,18 +6,23 @@
 	          <input id="test-name" type="text" autocomplete="off" class="input-large search-query"/>
 	          <button id="button-search" type="submit" class="btn btn-primary"><i class="icon-search icon-white"></i></button>
           </div>
-          &nbsp;
-          <img class="ajax-loader" src="images/ajax-loader.gif" style="display: none;"/>
         </form>
         
         <div id="search-results"></div>
     </div>
     <div class="span9">
 	    <ul id="test-tabs" class="nav nav-tabs">
+            <li style="display: none;" class="active">
+                <a href="#open-tab" data-toggle="tab">Open</a>
+            </li>
 	    </ul>
 	    
 	    <div id="test-tab-content" class="tab-content">
-	      <div class="tab-pane active" id="all-tab">
+	      <div class="tab-pane active" id="open-tab">
+              <div class="test-details-open">
+                  <h3>Open test case</h3>
+                  <p class="muted">Press <em>Strg + O</em> to open test case</p>
+              </div>
 	      </div>
 	    </div>
     </div>
