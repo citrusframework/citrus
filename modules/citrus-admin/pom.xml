@@ -14,6 +14,10 @@
   <name>citrus-admin</name>
   <packaging>war</packaging>
 
+  <properties>
+    <jasmine.serverPort>8234</jasmine.serverPort>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
         <dependency>
@@ -201,12 +205,12 @@
           </executions>
           <configuration>
               <schemaDirectory>src/main/resources/META-INF/schemas</schemaDirectory>
-              <includeSchemas>
-                  <includeSchema>citrus-admin-model.xsd</includeSchema>
-              </includeSchemas>
-              <includeBindings>
-                  <includeBinding>**/*.xjb</includeBinding>
-              </includeBindings>
+              <schemaIncludes>
+                  <include>citrus-admin-model.xsd</include>
+              </schemaIncludes>
+              <bindingIncludes>
+                  <include>**/*.xjb</include>
+              </bindingIncludes>
               <verbose>true</verbose>
               <extension>true</extension>
           </configuration>
@@ -303,7 +307,7 @@
                   <maxIdleTime>60000</maxIdleTime>
                 </connector>
               </connectors>
-              <scanIntervalSeconds>4</scanIntervalSeconds>
+              <scanIntervalSeconds>5</scanIntervalSeconds>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>
